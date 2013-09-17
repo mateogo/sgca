@@ -1,0 +1,171 @@
+<div class="row-fluid">
+  <!-- form-PRODUCT   parent:  -->
+  <form class="form-horizontal span12">
+    <fieldset>
+      <div class="row">
+        <div class="span8">
+
+          <div class="control-group">
+          <!-- _id ; prj._id: tipoproducto / productcode -->
+              <label for="productId" class="control-label">id:</label>
+
+              <div class="controls">
+                  <input id="productId" name="id" type="text" value="<%= _id === null ? '' : _id %>"
+                         disabled >
+                  <input id="project[id]" name="project[id]" type="text" 
+                          value="<%= project._id === null ? '' : project._id %>"  disabled>
+                  <select class="input-large" id="tipoproducto" name="tipoproducto" value="<%= tipoproducto %>">
+                      <option value='no_definido'
+                      <%= tipoproducto == 'no_definido' ? 'selected':'' %>>--tipo de producto--</option>
+                      <option value='paudiovisual'
+                      <%= tipoproducto == 'paudiovisual' ? 'selected':'' %>>producto audiovisual</option>
+                      <option value='micro'
+                      <%= tipoproducto == 'micro' ? 'selected':'' %>>micro</option>
+                      <option value='promo'
+                      <%= tipoproducto == 'promo' ? 'selected':'' %>>promo</option>
+                      <option value='imagen'
+                      <%= tipoproducto == 'imagen' ? 'selected':'' %>>imagen</option>
+                   </select>
+                  <input id="productcode" name="productcode" type="text" 
+                          value="<%= productcode === null ? '' : productcode %>"  disabled>
+                  <span class="help-inline"></span>
+              </div>
+          </div>
+
+          <div class="control-group">
+          <!-- slug  / denom -->
+              <label for="slug" class="control-label">denominación / título:</label>
+
+              <div class="controls">
+                <input type="text" class="input-large" id="slug" name="slug" 
+                    placeholder='denominación corta' value="<%= slug %>"/>
+                <input type="text" class="input-large" id="denom" name="denom" placeholder="título" 
+                     value="<%= denom %>" >
+                <span class="help-inline"></span>
+              </div>
+          </div>
+
+          <div class="control-group">
+          <!-- rubro  nivel_importancia estado_alta nivel_ejecucion -->
+              <label for="rubro" class="control-label">estados:</label>
+              <div class="controls">
+
+                <select class="input-large" id="estado_alta" name="estado_alta" 
+                    value="<%= estado_alta %>">
+                    <option value='activo'
+                    <%= estado_alta == 'activo' ? 'selected':'' %>>activo</option>
+                    <option value='suspendido'
+                    <%= estado_alta == 'suspendido' ? 'selected':'' %>>suspendido</option>
+                    <option value='baja'
+                    <%= estado_alta == 'baja' ? 'selected':'' %>>baja</option>
+                </select>
+
+                <select class="input-large" id="nivel_importancia" name="nivel_importancia" 
+                  value="<%= nivel_importancia %>">
+                    <option value='no_definido'
+                    <%= nivel_importancia == 'no_definido' ? 'selected':'' %>>--nivel relevancia--</option>
+                    <option value='bajo'
+                    <%= nivel_importancia == 'bajo' ? 'selected':'' %>>bajo</option>
+                    <option value='medio'
+                    <%= nivel_importancia == 'medio' ? 'selected':'' %>>medio</option>
+                    <option value='alto'
+                    <%= nivel_importancia == 'alto' ? 'selected':'' %>>alto</option>
+                    <option value='critico'
+                    <%= nivel_importancia == 'critico' ? 'selected':'' %>>critico</option>
+                </select>
+
+
+                <select class="input-large" id="nivel_ejecucion" name="nivel_ejecucion" 
+                  value="<%= nivel_ejecucion %>">
+                    <option value='no_definido' 
+                    <%= nivel_ejecucion == 'no_definido' ? 'selected':'' %> >-nivel ejecucion-</option>
+                  
+                    <option value='planificado' 
+                    <%= nivel_ejecucion == 'planificado' ? 'selected':'' %> >planificado</option>
+                  
+                    <option value='gestion' 
+                    <%= nivel_ejecucion == 'gestion' ? 'selected':'' %> >en gestión</option>
+
+                    <option value='recibido'
+                    <%= nivel_ejecucion == 'recibido' ? 'selected':'' %> >recibido</option>
+                  
+                    <option value='ingestado' 
+                    <%= nivel_ejecucion == 'ingestado' ? 'selected':'' %> >ingestado</option>
+                  
+                    <option value='controlado'
+                    <%= nivel_ejecucion == 'controlado' ? 'selected':'' %> >controlado ok</option>
+                  
+                    <option value='observado' 
+                    <%= nivel_ejecucion == 'observado' ? 'selected':'' %>>observado</option>
+                  
+                    <option value='rechazado' 
+                    <%= nivel_ejecucion == 'rechazado' ? 'selected':'' %>>rechazado</option>
+                  
+                    <option value='archivado' 
+                    <%= nivel_ejecucion == 'archivado' ? 'selected':'' %>>archivado</option>
+                 </select>
+                <span class="help-inline"></span>
+              </div>
+          </div>
+
+         <div class="control-group">
+          <!-- descriptores; -->
+              <label for="descriptores" class="control-label">descriptores (palabras claves separadas por ';'):</label>
+              <div class="controls">
+                  <textarea id="descriptores" name="descriptores" style="width: 90%;" 
+                  rows="2"><%= descriptores %></textarea>
+              </div>
+          </div>
+ 
+         <div class="control-group">
+          <!-- description   -->
+              <label for="description" class="control-label">descripcion</label>
+              <div class="controls">
+                  <textarea id="description" name="description" style="width: 90%;" 
+                  rows="2"><%= description %></textarea>
+              </div>
+          </div>
+        </div><!--  main first col content span 8 -->
+
+        <div class="span4"> <!--  main second col span 4 -->
+
+          <div class="well" style="width: 180px;text-align: center;width:50%;margin: 0px auto;">
+              <a href="#" class="btn btn-block btn-inverse clonar">Clonar producto!</a>
+              <a href="#"  class="btn btn-block btn-success browse">Navegar productos</a>
+              <a  id='nodalfacet' class="btn btn-block btn-inverse"
+                  data-toggle='modal' data-target='#patechfacet'>Faceta Técnica PA</a>
+              <a href="#"  class="btn btn-block btn-success vista">Vista</a>
+          </div>
+        </div><!--  sidebar right span 4 -->
+      </div><!--  end row  -->
+
+    </fieldset>
+    <div class="form-actions span7">
+      <a href="#" class="btn btn-primary save">Guardar</a>
+      <a href="#" class="btn btn-danger delete">Eliminar</a>
+    </div>
+  </form>
+</div>
+
+<div class="row-fluid status-bar">
+    <div class="span12">
+        <div class="alert alert-success" style="display: none">
+            <b>INFO:</b> El registro se guardó exitosamente
+        </div>
+    </div>
+</div>
+
+<!--  ====================   MODAL VIEWER  ==========================  -->
+<div class="modal hide fade in" id="patechfacet"  tabindex="-1" data-keyboard=false data-backdrop=false
+        role="dialog" aria-labelledby="patechfacetLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+        <h3 id='patechfacetLabel' >PA: Faceta Técnica</h3>
+    </div>
+    <div id="patechcallback" class="modal-body form-stacked"></div>
+    <div class="modal-footer">
+        <button class="btn btn-large btn-primary"  data-dismiss="modal"  
+        aria-hidden="true">Cerrar</button>
+    </div>
+</div>
+<!--  ====================   MODAL VIEWER  ==========================  -->

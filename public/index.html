@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>SGCA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        }
+    </style>
+    <link href="lib/backbone-forms-bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <script src="http://use.edgefonts.net/andika.js"></script>
+    <script src="http://use.edgefonts.net/arvo.js"></script>
+
+    <script>
+        // UNCOMMENT THIS CODE IF YOU USE THE "serverwithanalytics" SERVER
+        //   script type="text/javascript" src="socket.io/socket.io.js" /script
+        // var socket = io.connect();
+        // socket.on('connect', function () {
+        //     socket.send(window.location.href);
+        // });
+        // window.onhashchange = function () {
+        //     socket.send(window.location.href);
+        // }
+   </script>
+
+</head>
+
+<body>
+
+<div class="header"></div>
+
+<div class="container-fluid">
+
+    <div class="row-fluid">
+        <div id="content" class="span12>"></div>
+    </div>
+
+    <footer class="footer">
+        <p class="pull-right"><a href="#">Inicio</a></p>
+        <table class='bs-docs-social-logos'>
+            <tr><td><a href="http://www.argentina.ar/" title="Argentina, un país con buena gente" class="newWindow"><img src="http://www.igualdadcultural.gob.ar/images/layout/brochette/buena_gente.png;pvc4d3b049059521c6" alt="Logo, Argentina, un país con buena gente" /></a></td>
+            <td><a href="http://www.presidencia.gov.ar/" title="Presidencia de la Nación Argentina"  class="newWindow"><img src="http://www.igualdadcultural.gob.ar/images/layout/brochette/presidencia.png;pv14dee9fdfa3227a8" alt="Logo, Presidencia de la Nación Argentina" /></a></td>
+            <td><a href="http://www.medios.gov.ar/" title="Secretaría de Comunicación Púbtdca, Jefatura de Gabinete de Ministros"  class="newWindow"><img src="http://img1.igualdadcultural.gob.ar/images/layout/brochette/medios.png;pv2e968617238deb01" alt="Logo, Secretaría de Comunicación Púbtdca Jefatura de Gabinete de Ministdos" /></a></td>
+            <td><a href="http://www.minplan.gov.ar/" title="Ministerio de planificación Federal, Inversión Púbtdca y Servicios"  class="newWindow"><img src="http://img1.igualdadcultural.gob.ar/images/layout/brochette/minplan.png;pv0a8cafc4c0805eda" alt="Logo, Ministerio de planificación Federal, Inversión Púbtdca y Servicios" /></a></td>
+            <td><a href="http://www.cultura.gov.ar/home/" title="Secretaría de Cultura" ><img src="http://www.igualdadcultural.gob.ar/images/layout/brochette/cultura.png;pvfee84b695819dc26" alt="Logo, Secretaría de Cultura" /></a></td>
+            <td><a class="btn btn-large pull-right" href="http://www.igualdadcultural.gob.ar/"><img src="img/icon-ic.png" class="pull-left" style="margin-right:6px"/>Igualdad<br>Cultural</a></td></tr>
+            <tr><td><a href="http://www.cultura.gov.ar/direcciones/?info=direccion&amp;idd=7" title="Centro de Producción e Investigación Audiovisual" class="newWindow"><img src="http://www.igualdadcultural.gob.ar/images/layout/brochette/cepia.png;pvfc6f6533fec7d39d" alt="Logo, Centdo de Producción e Investigación Audiovisual" /></a></td>
+            <td><a href="http://www.argentinaconectada.gob.ar/" title="Argentina Conectada"  class="newWindow"><img src="http://img1.igualdadcultural.gob.ar/images/layout/brochette/argcon.png;pvf503048ee384da29" alt="Logo, Argentina Conectada" /></a></td>
+            <td><a href="http://www.tda.gob.ar/contenidos/home.html" title="TDA - Televisión Digital Abierta"  class="newWindow"><img src="http://img1.igualdadcultural.gob.ar/images/layout/brochette/tda.png;pv86bc3fcb8b5a7031" alt="Logo, TDA - Televisión Digital Abierta" /></a></td>
+            <td><a href="http://www.bacua.gov.ar/" title="Banco Audiovisual de Contenidos Universales Argentino"  class="newWindow"><img src="http://www.igualdadcultural.gob.ar/images/layout/brochette/bacua.png;pv927fbe8e8497ff13" alt="Logo, Banco Audiovisual de Contenidos Universales Argentino" /></a></td>
+            <td><a href="http://cda.gob.ar/" title="CDA - Contenidos Digitales Abiertos"   class="newWindow"><img src="http://www.igualdadcultural.gob.ar/images/layout/brochette/cda.png;pv001f1797f007a50c" alt="Logo, Contenidos Digitales Abiertos" /></a></td></tr>
+        </table>
+
+
+    </footer>
+</div>
+<!-- /container -->
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="lib/jquery-1.8.2.min.js"></script>
+<script src="lib/underscore-min.js"></script>
+<script src="lib/backbone-min.js"></script>
+<script src="lib/bootstrap.min.js"></script>
+<script src="lib/backbone-forms.min.js"></script>
+<script src="lib/backbone.bootstrap-modal.js"></script>
+<script src="lib/backbone-forms-bootstrap.js"></script>
+
+<script type="text/javascript" src="http://js.nicedit.com/nicEdit-latest.js"></script>
+
+<script src="js/utils.js"></script>
+<script src="js/models/models.js"></script>
+
+<script src="js/views/paginator.js"></script>
+<script src="js/views/header.js"></script>
+<script src="js/views/home.js"></script>
+<script src="js/views/about.js"></script>
+
+<script src="js/views/prjviewctrl.js"></script>
+<script src="js/views/projectlist.js"></script>
+<script src="js/views/projectdetails.js"></script>
+<script src="js/views/projectlayout.js"></script>
+
+<script src="js/views/resourcelayout.js"></script>
+<script src="js/views/resourcelist.js"></script>
+<script src="js/views/resourcedetails.js"></script>
+<script src="js/views/resourcequote.js"></script>
+
+<script src="js/views/quotationlayout.js"></script>
+<script src="js/views/quotationlist.js"></script>
+<script src="js/views/quotationdetails.js"></script>
+<script src="js/views/quotationresource.js"></script>
+
+<script src="js/views/productlayout.js"></script>
+<script src="js/views/productdetails.js"></script>
+<script src="js/views/productlist.js"></script>
+<script src="js/views/productpatech.js"></script>
+
+<script src="js/views/assetListView.js"></script>
+<script src="js/views/assetView.js"></script>
+
+<!-- Nuevo agregado para versiones -->
+<script src="js/views/assetlayoutview.js"></script>
+
+<script src="js/main.js"></script>
+
+<script type="text/javascript">
+ //<![CDATA[
+  bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+  //]]>
+</script> 
+</body>
+</html>
