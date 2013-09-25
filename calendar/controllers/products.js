@@ -47,6 +47,12 @@ var tpr_adapter = {
         prefix:'img'
     },
 
+    curaduria:{
+        serie: 'cu101',
+        base: 100000,
+        prefix:'K'
+    },
+
     poromision: {
         serie: 'xx101',
         base: 100000,
@@ -180,7 +186,26 @@ exports.findById = function(req, res) {
 
 exports.find = function(req, res) {
     var query = req.body; //{};
-    console.log('find: Retrieving query:[%s]',((query.project)?query.project._id:'null'));
+    /*
+    for(var key in query){
+        console.log('loop: [%s][%s]',key,query[key]['product']);
+        var ob = query[key];
+        for (var k2 in ob){
+            console.log('s-loop: [%s] [%s]',k2,ob[k2]);
+        }
+    }
+    */
+    //console.log('find: Retrieving query1:[%s]',((query.project)?query.project._id:'null'));
+    //console.log('find:product Retrieving query:',((query.es_capitulo_de) ? query['es_capitulo_de.product']:'nada'));
+    console.log('find:product Retrieving product collection with query');
+    //var qu = {};
+    //var pr = {product:'522f7581992f753b09000001',capnum:{$gt:0}} ;
+    //var pr = {product:'522f7581992f753b09000001',capnum:2} ;
+    //var elmatch = {'$elemMatch': {'product': '522f7581992f753b09000001'}};
+    //var qu= {'es_capitulo_de.product':'522f7581992f753b09000001'};
+
+    //console.log('qu: [%s]',qu.es_capitulo_de.product);
+
     dbi.collection(productsCol, function(err, collection) {
         collection.find(query).sort({slug:1}).toArray(function(err, items) {
             res.send(items);

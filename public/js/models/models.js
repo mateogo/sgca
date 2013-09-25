@@ -1,5 +1,6 @@
 window.Product = Backbone.Model.extend({
     // ******************* PROJECT ***************
+    whoami: 'Product:models.js ',
     urlRoot: "/productos",
 
     idAttribute: "_id",
@@ -33,12 +34,99 @@ window.Product = Backbone.Model.extend({
         return _.size(messages) > 0 ? {isValid: false, messages: messages} : {isValid: true};
     },
 
-    insertCapitulos: function(data){
-        console.log('insertCapitulos:models.js begins numcap: [%s]',data.cantcapitulos);
+    loadpacapitulos: function(cb){
+        var self = this;
+        var escoleccionde = 'es_coleccion_de.'+self.get('productcode')+'.productcode';
+        console.log('loadpacapitulos:models.js begins es_capitulo_de: [%s] [%s]',self.get('slug'),self.id);
+        var query = {$or: [{'es_capitulo_de.product':self.id}, {escoleccionde:self.get('productcode')}]};
+
+        var chapCol= new ProductCollection();
+        console.log('loadpacapitulos:models.js query  [%s] ',query['es_capitulo_de.product']);
+
+        chapCol.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                utils.productsCol.set(chapCol);
+                if(cb) cb(utils.productsCol.get());
+            }
+        });
+    },
+
+    isChild: function(){
+        var self = this;
+        if(self.get('es_capitulo_de')){
+            if(self.get('es_capitulo_de').product){
+                console.log('isChild: TRUE');
+                return true;
+            }
+        }
+        console.log('isChild: FALSE');
+        return false;
+    },
+
+    buildCapNumber: function(iter, prefix){
+        var numcap = iter;
+        if(prefix){
+            numcap += prefix*100;
+        }
+        return numcap;
+    },
+
+    linkChildsToAncestor: function (childs, predicate, cb) {
+        var ancestor = this,
+            deferreds = [], 
+            defer;
+
+
+        console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('productcode'));
+
+        for (var i = childs.length - 1; i >= 0; i--) {
+            var child = childs[i];
+            var parentref = {
+                product: ancestor.id,
+                productcode: ancestor.get('productcode'),
+                slug: ancestor.get('slug'),
+                capnum: ancestor.buildCapNumber(i+1,1)
+            };
+            if(predicate === 'es_capitulo_de') child.set({es_capitulo_de: parentref});
+            if(predicate === 'es_coleccion_de'){
+                var escol = child.get('es_coleccion_de');
+                if(!escol) escol = {};
+                escol[ancestor.get('productcode')] = parentref;
+                child.set({es_coleccion_de: escol});
+                console.log('linkChilds:ready es_coleccion: [%s] [%s]',i,child.get('es_coleccion_de'));
+           }
+
+            console.log('linkChilds:ready to insert: [%s] [%s]',i,child.get('slug'));
+
+            defer = child.save(null, {
+                success: function (model) {
+                    //console.log('saveNode:productdetails success');
+                    console.log('insertCapitulos:SUCCESS: [%s] [%s] ',i,child.get('slug'));
+                },
+                error: function () {
+                    console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',i,child.get('slug'));
+                }
+            });
+            deferreds.push(defer);
+        }
+
+
+        $.when.apply(null, deferreds).done(function(){
+            console.log('deferres done FIRED');
+            cb();
+            //utils.approuter.navigate('navegar/productos', {trigger: true, replace: false});
+        });
+    },
+
+    insertCapitulos: function(data,cb){
+        console.log('insertCapitulos:models.js begins capdesde: [%s]',data.numcapdesde);
         var self = this;
         var builder = {};
         var slug_template = _.template('Cap: <%= numcap %> - '+self.get('slug'));
         var denom_template = _.template('Cap: <%= numcap %> - '+self.get('denom'));
+        var deferreds = [],defer;
 
         builder._id = null;
         builder.tipoproducto = data.tipoproducto || self.tipoproducto;
@@ -47,24 +135,29 @@ window.Product = Backbone.Model.extend({
         builder.nivel_ejecucion = self.get('nivel_ejecucion');
         builder.estado_alta = self.get('estado_alta');
         builder.patechfacet = self.get('patechfacet');
+
         if(builder.patechfacet){
             builder.patechfacet.cantcapitulos = 0;
             builder.patechfacet.durnominal = data.durnominal;
-        };
-        for (var icap =1; icap <= data.cantcapitulos; icap +=1){
+        }
+
+        for (var icap =data.numcapdesde; icap <= data.numcaphasta; icap +=1){
             var capitulo = new Product(builder);
+            var capnum = self.buildCapNumber(icap, data.numcapprefix);
             capitulo.buildTagList();
-            capitulo.set({slug:  slug_template({numcap:icap})});
-            capitulo.set({denom: denom_template({numcap:icap})});
+            capitulo.set({slug:  slug_template({numcap:capnum})});
+            capitulo.set({denom: denom_template({numcap:capnum})});
             var parentref = {
                 product: self.id,
-                capnum: icap
+                productcode: self.get('productcode'),
+                slug: self.get('slug'),
+                capnum: capnum
             };
             capitulo.set({es_capitulo_de: parentref});
             //
             console.log('insertCapitulos:ready to insert: [%s] [%s]',icap,capitulo.get('slug'));
 
-            capitulo.save(null, {
+            defer = capitulo.save(null, {
                 success: function (model) {
                     //console.log('saveNode:productdetails success');
                     console.log('insertCapitulos:SUCCESS: [%s] [%s] ',icap,capitulo.get('slug'));
@@ -73,8 +166,14 @@ window.Product = Backbone.Model.extend({
                     console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',icap,capitulo.get('slug'));
                 }
             });
+            deferreds.push(defer);
             console.log('ITERATION [%s]',icap);
         }
+        $.when.apply(null, deferreds).done(function(){
+            console.log('deferres done FIRED');
+            cb();
+            //utils.approuter.navigate('navegar/productos', {trigger: true, replace: false});
+        });
     },
 
     getTagList: function(){
@@ -116,6 +215,7 @@ window.Product = Backbone.Model.extend({
     }
 
 });
+
 //        patechfacet:{
 //            durnominal:null,
 //            fecreacion:null,
@@ -202,14 +302,18 @@ window.PaCapitulosFacet = Backbone.Model.extend({
     },
 
     schema: {
-        cantcapitulos:  {type: 'Number', title: 'Cantidad de capítulos'},
+        numcapdesde:  {type: 'Number', title: 'Capítulo desde'},
+        numcaphasta:  {type: 'Number', title: 'Capítulo hasta'},
+        numcapprefix: {type: 'Number', title: 'Prefijo del código'},
         tipoproducto:  {type: 'Select',options: utils.tipoproductoOptionList },
         durnominal:    {type: 'Text', title: 'Duración nominal', editorAttrs:{placeholder : 'duracion mm:ss'}},
         descriptores:  {type: 'Text', title: 'Descriptores', editorAttrs:{placeholder : 'descriptores separados por ;'}},
    },
 
     defaults: {
-        cantcapitulos:'0',
+        numcapdesde:0,
+        numcaphasta:0,
+        numcapprefix: 100,
         tipoproducto:'paudiovisual',
         durnominal:'',
         descriptores:'',

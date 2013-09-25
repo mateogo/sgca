@@ -1,9 +1,9 @@
 <div class="row-fluid">
   <!-- form-PRODUCT   parent:  -->
-  <form class="form-horizontal span12">
-    <fieldset>
       <div class="row">
         <div class="span8">
+        <form class="form-horizontal span12">
+        <fieldset>
 
           <div class="control-group">
           <!-- _id ; prj._id: tipoproducto / productcode -->
@@ -21,6 +21,8 @@
                       <%= tipoproducto == 'paudiovisual' ? 'selected':'' %>>producto audiovisual</option>
                       <option value='micro'
                       <%= tipoproducto == 'micro' ? 'selected':'' %>>micro</option>
+                      <option value='curaduria'
+                      <%= tipoproducto == 'curaduria' ? 'selected':'' %>>curaduria</option>
                       <option value='promo'
                       <%= tipoproducto == 'promo' ? 'selected':'' %>>promo</option>
                       <option value='imagen'
@@ -108,23 +110,41 @@
               </div>
           </div>
 
-         <div class="control-group">
-          <!-- descriptores; -->
-              <label for="descriptores" class="control-label">descriptores (palabras claves separadas por ';'):</label>
-              <div class="controls">
-                  <textarea id="descriptores" name="descriptores" style="width: 90%;" 
-                  rows="2"><%= descriptores %></textarea>
+          <div class="control-group">
+            <!-- descriptores; -->
+                <label for="descriptores" class="control-label">descriptores (palabras claves separadas por ';'):</label>
+                <div class="controls">
+                    <textarea id="descriptores" name="descriptores" style="width: 90%;" 
+                    rows="2"><%= descriptores %></textarea>
+                </div>
+          </div>
+   
+          <div class="control-group">
+            <!-- description   -->
+                <label for="description" class="control-label">descripcion</label>
+                <div class="controls">
+                    <textarea id="description" name="description" style="width: 90%;" 
+                    rows="2"><%= description %></textarea>
+                </div>
+          </div>
+
+          <div class="form-actions ">
+            <a href="#" class="btn btn-primary save">Guardar</a>
+            <a href="#" class="btn btn-danger delete">Eliminar</a>
+          </div>
+
+          <div class="row-fluid status-bar">
+              <div class="span12">
+                  <div class="alert alert-success" style="display: none">
+                      <b>INFO:</b> El registro se guardó exitosamente
+                  </div>
               </div>
           </div>
- 
-         <div class="control-group">
-          <!-- description   -->
-              <label for="description" class="control-label">descripcion</label>
-              <div class="controls">
-                  <textarea id="description" name="description" style="width: 90%;" 
-                  rows="2"><%= description %></textarea>
-              </div>
-          </div>
+
+        </fieldset>
+        </form>
+
+
         </div><!--  main first col content span 8 -->
 
         <div class="span4"> <!--  main second col span 4 -->
@@ -138,21 +158,18 @@
               <a   class="btn btn-block btn-inverse capitulos" >PA: Alta rápida Cap</a>
               <a href="#"  class="btn btn-block btn-success vista">Vista</a>
           </div>
+          <div  class="well" style="width: 180px;text-align: center;width:50%;margin: 0px auto;">
+            <div class='nav-header'>Capitulos</div>
+            <div id="chapters1"></div>  
+          </div><!--/.well side bar -->
+
+          <div  class="well" style="width: 180px;text-align: center;width:50%;margin: 0px auto;">
+            <div class='nav-header'>Ancestro</div>
+            <div id="ancestor1" class="nav nav-list"></div>
+          </div><!--/.well side bar -->
+
         </div><!--  sidebar right span 4 -->
-      </div><!--  end row  -->
-
-    </fieldset>
-    <div class="form-actions span7">
-      <a href="#" class="btn btn-primary save">Guardar</a>
-      <a href="#" class="btn btn-danger delete">Eliminar</a>
-    </div>
-  </form>
+      </div><!--  end master row  -->
 </div>
 
-<div class="row-fluid status-bar">
-    <div class="span12">
-        <div class="alert alert-success" style="display: none">
-            <b>INFO:</b> El registro se guardó exitosamente
-        </div>
-    </div>
-</div>
+

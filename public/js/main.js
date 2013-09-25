@@ -30,6 +30,7 @@ var AppRouter = Backbone.Router.extend({
 
         "productos/add"          : "addProduct",
         "navegar/productos"      : "browseProducts",
+        "navegar/productos/pag/:page"  : "browseProducts",
         "productos/:id"          : "productDetails",
 
         "activos/:id"            : "assetDetails"
@@ -115,7 +116,7 @@ var AppRouter = Backbone.Router.extend({
 
     addProduct: function() {
         console.log('addProduct:main.js');
-        $('#content').html(new ProductListLayoutView({model: utils.productsQueryData()}).el);
+        $('#content').html(new ProductViewLayout({model: utils.productsQueryData()}).el);
 
         var product = new Product({project: utils.productsQueryData().getProject() });
  
@@ -130,17 +131,26 @@ var AppRouter = Backbone.Router.extend({
     productDetails: function (id) {
         console.log('productDetails:main.js');
 
-        $('#content').html(new ProductListLayoutView({model: utils.productsQueryData()}).el);
+        $('#content').html(new ProductViewLayout({model: utils.productsQueryData()}).el);
 
         var product = new Product({_id: id});
         product.fetch({success: function() {
             $("#listcontent").html(new ProductView({model: product}).el);
+
+            //product.loadpacapitulos(function(chapters){
+            //    console.log('ready to render chapters:main chapters:[%s]',chapters.length);
+            //   $("#chapters").html(new ProductChaptersView({model: chapters}).render().el);
+            //});
+     
         }});
-        //this.headerView.selectMenuItem();
     },
 
     browseProducts: function(page) {
         console.log('browseProducts:main.js');
+        var p = page ? parseInt(page, 10) : 1;
+        var browseproducts = new ProductBrowseView({page:p, el:'#content',parenttag:'content'});
+        /*
+
         $('#content').html(new ProductListLayoutView({model: utils.productsQueryData()}).el);
 
         var p = page ? parseInt(page, 10) : 1,
@@ -156,6 +166,7 @@ var AppRouter = Backbone.Router.extend({
             }
         });
         //this.headerView.selectMenuItem('browse-menu');
+        */
     },
 
 
@@ -375,7 +386,7 @@ utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView', 'ProjectListLayoutVie
     'QuotationListLayoutView', 'QuotationView', 'QuotationResourceItemView', 'QuotationListItemView',
     'PrjHeaderView','ProjectViewLayout','ReqResDetailView','AssetListItemView',
     'AssetAccordionView','AssetVersionListItemView','AssetView','AssetLayoutView',
-    'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView'], function() {
+    'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView','ProductViewLayout'], function() {
     app = new AppRouter();
     utils.approuter = app;
     Backbone.history.start();

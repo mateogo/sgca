@@ -1,5 +1,5 @@
  /*!
-  * SGIC - 2013
+  * SGCA - 2013
  */
 var express = require('express');
 var path = require('path');

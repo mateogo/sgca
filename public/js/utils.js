@@ -18,7 +18,7 @@ window.utils = {
                     window[view].prototype.template = _.template(data);
                 }));
             } else {
-                alert('tpl/' + view + '.html' + " not found!!");
+                alert('tpl/' + view + '.html' + " not FOUND!!");
             }
         });
         //$.when: Provides a way to execute callback functions based on one or more objects, 
@@ -78,6 +78,18 @@ window.utils = {
         return this.queryProductData;
     },
 
+    productsCol:{
+        get: function (){
+            if (!this.productsCollectionRef) {
+                this.productsCollectionRef = new ProductCollection();
+            }
+            return this.productsCollectionRef;
+        },
+        set: function(col){
+            this.productsCollectionRef = col;
+        }
+    },
+
     pacapitulosfacet: {
         init: function(product){
             var builder = {};
@@ -125,6 +137,7 @@ window.utils = {
         {val:'no_definido',  label:'tipo de producto'},
         {val:'paudiovisual', label:'producto audiovisual'},
         {val:'micro',        label:'micro'},
+        {val:'curaduria',    label:'curaduria'},
         {val:'promo',        label:'promo'},
         {val:'imagen',       label:'imagen'},
     ],
@@ -159,6 +172,7 @@ window.utils = {
         console.log('option [%s]',optionStr);
         return optionStr;
     },
+
     buildDatalistOptions: function(varname, data){
         var template = _.template("<option value='<%= val %>' label='<%= label %>' >");
         var optionStr = '';
@@ -166,6 +180,90 @@ window.utils = {
             optionStr += template(element);
         });
         return optionStr;
+    },
+
+
+    productListTableHeader:[
+        {tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',            label:'#'},
+        {tt:'th', flag:1, tclass:'col1', tmpl: 'template3', val:'productcode',       label:'código'},
+        {tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'tipoproducto',      label:'tipo'},
+        {tt:'th', flag:1, tclass:'col3', tmpl: 'template1', val:'slug',              label:'denominación'},
+        {tt:'th', flag:0, tclass:'col4', tmpl: 'template1', val:'project',           label:'proyecto'},
+        {tt:'th', flag:1, tclass:'col5', tmpl: 'template1', val:'nivel_ejecucion',   label:'ejecución'},
+        {tt:'th', flag:1, tclass:'col6', tmpl: 'template1', val:'nivel_importancia', label:'importancia'},
+        {tt:'th', flag:1, tclass:'col7', tmpl: 'template4', val:'acciones',          label:'acciones'}
+    ],
+
+    buildTableHeader: function(data){
+        var template = _.template("<<%= tt %> name='<%= val %>' class='<%= tclass %>' ><%= label %></<%= tt %> >");
+        var tabledata = '';
+        _.each(data,function(element, index, list){
+            if(element.flag){
+                tabledata += template(element);
+            }
+        });
+        console.log('<thead><tr>'+tabledata+'</tr></thead>');
+        return '<thead><tr>'+tabledata+'</tr></thead>';
+    },
+
+    buildTableRowTemplates:{
+        template1 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><%= value %></td>"),
+        template2 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><input name=tselect type=checkbox class=tselect ></td>"),
+        template3 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink' title='editar item'><%= value %></button></td>"),
+        template4 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tedit' title='no implementado aun'><i class='icon-edit'></i></button><button class='btn-link tzoom' title='ver productos relacionados' ><i class='icon-zoom-in'></i></button></td>"),
+    },
+
+    buildTableRow: function(data,model){
+        var self = this;
+        var tabledata = '';
+        _.each(data,function(element, index, list){
+            if(element.flag){
+                element.value = (model.get(element.val)||'#');
+                tabledata += self.buildTableRowTemplates[element.tmpl](element);
+            }
+        });
+        console.log(tabledata);
+        return tabledata;
+    },
+
+    selectedProducts:{
+        list:[],
+        select: function  () {
+            this.sproduct = this.first() || this.sproduct;
+        },
+        unselect: function() {
+            this.sproduct = null;
+        },
+        getSelected: function() {
+            return this.sproduct;
+        },
+        getSelectedLabel: function() {
+            if(!this.getSelected()) return 'Sin selección';
+            else return this.getSelected().get('productcode');
+        },
+        add: function  (product) {
+            for (var i = this.list.length - 1; i >= 0; i--) {
+                if(this.list[i]===product) return this.list;
+            }
+            this.list.push(product);
+            return this.list;
+        },
+        getList: function() {
+            return this.list;
+        },
+        remove: function (product) {
+            for (var i = this.list.length - 1; i >= 0; i--) {
+                if(this.list[i]===product) this.list.splice(i,1);
+            }
+            return this.list;
+        },
+        reset: function() {
+            this.list = [];
+        },
+        first: function  () {
+            if(this.list.length) return this.list[0];
+            else return null;
+        }
     },
 
     pacontenidos: ['artecultura','cienciaTecnologia','cienciasSociales','deporte','educacionTrabajo','historia','infancia','juventud','sociedad','ficcion'],
@@ -233,7 +331,7 @@ window.utils = {
             fillOpacity:{no_definido:.1,planificado:.4,rfi:.6,tdr:.8,compras:.9,adjudicado:.9,a_entregar:1,entregado:1,cumplido:1}
         },
         product: {
-            tprText: {no_definido:' ', paudiovisual:'PA', micro:'Micro', promo:'Promo', imagen:'Img'},
+            tprText: {no_definido:' ', paudiovisual:'PA', micro:'Micro', promo:'Promo', imagen:'Img', curaduria:'Cur'},
             eventFillColor: {no_definido:'lime',bajo:'green',medio:'blue',alto:'magenta',critico:'red'},
             fillOpacity:{no_definido:.1,planificado:.3,gestion:.6,recibido:.8,ingestado:.9,controlado:.9,aprobado:1,observado:1,archivado:1}
         },

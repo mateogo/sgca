@@ -28,6 +28,7 @@ window.ProjectView = Backbone.View.extend({
         "drop #picture"     : "dropHandler"
     },
 
+
     change: function (event) {
         /**
          *  event:

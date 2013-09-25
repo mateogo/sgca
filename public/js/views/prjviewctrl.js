@@ -192,22 +192,6 @@ window.ReqResListView = Backbone.View.extend({
     },
 });
 
-window.ProductListView = Backbone.View.extend({
-
-    initialize: function () {
-        this.listenTo(this.model, "change", this.render);
-        this.model.bind("change", this.render, this);
-        this.model.bind("destroy", this.close, this);
-    },
-
-    render: function () {
-
-        //alert(JSON.stringify(this.model.toJSON()));
-        $(this.el).html(this.template(this.model.toJSON()));
-        return this;
-    },
-});
-
 window.AssetAccordionView = Backbone.View.extend({
 
     events: {
