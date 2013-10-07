@@ -1,17 +1,18 @@
 window.ProductView = Backbone.View.extend({
-    /**
-     *  Constructor en main.js:
-     *        new ProductView({{model: product})
-     *
-     */
+
     whoami:'ProductView:productdetails',
 
     initialize: function () {
-        //alert('ProductView: project:['+ this.project.denom+']');
+        this.relatedController = dao.productViewFactory({product:this.model, chselector:'#chapters1',anselector:'#ancestor1',notasselector:'#notas1',asselector:'#assets1', context:this.el});
+        this.renderall();
+    },
+
+    renderall: function(){
         this.render();
-        this.relatedController = utils.productViewFactory({product:this.model, chselector:'#chapters1',anselector:'#ancestor1', context:this.el});
         this.renderChilds();
         this.renderAncestors();
+        this.renderAssets();
+        this.renderNotas();
     },
 
     render: function () {
@@ -24,8 +25,18 @@ window.ProductView = Backbone.View.extend({
         return this;
     },
 
+    renderAssets: function () {
+        this.relatedController.asrender();
+        return this;
+    },
+
     renderAncestors: function () {
         this.relatedController.anrender();
+        return this;
+    },
+
+    renderNotas: function () {
+        this.relatedController.notasrender();
         return this;
     },
     /**
@@ -35,21 +46,243 @@ window.ProductView = Backbone.View.extend({
     */
 
     events: {
-        "change"            : "change",
-        "click .testview"   : "testview",
-        "click .parealiz"   : "formparealization",
-        "click .paclasif"   : "formpaclasification",
-        "click .pafacet"    : "formpatechfacet",
-        "click .capitulos"  : "formpacapitulos",
+        "change .core"       : "change",
+        "click .testview"    : "testview",
+        "click .paclasif"    : "formpaclasification",
+        "click .padatospro"  : "formpatechfacet",
+        "click .capitulos"   : "formpacapitulos",
+        "click .painstancia" : "formaddinstance",
+        "click .branding"    : "formbranding",
+        "click .parealiz"    : "formparealization",
+        "click .notas"       : "formnotas",
+        "click .intechfacet" : "formintechfacet",
         "click .save"       : "beforeSave",
         "click .delete"     : "deleteNode",
         "click .clonar"     : "clone",
+        "click .eventos"    : "eventos",
         "click .browse"     : "browse",
         "click .vista"      : "vista",
+
+        "click .uploadcontent"  : "instanceUploadFiles",
+        "click .discardcontent" : "discardcontent",
+        "click .addnewinstance" : "addnewinstance",
+        "click .cancelinstance" : "cancelinstance",
+
+        "click .uploadbrnd"  : "brandingUploadFiles",
+        "click .discardbrnd" : "discardbrnd",
+        "click .addnewbrnd"  : "addnewbrnd",
+        "click .cancelbrnd"  : "cancelinstance",
+
+        "dragover #filesdrop" : "dragoverHandler",
+        "dragover #brnddrop"  : "dragoverHandler",
+        "drop #filesdrop"     : "instanceDropHandler",
+        "drop #brnddrop"      : "brandingDropHandler",
+
+    },
+
+    formbranding: function () {
+        var self = this,
+            facet = dao.brandingfacet.init(this.model),
+            form = new Backbone.Form({
+                model: facet,
+            }).render();
+
+        console.log('[%s] form-branding BEGINS',self.whoami);
+        dao.brandingfacet.setForm(form);
+        
+        form.on('change', function(form) {
+            var errors = form.commit();
+            console.log('form change!!:key editor');
+        });
+
+        form.on('blur', function(form) {
+            var errors = form.commit();
+            console.log('form blur!!:key editor');
+        });
+        $('.brandinghook').html(form.el); 
+    },
+
+    formaddinstance: function () {
+        var self = this,
+            facet = dao.addinstancefacet.init(this.model),
+            form = new Backbone.Form({
+                model: facet,
+            }).render();
+
+        console.log('[%s] formaddinstance BEGINS',self.whoami);
+        
+        facet.on('change:slug', function(facet, slug) {
+            console.log('change slug [%s][%s]',slug, dao.addinstancefacet.getContent().slug);
+            form.setValue({slug:slug});
+        });
+
+        form.on('change', function(form, editor) {
+            var errors = form.commit();
+        });
+
+        $('.painstanciahook').html(form.el); 
+    },
+
+    cancelinstance: function () {
+        console.log('[%s] cancelinstance BEGINS',this.whoami);      
+    },
+
+    discardcontent: function () {
+        this.discard('.instancedropped')
+        return false;
+    },
+    discardbrnd: function () {
+        this.discard('.brnddropped')
+        return false;
+    },
+    discard: function (target) {
+        this.loadedfiles += 1;
+        this.showFilesDropped(target);
+    },
+
+    addnewinstance: function () {
+        var productmodel = this.model;
+        console.log('[%s] addnewinstance BEGINS',this.whoami);
+        productmodel.insertInstance(dao.addinstancefacet.getContent(),dao.addinstancefacet.getAsset(),function(){
+            //self.beforeSave();
+            console.log('formcapitulos:productdetails, ready to RELOAD CHAPTERS [%s]','productos/' + productmodel.id);
+            //self.renderChilds();
+            //utils.approuter.navigate('productos/' + productmodel.id, {trigger: true, replace: false});
+        });
+        return false;
+    },
+
+    addnewbrnd: function () {
+        var productmodel = this.model;
+        console.log('[%s] add branding BEGINS',this.whoami);
+
+        productmodel.insertBranding(dao.brandingfacet.getContent(),dao.brandingfacet.getAsset());
+        this.beforeSave();
+        return false;
     },
 
     testview: function(){
         console.log('ProductView:productdetails: CLICK');
+    },
+
+    dragoverHandler: function (event) {
+        var e = event.originalEvent;
+        e.stopPropagation();
+        e.preventDefault();
+        //console.log('[%s] dragoverHandler BEGINS',this.whoami);
+    },
+
+    brandingDropHandler: function (event) {
+        var self = this;
+        console.log('[%s] BRANDING dropHandler BEGINS',this.whoami);
+        var progressbar = '#brndprogressbar';
+        this.dropHandler(event, progressbar);
+        var target = '.brnddropped';
+        this.showFilesDropped(target);
+        return false;
+    },
+
+    instanceDropHandler: function (event) {
+        var self = this;
+        console.log('[%s] INSTANCE dropHandler BEGINS',this.whoami);
+        var progressbar = '#instanceprogressbar';
+        this.dropHandler(event, progressbar);
+        var target = '.instancedropped';
+        this.showFilesDropped(target);
+        return false;
+    },
+
+    showFilesDropped: function(target){
+        var self = this;
+        var showFiles = _.template('<div><strong><%=name%></strong>: [<%=index%>]  [<%=type%>]  /  [<%=size%>]</div>');
+       $(target).html('');
+        _.each(this.uploadingfiles,function(element,index){
+            if(index >= self.loadedfiles){
+                console.log('show files [%s] [%s] [%s]',index,self.loadedfiles,index == self.loadedfiles);
+                $(target).append(showFiles({index:index,name:element.name, type:element.type, size:element.size }));
+            }
+        });
+    },
+    
+    dropHandler: function (event, progressbar) {
+        console.log('[%s] dropHandler BEGINS',this.whoami);
+        var e = event.originalEvent;
+        e.stopPropagation();
+        e.preventDefault();
+ 
+        e.dataTransfer.dropEffect = 'copy';
+        this.uploadingfiles = e.dataTransfer.files;
+        this.loadedfiles = 0;
+
+        $(progressbar).css({'width':'0%;'});
+        console.log('[%s] dropHandler upload BEGINS files:[%s] array:[%s]',this.whoami, this.uploadingfiles.length,_.isObject(this.uploadingfiles));
+        return false;
+    },
+
+    brandingUploadFiles: function (event) {
+        var self = this;
+        var progressbar = '#brndprogressbar';
+        var loaded= '#brndloaded';
+        var dropped= '.brnddropped';
+
+        console.log('[%s] BRANDING uploadFiles BEGINS folder:',self.whoami);
+ 
+        if(!self.uploadingfiles) return false;
+        if(self.uploadingfiles.length <= self.loadedfiles) return false;
+ 
+        dao.uploadFile(self.uploadingfiles[self.loadedfiles],progressbar,function(srvresponse, asset){
+            var filelink = 'Archivo subido: <a href="'+srvresponse.urlpath+'" >'+srvresponse.name+'</a>'
+            $(loaded).html(filelink);
+            $(progressbar).css({'width':'100%;'});
+
+            console.log('uploaded SUCCESS: [%S]',filelink);
+
+            self.loadedfiles += 1;
+            self.uploadedfile = srvresponse;
+            dao.brandingfacet.setAsset(asset);
+
+            self.showFilesDropped(dropped);
+            asset.linkChildsToAncestor(asset, self.model,'es_asset_de',function(){
+                console.log('ASSET linked to ancestor');
+            });
+            //
+            utils.showAlert('Success', 'Asset uploaded!', 'alert-success');
+            console.log('update form: [%s]',srvresponse.name);    
+        });
+
+        return false;
+    },
+
+    instanceUploadFiles: function (event) {
+        var self = this;
+        var progressbar = '#instanceprogressbar';
+        var loaded= '#instanceuploaded';
+        var dropped= '.instancedropped';
+
+        console.log('[%s] BRANDING uploadFiles BEGINS folder:',self.whoami);
+ 
+        if(!self.uploadingfiles) return false;
+        if(self.uploadingfiles.length <= self.loadedfiles) return false;
+ 
+        dao.uploadFile(self.uploadingfiles[self.loadedfiles], progressbar, function(srvresponse, asset){
+            var filelink = 'Archivo subido: <a href="'+srvresponse.urlpath+'" >'+srvresponse.name+'</a>'
+            $(loaded).html(filelink);
+            $(progressbar).css({'width':'100%;'});
+
+            console.log('uploaded SUCCESS: [%S]',filelink);
+
+            self.loadedfiles += 1;
+            self.uploadedfile = srvresponse;
+            dao.addinstancefacet.setContent({slug:srvresponse.name});
+            dao.addinstancefacet.setAsset(asset);
+
+            self.showFilesDropped(dropped);
+
+            utils.showAlert('Success', 'Asset uploaded!', 'alert-success');
+            console.log('update form: [%s]',srvresponse.name);    
+        });
+
+        return false;
     },
 
 
@@ -107,8 +340,8 @@ window.ProductView = Backbone.View.extend({
         this.model.save(null, {
             success: function (model) {
                 //console.log('saveNode:productdetails success');
-                self.render();
                 app.navigate('productos/' + model.id, false);
+                self.renderall();
                 utils.showAlert('Exito!', 'El nodo se actualizó correctamente', 'alert-success');
             },
             error: function () {
@@ -144,31 +377,39 @@ window.ProductView = Backbone.View.extend({
     vista: function () {
         //window.open('/producto.html#req/'+this.model.id);
         //utils.approuter.navigate(, true);
+        return false;
+    },
 
-        this.renderAncestors();
+    eventos: function () {
+        utils.approuter.navigate('navegar/proyectos', true);
         return false;
     },
 
     browse: function () {
-        //utils.productsQueryData().setProject(this.model.get('project')._id,this.model.get('denom'));
         utils.approuter.navigate('navegar/productos', true);
         return false;
     },
 
-  formpacapitulos: function () {
+    formpacapitulos: function () {
         var self = this,
             productmodel = this.model,
-            facet = utils.pacapitulosfacet.init(productmodel),
+            facet = dao.pacapitulosfacet.init(productmodel),
             form = new Backbone.Form({
                 model: facet,
             });
         /*
         form.on('contenido:change', function(form, contenidoEditor) {
             var contenido = contenidoEditor.getValue(),
-                newOptions = utils.pasubcontenido[contenido];
+                newOptions = dao.pasubcontenido[contenido];
             form.fields.subcontenido.editor.setOptions(newOptions);
         });
         */
+        form.on('change', function(form, contenidoEditor) {
+            var errors = form.commit();
+            dao.pacapitulosfacet.getContent();
+        });
+            
+
         var modal = new Backbone.BootstrapModal({
             content: form,
             title: 'PA: Alta rápida de capítulos',
@@ -179,7 +420,7 @@ window.ProductView = Backbone.View.extend({
 
         modal.open(function(){
             var errors = form.commit();
-            productmodel.insertCapitulos(utils.pacapitulosfacet.getContent(),function(){
+            productmodel.insertCapitulos(dao.pacapitulosfacet.getContent(),function(){
                 self.beforeSave();
                 console.log('formcapitulos:productdetails, ready to RELOAD CHAPTERS [%s]','productos/' + productmodel.id);
                 self.renderChilds();
@@ -188,93 +429,123 @@ window.ProductView = Backbone.View.extend({
         });
     }, 
 
-  formpaclasification: function () {
+    formnotas: function () {
         var self = this,
-            facet = utils.paclasificationfacet.init(this.model),
+            productmodel = this.model,
+            facet = dao.notasfacet.init(productmodel),
             form = new Backbone.Form({
                 model: facet,
             });
 
-        form.on('contenido:change', function(form, contenidoEditor) {
-            var contenido = contenidoEditor.getValue(),
-                newOptions = utils.pasubcontenido[contenido];
-            form.fields.subcontenido.editor.setOptions(newOptions);
-        });
-
         var modal = new Backbone.BootstrapModal({
-            currentmodel: this.model,
             content: form,
-            title: 'PA: Clasificación',
-            okText: 'aceptar',
+            title: 'Alta rápida de notas',
+            okText: 'guardar',
             cancelText: 'cancelar',
             animate: false
         });
 
         modal.open(function(){
             var errors = form.commit();
-            this.options.currentmodel.set({'clasification':utils.paclasificationfacet.getContent()});
-            self.beforeSave();
+            productmodel.insertNota(dao.notasfacet.getContent(),function(notas){
+                console.log('Formnotas:productdetails, CALLBACK OK [%s]', notas.length);
+                self.beforeSave();
+            });
         });
     }, 
 
-  formparealization: function () {
+    formpaclasification: function () {
+        var self = this,
+            facet = dao.paclasificationfacet.init(this.model),
+            form = new Backbone.Form({
+                model: facet,
+            }).render();
+
+        form.on('contenido:change', function(form, contenidoEditor) {
+            console.log('onchange:key');
+            var contenido = contenidoEditor.getValue(),
+                newOptions = dao.pasubcontenido[contenido];
+            form.fields.subcontenido.editor.setOptions(newOptions);
+        });
+
+        form.on('subcontenido:change', function(form, contenidoEditor) {
+            var scontenido = contenidoEditor.getValue();
+            console.log('onchange:SUB CONTENIDO key [%s]',scontenido);
+        });
+
+        form.on('change', function(form, contenidoEditor) {
+            var errors = form.commit();
+            console.log('onchange:key errors:[%s]',errors);
+            
+            self.model.set({'clasification':dao.paclasificationfacet.getContent()});
+        });
+        $('.paclasifhook').html(form.el);
+    }, 
+
+    formparealization: function () {
         var self = this;
-        var facet = utils.parealizfacet.init(this.model);
+        var facet = dao.parealizfacet.init(this.model);
         var form = new Backbone.Form({
             model: facet,
             });
 
-        var modal = new Backbone.BootstrapModal({
-            currentmodel: this.model,
-            content: form,
-            title: 'PA: Realizadores',
-            okText: 'aceptar',
-            cancelText: 'cancelar',
-            animate: false
-        });
-        modal.open(function(){
+        form.on('change', function(form, editor) {
             var errors = form.commit();
-            this.options.currentmodel.set({'realization':utils.parealizfacet.getContent()});
-            self.beforeSave();
+            console.log('onchange: errors:[%s]',errors);
+            self.model.set({'realization':dao.parealizfacet.getContent()});
+            var instance = dao.parealizfacet.getContent();
+            console.log('form: [%s] [%s] [%s]',instance.test, instance.productores, instance.musicos);
+
         });
+        $('.parealizhook').html(form.render().el);
+    }, 
+
+    formintechfacet: function () {
+        var self = this;
+        var facet = dao.intechfacet.init(this.model);
+        var form = new Backbone.Form({
+            model: facet,
+            });
+
+        form.on('change', function(form, editor) {
+            var errors = form.commit();
+            console.log('onchange: errors:[%s]',errors);
+            self.model.set({'painstancefacet':dao.intechfacet.getContent()});
+        });
+        $('.intechfacethook').html(form.render().el);
+    }, 
+
+    formparealization: function () {
+        var self = this;
+        var facet = dao.parealizfacet.init(this.model);
+        var form = new Backbone.Form({
+            model: facet,
+            });
+
+        form.on('change', function(form, editor) {
+            var errors = form.commit();
+            console.log('onchange: errors:[%s]',errors);
+            self.model.set({'realization':dao.parealizfacet.getContent()});
+            var instance = dao.parealizfacet.getContent();
+            console.log('form: [%s] [%s] [%s]',instance.test, instance.productores, instance.musicos);
+
+        });
+        $('.parealizhook').html(form.render().el);
     }, 
 
     formpatechfacet: function () {
         //console.log('shownodalpatechfacet:roductdetails begin');
-        var self = this;
-        var facet = utils.patechfacet.init(this.model);
-        var form = new Backbone.Form({
-            model: facet,
-            //fields:['durnominal','fecreacion','cantcapitulos','productora']
-            // fieldsets:[{legend:'Datos',fields:['durnominal','fecreacion']}]
+        var self = this,
+            facet = dao.patechfacet.init(this.model),
+            form = new Backbone.Form({
+                model: facet
+            });
 
-        });
-
-        var modal = new Backbone.BootstrapModal({
-            currentmodel: this.model,
-            content: form,
-            title: 'PA: Ficha Técnica',
-            okText: 'aceptar',
-            cancelText: 'cancelar',
-            animate: true
-        });
-        modal.open(function(){
+        form.on('change', function(form, editor) {
             var errors = form.commit();
-            this.options.currentmodel.set({'patechfacet':utils.patechfacet.getContent()});
-            self.beforeSave();
+            self.model.set({'patechfacet':dao.patechfacet.getContent()});
         });
-        //modal.on('ok', function() {
-            //Do some validation etc.
-            //console.log('shownodalpatechfacet: OK EVENT');
-            //if (!isValid) modal.preventClose();
-        //});
-
-
-        //if(this.model.get('patechfacet')
-        //$('#patechcallback').html(new ProductPaTechFacetView({model: utils.patechfacet.init(this.model)}).el);
-        //utils.editor.render('nicpanel','quotetext',this.model.get('quote'));
-        //return false;
-        //durnominal fecreacion cantcapitulos productora
+        $('.padatosprohook').html(form.render().el);
     }, 
 
     openpatechfacet: function () {
@@ -282,7 +553,7 @@ window.ProductView = Backbone.View.extend({
         var self = this;
 
 
-        var view = new ProductPaTechFacetView( {model: utils.patechfacet.init(this.model)} );
+        var view = new ProductPaTechFacetView( {model: dao.patechfacet.init(this.model)} );
         var modal = new Backbone.BootstrapModal({
             currentmodel: this.model,
             content: view,
@@ -292,7 +563,7 @@ window.ProductView = Backbone.View.extend({
             animate: true
         });
         modal.open(function(){
-            this.options.currentmodel.set({'patechfacet':utils.patechfacet.getContent()});
+            this.options.currentmodel.set({'patechfacet':dao.patechfacet.getContent()});
             self.beforeSave();
 
         });
@@ -304,7 +575,7 @@ window.ProductView = Backbone.View.extend({
 
 
         //if(this.model.get('patechfacet')
-        //$('#patechcallback').html(new ProductPaTechFacetView({model: utils.patechfacet.init(this.model)}).el);
+        //$('#patechcallback').html(new ProductPaTechFacetView({model: dao.patechfacet.init(this.model)}).el);
         //utils.editor.render('nicpanel','quotetext',this.model.get('quote'));
         //return false;
         //durnominal fecreacion cantcapitulos productora

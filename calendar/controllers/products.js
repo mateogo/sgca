@@ -20,13 +20,14 @@ var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
     'ERROR: No se pudo borrar el nodo en la base de datos'
 ];
-
-var series = ['pa101','pr101','pm101','im101','xx101'];
+//ATENCION: para agregar un serial, agregar entrada en tpr_adapter y en series;
+var series = ['pa101','pr101','pm101','im101','xx101','cu101','do101','au101','vi101'];
 
 var seriales = {};
 
+//ATENCION: para agregar un serial, agregar entrada en tpr_adapter y en series;
 var tpr_adapter = {
-    paudiovisual:{ 
+    paudiovisual:{
         serie: 'pa101',
         base: 100000,
         prefix: 'A'
@@ -41,18 +42,31 @@ var tpr_adapter = {
         base: 200000,
         prefix: 'M'
         },
-    imagen:{
-        serie: 'im101',
-        base: 100000,
-        prefix:'img'
-    },
-
     curaduria:{
         serie: 'cu101',
         base: 100000,
         prefix:'K'
     },
-
+    documento:{
+        serie: 'do101',
+        base: 100000,
+        prefix:'D'
+    },
+    audio:{
+        serie: 'au101',
+        base: 100000,
+        prefix:'U'
+    },
+    video:{
+        serie: 'vi101',
+        base: 100000,
+        prefix:'V'
+    },
+    imagen:{
+        serie: 'im101',
+        base: 100000,
+        prefix:'I'
+    },
     poromision: {
         serie: 'xx101',
         base: 100000,
@@ -76,7 +90,7 @@ var initSerial = function(serie){
     var serial ={
         _id: null,
         serie: serie,
-        nextnum: 411,
+        nextnum: 1,
         feUltMod: new Date()
     };
     return serial;

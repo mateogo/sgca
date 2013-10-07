@@ -41,6 +41,17 @@ exports.findById = function(req, res) {
     });
 };
 
+exports.renderImg = function(req, res) {
+    var id = req.params.id;
+    console.log('assets:renderById  Retrieving %s id:[%s]', assetsCol,id);
+    dbi.collection(assetsCol, function(err, collection) {
+        collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
+            console.log('assets:renderById  Retrieving urlpath:[%s]', item.urlpath);
+            res.redirect(item.urlpath);
+        });
+    });
+};
+
 exports.find = function(req, res) {
     console.log('assets: find:');
     var query = req.body; //{};
@@ -68,7 +79,7 @@ exports.add = function(req, res) {
     var asset = req.body;
     var query = {};
     query.name  = asset.name;
-    query.related = asset.related;
+    query['es_asset_de'] = asset['es_asset_de'];
 
     //paso-add-1.01: verifico si ya existe un asset con la misma URI
     dbi.collection(assetsCol, function(err, collection) {

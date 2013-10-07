@@ -17,12 +17,12 @@ window.ProjectView = Backbone.View.extend({
     },
 
     events: {
-        "change"           : "change",
-        "click .save"      : "beforeSave",
-        "click .delete"       : "deleteProject",
-        "click .addresources" : "addResources",
+        "change"                 : "change",
+        "click .save"            : "beforeSave",
+        "click .delete"          : "deleteProject",
+        "click .addresources"    : "addResources",
         "click .browseresources" : "browseResources",
-        "click .addquotation" : "addQuotation",
+        "click .addquotation"    : "addQuotation",
         "click .browsequotations" : "browseQuotations",
         "dragover"  : "dragoverHandler",
         "drop #picture"     : "dropHandler"
@@ -109,7 +109,7 @@ window.ProjectView = Backbone.View.extend({
 
         //var resource = new Resource({project:{_id : this.model.id},denom:'jajajaja'} );
         //$('#content').html(new ResourceView({model: resource}).el);
-        utils.resourcesQueryData().setProject(this.model.id,this.model.get('denom'));
+        dao.resourcesQueryData().setProject(this.model.id,this.model.get('denom'));
         utils.approuter.navigate('recursos/add', true);
  
         //var resource = new Resource({project:{_id : this.model.id} } );
@@ -123,7 +123,7 @@ window.ProjectView = Backbone.View.extend({
         //var resource = new Resource({project:{_id : this.model.id},denom:'jajajaja'} );
         //$('#content').html(new ResourceView({model: resource}).el);
  
-        utils.resourcesQueryData().setProject(this.model.id,this.model.get('denom'));
+        dao.resourcesQueryData().setProject(this.model.id,this.model.get('denom'));
         //console.log("ready to navigate");
         utils.approuter.navigate('navegar/recursos', true);
         //console.log("navigate!");
@@ -131,13 +131,13 @@ window.ProjectView = Backbone.View.extend({
     },
 
     addQuotation: function () {
-        utils.quotationsQueryData().setProject(this.model.id,this.model.get('denom'));
+        dao.quotationsQueryData().setProject(this.model.id,this.model.get('denom'));
         utils.approuter.navigate('requisitorias/add', true);
         return false;
     },
 
     browseQuotations: function () {
-        utils.quotationsQueryData().setProject(this.model.id,this.model.get('denom'));
+        dao.quotationsQueryData().setProject(this.model.id,this.model.get('denom'));
         utils.approuter.navigate('navegar/requisitorias', true);
         return false;
     },
@@ -165,11 +165,17 @@ $(function(){
     },
 
     dropHandler: function (event) {
-        var prjmodel = this.model;
-        var e = event.originalEvent;
+        var prjmodel = this.model,
+            e = event.originalEvent,
+            asset = new Asset(),
+            formData = new FormData(),
+            folder = asset.assetFolder();
+        
         e.stopPropagation();
         e.preventDefault();
         e.dataTransfer.dropEffect = 'copy';
+
+        this.uploadingfiles = e.dataTransfer.files;
 
         $('#uplprogressbar').css({'width':'0%;'});
         console.log('dropHandler:projectdetails');
@@ -183,11 +189,6 @@ $(function(){
         //};
         //reader.readAsDataURL(this.pictureFile);
 
-        this.uploadingfiles = e.dataTransfer.files;
-
-        var folder = prjmodel.assetFolder();
-
-        var formData = new FormData();
 
         formData.append('loadfiles', this.uploadingfiles[0]);
         formData.append('folder',folder);
@@ -202,7 +203,8 @@ $(function(){
             console.log('xhr.onload:projectdetails: '+filelink);
             $('#uplprogressbar').css({'width':'100%;'});
             $('#uploaded').html(filelink);
-            prjmodel.updateAsset(srvresponse, function(what){
+
+            asset.updateAsset(srvresponse, prjmodel, function(what){
                 utils.showAlert('Success', what, 'alert-error');
                 //$('#uplprogressbar').css({'width':'0%;'});
                 //$('#uplprogressbar').html('');

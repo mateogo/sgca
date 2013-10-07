@@ -19,7 +19,7 @@ window.ProductBrowseModel = Backbone.Model.extend({
         parenttag:'#content',
         contenttag:'#listcontent',
         page:1,
-        pquery: utils.productsQueryData(),
+        pquery: dao.productsQueryData(),
         numcapprefix: 100,
         tipoproducto:'paudiovisual',
         durnominal:'',
@@ -27,14 +27,15 @@ window.ProductBrowseModel = Backbone.Model.extend({
     }
 });
 
-
-
-
 window.ProductBrowseView = Backbone.View.extend({
     whoami:'ProductBrowseView:productlayout.js',
 
     initialize:function () {
         this.loadSettings();
+        this.renderAll();
+    },
+
+    renderAll:function () {
         this.renderlayout();
         this.rendercontent();
     },
@@ -47,7 +48,7 @@ window.ProductBrowseView = Backbone.View.extend({
     },
 
     renderlayout:function () {
-        this.$el.html(new ProductListLayoutView({model: utils.productsQueryData()}).el);
+        this.$el.html(new ProductListLayoutView({model: dao.productsQueryData()}).el);
         return this;
     },
     rendercontent:function () {
@@ -73,7 +74,31 @@ window.ProductBrowseView = Backbone.View.extend({
         "change .nav-list" : "change",
         "click  .selreset" : "resetselection",
         "click  .prjview"  : "prjview",
+        "click  .managetable"   : "managetable",
     },
+
+    managetable: function  () {
+        var self = this,
+            facet = dao.managetable.init(),
+            form = new Backbone.Form({
+                model: facet,
+            });
+
+        var modal = new Backbone.BootstrapModal({
+            content: form,
+            title: 'Gestión de Tabla',
+            okText: 'aceptar',
+            cancelText: 'cancelar',
+            animate: false
+        });
+
+        modal.open(function(){
+            var errors = form.commit();
+            dao.managetable.setActualColumns();
+            self.renderAll();
+        });
+    },
+
 });
 
 window.ProductListLayoutView = Backbone.View.extend({
@@ -85,9 +110,7 @@ window.ProductListLayoutView = Backbone.View.extend({
     },
 
     render:function () {
-        console.log('[%s] render BEGIN',this.whoami);
         $(this.el).html(this.template(this.model.toJSON()));
-        console.log('[%s] render ENDS',this.whoami);
         return this;
     },
 
@@ -99,8 +122,9 @@ window.ProductListLayoutView = Backbone.View.extend({
         "click  .dselproject"   : "resetselection",
         "click  .addchapters"   : "linkchapters",
         "click  .addassociated" : "linkcassociated",
+        "click  .managetableNOT"   : "managetable",
     },
-    
+
     linkchilds: function (predicate) {
         console.log('[%s] linkchilds:BEGIN predicate:[%s]',this.whoami, predicate);
         var self = this,
@@ -110,7 +134,6 @@ window.ProductListLayoutView = Backbone.View.extend({
         if(ancestor){
             if(childs.length>0){
                 ancestor.linkChildsToAncestor(childs,predicate, function(){
-                    console.log('[%s] linkassociated:CALLBACK SUCCESS ',this.whoami);
                 });
             }
         }else{
@@ -133,24 +156,22 @@ window.ProductListLayoutView = Backbone.View.extend({
     selectProductFromList: function(event){
         console.log('[%s] CLICK [%S]   ',this.whoami,event.target.name);
         utils.selectedProducts.select();
-        console.log('[%s] CLICK [%S]   ',this.whoami,utils.selectedProducts.getSelectedLabel());
         $('.prselected').html(utils.selectedProducts.getSelectedLabel());
     },
 
     deselectProductFromList: function(event){
         console.log('[%s] CLICK [%S]   ',this.whoami,event.target.name);
         utils.selectedProducts.unselect();
-        console.log('[%s] CLICK [%S]   ',this.whoami,utils.selectedProducts.getSelectedLabel());
         $('.prselected').html('deseleccionado');
     },
     prjview: function(){
-        utils.approuter.navigate('ver/proyecto/'+utils.productsQueryData().getProjectId(), true);
+        utils.approuter.navigate('ver/proyecto/'+dao.productsQueryData().getProjectId(), true);
         return false;
     },
 
     resetselection: function (event) {
         //utils.buildDatalistOptions('nivel_ejecucion',utils.paexecutionOptionList,'planificado');
-        utils.productsQueryData().setProject('','proyecto no seleccionado');
+        dao.productsQueryData().setProject('','proyecto no seleccionado');
         utils.approuter.browseProducts();
     },
 
@@ -189,7 +210,6 @@ window.ProductListView = Backbone.View.extend({
         var html  = '<table class="table table-bordered">';
             html +=  utils.buildTableHeader(utils.productListTableHeader);
             html += "<tbody class='tableitems'></tbody></table>";
-        console.log(html);
 
         $(this.el).html(html);
 
@@ -273,12 +293,12 @@ window.ProductRowItemView = Backbone.View.extend({
         var self=this;
         console.log('[%s] CLICK vercapitulos [%S]',self.whoami,self.model.get('productcode'));
         if (self.areChaptersVisible){
-            console.log('[%s] vercapitulos remove [%S]',self.whoami,self.viewchapters.whoami);
+            //console.log('[%s] vercapitulos remove [%S]',self.whoami,self.viewchapters.whoami);
             self.viewchapters.removechilds();
         }else {
-            var chctrl = utils.productViewFactory( {product:self.model, chselector:'#chapters1',anselector:'#ancestor1', context:this.el});
+            var chctrl = dao.productViewFactory( {product:self.model, chselector:'#chapters1',anselector:'#ancestor1', context:this.el});
             chctrl.fetchChapters(function(chapters){
-                console.log('[%s] evercapituls callback [%S]   ',self.whoami,chapters.length);
+                //console.log('[%s] evercapituls callback [%S]   ',self.whoami,chapters.length);
                 self.viewchapters = new ChaptersApendView({model: chapters, el:self.el});
                 //self.$el.append(self.viewchapters.render().el )
                 //$(self.el).after(self.viewchapters.render().el );

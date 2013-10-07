@@ -1,13 +1,9 @@
-<a href="#activos/<%=_id %>" class="row-fluid" >
-
-<div>
-    <div>Nombre: <%= name %></div>
+<div class='row-fluid span12' >
+    <div><h4><%= slug %></h4></div>
+    <div><a href="#activos/<%=_id %>" ><%= name %></a></div>
     
-    <div>Slug: <%= slug %></div>
-    
-    <div>denominacion: <% denom %></div>
+    <div>deonminación: <%= denom %></div>
         
-    <div>Proyecto relacionado: <% related.project._id %></div>
+    <div><a href="#ver/proyecto/<%= related.project %>" >Proyecto</a></div>
 </div>
 
-</a>

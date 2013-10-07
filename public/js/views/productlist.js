@@ -22,68 +22,12 @@ window.ProductViewLayout = Backbone.View.extend({
     },
 
     prjview: function(){
-        utils.approuter.navigate('ver/proyecto/'+utils.productsQueryData().getProjectId(), true);
+        utils.approuter.navigate('ver/proyecto/'+dao.productsQueryData().getProjectId(), true);
         return false;
     },
 
 });
 
-utils.productViewFactory = function(spec) {
-    //spec.product
-    //spec.chapters
-    //spec.context
-    //spec.chselector
-    //spec.anselector
-    //spec.anview
-    //spec.chview
-    //spec.chrender
-    //spec.anrender
-    console.log('product factory called:[%s]',spec.product.get('productcode'));
-    var loadChapters = function(cb){
-        console.log('loadchapters:begin [%s]', spec.product.get('productcode'));
-        spec.product.loadpacapitulos(cb);
-    };
-    var chaptersRender = function(chapters){
-        console.log('renderview:callback: [%S]',spec.chselector);
-        if(chapters) spec.chapters = chapters;
-        //if(!spec.chview) spec.chview = new ProductChaptersView({model:spec.chapters});
-        spec.chview = new ProductChaptersView({model:spec.chapters});
-        $(spec.chselector, spec.context).html(spec.chview.render().el);
-    };
-    var ancestorRender = function(){
-        if(spec.product.isChild()){
-            if(!spec.anview) spec.anview = new AncestorView({model:spec.product});
-            console.log('ancestorRender:begins [%S]', spec.anselector)
-            $(spec.anselector,spec.context).html(spec.anview.render().el);
-        };
-    };
-
-    var viewController = {
-        fetchChapters: function(cb){
-            loadChapters(cb);
-        },
-        chrender: function() {
-            console.log('chview.render');
-            loadChapters(chaptersRender);
-        },
-        anrender: function() {
-            console.log('ancestor.render');
-            ancestorRender();
-        },
-        setModel: function(pr,cb){
-            spec.product = pr;
-            loadChapters(cb);
-        },
-        refresh:function(){
-            if(!spec.chapters) {
-                loadchapters(chaptersRender);
-            }else{
-                chaptersRender();
-            }
-        },
-    }
-    return viewController;
-};
 
 window.ProductChaptersView = Backbone.View.extend({
 
@@ -135,7 +79,7 @@ window.ProductChaptersView = Backbone.View.extend({
         //$(this.el).html('<ul class="nav nav-list"></ul>');
 
         _.each(products,function(element){
-            console.log('each: element: [%s]',element.get('productcode'));
+            //console.log('each: element: [%s]',element.get('productcode'));
             $(that.el).append(new ChapterInlineView({model: element}).render().el);
         });
         return this;
@@ -146,7 +90,7 @@ window.ChapterInlineView = Backbone.View.extend({
 
     tagName: "li",
     
-    template: _.template("<button class='btn-block btn-link chapteritem'>[<%= es_capitulo_de.capnum %>]: <%= productcode %></button>"),
+    template: _.template("<button class='btn-block btn-link chapteritem' title='<%= slug %>'><%= productcode %></button>"),
 
     events: {
         "click  .chapteritem" : "chapteritem",
@@ -169,7 +113,7 @@ window.ChapterInlineView = Backbone.View.extend({
     },
 
     render: function () {
-        console.log('each2: element: [%s]',this.model.get('productcode'));
+        //console.log('each2: element: [%s]',this.model.get('productcode'));
  
         $(this.el).html(this.template(this.model.toJSON()));
         return this;
@@ -185,7 +129,118 @@ window.ChapterInlineView = Backbone.View.extend({
     },
 });
 
+window.NotasView = Backbone.View.extend({
+    whoami: 'NotasView:productlist.js',
+
+    initialize: function () {
+        console.log('[%s] initialize',this.whoami);
+        //this.listenTo(this.model, "change", this.changeevent,this);
+        //this.model.bind("change", this.changeevent, this);
+        //this.model.bind("destroy", this.destroyevent, this);
+    },
+
+    events: {
+    },
+    
+    tagName:'ul',    
+    className:'nav nav-list',
+
+    changeevent: function(){
+        console.log('[%s] CHANGE',this.whoami);
+        this.render();
+    },
+    destroyevent: function () {
+        console.log('[%s] DESTROY',this.whoami);
+        this.close();
+    },
+    notaitem:function(){
+        console.log('[%s] NOTAITEM',this.whoami);
+    },
+
+    render: function () {
+        console.log('[%s] RENDER',this.whoami);
+        var that = this;
+        var itemlist = this.model;
+        var len = itemlist.length;
+
+        _.each(itemlist,function(element){
+            //console.log('each: element: [%s]',element.get('productcode'));
+            $(that.el).append(new NotaInlineView({model: element}).render().el);
+        });
+        return this;
+    }
+});
+
+window.NotaInlineView = Backbone.View.extend({
+    whoami: 'NotaInLineView:productlist.js',
+
+    tagName: "li",    
+template: _.template("<a href='#articulos/<%= id %>' class='notaitem' title='<%= tiponota %>: <%= description %>'><%= fecha %>: <%= slug %></a>"),
+
+    events: {
+        "click  .chapteritem" : "chapteritem",
+        "click  .testview" : "testview",
+    },
+
+    notaitem:function(){
+        console.log('[%s] NOTAITEM',this.whoami);
+        utils.approuter.navigate('productos/'+this.model.id, true);
+    },
+
+    initialize: function () {
+        this.model.bind("change", this.changeevent, this);
+        this.model.bind("destroy", this.destroyevent, this);
+    },
+
+    render: function () {
+        console.log('[%s] RENDER',this.whoami);
+        $(this.el).html(this.template(this.model.toJSON()));
+        return this;
+    },
+    changeevent: function(){
+        console.log('[%s] changeevent',this.whoami);
+        this.render();
+
+    },
+    destroyevent: function () {
+        console.log('[%s] destroyevent',this.whoami);
+        this.close();
+    },
+});
+
+
+
 window.AncestorView = Backbone.View.extend({
+
+    initialize: function () {
+    },
+
+    events: {
+    },
+    
+    tagName:'ul',
+    
+    className:'nav nav-list',
+
+    render: function () {
+        console.log('AncestorView: render BEGIN');
+        var that = this;
+        var products = this.model;
+        var len = products.length;
+        //$(this.el).html('<ul class="nav nav-list"></ul>');
+
+        _.each(products,function(element){
+            console.log('each: ELEMENT: [%s]',element.get('slug'));
+            $(that.el).append(new AncestorInLineView({model: element}).render().el);
+        });
+        return this;
+    }
+});
+
+
+
+
+window.AncestorInLineView = Backbone.View.extend({
 
     tagName: "li",
     
@@ -197,7 +252,7 @@ window.AncestorView = Backbone.View.extend({
 
     ancestorpa:function(){
         console.log('ancestorView: CLICK');
-        utils.approuter.navigate('productos/'+this.model.get('es_capitulo_de').product, true);
+        utils.approuter.navigate('productos/'+this.model.id, true);
     },
 
     initialize: function () {

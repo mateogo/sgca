@@ -23,8 +23,9 @@ window.AssetView = Backbone.View.extend({
             //inicializar el desde / hasta del for
             // ejecutar el for para cada elemento del array, mandando a este como 'model'
             //console.log("valor de longitud del for: "+len);
-            for (var i = len-1; i >=0 ; i--)
-            {
+            for (var i = len-1; i >=0 ; i--) {
+                //var version = vers[i];
+
                 $('#versionslist',this.el).append(new AssetVersionListItemView({model: vers[i]}).render().el);
                 //console.log("dentro del ciclo:"+vers[i].name);
             }

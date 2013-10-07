@@ -7,8 +7,11 @@ window.ResourceView = Backbone.View.extend({
     whoami:'ResourceView',
 
     initialize: function () {
+        console.log('[%s] BEGINS 1',this.whoami);
         this.render();
+        console.log('[%s] BEGINS 2',this.whoami);
         this.assetlist();
+        console.log('[%s] BEGINS 3',this.whoami);
     },
 
     render: function () {
@@ -129,20 +132,21 @@ window.ResourceView = Backbone.View.extend({
     },
 
     dropHandler: function (event) {
-        var resmodel = this.model;
-        var e = event.originalEvent;
+        var self = this,
+            resmodel = this.model,
+            e = event.originalEvent
+            asset = new Asset(),
+            formData = new FormData(),
+            folder = asset.assetFolder();
+        
         e.stopPropagation();
         e.preventDefault();
         e.dataTransfer.dropEffect = 'copy';
 
-        $('#uplprogressbar').css({'width':'0%;'});
-        console.log('dropHandler:resourcedetails');
-
         this.uploadingfiles = e.dataTransfer.files;
 
-        var folder = resmodel.assetFolder();
-
-        var formData = new FormData();
+        $('#uplprogressbar').css({'width':'0%;'});
+        console.log('dropHandler:resourcedetails');
 
         formData.append('loadfiles', this.uploadingfiles[0]);
         formData.append('folder',folder);
@@ -159,9 +163,11 @@ window.ResourceView = Backbone.View.extend({
             $('#uplprogressbar').css({'width':'100%;'});
             $('#uploaded').html(filelink);
 
-            resmodel.updateAsset(srvresponse, function(what){
-                utils.showAlert('Success', what, 'alert-error');
+            asset.updateAsset(srvresponse, resmodel, function(what){
+                utils.showAlert('Success', what, 'alert-success');
+                self.assetlist();
             });
+
         };
         xhr.upload.onprogress = function(event) {
             console.log('xhr.onprogres:resourcedetails: !!! ');
@@ -174,21 +180,15 @@ window.ResourceView = Backbone.View.extend({
     },
 
     assetlist: function(){
-        var query = {'related.resource': this.model.id },
-            assetList = new AssetCollection();
-
-        assetList.fetch({
-            data: query,
-            type: 'post',
-            success: function(assetList) {
-                if(assetList.length>0){
-                    //$('#assets').append('<h5>archivos</h5>');
-                    assetList.each(function(asset){
-                        console.log('assetviewsuccess: [%s]',asset.get('slug'));
-                        var assetListItemView = new AssetAccordionView({model:asset,tagName:'div', className:'span8'});
-                        $('#assets').append(assetAccordionView.render().el);
-                    });
-                }
+        var resource = this.model;
+        resource.loadassets(function(assetList){
+            if(assetList.length>0){
+                $('#assets').html('');
+                assetList.each(function(asset){
+                    console.log('assetviewsuccess: [%s]',asset.get('slug'));
+                    var assetAccordionView = new AssetAccordionView({model:asset});
+                    $('#assets').append(assetAccordionView.render().el);
+                });
             }
         });
     }

@@ -19,8 +19,9 @@ window.AssetListView = Backbone.View.extend({
         var startPos = (this.options.page - 1) * 12;
         var endPos = Math.min(startPos + 12, len);
 
-        $(this.el).html('<ul class="thumbnails"></ul>');
-/*      for (var i = startPos; i < endPos; i++) {
+        //$(this.el).html('<div class="row-fluid"><div class="span9"><div>Hello!</div><ul class="thumbnails span8"></ul></div></div>');
+
+        /*      for (var i = startPos; i < endPos; i++) {
             $('.thumbnails', this.el).append(new ResourceListItemView({model: resources[i]}).render().el);
         }
 
@@ -33,7 +34,8 @@ window.AssetListView = Backbone.View.extend({
         }*/
 
         for (var i = 0; i < len; i++){
-            $('.thumbnails', this.el).append(new AssetListItemView({model: assets[i]}).render().el);
+            //$('.thumbnails', this.el).append(new AssetListItemView({model: assets[i]}).render().el);
+            $(this.el).append(new AssetListItemView({model: assets[i]}).render().el);
         }
 
         $(this.el).append(new Paginator({model: this.model, paginatorPath: this.paginatorPath, page: this.options.page}).render().el);
@@ -43,8 +45,6 @@ window.AssetListView = Backbone.View.extend({
 });
 
 window.AssetListItemView = Backbone.View.extend({
-
-    tagName: "li",
     
     initialize: function () {
         this.model.bind("change", this.render, this);

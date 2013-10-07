@@ -18,12 +18,12 @@ window.ResourceListLayoutView = Backbone.View.extend({
     },
 
     prjview: function (event){
-        utils.approuter.navigate('ver/proyecto/'+utils.resourcesQueryData().getProjectId(), true);
+        utils.approuter.navigate('ver/proyecto/'+dao.resourcesQueryData().getProjectId(), true);
         return false;
     },
 
     resetselection: function (event) {
-        utils.resourcesQueryData().setProject('','proyecto no seleccionado');
+        dao.resourcesQueryData().setProject('','proyecto no seleccionado');
         utils.approuter.browseResources();
     },
 

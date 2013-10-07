@@ -1,9 +1,11 @@
-window.Product = Backbone.Model.extend({
+window.Article = Backbone.Model.extend({
     // ******************* PROJECT ***************
-    whoami: 'Product:models.js ',
-    urlRoot: "/productos",
+    whoami: 'Article:models.js ',
+    urlRoot: "/articulos",
 
     idAttribute: "_id",
+
+    enabled_predicates:['es_capitulo_de','es_coleccion_de','es_instancia_de'],
 
     initialize: function () {
         this.validators = {};
@@ -34,43 +36,181 @@ window.Product = Backbone.Model.extend({
         return _.size(messages) > 0 ? {isValid: false, messages: messages} : {isValid: true};
     },
 
-    loadpacapitulos: function(cb){
+    schema: {
+        tiponota:     {type: 'Select',options: utils.notasOptionList },
+        fecha:        {type: 'Text', title: 'Fecha', editorAttrs:{placeholder : 'fecha relevante'}},
+        slug:         {type: 'Text', title: 'Asunto', editorAttrs:{placeholder : 'asunto'}},
+        description:  {type: 'TextArea', title: 'Descripción'},
+        url:          {type: 'Text', title: 'URL referencia', editorAttrs:{placeholder : 'fuente de dato- referencia'}},
+        responsable:  {type: 'Text', title: 'autor/responsable', editorAttrs:{placeholder : 'referente de la nota'}},
+        descriptores: {type: 'Text', title: 'descriptores', editorAttrs:{placeholder : 'separados por ;'}},
+    },
+
+    insertBranding: function(data, asset){
+        var self = this,
+            entries = self.get('branding');
+
+        console.log('insert branding:models.js begins [%s]',self.get('slug'));
+        if(!entries) entries = [];
+
+        data.tc = new Date().getTime();
+        data.assetId = asset.id;
+        data.assetName = asset.get('name');
+        entries.push(data);
+        self.set({branding: entries});
+    },
+
+    loadnotas:function (cb) {
         var self = this;
-        var escoleccionde = 'es_coleccion_de.'+self.get('productcode')+'.productcode';
-        console.log('loadpacapitulos:models.js begins es_capitulo_de: [%s] [%s]',self.get('slug'),self.id);
-        var query = {$or: [{'es_capitulo_de.product':self.id}, {escoleccionde:self.get('productcode')}]};
+        var list = self.get('notas');
+        console.log('mdel:loadnotas [%s]',list.length);
+        var notas = _.map(list, function(elem){
+            return new Article(elem);
+        });
+        cb(notas);
+    },
+    
+    insertNota: function(article, cb){
+        console.log('[%s] insertNota BEGINS',this.whoami);
+        var self = this,
+            predicate = 'es_nota_de',
+            notas = self.get('notas'),
+            data={},
+            deferreds = [],
+            defer;
 
-        var chapCol= new ProductCollection();
-        console.log('loadpacapitulos:models.js query  [%s] ',query['es_capitulo_de.product']);
+        article.set({feum:new Date().getTime()});
+        article.set({denom:article.get('slug')});
 
-        chapCol.fetch({
+        article = self.buildPredicateData(self, article, 1, 100, predicate);
+        console.log('[%s] insertNota BEGINS',this.whoami);
+        article.buildTagList();
+
+        defer = article.save(null, {
+            success: function (article) {
+                console.log('insert article:SUCCESS: [%s] ',article.get('slug'));
+            },
+            error: function () {
+                console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',article.get('slug'));
+            }
+        });
+        deferreds.push(defer);
+
+        $.when.apply(null, deferreds).done(function(){
+            console.log('UPDATE PRODUCTO TO INSERT NOTE:models.js begins [%s]',article.id);
+
+            if(!notas) notas = [];
+            data.id = article.id
+            data.slug = article.get('slug');
+            data.fecha = article.get('fecha');
+            data.tiponota = article.get('tiponota');
+            data.responsable = article.get('responsable');
+            data.url = article.get('url');
+
+            notas.push(data);
+            self.set({notas: notas});
+            cb(notas);
+        });
+    },
+
+
+    loadpaancestors:function (cb) {
+        var self = this;
+        var list=[],
+            rawlist=[];
+
+        _.each(self.enabled_predicates, function(elem){
+            if(self.get(elem)){
+                list = _.map(self.get(elem),function(item){
+                    return new Article({_id:item.id, slug:item.slug,articlecode:item.code,predicate:item.predicate});
+                });
+                rawlist = _.union(rawlist,list);
+            }
+        });
+        console.log('[%s]: loadpaancestors ends found:[%s]',self.whoami,rawlist.length);
+        if(cb) cb(rawlist);
+        return rawlist;
+    },
+
+
+    loadassets: function(cb){
+        var self = this;
+        console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('articlecode'));
+        var query = {'es_asset_de.id':self.id};
+        var assetCol= new AssetCollection();
+        assetCol.fetch({
             data: query,
             type: 'post',
             success: function() {
-                utils.productsCol.set(chapCol);
-                if(cb) cb(utils.productsCol.get());
+                if(cb) cb(assetCol);
             }
         });
     },
 
     isChild: function(){
         var self = this;
-        if(self.get('es_capitulo_de')){
-            if(self.get('es_capitulo_de').product){
-                console.log('isChild: TRUE');
-                return true;
+        for (var i = self.enabled_predicates.length - 1; i >= 0; i--) {
+            if(self.get(self.enabled_predicates[i])){
+                if(self.get(self.enabled_predicates[i]).length>0){
+                    //console.log('isChild: TRUE');
+                    return true;
+                }
             }
-        }
-        console.log('isChild: FALSE');
+       };
+        //console.log('isChild: FALSE');
         return false;
     },
 
-    buildCapNumber: function(iter, prefix){
-        var numcap = iter;
-        if(prefix){
-            numcap += prefix*100;
+    fetchFilteredPredicateArray: function(predicate, child, ancestor){
+        var tlist = child.get(predicate);
+        if(!tlist) {
+            tlist = [];
+        }else{
+            tlist = _.filter(tlist,function(element){
+                return element && (element.id!==ancestor.id);
+            });
         }
-        return numcap;
+        return tlist;
+    },
+
+    buildPredicateData: function (ancestor, child, seq, numprefix, predicate) {
+        var ancestordata = {
+                id: ancestor.id,
+                code: ancestor.get('articlecode'),
+                slug: ancestor.get('slug'),
+                order: 100,
+                predicate: predicate
+            };
+        var tlist = child.fetchFilteredPredicateArray(predicate, child,ancestor);
+        tlist.push(ancestordata);
+        
+        if(predicate === 'es_capitulo_de')  child.set({es_capitulo_de : tlist});
+        if(predicate === 'es_coleccion_de') child.set({es_coleccion_de: tlist});
+        if(predicate === 'es_instancia_de') child.set({es_instancia_de: tlist});
+        if(predicate === 'es_asset_de')     child.set({es_asset_de: tlist});
+        if(predicate === 'es_nota_de')      child.set({es_nota_de: tlist});
+
+        return child;
+    },
+
+    fetchBrandingEntries: function (query){
+        console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
+
+        var filtered = _.filter(this.get('branding'),function(elem){
+
+            console.log('filtered: [%s]', elem.assetName);
+            var filter = _.reduce(query, function(memo, value, key){
+                console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
+                if(value != elem[key]) return memo && false;
+                return memo  && true;
+            },true);
+            return filter;
+        });
+        var brandingCollection = new Backbone.Collection(filtered,{
+            model: BrandingFacet
+        });
+        console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
+        return brandingCollection;
     },
 
     linkChildsToAncestor: function (childs, predicate, cb) {
@@ -78,32 +218,17 @@ window.Product = Backbone.Model.extend({
             deferreds = [], 
             defer;
 
-
-        console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('productcode'));
-
+        console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('articlecode'));
         for (var i = childs.length - 1; i >= 0; i--) {
             var child = childs[i];
-            var parentref = {
-                product: ancestor.id,
-                productcode: ancestor.get('productcode'),
-                slug: ancestor.get('slug'),
-                capnum: ancestor.buildCapNumber(i+1,1)
-            };
-            if(predicate === 'es_capitulo_de') child.set({es_capitulo_de: parentref});
-            if(predicate === 'es_coleccion_de'){
-                var escol = child.get('es_coleccion_de');
-                if(!escol) escol = {};
-                escol[ancestor.get('productcode')] = parentref;
-                child.set({es_coleccion_de: escol});
-                console.log('linkChilds:ready es_coleccion: [%s] [%s]',i,child.get('es_coleccion_de'));
-           }
 
-            console.log('linkChilds:ready to insert: [%s] [%s]',i,child.get('slug'));
-
+            child = child.buildPredicateData(ancestor,child, i+1,100, predicate);
+            ///
+            //console.log('linkChilds: ready to insert [%s] / [%s]: [%s] [%s]',i,predicate,child.get(predicate),child.get('slug'));
             defer = child.save(null, {
                 success: function (model) {
-                    //console.log('saveNode:productdetails success');
-                    console.log('insertCapitulos:SUCCESS: [%s] [%s] ',i,child.get('slug'));
+                    //console.log('saveNode:articledetails success');
+                    console.log('insert ChildsToAncestor: SUCCESS: [%s] [%s] ',i,child.get('slug'));
                 },
                 error: function () {
                     console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',i,child.get('slug'));
@@ -112,21 +237,289 @@ window.Product = Backbone.Model.extend({
             deferreds.push(defer);
         }
 
+        $.when.apply(null, deferreds).done(function(){
+            //console.log('deferres done FIRED');
+            cb();
+            //utils.approuter.navigate('navegar/articulos', {trigger: true, replace: false});
+        });
+    },
+
+
+    getTagList: function(){
+        //project:{_id : this.model.id} }
+        return this.get('taglist');
+    },
+
+    buildTagList: function(){
+        var descriptores = this.get('descriptores');
+        if(descriptores){
+            var list = _.filter(_.map(descriptores.split(';'),function(str){return $.trim(str)}),function(str){return str});
+            //list = _.map(list,function(str){return {tag: str}; });
+            this.set({ taglist : list });
+        }else{
+            this.set({ taglist : [] });
+        }
+    },
+
+    assetFolder: function(){
+        var today  = new Date();
+        var day    = today.getDate()<10 ? '0'+today.getDate() : today.getDate();
+        var month = today.getMonth()+1;
+        month  = month<10 ? '0'+month : month;
+        var folder = _.template('/assets/<%= y %>/<%= m %>/<%= d %>');
+
+        return folder({y:today.getFullYear() ,m:month, d:day});
+    },
+    createAsset: function(data, cb) {
+        var self = this;
+        self.asset = new Asset();
+        self.asset.saveAssetData(data, cb);
+    },
+
+    defaults: {
+        _id: null,
+        slug: "",
+        denom: "",
+        fecha:'',
+
+        tiponota:'nota',
+        responsable:'',
+        descriptores:'',
+        description: "",
+        url:'',
+
+        nivel_importancia: "medio",
+        estado_alta: "activo",
+        nivel_ejecucion: "preparado",
+
+        taglist:[],
+        branding:[],
+        notas:[],
+    }
+
+});
+
+
+window.ArticleCollection = Backbone.Collection.extend({
+    // ******************* PROJECT COLLECTION ***************
+
+    model: Article,
+
+    url: "/navegar/articlos"
+
+});
+
+window.Product = Backbone.Model.extend({
+    // ******************* PROJECT ***************
+    whoami: 'Product:models.js ',
+    urlRoot: "/productos",
+
+    idAttribute: "_id",
+
+    enabled_predicates:['es_capitulo_de','es_coleccion_de','es_instancia_de'],
+
+    initialize: function () {
+        this.validators = {};
+
+        this.validators.slug = function (value) {
+            return value.length > 0 ? {isValid: true} : {isValid: false, message: "Indique una descripción"};
+        };
+    },
+
+    validateItem: function (key) {
+        return (this.validators[key]) ? this.validators[key](this.get(key)) : {isValid: true};
+    },
+
+    // TODO: Implement Backbone's standard validate() method instead.
+    validateAll: function () {
+
+        var messages = {};
+
+        for (var key in this.validators) {
+            if(this.validators.hasOwnProperty(key)) {
+                var check = this.validators[key](this.get(key));
+                if (check.isValid === false) {
+                    messages[key] = check.message;
+                }
+            }
+        }
+
+        return _.size(messages) > 0 ? {isValid: false, messages: messages} : {isValid: true};
+    },
+
+    loadnotas:function (cb) {
+        var self = this;
+        var list = self.get('notas');
+        console.log('mdel:loadnotas [%s]',list.length);
+        var notas = _.map(list, function(elem){
+            return new Article(elem);
+        });
+        cb(notas);
+    },
+    
+    loadpaancestors:function (cb) {
+        var self = this;
+        var list=[],
+            rawlist=[];
+
+        _.each(self.enabled_predicates, function(elem){
+            if(self.get(elem)){
+                list = _.map(self.get(elem),function(item){
+                    return new Product({_id:item.id, slug:item.slug,productcode:item.code,predicate:item.predicate});
+                });
+                rawlist = _.union(rawlist,list);
+            }
+        });
+        console.log('[%s]: loadpaancestors ends found:[%s]',self.whoami,rawlist.length);
+        if(cb) cb(rawlist);
+        return rawlist;
+    },
+
+    loadpacapitulos: function(cb){
+        var self = this;
+        console.log('loadpacapitulos:models.js begins es_capitulo_de: [%s]',self.get('productcode'));
+        var query = {$or: [{'es_capitulo_de.id':self.id},{'es_instancia_de.id':self.id}, {'es_coleccion_de.id':self.id}]};
+
+        var chapCol= new ProductCollection();
+        //console.log('loadpacapitulos:models.js query  [%s] ',query['es_capitulo_de.id']);
+
+        chapCol.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                dao.productsCol.set(chapCol);
+                if(cb) cb(dao.productsCol.get());
+            }
+        });
+    },
+
+    loadassets: function(cb){
+        var self = this;
+        console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('productcode'));
+        var query = {'es_asset_de.id':self.id};
+        var assetCol= new AssetCollection();
+        assetCol.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                if(cb) cb(assetCol);
+            }
+        });
+    },
+
+    isChild: function(){
+        var self = this;
+        for (var i = self.enabled_predicates.length - 1; i >= 0; i--) {
+            if(self.get(self.enabled_predicates[i])){
+                if(self.get(self.enabled_predicates[i]).length>0){
+                    //console.log('isChild: TRUE');
+                    return true;
+                }
+            }
+       };
+        //console.log('isChild: FALSE');
+        return false;
+    },
+
+    buildCapNumber: function(iter, prefix){
+        var numcap = iter;
+        if(prefix){
+            numcap += prefix;
+        }
+        return numcap;
+    },
+
+    fetchFilteredPredicateArray: function(predicate, child, ancestor){
+        var tlist = child.get(predicate);
+        if(!tlist) {
+            tlist = [];
+        }else{
+            tlist = _.filter(tlist,function(element){
+                return element && (element.id!==ancestor.id);
+            });
+        }
+        return tlist;
+    },
+
+    buildPredicateData: function (ancestor, child, seq, numprefix, predicate) {
+        var ancestordata = {
+                id: ancestor.id,
+                code: ancestor.get('productcode'),
+                slug: ancestor.get('slug'),
+                order: ancestor.buildCapNumber(seq,(numprefix||100)),
+                predicate: predicate
+            };
+        var tlist = child.fetchFilteredPredicateArray(predicate, child,ancestor);
+        tlist.push(ancestordata);
+        
+        if(predicate === 'es_capitulo_de')  child.set({es_capitulo_de : tlist});
+        if(predicate === 'es_coleccion_de') child.set({es_coleccion_de: tlist});
+        if(predicate === 'es_instancia_de') child.set({es_instancia_de: tlist});
+        if(predicate === 'es_asset_de')     child.set({es_asset_de: tlist});
+        if(predicate === 'es_nota_de')      child.set({es_nota_de: tlist});
+
+        return child;
+    },
+
+    fetchBrandingEntries: function (query){
+        console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
+
+        var filtered = _.filter(this.get('branding'),function(elem){
+
+            console.log('filtered: [%s]', elem.assetName);
+            var filter = _.reduce(query, function(memo, value, key){
+                console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
+                if(value != elem[key]) return memo && false;
+                return memo  && true;
+            },true);
+            return filter;
+        });
+        var brandingCollection = new Backbone.Collection(filtered,{
+            model: BrandingFacet
+        });
+        console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
+        return brandingCollection;
+    },
+
+    linkChildsToAncestor: function (childs, predicate, cb) {
+        var ancestor = this,
+            deferreds = [], 
+            defer;
+
+        console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('productcode'));
+        for (var i = childs.length - 1; i >= 0; i--) {
+            var child = childs[i];
+
+            child = child.buildPredicateData(ancestor,child, i+1,100, predicate);
+            ///
+            //console.log('linkChilds: ready to insert [%s] / [%s]: [%s] [%s]',i,predicate,child.get(predicate),child.get('slug'));
+            defer = child.save(null, {
+                success: function (model) {
+                    //console.log('saveNode:productdetails success');
+                    console.log('insert ChildsToAncestor: SUCCESS: [%s] [%s] ',i,child.get('slug'));
+                },
+                error: function () {
+                    console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',i,child.get('slug'));
+                }
+            });
+            deferreds.push(defer);
+        }
 
         $.when.apply(null, deferreds).done(function(){
-            console.log('deferres done FIRED');
+            //console.log('deferres done FIRED');
             cb();
             //utils.approuter.navigate('navegar/productos', {trigger: true, replace: false});
         });
     },
 
-    insertCapitulos: function(data,cb){
-        console.log('insertCapitulos:models.js begins capdesde: [%s]',data.numcapdesde);
-        var self = this;
-        var builder = {};
-        var slug_template = _.template('Cap: <%= numcap %> - '+self.get('slug'));
-        var denom_template = _.template('Cap: <%= numcap %> - '+self.get('denom'));
-        var deferreds = [],defer;
+    insertInstance: function(data, asset, cb){
+        console.log('[%s] insertInstance BEGINS',this.whoami);
+        var self = this,
+            builder = {},
+            predicate = 'es_instancia_de',
+            //name_template = _.template('Cap: <%= numcap %> - <%= name %> '),
+            deferreds = [],
+            defer;
 
         builder._id = null;
         builder.tipoproducto = data.tipoproducto || self.tipoproducto;
@@ -134,29 +527,129 @@ window.Product = Backbone.Model.extend({
         builder.nivel_importancia = self.get('nivel_importancia');
         builder.nivel_ejecucion = self.get('nivel_ejecucion');
         builder.estado_alta = self.get('estado_alta');
-        builder.patechfacet = self.get('patechfacet');
+        builder.slug = data.slug;
+        builder.denom = data.denom;
 
-        if(builder.patechfacet){
-            builder.patechfacet.cantcapitulos = 0;
-            builder.patechfacet.durnominal = data.durnominal;
+
+        var instancefacet = {};
+        instancefacet.rolinstancia = data.rolinstancia;
+        if(asset){
+            instancefacet.size = asset.get('size');
+            instancefacet.tipofile = asset.get('type');
         }
+        builder.painstancefacet = instancefacet;
+        /////////
+        var instance = new Product(builder);
+        instance.buildTagList();
+
+        instance = self.buildPredicateData(self, instance, 1, 100, predicate);
+
+        //console.log('insertInstance:ready to insert: [%s] ',instance.get('slug'));
+        defer = instance.save(null, {
+            success: function (instance) {
+                //console.log('saveNode:productdetails success');
+                console.log('insert Instance:SUCCESS: [%s] ',instance.get('slug'));
+            },
+            error: function () {
+                console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',instance.get('slug'));
+            }
+        });
+        deferreds.push(defer);
+
+        ////
+        $.when.apply(null, deferreds).done(function(){
+            if(asset){
+                asset.linkChildsToAncestor(asset, instance,'es_asset_de',cb);
+            }else{
+                //console.log('deferres done FIRED');
+                cb();
+            }
+            //utils.approuter.navigate('navegar/productos', {trigger: true, replace: false});
+        });
+    },
+
+    insertBranding: function(data, asset){
+        var self = this,
+            entries = self.get('branding');
+
+        console.log('insert branding:models.js begins [%s]',self.get('slug'));
+        if(!entries) entries = [];
+
+        data.tc = new Date().getTime();
+        data.assetId = asset.id;
+        data.assetName = asset.get('name');
+        entries.push(data);
+        self.set({branding: entries});
+    },
+
+   insertNota: function(article, cb){
+        console.log('[%s] insertNota BEGINS',this.whoami);
+        var self = this,
+            predicate = 'es_nota_de',
+            notas = self.get('notas'),
+            data={},
+            deferreds = [],
+            defer;
+
+        article.set({feum:new Date().getTime()});
+        article.set({denom:article.get('slug')});
+
+        article = self.buildPredicateData(self, article, 1, 100, predicate);
+        console.log('[%s] insertNota BEGINS',this.whoami);
+        article.buildTagList();
+
+        defer = article.save(null, {
+            success: function (article) {
+                console.log('insert article:SUCCESS: [%s] ',article.get('slug'));
+            },
+            error: function () {
+                console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',article.get('slug'));
+            }
+        });
+        deferreds.push(defer);
+
+        $.when.apply(null, deferreds).done(function(){
+            console.log('UPDATE PRODUCTO TO INSERT NOTE:models.js begins [%s]',article.id);
+
+            if(!notas) notas = [];
+            data.id = article.id
+            data.slug = article.get('slug');
+            data.fecha = article.get('fecha');
+            data.tiponota = article.get('tiponota');
+            data.responsable = article.get('responsable');
+            data.url = article.get('url');
+
+            notas.push(data);
+            self.set({notas: notas});
+            cb(notas);
+        });
+    },
+
+    insertCapitulos: function(data,cb){
+        console.log('insertCapitulos:models.js begins capdesde: [%s]',data.numcapdesde);
+        var self = this,
+            builder = {},
+            predicate = 'es_capitulo_de',
+            name_template = _.template('Cap: <%= numcap %> - <%= name %> '),
+            deferreds = [],defer;
+
+        builder._id = null;
+        builder.tipoproducto = data.tipoproducto || self.tipoproducto;
+        builder.descriptores = data.descriptores;
+        builder.nivel_importancia = self.get('nivel_importancia');
+        builder.nivel_ejecucion = self.get('nivel_ejecucion');
+        builder.estado_alta = self.get('estado_alta');
+
 
         for (var icap =data.numcapdesde; icap <= data.numcaphasta; icap +=1){
+ 
             var capitulo = new Product(builder);
-            var capnum = self.buildCapNumber(icap, data.numcapprefix);
             capitulo.buildTagList();
-            capitulo.set({slug:  slug_template({numcap:capnum})});
-            capitulo.set({denom: denom_template({numcap:capnum})});
-            var parentref = {
-                product: self.id,
-                productcode: self.get('productcode'),
-                slug: self.get('slug'),
-                capnum: capnum
-            };
-            capitulo.set({es_capitulo_de: parentref});
-            //
-            console.log('insertCapitulos:ready to insert: [%s] [%s]',icap,capitulo.get('slug'));
+            capitulo = self.buildPredicateData(self, capitulo, icap,data.numcapprefix,predicate);
+            capitulo.set({slug:  name_template({numcap: self.buildCapNumber(icap,(data.numcapprefix||100)), name:self.get('slug') })});
+            capitulo.set({denom: name_template({numcap: self.buildCapNumber(icap,(data.numcapprefix||100)), name:self.get('denom')})});
 
+            //console.log('insertCapitulos:ready to insert: [%s] [%s]',icap,capitulo.get('slug'));
             defer = capitulo.save(null, {
                 success: function (model) {
                     //console.log('saveNode:productdetails success');
@@ -167,10 +660,9 @@ window.Product = Backbone.Model.extend({
                 }
             });
             deferreds.push(defer);
-            console.log('ITERATION [%s]',icap);
         }
         $.when.apply(null, deferreds).done(function(){
-            console.log('deferres done FIRED');
+            //console.log('deferres done FIRED');
             cb();
             //utils.approuter.navigate('navegar/productos', {trigger: true, replace: false});
         });
@@ -192,6 +684,21 @@ window.Product = Backbone.Model.extend({
         }
     },
 
+    assetFolder: function(){
+        var today  = new Date();
+        var day    = today.getDate()<10 ? '0'+today.getDate() : today.getDate();
+        var month = today.getMonth()+1;
+        month  = month<10 ? '0'+month : month;
+        var folder = _.template('/assets/<%= y %>/<%= m %>/<%= d %>');
+
+        return folder({y:today.getFullYear() ,m:month, d:day});
+    },
+    createAsset: function(data, cb) {
+        var self = this;
+        self.asset = new Asset();
+        self.asset.saveAssetData(data, cb);
+    },
+
     defaults: {
         _id: null,
         project:{},
@@ -200,6 +707,8 @@ window.Product = Backbone.Model.extend({
  
         slug: "",
         denom: "",
+        notas:[],
+        branding:[],
 
         descriptores: "",
         taglist:[],
@@ -236,21 +745,9 @@ window.ProductCollection = Backbone.Collection.extend({
 window.BrowseProductsQuery = Backbone.Model.extend({
     // ******************* BROWSE PRODUCTS ***************
     retrieveData: function(){
-        var query = {};
-        var keys = _.keys(this.attributes);
-        for (var k=0;k<keys.length;k++){
-            var data = this.get(keys[k]);
-            if(! (data==null || data=="" || data == "0")){
-                if(keys[k]=='taglist'){
-                    //query[keys[k]] = {$elemMatch: {tag: data}};
-                    query[keys[k]] = data;
-                }else{
-                    query[keys[k]] = data;
-                }
-            }
-        }
-        return query;
+        return dao.extractData(this.attributes);
     },
+    
     getProject: function(){
         //project:{_id : this.model.id} }
         return this.get('project');
@@ -285,20 +782,84 @@ window.BrowseProductsQuery = Backbone.Model.extend({
     }
 });
 
-window.PaCapitulosFacet = Backbone.Model.extend({
+window.ManageTable = Backbone.Model.extend({
     // ******************* BROWSE PRODUCTS ***************
-    whoami:'pacapitulosfacet',
+    whoami:'managetable',
 
     retrieveData: function(){
+        return dao.extractData(this.attributes);
+    },
+
+    schema: {
+        columnById:  {  type: 'Checkboxes', options: null}
+    },
+
+    initialize: function () {
+        console.log('initialize');
+        var TableSchema =  Backbone.Model.extend({
+            toString: function() { return this.get('label'); }
+            });
+        var TableSchemaCollection = Backbone.Collection.extend({
+            model: TableSchema
+            });
+        var tschema = new TableSchemaCollection(utils.productListTableHeader);
+        console.log('lista especificacion: [%s][%s]', utils.productListTableHeader.length, tschema.get(1).toString());
+        this.schema.columnById.options = tschema;
+        //utils.inspect(tschema,0, this.whoami);
+    },
+
+    defaults: {
+    }
+});
+
+
+window.AddInstanceFacet = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    whoami:'addinstancefacet',
+
+    retrieveData: function(){
+        return dao.extractData(this.attributes);
+    },
+
+    /*
+    retrieveDatasss: function(){
         var qobj = {};
         var keys = _.keys(this.attributes);
         for (var k=0;k<keys.length;k++){
             var data = this.get(keys[k]);
             if(! (data==null || data=="" || data == "0")){
                 qobj[keys[k]] = data;
+                console.log('retrievedata[%s][%s]',keys[k],data);
             }
         }
         return qobj;
+    },
+    */
+
+    schema: {
+        tipoproducto: {type: 'Select', options: utils.tipoinstanciaOptionList },
+        rolinstancia: {type: 'Select', options: utils.rolinstanciasOptionList },
+        slug:         {type: 'Text', editorAttrs: {placeholder: 'nombre de archivo'}},
+        denom:        {type: 'Text', title: 'denominacion', editorAttrs: {placeholder: 'denominacion'}},
+        descriptores: {type: 'Text', title: 'descriptores', editorAttrs:{placeholder: 'descriptores'}},
+        url:          {type: 'Text', title: 'URI', editorAttrs:{placeholder: 'URL del objeto digital'}},
+   },
+
+    defaults: {
+        slug:'',
+        rolinstancia:'no_definido',
+        tipoproducto:'no_definido',
+        denom:'',
+        descriptores:'',
+    }
+});
+
+window.PaCapitulosFacet = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    whoami:'pacapitulosfacet',
+
+    retrieveData: function(){
+        return dao.extractData(this.attributes);
     },
 
     schema: {
@@ -320,30 +881,56 @@ window.PaCapitulosFacet = Backbone.Model.extend({
     }
 });
 
+window.NotasFacet = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    whoami:'notas',
+
+    retrieveData: function(){
+        return dao.extractData(this.attributes);
+    },
+
+    schema: {
+        tiponota:    {type: 'Select',options: utils.notasOptionList },
+        fecha:       {type: 'Text', title: 'Fecha', editorAttrs:{placeholder : 'fecha relevante'}},
+        slug:     {type: 'Text', title: 'Asunto', editorAttrs:{placeholder : 'asunto'}},
+        descr:    {type: 'TextArea', title: 'Descripción'},
+        url:      {type: 'Text', title: 'URL referencia', editorAttrs:{placeholder : 'fuente de dato- referencia'}},
+        responsable:    {type: 'Text', title: 'autor/responsable', editorAttrs:{placeholder : 'referente de la nota'}},
+        descriptores:    {type: 'Text', title: 'descriptores', editorAttrs:{placeholder : 'separados por ;'}},
+    },
+
+    defaults: {
+        tiponota:'nota',
+        fecha:'',
+        slug:'',
+        descr:'',
+        url:'',
+        responsable:'',
+        descriptores:'',
+    }
+});
 
 window.PaClasificationFacet = Backbone.Model.extend({
     // ******************* BROWSE PRODUCTS ***************
     whoami:'paclasificationfacet',
 
     retrieveData: function(){
-        var qobj = {};
-        var keys = _.keys(this.attributes);
-        for (var k=0;k<keys.length;k++){
-            var data = this.get(keys[k]);
-            if(! (data==null || data=="" || data == "0")){
-                qobj[keys[k]] = data;
-            }
+        return dao.extractData(this.attributes);
+    },
+
+    initialize: function () {
+        if(this.get('contenido')){
+            this.schema.subcontenido.options = dao.pasubcontenido[this.get('contenido')];
         }
-        return qobj;
     },
 
     schema: {
-        contenido:    {type: 'Select',options: utils.pacontenidos },
-        subcontenido: {type: 'Select',options: utils.pasubcontenido.arteCultura},
-        genero:       {type: 'Select',options: utils.pageneros},
-        formato:      {type: 'Select',options: utils.paformatos},
-        videoteca:    {type: 'Select',options: utils.videotecas},
-        etario:       {type: 'Select',options: utils.etarios},  
+        contenido:    {type: 'Select',options: dao.pacontenidos },
+        subcontenido: {type: 'Select',options: dao.pasubcontenido.artecultura},
+        genero:       {type: 'Select',options: dao.pageneros},
+        formato:      {type: 'Select',options: dao.paformatos},
+        videoteca:    {type: 'Select',options: dao.videotecas},
+        etario:       {type: 'Select',options: dao.etarios},  
    },
 
     defaults: {
@@ -361,15 +948,7 @@ window.PaRealizationFacet = Backbone.Model.extend({
     whoami:'parealizacionfacet',
 
     retrieveData: function(){
-        var qobj = {};
-        var keys = _.keys(this.attributes);
-        for (var k=0;k<keys.length;k++){
-            var data = this.get(keys[k]);
-            if(! (data==null || data=="" || data == "0")){
-                qobj[keys[k]] = data;
-            }
-        }
-        return qobj;
+        return dao.extractData(this.attributes);
     },
 
     schema: {
@@ -380,6 +959,7 @@ window.PaRealizationFacet = Backbone.Model.extend({
         camarografos: {type: 'TextArea',editorAttrs:{placeholder : 'camarografos'} },
         guionistas: {type: 'TextArea',editorAttrs:{placeholder : 'guionistas'} },
         musicos: {type: 'TextArea',editorAttrs:{placeholder : 'musicos'} },
+        test: {type: 'Text',editorAttrs:{placeholder : 'test'} },
     },
 
     defaults: {
@@ -390,23 +970,77 @@ window.PaRealizationFacet = Backbone.Model.extend({
         camarografos:'',
         guionistas:'',
         musicos:'',
+        test:'',
     }
 });
+window.BrandingFacet = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    whoami:'brandingfacet',
+
+    retrieveData: function(){
+        return dao.extractData(this.attributes);
+    },
+
+    schema: {
+        tipobranding: {type: 'Select',options: utils.tipoBrandingOptionList },
+        rolbranding:  {type: 'Select',options: utils.rolBrandingOptionList },
+        slug: {type: 'Text',title:'copete', editorAttrs:{placeholder : 'bajada de información'} },
+        description: {type: 'TextArea',title:'descripción' },
+        url: {type: 'Text',titlo:'destino para más información' },
+    },
+
+    defaults: {
+        tipobranding:'',
+        rolbranding:'',
+        slug:'',
+        description:'',
+    }
+});
+
+window.PaInstanceFacet = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    whoami:'painstancefacet',
+
+    retrieveData: function(){
+        return dao.extractData(this.attributes);
+    },
+
+    schema: {
+        rolinstancia:   {type: 'Select',options: utils.rolinstanciasOptionList },
+        size:           {type: 'Number', title: 'Tamaño archivo'},
+        tipofile:       {type: 'Text', title: 'Tipo / MimeType'},
+        framerate:      {type: 'Select',options: utils.framerateOptionList },
+        codec:          {type: 'Select',options: utils.codecOptionList },
+        formatoorig:    {type: 'Select',options: utils.formatooriginalOptionList },
+        aspectratio:    {type: 'Select',options: utils.aspectratioOptionList },
+        sopentrega:     {type: 'Select',options: utils.sopentregaOptionList },
+        resolucion:     {type: 'Select',options: utils.resolucionOptionList },
+        observacion:    {type: 'TextArea'},
+    },
+    
+
+    defaults: {
+        rolinstancia:'',
+        size:'',
+        tipofile:'',
+        tipovideo:'high_res',
+        framerate:'25p',
+        codec:'',
+        formatoorig:'',
+        aspectratio:'',
+        sopoentrega:'',
+        resolucion:'',
+        observacion:'',
+    }
+});
+
 
 window.PaTechFacet = Backbone.Model.extend({
     // ******************* BROWSE PRODUCTS ***************
     whoami:'patechfacet',
 
     retrieveData: function(){
-        var qobj = {};
-        var keys = _.keys(this.attributes);
-        for (var k=0;k<keys.length;k++){
-            var data = this.get(keys[k]);
-            if(! (data==null || data=="" || data == "0")){
-                qobj[keys[k]] = data;
-            }
-        }
-        return qobj;
+        return dao.extractData(this.attributes);
     },
 
     schema: {
@@ -659,7 +1293,6 @@ window.Project = Backbone.Model.extend({
                 cb('An error occurred while trying to delete this item');
            }
         });
-        console.log('asset created');
     },
 
     assetFolder: function(){
@@ -805,6 +1438,20 @@ window.Resource = Backbone.Model.extend({
         return _.size(messages) > 0 ? {isValid: false, messages: messages} : {isValid: true};
     },
 
+    loadassets: function(cb){
+        var self = this;
+        console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('slug'));
+        var query = {'es_asset_de.id':self.id};
+        var assetCol= new AssetCollection();
+        assetCol.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                if(cb) cb(assetCol);
+            }
+        });
+    },
+
     updateAsset: function(data, cb){
         // create new asset-entry
         var as = {};
@@ -827,7 +1474,6 @@ window.Resource = Backbone.Model.extend({
                 cb('An error occurred while trying to delete this item');
            }
         });
-        console.log('asset created');
     },
 
     assetFolder: function(){
@@ -874,6 +1520,7 @@ window.ResourceCollection = Backbone.Collection.extend({
 window.Asset = Backbone.Model.extend({
     // ******************* RESOURCE ***************
     urlRoot: "/activos",
+    whoami: 'Asset:models.js',
 
     idAttribute: "_id",
 
@@ -881,8 +1528,6 @@ window.Asset = Backbone.Model.extend({
 
    initialize: function () {
         this.validators = {};
-
-      
     },
 
     validateItem: function (key) {
@@ -891,9 +1536,7 @@ window.Asset = Backbone.Model.extend({
 
     // TODO: Implement Backbone's standard validate() method instead.
     validateAll: function () {
-
         var messages = {};
-
         for (var key in this.validators) {
             if(this.validators.hasOwnProperty(key)) {
                 var check = this.validators[key](this.get(key));
@@ -902,16 +1545,113 @@ window.Asset = Backbone.Model.extend({
                 }
             }
         }
-
         return _.size(messages) > 0 ? {isValid: false, messages: messages} : {isValid: true};
     },
 
+    saveAssetData: function(data, cb){
+        var self = this;
+        self.buildAssetData(data);
+        self.save(null, {
+            success: function (model) {
+                cb(model);
+            },
+            error: function () {
+                cb(model);
+           }
+        });
+    },
 
+    buildAssetData: function(data){
+        var self = this;
+        var versions = [];
+        // create new asset-entry
+        versions.push(data.fileversion);
+        self.set({name: data.name, urlpath:data.urlpath, type: data.fileversion.type, size: data.fileversion.size, slug:data.slug||data.name, denom: data.denom||data.name, versions:versions});
+        console.log('[%s] asset builded from data', self.whoami);
+    },
 
+    fetchFilteredPredicateArray: function(predicate, child, ancestor){
+        var tlist = child.get(predicate);
+        if(!tlist) {
+            tlist = [];
+        }else{
+            tlist = _.filter(tlist,function(element){
+                return element && (element.id!==ancestor.id);
+            });
+        }
+        return tlist;
+    },
 
+    buildPredicateData: function (ancestor, child, predicate) {
+        var ancestordata = {
+                id: ancestor.id,
+                code: ancestor.get('productcode') || 'ASSET',
+                slug: ancestor.get('slug'),
+                predicate: predicate
+            };
+        var tlist = child.fetchFilteredPredicateArray(predicate, child, ancestor);
+        tlist.push(ancestordata);
+        
+        if(predicate === 'es_capitulo_de')  child.set({es_capitulo_de : tlist});
+        if(predicate === 'es_coleccion_de') child.set({es_coleccion_de: tlist});
+        if(predicate === 'es_instancia_de') child.set({es_instancia_de: tlist});
+        if(predicate === 'es_asset_de')     child.set({es_asset_de: tlist});
+        if(predicate === 'es_nota_de')      child.set({es_nota_de: tlist});
+        return child;
+    },
 
+    linkChildsToAncestor: function (childs, ancestor, predicate, cb) {
+        var deferreds = [], 
+            defer;
+        if(!_.isArray(childs)){
+            var tempo = childs;
+            childs = [];
+            childs.push(tempo);
+        }
 
+        console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('productcode'));
+        for (var i = childs.length - 1; i >= 0; i--) {
+            var child = childs[i];
 
+            child = child.buildPredicateData(ancestor,child, predicate);
+            ///
+            defer = child.save(null, {
+                success: function (child) {
+                    //console.log('saveNode:productdetails success');
+                    console.log('link Asset:SUCCESS:  [%s] ',child.get('slug'));
+                },
+                error: function () {
+                    console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',i,child.get('slug'));
+                }
+            });
+            deferreds.push(defer);
+        }
+
+        $.when.apply(null, deferreds).done(function(){
+            //console.log('deferres done FIRED');
+            cb();
+            //utils.approuter.navigate('navegar/productos', {trigger: true, replace: false});
+        });
+    },
+
+    updateAsset: function(data, ancestor, cb){
+        var self = this,
+            predicate = 'es_asset_de';
+
+        self.buildAssetData(data);
+        self.linkChildsToAncestor(self, ancestor, predicate, cb);
+        console.log('[%s]/updateAsset: END:[%s] / [%s]: [%s]',this.whoami,i,predicate,self.get('slug'));
+    },
+
+    assetFolder: function(){
+        var today  = new Date();
+        var day    = today.getDate()<10 ? '0'+today.getDate() : today.getDate();
+        var month = today.getMonth()+1;
+        month  = month<10 ? '0'+month : month;
+        var folder = _.template('/assets/<%= y %>/<%= m %>/<%= d %>');
+
+        return folder({y:today.getFullYear() ,m:month, d:day});
+    },
 
     getProjectName: function(){
         // todo: instanciar un project 
@@ -931,8 +1671,9 @@ window.Asset = Backbone.Model.extend({
         slug: "",
         denom: "",
         urlpath:"",
+        type:"",
+        size:"",
         versions:[],
-        related:{}
     }
 });
 

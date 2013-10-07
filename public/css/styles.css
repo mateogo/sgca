@@ -147,3 +147,35 @@ legend {
     margin-top: 0px;
     margin-bottom: 0px;
 }
+
+/* Checkboxes */
+.bbf-checkboxes {
+  list-style-type: 'nav nav-list';
+}
+
+  .bbf-checkboxes input {
+    width: auto;
+  }
+
+  .bbf-checkboxes label {
+    float: none;
+  }
+
+
+/* List */
+.bbf-list ul {
+  list-style-type: 'nav nav-list';
+  margin: 0;
+  padding: 0;
+}
+
+.field-columnById li {
+    color: #333;
+    padding: 2px;
+    margin: 10px;
+    border: 2px solid #ddd;
+    vertical-align:center;
+    list-style-type: none;
+   
+}
+

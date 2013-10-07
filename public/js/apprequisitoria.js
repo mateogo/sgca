@@ -20,9 +20,9 @@ var ReqviewerAppRouter = Backbone.Router.extend({
         alert('vistarequisitoria: '+id);
         //if (!this.quotationListLayoutView) {
         //    alert('create view 2');
-        //    this.quotationListLayoutView = new QuotationListLayoutView({model: utils.quotationsQueryData()});
+        //    this.quotationListLayoutView = new QuotationListLayoutView({model: dao.quotationsQueryData()});
         //}
-        $('#content').html(new QuotationListLayoutView({model: utils.quotationsQueryData()}).el);
+        $('#content').html(new QuotationListLayoutView({model: dao.quotationsQueryData()}).el);
         var quotation = new Quotation({_id: id});
         quotation.fetch({success: function() {
             $("#listcontent").html(new QuotationView({model: quotation}).el);

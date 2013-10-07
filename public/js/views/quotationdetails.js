@@ -40,7 +40,7 @@ window.QuotationView = Backbone.View.extend({
         }else{
             this.selectedResources =_.without(this.selectedResources,event.target.value);
         }
-        alert(this.selectedResources);
+        //alert(this.selectedResources);
     },
 
     change: function (event) {
@@ -80,6 +80,7 @@ window.QuotationView = Backbone.View.extend({
             return false;
         }
         if(this.selectedResources){
+            console.log('hay selected resources!');
             this.model.setResourceList(this.selectedResources);
         }
         this.saveNode();
@@ -131,13 +132,13 @@ window.QuotationView = Backbone.View.extend({
     },
 
     browse: function () {
-        //utils.quotationsQueryData().setProject(this.model.get('project')._id,this.model.get('denom'));
+        //dao.quotationsQueryData().setProject(this.model.get('project')._id,this.model.get('denom'));
         utils.approuter.navigate('navegar/requisitorias', true);
         return false;
     },
 
     showresources: function () {
-        var query = {project: utils.quotationsQueryData().getProject()},
+        var query = {project: dao.quotationsQueryData().getProject()},
             resourceList = new ResourceCollection([], {quotation: this.model});
 
         this.selectedResources = this.model.getResourceList();

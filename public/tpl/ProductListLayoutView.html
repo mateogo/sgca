@@ -5,7 +5,7 @@
   <div class="well sidebar-nav">
     <ul class="nav nav-list">
       <li class="nav-header">Producto seleccionado</li>
-      <li><button id='mastevale' class='btn btn-block btn-link prselected'></button></li>
+      <li><button id='mastevale' class='btn btn-block btn-link prselected'><%= utils.selectedProducts.getSelectedLabel() %></button></li>
       <li class="nav-header">Proyecto seleccionado</li>
       <li><button class='btn btn-block btn-link prjview'><%= utils.viewData.currentProject %></button></li>
       <li><input type='hidden' placeholder='proyecto' disabled class='input-small' id='project[_id]' name='project[_id]' value=<%= project['_id'] %> ></li>
@@ -44,7 +44,8 @@
                             <li class="divider"></li>
                             <li><a class='addchapters' ><i class="icon-check"></i>vincular capítulos</a></li>
                             <li><a class='addassociated' ><i class="icon-check"></i>vincular curaduría</a></li>
-                            <li class="nav-header">This App</li>
+                            <li class="divider"></li>
+                            <li><a class='btn btn-link managetable' >seleccionar columnas</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">

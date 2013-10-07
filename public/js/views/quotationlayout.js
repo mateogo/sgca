@@ -18,12 +18,12 @@ window.QuotationListLayoutView = Backbone.View.extend({
     },
 
     prjview: function(){
-        utils.approuter.navigate('ver/proyecto/'+utils.quotationsQueryData().getProjectId(), true);
+        utils.approuter.navigate('ver/proyecto/'+dao.quotationsQueryData().getProjectId(), true);
         return false;
     },
 
     resetselection: function (event) {
-        utils.quotationsQueryData().setProject('','proyecto no seleccionado');
+        dao.quotationsQueryData().setProject('','proyecto no seleccionado');
         utils.approuter.browseQuotations();
     },
 

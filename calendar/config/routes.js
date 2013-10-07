@@ -1,7 +1,7 @@
 /*
- *  calendar routes.js
- *  package: /calendar/config
- *  DOC: Configura los routes para Calendar.
+ *  bacua routes.js
+ *  package: /bacua/config
+ *  DOC: Configura los routes para Bacua.
  *       
  *       
  *  Use:
@@ -9,6 +9,8 @@
  */
 module.exports = function (config, app) {
     var rootPath = config.root;
+    var utils = require(rootPath + '/core/util/utils');
+
     // user routes
     app.post('/login', function(req,res,next){
         var usr = req.body.user;
@@ -18,44 +20,9 @@ module.exports = function (config, app) {
         res.redirect('/');
     });
 
-    var strutils = require(rootPath + '/calendar/util/strutils');
     app.post('/files', function(req,res,next){
         console.log("/files:routes.js ");
-        var fs = require('fs');
-        var times = new Date().getTime();
-        var times_str = times.toString()+'_';
-        var filename = strutils.safeFileName(req.files.loadfiles.name);
-        var serverFolder = rootPath + '/public/files' + req.body.folder;
-        var urlPath = 'files' + req.body.folder + '/' + times_str + filename;
-        var serverPath = serverFolder + '/' + times_str + filename;
-        //console.log("path: "+serverPath);
-        //console.log("req: "+JSON.stringify(req.files.loadfiles));
-        //todo: revisar filename
-        console.log("req.body: "+JSON.stringify(req.body));
-        console.log("req.files: "+JSON.stringify(filename));
-
-        if(!fs.existsSync(serverFolder)) fs.mkdirSync(serverFolder);
-        fs.rename(req.files.loadfiles.path,serverPath,function(error){
-                if(error){
-                    res.send({error: 'Ooops! algo salio mal!'});
-                     return;
-                }
-                res.send({
-                        name: filename,
-                        urlpath: urlPath,
-
-                        fileversion:{
-                            name: filename,
-                            urlpath: urlPath,
-                            mime: req.files.loadfiles.mime,
-                            type: req.files.loadfiles.type,
-                            size: req.files.loadfiles.size,
-                            lastModifiedDate: req.files.loadfiles.lastModifiedDate,
-                            uploadDate: times
-                        }
-                    });
-            }
-        );
+        utils.moveFile(req, res, rootPath);
     });
 
     // projects routes
@@ -87,6 +54,7 @@ module.exports = function (config, app) {
     // products routes
     var product = require(rootPath + '/calendar/controllers/products');
     app.post('/navegar/productos', product.find);
+    app.get('/refine/productos', product.findAll);
     app.get('/productos/:id', product.findById);
     app.post('/productos', product.add);
     app.put('/productos/:id', product.update);
@@ -99,4 +67,15 @@ module.exports = function (config, app) {
     app.post('/activos', asset.add);
     app.put('/activos/:id', asset.update);
     app.delete('/activos/:id', asset.delete);
+    app.get('/asset/render/img/:id', asset.renderImg);
+
+    // article (articulos) routes
+    var article = require(rootPath + '/calendar/controllers/articles');
+    app.post('/recuperar/articulos', article.find);
+    app.get('/articulos/:id', article.findById);
+    app.post('/articulos', article.add);
+    app.put('/articulos/:id', article.update);
+    app.delete('/articulos/:id', article.delete);
+
+
 };

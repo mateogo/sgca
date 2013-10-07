@@ -3,24 +3,24 @@ var AppRouter = Backbone.Router.extend({
     whoami: 'AppRouter: ',
 
     routes: {
-        ""                      : "home",
-        "login"                 : "browseProjects",
-        "about"                 : "about",
+        ""                       : "home",
+        "login"                  : "browseProjects",
+        "about"                  : "about",
 
-        "ver/proyecto/:id"      : "viewprojectDetails",
-        "proyectos"             : "listProjects",
-        "navegar/proyectos"     : "browseProjects",
+        "ver/proyecto/:id"       : "viewprojectDetails",
+        "proyectos"              : "listProjects",
+        "navegar/proyectos"      : "browseProjects",
         "navegar/proyectos/pag/:page"  : "browseProjects",
-        "proyectos/pag/:page"   : "listProjects",
-        "proyectos/add"         : "addProject",
-        "proyectos/:id"         : "projectDetails",
+        "proyectos/pag/:page"    : "listProjects",
+        "proyectos/add"          : "addProject",
+        "proyectos/:id"          : "projectDetails",
 
-        "recursos"              : "browseResources",
-        "navegar/recursos"      : "browseResources",
+        "recursos"               : "browseResources",
+        "navegar/recursos"       : "browseResources",
         "navegar/recursos/pag/:page"  : "browseResources",
-        "recursos/pag/:page"   : "listResources",
-        "recursos/add"          : "addResource",
-        "recursos/:id"          : "resourceDetails",
+        "recursos/pag/:page"     : "listResources",
+        "recursos/add"           : "addResource",
+        "recursos/:id"           : "resourceDetails",
 
         "requisitorias"          : "browseQuotations",
         "navegar/requisitorias"  : "browseQuotations",
@@ -33,7 +33,14 @@ var AppRouter = Backbone.Router.extend({
         "navegar/productos/pag/:page"  : "browseProducts",
         "productos/:id"          : "productDetails",
 
-        "activos/:id"            : "assetDetails"
+        "articulos/add"          : "addArticle",
+        "navegar/articulos"      : "browseArticles",
+        "navegar/articulos/pag/:page"  : "browseArticles",
+        "articulos/:id"          : "articleDetails",
+
+        "activos/add"            : "assetDetails",
+        "activos/:id"            : "assetDetails",
+        "navegar/activos"        : "browseAssets"
         
     },
 
@@ -65,9 +72,9 @@ var AppRouter = Backbone.Router.extend({
         console.log('quotationDetails:main.js');
         //if (!this.quotationListLayoutView) {
         //    alert('create view 2');
-        //    this.quotationListLayoutView = new QuotationListLayoutView({model: utils.quotationsQueryData()});
+        //    this.quotationListLayoutView = new QuotationListLayoutView({model: dao.quotationsQueryData()});
         //}
-        $('#content').html(new QuotationListLayoutView({model: utils.quotationsQueryData()}).el);
+        $('#content').html(new QuotationListLayoutView({model: dao.quotationsQueryData()}).el);
         var quotation = new Quotation({_id: id});
         quotation.fetch({success: function() {
             $("#listcontent").html(new QuotationView({model: quotation}).el);
@@ -79,12 +86,12 @@ var AppRouter = Backbone.Router.extend({
         console.log('browseQuotations:main.js');
         //if (!this.quotationListLayoutView) {
         //    alert('create view 1');
-        //    this.quotationListLayoutView = new QuotationListLayoutView({model: utils.quotationsQueryData()});
+        //    this.quotationListLayoutView = new QuotationListLayoutView({model: dao.quotationsQueryData()});
         //}
-        $('#content').html(new QuotationListLayoutView({model: utils.quotationsQueryData()}).el);
+        $('#content').html(new QuotationListLayoutView({model: dao.quotationsQueryData()}).el);
         //var queryset = _.clone(this.queryQuotationData.attributes);
         var p = page ? parseInt(page, 10) : 1,
-            query = utils.quotationsQueryData().retrieveData(),
+            query = dao.quotationsQueryData().retrieveData(),
             quotationList = new QuotationCollection();
 
         quotationList.fetch({
@@ -102,9 +109,9 @@ var AppRouter = Backbone.Router.extend({
 
     addQuotation: function() {
         console.log('addQuotation:main.js');
-        $('#content').html(new QuotationListLayoutView({model: utils.quotationsQueryData()}).el);
+        $('#content').html(new QuotationListLayoutView({model: dao.quotationsQueryData()}).el);
 
-        var quotation = new Quotation({project: utils.quotationsQueryData().getProject() });
+        var quotation = new Quotation({project: dao.quotationsQueryData().getProject() });
  
         $('#listcontent').html(new QuotationView({model: quotation}).el);
         //utils.editor.render('description');
@@ -116,9 +123,9 @@ var AppRouter = Backbone.Router.extend({
 
     addProduct: function() {
         console.log('addProduct:main.js');
-        $('#content').html(new ProductViewLayout({model: utils.productsQueryData()}).el);
+        $('#content').html(new ProductViewLayout({model: dao.productsQueryData()}).el);
 
-        var product = new Product({project: utils.productsQueryData().getProject() });
+        var product = new Product({project: dao.productsQueryData().getProject() });
  
         $('#listcontent').html(new ProductView({model: product}).el);
         //utils.editor.render('description');
@@ -128,10 +135,29 @@ var AppRouter = Backbone.Router.extend({
         //this.headerView.selectMenuItem('add-menu');
     },
 
+    addArticle: function() {
+        console.log('addArticle:main.js');
+        $('#content').html(new ArticleViewLayout().el);
+
+        var article = new Article();
+ 
+        $('#listcontent').html(new ArticleView({model: article}).el);
+    },
+
+    articleDetails: function(id) {
+        console.log('articleDetails:main.js');
+        $('#content').html(new ArticleViewLayout().el);
+
+        var article = new Article({_id: id});
+        article.fetch({success: function() {
+            $('#listcontent').html(new ArticleView({model: article}).el);
+        }});
+    },
+
     productDetails: function (id) {
         console.log('productDetails:main.js');
 
-        $('#content').html(new ProductViewLayout({model: utils.productsQueryData()}).el);
+        $('#content').html(new ProductViewLayout({model: dao.productsQueryData()}).el);
 
         var product = new Product({_id: id});
         product.fetch({success: function() {
@@ -151,10 +177,10 @@ var AppRouter = Backbone.Router.extend({
         var browseproducts = new ProductBrowseView({page:p, el:'#content',parenttag:'content'});
         /*
 
-        $('#content').html(new ProductListLayoutView({model: utils.productsQueryData()}).el);
+        $('#content').html(new ProductListLayoutView({model: dao.productsQueryData()}).el);
 
         var p = page ? parseInt(page, 10) : 1,
-            query = utils.productsQueryData().retrieveData(),
+            query = dao.productsQueryData().retrieveData(),
             productList = new ProductCollection();
 
         productList.fetch({
@@ -189,10 +215,10 @@ var AppRouter = Backbone.Router.extend({
 
     browseProjects: function(page) {
         console.log('browseProjects:main.js');
-        $('#content').html(new ProjectListLayoutView({model: utils.projectsQueryData()}).el);
+        $('#content').html(new ProjectListLayoutView({model: dao.projectsQueryData()}).el);
 
         var p = page ? parseInt(page, 10) : 1,
-            query = utils.projectsQueryData().retrieveData(),
+            query = dao.projectsQueryData().retrieveData(),
             projectList = new ProjectCollection();
 
         projectList.fetch({
@@ -209,7 +235,7 @@ var AppRouter = Backbone.Router.extend({
 
     viewprojectDetails: function (id) {
         console.log('viewprojectDetails:main.js');
-        $('#content').html(new ProjectViewLayout({model: utils.resourcesQueryData()}).el);
+        $('#content').html(new ProjectViewLayout({model: dao.resourcesQueryData()}).el);
         projectview(id);
     },
 
@@ -249,9 +275,9 @@ var AppRouter = Backbone.Router.extend({
         console.log('resourceDetails:main.js');
         //if (!this.resourceListLayoutView) {
         //    alert('create view 2');
-        //    this.resourceListLayoutView = new ResourceListLayoutView({model: utils.resourcesQueryData()});
+        //    this.resourceListLayoutView = new ResourceListLayoutView({model: dao.resourcesQueryData()});
         //}
-        $('#content').html(new ResourceListLayoutView({model: utils.resourcesQueryData()}).el);
+        $('#content').html(new ResourceListLayoutView({model: dao.resourcesQueryData()}).el);
         var resource = new Resource({_id: id});
         resource.fetch({success: function() {
             $("#listcontent").html(new ResourceView({model: resource}).el);
@@ -263,12 +289,12 @@ var AppRouter = Backbone.Router.extend({
         console.log('browseResources:main.js');
         //if (!this.resourceListLayoutView) {
         //    alert('create view 1');
-        //    this.resourceListLayoutView = new ResourceListLayoutView({model: utils.resourcesQueryData()});
+        //    this.resourceListLayoutView = new ResourceListLayoutView({model: dao.resourcesQueryData()});
         //}
-        //$('#content').html(new ResourceListLayoutView({model: utils.resourcesQueryData()}).el);
+        //$('#content').html(new ResourceListLayoutView({model: dao.resourcesQueryData()}).el);
         //var queryset = _.clone(this.queryResourceData.attributes);
         var p = page ? parseInt(page, 10) : 1,
-            query = utils.resourcesQueryData().retrieveData(),
+            query = dao.resourcesQueryData().retrieveData(),
             resourceList = new ResourceCollection();
 
         resourceList.fetch({
@@ -284,6 +310,21 @@ var AppRouter = Backbone.Router.extend({
         this.headerView.selectMenuItem('browse-menu');
         //console.log("browse resource end");
     },
+
+    addResource: function() {
+        console.log('addResource:main.js');
+        $('#content').html(new ResourceListLayoutView({model: dao.resourcesQueryData()}).el);
+
+        var resource = new Resource({project: dao.resourcesQueryData().getProject() });
+ 
+        $('#listcontent').html(new ResourceView({model: resource}).el);
+        //utils.editor.render('description');
+        //var myEditor = new nicEditor({fullPanel : true }).panelInstance('description');
+        //myEditor.addEvent('add', function() { alert( myEditor.instanceById('myArea2').getContent() );});});
+        this.headerView.selectMenuItem();
+        //this.headerView.selectMenuItem('add-menu');
+    },
+
     assetDetails: function(id)
     {  
         console.log('assetDetails:main.js');
@@ -301,14 +342,14 @@ var AppRouter = Backbone.Router.extend({
 
         }});
 
-        this.headerView.selectMenuItem('browse-menu');
+        //this.headerView.selectMenuItem('browse-menu');
     },
 
-    filesList: function()
+    browseAssets: function()
     {
         console.log('fileList:main.js');
         // FIXME : El proyecto lo harcodeo, se debe pasar en la funcion
-        var query = {related: {project: '519fbc3255658d6d18000001'}};
+        var query = {related: {project: '5228df86c113982b02000001'}};
 
         //todo: configurar el query que realiza el callback
         fileList = new AssetCollection();
@@ -326,58 +367,7 @@ var AppRouter = Backbone.Router.extend({
         });
     },
     //Esta funcion tiene que mostrar los datos de los detalles del archivo
-    assetDetailsTest: function(id)
-    {
-        /*
-        var project = new Project({ _id: id});
-        
-        project.fetch({success: function() 
-        {
-            utils.currentproject = project;
-            
-            $("#content").html(new ProjectView({model: project}).el);
-        }});
 
-        this.headerView.selectMenuItem();
-
-        return false;
-        */
-        
-        // Backbone se encarga de pasarle el id correspondiente
-        // asset.fetch le ordena a backbone ir a buscar el objeto
-        // al servidor, con el id pasado por argumento, cuando
-        // asset.fetch es configurado con el objeto {success: function()
-        // {
-        // $("#content").html(new AssetView({model:asset}))
-        // Este asset esta siendo referenciado utilizando la tecnica closure. 
-        // donde el objeto no muere y sigue permaneciendo activo.
-        // AssetView es la vista, que le paso el model adecuado para armarla
-        // AssetView  referencia al controlador de la vista que extiende de backbone. 
-        // }}
-
-        console.log('assetDetails:main.js');
-
-        var asset = new Asset({_id: id});
-
-        asset.fetch( {success: function()
-        {
-            $("#content").html(new AssetView({model: asset}).el);
-
-        }});
-    },
-    addResource: function() {
-        console.log('addResource:main.js');
-        $('#content').html(new ResourceListLayoutView({model: utils.resourcesQueryData()}).el);
-
-        var resource = new Resource({project: utils.resourcesQueryData().getProject() });
- 
-        $('#listcontent').html(new ResourceView({model: resource}).el);
-        //utils.editor.render('description');
-        //var myEditor = new nicEditor({fullPanel : true }).panelInstance('description');
-        //myEditor.addEvent('add', function() { alert( myEditor.instanceById('myArea2').getContent() );});});
-        this.headerView.selectMenuItem();
-        //this.headerView.selectMenuItem('add-menu');
-    }
 });
  
 utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView', 'ProjectListLayoutView', 'ProjectView',
@@ -386,11 +376,9 @@ utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView', 'ProjectListLayoutVie
     'QuotationListLayoutView', 'QuotationView', 'QuotationResourceItemView', 'QuotationListItemView',
     'PrjHeaderView','ProjectViewLayout','ReqResDetailView','AssetListItemView',
     'AssetAccordionView','AssetVersionListItemView','AssetView','AssetLayoutView',
-    'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView','ProductViewLayout'], function() {
+    'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView',
+    'ProductViewLayout','ArticleView', 'ArticleViewLayout'], function() {
     app = new AppRouter();
     utils.approuter = app;
     Backbone.history.start();
 });
-//$ Backbone HeaderView utils ResourceView ResourceCollection HomeView AboutView ProjectCollection ProjectListLayoutView ProjectListView ProjectView ResourceListLayoutView ResourceListView app Project Resource
-
-// AssetView, que carga el objeto utils.loadTemplate([AssetView]) se hace referencia al nombre del archivo html donde se van cargar los html

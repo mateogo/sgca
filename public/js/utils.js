@@ -64,82 +64,131 @@ window.utils = {
         return this.parseDateStr(str).getTime();
     },
 
-    quotationsQueryData:function (){
-        if (!this.queryQuotationData) {
-            this.queryQuotationData = new BrowseQuotationsQuery();
-        }
-        return this.queryQuotationData;
-    },
+    tipoBrandingOptionList: [
+        {val:'no_definido'      , label:'tipo de archivo'},
+        {val:'imagen_web'       , label:'Imagen Web'},
+    ],
+    rolBrandingOptionList: [
+        {val:'no_definido'      , label:'destino'},
+        {val:'principal'        , label:'principal'},
+        {val:'carousel'         , label:'carousel'},
+    ],
 
-    productsQueryData:function (){
-        if (!this.queryProductData) {
-            this.queryProductData = new BrowseProductsQuery();
-        }
-        return this.queryProductData;
-    },
+    notasexecutionOptionList: [
+        {val:'no_definido' , label:'Nivel de ejecución'},
+        {val:'planificada' , label:'planificada'},
+        {val:'preparada'   , label:'preparada'},
+        {val:'publicada'   , label:'publicada'},
+        {val:'archivo'     , label:'archivada'},
+    ],
+    
+    notasOptionList: [
+        {val:'nota'          , label:'nota'},
+        {val:'visualizacion' , label:'visualización'},
+        {val:'premio'        , label:'premio'},
+        {val:'gacetilla'     , label:'gacetilla'},
+        {val:'publicacion'   , label:'publicación'},
+        {val:'informacion'   , label:'información'},
+    ],
 
-    productsCol:{
-        get: function (){
-            if (!this.productsCollectionRef) {
-                this.productsCollectionRef = new ProductCollection();
-            }
-            return this.productsCollectionRef;
-        },
-        set: function(col){
-            this.productsCollectionRef = col;
-        }
-    },
+    rolinstanciasOptionList: [
+        {val:'no_definido'      , label:'tipo de instancia'},
+        {val:'master'           , label:'master'},
+        {val:'promo'            , label:'promo'},
+        {val:'trailer'          , label:'trailer'},
+        {val:'audio_principal'  , label:'audio principal'},
+        {val:'audio_ambiente'   , label:'audio ambiente'},
+        {val:'audio_descripcion', label:'audio descripcion'},
+        {val:'grafica'          , label:'grafica'},
+        {val:'branding'         , label:'branding'},
+        {val:'script'           , label:'script'},
+    ],
 
-    pacapitulosfacet: {
-        init: function(product){
-            var builder = {};
-            builder.durnominal = product.get('patechfacet') && product.get('patechfacet').durnominal;
-            builder.tipoproducto = product.get('tipoproducto');
-            builder.descriptores = product.get('descriptores');
-            builder.cantcapitulos = 0;
-            this.data = new PaCapitulosFacet(builder);
-            return this.data;
-        },
-        getContent: function(){
-            return this.data.retrieveData();
-        }
-    },
+    resolucionOptionList: [
+        {val:'no_definido' , label:'no_definido'},
+        {val:'1920x1080'   , label:'1920x1080'},
+        {val:'1440x1080'   , label:'1440x1080'},
+        {val:'1280x720'    , label:'1280x720'},
+        {val:'1024x576'    , label:'1024x576'},
+        {val:'720x576'     , label:'720x576'},
+        {val:'720x480'     , label:'720x480'},
+        {val:'Otro'        , label:'Otro'},
+    ],
 
-    patechfacet: {
-        init: function(product){
-            this.data = new PaTechFacet(product.get('patechfacet'));
-            return this.data;
-        },
-        getContent: function(){
-            return this.data.retrieveData();
-        }
-    },
-    parealizfacet: {
-        init: function(product){
-            this.data = new PaRealizationFacet(product.get('realization'));
-            return this.data;
-        },
-        getContent: function(){
-            return this.data.retrieveData();
-        }
-    },
-    paclasificationfacet: {
-        init: function(product){
-            this.data = new PaClasificationFacet(product.get('clasification'));
-            return this.data;
-        },
-        getContent: function(){
-            return this.data.retrieveData();
-        }
-    },
+    sopentregaOptionList: [
+        {val:'no_definido' , label:'no_definido'},
+        {val:'HD'          , label:'HD'},
+        {val:'Blue-ray'    , label:'Blue-ray'},
+        {val:'Tape'        , label:'Tape'},
+        {val:'DVD'         , label:'DVD'},
+        {val:'transfer'    , label:'Transfer'},
+        {val:'Otro'        , label:'Otro'},
+    ],
+
+    aspectratioOptionList: [
+        {val:'no_definido' , label:'no_definido'},
+        {val:'16_9'        , label:'16:9'},
+        {val:'4_3'         , label:'4:3'},
+        {val:'2_1'         , label:'2:1'},
+        {val:'240_1'       , label:'2.40:1'},
+        {val:'Otro'        , label:'Otro'},
+    ],
+
+    formatooriginalOptionList: [
+        {val:'no_definido'  , label:'no_definido'},
+        {val:'QuickTime'    , label:'QuickTime'},
+        {val:'MXFOP1A'      , label:'MXF op1A'},
+        {val:'HDCAM'        , label:'HDCAM'},
+        {val:'DigiBeta'     , label:'Digi Beta'},
+        {val:'XDCAMBD'      , label:'XDCAM-BD'},
+        {val:'ArchDigital'  , label:'Archivo digital'},
+        {val:'MiniDV'       , label:'Mini DV'},
+        {val:'HDV'          , label:'HDV'},
+        {val:'Otro'         , label:'Otro'},
+    ],
+ 
+    codecOptionList: [
+        {val:'no_definido'       , label:'no_definido'},
+        {val:'AVC-Intra100422'   , label:'AVC-Intra 100 High 422'},
+        {val:'AvidMPEG30'        , label:'Avid MPEG 30'},
+        {val:'AppleProRes422HQ'  , label:'Apple ProRes 422 SQ'},
+        {val:'AppleProRes422SQ'  , label:'Apple ProRes 422 HQ'},
+        {val:'IMX30'             , label:'IMX30'},
+        {val:'XDCAMHD50'         , label:'XDCAM HD 50'},
+        {val:'DnxHD120'          , label:'Dnx HD 120'},
+        {val:'DnxHD185'          , label:'Dnx HD 185'},
+    ],
+
+    framerateOptionList: [
+        {val:'no_definido' , label:'no_definido'},
+        {val:'24p'     , label:'24p'},
+        {val:'25p'     , label:'25p'},
+        {val:'30p'     , label:'30p'},
+        {val:'50i'     , label:'50i'},
+        {val:'60i'     , label:'60i'},
+        {val:'23976p'  , label:'29.76p'},
+        {val:'2997p'   , label:'29.97p'},
+    ],
+
+    tipovideoOptionList: [
+        {val:'no_definido'      , label:'tipo de instancia'},
+        {val:'high_res'         , label:'alta resolución'},
+        {val:'low_res'          , label:'baja resolución'},
+    ],
 
     tipoproductoOptionList:[
         {val:'no_definido',  label:'tipo de producto'},
         {val:'paudiovisual', label:'producto audiovisual'},
         {val:'micro',        label:'micro'},
         {val:'curaduria',    label:'curaduria'},
-        {val:'promo',        label:'promo'},
+    ],
+
+    tipoinstanciaOptionList:[
+        {val:'no_definido',  label:'tipo de instancia'},
+        {val:'video',        label:'video'},
         {val:'imagen',       label:'imagen'},
+        {val:'audio',        label:'audio'},
+        {val:'documento',    label:'documento'},
     ],
 
     nivelimportanciaOptionList:[
@@ -148,6 +197,14 @@ window.utils = {
         {val:'alto',    label:'alto'},
         {val:'critico', label:'crítico'},
     ],
+
+    estadoaltaOptionList:[
+        {val:'activo',     label:'activo'},
+        {val:'suspendido', label:'suspendido'},
+        {val:'cerrado',    label:'cerrado'},
+        {val:'baja',       label:'baja'},
+    ],
+
 
     paexecutionOptionList:[
         {val:'no_definido', label:'-nivel de ejecución-'},
@@ -167,9 +224,9 @@ window.utils = {
         _.each(data,function(element, index, list){
             element.selected = (actualvalue == element.val ? 'selected' : '');
             optionStr += template(element);
-            console.log('element: %s',element);
+            //console.log('element: %s',element);
         });
-        console.log('option [%s]',optionStr);
+        //console.log('option [%s]',optionStr);
         return optionStr;
     },
 
@@ -184,14 +241,14 @@ window.utils = {
 
 
     productListTableHeader:[
-        {tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',            label:'#'},
-        {tt:'th', flag:1, tclass:'col1', tmpl: 'template3', val:'productcode',       label:'código'},
-        {tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'tipoproducto',      label:'tipo'},
-        {tt:'th', flag:1, tclass:'col3', tmpl: 'template1', val:'slug',              label:'denominación'},
-        {tt:'th', flag:0, tclass:'col4', tmpl: 'template1', val:'project',           label:'proyecto'},
-        {tt:'th', flag:1, tclass:'col5', tmpl: 'template1', val:'nivel_ejecucion',   label:'ejecución'},
-        {tt:'th', flag:1, tclass:'col6', tmpl: 'template1', val:'nivel_importancia', label:'importancia'},
-        {tt:'th', flag:1, tclass:'col7', tmpl: 'template4', val:'acciones',          label:'acciones'}
+        {id:0, tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',            label:'#'},
+        {id:1, tt:'th', flag:1, tclass:'col1', tmpl: 'template3', val:'productcode',       label:'código'},
+        {id:2, tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'tipoproducto',      label:'tipo'},
+        {id:3, tt:'th', flag:1, tclass:'col3', tmpl: 'template1', val:'slug',              label:'denominación'},
+        {id:4, tt:'th', flag:0, tclass:'col4', tmpl: 'template1', val:'project',           label:'proyecto'},
+        {id:5, tt:'th', flag:1, tclass:'col5', tmpl: 'template1', val:'nivel_ejecucion',   label:'ejecución'},
+        {id:6, tt:'th', flag:1, tclass:'col6', tmpl: 'template1', val:'nivel_importancia', label:'importancia'},
+        {id:7, tt:'th', flag:1, tclass:'col7', tmpl: 'template4', val:'acciones',          label:'acciones'}
     ],
 
     buildTableHeader: function(data){
@@ -202,7 +259,7 @@ window.utils = {
                 tabledata += template(element);
             }
         });
-        console.log('<thead><tr>'+tabledata+'</tr></thead>');
+        //console.log('<thead><tr>'+tabledata+'</tr></thead>');
         return '<thead><tr>'+tabledata+'</tr></thead>';
     },
 
@@ -222,7 +279,7 @@ window.utils = {
                 tabledata += self.buildTableRowTemplates[element.tmpl](element);
             }
         });
-        console.log(tabledata);
+        //console.log(tabledata);
         return tabledata;
     },
 
@@ -265,40 +322,6 @@ window.utils = {
             else return null;
         }
     },
-
-    pacontenidos: ['artecultura','cienciaTecnologia','cienciasSociales','deporte','educacionTrabajo','historia','infancia','juventud','sociedad','ficcion'],
-    pageneros:['animacion', 'biografia', 'curso', 'ficcion', 'docuficcion', 'documental', 'entretenimiento', 'entrevistas', 'telenovela', 'reality', 'recital', 'periodistico', 'noticiero','inespecifico'],
-    paformatos:['serie', 'micros', 'cortometraje', 'largometraje', 'trailer', 'promo', 'programa', 'noticiero', 'micro', 'unitarios', 'recital', 'periodistico', 'especial', 'inespecifico'],
-    videotecas:['concurso', 'produccionPropia', 'adquisicion', 'coproduccion', 'cesion', 'banco','inespecifico'],
-    etarios:['infantil', 'jovenes','adolescentes', 'adulto', 'mayores','inespecifico'],
-
-    pasubcontenido: {
-        arteCultura: ['musica', 'plastica', 'fotografia', 'arteDigital', 'video', 'teatro', 'animacion', 'otros' ],
-        cienciaTecnologia: ['astronomia', 'fisica', 'matematica', 'quimica','otros'],
-        cienciasSociales: ['antropologia', 'historia', 'sociologia', 'economia', 'politica', 'otros'],
-        deporte: ['historiaDeporte', 'actualidadDeporte', 'deporteAmateur', 'deporteProfesional','otros'],
-        educacionTrabajo:['educSexual', 'primerosAuxilios', 'educRural', 'oficios', 'debateEducativo','otros' ],
-        historia: ['universal', 'argentinaSXX', 'argentinaSXiX', 'biografia','otros'],
-        infancia: ['pedagogia', 'recreacion', 'curricula','otros'],
-        juventud: ['pedagogia', 'recreacion', 'curricula','otros'],
-        sociedad: ['gastronomia', 'ddhh', 'familia', 'respSocial', 'salud','otros' ],
-        ficcion: ['novela', 'thriller', 'drama', 'comedia', 'accion','otros' ],
-    },
-
-    resourcesQueryData:function (){
-        if (!this.queryResourceData) {
-            this.queryResourceData = new BrowseResourcesQuery();
-        }
-        return this.queryResourceData;
-    },
-
-    projectsQueryData:function (){
-        if (!this.queryProjectData) {
-            this.queryProjectData = new BrowseProjectsQuery();
-        }
-        return this.queryProjectData;
-    },
-
     editor:{
         render: function(nicpanel, target, text){
             this.get().setPanel(nicpanel);
@@ -338,10 +361,21 @@ window.utils = {
         project: {
             eventText: {no_definido:' ',concurso: 'Conc',adhesion:'Adh',produccion:'Pro',cesion:'Ces', musica:'Mus', teatro:'Tea', musical:'Tmu', invantil:'Inf',circo:'Cir',cine:'Cin',festival:'Fes',fpopular:'FPo',danza:'Dza',congreso:'Con'},
             eventFillColor: {no_definido:'lime',bajo:'green',medio:'blue',alto:'magenta',critico:'red'},
-            ispropioText: {'1':'IC','0':'Ax'},
+            ispropioText: {'1':'BACUA','0':'Ax'},
             fillOpacity:{no_definido:1,planificado:.4,produccion:1,posproduccion:.7,demorado:.4,reprogramado:.4,suspendido:.1,cumplido:.1},
         },
         resourcelist:[]
+    },
+    inspect: function  (target, deep, whoami) {
+        var deep = deep+=1 || 1;
+        var self = this;
+        console.log('[%s]:inspect CALLED: [%s]: [%s]',deep, whoami, target);
+        _.each(target, function(value, key){
+            console.log('[%s]:inspect: [%s] [%s]: [%s]',deep, whoami, key,value);
+            if( (_.isObject(value) && !_.isFunction(value)) && deep<4 ){
+                self.inspect(value, deep);
+            }
+        });
     },
     parseDateStr: function(str) {
         var mx = str.match(/(\d+)/g);
