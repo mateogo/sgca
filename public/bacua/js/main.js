@@ -8,9 +8,7 @@ var AppRouter = Backbone.Router.extend({
         "about"                  : "about",
         "pa/ver/:id"             : "viewproduct",
 
-        
     },
-
 
     initialize: function () {
         this.headerView = new HeaderView();
@@ -65,7 +63,8 @@ var AppRouter = Backbone.Router.extend({
 
 });
  
-utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView', 'ProductViewLayout', 'ProductViewCarouselItem1' ], function() {
+utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView', 'ProductViewLayout', 'ProductViewCarouselItem1',
+     'ProductViewFeaturette1', 'ProductViewDestacados1'], function() {
     app = new AppRouter();
     utils.approuter = app;
     Backbone.history.start();

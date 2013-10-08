@@ -360,6 +360,63 @@ window.dao = {
         return this.queryProjectData;
     },
 
+    invertedAttributeList: function  (ancestor, products) {
+        var self = this,
+            data = {name: ancestor.get('productcode'), children:[]},
+            entries = ['tipoproducto', 'descriptores','nivel_importancia','nivel_ejecucion','patechfacet','clasification','realization'],
+            whoami;
+
+        console.log('Inverted attribute BEGIN PRODUCTS :[%s]', products.length);
+
+        products.each(function(product){
+            console.log('PRODUCTS each iteration :[%s]', product.get('slug'));
+            whoami = {name:product.get('productcode'), size: 1};
+            self.parseProduct(entries, data, product,  whoami);
+            console.log(JSON.stringify(data));
+        });
+        return data;
+    },
+
+    parseProduct: function (list, node, model, whoami){
+        var self = this,
+            entry_node, 
+            local_node;
+        console.log('parseProduct: list:[%s] node:[%s] whoami:[%s]', list[0], node.name, whoami.name);
+
+        _.each(list, function(entry, index){
+            entry_node = self.fetchEntryNode(node, entry);
+
+            if(_.isString(model.get(entry))){
+                local_node = self.fetchEntryNode(entry_node, model.get(entry));
+                local_node.children.push(whoami);
+
+            }else if ( _.isArray(model.get(entry)) ){
+                var list = model.get(entry);
+                _.each(list, function(elem){
+                    local_node = self.fetchEntryNode(entry_node, elem);
+                    local_node.children.push(whoami);
+                });
+
+            }else if (_.isObject(model.get(entry))){
+                var entries = _.keys(model.get(entry));
+                self.parseProduct(entries, entry_node, new Backbone.Model(model.get(entry)),  whoami);
+            }
+        });
+    },
+
+    fetchEntryNode: function (node, entry){
+        var enode = _.filter(node.children,function(elem){
+            if(elem.name === entry) return true; else return false;
+        });
+        if(enode && enode.length>0){
+            return enode[0];
+        }else {
+            var newentry = {name:entry, children:[]};
+            node.children.push(newentry);
+            return newentry;
+        }
+    },
+
     pacontenidos: ['artecultura','cienciaTecnologia','cienciasSociales','deporte','educacionTrabajo','historia','infancia','juventud','sociedad','ficcion'],
     pageneros:['animacion', 'biografia', 'curso', 'ficcion', 'docuficcion', 'documental', 'entretenimiento', 'entrevistas', 'telenovela', 'reality', 'recital', 'periodistico', 'noticiero','inespecifico'],
     paformatos:['serie', 'micros', 'cortometraje', 'largometraje', 'trailer', 'promo', 'programa', 'noticiero', 'micro', 'unitarios', 'recital', 'periodistico', 'especial', 'inespecifico'],

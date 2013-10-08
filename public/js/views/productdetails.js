@@ -375,7 +375,7 @@ window.ProductView = Backbone.View.extend({
     },
 
     vista: function () {
-        //window.open('/producto.html#req/'+this.model.id);
+        window.open('/bacua/#pa/ver/'+this.model.id);
         //utils.approuter.navigate(, true);
         return false;
     },

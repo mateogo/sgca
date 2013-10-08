@@ -9,6 +9,7 @@ window.ProductView = Backbone.View.extend({
     renderAll:function () {
         this.renderlayout();
         this.renderCarousel();
+        this.renderCoreData();
         //this.rendercontent();
     },
 
@@ -57,20 +58,63 @@ window.ProductView = Backbone.View.extend({
         return this;
     },
 
+    renderCoreData: function () {
+        var self = this,
+            selector = '#featurette', ///self.settings.get('contenttag')
+            active = true,
+            deferreds=[],
+            defer,
+            branding,
+            article = new Article();
+        
+        branding = utils.fetchFilteredEntries(this.product, 'branding', {rolbranding:'principal'});
+        self.product.set({featurette: branding[0]});
+        new ProductViewFeaturette1({model: self.product, el: $(selector)});
+    },
+
     renderCarousel: function () {
         var self = this,
-            selector = '#carouselinner'; ///self.settings.get('contenttag')
+            selector = '#carouselinner', ///self.settings.get('contenttag')
+            active = true,
+            deferreds=[],
+            defer,
+            rendering,
+            article = new Article();
 
-        var branding = self.product.fetchBrandingEntries({rolbranding:'carousel'});
-        var active = true;
+        var notas = new Backbone.Collection(utils.fetchFilteredEntries(self.product, 'notas', {tiponota:'portal'}),{
+            model: Article
+        });
+        //console.log('Collection:  [%s]', notas.at(0).get('slug'));
 
-        branding.each(function(brand){
-            brand.set({active: (active ? 'active' : '')});
-            if(!brand.get('slug')) brand.set({slug: self.product.get('slug')});
-            if(!brand.get('description')) brand.set({description: self.product.get('description')});
-            if(!brand.get('url')) brand.set({url: 'pa/ver/'+self.product.id});
-            new ProductViewCarouselItem1({model: brand, el: $(selector)});
-            if(active) active = false;
+        notas.each(function(entry){
+            article = new Article({_id: entry.get('id')});
+            console.log('ready to fetch article:  [%s]', entry.get('id'));
+            defer = article.fetch({success: function(article) {
+                
+                article.set({active: (active ? 'active' : '')});
+                if(!article.get('slug')) article.set({slug: self.product.get('slug')});
+                if(!article.get('description')) article.set({description: self.product.get('description')});
+                if(!article.get('url')) article.set({url: 'pa/ver/'+self.product.id});
+
+                //carousel
+                rendering = utils.fetchFilteredEntries(article, 'branding', {rolbranding:'carousel'});
+                if(rendering.length>0){
+                    selector = '#carouselinner';
+                    article.set({assetId: rendering[0].assetId});
+                    new ProductViewCarouselItem1({model: article, el: $(selector)});
+                    if(active) active = false;                    
+                }
+
+                //destacados
+                rendering = utils.fetchFilteredEntries(article, 'branding', {rolbranding:'destacado'});
+                if(rendering.length>0){
+                    selector = '.destacados';
+                    article.set({assetId: rendering[0].assetId});
+                    console.log('DESTACADOS DESTACADOS DESTACADOS');
+                    new ProductViewDestacados1({model: article, el: $(selector)});
+                }
+            }});
+            deferreds.push(defer);
         });
     },
 
@@ -126,6 +170,20 @@ window.ProductView = Backbone.View.extend({
 
 });
 
+window.ProductViewDestacados1 = Backbone.View.extend({
+    initialize: function () {
+        this.model.bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+        this.render();
+    },
+
+    render: function () {
+        console.log('[%s] render destacados',self.whoami);
+        this.$el.append(this.template(this.model.toJSON()));
+        return this;
+    }
+});
+
 window.ProductViewCarouselItem1 = Backbone.View.extend({
     initialize: function () {
         this.model.bind("change", this.render, this);
@@ -140,6 +198,19 @@ window.ProductViewCarouselItem1 = Backbone.View.extend({
     }
 });
 
+window.ProductViewFeaturette1 = Backbone.View.extend({
+    initialize: function () {
+        this.model.bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+        this.render();
+    },
+
+    render: function () {
+        //console.log('[%s] rrender item [%s]',self.whoami, this.model.get('slug'));
+        this.$el.append(this.template(this.model.toJSON()));
+        return this;
+    }
+});
 
 window.ProductViewLayout = Backbone.View.extend({
 

@@ -193,7 +193,8 @@ window.Article = Backbone.Model.extend({
         return child;
     },
 
-    fetchBrandingEntries: function (query){
+
+    fetchBrandingEntries: function (entry,query){
         console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
 
         var filtered = _.filter(this.get('branding'),function(elem){
@@ -389,6 +390,29 @@ window.Product = Backbone.Model.extend({
             success: function() {
                 dao.productsCol.set(chapCol);
                 if(cb) cb(dao.productsCol.get());
+            }
+        });
+    },
+
+    loadchilds: function(ancestor, predicates, cb){
+        var self = this,
+            querydata = [],
+            products= new ProductCollection(),
+            query = {};
+
+        console.log('loadchilds:models.js BEGINS [%s] : [%s]',ancestor.get('productcode'),predicates);
+        if(!_.isArray(predicates))
+            if(_.isObject(predicates)) querydata.push(predicates);
+            else return null;
+        else querydata = predicates;
+
+        query = {$or: querydata };
+
+        products.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                if(cb) cb(products);
             }
         });
     },
@@ -959,7 +983,6 @@ window.PaRealizationFacet = Backbone.Model.extend({
         camarografos: {type: 'TextArea',editorAttrs:{placeholder : 'camarografos'} },
         guionistas: {type: 'TextArea',editorAttrs:{placeholder : 'guionistas'} },
         musicos: {type: 'TextArea',editorAttrs:{placeholder : 'musicos'} },
-        test: {type: 'Text',editorAttrs:{placeholder : 'test'} },
     },
 
     defaults: {
@@ -970,7 +993,6 @@ window.PaRealizationFacet = Backbone.Model.extend({
         camarografos:'',
         guionistas:'',
         musicos:'',
-        test:'',
     }
 });
 window.BrandingFacet = Backbone.Model.extend({

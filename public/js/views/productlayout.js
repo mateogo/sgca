@@ -115,15 +115,87 @@ window.ProductListLayoutView = Backbone.View.extend({
     },
 
     events: {
-        "change .nav-list"      : "change",
-        "click  .prjview"       : "prjview",
-        "click   .selproduct"   : "selectProductFromList",
-        "click  .dselproduct"   : "deselectProductFromList",
-        "click  .dselproject"   : "resetselection",
-        "click  .addchapters"   : "linkchapters",
-        "click  .addassociated" : "linkcassociated",
-        "click  .managetableNOT"   : "managetable",
+        "change .nav-list"       : "change",
+        "click  .prjview"        : "prjview",
+        "click   .selproduct"    : "selectProductFromList",
+        "click  .dselproduct"    : "deselectProductFromList",
+        "click  .dselproject"    : "resetselection",
+        "click  .addchapters"    : "linkchapters",
+        "click  .addassociated"  : "linkcassociated",
+        "click  .managetableNOT" : "managetable",
+        "click  .buildtree"      : "buildtree",
     },
+
+    buildtree: function  () {
+
+        var windowObjectReference;
+        var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
+        var target = '/bacua/d3rendertree.html'
+        var title = 'grafo'
+
+        console.log('[%s] buildtree:BEGIN ',this.whoami);
+        var self = this,
+            ancestor = utils.selectedProducts.getSelected();
+
+        ancestor.loadchilds(ancestor, {'es_coleccion_de.id': ancestor.id}, function(products){
+            console.log('[%s] collection CALLBACK [%S]',self.whoami, products.length);
+            var tree = dao.invertedAttributeList(ancestor, products);
+            //console.log(JSON.stringify(tree));
+            //console.log(JSON.stringify(JSON.parse(JSON.stringify(tree))));
+            utils.d3treegraph = JSON.parse(JSON.stringify(tree));
+            windowObjectReference = window.open(target);
+        });
+
+    },
+
+    rendertree: function(root){
+
+        //var target = window.open("/bacua/d3demo.html");
+        $('#d3grafo').html('');
+        var diameter = 960;
+        var tree = d3.layout.tree()
+            .size([360, diameter / 2 - 120])
+            .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
+
+        var diagonal = d3.svg.diagonal.radial()
+            .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
+
+        var svg = d3.select("#d3grafo").append("svg")
+            .attr("width", diameter)
+            .attr("height", diameter - 150)
+            .append("g")
+            .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+
+
+        //d3.json('flare.json', function(error, root) {
+          var nodes = tree.nodes(root),
+              links = tree.links(nodes);
+
+          var link = svg.selectAll(".link")
+            .data(links)
+            .enter().append("path")
+            .attr("class", "link")
+            .attr("d", diagonal);
+
+          var node = svg.selectAll(".node")
+            .data(nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; });
+
+          node.append("circle")
+              .attr("r", 4.5);
+
+          node.append("text")
+              .attr("dy", ".31em")
+              .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
+              .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
+              .text(function(d) { return d.name; });
+        //});
+
+        d3.select(self.frameElement).style("height", diameter - 150 + "px");
+    },
+
 
     linkchilds: function (predicate) {
         console.log('[%s] linkchilds:BEGIN predicate:[%s]',this.whoami, predicate);
