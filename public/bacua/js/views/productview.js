@@ -6,34 +6,20 @@ window.ProductView = Backbone.View.extend({
         this.loadProduct();
     },
 
-    renderAll:function () {
-        this.renderlayout();
+    renderCarouselAll:function () {
+        this.renderCarousellayout();
         this.renderCarousel();
-        this.renderCoreData();
+        this.renderFeaturetteData();
         //this.rendercontent();
     },
 
+    renderJumboAll:function () {
+        this.renderJumbolayout();
+        this.renderJumboHeader();
+        this.renderDescribeData();
+    },
+
     loadSettings: function(){
- 
-    /*
-    defaults: {
-        parenttag:'#content',
-        contenttag:'#listcontent',
-        page:1,
-        pquery: dao.productsQueryData(),
-        numcapprefix: 100,
-        tipoproducto:'paudiovisual',
-        durnominal:'',
-        descriptores:'',
-    }
-
-        if(!this.settings) this.settings = new ProductBrowseModel();
-        if(this.options.page) this.settings.set({page:this.options.page});
-        if(this.options.parenttag) this.settings.set({parenttag:this.options.parenttag});
-        utils.selectedProducts.reset();
-    */
-
-
     },
 
     loadProduct: function(){
@@ -42,7 +28,7 @@ window.ProductView = Backbone.View.extend({
         product.fetch({success: function() {
             console.log('success: [%s',product.id);
             self.product = product;
-            self.renderAll();
+            self.renderCarouselAll();
             //$("#listcontent").html(new ProductView({model: product}).el);
 
             //product.loadpacapitulos(function(chapters){
@@ -53,12 +39,76 @@ window.ProductView = Backbone.View.extend({
         }});
     },
 
-    renderlayout:function () {
+
+    renderJumbolayout:function () {
+        this.$el.html(new ProductViewJumboLayout().el);
+        return this;
+    },
+    renderJumboHeader:function () {
+        var self = this,
+            selector = '.jumbotron';
+        
+        new ProductViewJumboHeader1({model: self.product, el: $(selector)});
+        return this;
+    },
+
+    renderDescribeData:function () {
+        var self = this;
+
+        self.renderCoreData(self.product);
+        self.renderClasificacion(self.product);
+        self.renderPatechfacet(self.product);
+
+        return this;
+    },
+
+    renderCoreData: function (product){
+        var keys = ['productcode','tipoproducto'];
+        var data = [];
+        var selector = '#coredata';
+
+        _.each(keys, function(elem){
+            data.push({key: elem, value: product.get(elem)});
+        })
+        console.log('render data leng[%s]', data.length);
+        var view = new ProductViewCoreData({data: data, el:$(selector), title:'Producto'});
+
+    },
+ 
+    renderClasificacion: function (product){
+        var node = product.get('clasification');
+        var data = [];
+        var selector = '#clasificacion';
+
+        _.each(node, function(value, key){
+            data.push({key: key, value: value});
+        })
+        console.log('CLASIFICATION render data leng[%s]', data.length);
+        var view = new ProductViewClasificationData({data: data, el:$(selector), acparent:'clasification', acref:'nodo1', acin:'in',  title:'Clasificación'});
+
+    },
+
+    renderPatechfacet: function (product){
+        var node = product.get('patechfacet');
+        var data = [];
+        var selector = '#clasificacion';
+
+        _.each(node, function(value, key){
+            data.push({key: key, value: value});
+        })
+        console.log('PATECHFACET render data leng[%s]', data.length);
+        var view = new ProductViewClasificationData({data: data, el:$(selector), acparent:'clasification', acref:'nodo2', acin:'',  title:'Datos técnicos'});
+
+    },
+
+
+
+    renderCarousellayout:function () {
         this.$el.html(new ProductViewLayout().el);
         return this;
     },
 
-    renderCoreData: function () {
+    renderFeaturetteData: function () {
         var self = this,
             selector = '#featurette', ///self.settings.get('contenttag')
             active = true,
@@ -169,7 +219,119 @@ window.ProductView = Backbone.View.extend({
     },
 
 });
+////// PRODUCT VIEW ENDS //////////////
 
+
+//// JUMBO
+window.ProductViewJumboLayout = Backbone.View.extend({
+    whoami:'bacua/productviewlayout:productview.js',
+
+    initialize:function () {
+        this.render();
+    },
+
+    render:function () {
+        $(this.el).html(this.template());
+        return this;
+    },
+
+    events: {
+    },
+});
+
+window.ProductViewJumboHeader1 = Backbone.View.extend({
+    initialize: function () {
+        this.model.bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+        this.render();
+    },
+
+    render: function () {
+        //console.log('[%s] rrender item [%s]',self.whoami, this.model.get('slug'));
+        this.$el.append(this.template(this.model.toJSON()));
+        return this;
+    }
+});
+
+
+window.ProductViewClasificationData = Backbone.View.extend({
+    initialize: function () {
+        console.log('initialize [%s]', this.options.acref)
+        this.buildTemplate();
+    },
+
+        //var view = new ProductViewClasificationData({data: data, el:$(selector), acparent:'clasification',acref:'nodo1',acin:tue,  title:'Clasificacion'});
+
+
+
+    buildTemplate: function  () {
+        var header = _.template('<div class="panel panel-info"><div class="panel-heading"><h5 class="panel-title text-center" ><a class="accordion-toggle" data-toggle="collapse" data-parent="#clasificacion" href="#<%= acref %>"><%= title %></a></h5></div><div id="<%= acref %>" class="panel-collapse collapse <%= acin %>"><div class="panel-body" ><%= content %></div></div></div>');
+        var body = _.template('<p class="lead text-center" ><%= value %></p>');
+        var content = '';
+
+        _.each(this.options.data, function(elem,key){
+            content += body(elem);
+        });
+
+        this.options.content = content;
+
+        var nodetemplate = header(this.options);
+        this.render (nodetemplate);
+    },
+
+    render: function (text) {
+        //console.log('[%s] rrender item [%s]',self.whoami, this.model.get('slug'));
+        this.$el.append(text);
+        return this;
+    }
+});
+
+window.ProductViewCoreData = Backbone.View.extend({
+    initialize: function () {
+        console.log('initialize [%s]', this.options.data.length)
+        this.buildTemplate();
+    },
+
+    buildTemplate: function  () {
+        var header = _.template('<div class="panel-heading"><h5 class=text-center ><%= title %></h5></div><div class="panel-body" ><%= content %></div>');
+        var body = _.template('<p class="lead text-center" ><strong><%= value %></strong></p>');
+        var content = '';
+
+        _.each(this.options.data, function(elem,key){
+            content += body(elem);
+            console.log('bluid temp4 [%s]', content);
+        });
+        this.options.content = content;
+
+        var nodetemplate = header(this.options);
+        this.render (nodetemplate);
+    },
+
+    render: function (text) {
+        //console.log('[%s] rrender item [%s]',self.whoami, this.model.get('slug'));
+        this.$el.html(text);
+        return this;
+    }
+});
+
+
+window.ProductViewDescribeData = Backbone.View.extend({
+    initialize: function () {
+        this.model.bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+        this.render();
+    },
+
+    render: function () {
+        //console.log('[%s] rrender item [%s]',self.whoami, this.model.get('slug'));
+        this.$el.append(this.template(this.model.toJSON()));
+        return this;
+    }
+});
+
+
+
+//// CAROUSEL
 window.ProductViewDestacados1 = Backbone.View.extend({
     initialize: function () {
         this.model.bind("change", this.render, this);
@@ -212,8 +374,8 @@ window.ProductViewFeaturette1 = Backbone.View.extend({
     }
 });
 
-window.ProductViewLayout = Backbone.View.extend({
 
+window.ProductViewLayout = Backbone.View.extend({
     whoami:'bacua/productviewlayout:productview.js',
 
     initialize:function () {
@@ -227,11 +389,10 @@ window.ProductViewLayout = Backbone.View.extend({
 
     events: {
     },
-
-
-
 });
 
+
+/// OLD STUFF
 window.ProductListView = Backbone.View.extend({
     whoami:'ProductListView:productlayout.js',
 

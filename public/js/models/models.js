@@ -194,7 +194,7 @@ window.Article = Backbone.Model.extend({
     },
 
 
-    fetchBrandingEntries: function (entry,query){
+    fetchBrandingEntries: function (query){
         console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
 
         var filtered = _.filter(this.get('branding'),function(elem){
@@ -358,6 +358,14 @@ window.Product = Backbone.Model.extend({
         cb(notas);
     },
     
+    loadbranding:function (cb) {
+        var self = this;
+        console.log('mdel:loadbranding');
+
+        var brands = self.fetchBrandingEntries({});
+        cb(brands);
+    },
+    
     loadpaancestors:function (cb) {
         var self = this;
         var list=[],
@@ -491,17 +499,21 @@ window.Product = Backbone.Model.extend({
         var filtered = _.filter(this.get('branding'),function(elem){
 
             console.log('filtered: [%s]', elem.assetName);
+
             var filter = _.reduce(query, function(memo, value, key){
                 console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
                 if(value != elem[key]) return memo && false;
                 return memo  && true;
             },true);
             return filter;
+
         });
+
         var brandingCollection = new Backbone.Collection(filtered,{
             model: BrandingFacet
+
         });
-        console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
+        //console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
         return brandingCollection;
     },
 
@@ -603,6 +615,7 @@ window.Product = Backbone.Model.extend({
         data.assetId = asset.id;
         data.assetName = asset.get('name');
         entries.push(data);
+        console.log('BRANDING hash insert [%s] [%s]',entries.length, data.assetName);
         self.set({branding: entries});
     },
 
@@ -1009,6 +1022,7 @@ window.BrandingFacet = Backbone.Model.extend({
         slug: {type: 'Text',title:'copete', editorAttrs:{placeholder : 'bajada de información'} },
         description: {type: 'TextArea',title:'descripción' },
         url: {type: 'Text',titlo:'destino para más información' },
+        estado_alta:  {type: 'Select',options: utils.estadoaltaOptionList },
     },
 
     defaults: {
@@ -1016,6 +1030,7 @@ window.BrandingFacet = Backbone.Model.extend({
         rolbranding:'',
         slug:'',
         description:'',
+        estado_alta:'activo'
     }
 });
 

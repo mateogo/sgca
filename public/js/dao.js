@@ -255,6 +255,9 @@ window.dao = {
         var loadNotas = function(cb){
             spec.product.loadnotas(cb);
         };
+        var loadBranding = function(cb){
+            spec.product.loadbranding(cb);
+        };
         var loadInstances = function(cb){
             spec.product.loadpacapitulos(cb);
         };
@@ -271,6 +274,17 @@ window.dao = {
             _.each(spec.assets,function(asset){
                 spec.asview = new AssetAccordionView({model:asset});
                 $(spec.asselector, spec.context).append(spec.asview.render().el);
+            });
+        };
+        var brandingRender = function(items){
+            console.log('BRANDING renderview:callback: [%S]',spec.brandingselector);
+            if(items) spec.brands = items;
+
+            $(spec.brandingselector, spec.context).html("");
+            spec.brands.each(function(branding){
+                console.log('BRANDING EACH renderview:callback: [%S]',branding.get('slug'));
+                spec.brandingview = new BrandingEditView({model:branding});
+                $(spec.brandingselector, spec.context).append(spec.brandingview.render().el);
             });
         };
         var notasRender = function(items){
@@ -319,6 +333,9 @@ window.dao = {
             notasrender: function() {
                 loadNotas(notasRender);
             },
+            brandingrender: function() {
+                loadBranding(brandingRender);
+            },
             asrender: function() {
                 loadAssets(assetsRender);
             },
@@ -330,6 +347,9 @@ window.dao = {
             },
             anrender: function() {
                 loadAncestors(ancestorRender);
+            },
+            getBrands: function () {
+                return spec.brands;
             },
             setModel: function(pr,cb){
                 spec.product = pr;

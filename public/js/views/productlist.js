@@ -129,6 +129,59 @@ window.ChapterInlineView = Backbone.View.extend({
     },
 });
 
+
+window.BrandingEditView = Backbone.View.extend({
+    whoami: 'BrandingEditView:productlist.js',
+
+    initialize: function () {
+        console.log('[%s] initialize',this.whoami);
+    },
+
+    events: {
+    },
+    
+    tagName:'div',    
+    className:'accordion-group',
+
+    changeevent: function(){
+        console.log('[%s] CHANGE',this.whoami);
+        this.render();
+    },
+    destroyevent: function () {
+        console.log('[%s] DESTROY',this.whoami);
+        this.close();
+    },
+    notaitem:function(){
+        console.log('[%s] NOTAITEM',this.whoami);
+    },
+
+    render: function () {
+        var self = this,
+            facet = self.model,
+            form = new Backbone.Form({
+                model: facet,
+            }).render();
+
+        console.log('[%s] accordion-form-branding BEGINS',self.whoami);
+        
+        form.on('change', function(form) {
+            var errors = form.commit();
+            console.log('form change!!:key editor');
+        });
+
+        form.on('blur', function(form) {
+            var errors = form.commit();
+            console.log('form blur!!:key editor');
+        });
+
+        $(this.el).html(this.template(this.model.toJSON()));
+        $('.brndedithook',this.el).html(form.el);
+        return this;
+    },
+
+});
+
+
 window.NotasView = Backbone.View.extend({
     whoami: 'NotasView:productlist.js',
 

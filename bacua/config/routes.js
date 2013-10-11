@@ -9,5 +9,11 @@
  */
 module.exports = function (config, app) {
 
+	/*
+  	app.get('/bacua/pa/carousel', function(req,res,next){
+    	console.log("/bacua/pa/carousel:bacua/config/routes.js ");
+    	res.redirect('/bacua/carousel/carousel.html');
+    });
+	*/
 
 };
