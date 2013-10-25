@@ -105,7 +105,7 @@ window.ProductView = Backbone.View.extend({
 
         form.on('blur', function(form) {
             var errors = form.commit();
-            console.log('form blur!!:key editor');
+            console.log('form blur!!:KEY editor');
         });
         $('.brandinghook').html(form.el); 
     },
@@ -344,7 +344,6 @@ window.ProductView = Backbone.View.extend({
         var self = this;
         // builds taglist array
         self.model.buildTagList();
-        self.buildBrandingList();
         //
         this.model.save(null, {
             success: function (model) {
@@ -357,19 +356,6 @@ window.ProductView = Backbone.View.extend({
                 utils.showAlert('Error', 'Ocurrió un error al intentar actualizar este nodo', 'alert-error');
             }
         });
-    },
-    buildBrandingList: function () {
-        var branding = this.relatedController.getBrands();
-        var brands = [];
-
-        if(!(branding && branding.length>0)) return;
-
-        branding.each(function(brand){
-        console.log('brands iterate:[%s]',brand.get('slug'));
-            brands.push(brand.attributes);
-        });
-        console.log('brands length:[%s]',brands.length);
-        this.model.set({branding:brands});
     },
 
     deleteNode: function () {
@@ -507,24 +493,6 @@ window.ProductView = Backbone.View.extend({
             self.model.set({'clasification':dao.paclasificationfacet.getContent()});
         });
         $('.paclasifhook').html(form.el);
-    }, 
-
-    formparealization: function () {
-        var self = this;
-        var facet = dao.parealizfacet.init(this.model);
-        var form = new Backbone.Form({
-            model: facet,
-            });
-
-        form.on('change', function(form, editor) {
-            var errors = form.commit();
-            console.log('onchange: errors:[%s]',errors);
-            self.model.set({'realization':dao.parealizfacet.getContent()});
-            var instance = dao.parealizfacet.getContent();
-            console.log('form: [%s] [%s] [%s]',instance.test, instance.productores, instance.musicos);
-
-        });
-        $('.parealizhook').html(form.render().el);
     }, 
 
     formintechfacet: function () {

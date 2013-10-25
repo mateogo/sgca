@@ -256,7 +256,7 @@ window.dao = {
             spec.product.loadnotas(cb);
         };
         var loadBranding = function(cb){
-            spec.product.loadbranding(cb);
+            dao.loadbranding(spec.product, cb);
         };
         var loadInstances = function(cb){
             spec.product.loadpacapitulos(cb);
@@ -283,7 +283,7 @@ window.dao = {
             $(spec.brandingselector, spec.context).html("");
             spec.brands.each(function(branding){
                 console.log('BRANDING EACH renderview:callback: [%S]',branding.get('slug'));
-                spec.brandingview = new BrandingEditView({model:branding});
+                spec.brandingview = new BrandingEditView({model:branding, viewController: viewController});
                 $(spec.brandingselector, spec.context).append(spec.brandingview.render().el);
             });
         };
@@ -313,6 +313,21 @@ window.dao = {
             spec.chview = new ProductChaptersView({model:spec.instances});
             $(spec.inselector, spec.context).html(spec.chview.render().el);
         };
+
+        var buildBrandingList= function (branding) {
+            //var branding = model.relatedController.getBrands();
+            var brands = [];
+
+            if(!(branding && branding.length>0)) return;
+
+            branding.each(function(brand){
+            console.log('brands iterate:[%s]',brand.get('slug'));
+                brands.push(brand.attributes);
+            });
+            console.log('brands length:[%s]',brands.length);
+            spec.product.set({branding:brands});
+        };
+
 
         var viewController = {
             fetchInstances: function(cb){
@@ -351,6 +366,12 @@ window.dao = {
             getBrands: function () {
                 return spec.brands;
             },
+            getProduct: function () {
+                return spec.product;
+            },
+            buildBrandingList: function(){
+                buildBrandingList(spec.brands);
+            },
             setModel: function(pr,cb){
                 spec.product = pr;
                 loadChapters(cb);
@@ -364,6 +385,38 @@ window.dao = {
             },
         }
         return viewController;
+    },
+
+    loadbranding:function (model, cb) {
+   
+        console.log('mdel:loadbranding');
+
+        var brands = this.fetchBrandingEntries(model, {});
+        cb(brands);
+    },
+
+    fetchBrandingEntries: function (model, query){
+        console.log('filtered: begins [%s] [%s]', model.get('slug'),model.get('branding').length);
+
+        var filtered = _.filter(model.get('branding'),function(elem){
+
+            console.log('filtered: [%s]', elem.assetName);
+
+            var filter = _.reduce(query, function(memo, value, key){
+                console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
+                if(value != elem[key]) return memo && false;
+                return memo  && true;
+            },true);
+            return filter;
+
+        });
+
+        var brandingCollection = new Backbone.Collection(filtered,{
+            model: BrandingFacet
+
+        });
+        //console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
+        return brandingCollection;
     },
 
     resourcesQueryData:function (){

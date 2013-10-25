@@ -365,7 +365,45 @@ window.Product = Backbone.Model.extend({
         var brands = self.fetchBrandingEntries({});
         cb(brands);
     },
-    
+
+    fetchBrandingEntries: function (query){
+        console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
+
+        var filtered = _.filter(this.get('branding'),function(elem){
+
+            console.log('filtered: [%s]', elem.assetName);
+
+            var filter = _.reduce(query, function(memo, value, key){
+                console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
+                if(value != elem[key]) return memo && false;
+                return memo  && true;
+            },true);
+            return filter;
+
+        });
+
+        var brandingCollection = new Backbone.Collection(filtered,{
+            model: BrandingFacet
+
+        });
+        //console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
+        return brandingCollection;
+    },
+
+    buildBrandingList: function (branding) {
+        //var branding = this.relatedController.getBrands();
+        var brands = [];
+
+        if(!(branding && branding.length>0)) return;
+
+        branding.each(function(brand){
+        console.log('brands iterate:[%s]',brand.get('slug'));
+            brands.push(brand.attributes);
+        });
+        console.log('brands length:[%s]',brands.length);
+        this.set({branding:brands});
+    },
+
     loadpaancestors:function (cb) {
         var self = this;
         var list=[],

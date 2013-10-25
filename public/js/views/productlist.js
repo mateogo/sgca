@@ -171,7 +171,8 @@ window.BrandingEditView = Backbone.View.extend({
 
         form.on('blur', function(form) {
             var errors = form.commit();
-            console.log('form blur!!:key editor');
+            console.log('form BLUR!!:KEY editor');
+            self.options.viewController.buildBrandingList();
         });
 
         $(this.el).html(this.template(this.model.toJSON()));

@@ -15,11 +15,13 @@ window.ArticleView = Backbone.View.extend({
     },
 
     renderall: function(){
+        this.relatedController = dao.productViewFactory({product:this.model, brandingselector:'#brandingaccordion',asselector:'#assets1', context:this.el});
+
         this.render();
-        //this.renderChilds();
-        //this.renderAncestors();
         this.renderAssets();
         this.renderNotas();
+        this.renderBranding();
+
     },
 
     render: function () {
@@ -48,8 +50,11 @@ window.ArticleView = Backbone.View.extend({
         return this;
     },
 
-
-
+    renderBranding: function () {
+        this.relatedController.brandingrender();
+        console.log('renderbrandig: spec.brands: [%s]', this.relatedController.getBrands().length);
+        return this;
+    },
 
     renderAncestors: function () {
         this.relatedController.anrender();
