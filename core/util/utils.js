@@ -53,6 +53,21 @@ var createFolder = function(publicPath, today){
     return serverPath;
 };
 
+exports.safeName = function (name){
+    var str = name.toLowerCase();
+    str = str.split(' ').join('-');
+    str = str.replace(/[áÁéÉíÍóÓúÚñ]/g,function(c) { return es_cutoff[c]; });
+    return str;
+};
+
+exports.safeAddress = function (name){
+    var str = name.toLowerCase();
+    str = str.split(' ').join('%20');
+    str = str.replace(/[áÁéÉíÍóÓúÚñ]/g,function(c) { return es_cutoff[c]; });
+    return str;
+};
+
+
 exports.moveFile = function(req, res, rootPath){
     var today = new Date();
     var times = today.getTime();

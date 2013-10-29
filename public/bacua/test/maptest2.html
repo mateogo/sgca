@@ -38,10 +38,14 @@
           true
     ));
   }
+
+
+
     function mostrarPopupA() {
     map.addPopup(new  OpenLayers.Popup.FramedCloud(
 							  "Agustin",
-                             new OpenLayers.LonLat(-58.40534946876434,-34.597017191566344)
+                             //new OpenLayers.LonLat(-58.40534946876434,-34.597017191566344)
+                             new OpenLayers.LonLat(-58.45105059999999,-34.5919216)
           .transform(
             new OpenLayers.Projection("EPSG:4326"), // de WGS 1984
             new OpenLayers.Projection("EPSG:900913")),

@@ -10,6 +10,7 @@
 module.exports = function (config, app) {
     var rootPath = config.root;
     var utils = require(rootPath + '/core/util/utils');
+    var http = require("http");
 
     // user routes
     app.post('/login', function(req,res,next){
@@ -25,6 +26,155 @@ module.exports = function (config, app) {
         utils.moveFile(req, res, rootPath);
     });
 
+    app.get('/geocode', function(req,res){
+        console.log("/geocode:routes.js ");
+        //4266,conecpcion arenal,capitalfederal,argentina
+
+        var pa = '/maps/api/geocode/json?address=';
+
+        pa += utils.safeAddress(req.query.address);
+        pa += '&sensor=false';
+        //console.log('feini: [%s]',req.query.feinicio);
+        //console.log('fefin: [%s]',req.query.fefinal);
+        console.log('pa: [%s]',pa);
+
+        var options = {
+            host: 'maps.googleapis.com',
+            //path: '/webservice/response/client.php?Method=GetEventosListFiltered&FechaInicio=2013-10-28&FechaFin=2013-10-30&Latitud=-34.60834737727606&Longitud=-58.39688441711421&OrdenarPor=Distancia&Limit=10'
+            path: pa
+        };
+
+        console.log("/geocode:routes.js 1");
+        http.get(options, function (http_res) {
+            // initialize the container for our data
+            var data = "";
+
+            // this event fires many times, each time collecting another piece of the response
+            console.log("/geocode:routes.js 2");
+            http_res.on("data", function (chunk) {
+                // append this chunk to our growing `data` var
+                console.log("/geocode:routes.js 3");
+                data += chunk;
+            });
+
+            http_res.on('error',function(e){
+                console.log("Error: " + e.message); 
+                console.log( e.stack );
+            });
+
+            // this event fires *one* time, after all the `data` events/chunks have been gathered
+            http_res.on("end", function () {
+                // you can use res.send instead of console.log to output via express
+                console.log(data);
+                res.send(data);
+            });
+        });
+        //console.log("/agendacultural:routes.js ");
+        //res.redirect();
+    });
+
+
+    app.get('/agendacultural', function(req,res){
+        console.log("/agendacultural:routes.js ");
+
+        var http = require("http");
+
+        var pa = '/webservice/response/client.php?Method=GetEventosListFiltered&Latitud=-34.5919216&Longitud=-58.45105059999999&OrdenarPor=Distancia&Limit=30';
+
+        if(req.query.eventid){
+            pa += '&IdEvento='+req.query.eventid;
+        }else{
+            pa += '&FechaInicio='+req.query.feinicio;
+            pa += '&FechaFin='+req.query.fefinal;
+            if(req.query.tipoevento) pa += '&IdTipoEvento='+req.query.tipoevento;
+            if(req.query.title) pa += '&Titulo='+req.query.title;
+        }
+
+        //console.log('feini: [%s]',req.query.feinicio);
+        //console.log('fefin: [%s]',req.query.fefinal);
+        console.log('pa: [%s]',pa);
+
+        var options = {
+            host: 'agendacultural.buenosaires.gob.ar',
+            //path: '/webservice/response/client.php?Method=GetEventosListFiltered&FechaInicio=2013-10-28&FechaFin=2013-10-30&Latitud=-34.60834737727606&Longitud=-58.39688441711421&OrdenarPor=Distancia&Limit=10'
+            path: pa
+        };
+
+        console.log("/agendacultural:routes.js 1");
+        http.get(options, function (http_res) {
+            // initialize the container for our data
+            var data = "";
+
+            // this event fires many times, each time collecting another piece of the response
+            console.log("/agendacultural:routes.js 2");
+            http_res.on("data", function (chunk) {
+                // append this chunk to our growing `data` var
+                console.log("/agendacultural:routes.js 3");
+                data += chunk;
+            });
+
+            http_res.on('error',function(e){
+                console.log("Error: " + e.message); 
+                console.log( e.stack );
+            });
+
+            // this event fires *one* time, after all the `data` events/chunks have been gathered
+            http_res.on("end", function () {
+                // you can use res.send instead of console.log to output via express
+                console.log(data);
+                res.send(data);
+            });
+        });
+        //console.log("/agendacultural:routes.js ");
+        //res.redirect();
+    });
+
+    app.get('/lugaresagenda', function(req,res){
+        console.log("/lugaresagenda:routes.js ");
+
+        var http = require("http");
+        var pa = '/webservice/response/client.php?Method=GetLugaresListFiltered&OrdenarPor=NombreUrl&Orden=ASC&Limit=10&Offset=0';
+
+        pa += '&NombreUrl='+utils.safeName(req.query.nombre);
+        
+        console.log('pa: [%s]',pa);
+
+        var options = {
+            host: 'agendacultural.buenosaires.gob.ar',
+            //path: '/webservice/response/client.php?Method=GetEventosListFiltered&FechaInicio=2013-10-28&FechaFin=2013-10-30&Latitud=-34.60834737727606&Longitud=-58.39688441711421&OrdenarPor=Distancia&Limit=10'
+            path: pa
+        };
+
+        console.log("/lugaresagenda:routes.js 1");
+        http.get(options, function (http_res) {
+            // initialize the container for our data
+            var data = "";
+
+            // this event fires many times, each time collecting another piece of the response
+            console.log("/lugaresagenda:routes.js 2");
+            http_res.on("data", function (chunk) {
+                // append this chunk to our growing `data` var
+                console.log("/lugaresagenda:routes.js 3");
+                data += chunk;
+            });
+
+            http_res.on('error',function(e){
+                console.log("Error: " + e.message); 
+                console.log( e.stack );
+            });
+
+            // this event fires *one* time, after all the `data` events/chunks have been gathered
+            http_res.on("end", function () {
+                // you can use res.send instead of console.log to output via express
+                console.log(data);
+                res.send(data);
+            });
+        });
+        //console.log("/agendacultural:routes.js ");
+        //res.redirect();
+    });
+
+ 
     // projects routes
     var project = require(rootPath + '/calendar/controllers/projects');
     app.get('/proyectos', project.findAll);

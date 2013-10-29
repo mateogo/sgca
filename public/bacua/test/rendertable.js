@@ -201,6 +201,7 @@ var collection = [
   }
 ];
 
+// creando una coleccion de person(s)
 var persons = new PersonCollection(collection);
 
 $('.addrow').on('click',function(){
@@ -232,6 +233,49 @@ var renderTable = function(){
 
 };
 
+var verError = function (obj, error){
+    //find every Tutorial and print the author
+    console.log('hay un error [%s]',typeof obj);
+    inspect(obj,0,'inspect');
+};
+var parseXml = function (xml){
+    //find every Tutorial and print the author
+  $(xml).find("Item").each(function(){
+    var  id = $(this).find('IdEvento').text();
+    var  title = $(this).find('Titulo').text();
+    console.log('id:[%s] tit:[%s]',id, title)
+  });
+
+  // Output:
+  // The Reddest
+  // The Hairiest
+  // The Tallest
+  // The Fattest
+};
+var inspect = function  (target, deep, whoami) {
+        var deep = deep+=1 || 1;
+        var self = this;
+        console.log('[%s]:inspect CALLED: [%s]: [%s]',deep, whoami, target);
+        _.each(target, function(value, key){
+            console.log('[%s]:inspect: [%s] [%s]: [%s]',deep, whoami, key,value);
+            if( (_.isObject(value) && !_.isFunction(value)) && deep<4 ){
+                self.inspect(value, deep);
+            }
+        });
+};
+
+
+var fetchEntries = function  (argument) {
+    $.ajax({
+        type: "GET",
+        url: "/agendacultural",
+        dataType: "xml",
+        success: parseXml,
+        error:verError
+    });
+};
+
 $(function(){
-  renderTable();
+  //renderTable();
+  fetchEntries();
 });
