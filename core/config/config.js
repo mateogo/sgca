@@ -8,6 +8,10 @@ var path = require('path');
 var rootPath = path.normalize(__dirname + '/../..');
 var publicPath = path.join(rootPath, 'public');
 var fs = require('fs');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
+
 
 //Installed Dbases
 var dbaseDevel = 'mongodb://localhost/sgcadb_dev'; //port = 27017  ojo: {auto_reconnect: true}
@@ -20,6 +24,13 @@ var calendarApp    = rootPath + '/calendar';
 var bacuaApp    = rootPath + '/bacua';
 var coreApp  = rootPath + '/core';
 var apps = [calendarApp, bacuaApp];
+
+
+var user = {
+  id: '123456',
+  name:'mateo',
+  passwd:'mgomgo'
+};
 
 
 //Mailer options
@@ -44,10 +55,55 @@ var instanceDbListeners = function (db,BSON) {
 };
 
 var routesBootstrap = function (app, express) {
+
+  passport.use(new LocalStrategy(
+    // verify callback
+    function(username, password, done) {
+      console.log('passport verify: username[%s] pass[%s] ',username,password);
+      return done(null, user); // ok
+      //return done(null, false, { message: 'Incorrect username.' }); // ToDo: implementar FLASH
+      //return done(err); // server error
+      //  return (new Error('User ' + id + ' does not exist'));
+      //  process.nextTick(function () {
+
+      /*
+      User.findOne({ username: username }, function (err, user) {
+        if (err) { return done(err); }
+        if (!user) {
+          return done(null, false, { message: 'Incorrect username.' });
+        }
+        if (!user.validPassword(password)) {
+          return done(null, false, { message: 'Incorrect password.' });
+        }
+        return done(null, user);
+      });
+      */
+    }
+  ));
+
+  passport.serializeUser(function(user, done) {
+    //console.log('serialize:[%s]',user.name);
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(function(id, done) {
+    //console.log('deserialize:[%s]',id);
+    done(null, user);
+    /*
+    User.findById(id, function(err, user) {
+      done(err, user);
+    });
+    */
+  });
+
   app.configure(function () {
     app.set('port', process.env.NODE_PORT || 3000);
     app.use(express.logger('dev'));  /* 'default', 'short', 'tiny', 'dev' */
+    app.use(express.cookieParser());
     app.use(express.bodyParser());
+    app.use(express.session({ secret: 'keyboard cat' }));
+    app.use(passport.initialize());
+    app.use(passport.session());
     app.use(app.router);
     app.use(express.static(publicPath));
   });

@@ -11,15 +11,19 @@ module.exports = function (config, app) {
     var rootPath = config.root;
     var utils = require(rootPath + '/core/util/utils');
     var http = require("http");
+    var passport = require('passport');
 
-    // user routes
-    app.post('/login', function(req,res,next){
-        var usr = req.body.user;
-        console.log("user1: ["+usr+"]");
-        console.log("user2: ["+usr.name+"]");
-        console.log("user3: ["+usr.pass+"]");
-        res.redirect('/');
-    });
+    var ensureAuthenticated = function (req, res, next) {
+        console.log('autenticando!!!!');
+        if (req.isAuthenticated()) { return next(); }
+        res.redirect('/login')
+    };
+
+    app.post('/login',
+      passport.authenticate('local', { successRedirect: '/',
+                                       failureRedirect: '/login',
+                                       failureFlash: true })
+    );
 
     app.post('/files', function(req,res,next){
         console.log("/files:routes.js ");
@@ -205,7 +209,7 @@ module.exports = function (config, app) {
     var product = require(rootPath + '/calendar/controllers/products');
     app.post('/navegar/productos', product.find);
     app.get('/refine/productos', product.findAll);
-    app.get('/productos/:id', product.findById);
+    app.get('/productos/:id',ensureAuthenticated, product.findById);
     app.post('/productos', product.add);
     app.put('/productos/:id', product.update);
     app.delete('/productos/:id', product.delete);

@@ -461,34 +461,7 @@ var initMap = function () {
     
 };
 
- /*   
-    map.addLayer(new OpenLayers.Layer.OSM());
-    
-    var lonLat = new OpenLayers.LonLat(-104.73, 38.92).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject());
-   
-    var markers = new OpenLayers.Layer.Markers('Markers');
-    map.addLayer(markers);
-    markers.addMarker(new OpenLayers.Marker(lonLat));
-    
-    function onPopupClose(evt) { selectControl.unselect(this.feature); }
-    
-    var icon0 = new OpenLayers.Icon("pinMS.png", new OpenLayers.Size(32, 32), new OpenLayers.Pixel(-16, -32));
-    var lonLat0 = new OpenLayers.LonLat(-104.73, 38.92).transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject());
 
-    markers.addMarker(new OpenLayers.Marker(lonLat0, icon0.clone()));
-
-    // Error throws here
-    map.addPopup(new OpenLayers.Popup.FramedCloud("featurePopup",
-     lonLat0, 
-     new OpenLayers.Size(10, 10), 
-     "<h2>Title</h2>description", 
-     null, 
-     true, 
-     onPopupClose));
-
-    map.setCenter(lonLat, 1); 
-
-*/
 var addPlace = function (name, direccion, latitud, longitud) {
     if(!map) initMap();
     //latitud =  -34.6011977;
@@ -541,7 +514,7 @@ var buildPlaces = function (lugares) {
     var pattern = /\([0-9a-zA-Z\s\)]+\|/gm;
 
     //console.log('0-buildPlaces: lugares[%s]:',lugares);
-
+        
     var arr = lugares.split(pattern);
     //console.log('1-buildPlaces: len:[%s] arr[%s]:',arr.length,arr);
 
@@ -636,3 +609,4 @@ $(function(){
   //var arr = buildPlaces(text3);
   //console.log('arr: len:[%s]',arr.length);
 });
+
