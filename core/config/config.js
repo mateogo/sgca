@@ -10,6 +10,7 @@ var publicPath = path.join(rootPath, 'public');
 var fs = require('fs');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var user = require(rootPath + '/calendar/controllers/user');
 
 
 
@@ -24,13 +25,6 @@ var calendarApp    = rootPath + '/calendar';
 var bacuaApp    = rootPath + '/bacua';
 var coreApp  = rootPath + '/core';
 var apps = [calendarApp, bacuaApp];
-
-
-var user = {
-  id: '123456',
-  name:'mateo',
-  passwd:'mgomgo'
-};
 
 
 //Mailer options
@@ -60,40 +54,43 @@ var routesBootstrap = function (app, express) {
     // verify callback
     function(username, password, done) {
       console.log('passport verify: username[%s] pass[%s] ',username,password);
-      return done(null, user); // ok
+      //return done(null, user); // ok
       //return done(null, false, { message: 'Incorrect username.' }); // ToDo: implementar FLASH
       //return done(err); // server error
       //  return (new Error('User ' + id + ' does not exist'));
       //  process.nextTick(function () {
 
-      /*
-      User.findOne({ username: username }, function (err, user) {
-        if (err) { return done(err); }
-        if (!user) {
+      
+      user.findOne({ username: username }, function (err, userdao) {
+        if (err) { 
+         console.log('passport error');
+          return done(err); 
+        }
+        if (!userdao) {
+          console.log('passport USER NOT FOUND');
           return done(null, false, { message: 'Incorrect username.' });
         }
         if (!user.validPassword(password)) {
+          console.log('passport PASSWD ERROR');
           return done(null, false, { message: 'Incorrect password.' });
         }
-        return done(null, user);
+        console.log('passport USER:[%s] ',userdao.username);
+        return done(null, userdao);
       });
-      */
+  
     }
   ));
 
   passport.serializeUser(function(user, done) {
     //console.log('serialize:[%s]',user.name);
-    done(null, user.id);
+    done(null, user._id);
   });
 
   passport.deserializeUser(function(id, done) {
     //console.log('deserialize:[%s]',id);
-    done(null, user);
-    /*
-    User.findById(id, function(err, user) {
+    user.fetchById(id, function(err, user) {
       done(err, user);
     });
-    */
   });
 
   app.configure(function () {

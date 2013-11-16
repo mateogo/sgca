@@ -1766,6 +1766,80 @@ window.AssetCollection = Backbone.Collection.extend({
 
 });
 
+window.User = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    whoami:'user:models.js',
+
+    urlRoot: "/usuarios",
+
+    idAttribute: "_id",
+    /*
+    getFullName: function(){
+        var fullname = this.get('name') + this.get('lastname');
+        return fullname;
+
+    },
+    */
+
+    /*
+    retrieveData: function(){
+        return dao.extractData(this.attributes);
+    },
+    */
+
+
+    defaults : {
+        _id: null,
+        displayName:'',
+        username:'',
+        password:'',
+        mail:'',
+        roles:[],
+        fealta:'',
+
+        estado_alta:'pendaprobacion',
+        verificado: {
+            mail:false,
+            feaprobado: null,
+            adminuser: '',
+        },
+        conduso:[]
+    }
+});
+
+window.UserFacet = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    whoami:'userfacet:models.js',
+
+    //urlRoot: "/usuario",
+
+    idAttribute: "_id",
+
+    schema: {
+        displayName:   {type: 'Text', title: 'Nombre completo', editorAttrs:{placeholder : 'sera utilizado como saludo'}},
+        mail:          {type: 'Text', title: 'EMail', editorAttrs:{placeholder : 'sera su nombre de usuario'}},
+        password:      {type: 'Password', title: 'Clave' },
+    },
+
+    defaults : {
+        _id: null,
+        displayName:'',
+        username:'',
+        password:'',
+        mail:'',
+        roles:[],
+        fealta:'',
+
+        estado_alta:'pendaprobacion',
+        verificado: {
+            mail:false,
+            feaprobado: null,
+            adminuser: '',
+        },
+        conduso:[]
+    }
+});
+
 /*
 eq: {
     "domain":null,

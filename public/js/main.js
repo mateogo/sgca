@@ -52,8 +52,9 @@ var AppRouter = Backbone.Router.extend({
 
     home: function () {
         console.log('home:main.js');
+        var user = new User();
         if (!this.homeView) {
-            this.homeView = new HomeView();
+            this.homeView = new HomeView({model: user});
         }
         $('#content').html(this.homeView.el);
         this.headerView.selectMenuItem('home-menu');
@@ -369,7 +370,8 @@ var AppRouter = Backbone.Router.extend({
     //Esta funcion tiene que mostrar los datos de los detalles del archivo
 
 });
- 
+
+
 utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView', 'ProjectListLayoutView', 'ProjectView',
     'ProjectListItemView', 'ResourceView', 'ResourceListItemView', 
     'ResourceListLayoutView', 'ResourceQuoteView',
