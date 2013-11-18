@@ -276,6 +276,6 @@ var fetchEntries = function  (argument) {
 };
 
 $(function(){
-  //renderTable();
-  fetchEntries();
+  renderTable();
+  //fetchEntries();
 });

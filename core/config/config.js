@@ -70,7 +70,7 @@ var routesBootstrap = function (app, express) {
           console.log('passport USER NOT FOUND');
           return done(null, false, { message: 'Incorrect username.' });
         }
-        if (!user.validPassword(password)) {
+        if (!user.validPassword(userdao, password)) {
           console.log('passport PASSWD ERROR');
           return done(null, false, { message: 'Incorrect password.' });
         }

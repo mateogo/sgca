@@ -6,6 +6,10 @@
  *     Exporta el objeto controller de un usero via 'exports'
  *     metodos exportados:
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
+ *
+ * Todo: cachear los usuarios activos para no leer de la base de datos en cada acceso.
+    Ojo: Administrar el cache: ver c´mo
+
  */
 var dbi ;
 var BSON;
@@ -16,7 +20,6 @@ var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
     'ERROR: No se pudo borrar el nodo en la base de datos'
 ];
-var currentUser ;
 //ATENCION: para agregar un serial, agregar entrada en tpr_adapter y en series;
 
 //ATENCION: para agregar un serial, agregar entrada en tpr_adapter y en series;
@@ -60,7 +63,7 @@ exports.setBSON = function(bs) {
 };
 
 
-exports.validPassword = function(password) {
+exports.validPassword = function(currentUser, password) {
     console.log('valid password BEGIN');
     if(!currentUser) return false;
     if(password === currentUser.password){
@@ -77,7 +80,6 @@ exports.findOne = function(query, cb) {
 
     dbi.collection(usersCol, function(err, collection) {
         collection.findOne(query, function(err, item) {
-            currentUser = item;
             cb(err, item);
         });
     });
