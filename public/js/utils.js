@@ -79,6 +79,85 @@ window.utils = {
         return filtered;
     },
 
+    maprender: {
+        init: function(selector, lon, lat){
+            this.map = new OpenLayers.Map((selector||'showmap'));
+            // Capa base que muestra el mapa de openstreetmap
+            this.map.addLayer(new OpenLayers.Layer.OSM());
+            // Capa markers
+            this.map.setCenter(new OpenLayers.LonLat((lon||-58.39688441711421),(lat||-34.60834737727606))
+              .transform(
+                new OpenLayers.Projection("EPSG:4326"), // de WGS 1984
+                new OpenLayers.Projection("EPSG:900913") // a Proyección Esférica Mercator
+              ), 13 // Nivel de zum
+            );
+
+            this.markers = new OpenLayers.Layer.Markers( "Markers" );
+            this.map.addLayer(this.markers);            
+            //this.template = _.template("<div class='popup-content' style='font-size:.8em;width:150px;height:150px;'><h4><%= name %></h4> <%= direccion %></div>");
+            this.template = _.template("<h4><%= name %></h4><%= direccion %>");
+            this.size = new OpenLayers.Size(21,25);
+            this.offset = new OpenLayers.Pixel(-(this.size.w/2), -this.size.h);
+
+            //self.map.setCenter(lonlat, 16 );
+        },
+        
+        addPlace: function (address) {
+            var self = this;
+            if(!self.map) self.initMap();
+ 
+            console.log('maprender: [%s] [%s] [%s]',address.nombre,address.latitud,address.longitud);
+            self.lonlat = new OpenLayers.LonLat(address.longitud,address.latitud).transform(
+                    new OpenLayers.Projection("EPSG:4326"),
+                    new OpenLayers.Projection("EPSG:900913"));
+
+            self.map.setCenter(self.lonlat, 15 );
+
+            self.icon = new OpenLayers.Icon('lib/img/marker.png', self.size, self.offset);
+            self.markers.addMarker(new OpenLayers.Marker(self.lonlat, self.icon));
+        },
+
+        addPopupPlace: function (address) {
+            var self = this;
+            this.addPlace(address);
+
+            var htmltext = self.template({name:address.nombre, direccion:address.displayAddress})
+            var popup = new  OpenLayers.Popup.FramedCloud(
+                    address.nombre,
+                    self.lonlat,
+                    new OpenLayers.Size(121,125), 
+                    htmltext,
+                    self.icon,
+                    true
+            );
+            popup.minSize = new OpenLayers.Size(10,100);
+            self.map.addPopup(popup);
+        },
+
+        getMap: function(){
+            return this.map;
+        }
+    },
+
+    userStatusOptionList:[
+        {val:'activo'        , label:'activo'},
+        {val:'pendaprobacion', label:'pend aprobacion'},
+        {val:'pendmail'      , label:'pend verif mail'},
+        {val:'suspendido'    , label:'suspendido'},
+        {val:'inactivo'      , label:'inactivo'},
+        {val:'baja'          , label:'baja'},
+    ],
+
+    userRolesOptionList: [
+        {val:'no_definido'    , label:'Roles'},
+        {val:'administrador'  , label:'administrador'},
+        {val:'productor'      , label:'productor'},
+        {val:'tecnico'        , label:'tecnico'},
+        {val:'catalogador'    , label:'catalogador'},
+        {val:'visualizador'   , label:'visualizador'},
+        {val:'adherente'      , label:'adherente'},
+    ],
+
     tipoBrandingOptionList: [
         {val:'no_definido'      , label:'tipo de archivo'},
         {val:'imagen_web'       , label:'Imagen Web'},
@@ -89,6 +168,7 @@ window.utils = {
         {val:'principal'        , label:'principal'},
         {val:'carousel'         , label:'carousel'},
         {val:'destacado'        , label:'destacado'},
+        {val:'perfil'           , label:'perfil'},
     ],
 
     notasexecutionOptionList: [
@@ -108,6 +188,60 @@ window.utils = {
         {val:'informacion'   , label:'información'},
         {val:'portal'        , label:'portal'},
     ],
+
+    contactoOL: [
+        {val:'mail'        , label:'email'},
+        {val:'telefono'    , label:'teléfono'},
+        {val:'direccion'   , label:'dirección'},
+        {val:'web'         , label:'web'},
+        {val:'informacion' , label:'información'},
+    ],
+
+    tipocontactoOL:{
+        mail: [
+            {val:'principal'  , label:'principal'},
+            {val:'trabajo'    , label:'trabajo'},
+            {val:'personal'   , label:'personal'},
+            {val:'otro'       , label:'otro'},
+        ],
+        telefono: [
+            {val:'principal'   , label:'principal'},
+            {val:'celular'     , label:'celular'},
+            {val:'trabajo'     , label:'trabajo'},
+            {val:'fax'         , label:'fax'},
+            {val:'particular'  , label:'particular'},
+            {val:'pager'       , label:'pager'},
+            {val:'skype'       , label:'skype'},
+            {val:'googlevoice' , label:'googlevoice'},
+            {val:'otro'        , label:'otro'},
+        ],
+        direccion: [
+            {val:'principal'  , label:'principal'},
+            {val:'trabajo'    , label:'trabajo'},
+            {val:'sede'       , label:'sede'},
+            {val:'deposito'   , label:'depósito'},
+            {val:'sala'       , label:'sala'},
+            {val:'pagos'      , label:'pagos'},
+            {val:'cobranza'   , label:'cobranza'},
+            {val:'particular' , label:'particular'},
+            {val:'locacion'   , label:'locación'},
+            {val:'otro'       , label:'otro'},
+        ],
+        web: [
+            {val:'principal'  , label:'principal'},
+            {val:'trabajo'    , label:'trabajo'},
+            {val:'perfil'     , label:'perfil'},
+            {val:'blog'       , label:'blog'},
+            {val:'personal'   , label:'personal'},
+            {val:'otro'       , label:'otro'},
+        ],
+        informacion: [
+            {val:'cumple'      , label:'cumpleaños'},
+            {val:'aniversario' , label:'aniversario'},
+            {val:'cierre'      , label:'cierre'},
+            {val:'otro'        , label:'otro'},
+        ],
+    },
 
     rolinstanciasOptionList: [
         {val:'no_definido'      , label:'tipo de instancia'},
@@ -257,6 +391,16 @@ window.utils = {
         return optionStr;
     },
 
+    personListTableHeader:[
+        {id:0, tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',            label:'#'},
+        {id:1, tt:'th', flag:1, tclass:'col1', tmpl: 'template3', val:'nickName',          label:'identificador'},
+        {id:2, tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'tipopersona',       label:'tipo'},
+        {id:3, tt:'th', flag:1, tclass:'col3', tmpl: 'template1', val:'name',              label:'denominación'},
+        {id:4, tt:'th', flag:1, tclass:'col4', tmpl: 'template1', val:'tipojuridico',      label:'juridico'},
+        {id:5, tt:'th', flag:1, tclass:'col5', tmpl: 'template1', val:'roles',             label:'roles'},
+        {id:6, tt:'th', flag:1, tclass:'col6', tmpl: 'template1', val:'estado_alta',       label:'importancia'},
+        {id:7, tt:'th', flag:1, tclass:'col7', tmpl: 'template4', val:'acciones',          label:'acciones'}
+    ],
 
     productListTableHeader:[
         {id:0, tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',            label:'#'},
@@ -293,12 +437,52 @@ window.utils = {
         var tabledata = '';
         _.each(data,function(element, index, list){
             if(element.flag){
-                element.value = (model.get(element.val)||'#');
+                element.value = (model.displayItem(element.val)||'#');
                 tabledata += self.buildTableRowTemplates[element.tmpl](element);
             }
         });
         //console.log(tabledata);
         return tabledata;
+    },
+
+    selectedPersons:{
+        list:[],
+        select: function  () {
+            this.sperson = this.first() || this.sperson;
+        },
+        unselect: function() {
+            this.sperson = null;
+        },
+        getSelected: function() {
+            return this.sperson;
+        },
+        getSelectedLabel: function() {
+            if(!this.getSelected()) return 'Sin selección';
+            else return this.getSelected().get('nickName');
+        },
+        add: function  (person) {
+            for (var i = this.list.length - 1; i >= 0; i--) {
+                if(this.list[i]===person) return this.list;
+            }
+            this.list.push(person);
+            return this.list;
+        },
+        getList: function() {
+            return this.list;
+        },
+        remove: function (person) {
+            for (var i = this.list.length - 1; i >= 0; i--) {
+                if(this.list[i]===person) this.list.splice(i,1);
+            }
+            return this.list;
+        },
+        reset: function() {
+            this.list = [];
+        },
+        first: function  () {
+            if(this.list.length) return this.list[0];
+            else return null;
+        }
     },
 
     selectedProducts:{
@@ -340,6 +524,7 @@ window.utils = {
             else return null;
         }
     },
+
     editor:{
         render: function(nicpanel, target, text){
             this.get().setPanel(nicpanel);

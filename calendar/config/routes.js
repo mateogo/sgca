@@ -239,5 +239,13 @@ module.exports = function (config, app) {
     app.put('/usuarios/:id', user.update);
     app.delete('/usuarios/:id', user.delete);
 
-
+    // person (personas) routes
+    var person = require(rootPath + '/calendar/controllers/persons');
+    app.post('/recuperar/personas', person.find);
+    app.post('/navegar/personas', person.find);
+    app.get('/personas/:id', person.findById);
+    app.post('/personas', person.add);
+    app.put('/personas/:id', person.update);
+    app.delete('/personas/:id', person.delete);
+ 
 };

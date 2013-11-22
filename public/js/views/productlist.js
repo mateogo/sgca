@@ -28,6 +28,88 @@ window.ProductViewLayout = Backbone.View.extend({
 
 });
 
+window.ModelRelatedView = Backbone.View.extend({
+    whoami: 'ModelRelatedView',
+
+    initialize: function () {
+        console.log('[%s] INIT',this.whoami);
+
+        this.listenTo(this.model, "change", this.changeevent,this);
+        this.model.bind("change", this.changeevent, this);
+        this.model.bind("destroy", this.destroyevent, this);
+    },
+
+    events: {
+        "click  .relateditem" : "relateditem",
+    },
+    
+    tagName:'ul',
+    className:'nav nav-list',
+
+    changeevent: function(){
+        console.log('[%s]:changeevent  CHANGE', this.whoami);
+        this.render();
+
+    },
+    destroyevent: function () {
+        console.log('[%s]:changeevent  DESTROY', this.whoami);
+        this.close();
+    },
+
+    relateditem:function(){
+        console.log('[%s] relateditem CLICK',this.whoami);
+    },
+
+    render: function () {
+        console.log('[%s] render BEGIN',this.whoami);
+        var that = this;
+        var items = this.model;
+        var len = items.length;
+
+        items.each(function(element){
+            //console.log('each: element: [%s]',element.get('productcode'));
+            $(that.el).append(new ModelInlineView({model: element}).render().el);
+        });
+        return this;
+    }
+});
+
+window.ModelInlineView = Backbone.View.extend({
+    whoami: 'ModelInlineView',
+
+    tagName: "li",    
+    template: _.template("<button class='btn-block btn-link relateditem' title='<%= displayName %>'><%= nickName %></button>"),
+
+    events: {
+        "click  .relateditem" : "relateditem",
+    },
+
+    relateditem:function(){
+        console.log('[%s]: relateditem CLICK',this.whoami);
+        utils.approuter.navigate('personas/'+this.model.id, true);
+    },
+
+    initialize: function () {
+        this.model.bind("change", this.changeevent, this);
+        this.model.bind("destroy", this.destroyevent, this);
+    },
+
+    render: function () {
+        //console.log('each2: element: [%s]',this.model.get('productcode'));
+        $(this.el).html(this.template(this.model.toJSON()));
+        return this;
+    },
+
+    changeevent: function(){
+        console.log('[%s]: change EVENT',this.whoami);
+        this.render();
+
+    },
+    destroyevent: function () {
+        console.log('[%s]: destroy EVENT',this.whoami);
+        this.close();
+    },
+});
 
 window.ProductChaptersView = Backbone.View.extend({
 
@@ -180,6 +262,183 @@ window.BrandingEditView = Backbone.View.extend({
         return this;
     },
 
+});
+
+
+window.UsersView = Backbone.View.extend({
+    whoami: 'UsersView:productlist.js',
+
+    initialize: function () {
+        console.log('[%s] initialize',this.whoami);
+        //this.listenTo(this.model, "change", this.changeevent,this);
+        //this.model.bind("change", this.changeevent, this);
+        //this.model.bind("destroy", this.destroyevent, this);
+    },
+
+    events: {
+    },
+    
+    tagName:'ul',    
+    className:'nav nav-list',
+
+    changeevent: function(){
+        console.log('[%s] CHANGE',this.whoami);
+        this.render();
+    },
+    destroyevent: function () {
+        console.log('[%s] DESTROY',this.whoami);
+        this.close();
+    },
+
+    render: function () {
+        console.log('[%s] RENDER',this.whoami);
+        var that = this;
+        var itemlist = this.model;
+        var len = itemlist.length;
+        console.log('[%s] RENDER len:[%s]',this.whoami, len);
+
+        itemlist.each(function(element){
+            console.log('each: element: [%s]',element.get('username'));
+            $(that.el).append(new UserInlineView({model: element}).render().el);
+        });
+        return this;
+    }
+});
+
+window.UserInlineView = Backbone.View.extend({
+    whoami: 'UserInLineView:productlist.js',
+    tagName: "li",
+
+    template: _.template("<a class='useritem' title='<%= displayName %>'><%= username %></a>"),
+
+    events: {
+        "click  .useritem" : "editItem",
+        "click  .testview" : "testview",
+    },
+
+    editItem:function(){
+        console.log('[%s] EDITITEM',this.whoami);
+        dao.userfacet.setFacet(this.model);
+        //utils.approuter.navigate('productos/'+this.model.id, true);
+    },
+
+    initialize: function () {
+        this.model.bind("change", this.changeevent, this);
+        this.model.bind("destroy", this.destroyevent, this);
+    },
+
+    render: function () {
+        console.log('[%s] RENDER',this.whoami);
+        $(this.el).html(this.template(this.model.toJSON()));
+        return this;
+    },
+    changeevent: function(){
+        console.log('[%s] changeevent',this.whoami);
+        this.render();
+
+    },
+    destroyevent: function () {
+        console.log('[%s] destroyevent',this.whoami);
+        this.close();
+    },
+});
+
+
+window.ContactsView = Backbone.View.extend({
+    whoami: 'ContactosView:productlist.js',
+
+    initialize: function () {
+        console.log('[%s] initialize',this.whoami);
+        //this.listenTo(this.model, "change", this.changeevent,this);
+        //this.model.bind("change", this.changeevent, this);
+        //this.model.bind("destroy", this.destroyevent, this);
+    },
+
+    events: {
+    },
+    
+    tagName:'ul',    
+    className:'nav nav-list',
+
+    changeevent: function(){
+        console.log('[%s] CHANGE',this.whoami);
+        this.render();
+    },
+    destroyevent: function () {
+        console.log('[%s] DESTROY',this.whoami);
+        this.close();
+    },
+
+    render: function () {
+        //console.log('[%s] RENDER',this.whoami);
+        var that = this;
+        var itemlist = this.model;
+        var len = itemlist.length;
+        //console.log('[%s] RENDER len:[%s]',this.whoami, len);
+
+        itemlist.each(function(element){
+            //console.log('each: element: [%s]',element.get('contactdata'));
+            $(that.el).append(new ContactInlineView({model: element}).render().el);
+        });
+        return this;
+    }
+});
+
+window.ContactInlineView = Backbone.View.extend({
+    whoami: 'ContactInLineView:productlist.js',
+    tagName: "li",
+
+template: _.template("<a class='contactitem' title='<%= tipocontacto %> <%= subcontenido %>'><%= contactdata %></a>"),
+
+    events: {
+        "click  .contactitem" : "editItem",
+        "click  .testview" : "testview",
+    },
+
+    editItem:function(){
+        console.log('[%s] EDITITEM',this.whoami);
+        dao.contactfacet.setFacet(this.model);
+        //utils.approuter.navigate('productos/'+this.model.id, true);
+    },
+
+    initialize: function () {
+        this.model.bind("change", this.changeevent, this);
+        this.model.bind("destroy", this.destroyevent, this);
+    },
+
+    render: function () {
+        console.log('[%s] RENDER',this.whoami);
+        $(this.el).html(this.template(this.model.toJSON()));
+        return this;
+    },
+    changeevent: function(){
+        console.log('[%s] changeevent',this.whoami);
+        this.render();
+
+    },
+    destroyevent: function () {
+        console.log('[%s] destroyevent',this.whoami);
+        this.close();
+    },
+});
+
+window.ProfileImageView = Backbone.View.extend({
+    whoami: 'ProfileImageView:productlist.js',
+    tagName: "li",
+
+    template: _.template(
+"<img src='/asset/render/img/<%= assetId%>' class='profile' title='<%= slug%>' alt='<%= slug%>'>"
+    ),
+    
+    initialize: function () {
+        console.log('[%s] RENDER [%s]',this.whoami, this.model.get('slug'));
+    },
+
+    render: function () {
+        console.log('[%s] RENDER',this.whoami);
+        $(this.el).html(this.template(this.model.toJSON()));
+        return this;
+    },
 });
 
 

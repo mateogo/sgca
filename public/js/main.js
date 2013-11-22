@@ -38,6 +38,11 @@ var AppRouter = Backbone.Router.extend({
         "navegar/articulos/pag/:page"  : "browseArticles",
         "articulos/:id"          : "articleDetails",
 
+        "personas/add"          : "addPerson",
+        "navegar/personas"      : "browsePersons",
+        "navegar/personas/pag/:page"  : "browsePersons",
+        "personas/:id"          : "personDetails",
+
         "activos/add"            : "assetDetails",
         "activos/:id"            : "assetDetails",
         "navegar/activos"        : "browseAssets"
@@ -49,6 +54,33 @@ var AppRouter = Backbone.Router.extend({
         this.headerView = new HeaderView();
         $('.header').html(this.headerView.el);
     },
+
+    addPerson: function() {
+        console.log('addPerson:main.js');
+        $('#content').html(new PersonViewLayout().el);
+
+        var person = new Person();
+ 
+        $('#listcontent').html(new PersonView({model: person}).el);
+    },
+
+    personDetails: function (id) {
+        console.log('personDetails:main.js');
+
+        $('#content').html(new PersonViewLayout().el);
+
+        var person = new Person({_id: id});
+        person.fetch({success: function() {
+            $("#listcontent").html(new PersonView({model: person}).el);     
+        }});
+    },
+
+    browsePersons: function(page) {
+        console.log('browsePersons:main.js');
+        var p = page ? parseInt(page, 10) : 1;
+        var browsepersons = new PersonBrowseView({page:p, el:'#content',parenttag:'content'});
+    },
+
 
     home: function () {
         console.log('home:main.js');
@@ -379,7 +411,8 @@ utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView', 'ProjectListLayoutVie
     'PrjHeaderView','ProjectViewLayout','ReqResDetailView','AssetListItemView',
     'AssetAccordionView','AssetVersionListItemView','AssetView','AssetLayoutView',
     'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView',
-    'ProductViewLayout','ArticleView', 'ArticleViewLayout','BrandingEditView'], function() {
+    'ProductViewLayout','ArticleView', 'ArticleViewLayout','BrandingEditView',
+    'PersonView','PersonViewLayout','PersonTableLayoutView'], function() {
     app = new AppRouter();
     utils.approuter = app;
     Backbone.history.start();

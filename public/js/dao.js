@@ -42,6 +42,13 @@ window.dao = {
         return this.queryQuotationData;
     },
 
+    personsQueryData:function (){
+        if (!this.queryPersonData) {
+            this.queryPersonData = new BrowsePersonsQuery();
+        }
+        return this.queryPersonData;
+    },
+
     productsQueryData:function (){
         if (!this.queryProductData) {
             this.queryProductData = new BrowseProductsQuery();
@@ -161,6 +168,63 @@ window.dao = {
         }
     },
 
+    userfacet: {
+        init: function(user){
+            this.data = new User(user);
+            this.addToCol();
+            return this.data;
+        },
+        addToCol: function(){
+            this.col.add(this.data);
+        },
+        setFacet: function(facet){
+            this.data = facet;
+            return this.data;
+        },
+        getFacet: function(){
+            return this.data;
+        },       
+        setCol: function(colection){
+            this.col = colection;
+            return this.col;
+        },
+        getCol: function(){
+            return this.col;
+        },       
+        getContent: function(){
+            return this.data.retrieveData();
+        }
+    },
+
+
+    contactfacet: {
+        init: function(contact){
+            this.data = new ContactFacet(contact);
+            this.addToCol();
+            return this.data;
+        },
+        addToCol: function(){
+            this.col.add(this.data);
+        },
+        setFacet: function(facet){
+            this.data = facet;
+            return this.data;
+        },
+        getFacet: function(){
+            return this.data;
+        },       
+        setCol: function(colection){
+            this.col = colection;
+            return this.col;
+        },
+        getCol: function(){
+            return this.col;
+        },       
+        getContent: function(){
+            return this.data.retrieveData();
+        }
+    },
+
     parealizfacet: {
         init: function(product){
             console.log('parealizfacet: [%s]',product.get('slug'));
@@ -248,12 +312,24 @@ window.dao = {
         //spec.chselector; anselector; 
         //spec.anview; chview; notasview
         //spec.chrender; anrender; notasrender
-        console.log('product factory called:[%s]',spec.product.get('productcode'));
-        var loadChapters = function(cb){
+        console.log('model factory called');
+        var loadChilds = function(cb){
             spec.product.loadpacapitulos(cb);
+        };
+        var loadRelated = function(cb){
+            spec.product.loadrelated(cb);
+        };
+        var loadProfile = function(cb){
+            spec.product.fetchProfileData(cb);
+        };
+        var loadContacts = function(cb){
+            spec.product.loadcontacts(cb);
         };
         var loadNotas = function(cb){
             spec.product.loadnotas(cb);
+        };
+        var loadUsers = function(cb){
+            spec.product.loadusers(cb);
         };
         var loadBranding = function(cb){
             dao.loadbranding(spec.product, cb);
@@ -266,6 +342,13 @@ window.dao = {
         };
         var loadAncestors = function(cb){
             spec.ancestors = spec.product.loadpaancestors(cb);
+        };
+        var profileRender = function(branding){
+            console.log('PROFILE renderview:callback: [%s] length:[%s]',spec.perfilselector, branding.length);
+            if(branding) spec.perfil = branding.at(0);
+            console.log('PROFILERENDER: [%s]',spec.perfil.get('slug'));
+            spec.perfilview = new ProfileImageView({model:spec.perfil});
+            $(spec.perfilselector).html(spec.perfilview.render().el);
         };
         var assetsRender = function(assets){
             console.log('ASSETS renderview:callback: [%s] length:[%s]',spec.asselector, assets.length);
@@ -282,13 +365,25 @@ window.dao = {
 
             $(spec.brandingselector, spec.context).html("");
             spec.brands.each(function(branding){
-                console.log('BRANDING EACH renderview:callback: [%S]',branding.get('slug'));
+                console.log('BRANDING EACH renderview:callback: [%s]',branding.get('slug'));
                 spec.brandingview = new BrandingEditView({model:branding, viewController: viewController});
                 $(spec.brandingselector, spec.context).append(spec.brandingview.render().el);
             });
         };
+        var contactsRender = function(items){
+            console.log('CONTACTS renderview:callback: [%s]',spec.contactsselector);
+            if(items) spec.contacts = items;
+            spec.contactsview = new ContactsView({model:spec.contacts});
+            $(spec.contactsselector, spec.context).html(spec.contactsview.render().el);
+        };
+        var usersRender = function(items){
+            console.log('USERS renderview:callback: [%s]',spec.usersselector);
+            if(items) spec.users = items;
+            spec.usersview = new UsersView({model:spec.users});
+            $(spec.usersselector, spec.context).html(spec.usersview.render().el);
+        };
         var notasRender = function(items){
-            console.log('NOTAS renderview:callback: [%S]',spec.notasselector);
+            console.log('NOTAS renderview:callback: [%s]',spec.notasselector);
             if(items) spec.notas = items;
             spec.notasview = new NotasView({model:spec.notas});
             $(spec.notasselector, spec.context).html(spec.notasview.render().el);
@@ -299,7 +394,14 @@ window.dao = {
             spec.anview = new AncestorView({model:spec.ancestors});
             $(spec.anselector,spec.context).html(spec.anview.render().el);
         };
-        var chaptersRender = function(chapters){
+        var relatedRender = function(related){
+            console.log('renderview:callback: [%S]',spec.chselector);
+            if(related) spec.related = related;
+            //if(!spec.chview) spec.chview = new ProductChaptersView({model:spec.related});
+            spec.relview = new ModelRelatedView({model:spec.related});
+            $(spec.relselector, spec.context).html(spec.relview.render().el);
+        };
+        var childsRender = function(chapters){
             console.log('renderview:callback: [%S]',spec.chselector);
             if(chapters) spec.chapters = chapters;
             //if(!spec.chview) spec.chview = new ProductChaptersView({model:spec.chapters});
@@ -334,7 +436,10 @@ window.dao = {
                 loadInstances(cb);
             },
             fetchChapters: function(cb){
-                loadChapters(cb);
+                loadChilds(cb);
+            },
+            fetchRelated: function(cb){
+                loadRelated(cb);
             },
             fetchAncestors: function(cb){
                 loadAncestors(cb);
@@ -344,6 +449,12 @@ window.dao = {
             },
             fetchNotas: function(cb){
                 loadNotas(cb);
+            },
+            contactsrender: function() {
+                loadContacts(contactsRender);
+            },
+            usersrender: function() {
+                loadUsers(usersRender);
             },
             notasrender: function() {
                 loadNotas(notasRender);
@@ -355,13 +466,19 @@ window.dao = {
                 loadAssets(assetsRender);
             },
             chrender: function() {
-                loadChapters(chaptersRender);
+                loadChilds(childsRender);
+            },
+            relrender: function() {
+                loadRelated(relatedRender);
             },
             inrender: function() {
                 loadInstances(instancesRender);
             },
             anrender: function() {
                 loadAncestors(ancestorRender);
+            },
+            profilerender: function() {
+                loadProfile(profileRender);
             },
             getBrands: function () {
                 return spec.brands;
@@ -374,13 +491,13 @@ window.dao = {
             },
             setModel: function(pr,cb){
                 spec.product = pr;
-                loadChapters(cb);
+                loadChilds(cb);
             },
             refresh:function(){
                 if(!spec.chapters) {
-                    loadchapters(chaptersRender);
+                    loadchapters(childsRender);
                 }else{
-                    chaptersRender();
+                    childsRender();
                 }
             },
         }

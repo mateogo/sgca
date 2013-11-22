@@ -305,6 +305,8 @@ var LocacionView = Backbone.View.extend({
     },
     showMap: function(place){
         addPlace(place.nombre, place.direccion,place.latitud,place.longitud);
+        //if(!utils.maprender.getMap()) utils.maprender.init('showmap',200,400);
+        //utils.maprender.addPlace(place);
     },
 
     initialize: function () {

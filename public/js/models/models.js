@@ -1,3 +1,684 @@
+window.ContactFacet = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    whoami:'contactFacet',
+
+    retrieveData: function(){
+        return dao.extractData(this.attributes);
+    },
+
+    initialize: function () {
+        //console.log(this.get('tipocontacto'));
+    },
+
+    schema: {
+        tipocontacto: {type: 'Select',options: utils.contactoOL },
+        subcontenido: {type: 'Select',options: utils.tipocontactoOL.mail},
+        contactdata:  {type: 'TextArea', title: 'Dato', editorAttrs:{placeholder : 'ingrese dato de contacto'}},
+        protocolo:    {type: 'Text', title: 'Protocolo'},
+        comentario:   {type: 'Text', title: 'Comentario'},
+        horario:      {type: 'Text', title: 'Horario'},
+        /*
+        calle:        {type: 'Text', title: 'Calle'},
+        numero:       {type: 'Text', title: 'Número'},
+        localidad:    {type: 'Text', title: 'Localidad'},
+        ciudad:       {type: 'Text', title: 'Ciudad'},
+        provincia:    {type: 'Text', title: 'Provincia - Estado'},
+        cp:           {type: 'Text', title: 'Código Postal'},
+        pais:         {type: 'Text', title: 'País'},
+        telefono:     {type: 'Text', title: 'Telefono'},
+        lat:          {type: 'Text', title: 'Latitud'},
+        lon:          {type: 'Text', title: 'Longitud'},
+        */
+    },
+
+    defaults: {
+        tipocontacto:'telefono',
+        subcontenido: '',
+        contactdata: '',
+        protocolo: '',
+        comentario: '',
+        horario: ''
+    }
+});
+
+window.ContactFacetCollection = Backbone.Collection.extend({
+    // ******************* PROJECT COLLECTION ***************
+
+    model: ContactFacet,
+
+    url: "/navegar/personas"
+
+});
+
+window.Person = Backbone.Model.extend({
+    // ******************* PROJECT ***************
+    whoami: 'Person:models.js ',
+    urlRoot: "/personas",
+
+    idAttribute: "_id",
+
+    enabled_predicates:['es_miembro_de'],
+
+    initialize: function () {
+        this.validators = {};
+
+        this.validators.name = function (value) {
+            return value.length > 0 ? {isValid: true} : {isValid: false, message: "Dato requerido"};
+        };
+        this.validators.nickName = function (value) {
+            return value.length > 0 ? {isValid: true} : {isValid: false, message: "Dato requerido"};
+        };
+        this.validators.displayName = function (value) {
+            return value.length > 0 ? {isValid: true} : {isValid: false, message: "Dato requerido"};
+        };
+
+        this.viewers = {};
+
+        this.viewers.tipojuridico = function (value){
+            var keys = _.keys(value);
+            return  _.filter(keys,function(item){return value[item];}).join("; ");
+        };
+
+        this.viewers.roles = function (value){
+            var keys = _.keys(value);
+            return  _.filter(keys,function(item){return value[item];}).join("; ");
+        };
+    },
+
+    validateItem: function (key) {
+        return (this.validators[key]) ? this.validators[key](this.get(key)) : {isValid: true};
+    },
+
+    displayItem: function (key) {
+        return (this.viewers[key]) ? this.viewers[key](this.get(key)) : this.get(key) ;
+    },
+
+    // TODO: Implement Backbone's standard validate() method instead.
+    validateAll: function () {
+
+        var messages = {};
+
+        for (var key in this.validators) {
+            if(this.validators.hasOwnProperty(key)) {
+                var check = this.validators[key](this.get(key));
+                if (check.isValid === false) {
+                    messages[key] = check.message;
+                }
+            }
+        }
+
+        return _.size(messages) > 0 ? {isValid: false, messages: messages} : {isValid: true};
+    },
+
+    insertcontact: function(data) {
+        var self = this;
+        var entries = [];
+
+        console.log('[%s] insertcontact begins [%s]',self.whoami,data.contactdata);
+        var contacts = dao.contactfacet.getCol();
+        contacts.each(function(elem){
+            entries.push(elem.retrieveData());
+
+        });
+
+        console.log('CONTACT hash insert [%s] ',entries.length);
+        self.set({contactinfo: entries});
+    },
+
+    loadcontacts: function(cb){
+        dao.contactfacet.setCol( new ContactFacetCollection(this.get('contactinfo')));
+
+        console.log('[%s] loadcontacts [%s] ',this.whoami, dao.contactfacet.getCol().length);
+
+        cb(dao.contactfacet.getCol());
+    },
+
+
+    loadusers: function(cb){
+        var self = this;
+        console.log('loadusers.Person:models.js begins es_asset_de: [%s]',self.get('nickName'));
+        var query = {'es_usuario_de.id':self.id};
+        var userCol= new UserCollection();
+        dao.userfacet.setCol(userCol);
+        userCol.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                if(cb) cb(userCol);
+            }
+        });
+    },
+
+   insertuser: function(user, cb){
+        console.log('[%s] insert USER BEGINS',this.whoami);
+        utils.inspect(user.attributes,0, 'INSERT USER');
+        
+        var self = this,
+            predicate = 'es_usuario_de',
+            deferreds = [],
+            defer;
+
+        user.beforeUpdate();
+        //user.set({feum:new Date().getTime()});
+        //user.set({denom:user.get('slug')});
+
+        user = self.buildPredicateData(self, user, 1, 100, predicate);
+        console.log('[%s] insertUSER READY TO SAVE',this.whoami);
+
+        defer = user.save(null, {
+            success: function (user) {
+                console.log('insert user:SUCCESS: [%s] ',user.get('username'));
+            },
+            error: function () {
+                console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',user.get('username'));
+            }
+        });
+        deferreds.push(defer);
+
+        $.when.apply(null, deferreds).done(function(){
+            console.log('UPDATE user DONE!! id:[%s]',user.id);
+            /*
+
+            if(!notas) notas = [];
+            data.id = user.id
+            data.slug = user.get('slug');
+            data.fecha = user.get('fecha');
+            data.tiponota = user.get('tiponota');
+            data.responsable = user.get('responsable');
+            data.url = user.get('url');
+
+            notas.push(data);
+            self.set({notas: notas});
+            */
+            if(cb) cb(user);
+        });
+    },
+
+
+    loadnotas:function (cb) {
+        var self = this;
+        var list = self.get('notas');
+        console.log('mdel:loadnotas [%s]',list.length);
+        var notas = _.map(list, function(elem){
+            return new Article(elem);
+        });
+        cb(notas);
+    },
+    
+    loadbranding:function (cb) {
+        var self = this;
+        console.log('mdel:loadbranding');
+
+        var brands = self.fetchBrandingEntries({});
+        cb(brands);
+    },
+
+    fetchProfileData: function (cb){
+        var self = this;
+        var brands = self.fetchBrandingEntries({rolbranding:'perfil'});
+        if (brands.length){
+            if(cb) cb(brands);
+        }
+    },
+
+    fetchBrandingEntries: function (query){
+        console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
+
+        var filtered = _.filter(this.get('branding'),function(elem){
+
+            console.log('filtered: [%s]', elem.assetName);
+
+            var filter = _.reduce(query, function(memo, value, key){
+                console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
+                if(value != elem[key]) return memo && false;
+                return memo  && true;
+            },true);
+            return filter;
+
+        });
+
+        var brandingCollection = new Backbone.Collection(filtered,{
+            model: BrandingFacet
+
+        });
+        //console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
+        return brandingCollection;
+    },
+
+    buildBrandingList: function (branding) {
+        //var branding = this.relatedController.getBrands();
+        var brands = [];
+
+        if(!(branding && branding.length>0)) return;
+
+        branding.each(function(brand){
+        console.log('brands iterate:[%s]',brand.get('slug'));
+            brands.push(brand.attributes);
+        });
+        console.log('brands length:[%s]',brands.length);
+        this.set({branding:brands});
+    },
+
+    loadpaancestors:function (cb) {
+        var self = this;
+        var list=[],
+            rawlist=[];
+
+        _.each(self.enabled_predicates, function(elem){
+            if(self.get(elem)){
+                list = _.map(self.get(elem),function(item){
+                    return new Person({_id:item.id, slug:item.slug,personcode:item.code,predicate:item.predicate});
+                });
+                rawlist = _.union(rawlist,list);
+            }
+        });
+        console.log('[%s]: loadpaancestors ends found:[%s]',self.whoami,rawlist.length);
+        if(cb) cb(rawlist);
+        return rawlist;
+    },
+
+    loadrelated: function(cb){
+        var self = this;
+        console.log('[%s] loadrelated BEGIN [%s]',self.whoami, self.get('nickName'));
+        var query = {$or: [{'es_relacion_de.id':self.id},{'es_miembro_de.id':self.id}, {'es_coleccion_de.id':self.id}]};
+
+        var chapCol= new PersonCollection();
+        //console.log('loadpacapitulos:models.js query  [%s] ',query['es_capitulo_de.id']);
+
+        chapCol.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                if(cb) cb(chapCol);
+            }
+        });
+    },
+
+    loadchilds: function(ancestor, predicates, cb){
+        var self = this,
+            querydata = [],
+            persons= new PersonCollection(),
+            query = {};
+
+        console.log('loadchilds:models.js BEGINS [%s] : [%s]',ancestor.get('personcode'),predicates);
+        if(!_.isArray(predicates))
+            if(_.isObject(predicates)) querydata.push(predicates);
+            else return null;
+        else querydata = predicates;
+
+        query = {$or: querydata };
+
+        persons.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                if(cb) cb(persons);
+            }
+        });
+    },
+
+    loadassets: function(cb){
+        var self = this;
+        console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('personcode'));
+        var query = {'es_asset_de.id':self.id};
+        var assetCol= new AssetCollection();
+        assetCol.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                if(cb) cb(assetCol);
+            }
+        });
+    },
+
+    isChild: function(){
+        var self = this;
+        for (var i = self.enabled_predicates.length - 1; i >= 0; i--) {
+            if(self.get(self.enabled_predicates[i])){
+                if(self.get(self.enabled_predicates[i]).length>0){
+                    //console.log('isChild: TRUE');
+                    return true;
+                }
+            }
+       };
+        //console.log('isChild: FALSE');
+        return false;
+    },
+
+    buildRefNumber: function(iter, prefix){
+        var numcap = iter;
+        if(prefix){
+            numcap += prefix;
+        }
+        return numcap;
+    },
+
+    fetchFilteredPredicateArray: function(predicate, child, ancestor){
+        var tlist = child.get(predicate);
+        if(!tlist) {
+            tlist = [];
+        }else{
+            tlist = _.filter(tlist,function(element){
+                return element && (element.id!==ancestor.id);
+            });
+        }
+        return tlist;
+    },
+
+    buildPredicateData: function (ancestor, child, seq, numprefix, predicate) {
+        var ancestordata = {
+                id: ancestor.id,
+                code: ancestor.get('nickName'),
+                slug: ancestor.get('name'),
+                order: ancestor.buildRefNumber(seq,(numprefix||100)),
+                predicate: predicate
+            };
+        var tlist = child.fetchFilteredPredicateArray(predicate, child,ancestor);
+        tlist.push(ancestordata);
+        
+        if(predicate === 'es_capitulo_de')  child.set({es_capitulo_de : tlist});
+        if(predicate === 'es_coleccion_de') child.set({es_coleccion_de: tlist});
+        if(predicate === 'es_instancia_de') child.set({es_instancia_de: tlist});
+        if(predicate === 'es_asset_de')     child.set({es_asset_de: tlist});
+        if(predicate === 'es_nota_de')      child.set({es_nota_de: tlist});
+        if(predicate === 'es_usuario_de')   child.set({es_usuario_de: tlist});
+        if(predicate === 'es_miembro_de')   child.set({es_miembro_de: tlist});
+        if(predicate === 'es_relacion_de')  child.set({es_relacion_de: tlist});
+
+        return child;
+    },
+
+    fetchBrandingEntries: function (query){
+        console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
+
+        var filtered = _.filter(this.get('branding'),function(elem){
+
+            console.log('filtered: [%s]', elem.assetName);
+
+            var filter = _.reduce(query, function(memo, value, key){
+                console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
+                if(value != elem[key]) return memo && false;
+                return memo  && true;
+            },true);
+            return filter;
+
+        });
+
+        var brandingCollection = new Backbone.Collection(filtered,{
+            model: BrandingFacet
+
+        });
+        //console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
+        return brandingCollection;
+    },
+
+    linkChildsToAncestor: function (childs, predicate, cb) {
+        var ancestor = this,
+            deferreds = [], 
+            defer;
+
+        console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('nickName'));
+        for (var i = childs.length - 1; i >= 0; i--) {
+            var child = childs[i];
+
+            child = child.buildPredicateData(ancestor,child, i+1,100, predicate);
+            ///
+            //console.log('linkChilds: ready to insert [%s] / [%s]: [%s] [%s]',i,predicate,child.get(predicate),child.get('slug'));
+            defer = child.save(null, {
+                success: function (model) {
+                    //console.log('saveNode:persondetails success');
+                    console.log('insert ChildsToAncestor: SUCCESS: [%s] [%s] ',i,child.get('nickName'));
+                },
+                error: function () {
+                    console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',i,child.get('nickName'));
+                }
+            });
+            deferreds.push(defer);
+        }
+
+        $.when.apply(null, deferreds).done(function(){
+            //console.log('deferres done FIRED');
+            cb();
+            //utils.approuter.navigate('navegar/personas', {trigger: true, replace: false});
+        });
+    },
+
+    insertInstance: function(data, asset, cb){
+        console.log('[%s] insertInstance BEGINS',this.whoami);
+        var self = this,
+            builder = {},
+            predicate = 'es_instancia_de',
+            //name_template = _.template('Cap: <%= numcap %> - <%= name %> '),
+            deferreds = [],
+            defer;
+
+        builder._id = null;
+        builder.tipopersona = data.tipopersona || self.tipopersona;
+        builder.descriptores = data.descriptores;
+        builder.nivel_importancia = self.get('nivel_importancia');
+        builder.nivel_ejecucion = self.get('nivel_ejecucion');
+        builder.estado_alta = self.get('estado_alta');
+        builder.slug = data.slug;
+        builder.denom = data.denom;
+
+
+        var instancefacet = {};
+        instancefacet.rolinstancia = data.rolinstancia;
+        if(asset){
+            instancefacet.size = asset.get('size');
+            instancefacet.tipofile = asset.get('type');
+        }
+        builder.painstancefacet = instancefacet;
+        /////////
+        var instance = new Person(builder);
+        instance.buildTagList();
+
+        instance = self.buildPredicateData(self, instance, 1, 100, predicate);
+
+        //console.log('insertInstance:ready to insert: [%s] ',instance.get('slug'));
+        defer = instance.save(null, {
+            success: function (instance) {
+                //console.log('saveNode:persondetails success');
+                console.log('insert Instance:SUCCESS: [%s] ',instance.get('slug'));
+            },
+            error: function () {
+                console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',instance.get('slug'));
+            }
+        });
+        deferreds.push(defer);
+
+        ////
+        $.when.apply(null, deferreds).done(function(){
+            if(asset){
+                asset.linkChildsToAncestor(asset, instance,'es_asset_de',cb);
+            }else{
+                //console.log('deferres done FIRED');
+                cb();
+            }
+            //utils.approuter.navigate('navegar/personas', {trigger: true, replace: false});
+        });
+    },
+
+    insertBranding: function(data, asset){
+        var self = this,
+            entries = self.get('branding');
+
+        console.log('insert branding:models.js begins [%s]',self.get('slug'));
+        if(!entries) entries = [];
+
+        data.tc = new Date().getTime();
+        data.assetId = asset.id;
+        data.assetName = asset.get('name');
+        entries.push(data);
+        console.log('BRANDING hash insert [%s] [%s]',entries.length, data.assetName);
+        self.set({branding: entries});
+    },
+
+   insertNota: function(article, cb){
+        console.log('[%s] insertNota BEGINS',this.whoami);
+        var self = this,
+            predicate = 'es_nota_de',
+            notas = self.get('notas'),
+            data={},
+            deferreds = [],
+            defer;
+
+        article.set({feum:new Date().getTime()});
+        article.set({denom:article.get('slug')});
+
+        article = self.buildPredicateData(self, article, 1, 100, predicate);
+        console.log('[%s] insertNota BEGINS',this.whoami);
+        article.buildTagList();
+
+        defer = article.save(null, {
+            success: function (article) {
+                console.log('insert article:SUCCESS: [%s] ',article.get('slug'));
+            },
+            error: function () {
+                console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',article.get('slug'));
+            }
+        });
+        deferreds.push(defer);
+
+        $.when.apply(null, deferreds).done(function(){
+            console.log('UPDATE PRODUCTO TO INSERT NOTE:models.js begins [%s]',article.id);
+
+            if(!notas) notas = [];
+            data.id = article.id
+            data.slug = article.get('slug');
+            data.fecha = article.get('fecha');
+            data.tiponota = article.get('tiponota');
+            data.responsable = article.get('responsable');
+            data.url = article.get('url');
+
+            notas.push(data);
+            self.set({notas: notas});
+            cb(notas);
+        });
+    },
+
+    insertCapitulos: function(data,cb){
+        console.log('insertCapitulos:models.js begins capdesde: [%s]',data.numcapdesde);
+        var self = this,
+            builder = {},
+            predicate = 'es_capitulo_de',
+            name_template = _.template('Cap: <%= numcap %> - <%= name %> '),
+            deferreds = [],defer;
+
+        builder._id = null;
+        builder.tipopersona = data.tipopersona || self.tipopersona;
+        builder.descriptores = data.descriptores;
+        builder.nivel_importancia = self.get('nivel_importancia');
+        builder.nivel_ejecucion = self.get('nivel_ejecucion');
+        builder.estado_alta = self.get('estado_alta');
+
+
+        for (var icap =data.numcapdesde; icap <= data.numcaphasta; icap +=1){
+ 
+            var capitulo = new Person(builder);
+            capitulo.buildTagList();
+            capitulo = self.buildPredicateData(self, capitulo, icap,data.numcapprefix,predicate);
+            capitulo.set({slug:  name_template({numcap: self.buildCapNumber(icap,(data.numcapprefix||100)), name:self.get('slug') })});
+            capitulo.set({denom: name_template({numcap: self.buildCapNumber(icap,(data.numcapprefix||100)), name:self.get('denom')})});
+
+            //console.log('insertCapitulos:ready to insert: [%s] [%s]',icap,capitulo.get('slug'));
+            defer = capitulo.save(null, {
+                success: function (model) {
+                    //console.log('saveNode:persondetails success');
+                    console.log('insertCapitulos:SUCCESS: [%s] [%s] ',icap,capitulo.get('slug'));
+                },
+                error: function () {
+                    console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',icap,capitulo.get('slug'));
+                }
+            });
+            deferreds.push(defer);
+        }
+        $.when.apply(null, deferreds).done(function(){
+            //console.log('deferres done FIRED');
+            cb();
+            //utils.approuter.navigate('navegar/personas', {trigger: true, replace: false});
+        });
+    },
+
+    getTagList: function(){
+        //project:{_id : this.model.id} }
+        return this.get('taglist');
+    },
+
+    buildTagList: function(){
+        var descriptores = this.get('descriptores');
+        if(descriptores){
+            var list = _.filter(_.map(descriptores.split(';'),function(str){return $.trim(str)}),function(str){return str});
+            //list = _.map(list,function(str){return {tag: str}; });
+            this.set({ taglist : list });
+        }else{
+            this.set({ taglist : [] });
+        }
+    },
+
+    assetFolder: function(){
+        var today  = new Date();
+        var day    = today.getDate()<10 ? '0'+today.getDate() : today.getDate();
+        var month = today.getMonth()+1;
+        month  = month<10 ? '0'+month : month;
+        var folder = _.template('/assets/<%= y %>/<%= m %>/<%= d %>');
+
+        return folder({y:today.getFullYear() ,m:month, d:day});
+    },
+    createAsset: function(data, cb) {
+        var self = this;
+        self.asset = new Asset();
+        self.asset.saveAssetData(data, cb);
+    },
+
+    defaults: {
+        _id: null,
+        tipopersona:"",
+        name: '',
+        displayName: '',
+        nickName: '',
+        tipojuridico:{
+            pfisica: true,
+            pjuridica: false,
+            pideal: true,
+        },
+        roles:{
+            adherente:false,
+            proveedor:false,
+        },
+
+        estado_alta: "activo",
+        descriptores: "",
+        taglist:[],
+        description: "",
+ 
+        contactinfo:[],
+        notas:[],
+        branding:[],
+
+
+    }
+
+});
+
+//        patechfacet:{
+//            durnominal:null,
+//            fecreacion:null,
+//            cantcapitulos:null,
+//            personara:null,
+//        },
+
+
+window.PersonCollection = Backbone.Collection.extend({
+    // ******************* PROJECT COLLECTION ***************
+
+    model: Person,
+
+    url: "/navegar/personas"
+
+});
+
+
 window.Article = Backbone.Model.extend({
     // ******************* PROJECT ***************
     whoami: 'Article:models.js ',
@@ -815,6 +1496,21 @@ window.ProductCollection = Backbone.Collection.extend({
 
     url: "/navegar/productos"
 
+});
+
+window.BrowsePersonsQuery = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    retrieveData: function(){
+        return dao.extractData(this.attributes);
+    },
+    
+    defaults: {
+        name:'',
+        nickName:'',
+        tipopersona: '',
+        taglist: '',
+
+    }
 });
 
 window.BrowseProductsQuery = Backbone.Model.extend({
@@ -1773,6 +2469,29 @@ window.User = Backbone.Model.extend({
     urlRoot: "/usuarios",
 
     idAttribute: "_id",
+
+    retrieveData: function(){
+        return dao.extractData(this.attributes);
+    },
+    beforeUpdate: function() {
+        this.set({feum:new Date().getTime()});
+        this.set({username:this.get('mail')});
+
+    },
+
+    fetchFilteredPredicateArray: function(predicate, child, ancestor){
+        var tlist = child.get(predicate);
+        if(!tlist) {
+            tlist = [];
+        }else{
+            tlist = _.filter(tlist,function(element){
+                return element && (element.id!==ancestor.id);
+            });
+        }
+        return tlist;
+    },
+
+
     /*
     getFullName: function(){
         var fullname = this.get('name') + this.get('lastname');
@@ -1781,11 +2500,13 @@ window.User = Backbone.Model.extend({
     },
     */
 
-    /*
-    retrieveData: function(){
-        return dao.extractData(this.attributes);
+    schema: {
+        displayName:   {type: 'Text', title: 'Nombre', editorAttrs:{placeholder : 'sera utilizado como saludo'}},
+        mail:          {type: 'Text', title: 'EMail', editorAttrs:{placeholder : 'sera su nombre de usuario'}},
+        password:      {type: 'Password', title: 'Clave' },
+        estado_alta:   {type: 'Select',options: utils.userStatusOptionList },
+        roles:         { type: 'List', itemType: 'Text' }
     },
-    */
 
 
     defaults : {
@@ -1815,11 +2536,14 @@ window.UserFacet = Backbone.Model.extend({
 
     idAttribute: "_id",
 
+    // USER FACET
     schema: {
         displayName:   {type: 'Text', title: 'Nombre completo', editorAttrs:{placeholder : 'sera utilizado como saludo'}},
         mail:          {type: 'Text', title: 'EMail', editorAttrs:{placeholder : 'sera su nombre de usuario'}},
         password:      {type: 'Password', title: 'Clave' },
+        rolinstancia:   {type: 'Select',options: utils.rolinstanciasOptionList },
     },
+    //    roles:         {type: 'Select',options: utils.userRolesOptionList },
 
     defaults : {
         _id: null,
@@ -1838,6 +2562,20 @@ window.UserFacet = Backbone.Model.extend({
         },
         conduso:[]
     }
+});
+
+window.UserCollection = Backbone.Collection.extend({
+    // ******************* RESOURCE COLLECTION ***************
+    // otros metodos: initialize, url, model, comparator
+    // models:  use get, at or underscore methods
+
+    model: User,
+    initialize: function (model, options) {
+       if(options) this.options = options;
+    },
+
+    url: "/recuperar/usuarios"
+
 });
 
 /*
