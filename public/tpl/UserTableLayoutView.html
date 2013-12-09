@@ -1,0 +1,69 @@
+<!--  ====================  ProductList LAYOUT SIDE-BAR ==========================  -->
+<div class="row-fluid">
+<!-- START selector column -->
+<div class="span2">
+  <div class="well sidebar-nav">
+    <ul class="nav nav-list">
+      <li class="nav-header">Persona seleccionado</li>
+      <li><button id='mastevale' class='btn btn-block btn-link prselected'><%= utils.selectedUsers.getSelectedLabel() %></button></li>
+      <li class="nav-header">Selectores</li>
+      <li><input type='text' placeholder='identificador' class='input-small' id='nickName' name='nickName' value=<%= nickName %>></li>
+      <li><input type='text' placeholder='tipo' class='input-small' id='tipopersona' name='tipopersona' value=<%= tipopersona %>></li>
+      <li><input type='text' placeholder='descriptor' class='input-small' id='taglist' name='taglist' value=<%= taglist %> ></li>
+
+    </ul>
+  </div><!--/.well side bar -->
+</div><!--/span3 side bar-->
+<!-- START Content  tabs -->
+<div class="span10">
+<!-- START head-row -->
+<div class="navbar " style="z-index: 10;">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar">1</span>
+                <span class="icon-bar">2</span>
+                <span class="icon-bar">3</span>
+            </a>
+
+            <a class="brand" href="#navegar/personas">Usuarios</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <!-- <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Acciones<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a class='selperson' ><i class="icon-check"></i>seleccionar persona</a></li>
+                            <li><a class='dselperson' ><i class="icon-remove"></i>deseleccionar persona</a></li>
+                            <li class="divider"></li>
+                            <li><a class='addmembers' ><i class="icon-check"></i>vincular miembros</a></li>
+                            <li><a class='addassociated' ><i class="icon-check"></i>vincular relacionados</a></li>
+                            <li><a class='buildtree' ><i class="icon-check"></i>ver grafo</a></li>
+                            <li class="divider"></li>
+                            <li><a class='btn btn-link managetable' >seleccionar columnas</a></li>
+                        </ul>
+                    </li> -->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Nuevo<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#usuarios/add">Usuario</a></li>
+                            <!-- <li><a href="#proyectos/add">Proyecto</a></li> -->
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul class="nav pull-right"></ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+  <div id="listcontent" class="content row-fluid"></div>    	      
+</div><!--/span10-->
+</div><!--row-fluid -->
+<hr>

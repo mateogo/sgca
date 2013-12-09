@@ -54,9 +54,9 @@ var routesBootstrap = function (app, express) {
     // verify callback
     function(username, password, done) {
       console.log('passport verify: username[%s] pass[%s] ',username,password);
-      //return done(null, user); // ok
-      //return done(null, false, { message: 'Incorrect username.' }); // ToDo: implementar FLASH
-      //return done(err); // server error
+      //  return done(null, user); // ok
+      //  return done(null, false, { message: 'Incorrect username.' }); // ToDo: implementar FLASH
+      //  return done(err); // server error
       //  return (new Error('User ' + id + ' does not exist'));
       //  process.nextTick(function () {
 
@@ -82,12 +82,12 @@ var routesBootstrap = function (app, express) {
   ));
 
   passport.serializeUser(function(user, done) {
-    //console.log('serialize:[%s]',user.name);
+    console.log('serialize:[%s]',user.name);
     done(null, user._id);
   });
 
   passport.deserializeUser(function(id, done) {
-    //console.log('deserialize:[%s]',id);
+    console.log('deserialize:[%s]',id);
     user.fetchById(id, function(err, user) {
       done(err, user);
     });

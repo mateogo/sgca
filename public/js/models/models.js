@@ -2470,6 +2470,10 @@ window.User = Backbone.Model.extend({
 
     idAttribute: "_id",
 
+   initialize: function(){
+        this.viewers = {};
+   },
+
     retrieveData: function(){
         return dao.extractData(this.attributes);
     },
@@ -2489,6 +2493,10 @@ window.User = Backbone.Model.extend({
             });
         }
         return tlist;
+    },
+
+    displayItem: function (key) {
+        return (this.viewers[key]) ? this.viewers[key](this.get(key)) : this.get(key) ;
     },
 
 

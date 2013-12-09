@@ -45,7 +45,9 @@ var AppRouter = Backbone.Router.extend({
 
         "activos/add"            : "assetDetails",
         "activos/:id"            : "assetDetails",
-        "navegar/activos"        : "browseAssets"
+        "navegar/activos"        : "browseAssets",
+
+        "recuperar/usuarios"     : "browseUsers"
         
     },
 
@@ -53,6 +55,16 @@ var AppRouter = Backbone.Router.extend({
     initialize: function () {
         this.headerView = new HeaderView();
         $('.header').html(this.headerView.el);
+    },
+
+
+    browseUsers: function (page) {
+
+        console.log('browseUsers:main.js');
+        var p = page ? parseInt(page, 10) : 1;
+        
+        var browsepersons = new UserBrowseView({page:p, el:'#content',parenttag:'content'});
+
     },
 
     addPerson: function() {
@@ -412,7 +424,7 @@ utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView', 'ProjectListLayoutVie
     'AssetAccordionView','AssetVersionListItemView','AssetView','AssetLayoutView',
     'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView',
     'ProductViewLayout','ArticleView', 'ArticleViewLayout','BrandingEditView',
-    'PersonView','PersonViewLayout','PersonTableLayoutView'], function() {
+    'PersonView','PersonViewLayout','PersonTableLayoutView','UserTableLayoutView'], function() {
     app = new AppRouter();
     utils.approuter = app;
     Backbone.history.start();

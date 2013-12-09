@@ -391,6 +391,14 @@ window.utils = {
         return optionStr;
     },
 
+
+    userListTableHeader:[
+        {id:0, tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',            label:'#'},
+        {id:1, tt:'th', flag:1, tclass:'col1', tmpl: 'template3', val:'mail',              label:'identificador'},
+        {id:2, tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'username',          label:'tipo'},
+        {id:3, tt:'th', flag:1, tclass:'col3', tmpl: 'template1', val:'estado_alta',       label:'estado'},
+    ], 
+
     personListTableHeader:[
         {id:0, tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',            label:'#'},
         {id:1, tt:'th', flag:1, tclass:'col1', tmpl: 'template3', val:'nickName',          label:'identificador'},
@@ -443,6 +451,46 @@ window.utils = {
         });
         //console.log(tabledata);
         return tabledata;
+    },
+
+       selectedUsers:{
+        list:[],
+        select: function  () {
+            this.suser = this.first() || this.suser;
+        },
+        unselect: function() {
+            this.suser = null;
+        },
+        getSelected: function() {
+            return this.suser;
+        },
+        getSelectedLabel: function() {
+            if(!this.getSelected()) return 'Sin selección';
+            else return this.getSelected().get('nickName');
+        },
+        add: function  (user) {
+            for (var i = this.list.length - 1; i >= 0; i--) {
+                if(this.list[i]===user) return this.list;
+            }
+            this.list.push(user);
+            return this.list;
+        },
+        getList: function() {
+            return this.list;
+        },
+        remove: function (user) {
+            for (var i = this.list.length - 1; i >= 0; i--) {
+                if(this.list[i]===user) this.list.splice(i,1);
+            }
+            return this.list;
+        },
+        reset: function() {
+            this.list = [];
+        },
+        first: function  () {
+            if(this.list.length) return this.list[0];
+            else return null;
+        }
     },
 
     selectedPersons:{
