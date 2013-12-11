@@ -30,7 +30,8 @@ window.UserBrowseModel = Backbone.Model.extend({
 window.UserBrowseView = Backbone.View.extend({
     whoami:'UserBrowseView:userlayout.js',
 
-    initialize:function () {
+    initialize:function (options) {
+        this.options = options;
         this.loadSettings();
         this.renderAll();
     },
@@ -267,7 +268,8 @@ window.UserListView = Backbone.View.extend({
 
     paginatorPath: '#recuperar/usuarios/pag/',
 
-    initialize: function () {
+    initialize: function (options) {
+        this.options = options;
         this.render();
     },
 
