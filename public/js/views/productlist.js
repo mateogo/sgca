@@ -522,6 +522,43 @@ template: _.template("<a href='#articulos/<%= id %>' class='notaitem' title='<%=
 });
 
 
+window.PersonAncestorView = Backbone.View.extend({
+    tagName:'ul',    
+    className:'nav nav-list',
+
+    render: function () {
+        console.log('PersonAncestorView: render BEGIN');
+        var that = this;
+        var products = this.model;
+        products.each(function(element){
+            $(that.el).append(new PersonAncestorInLineView({model: element}).render().el);
+        });
+        return this;
+    }
+});
+
+window.PersonAncestorInLineView = Backbone.View.extend({
+    tagName: "li",
+    template: _.template("<button class='btn-block btn-link ancestorpa'><%= nickName %></button>"),
+
+    events: {
+        "click  .ancestorpa" : "ancestorpa",
+    },
+
+    ancestorpa:function(){
+        utils.approuter.navigate('personas/'+this.model.id, true);
+    },
+
+    initialize: function () {
+        this.model.bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+    },
+
+    render: function () {
+        $(this.el).html(this.template(this.model.toJSON()));
+        return this;
+    }
+});
 
 window.AncestorView = Backbone.View.extend({
 
@@ -549,9 +586,6 @@ window.AncestorView = Backbone.View.extend({
         return this;
     }
 });
-
-
-
 
 window.AncestorInLineView = Backbone.View.extend({
 

@@ -11,14 +11,20 @@ window.utils = {
         //
         //_.template compiles a template using underscore
         //
+        var self = this;
         var deferreds = [];
+        self.templates = {};
         $.each(views, function(index, view) {
             if (window[view]) {
                 deferreds.push($.get('tpl/' + view + '.html', function(data) {
                     window[view].prototype.template = _.template(data);
                 }));
             } else {
-                alert('tpl/' + view + '.html' + " not FOUND!!");
+                console.log('WARINING: Marionette template. tpl/' + view + '.html' + " not FOUND!!");
+                deferreds.push($.get('tpl/' + view + '.html', function(data) {
+                    self.templates[view] = _.template(data);
+                }));
+
             }
         });
         //$.when: Provides a way to execute callback functions based on one or more objects, 
@@ -138,6 +144,18 @@ window.utils = {
             return this.map;
         }
     },
+
+    tipoComprobaneOptionList: [
+        {val:'no_definido'    , label:'tipo de comprobante'},
+        {val:'nrecepcion'     , label:'N/Recepción'},
+        {val:'nentrega'       , label:'N/Entrega'},
+        {val:'ptecnico'       , label:'P/Técnico'},
+    ],
+
+    tipoBrandingOptionList: [
+        {val:'no_definido'      , label:'tipo de archivo'},
+        {val:'imagen_web'       , label:''},
+    ],
 
     userStatusOptionList:[
         {val:'activo'        , label:'activo'},
@@ -437,7 +455,7 @@ window.utils = {
         template1 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><%= value %></td>"),
         template2 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><input name=tselect type=checkbox class=tselect ></td>"),
         template3 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink' title='editar item'><%= value %></button></td>"),
-        template4 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tedit' title='no implementado aun'><i class='icon-edit'></i></button><button class='btn-link tzoom' title='ver productos relacionados' ><i class='icon-zoom-in'></i></button></td>"),
+        template4 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tedit' title='no implementado aun'><i class='icon-edit'></i></button><button class='btn-link tzoom' title='ver personas relacionadas' ><i class='icon-zoom-in'></i></button></td>"),
     },
 
     buildTableRow: function(data,model){

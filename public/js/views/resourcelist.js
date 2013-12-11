@@ -5,7 +5,8 @@ window.ResourceListView = Backbone.View.extend({
 
     paginatorPath: '#navegar/recursos/pag/',
 
-    initialize: function () {
+    initialize: function (options) {
+        this.options = options;
         this.render();
     },
 

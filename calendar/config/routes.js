@@ -247,5 +247,15 @@ module.exports = function (config, app) {
     app.post('/personas', person.add);
     app.put('/personas/:id', person.update);
     app.delete('/personas/:id', person.delete);
+
+    // receipt (comprobantes) routes
+    var receipt = require(rootPath + '/calendar/controllers/receipts');
+    app.get ('/comprobantes',           receipt.findAll);
+    app.post('/recuperar/comprobantes', receipt.find);
+    app.post('/navegar/comprobantes',   receipt.find);
+    app.get ('/comprobantes/:id',       receipt.findById);
+    app.post('/comprobantes',           receipt.add);
+    app.put ('/comprobantes/:id',       receipt.update);
+    app.delete('/comprobantes/:id',     receipt.delete);
  
 };

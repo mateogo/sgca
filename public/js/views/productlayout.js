@@ -30,7 +30,8 @@ window.ProductBrowseModel = Backbone.Model.extend({
 window.ProductBrowseView = Backbone.View.extend({
     whoami:'ProductBrowseView:productlayout.js',
 
-    initialize:function () {
+    initialize:function (options) {
+        this.options = options;
         this.loadSettings();
         this.renderAll();
     },
@@ -264,7 +265,8 @@ window.ProductListView = Backbone.View.extend({
 
     paginatorPath: '#navegar/productos/pag/',
 
-    initialize: function () {
+    initialize: function (options) {
+        this.options = options;
         this.render();
     },
 
