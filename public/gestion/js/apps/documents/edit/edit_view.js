@@ -14,8 +14,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     }
   });
 
-  //Edit.Document = Marionette.ItemView.extend({
-
   Edit.Document = DocManager.DocsApp.Common.Views.Form.extend({
     
     tagName:'form',

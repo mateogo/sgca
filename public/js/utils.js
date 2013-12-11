@@ -439,6 +439,13 @@ window.utils = {
         {id:7, tt:'th', flag:1, tclass:'col7', tmpl: 'template4', val:'acciones',          label:'acciones'}
     ],
 
+    documListTableHeader:[
+        {id:0, tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',        label:'#'},
+        {id:1, tt:'th', flag:1, tclass:'col1', tmpl: 'template3', val:'cnumber',       label:'comprob'},
+        {id:2, tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'tipocomp',      label:'tipo'},
+        {id:3, tt:'th', flag:1, tclass:'col3', tmpl: 'template1', val:'slug',          label:'asunto'},
+    ],
+
     buildTableHeader: function(data){
         var template = _.template("<<%= tt %> name='<%= val %>' class='<%= tclass %>' ><%= label %></<%= tt %> >");
         var tabledata = '';
@@ -448,7 +455,7 @@ window.utils = {
             }
         });
         //console.log('<thead><tr>'+tabledata+'</tr></thead>');
-        return '<thead><tr>'+tabledata+'</tr></thead>';
+        return '<thead><tr>'+tabledata+'</tr></thead><tbody></tbody>';
     },
 
     buildTableRowTemplates:{
@@ -471,7 +478,18 @@ window.utils = {
         return tabledata;
     },
 
-       selectedUsers:{
+    buildRowRenderTemplate: function(lista, templates){
+        var items =[];
+        _.each(lista, function(data,index){
+          if(data.flag){
+            data.value = '<%= '+data.val+' %>';
+            items.push(templates[data.tmpl](data));
+          }          
+        });
+        return items.join();  
+    },
+
+    selectedUsers:{
         list:[],
         select: function  () {
             this.suser = this.first() || this.suser;
