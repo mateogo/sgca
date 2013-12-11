@@ -16,6 +16,12 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
  List.Document = Marionette.ItemView.extend({
     tagName: "tr",
+
+    getTemplate: function(){
+      console.log();
+      return _.template(utils.buildRowRenderTemplate(utils.documListTableHeader,utils.buildTableRowTemplates));
+    },
+/*
     template: _.template(
       '<td><%= cnumber %></td>' +
       '<td><%= tipocomp %></td>'  +
@@ -33,7 +39,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
       '</td>'
     ),
 
-
+*/
     events: {
       "click": "highlightName",
       "click td a.js-show": "showClicked",
@@ -89,10 +95,17 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
   List.Documents = Marionette.CompositeView.extend({
     tagName: "table",
     className: "table table-bordered table-hover",
-    template: _.template(
+
+    getTemplate: function(){
+      console.log(utils.buildTableHeader(utils.documListTableHeader));
+      return _.template(utils.buildTableHeader(utils.documListTableHeader));
+    },
+
+    //template: _.template()
       //'<thead><tr><td>comprob</td><td>tipo</td><td>Descripción</td><td>Acciones</td></tr></thead><tbody></tbody>'
-      '<thead><tr><th>comprob</th><th>tipo</th><th>Descripción</th><th>Acciones</th></tr></thead><tbody></tbody>'
-      ),
+      //'<thead><tr><th>comprob</th><th>tipo</th><th>Descripción</th><th>Acciones</th></tr></thead><tbody></tbody>'
+    //),
+
     emptyView: NoDocumentsView,
     itemView: List.Document,
     itemViewContainer: "tbody",
