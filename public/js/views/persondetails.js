@@ -25,11 +25,8 @@ window.PersonView = Backbone.View.extend({
         this.renderBranding();
         this.renderChilds();
         this.renderProfileImage();
-        
-        /*
         this.renderAncestors();
         this.renderNotas();
-        */
     },
 
     render: function () {
@@ -68,13 +65,8 @@ window.PersonView = Backbone.View.extend({
         return this;
     },
 
-
-    /*
-
-
-
     renderAncestors: function () {
-        this.relatedController.anrender();
+        this.relatedController.personanrender();
         return this;
     },
 
@@ -82,9 +74,6 @@ window.PersonView = Backbone.View.extend({
         this.relatedController.notasrender();
         return this;
     },
-
-
-    */
 
     /**
      * Scope of events: Events declared in a view use the view’s `el` element to wire up the events. 
@@ -98,31 +87,18 @@ window.PersonView = Backbone.View.extend({
         "click .contacto"    : "newcontact",
         "click .usuario"     : "newuser",
         "click .useritem"    : "edituser",
-        "click .paclasif"    : "formpaclasification",
-        "click .padatospro"  : "formpatechfacet",
-        "click .capitulos"   : "formpacapitulos",
-        "click .painstancia" : "formaddinstance",
         "click .branding"    : "formbranding",
-        "click .parealiz"    : "formparealization",
         "click .notas"       : "formnotas",
-        "click .intechfacet" : "formintechfacet",
         "click .save"       : "beforeSave",
         "click .delete"     : "deleteNode",
         "click .clonar"     : "clone",
         "click .eventos"    : "eventos",
         "click .browse"     : "browse",
-        "click .vistacarousel" : "vistacarousel",
-        "click .vistainfo"   : "vistainfo",
-
-        "click .uploadcontent"  : "instanceUploadFiles",
-        "click .discardcontent" : "discardcontent",
-        "click .addnewinstance" : "addnewinstance",
-        "click .cancelinstance" : "cancelinstance",
 
         "click .uploadbrnd"  : "brandingUploadFiles",
         "click .discardbrnd" : "discardbrnd",
         "click .addnewbrnd"  : "addnewbrnd",
-        "click .cancelbrnd"  : "cancelinstance",
+        "click .cancelbrnd"  : "cancelbrnd",
 
         "dragover #filesdrop" : "dragoverHandler",
         "dragover #brnddrop"  : "dragoverHandler",
@@ -147,6 +123,20 @@ window.PersonView = Backbone.View.extend({
 
     newuser: function(){
         this.formuser(dao.userfacet.init());
+    },
+
+    cancelbrnd: function () {
+        console.log('[%s] cancelbrnd BEGINS',this.whoami);      
+    },
+
+    eventos: function () {
+        utils.approuter.navigate('navegar/proyectos', true);
+        return false;
+    },
+
+    browse: function () {
+        utils.approuter.navigate('navegar/personas', true);
+        return false;
     },
 
     formuser: function (user) {
@@ -188,16 +178,7 @@ window.PersonView = Backbone.View.extend({
         // redefinición de la lista subcontenido, en función del dato actual del contact
         var schema = contact.schema;
         schema.subcontenido.options = utils.tipocontactoOL[contact.get('tipocontacto')];
-        /*
-        var schema = {
-                tipocontacto: {type: 'Select', options: utils.contactoOL },
-                subcontenido: {type: 'Select', options: utils.tipocontactoOL[contact.get('tipocontacto')]},
-                contactdata:  {type: 'TextArea', title: 'Dato', editorAttrs:{placeholder : 'ingrese dato de contacto'}},
-                protocolo:    {type: 'Text', title: 'Protocolo'},
-                comentario:   {type: 'Text', title: 'Comentario'},
-                horario:      {type: 'Text', title: 'Horario'},
-        };
-        */
+
         var form = new Backbone.Form({
                 model: contact,
                 schema: schema
@@ -303,6 +284,30 @@ window.PersonView = Backbone.View.extend({
         $('.brandinghook').html(form.el); 
     },
 
+    formnotas: function () {
+        var self = this,
+            personmodel = this.model,
+            facet = dao.notasfacet.init(personmodel),
+            form = new Backbone.Form({
+                model: facet,
+            });
+
+        var modal = new Backbone.BootstrapModal({
+            content: form,
+            title: 'Alta rápida de notas',
+            okText: 'guardar',
+            cancelText: 'cancelar',
+            animate: false
+        });
+
+        modal.open(function(){
+            var errors = form.commit();
+            personmodel.insertNota(dao.notasfacet.getContent(),function(notas){
+                console.log('Formnotas:persondetails, CALLBACK OK [%s]', notas.length);
+                self.beforeSave();
+            });
+        });
+    }, 
 
     addnewbrnd: function () {
         var personmodel = this.model;
@@ -395,21 +400,11 @@ window.PersonView = Backbone.View.extend({
 
 
     change: function (event) {
-        /**
-         *  event:
-         *   event.target.name: model property
-         *   event.target.value: model value
-         *   event.target.id model key
-         *  
-         *   this.model.set( {prop1:newValue1, prop2,newValue2 }  )
-         */
-
-        // Remove any existing alert message
         utils.hideAlert();
 
-        // Apply the change to the model
         var target = event.target;
         var change = {};
+
         if(target.type==='checkbox'){
             this.model.get(target.name)[target.value]= target.checked;
         }else{
@@ -418,7 +413,6 @@ window.PersonView = Backbone.View.extend({
         }
         //utils.showAlert('Success!', 'name:['+target.name+'] value:['+target.value+'] key:['+target.id+'] checked:['+target.checked+'] type:['+target.type+'] change:['+change[target.name]+']', 'alert-success');
 
-        // Run validation rule (if any) on changed item
         var check = this.model.validateItem(target.id);
         if (check.isValid === false) {
             utils.addValidationError(target.id, check.message);
@@ -428,29 +422,22 @@ window.PersonView = Backbone.View.extend({
     },
 
     beforeSave: function () {
-        //console.log('beforeSave:persondetails BEGIN');
         var self = this;
         var check = this.model.validateAll();
-        //console.log('beforeSave:persondetails validateAll ok');
 
         if (check.isValid === false) {
             utils.displayValidationErrors(check.messages);
             return false;
         }
 
-        //console.log('beforeSave:persondetails SAVING NOW');
         this.saveNode();
         return false;
     },
 
     saveNode: function () {
-        console.log('saveNode:persondetails begins1');
         var self = this;
-        console.log('saveNode:persondetails begins2');
-        // builds taglist array
         self.model.buildTagList();
-        console.log('saveNode:persondetails begins3');
-        //
+
         self.model.save(null, {
             success: function (model) {
                 //console.log('saveNode:persondetails success');
@@ -488,40 +475,4 @@ window.PersonView = Backbone.View.extend({
         return false;
     },
 
-
-    eventos: function () {
-        utils.approuter.navigate('navegar/proyectos', true);
-        return false;
-    },
-
-    browse: function () {
-        utils.approuter.navigate('navegar/personas', true);
-        return false;
-    },
-
-
-    formnotas: function () {
-        var self = this,
-            personmodel = this.model,
-            facet = dao.notasfacet.init(personmodel),
-            form = new Backbone.Form({
-                model: facet,
-            });
-
-        var modal = new Backbone.BootstrapModal({
-            content: form,
-            title: 'Alta rápida de notas',
-            okText: 'guardar',
-            cancelText: 'cancelar',
-            animate: false
-        });
-
-        modal.open(function(){
-            var errors = form.commit();
-            personmodel.insertNota(dao.notasfacet.getContent(),function(notas){
-                console.log('Formnotas:persondetails, CALLBACK OK [%s]', notas.length);
-                self.beforeSave();
-            });
-        });
-    }, 
 });

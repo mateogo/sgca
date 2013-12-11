@@ -4,7 +4,8 @@ window.ProjectListView = Backbone.View.extend({
 
     paginatorPath: '#navegar/proyectos/pag/',
 
-    initialize: function () {
+    initialize: function (options) {
+        this.options  = options;
         this.render();
     },
 

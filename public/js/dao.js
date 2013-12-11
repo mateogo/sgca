@@ -307,12 +307,9 @@ window.dao = {
     },
 
     productViewFactory: function(spec) {
-        //spec.product; chapters; ancestors;
-        //spec.context
-        //spec.chselector; anselector; 
-        //spec.anview; chview; notasview
-        //spec.chrender; anrender; notasrender
+
         console.log('model factory called');
+
         var loadChilds = function(cb){
             spec.product.loadpacapitulos(cb);
         };
@@ -342,6 +339,9 @@ window.dao = {
         };
         var loadAncestors = function(cb){
             spec.ancestors = spec.product.loadpaancestors(cb);
+        };
+        var loadPersonAncestors = function(cb){
+            spec.ancestors = spec.product.loadancestors(cb);
         };
         var profileRender = function(branding){
             console.log('PROFILE renderview:callback: [%s] length:[%s]',spec.perfilselector, branding.length);
@@ -392,6 +392,12 @@ window.dao = {
             if(ancestors) spec.ancestors = ancestors;
             console.log('ancestorRender:begins [%s] length:[%s]', spec.anselector, spec.ancestors.length)
             spec.anview = new AncestorView({model:spec.ancestors});
+            $(spec.anselector,spec.context).html(spec.anview.render().el);
+        };
+        var personancestorRender = function(ancestors){
+            if(ancestors) spec.ancestors = ancestors;
+            console.log('ancestorRender:begins [%s] length:[%s]', spec.anselector, spec.ancestors.length)
+            spec.anview = new PersonAncestorView({model:spec.ancestors});
             $(spec.anselector,spec.context).html(spec.anview.render().el);
         };
         var relatedRender = function(related){
@@ -476,6 +482,9 @@ window.dao = {
             },
             anrender: function() {
                 loadAncestors(ancestorRender);
+            },
+            personanrender: function() {
+                loadPersonAncestors(personancestorRender);
             },
             profilerender: function() {
                 loadProfile(profileRender);

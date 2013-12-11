@@ -57,10 +57,12 @@ window.Person = Backbone.Model.extend({
 
     idAttribute: "_id",
 
-    enabled_predicates:['es_miembro_de'],
+    enabled_predicates:['es_miembro_de', 'es_relacion_de', 'es_coleccion_de'],
 
     initialize: function () {
         this.validators = {};
+
+        this.viewers = {};
 
         this.validators.name = function (value) {
             return value.length > 0 ? {isValid: true} : {isValid: false, message: "Dato requerido"};
@@ -71,8 +73,6 @@ window.Person = Backbone.Model.extend({
         this.validators.displayName = function (value) {
             return value.length > 0 ? {isValid: true} : {isValid: false, message: "Dato requerido"};
         };
-
-        this.viewers = {};
 
         this.viewers.tipojuridico = function (value){
             var keys = _.keys(value);
@@ -259,17 +259,17 @@ window.Person = Backbone.Model.extend({
         this.set({branding:brands});
     },
 
-    loadpaancestors:function (cb) {
+    loadancestors:function (cb) {
         var self = this;
         var list=[],
-            rawlist=[];
+            rawlist= new PersonCollection();
 
         _.each(self.enabled_predicates, function(elem){
             if(self.get(elem)){
                 list = _.map(self.get(elem),function(item){
-                    return new Person({_id:item.id, slug:item.slug,personcode:item.code,predicate:item.predicate});
+                    return new Person({_id:item.id, displayName:item.slug,nickName:item.code,predicate:item.predicate});
                 });
-                rawlist = _.union(rawlist,list);
+                rawlist.add(list);
             }
         });
         console.log('[%s]: loadpaancestors ends found:[%s]',self.whoami,rawlist.length);
@@ -283,7 +283,6 @@ window.Person = Backbone.Model.extend({
         var query = {$or: [{'es_relacion_de.id':self.id},{'es_miembro_de.id':self.id}, {'es_coleccion_de.id':self.id}]};
 
         var chapCol= new PersonCollection();
-        //console.log('loadpacapitulos:models.js query  [%s] ',query['es_capitulo_de.id']);
 
         chapCol.fetch({
             data: query,
@@ -443,62 +442,6 @@ window.Person = Backbone.Model.extend({
         });
     },
 
-    insertInstance: function(data, asset, cb){
-        console.log('[%s] insertInstance BEGINS',this.whoami);
-        var self = this,
-            builder = {},
-            predicate = 'es_instancia_de',
-            //name_template = _.template('Cap: <%= numcap %> - <%= name %> '),
-            deferreds = [],
-            defer;
-
-        builder._id = null;
-        builder.tipopersona = data.tipopersona || self.tipopersona;
-        builder.descriptores = data.descriptores;
-        builder.nivel_importancia = self.get('nivel_importancia');
-        builder.nivel_ejecucion = self.get('nivel_ejecucion');
-        builder.estado_alta = self.get('estado_alta');
-        builder.slug = data.slug;
-        builder.denom = data.denom;
-
-
-        var instancefacet = {};
-        instancefacet.rolinstancia = data.rolinstancia;
-        if(asset){
-            instancefacet.size = asset.get('size');
-            instancefacet.tipofile = asset.get('type');
-        }
-        builder.painstancefacet = instancefacet;
-        /////////
-        var instance = new Person(builder);
-        instance.buildTagList();
-
-        instance = self.buildPredicateData(self, instance, 1, 100, predicate);
-
-        //console.log('insertInstance:ready to insert: [%s] ',instance.get('slug'));
-        defer = instance.save(null, {
-            success: function (instance) {
-                //console.log('saveNode:persondetails success');
-                console.log('insert Instance:SUCCESS: [%s] ',instance.get('slug'));
-            },
-            error: function () {
-                console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',instance.get('slug'));
-            }
-        });
-        deferreds.push(defer);
-
-        ////
-        $.when.apply(null, deferreds).done(function(){
-            if(asset){
-                asset.linkChildsToAncestor(asset, instance,'es_asset_de',cb);
-            }else{
-                //console.log('deferres done FIRED');
-                cb();
-            }
-            //utils.approuter.navigate('navegar/personas', {trigger: true, replace: false});
-        });
-    },
-
     insertBranding: function(data, asset){
         var self = this,
             entries = self.get('branding');
@@ -557,49 +500,6 @@ window.Person = Backbone.Model.extend({
         });
     },
 
-    insertCapitulos: function(data,cb){
-        console.log('insertCapitulos:models.js begins capdesde: [%s]',data.numcapdesde);
-        var self = this,
-            builder = {},
-            predicate = 'es_capitulo_de',
-            name_template = _.template('Cap: <%= numcap %> - <%= name %> '),
-            deferreds = [],defer;
-
-        builder._id = null;
-        builder.tipopersona = data.tipopersona || self.tipopersona;
-        builder.descriptores = data.descriptores;
-        builder.nivel_importancia = self.get('nivel_importancia');
-        builder.nivel_ejecucion = self.get('nivel_ejecucion');
-        builder.estado_alta = self.get('estado_alta');
-
-
-        for (var icap =data.numcapdesde; icap <= data.numcaphasta; icap +=1){
- 
-            var capitulo = new Person(builder);
-            capitulo.buildTagList();
-            capitulo = self.buildPredicateData(self, capitulo, icap,data.numcapprefix,predicate);
-            capitulo.set({slug:  name_template({numcap: self.buildCapNumber(icap,(data.numcapprefix||100)), name:self.get('slug') })});
-            capitulo.set({denom: name_template({numcap: self.buildCapNumber(icap,(data.numcapprefix||100)), name:self.get('denom')})});
-
-            //console.log('insertCapitulos:ready to insert: [%s] [%s]',icap,capitulo.get('slug'));
-            defer = capitulo.save(null, {
-                success: function (model) {
-                    //console.log('saveNode:persondetails success');
-                    console.log('insertCapitulos:SUCCESS: [%s] [%s] ',icap,capitulo.get('slug'));
-                },
-                error: function () {
-                    console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',icap,capitulo.get('slug'));
-                }
-            });
-            deferreds.push(defer);
-        }
-        $.when.apply(null, deferreds).done(function(){
-            //console.log('deferres done FIRED');
-            cb();
-            //utils.approuter.navigate('navegar/personas', {trigger: true, replace: false});
-        });
-    },
-
     getTagList: function(){
         //project:{_id : this.model.id} }
         return this.get('taglist');
@@ -614,21 +514,6 @@ window.Person = Backbone.Model.extend({
         }else{
             this.set({ taglist : [] });
         }
-    },
-
-    assetFolder: function(){
-        var today  = new Date();
-        var day    = today.getDate()<10 ? '0'+today.getDate() : today.getDate();
-        var month = today.getMonth()+1;
-        month  = month<10 ? '0'+month : month;
-        var folder = _.template('/assets/<%= y %>/<%= m %>/<%= d %>');
-
-        return folder({y:today.getFullYear() ,m:month, d:day});
-    },
-    createAsset: function(data, cb) {
-        var self = this;
-        self.asset = new Asset();
-        self.asset.saveAssetData(data, cb);
     },
 
     defaults: {
@@ -646,7 +531,6 @@ window.Person = Backbone.Model.extend({
             adherente:false,
             proveedor:false,
         },
-
         estado_alta: "activo",
         descriptores: "",
         taglist:[],
@@ -655,23 +539,10 @@ window.Person = Backbone.Model.extend({
         contactinfo:[],
         notas:[],
         branding:[],
-
-
     }
-
 });
 
-//        patechfacet:{
-//            durnominal:null,
-//            fecreacion:null,
-//            cantcapitulos:null,
-//            personara:null,
-//        },
-
-
 window.PersonCollection = Backbone.Collection.extend({
-    // ******************* PROJECT COLLECTION ***************
-
     model: Person,
 
     url: "/navegar/personas"
@@ -691,6 +562,8 @@ window.Article = Backbone.Model.extend({
     initialize: function () {
         this.validators = {};
 
+        this.viewers = {};
+
         this.validators.slug = function (value) {
             return value.length > 0 ? {isValid: true} : {isValid: false, message: "Indique una descripción"};
         };
@@ -698,6 +571,10 @@ window.Article = Backbone.Model.extend({
 
     validateItem: function (key) {
         return (this.validators[key]) ? this.validators[key](this.get(key)) : {isValid: true};
+    },
+
+    displayItem: function (key) {
+        return (this.viewers[key]) ? this.viewers[key](this.get(key)) : this.get(key) ;
     },
 
     // TODO: Implement Backbone's standard validate() method instead.
@@ -1003,6 +880,8 @@ window.Product = Backbone.Model.extend({
     initialize: function () {
         this.validators = {};
 
+        this.viewers = {};
+
         this.validators.slug = function (value) {
             return value.length > 0 ? {isValid: true} : {isValid: false, message: "Indique una descripción"};
         };
@@ -1010,6 +889,10 @@ window.Product = Backbone.Model.extend({
 
     validateItem: function (key) {
         return (this.validators[key]) ? this.validators[key](this.get(key)) : {isValid: true};
+    },
+
+    displayItem: function (key) {
+        return (this.viewers[key]) ? this.viewers[key](this.get(key)) : this.get(key) ;
     },
 
     // TODO: Implement Backbone's standard validate() method instead.
@@ -1440,21 +1323,6 @@ window.Product = Backbone.Model.extend({
         }
     },
 
-    assetFolder: function(){
-        var today  = new Date();
-        var day    = today.getDate()<10 ? '0'+today.getDate() : today.getDate();
-        var month = today.getMonth()+1;
-        month  = month<10 ? '0'+month : month;
-        var folder = _.template('/assets/<%= y %>/<%= m %>/<%= d %>');
-
-        return folder({y:today.getFullYear() ,m:month, d:day});
-    },
-    createAsset: function(data, cb) {
-        var self = this;
-        self.asset = new Asset();
-        self.asset.saveAssetData(data, cb);
-    },
-
     defaults: {
         _id: null,
         project:{},
@@ -1877,6 +1745,10 @@ window.Quotation = Backbone.Model.extend({
         return (this.validators[key]) ? this.validators[key](this.get(key)) : {isValid: true};
     },
 
+    displayItem: function (key) {
+        return (this.viewers[key]) ? this.viewers[key](this.get(key)) : this.get(key) ;
+    },
+
     // TODO: Implement Backbone's standard validate() method instead.
     validateAll: function () {
 
@@ -1996,6 +1868,8 @@ window.Project = Backbone.Model.extend({
     initialize: function () {
         this.validators = {};
 
+        this.viewers = {};
+
         this.validators.slug = function (value) {
             return value.length > 0 ? {isValid: true} : {isValid: false, message: "Indique la denominación identificatoria del evento"};
         };
@@ -2022,6 +1896,10 @@ window.Project = Backbone.Model.extend({
 
     validateItem: function (key) {
         return (this.validators[key]) ? this.validators[key](this.get(key)) : {isValid: true};
+    },
+
+    displayItem: function (key) {
+        return (this.viewers[key]) ? this.viewers[key](this.get(key)) : this.get(key) ;
     },
 
     // TODO: Implement Backbone's standard validate() method instead.
@@ -2192,6 +2070,10 @@ window.Resource = Backbone.Model.extend({
         return (this.validators[key]) ? this.validators[key](this.get(key)) : {isValid: true};
     },
 
+    displayItem: function (key) {
+        return (this.viewers[key]) ? this.viewers[key](this.get(key)) : this.get(key) ;
+    },
+
     // TODO: Implement Backbone's standard validate() method instead.
     validateAll: function () {
 
@@ -2303,6 +2185,10 @@ window.Asset = Backbone.Model.extend({
 
     validateItem: function (key) {
         return (this.validators[key]) ? this.validators[key](this.get(key)) : {isValid: true};
+    },
+
+    displayItem: function (key) {
+        return (this.viewers[key]) ? this.viewers[key](this.get(key)) : this.get(key) ;
     },
 
     // TODO: Implement Backbone's standard validate() method instead.
@@ -2585,6 +2471,9 @@ window.UserCollection = Backbone.Collection.extend({
     url: "/recuperar/usuarios"
 
 });
+
+
+
 
 /*
 eq: {

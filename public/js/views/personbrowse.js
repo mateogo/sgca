@@ -30,7 +30,8 @@ window.PersonBrowseModel = Backbone.Model.extend({
 window.PersonBrowseView = Backbone.View.extend({
     whoami:'PersonBrowseView:personlayout.js',
 
-    initialize:function () {
+    initialize:function (options) {
+        this.options = options;
         this.loadSettings();
         this.renderAll();
     },
@@ -263,7 +264,8 @@ window.PersonListView = Backbone.View.extend({
 
     paginatorPath: '#navegar/personas/pag/',
 
-    initialize: function () {
+    initialize: function (options) {
+        this.options = options;
         this.render();
     },
 
