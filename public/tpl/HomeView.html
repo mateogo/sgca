@@ -1,26 +1,104 @@
-<div class="home-hero">
-  <h1>Sistema de Gestión de Contenidos Audiovisuales</h1>
-  <h3>Bienvenido al SGCA</h3>
+<!-- 
+  <div class="home-hero">
+    <h1>Sistema de Gestión de Contenidos Audiovisuales</h1>
+    <h3>Bienvenido al SiGCA</h3>
 
-  <br/>
-  <div style="opacity: .9;">
-    <form class="form-vertical" method="post" action="/login#navegar/proyectos">
-      <input type='text'  name='username' class="input-large" placeholder='usuario'><br/>
-      <input type='password'  name='password' class="input-large" placeholder='clave'><br/>
-      <button type="submit" class="btn btn-primary btn-large">Ingresar</button>
-    </form>
-    <div >
-      <a href="#" class="altausuario">Alta nuevo usuario</a>
+    <br/>
+    <div style="opacity: .9;">
+      <form class="form-vertical" method="post" action="/login#navegar/proyectos">
+        <input type='text'  name='username' class="input-large" placeholder='usuario'><br/>
+        <input type='password'  name='password' class="input-large" placeholder='clave'><br/>
+        <button type="submit" class="btn btn-primary btn-default">Ingresar</button>
+      </form>
+      <div >
+        <a href="#" class="altausuario">Alta nuevo usuario</a>
+      </div>
+
+      <div class="row-fluid status-bar">
+          <div class="span12">
+              <div class="alert alert-success" style="display: none">
+                  <b>INFO:</b> El registro se guardó exitosamente
+              </div>
+          </div>
+      </div>
+
+
     </div>
-
-    <div class="row-fluid status-bar">
-        <div class="span12">
-            <div class="alert alert-success" style="display: none">
-                <b>INFO:</b> El registro se guardó exitosamente
-            </div>
-        </div>
-    </div>
-
-
   </div>
+-->
+<div class="front-card floatFix" style="width:838px;margin:auto;margin-top:50px;padding:20px;">
+
+  <div class="front-welcome">
+    <div class="callout-copy">
+     <img src="/img/sigca-logo.png" alt="sigca" />
+    </div>
+  </div>
+
+  <div class="user-options">
+    <div class="front-signin js-front-signin">
+      <form action="/login#navegar/proyectos" class="signin" method="post">
+        
+        <div class="username">
+          <input type='text' name='username' class="input-large" placeholder='usuario'>
+        </div>
+
+
+
+        <table class="flex-table password-signin">
+          <tbody>
+            <tr>
+                <td class="flex-table-primary">
+                  <div class="password flex-table-form">
+                    <input type='password' name='password' class="text-input flex-table-input" placeholder='clave'>
+                  </div>
+                </td>
+                <td class="flex-table-secondary">
+                  <button type="submit" class="submit btn primary-btn flex-table-btn js-submit">
+                    Iniciar sesión
+                  </button>
+                </td>
+            </tr>
+          </tbody>
+        </table>
+
+
+
+        <div class="remember-forgot">
+          <label class="remember">
+            <input type="checkbox" value="1" name="remember_me" checked="checked">
+            <span>Recordar mis datos</span>
+          </label>
+        </div>
+
+
+      </form>
+
+    </div>
+
+
+    <div class="front-signup js-front-signup">
+      <h2>Regístrate</h2>
+
+      <form action="https://twitter.com/signup" class="signup" method="post">
+
+        <div class="field">
+          <input type="text" class="text-input" autocomplete="off" name="user[name]" maxlength="20" placeholder="Nombre completo">
+        </div>
+
+        <div class="field">
+          <input type="text" class="text-input email-input" autocomplete="off" name="user[email]" placeholder="Correo electrónico">
+        </div>
+
+        <div class="field">
+          <input type="password" class="text-input" name="user[user_password]" placeholder="Contraseña">
+        </div>
+        <br/>
+        <button type="submit" class="btn signup-btn">
+          Regístrate en SiGCA
+        </button>
+      </form>
+    </div>
+  </div>
+
+
 </div>
