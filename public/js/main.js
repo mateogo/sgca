@@ -47,7 +47,11 @@ var AppRouter = Backbone.Router.extend({
         "activos/:id"            : "assetDetails",
         "navegar/activos"        : "browseAssets",
 
+        "usuarios/add"           : "addUser",
+        "usuarios/:id"           : "userDetails",
         "recuperar/usuarios"     : "browseUsers"
+
+
         
     },
 
@@ -55,6 +59,26 @@ var AppRouter = Backbone.Router.extend({
     initialize: function () {
         this.headerView = new HeaderView();
         $('.header').html(this.headerView.el);
+    },
+
+    // User Module
+
+    addUser: function() {
+        console.log('addUser:main.js');
+        $('#content').html(new UserViewLayout().el);
+        var user = new User();
+        $('#listcontent').html(new UserView({model: user}).el);
+    },
+
+    userDetails: function (id) {
+        console.log('userDetails:main.js');
+
+        $('#content').html(new UserViewLayout().el);
+
+        var user = new User({_id: id});
+        user.fetch({success: function() {
+            $("#listcontent").html(new UserView({model: person}).el);     
+        }});
     },
 
 
@@ -66,6 +90,8 @@ var AppRouter = Backbone.Router.extend({
         var browsepersons = new UserBrowseView({page:p, el:'#content',parenttag:'content'});
 
     },
+
+    // User Module
 
     addPerson: function() {
         console.log('addPerson:main.js');
@@ -424,7 +450,7 @@ utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView', 'ProjectListLayoutVie
     'AssetAccordionView','AssetVersionListItemView','AssetView','AssetLayoutView',
     'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView',
     'ProductViewLayout','ArticleView', 'ArticleViewLayout','BrandingEditView',
-    'PersonView','PersonViewLayout','PersonTableLayoutView','UserTableLayoutView'], function() {
+    'PersonView','PersonViewLayout','PersonTableLayoutView','UserTableLayoutView','UserView','UserViewLayout'], function() {
     app = new AppRouter();
     utils.approuter = app;
     Backbone.history.start();

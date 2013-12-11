@@ -2499,6 +2499,43 @@ window.User = Backbone.Model.extend({
         return (this.viewers[key]) ? this.viewers[key](this.get(key)) : this.get(key) ;
     },
 
+    loadcontacts: function(cb){
+        dao.contactfacet.setCol( new ContactFacetCollection(this.get('contactinfo')));
+
+        console.log('[%s] loadcontacts [%s] ',this.whoami, dao.contactfacet.getCol().length);
+
+        cb(dao.contactfacet.getCol());
+    },
+
+
+    loadusers: function(cb){
+        var self = this;
+        console.log('loadusers.Person:models.js begins es_asset_de: [%s]',self.get('nickName'));
+        var query = {'es_usuario_de.id':self.id};
+        var userCol= new UserCollection();
+        dao.userfacet.setCol(userCol);
+        userCol.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                if(cb) cb(userCol);
+            }
+        });
+    },
+
+    loadassets: function(cb){
+        var self = this;
+        console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('personcode'));
+        var query = {'es_asset_de.id':self.id};
+        var assetCol= new AssetCollection();
+        assetCol.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                if(cb) cb(assetCol);
+            }
+        });
+    },
 
     /*
     getFullName: function(){
