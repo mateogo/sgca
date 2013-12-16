@@ -8,11 +8,24 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     
     regions: {
       navbarRegion:  '#navbar-region',
+      itemEditRegion: '#itemedit-region',
       sidebarRegion: '#sidebar-region',
       linksRegion:   '#panel-region',
       mainRegion:    '#main-region'
     }
   });
+
+
+  Edit.Search = DocManager.DocsApp.Common.Views.SearchPanel.extend({
+    initialize: function(options){
+      this.optiones = options;
+      var self = this;
+      console.log('Search panel initizlize: [%s]',options.searchtrigger)
+    },
+ 
+  });
+
+
 
   Edit.Document = DocManager.DocsApp.Common.Views.Form.extend({
     
@@ -22,59 +35,164 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     getTemplate: function(){
       return utils.templates.DocumEditCore;
     },
+
+    initialize: function(options){
+      var self = this;
+      this.events = _.extend({},this.formevents);
+      this.delegateEvents();
+    },
  
   });
 
 
-  Edit.NavItem = Marionette.ItemView.extend({
-    template: _.template('<a href="#<%= url %>"><%= name %></a>'),
-    tagName: "li",
-
-    events: {
-      "click a": "navigate"
-    },
-
-    triggers: {
-      //"click a": "document:new"
-    },
-
-
-    navigate: function(e){
-      console.log('list.NavItem navigate');
-      e.preventDefault();
-      this.trigger("document:new");
-    },
-
-    onRender: function(){
-      if(this.model.selected){
-        this.$el.addClass("active");
-      };
-    }
-  });
-
-  Edit.NavPanel = Marionette.CompositeView.extend({
-    //template: "#header-template",
-    tagName: "nav",
-    className: "navbar navbar-default",
-
-    itemView: Edit.NavItem,
-    itemViewContainer: "ul",
+  // PARTE TECNICO
+  Edit.PTecnico = DocManager.DocsApp.Common.Views.Form.extend({
+    whoami:'PTecnico:edit_view.js',
     
+    tagName:'form',
+    className: 'form-horizontal',
+
     getTemplate: function(){
-      return utils.templates.DocumNavbar;
-    },
-    
-    events: {
-      "click a.brand": "brandClicked"
+      return utils.templates.DocumEditPT;
     },
 
-    brandClicked: function(e){
-      e.preventDefault();
-      console.log('brand-clicked');
-      //this.trigger("brand:clicked");
-    }
+    initialize: function(options){
+      var self = this;
+      this.events = _.extend({},this.formevents,this.events);
+      this.delegateEvents();
+    },
+ 
+    events: {
+      "click .js-productsch": "productsearch",
+    },
+
+    productsearch: function(){
+      var self = this,
+          query = this.$('#product').val();
+      console.log('productearch [%s]',query);
+      this.trigger('product:select', query, function(entity){
+        self.model.set({product:entity.get('productcode')});
+        console.log('volvimos!! [%s]',entity.get('productcode'));
+        self.render();
+      });
+
+
+    },
   });
 
+
+  // ventana modal
+  Edit.modalSearchEntities = function(type, cb){
+        console.log('modal SEARCH ENTITIES');
+        var options = {
+          documents: {
+            collection: new DocManager.Entities.ComprobanteCollection(),
+            searchtrigger:"document:filtered:entities",
+            itemViewOptions:{
+              itemtype:'documentos'
+            }  
+          },
+
+          persons: {
+            collection: new DocManager.Entities.PersonCollection(),
+            searchtrigger:"person:filtered:entities",
+            itemViewOptions:{
+              itemtype:'persons'
+            }  
+          },
+
+          products: {
+            collection: new DocManager.Entities.ProductCollection(),
+            searchtrigger:"product:filtered:entities",
+            itemViewOptions:{
+              itemtype:'products'
+            }  
+          }
+
+        }
+        var form = new Edit.Search(options[type]);
+
+        form.on('itemview:item:found',function(form,model){
+          //console.log('callback ITEMFOUND [%s]',model.get('cnumber'));
+          if(cb) cb(model);
+          modal.close();
+        });
+            
+        var modal = new Backbone.BootstrapModal({
+            content: form,
+            title: 'Buscar entidades',
+            okText: 'aceptar',
+            cancelText: 'cancelar',
+            animate: false
+        });
+
+        modal.open(function(){
+            console.log('ME CERRARON [%s]');
+        });
+  };
+
+  // ventana modal
+  Edit.createInstance = function(view){
+        console.log('modal DOCUM NEW');
+        var self = view,
+            facet = new DocManager.Entities.DocumCoreFacet(),
+            form = new Backbone.Form({
+                model: facet,
+            });
+
+        form.on('change', function(form, contenidoEditor) {
+            console.log('form: on:change');
+            var errors = form.commit();
+        });
+            
+        var modal = new Backbone.BootstrapModal({
+            content: form,
+            title: 'Alta rápida comprobantes',
+            okText: 'aceptar',
+            cancelText: 'cancelar',
+            animate: false
+        });
+
+        modal.open(function(){
+            var errors = form.commit();
+            console.log('close: [%s]',facet.get('slug'));
+            facet.createNewDocument(function(err, model){
+              DocManager.trigger("documents:list");
+            });
+        });
+  };
+
+  // ventana modal
+  Edit.createItem = function(model){
+        console.log('Modal ITEM NEW');
+        var facet = new DocManager.Entities.DocumItemCoreFacet(),
+            form = new Backbone.Form({
+                model: facet,
+            });
+
+        form.on('change', function(form, contenidoEditor) {
+            console.log('form: on:change');
+            var errors = form.commit();
+        });
+            
+        var modal = new Backbone.BootstrapModal({
+            content: form,
+            title: 'Nuevo renglón de comprobante',
+            okText: 'aceptar',
+            cancelText: 'cancelar',
+            animate: false
+        });
+
+        modal.open(function(){
+            var errors = form.commit();
+            console.log(' MODAL close: [%s] : [%s]',facet.get('tipoitem'),facet.get('slug'),model.get('slug'));
+            var item = model.initNewItem(facet);
+            Edit.Session.items.add(item);
+            //facet.createNewDocument(function(err, model){
+            //  DocManager.trigger("documents:list");
+            //});
+        });
+  };
 
 });
 

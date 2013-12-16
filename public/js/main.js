@@ -49,10 +49,9 @@ var AppRouter = Backbone.Router.extend({
 
         "usuarios/add"           : "addUser",
         "usuarios/:id"           : "userDetails",
-        "recuperar/usuarios"     : "browseUsers"
+        "recuperar/usuarios"     : "browseUsers",
 
-
-        
+        "navegar/comprobantes"   : "gestion"        
     },
 
 
@@ -61,7 +60,11 @@ var AppRouter = Backbone.Router.extend({
         $('.header').html(this.headerView.el);
     },
 
-    // User Module
+    gestion: function () {
+        console.log('bye')
+        window.open('/gestion/#comprobantes');
+        return false;
+    },
 
     addUser: function() {
         console.log('addUser:main.js');

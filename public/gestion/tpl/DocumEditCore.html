@@ -1,49 +1,49 @@
   <div class="form-group">
     <label class="col-sm-2 control-label">localizador</label>
-    <div class="col-sm-2">
-      <p class="form-control-static"><strong><%= cnumber %></strong></p>
+    <div class="col-sm-4">
+      <p class="form-control-static"><strong><%= tipocomp %>: <%= cnumber %></strong></p>
     </div>
     <div class="col-sm-4">
       <p class="form-control-static">id: <%= _id %></p>
     </div>
   </div>
   <div class="form-group">
-    <label for="tipocomp" class="col-sm-2 control-label" >tipo / fecha</label>
+    <label for="fecomp" class="col-sm-2 control-label" >fecha / sujeto</label>
     <div class='row'>
-      <div class="col-sm-4">
-      <select class="form-control" id="tipocomp" name="tipocomp" value="<%= tipocomp %>" >
-         <option value='no_definido'
-         <%= tipocomp == 'no_definido' ? 'selected':'' %>>--tipo de comprobante--</option>
-         <option value='nrecepcion'
-         <%= tipocomp == 'nrecepcion' ? 'selected':'' %>>n/recepcion</option>
-         <option value='nentrega'
-         <%= tipocomp == 'nentrega' ? 'selected':'' %>>n/entrega</option>
-         <option value='ptecnico'
-         <%= tipocomp == 'ptecnico' ? 'selected':'' %>>p/tecnico</option>
-      </select>
-      </div>
       <div class="col-sm-3">
          <input id="fecomp" name="fecomp" type="datetime-local" class="form-control" 
            value="<%= fecomp %>" placeholder="Fecha comprobante">
+      </div>
+      <div class="input-group col-sm-5">
+        <span class="input-group-addon">@</span>
+          <input id="persona" name="persona" type="text" class="form-control" 
+            value="<%= persona %>"  placeholder="contraparte">
+        <span class="input-group-btn"><button class="btn btn-default" type="button">Buscar</button></span>
       </div>
       <span class="help-block"></span>
     </div>
   </div>
   <div class="form-group">
-    <label for="persona" class="col-sm-2 control-label"  >persona</label>
-    <div class="input-group col-sm-10">
-      <span class="input-group-addon">@</span>
-      <input id="persona" name="persona" type="text" class="form-control" 
-          value="<%= persona %>"  placeholder="contraparte">
-      <span class="input-group-btn"><button class="btn btn-default" type="button">Buscar</button></span>
-    <span class="help-block"></span>
+    <label for="slug" class="col-sm-2 control-label"  >asunto</label>
+    <div class="col-sm-10">
+    <input id="slug" name="slug" type="text" class="form-control input-sm" 
+          value="<%= slug %>" >
+      <span class="help-block"></span>
     </div>
   </div>
   <div class="form-group">
-    <label for="slug" class="col-sm-2 control-label"  >asunto</label>
-    <div class="col-sm-10">
-    <input id="slug" name="slug" type="text" class="form-control" 
-          value="<%= slug %>" >
+    <label for="estado_alta" class="col-sm-2 control-label"  >estados</label>
+    <div class='row'>
+      <div class="col-sm-4">
+          <select class="form-control input-sm" id="estado_alta" name="estado_alta" value="<%= estado_alta %>">
+            <%= utils.buildSelectOptions('estado_alta',utils.estadoaltaOptionList, estado_alta) %>
+          </select>
+      </div>
+      <div class="col-sm-4">
+          <select class="form-control input-sm" id="nivel_ejecucion" name="nivel_ejecucion" value="<%= nivel_ejecucion %>">
+            <%= utils.buildSelectOptions('nivel_ejecucion',utils.documexecutionOptionList, nivel_ejecucion) %>
+          </select>
+      </div>
       <span class="help-block"></span>
     </div>
   </div>
@@ -51,12 +51,13 @@
     <label for="description" class="col-sm-2 control-label"  >descripción</label>
     <div class="col-sm-10">
     <textarea id="description" name="description" type="textarea" 
-      class="form-control" rows="3"><%= description %></textarea>
+      class="form-control input-sm" rows="3"><%= description %></textarea>
       <span class="help-block"></span>
      </div>
   </div>
   <div class="form-group">
     <div class="col-sm-10 col-sm-offset-2">
-    <button type="button" class="btn js-submit">Save</button>
-     </div>
+      <button type="button" class="btn btn-primary js-submit">Guardar</button>
+      <button type="button" class="btn btn-warning">Cancelar</button>
+    </div>
   </div>

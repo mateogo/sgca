@@ -207,6 +207,7 @@ module.exports = function (config, app) {
 
     // products routes
     var product = require(rootPath + '/calendar/controllers/products');
+    app.get('/productos', product.findAll);
     app.post('/navegar/productos', product.find);
     app.get('/refine/productos', product.findAll);
     app.get('/productos/:id',ensureAuthenticated, product.findById);
@@ -241,6 +242,7 @@ module.exports = function (config, app) {
 
     // person (personas) routes
     var person = require(rootPath + '/calendar/controllers/persons');
+    app.get('/personas', person.findAll);
     app.post('/recuperar/personas', person.find);
     app.post('/navegar/personas', person.find);
     app.get('/personas/:id', person.findById);

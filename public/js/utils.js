@@ -144,6 +144,31 @@ window.utils = {
             return this.map;
         }
     },
+    tipoDocumItemOptionList: [
+        {val:'no_definido'    , label:'tipo de comprobante'},
+        {val:'ptecnico'       , label:'P/Técnico'},
+    ],
+    paOptionList: [
+        {val:'no_definido'  , label:'Nivel de ejecución'},
+        {val:'enproceso'    , label:'en proceso'},
+        {val:'completado'   , label:'completado'},
+        {val:'suspendido'   , label:'suspendido'},
+        {val:'archivo'      , label:'archivado'},
+    ],
+
+    documexecutionOptionList: [
+        {val:'no_definido'  , label:'Nivel de ejecución'},
+        {val:'enproceso'    , label:'en proceso'},
+        {val:'completado'   , label:'completado'},
+        {val:'suspendido'   , label:'suspendido'},
+        {val:'archivo'      , label:'archivado'},
+    ],
+
+    estadoqcOptionList: [
+        {val:'aprobado'    , label:'APROBADO'},
+        {val:'rechazado'   , label:'RECHAZADO'},
+        {val:'observado'   , label:'OBSERVADO'}
+    ],
 
     tipoComprobaneOptionList: [
         {val:'no_definido'    , label:'tipo de comprobante'},
@@ -262,23 +287,29 @@ window.utils = {
     },
 
     rolinstanciasOptionList: [
-        {val:'no_definido'      , label:'tipo de instancia'},
-        {val:'master'           , label:'master'},
-        {val:'promo'            , label:'promo'},
-        {val:'trailer'          , label:'trailer'},
-        {val:'audio_principal'  , label:'audio principal'},
-        {val:'audio_ambiente'   , label:'audio ambiente'},
-        {val:'audio_descripcion', label:'audio descripcion'},
-        {val:'grafica'          , label:'grafica'},
-        {val:'branding'         , label:'branding'},
-        {val:'script'           , label:'script'},
+        {val:'no_definido'      , label:'versión'},
+        {val:'masteraire'        , label:'Master Aire'},
+        {val:'mastertextless'    , label:'Master Text-less'},
+        {val:'matpromocion'      , label:'Material de promoción'},
+        {val:'grafica'           , label:'Gráfica'},
+        {val:'planosdeseguridad' , label:'Planos de seguridad'},
+        {val:'capituloprueba'    , label:'Capitulos de prueba'},
+        {val:'trailer'           , label:'trailer'},
+        {val:'audio_principal'   , label:'audio principal'},
+        {val:'audio_ambiente'    , label:'audio ambiente'},
+        {val:'audio_descripcion' , label:'audio descripcion'},
+        {val:'branding'          , label:'branding'},
+        {val:'script'            , label:'script'},
+    ],
+    versionOptionList: [
     ],
 
     resolucionOptionList: [
-        {val:'no_definido' , label:'no_definido'},
+        {val:'no_definido' , label:'Resolución'},
         {val:'1920x1080'   , label:'1920x1080'},
         {val:'1440x1080'   , label:'1440x1080'},
         {val:'1280x720'    , label:'1280x720'},
+        {val:'1280x720p'   , label:'1280x720p'},
         {val:'1024x576'    , label:'1024x576'},
         {val:'720x576'     , label:'720x576'},
         {val:'720x480'     , label:'720x480'},
@@ -296,7 +327,7 @@ window.utils = {
     ],
 
     aspectratioOptionList: [
-        {val:'no_definido' , label:'no_definido'},
+        {val:'no_definido' , label:'Relación de aspecto'},
         {val:'16_9'        , label:'16:9'},
         {val:'4_3'         , label:'4:3'},
         {val:'2_1'         , label:'2:1'},
@@ -304,8 +335,26 @@ window.utils = {
         {val:'Otro'        , label:'Otro'},
     ],
 
-    formatooriginalOptionList: [
+    audiocontentOptionList: [
+        {val:'no_definido'    , label:'no_definido'},
+        {val:'fullmix'        , label:'Full Mix'},
+        {val:'musicayefectos' , label:'Musica y Efectos'},
+        {val:'musica'         , label:'Música'},
+        {val:'efectos'        , label:'Efectos'},
+        {val:'dialogos'       , label:'Diálogos'},
+        {val:'voiceover'      , label:'Voice Over'},
+        {val:'mudo'           , label:'Mudo'},
+        {val:'mixminus'       , label:'Mix Minus'},
+    ],
+    audiocanalOptionList: [
         {val:'no_definido'  , label:'no_definido'},
+        {val:'mono'         , label:'Mono'},
+        {val:'stereoder'    , label:'Stereo Der'},
+        {val:'stereoizq'    , label:'Stereo Izq'},
+    ],
+
+    formatooriginalOptionList: [
+        {val:'no_definido'  , label:'formato original'},
         {val:'QuickTime'    , label:'QuickTime'},
         {val:'MXFOP1A'      , label:'MXF op1A'},
         {val:'HDCAM'        , label:'HDCAM'},
@@ -330,7 +379,7 @@ window.utils = {
     ],
 
     framerateOptionList: [
-        {val:'no_definido' , label:'no_definido'},
+        {val:'no_definido' , label:'Frame Rate'},
         {val:'24p'     , label:'24p'},
         {val:'25p'     , label:'25p'},
         {val:'30p'     , label:'30p'},
@@ -441,9 +490,10 @@ window.utils = {
 
     documListTableHeader:[
         {id:0, tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',        label:'#'},
-        {id:1, tt:'th', flag:1, tclass:'col1', tmpl: 'template3', val:'cnumber',       label:'comprob'},
+        {id:1, tt:'th', flag:1, tclass:'col1', tmpl: 'template6', val:'cnumber',       label:'comprob'},
         {id:2, tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'tipocomp',      label:'tipo'},
         {id:3, tt:'th', flag:1, tclass:'col3', tmpl: 'template1', val:'slug',          label:'asunto'},
+        {id:4, tt:'th', flag:1, tclass:'col4', tmpl: 'template5', val:'acciones',      label:'acciones'}
     ],
 
     buildTableHeader: function(data){
@@ -455,7 +505,7 @@ window.utils = {
             }
         });
         //console.log('<thead><tr>'+tabledata+'</tr></thead>');
-        return '<thead><tr>'+tabledata+'</tr></thead><tbody></tbody>';
+        return '<thead><tr>'+tabledata+'</tr></thead>';
     },
 
     buildTableRowTemplates:{
@@ -463,6 +513,8 @@ window.utils = {
         template2 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><input name=tselect type=checkbox class=tselect ></td>"),
         template3 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink' title='editar item'><%= value %></button></td>"),
         template4 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tedit' title='no implementado aun'><i class='icon-edit'></i></button><button class='btn-link tzoom' title='ver personas relacionadas' ><i class='icon-zoom-in'></i></button></td>"),
+        template5 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit' title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-zoom' title='entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></td>"),
+        template6 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='ver'><%= value %></button></td>"),
     },
 
     buildTableRow: function(data,model){

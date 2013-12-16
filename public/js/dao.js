@@ -618,10 +618,9 @@ window.dao = {
 
     pacontenidos: ['artecultura','cienciaTecnologia','cienciasSociales','deporte','educacionTrabajo','historia','infancia','juventud','sociedad','ficcion'],
     pageneros:['animacion', 'biografia', 'curso', 'ficcion', 'docuficcion', 'documental', 'entretenimiento', 'entrevistas', 'telenovela', 'reality', 'recital', 'periodistico', 'noticiero','inespecifico'],
-    paformatos:['serie', 'micros', 'cortometraje', 'largometraje', 'trailer', 'promo', 'programa', 'noticiero', 'micro', 'unitarios', 'recital', 'periodistico', 'especial', 'inespecifico'],
+    paformatos:['serie', 'serie-programas', 'unitario', 'videoclip', 'promo', 'miniserie', 'micro', 'micro-recital', 'cortometraje', 'largometraje', 'backstage','trailer',  'noticiero', 'periodistico', 'especial', 'inespecifico'],
     videotecas:['concurso', 'produccionPropia', 'adquisicion', 'coproduccion', 'cesion', 'banco','inespecifico'],
     etarios:['infantil', 'jovenes','adolescentes', 'adulto', 'mayores','inespecifico'],
-
     pasubcontenido: {
         artecultura: ['musica', 'plastica', 'fotografia', 'arteDigital', 'video', 'teatro', 'animacion', 'otros' ],
         cienciaTecnologia: ['astronomia', 'fisica', 'matematica', 'quimica','otros'],

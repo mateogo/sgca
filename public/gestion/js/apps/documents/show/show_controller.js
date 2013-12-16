@@ -12,8 +12,8 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
             model: document
           });
 
-          documentView.on("document:edit", function(document){
-            DocManager.trigger("document:edit", document.id);
+          documentView.on("document:edit", function(model){
+            DocManager.trigger("document:edit", model);
           });
         }
         else{

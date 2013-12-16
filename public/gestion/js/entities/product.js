@@ -1,48 +1,46 @@
 DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionette, $, _){
-  Entities.Person = Backbone.Model.extend({
+  Entities.Product = Backbone.Model.extend({
 
-    whoami: 'Person:models.js ',
-    urlRoot: "/personas",
+    whoami: 'Product:models.js ',
+    urlRoot: "/productos",
 
     idAttribute: "_id",
 
     defaults: {
         _id: null,
-        tipopersona:"",
-        name: '',
-        displayName: '',
-        nickName: '',
-        tipojuridico:{
-            pfisica: true,
-            pjuridica: false,
-            pideal: true,
-        },
-        roles:{
-            adherente:false,
-            proveedor:false,
-        },
-        estado_alta: "activo",
+        project:{},
+        tipoproducto:"",
+        productcode:"",
+ 
+        slug: "",
+        denom: "",
+        notas:[],
+        branding:[],
+
         descriptores: "",
         taglist:[],
         description: "",
- 
-        contactinfo:[],
-        notas:[],
-        branding:[],
-    },
 
+        nivel_importancia: "medio",
+        estado_alta: "activo",
+        nivel_ejecucion: "planificado",
+        patechfacet:{},
+
+        resources: []
+
+    },
 
     validate: function(attrs, options) {
       var errors = {}
-      if (! attrs.name) {
-        errors.firstName = "no puede quedar en blanco";
+      if (! attrs.productcode) {
+        errors.productcode = "no puede quedar en blanco";
       }
-      if (! attrs.nickName) {
-        errors.lastName = "no puede quedar en blanco";
+      if (! attrs.slug) {
+        errors.slug = "no puede quedar en blanco";
       }
       else{
-        if (attrs.displayName.length < 2) {
-          errors.lastName = "demasiado corto";
+        if (attrs.denom.length < 2) {
+          errors.denom = "demasiado corto";
         }
       }
       if( ! _.isEmpty(errors)){
@@ -51,14 +49,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     }
   });
 
-  //Entities.configureStorage(Entities.Person);
+  //Entities.configureStorage(Entities.Product);
 
-  Entities.PersonCollection = Backbone.Collection.extend({
+  Entities.ProductCollection = Backbone.Collection.extend({
 
-    model: Entities.Person,
-    url: "/personas",
+    model: Entities.Product,
+    url: "/productos",
 
-    comparator: "nickName"
+    comparator: "productcode"
   });
 
   var filterFactory = function (entities){
@@ -69,9 +67,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           var criteria = filterCriterion.toLowerCase();
           return function(document){
             //console.log('filterfunction:[%s]vs [%s]/[%s]/[%s]',criteria,document.get("tipocomp"),document.get("cnumber"),document.get("slug"));
-            if(document.get("nickName").toLowerCase().indexOf(criteria) !== -1
-              || document.get("name").toLowerCase().indexOf(criteria) !== -1
-              || document.get("displayName").toLowerCase().indexOf(criteria) !== -1){
+            if(document.get("productcode").toLowerCase().indexOf(criteria) !== -1
+              || document.get("denom").toLowerCase().indexOf(criteria) !== -1
+              || document.get("slug").toLowerCase().indexOf(criteria) !== -1){
               
               return document;
             }
@@ -83,7 +81,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var API = {
     getEntities: function(){
-      var entities = new Entities.PersonCollection();
+      var entities = new Entities.ProductCollection();
       var defer = $.Deferred();
 
       entities.fetch({
@@ -113,7 +111,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     getEntity: function(entityId){
-      var entity = new Entities.Person({_id: entityId});
+      var entity = new Entities.Product({_id: entityId});
       var defer = $.Deferred();
 
       entity.fetch({
@@ -129,15 +127,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   };
 
-  DocManager.reqres.setHandler("person:entities", function(){
+  DocManager.reqres.setHandler("product:entities", function(){
     return API.getEntities();
   });
 
-  DocManager.reqres.setHandler("person:entity", function(id){
+  DocManager.reqres.setHandler("product:entity", function(id){
     return API.getEntity(id);
   });
 
-  DocManager.reqres.setHandler("person:filtered:entities", function(criteria, cb){
+  DocManager.reqres.setHandler("product:filtered:entities", function(criteria, cb){
     return API.getFilteredCol(criteria,cb);
   });
 
