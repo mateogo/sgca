@@ -136,7 +136,7 @@ window.Person = Backbone.Model.extend({
 
     loadusers: function(cb){
         var self = this;
-        console.log('loadusers.Person:models.js begins es_asset_de: [%s]',self.get('nickName'));
+        console.log('loadusers.Person:models.js begins es_usuario_de: [%s]',self.get('nickName'));
         var query = {'es_usuario_de.id':self.id};
         var userCol= new UserCollection();
         dao.userfacet.setCol(userCol);

@@ -68,11 +68,13 @@ var routesBootstrap = function (app, express) {
         }
         if (!userdao) {
           console.log('passport USER NOT FOUND');
-          return done(null, false, { message: 'Incorrect username.' });
+          //return done(null, false, { message: 'Incorrect username.' });
+          return done(null, false);
         }
         if (!user.validPassword(userdao, password)) {
           console.log('passport PASSWD ERROR');
-          return done(null, false, { message: 'Incorrect password.' });
+          //return done(null, false, { message: 'Incorrect password.' });
+          return done(null, false);
         }
         console.log('passport USER:[%s] ',userdao.username);
         return done(null, userdao);

@@ -68,6 +68,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
 
     formevents: {
       "click button.js-submit": "submitClicked",
+      "click button.js-cancel": "cancelClicked",
       "change": "change"
     },
 
@@ -91,6 +92,11 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
       //var data = Backbone.Syphon.serialize(this);
       console.log('FORM SUBMITTED');
       this.trigger("form:submit", this.model);
+    },
+
+    cancelClicked: function(e){
+      e.preventDefault();
+      this.close()
     },
 
     onFormDataInvalid: function(errors){
