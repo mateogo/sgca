@@ -1323,6 +1323,29 @@ window.Product = Backbone.Model.extend({
         }
     },
 
+    createNewPtecnico: function(cb){
+        console.log('initNewPtecnico:Product:models.js');
+        var self = this;
+        var docum = new Comprobante();
+        var dt = self.getDatosTecnicos();
+        docum.initPtecnico(self,dt);
+        docum.beforeSave();
+        docum.update(cb);
+
+    },
+    getDatosTecnicos:function(){
+        var dt = {};
+        var patechfacet = this.get('patechfacet');
+        if(patechfacet){
+            _.extend(dt,patechfacet);
+        }
+        var painstancefacet = this.get('painstancefacet');
+        if(painstancefacet){
+            _.extend(dt,painstancefacet);
+        }
+        return dt;
+    },
+
     defaults: {
         _id: null,
         project:{},
@@ -1365,6 +1388,105 @@ window.ProductCollection = Backbone.Collection.extend({
     url: "/navegar/productos"
 
 });
+
+  
+window.Comprobante = Backbone.Model.extend({
+    urlRoot: "/comprobantes",
+    whoami: 'Comprobante:models.js ',
+
+    idAttribute: "_id",
+
+    defaults: {
+      _id: null,
+      tipocomp: "",
+      cnumber: "",
+      fecomp: "",
+      persona: "",
+      slug: "",
+      estado_alta:'activo',
+      nivel_ejecucion: 'alta',
+      description: "",
+      items:[]
+    },
+
+    enabled_predicates:['es_relacion_de'],
+
+    initPtecnico: function(product, dt){
+      var fealta = new Date();
+      this.set({fealta:fealta.getTime()});
+      this.set({fecomp:fealta.getTime()});
+      this.set({tipocomp:'ptecnico'});
+      this.set({persona:dt.productora});
+      this.set({slug:'PT: '+product.get('slug')});
+      this.set({estado_alta:'activo'});
+      this.set({nivel_ejecucion:'enproceso'});
+
+      var ptecnico = new DocumParteTecnico();
+      ptecnico.set({
+        tipoitem:'ptecnico',
+        slug: this.get('slug'),
+        fept: this.get('fecomp'),
+        product:product.get('slug'),
+        productid: product.id,
+        productora: dt.productora, //x
+        sopoentrega: dt.sopoentrega,//
+        resolucion: dt.resolucion,//
+        framerate: dt.framerate,//
+        aspectratio: dt.aspectratio,//
+        rolinstancia: dt.rolinstancia,//
+        formatoorig: dt.formatoorig,//
+        estado_alta:'activo',
+        nivel_ejecucion:'enproceso'
+      });
+      this.get('items').push(ptecnico.attributes);
+    },
+
+    beforeSave: function(){
+      var feultmod = new Date();
+      this.set({feultmod:feultmod.getTime()})
+    },
+
+    update: function(cb){
+      var self = this;
+      self.beforeSave();
+      var errors ;
+      console.log('ready to SAVE');
+      if(!self.save(null,{
+        success: function(model){
+          //console.log('callback SUCCESS')
+          cb(null,model);
+        }
+      })) {
+          cb(null,null);
+      }    
+    },
+
+ });
+
+
+window.DocumParteTecnico = Backbone.Model.extend({
+    whoami: 'DocumParteTecnico:models.js ',
+
+    defaults: {
+      tipoitem: "",
+      slug: "",
+      fept: "",
+      revision:1,
+      product: "",
+      productora:"",
+      sopoentrega:"",
+      vbloques:"",
+      estado_alta:"",
+      nivel_ejecucion:"",
+      estado_qc:"",
+      resolucion:"",
+      framerate:"",
+      aspectratio:"",
+      rolinstancia:"",
+      formatoorig:"",
+    },
+});
+
 
 window.BrowsePersonsQuery = Backbone.Model.extend({
     // ******************* BROWSE PRODUCTS ***************
@@ -1593,21 +1715,35 @@ window.PaRealizationFacet = Backbone.Model.extend({
     schema: {
         realizadores: {type: 'TextArea',editorAttrs:{placeholder : 'realizadores'},editorClass:'input-large' },
         productores: {type: 'TextArea',editorAttrs:{placeholder : 'productores'} },
-        actores: {type: 'TextArea',editorAttrs:{placeholder : 'actores'} },
+        coproductores: {type: 'TextArea',editorAttrs:{placeholder : 'co-productores'} },
+        conduccion: {type: 'TextArea',editorAttrs:{placeholder : 'conduccion'} },
+        reparto: {type: 'TextArea',editorAttrs:{placeholder : 'actores'} },
         directores: {type: 'TextArea',editorAttrs:{placeholder : 'directores'} },
-        camarografos: {type: 'TextArea',editorAttrs:{placeholder : 'camarografos'} },
+        fotografia: {type: 'TextArea',editorAttrs:{placeholder : 'fotografia'} },
+        edicion: {type: 'TextArea',editorAttrs:{placeholder : 'edicion'} },
+        camaras: {type: 'TextArea',editorAttrs:{placeholder : 'camaras'} },
         guionistas: {type: 'TextArea',editorAttrs:{placeholder : 'guionistas'} },
-        musicos: {type: 'TextArea',editorAttrs:{placeholder : 'musicos'} },
+        escenografia: {type: 'TextArea',editorAttrs:{placeholder : 'escenografia'} },
+        musicos: {type: 'TextArea',editorAttrs:{placeholder : 'musica original'} },
+        sonido: {type: 'TextArea',editorAttrs:{placeholder : 'sonido'} },
+        provincia: {type: 'Text',editorAttrs:{placeholder : 'provincia'} },
     },
 
     defaults: {
         realizadores:'',
+        conduccion:'',
         productores:'',
-        actores:'',
+        coproductores:'',
+        fotografia:'',
+        edicion:'',
+        camaras: '',
+        escenografia:'',
+        reparto:'',
         directores:'',
-        camarografos:'',
         guionistas:'',
         musicos:'',
+        sonido:'',
+        provincia:'',
     }
 });
 window.BrandingFacet = Backbone.Model.extend({

@@ -1,43 +1,35 @@
 DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionette, $, _){
 
-  var registerHeadersEvents = function(hview){
+  var registerHeadersEvents = function(hview, layout){
       hview.on("itemview:document:new", function(childView){
-        console.log('initNavPanel BUBLING');
-        var self = this,
-            facet = new DocManager.Entities.DocumCoreFacet(),
-            form = new Backbone.Form({
-                model: facet,
-            });
-
-        form.on('change', function(form, contenidoEditor) {
-            console.log('form: on:change');
-            var errors = form.commit();
-        });
-            
-        var modal = new Backbone.BootstrapModal({
-            content: form,
-            title: 'Alta rápida comprobantes',
-            okText: 'aceptar',
-            cancelText: 'cancelar',
-            animate: false
-        });
-
-        modal.open(function(){
-            var errors = form.commit();
-            console.log('close: [%s]',facet.get('slug'));
-            facet.createNewDocument(function(err, model){
-              DocManager.trigger("documents:list");
-            });
-        });
+        DocManager.DocsApp.Edit.createInstance(this);
       });
+
+      hview.on("itemview:documents:list", function(childView, model){
+        var trigger = model.get("navigationTrigger");
+        DocManager.trigger(trigger);
+      });
+
+      hview.on("documents:filtered:list", function(criteria){
+        console.log('filtered list [%s]',criteria)
+
+        DocManager.request("document:filtered:entities", criteria, function(documents){
+          console.log('Filtered CALLBACK: [%s]',documents.length);
+          var documentsListView = new List.Documents({
+            collection: documents
+          });
+          registerDocumListEvents(documentsListView);
+            layout.mainRegion.show(documentsListView);
+          });
+      });  
   };
 
-  var initNavPanel = function(){
+  var initNavPanel = function(layout){
       var links = DocManager.request("docum:nav:entities");
       console.log('initNavPanel BEGINS  [%s]', links.length);
 
-      var headers = new List.NavPanel({collection: links});
-      registerHeadersEvents(headers);
+      var headers = new DocManager.DocsApp.Common.Views.NavPanel({collection: links});
+      registerHeadersEvents(headers, layout);
 
       return headers;
   };
@@ -50,7 +42,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
       // DocManager.mainRegion.show(loadingView);
 
       var documLayout = new List.Layout();
-      var documNavBar = initNavPanel();
+      var documNavBar = initNavPanel(documLayout);
 
       DocManager.request("document:filtered:entities", criterion, function(documents){
         console.log('callback from REQUEST: [%s]',documents.length);
@@ -59,9 +51,12 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
           documNavBar.triggerMethod("set:filter:criterion", criterion);
         });
 */
+  
         var documentsListView = new List.Documents({
           collection: documents
         });
+
+        
         registerDocumListEvents(documentsListView);
 
 /*        documNavBar.on("documents:filter", function(filterCriterion){
@@ -96,6 +91,8 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
         documentsListView.on("itemview:document:delete", function(childView, model){
           model.destroy();
         });
+
+
   };
 
 });

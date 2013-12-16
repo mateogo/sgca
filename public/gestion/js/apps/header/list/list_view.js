@@ -1,7 +1,7 @@
 DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marionette, $, _){
 
   List.Header = Marionette.ItemView.extend({
-    template: _.template('<a href="#<%= url %>"><%= name %></a>'),
+    template: _.template('<a href="#<%= url %>" title="<%= navigationTrigger %>"><%= name %></a>'),
 
     tagName: "li",
 

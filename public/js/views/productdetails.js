@@ -80,6 +80,7 @@ window.ProductView = Backbone.View.extend({
         "click .discardbrnd" : "discardbrnd",
         "click .addnewbrnd"  : "addnewbrnd",
         "click .cancelbrnd"  : "cancelinstance",
+        "click .ptecnico"    : "altaptecnico",
 
         "dragover #filesdrop" : "dragoverHandler",
         "dragover #brnddrop"  : "dragoverHandler",
@@ -158,6 +159,13 @@ window.ProductView = Backbone.View.extend({
             //utils.approuter.navigate('productos/' + productmodel.id, {trigger: true, replace: false});
         });
         return false;
+    },
+
+    altaptecnico: function(){
+        this.model.createNewPtecnico(function(err,docum){
+            window.open('/gestion/#comprobantes/'+docum.id+'/edit');
+            return false;
+        });
     },
 
     addnewbrnd: function () {

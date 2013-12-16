@@ -18,7 +18,6 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
     tagName: "tr",
 
     getTemplate: function(){
-      console.log();
       return _.template(utils.buildRowRenderTemplate(utils.documListTableHeader,utils.buildTableRowTemplates));
     },
 /*
@@ -44,7 +43,9 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
       "click": "highlightName",
       "click td a.js-show": "showClicked",
       "click td a.js-edit": "editClicked",
-      "click button.js-delete": "deleteClicked"
+      "click button.js-delete": "deleteClicked",
+      "click button.js-show": "showClicked",
+      "click button.js-edit": "editClicked",
     },
 
     flash: function(cssClass){
@@ -98,7 +99,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
     getTemplate: function(){
       console.log(utils.buildTableHeader(utils.documListTableHeader));
-      return _.template(utils.buildTableHeader(utils.documListTableHeader));
+      return _.template(utils.buildTableHeader(utils.documListTableHeader)+'<tbody></tbody>');
     },
 
     //template: _.template()
@@ -125,55 +126,6 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
     }
   });
 
-   List.NavItem = Marionette.ItemView.extend({
-    template: _.template('<a href="#<%= url %>"><%= name %></a>'),
-    tagName: "li",
-
-    events: {
-      "click a": "navigate"
-    },
-
-    triggers: {
-      //"click a": "document:new"
-    },
-
-    navigate: function(e){
-      console.log('list.NavItem navigate');
-      e.preventDefault();
-      this.trigger("document:new");
-    },
-
-    onRender: function(){
-      console.log('onrender NAV ITEM');
-      if(this.model.selected){
-        this.$el.addClass("active");
-      };
-    }
-  });
-
-  List.NavPanel = Marionette.CompositeView.extend({
-    //template: "#header-template",
-    tagName: "nav",
-    className: "navbar navbar-default",
-
-    itemView: List.NavItem,
-    itemViewContainer: "ul",
-    
-    getTemplate: function(){
-      console.log('template required');
-      return utils.templates.DocumNavbar;
-    },
-    
-    events: {
-      "click a.brand": "brandClicked"
-    },
-
-    brandClicked: function(e){
-      e.preventDefault();
-      console.log('brand-clicked');
-      //this.trigger("brand:clicked");
-    }
-  });
 
 
 });

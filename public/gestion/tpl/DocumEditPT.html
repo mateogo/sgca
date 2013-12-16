@@ -1,0 +1,119 @@
+  <div class="form-group">
+    <label for="slug" class="col-sm-2 control-label"  >Parte técnico</label>
+    <div class="col-sm-10">
+    <input id="slug" name="slug" type="text" class="form-control input-sm" 
+          value="<%= slug %>" >
+      <span class="help-block"></span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="fept" class="col-sm-2 control-label" >fecha/ rev</label>
+    <div class='row'>
+      <div class="col-sm-3">
+         <input id="fept" name="fept" type="datetime-local" class="form-control" 
+           value="<%= fept %>" placeholder="Fecha dd/mm/aaaa">
+      </div>
+      <div class="col-sm-1">
+         <input id="revision" name="revision" type="number" class="form-control" 
+           value="<%= revision %>" placeholder="revisión">
+      </div>
+      <div class="input-group col-sm-4">
+        <span class="input-group-addon">@</span>
+          <input id="product" name="product" type="text" class="form-control" 
+            value="<%= product %>"  placeholder="instancia producto audiovisual">
+        <span class="input-group-btn"><button class="btn btn-default js-productsch" type="button">Buscar</button></span>
+      </div>
+      <span class="help-block"></span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="productora" class="col-sm-2 control-label"  >entregado por</label>
+    <div class='row'>
+      <div class="input-group col-sm-4">
+        <span class="input-group-addon">@</span>
+        <input id="productora" name="productora" type="text" class="form-control" 
+            value="<%= productora %>"  placeholder="casa productora">
+        <span class="input-group-btn"><button class="btn btn-default js-personsch" type="button">Buscar</button></span>
+      </div>
+      <div class="col-sm-5">
+        <input id="sopoentrega" name="sopoentrega" type="text" class="form-control" 
+            value="<%= sopoentrega %>" placeholder="soporte original" >
+      <span class="help-block"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class='row'>
+    <label for="estado_alta" class="col-sm-2 control-label"  >Video</label>
+      <div class="col-sm-1">
+         <input id="vbloques" name="vbloques" type="number" class="form-control input-sm" 
+           value="<%= vbloques %>" placeholder="blo">
+      </div>
+      <div class="col-sm-3">
+          <select class="form-control input-sm" id="resolucion" name="resolucion" value="<%= resolucion %>">
+            <%= utils.buildSelectOptions('resolucion',utils.resolucionOptionList, resolucion) %>
+          </select>
+      </div>
+      <div class="col-sm-3">
+          <select class="form-control input-sm" id="framerate" name="framerate" value="<%= framerate %>">
+            <%= utils.buildSelectOptions('framerate',utils.framerateOptionList, framerate) %>
+          </select>
+      </div>
+    </div>
+    <div class='row'>
+      <div class="col-sm-3 col-sm-offset-2">
+          <select class="form-control input-sm" id="aspectratio" name="aspectratio" value="<%= aspectratio %>">
+            <%= utils.buildSelectOptions('aspectratio',utils.aspectratioOptionList, aspectratio) %>
+          </select>
+      </div>
+      <div class="col-sm-3">
+          <select class="form-control input-sm" id="rolinstancia" name="rolinstancia" value="<%= rolinstancia %>">
+            <%= utils.buildSelectOptions('rolinstancia',utils.rolinstanciasOptionList, rolinstancia) %>
+          </select>
+      </div>
+      <div class="col-sm-3">
+          <select class="form-control input-sm" id="formatoorig" name="formatoorig" value="<%= formatoorig %>">
+            <%= utils.buildSelectOptions('formatoorig',utils.formatooriginalOptionList, formatoorig) %>
+          </select>
+      </div>
+      <span class="help-block"></span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="description" class="col-sm-2 control-label"  >comentario</label>
+    <div class="col-sm-10">
+    <textarea id="description" name="description" type="textarea" 
+      class="form-control input-sm" rows="3"><%= description %></textarea>
+      <span class="help-block"></span>
+     </div>
+  </div>
+  <div class="form-group">
+    <label for="estado_alta" class="col-sm-2 control-label"  >estados</label>
+    <div class='row'>
+      <div class="col-sm-3">
+          <select class="form-control input-sm" id="estado_alta" name="estado_alta" value="<%= estado_alta %>">
+            <%= utils.buildSelectOptions('estado_alta',utils.estadoaltaOptionList, estado_alta) %>
+          </select>
+      </div>
+      <div class="col-sm-3">
+          <select class="form-control input-sm" id="nivel_ejecucion" name="nivel_ejecucion" value="<%= nivel_ejecucion %>">
+            <%= utils.buildSelectOptions('nivel_ejecucion',utils.documexecutionOptionList, nivel_ejecucion) %>
+          </select>
+      </div>
+      <div class="col-sm-3">
+          <select class="form-control input-sm" id="estado_qc" name="estado_qc" value="<%= estado_qc %>">
+            <%= utils.buildSelectOptions('estado_qc',utils.estadoqcOptionList, estado_qc) %>
+          </select>
+      </div>
+      <span class="help-block"></span>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-10 col-sm-offset-2">
+    <button type="button" class="btn btn-primary js-submit">Guardar</button>
+    <button type="button" class="btn btn-warning">Cancelar</button>
+     </div>
+  </div>
+  <hr>
+  <hr>

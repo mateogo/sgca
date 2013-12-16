@@ -25,8 +25,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var initdocumheaders = function(){
     Entities.documitems = new Entities.HeaderCollection([
-      { name: "Nuevo", url: "nuevo", navigationTrigger: "documents:list" },
-      { name: "Algo", url: "about", navigationTrigger: "about:show" }
+      { name: "Nuevo", url: "nuevo", navigationTrigger: "document:new" },
+      { name: "Lista", url: "lista", navigationTrigger: "documents:list" }
+    ]);
+ };
+
+  var initdocumitemheaders = function(){
+    Entities.documedititems = new Entities.HeaderCollection([
+      { name: "nuevo", url: "nuevo", navigationTrigger: "document:new" },
+      { name: "renglón", url: "nuevorenglon", navigationTrigger: "document:item:new" },
+      { name: "lista", url: "lista", navigationTrigger: "documents:list" }
     ]);
   };
 
@@ -42,6 +50,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         initdocumheaders();
       }
       return Entities.documitems;
+    },
+    getDocumEditCol: function(){
+      if(Entities.documedititems === undefined){
+        initdocumitemheaders();
+      }
+      return Entities.documedititems;
     }
   };
 
@@ -51,4 +65,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   DocManager.reqres.setHandler("docum:nav:entities", function(){
     return API.getDocumNavCol();
   });
+  DocManager.reqres.setHandler("docum:edit:entities", function(){
+    return API.getDocumEditCol();
+  });
+
 });

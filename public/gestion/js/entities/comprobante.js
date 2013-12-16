@@ -13,7 +13,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       fecomp: "",
       persona: "",
       slug: "",
-      description: ""
+      estado_alta:'activo',
+      nivel_ejecucion: 'alta',
+      description: "",
+      items:[]
     },
 
     enabled_predicates:['es_relacion_de'],
@@ -26,8 +29,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     beforeSave: function(){
       var feultmod = new Date();
       this.set({feultmod:feultmod.getTime()})
-
-
     },
 
     update: function(cb){
@@ -43,7 +44,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       })) {
           cb(self.validationError,null);
       }    
+    },
 
+    itemTypes: {
+      ptecnico:{
+        initNew: function(attrs){
+          var ptecnico = new Entities.DocumParteTecnico(attrs);
+          //console.log('initNew PARTE TECNICO [%s]',ptecnico.get('slug'));
+          //do some initialization
+          return ptecnico;
+        }
+      }
     },
 
     validate: function(attrs, options) {
@@ -61,7 +72,28 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if( ! _.isEmpty(errors)){
         return errors;
       }
-    }
+    },
+
+    insertItemCollection: function(itemCol) {
+        var self = this;
+        console.log('insert items begins items:[%s]', itemCol.length);
+        //var itemModel = self[item.get('tipoitem')].initNew(item.attributes);
+        self.set({items: itemCol.toJSON()});
+    },
+
+    initNewItem: function(item){
+      var self = this;
+      var itemModel = self.itemTypes[item.get('tipoitem')].initNew(item.attributes);
+      return itemModel;
+    },
+
+    loaditems: function(cb){
+        dao.contactfacet.setCol( new ContactFacetCollection(this.get('contactinfo')));
+
+        console.log('[%s] loadcontacts [%s] ',this.whoami, dao.contactfacet.getCol().length);
+
+        cb(dao.contactfacet.getCol());
+    },
   });
 
 
@@ -71,6 +103,107 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     model: Entities.Comprobante,
     comparator: "cnumber",
   });
+
+  Entities.DocumParteTecnico = Backbone.Model.extend({
+    whoami: 'DocumParteTecnico:comprobante.js ',
+
+    schema: {
+        tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList },
+        slug:     {type: 'Text', title: 'Descripción corta'},
+    },
+
+    validate: function(attrs, options) {
+      //if(!attrs) return;
+      var errors = {}
+      console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
+
+      if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
+        errors.tipocomp = "No puede ser nulo";
+      }
+      if (_.has(attrs,'slug') && ! attrs.slug) {
+        errors.slug = "No puede ser nulo";
+      }
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+
+    defaults: {
+      tipoitem: "",
+      slug: "",
+      fept: "",
+      revision:1,
+      product: "",
+      productora:"",
+      sopoentrega:"",
+      vbloques:"",
+      estado_alta:"",
+      nivel_ejecucion:"",
+      estado_qc:"",
+      resolucion:"",
+      framerate:"",
+      aspectratio:"",
+      rolinstancia:"",
+      formatoorig:"",
+
+
+
+    },
+
+   });
+
+  var modelFactory = function(attrs, options){
+    utils.inspect(attrs,1,'modelFactory');
+    var model;
+    if(attrs.tipoitem==='ptecnico') model = new Entities.DocumParteTecnico(attrs);
+    return model;
+  };
+
+  Entities.DocumItemsCollection = Backbone.Collection.extend({
+    whoami: 'Entities.ComprobanteItemsCollection:comprobante.js ',
+
+    model: function(attrs, options){
+      console.log('collection MODEL FUNCTION: [%s]',attrs.tipoitem);
+      return modelFactory(attrs, options);
+      //if(attrs.tipoitem==='ptecnico') return new Entities.DocumParteTecnico(attrs, options);
+      //return new Entities.DocumItemCoreFacet(attrs, options);
+    },
+
+  });
+
+  Entities.DocumItemCoreFacet = Backbone.Model.extend({
+ 
+    whoami: 'DocumItemCoreFacet:comprobante.js ',
+
+    schema: {
+        tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList },
+        slug:     {type: 'Text', title: 'Descripción corta'},
+    },
+
+    createNewDocument: function(cb){
+      //console.log('create New Document BEGIN')
+      var self = this;
+      var docum = new Entities.Comprobante(self.attributes);
+
+      docum.initBeforeCreate();
+
+      docum.save(null, {
+        success: function(model){
+          //console.log('callback SUCCESS')
+          cb(null,model);
+        }
+      });
+    },
+
+    defaults: {
+      tipoitem: "",
+      slug: "",
+    },
+
+   });
+
+
 
 
   Entities.DocumCoreFacet = Backbone.Model.extend({
@@ -103,7 +236,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     defaults: {
       _id: null,
-      fecha: "",
       tipocomp: "",
       cnumber: "",
       slug: "",
@@ -138,9 +270,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         filterFunction: function(filterCriterion){
           var criteria = filterCriterion.toLowerCase();
           return function(document){
+            console.log('filterfunction:[%s]vs [%s]/[%s]/[%s]',criteria,document.get("tipocomp"),document.get("cnumber"),document.get("slug"));
             if(document.get("tipocomp").toLowerCase().indexOf(criteria) !== -1
               || document.get("slug").toLowerCase().indexOf(criteria) !== -1
-              || document.get("description").toLowerCase().indexOf(criteria) !== -1
               || document.get("cnumber").toLowerCase().indexOf(criteria) !== -1){
               
               return document;
@@ -176,11 +308,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       $.when(fetchingDocuments).done(function(documents){
         //console.log('getFilteredCol: 3');
         var filteredDocuments = filterFactory(documents);
-        console.log('getFilteredCol: 4');
+        console.log('getFilteredCol: [%s]',criteria);
         if(criteria){
           filteredDocuments.filter(criteria);
         }
-        if(cb) cb(documents);
+        if(cb) cb(filteredDocuments);
       });
       //console.log('getFilteredCol: 5');
     },
