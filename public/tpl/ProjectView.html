@@ -13,7 +13,10 @@
                             <input id="projectId" name="id" type="text" value="<%= _id === null ? '' : _id %>"
                                    disabled/>
 
-                            <input type="text" class="input-medium" id="eventdatestr" name="eventdatestr" placeholder='Fecha dd/mm/aaaa' value="<%= eventdatestr %>"/>
+                            <!-- <input type="text" class="input-medium" id="eventdatestr" name="eventdatestr" placeholder='Fecha dd/mm/aaaa' value="<%= eventdatestr %>"/> -->
+
+                             <input type="text" name="eventdatestr" id="eventdatestr" class="datepicker" data-date-format="dd/mm/yyyy" placeholder="Fecha" value="<%= eventdatestr %>"/>
+
                             
                             <span class="help-inline"></span>
                         </div>
@@ -182,3 +185,7 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(".datepicker").datepicker({format: "dd/mm/yyyy"});
+</script>
