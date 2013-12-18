@@ -18,7 +18,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var initializeHeaders = function(){
     Entities.headeritems = new Entities.HeaderCollection([
-      { name: "Comprobantes", url: "comprobantes", navigationTrigger: "documents:list" },
+      { name: "Gestión", url: "comprobantes", navigationTrigger: "documents:list" },
+      { name: "Productos", url: "productos", navigationTrigger: "products:list" },
       { name: "Acerca de", url: "about", navigationTrigger: "about:show" }
     ]);
   };

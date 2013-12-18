@@ -158,13 +158,38 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
     },
     
     events: {
+      "click .js-prev": "fetchPrev",
+      "click .js-next": "fetchNext",
       "click a.brand": "brandClicked",
-      "click .js-filter-by-id" : "documentList"
+      "click .js-filter-by-id" : "documentSearch"
     },
 
-    documentList: function(){
+    fetchPrev: function(){
+      console.log('fetchprev');
+      var query = this.$('#search-by-id').val();
+      this.trigger('document:fetchprev', query, function(entity){
+        console.log('back in fetchprev');
+      });
+    },
+
+    fetchNext: function(){
+      console.log('fetchNext');
+      var query = this.$('#search-by-id').val();
+      this.trigger('document:fetchnext', query, function(entity){
+        console.log('back in fetchNext');
+      });    
+    },
+
+    documentSearch: function(){
       console.log('documentList: [%s]',$('input',this.$el).val())
-      this.trigger("documents:filtered:list",$('input',this.$el).val());
+      var self = this,
+          query = this.$('#search-by-id').val();
+      this.trigger('document:search', query, function(entity){
+        this.trigger('document:edit',entity);
+
+      });
+
+
     },
 
     brandClicked: function(e){

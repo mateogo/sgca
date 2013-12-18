@@ -9,6 +9,12 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
   });
 
   var API = {
+
+    listProducts: function(criterion){
+      console.log('API: listProducts');
+      window.open('/#navegar/productos');
+    },
+
     listDocuments: function(criterion){
       console.log('API: listDocuments');
       DocsApp.List.Controller.listDocuments(criterion);
@@ -34,6 +40,11 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
     else{
       DocManager.navigate("comprobantes");
     }
+  });
+
+
+  DocManager.on("products:list", function(){
+    API.listProducts();
   });
 
   DocManager.on("documents:list", function(){

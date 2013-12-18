@@ -107,11 +107,15 @@ exports.findById = function(req, res) {
 exports.find = function(req, res) {
     var query = req.body; //{};
 
-    console.log('find:user Retrieving user collection with query');
+    console.log('find:user Retrieving user collection with query [%s]',query['es_usuario_de.id']);
+    for (var i in query){
+        console.log(i,query[i]);
+    }
 
     dbi.collection(usersCol, function(err, collection) {
         collection.find(query).sort({username:1}).toArray(function(err, items) {
-            res.send(items);
+            console.log('recuperados [%s]',items.length)
+            res.send(items[0]);
         });
     });
 };

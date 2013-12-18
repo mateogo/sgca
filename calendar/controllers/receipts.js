@@ -121,6 +121,16 @@ var addNewReceipt = function(req, res, node){
 };
 
 
+var fetchOne = function(query, cb) {
+    console.log('findReceipt Retrieving receipt collection for passport');
+
+    dbi.collection(receiptsCol, function(err, collection) {
+        collection.findOne(query, function(err, item) {
+            cb(err, item);
+        });
+    });
+};
+
 var insertNewReceipt = function (req, res, receipt){
     console.log('insertNewReceipt:receipts.js BEGIN [%s]',receipt.name);
     //dbi.collection(receiptsCol, function(err, collection) {
@@ -152,13 +162,18 @@ exports.setBSON = function(bs) {
     return this;
 };
 
+exports.findOne = function(req, res) {
+    var query = req.body;
 
-exports.findOne = function(query, cb) {
-    console.log('findReceipt Retrieving receipt collection for passport');
 
+    var sort = {cnumber: 1};
+    if (query.cnumber['$lt']) sort = {cnumber: -1};
+
+    console.log('findONE:receipt Retrieving receipt collection with query [%s] sort:[%s]',query.cnumber, sort.cnumber);
+ 
     dbi.collection(receiptsCol, function(err, collection) {
-        collection.findOne(query, function(err, item) {
-            cb(err, item);
+        collection.find   (query).sort(sort).toArray(function(err, items) {
+            res.send(items[0]);
         });
     });
 };
@@ -188,7 +203,7 @@ exports.find = function(req, res) {
     console.log('find:receipt Retrieving receipt collection with query');
 
     dbi.collection(receiptsCol, function(err, collection) {
-        collection.find(query).sort({receiptname:1}).toArray(function(err, items) {
+        collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
             res.send(items);
         });
     });
@@ -197,7 +212,7 @@ exports.find = function(req, res) {
 exports.findAll = function(req, res) {
     console.log('findAll: Retrieving all instances of [%s] collection', receiptsCol);
     dbi.collection(receiptsCol, function(err, collection) {
-        collection.find().sort({receiptname:1}).toArray(function(err, items) {
+        collection.find().sort({cnumber:1}).toArray(function(err, items) {
             res.send(items);
         });
     });

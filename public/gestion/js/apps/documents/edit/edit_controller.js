@@ -50,7 +50,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       ptecnico.on('product:select',function(query,cb){
         console.log('desde el CONTROLLER');
 
-        DocManager.request("product:search",function(model){
+        DocManager.request("product:search", query, function(model){
           cb(model);
         });      
 
@@ -96,6 +96,20 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
   };
 
+  var fetchPrevNextDocument = function (ename, query, cb){
+    var qmodel;
+    console.log('query: [%s]',query);
+    if(query) qmodel = new DocManager.Entities.Comprobante({cnumber:query});
+    else qmodel = Edit.Session.model;
+    DocManager.request(ename,qmodel, function(model){
+      if(model){
+        console.log('1we are back!!![%s]',model.get('cnumber'));
+        Edit.Session.layout.close();
+        DocManager.trigger("document:edit", model);
+      }
+    });
+  };
+
   var registerHeadersEvents = function(hview){
 
       hview.on("itemview:document:new", function(childView){
@@ -110,6 +124,25 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         var trigger = model.get("navigationTrigger");
         DocManager.trigger(trigger);
       });
+
+      hview.on('document:search',function(query, cb){
+        DocManager.request("document:search",query, function(model){
+          if(model){
+            Edit.Session.layout.close();
+            DocManager.trigger("document:edit", model);
+          }
+        });      
+
+      });
+
+      hview.on('document:fetchprev', function(query, cb){
+        fetchPrevNextDocument("document:fetchprev",query,cb);
+      });
+
+      hview.on('document:fetchnext', function(query, cb){
+        fetchPrevNextDocument("document:fetchnext",query,cb);
+      });
+
   };
 
   var initNavPanel = function(){
@@ -124,33 +157,34 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   };
 
   var API = {
-    searchDocuments: function(cb){
-      Edit.modalSearchEntities('documents', function(model){
+    searchDocuments: function(query, cb){
+      console.log('search documents');
+      Edit.modalSearchEntities('documents', query, function(model){
         cb(model);
       });
     },
-    searchPersons: function(cb){
-      Edit.modalSearchEntities('persons', function(model){
+    searchPersons: function(query, cb){
+      Edit.modalSearchEntities('persons', query, function(model){
         cb(model);
       });
     },
-    searchProducts: function(cb){
-      Edit.modalSearchEntities('products', function(model){
+    searchProducts: function(query, cb){
+      Edit.modalSearchEntities('products', query, function(model){
         cb(model);
       });
     },
   };
 
-  DocManager.reqres.setHandler("document:search", function(cb){
-    API.searchDocuments(cb);
+  DocManager.reqres.setHandler("document:search", function(query, cb){
+    API.searchDocuments(query, cb);
   });
 
-  DocManager.reqres.setHandler("person:search", function(cb){
-    API.searchPersons(cb);
+  DocManager.reqres.setHandler("person:search", function(query, cb){
+    API.searchPersons(query, cb);
   });
 
-  DocManager.reqres.setHandler("product:search", function(cb){
-    API.searchProducts(cb);
+  DocManager.reqres.setHandler("product:search", function(query, cb){
+    API.searchProducts(query, cb);
   });
 
 });

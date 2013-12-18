@@ -254,6 +254,7 @@ module.exports = function (config, app) {
     var receipt = require(rootPath + '/calendar/controllers/receipts');
     app.get ('/comprobantes',           receipt.findAll);
     app.post('/recuperar/comprobantes', receipt.find);
+    app.post('/comprobante/fetch',      receipt.findOne);
     app.post('/navegar/comprobantes',   receipt.find);
     app.get ('/comprobantes/:id',       receipt.findById);
     app.post('/comprobantes',           receipt.add);

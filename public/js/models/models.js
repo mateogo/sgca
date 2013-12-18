@@ -1413,17 +1413,19 @@ window.Comprobante = Backbone.Model.extend({
 
     initPtecnico: function(product, dt){
       var fealta = new Date();
-      this.set({fealta:fealta.getTime()});
-      this.set({fecomp:fealta.getTime()});
-      this.set({tipocomp:'ptecnico'});
-      this.set({persona:dt.productora});
-      this.set({slug:'PT: '+product.get('slug')});
-      this.set({estado_alta:'activo'});
-      this.set({nivel_ejecucion:'enproceso'});
+      this.set({fealta: fealta.getTime()});
+      this.set({fecomp_tc: fealta.getTime()});
+
+      this.set({fecomp: utils.displayDate(fealta)});
+      this.set({tipocomp: 'ptecnico'});
+      this.set({persona: dt.productora});
+      this.set({slug: 'PT:'+product.get('slug')});
+      this.set({estado_alta: 'activo'});
+      this.set({nivel_ejecucion: 'enproceso'});
 
       var ptecnico = new DocumParteTecnico();
       ptecnico.set({
-        tipoitem:'ptecnico',
+        tipoitem: 'ptecnico',
         slug: this.get('slug'),
         fept: this.get('fecomp'),
         product:product.get('slug'),
@@ -2533,7 +2535,10 @@ window.User = Backbone.Model.extend({
     loadusers: function(cb){
         var self = this;
         console.log('loadusers.Person:models.js begins es_asset_de: [%s]',self.get('nickName'));
-        var query = {'es_usuario_de.id':self.id};
+        //var query = {'es_usuario_de.id':self.id};
+        var query = {};
+        query['es_usuario_de.id']= self.id;
+
         var userCol= new UserCollection();
         dao.userfacet.setCol(userCol);
         userCol.fetch({

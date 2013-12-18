@@ -68,6 +68,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if (_.has(attrs,'slug') && ! attrs.slug) {
         errors.slug = "No puede ser nulo";
       }
+      if (_.has(attrs,'fecomp')){
+        var fecomp_tc = utils.buildDateNum(attrs['fecomp']);
+        if(Math.abs(fecomp_tc-(new Date().getTime()))>(1000*60*60*24*30) ){
+          errors.fecomp = 'fecha no valida';
+        }
+        this.set('fecomp_tc',fecomp_tc);
+      }
 
       if( ! _.isEmpty(errors)){
         return errors;
@@ -100,6 +107,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   Entities.ComprobanteCollection = Backbone.Collection.extend({
     whoami: 'Entities.ComprobanteCollection:comprobante.js ',
     url: "/comprobantes",
+    model: Entities.Comprobante,
+    comparator: "cnumber",
+  });
+
+  Entities.ComprobanteFindOne = Backbone.Collection.extend({
+    whoami: 'Entities.ComprobanteFindOne:comprobante.js ',
+    url: "/comprobante/fetch",
     model: Entities.Comprobante,
     comparator: "cnumber",
   });
@@ -154,7 +168,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
    });
 
   var modelFactory = function(attrs, options){
-    utils.inspect(attrs,1,'modelFactory');
+    //utils.inspect(attrs,1,'modelFactory');
     var model;
     if(attrs.tipoitem==='ptecnico') model = new Entities.DocumParteTecnico(attrs);
     return model;
@@ -329,7 +343,25 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         }
       });
       return defer.promise();
+    },
+
+    fetchNextPrev: function(type, model, cb){
+      console.log('fetchNextPrev:comprobantes.js begins model:[%s]',model.get('cnumber'));
+      var query = {};
+      if(type === 'fetchnext') query.cnumber = { $gt : model.get('cnumber')}
+      if(type === 'fetchprev') query.cnumber = { $lt : model.get('cnumber')}
+
+      var comprobantes= new Entities.ComprobanteFindOne();
+      comprobantes.fetch({
+          data: query,
+          type: 'post',
+          success: function() {
+              console.log('callback: length[%s]  model[%s]',comprobantes.length, comprobantes.at(0).get('cnumber'))
+              if(cb) cb(comprobantes.at(0));
+          }
+      });
     }
+
   };
 
   DocManager.reqres.setHandler("document:entities", function(){
@@ -344,5 +376,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     return API.getEntity(id);
   });
 
+  DocManager.reqres.setHandler("document:fetchprev", function(model, cb){
+    return API.fetchNextPrev('fetchprev',model, cb);
+  });
+
+  DocManager.reqres.setHandler("document:fetchnext", function(model, cb){
+    return API.fetchNextPrev('fetchnext',model, cb);
+  });
 
 });

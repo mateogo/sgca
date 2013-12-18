@@ -66,6 +66,14 @@ window.utils = {
         $('.alert').hide();
     },
 
+    displayDate: function (d) {
+        var di = ('000'+d.getDate());
+        var me = ('000'+(d.getMonth()+1));
+        di = di.substr(di.length-2,2);
+        me = me.substr(me.length-2,2);
+        return di+'/'+me+'/'+d.getFullYear();
+    },
+
     buildDateNum: function(str){
         return this.parseDateStr(str).getTime();
     },

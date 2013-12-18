@@ -18,6 +18,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
   Edit.Search = DocManager.DocsApp.Common.Views.SearchPanel.extend({
     initialize: function(options){
+      console.log('iniTIALIZE: [%s]',this.model.get('query'));
       this.optiones = options;
       var self = this;
       console.log('Search panel initizlize: [%s]',options.searchtrigger)
@@ -82,19 +83,23 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
 
   // ventana modal
-  Edit.modalSearchEntities = function(type, cb){
-        console.log('modal SEARCH ENTITIES');
+  Edit.modalSearchEntities = function(type, query, cb){
+        console.log('modal SEARCH ENTITIES [%s] [%s]',type,query);
         var options = {
           documents: {
+            title:'buscar comprobantes',
             collection: new DocManager.Entities.ComprobanteCollection(),
+            model: new Backbone.Model({query:query}),
             searchtrigger:"document:filtered:entities",
             itemViewOptions:{
               itemtype:'documentos'
-            }  
+            }
           },
 
           persons: {
+            title:'buscar personas',
             collection: new DocManager.Entities.PersonCollection(),
+            model: new Backbone.Model({query:query}),
             searchtrigger:"person:filtered:entities",
             itemViewOptions:{
               itemtype:'persons'
@@ -102,7 +107,9 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
           },
 
           products: {
+            title:'buscar productos',
             collection: new DocManager.Entities.ProductCollection(),
+            model: new Backbone.Model({query:query}),
             searchtrigger:"product:filtered:entities",
             itemViewOptions:{
               itemtype:'products'
@@ -110,6 +117,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
           }
 
         }
+        //options[type].model = new Backbone.Model({query:query});
         var form = new Edit.Search(options[type]);
 
         form.on('itemview:item:found',function(form,model){
@@ -120,7 +128,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
             
         var modal = new Backbone.BootstrapModal({
             content: form,
-            title: 'Buscar entidades',
+            title: options[type].title,
             okText: 'aceptar',
             cancelText: 'cancelar',
             animate: false
