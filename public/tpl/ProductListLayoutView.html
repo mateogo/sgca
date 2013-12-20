@@ -6,7 +6,7 @@
     <ul class="nav nav-list">
       <li class="nav-header">Producto seleccionado</li>
       <li><button id='mastevale' class='btn btn-block btn-link prselected'><%= utils.selectedProducts.getSelectedLabel() %></button></li>
-      <li class="nav-header">Proyecto seleccionado</li>
+      <li class="nav-header">Procedencia seleccionado</li>
       <li><button class='btn btn-block btn-link prjview'><%= utils.viewData.currentProject %></button></li>
       <li><input type='hidden' placeholder='proyecto' disabled class='input-small' id='project[_id]' name='project[_id]' value=<%= project['_id'] %> ></li>
       <li class="nav-header">Selectores</li>
@@ -53,7 +53,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Nuevo<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="#productos/add">Producto</a></li>
-                            <li><a href="#proyectos/add">Proyecto</a></li>
+                            <li><a href="#proyectos/add">Procedencia</a></li>
                         </ul>
                     </li>
                 </ul>

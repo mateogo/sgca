@@ -42,21 +42,28 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     }
   }
   var registerDocumItemsView = function(view){
-    view.on('itemview:item:edit',function(childView, model){
-      console.log('Parte tecnico BEGINS:[%s] [%s]',model.get('fecomp'),model.whoami);
-      var ptecnico = new Edit.PTecnico({
-        model: model,
-      });
-      ptecnico.on('product:select',function(query,cb){
-        console.log('desde el CONTROLLER');
+    view.on('itemview:item:edit',function(childView, ptmodel){
+      console.log('Parte tecnico BEGINS:[%s] [%s]',ptmodel.get('estado_qc'),ptmodel.whoami);
 
+      var ptlayout = new Edit.PTecnicoLayout();
+      var ptecnico = new Edit.PTecnicoHeader({
+        model: ptmodel,
+      });
+
+      ptecnico.on('product:select',function(query, cb){
         DocManager.request("product:search", query, function(model){
           cb(model);
         });      
-
       });
+
+      ptecnico.on('person:select',function(query, cb){
+        DocManager.request("person:search", query, function(model){
+          cb(model);
+        });      
+      });
+
       ptecnico.on("form:submit", function(model){
-        console.log('form:submit [%s]',model.whoami,model.get('slug'));
+        console.log('ptecico: form:submit [%s]',model.whoami,model.get('slug'));
         Edit.Session.model.insertItemCollection(Edit.Session.items);
         Edit.Session.model.update(function(err,model){
           if(err){
@@ -67,9 +74,68 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         });
       });
 
-      Edit.Session.layout.itemEditRegion.show(ptecnico);
+      var pticollection = fetchPTItemsCollection(ptmodel);
+
+      var ptiview = new Edit.PTecnicoList({collection: pticollection});
+      ptiview.on("pti:form:submit",function(){
+        console.log('pti:form:submit');
+
+        var ptierr = false;
+        ptiview.children.each(function (view){
+          var err = view.model.validate(view.model.attributes);
+          view.onFormDataInvalid((err||{}));
+          if(err) ptierr = true;
+        });
+
+        if(!ptierr){
+          ptmodel.insertItemCollection(pticollection);
+          Edit.Session.model.insertItemCollection(Edit.Session.items);
+
+          Edit.Session.model.update(function(err,model){
+            if(err){
+              ptecnico.triggerMethod("form:data:invalid", err);
+            }else{
+              ptlayout.close();
+            }
+          });
+        }
+      });
+
+      ptiview.on("itemview:pti:remove:item",function(view, model){
+        removeItemFromCol(model, pticollection);
+      });
+
+
+      ptlayout.on("pti:add:item", function(){
+        addEmptyItemToCol(pticollection);
+      });
+
+      ptlayout.on("show", function(){
+          ptlayout.ptheaderRegion.show(ptecnico);
+          ptlayout.ptlistRegion.show(ptiview);
+      });
+
+      ptlayout.on("form:submit", function(){
+        ptiview.triggerMethod("form:submit");
+      });
+
+      Edit.Session.layout.itemEditRegion.show(ptlayout);
     });
 
+  };
+
+  var fetchPTItemsCollection = function(model){
+    return model.getItems();
+  };
+
+
+  var removeItemFromCol = function(model, col){
+    col.remove(model);
+  };
+
+  var addEmptyItemToCol = function(col){
+    var ptimodel = new DocManager.Entities.DocumParteTecnicoItem();
+    col.add(ptimodel);
   };
 
   var registerDocumentEntity = function(model) {
@@ -91,6 +157,12 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
           DocManager.trigger("document:edit", model);
         }
       });
+    });
+
+    view.on('person:select',function(query, cb){
+      DocManager.request("person:search", query, function(model){
+        cb(model);
+      });      
 
     });
 
@@ -98,12 +170,10 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
   var fetchPrevNextDocument = function (ename, query, cb){
     var qmodel;
-    console.log('query: [%s]',query);
     if(query) qmodel = new DocManager.Entities.Comprobante({cnumber:query});
     else qmodel = Edit.Session.model;
     DocManager.request(ename,qmodel, function(model){
       if(model){
-        console.log('1we are back!!![%s]',model.get('cnumber'));
         Edit.Session.layout.close();
         DocManager.trigger("document:edit", model);
       }
@@ -147,7 +217,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
   var initNavPanel = function(){
       var links = DocManager.request("docum:edit:entities");
-      console.log('initEDIT-NavPanel BEGINS  [%s]', links.length);
 
       var headers = new DocManager.DocsApp.Common.Views.NavPanel({collection: links});
       //var headers = new Edit.NavPanel({collection: links});
@@ -158,7 +227,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
   var API = {
     searchDocuments: function(query, cb){
-      console.log('search documents');
       Edit.modalSearchEntities('documents', query, function(model){
         cb(model);
       });
@@ -188,43 +256,3 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   });
 
 });
-
-
-
-
-
-/*
-      var loadingView = new DocManager.Common.Views.Loading({
-        title: "Artificial Loading Delay",
-        message: "Data loading is delayed to demonstrate using a loading view."
-      });      
-      DocManager.mainRegion.show(loadingView);
-*/
-/*
-      var fetchingDocument = DocManager.request("document:entity", id);   
-      $.when(fetchingDocument).done(function(document){
-        var view;
-        if(document !== undefined){
-          view = new Edit.Document({
-            model: document,
-            generateTitle: true
-          });
-
-          view.on("form:submit", function(data){
-            if(document.save(data)){
-              DocManager.trigger("document:show", document.get("id"));
-            }
-            else{
-              view.triggerMethod("form:data:invalid", document.validationError);
-            }
-          });
-        }
-        else{
-          view = new DocManager.DocsApp.Show.MissingDocument();
-        }
-
-        DocManager.mainRegion.show(view);
-      });
-
-*/
-

@@ -18,12 +18,9 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
   Edit.Search = DocManager.DocsApp.Common.Views.SearchPanel.extend({
     initialize: function(options){
-      console.log('iniTIALIZE: [%s]',this.model.get('query'));
       this.optiones = options;
       var self = this;
-      console.log('Search panel initizlize: [%s]',options.searchtrigger)
-    },
- 
+    }, 
   });
 
 
@@ -39,52 +36,31 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
     initialize: function(options){
       var self = this;
-      this.events = _.extend({},this.formevents);
-      this.delegateEvents();
-    },
- 
-  });
-
-
-  // PARTE TECNICO
-  Edit.PTecnico = DocManager.DocsApp.Common.Views.Form.extend({
-    whoami:'PTecnico:edit_view.js',
-    
-    tagName:'form',
-    className: 'form-horizontal',
-
-    getTemplate: function(){
-      return utils.templates.DocumEditPT;
-    },
-
-    initialize: function(options){
-      var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
-    },
- 
+   },
+
     events: {
-      "click .js-productsch": "productsearch",
+      "click .js-personsch": "personsearch",
     },
 
-    productsearch: function(){
+    personsearch: function(){
       var self = this,
-          query = this.$('#product').val();
-      console.log('productearch [%s]',query);
-      this.trigger('product:select', query, function(entity){
-        self.model.set({product:entity.get('productcode')});
-        console.log('volvimos!! [%s]',entity.get('productcode'));
+          query = this.$('#persona').val();
+
+      console.log('personsearch [%s]',query);
+      this.trigger('person:select', query, function(entity){
+        self.model.set({persona:entity.get('nickName')});
+        self.model.set({personaid:entity.id});
         self.render();
       });
-
-
     },
   });
+
 
 
   // ventana modal
   Edit.modalSearchEntities = function(type, query, cb){
-        console.log('modal SEARCH ENTITIES [%s] [%s]',type,query);
         var options = {
           documents: {
             title:'buscar comprobantes',
@@ -117,11 +93,9 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
           }
 
         }
-        //options[type].model = new Backbone.Model({query:query});
         var form = new Edit.Search(options[type]);
 
         form.on('itemview:item:found',function(form,model){
-          //console.log('callback ITEMFOUND [%s]',model.get('cnumber'));
           if(cb) cb(model);
           modal.close();
         });
@@ -149,7 +123,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
             });
 
         form.on('change', function(form, contenidoEditor) {
-            console.log('form: on:change');
             var errors = form.commit();
         });
             
@@ -163,7 +136,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
         modal.open(function(){
             var errors = form.commit();
-            console.log('close: [%s]',facet.get('slug'));
             facet.createNewDocument(function(err, model){
               DocManager.trigger("documents:list");
             });
@@ -179,7 +151,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
             });
 
         form.on('change', function(form, contenidoEditor) {
-            console.log('form: on:change');
             var errors = form.commit();
         });
             
@@ -193,59 +164,138 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
         modal.open(function(){
             var errors = form.commit();
-            console.log(' MODAL close: [%s] : [%s]',facet.get('tipoitem'),facet.get('slug'),model.get('slug'));
             var item = model.initNewItem(facet);
             Edit.Session.items.add(item);
-            //facet.createNewDocument(function(err, model){
-            //  DocManager.trigger("documents:list");
-            //});
         });
   };
 
-});
 
-/*
-  Edit.Document = DocManager.DocsApp.Common.Views.Form.extend({
-    initialize: function(){
-      this.title = "Edit " + this.model.get("firstName") + " " + this.model.get("lastName");
+  // PARTE TECNICO
+  Edit.PTecnicoHeader = DocManager.DocsApp.Common.Views.Form.extend({
+    whoami:'PTecnico:edit_view.js',
+    
+    tagName:'form',
+    className: 'form-horizontal',
+
+    getTemplate: function(){
+      return utils.templates.DocumEditPT;
     },
 
-    onRender: function(){
-      if(this.options.generateTitle){
-        var $title = $('<h1>', { text: this.title });
-        this.$el.prepend($title);
-      }
+    initialize: function(options){
+      var self = this;
+      this.events = _.extend({},this.formevents,this.events);
+      this.delegateEvents();
+    },
+ 
+    events: {
+      "click .js-productsch": "productsearch",
+      "click .js-personsch": "personsearch",
+    },
 
-      this.$(".js-submit").text("Update document");
+    personsearch: function(){
+      var self = this,
+          query = this.$('#productora').val();
+
+      this.trigger('person:select', query, function(entity){
+        self.model.set({productora:entity.get('nickName')});
+        self.model.set({productoraid:entity.id});
+        self.render();
+      });
+    },
+
+    productsearch: function(){
+      var self = this,
+          query = this.$('#product').val();
+
+      this.trigger('product:select', query, function(entity){
+        self.model.set({product:entity.get('productcode')});
+        self.render();
+      });
+    },
+
+  });
+
+  Edit.PTecnicoLayout = Marionette.Layout.extend({
+    className: 'row',
+
+    getTemplate: function(){
+      return utils.templates.DocumEditPTLayout;
+    },
+    
+    events: {
+      "click button.js-submit": "submitClicked",
+      "click button.js-cancel": "cancelClicked",
+      "click button.js-addItem": "addItem",
+    },
+
+    submitClicked: function(e){
+      e.preventDefault();
+      this.trigger("form:submit");
+    },
+
+    cancelClicked: function(e){
+      e.preventDefault();
+      this.close()
+    },
+
+    addItem: function(e){
+      e.preventDefault();
+      this.trigger("pti:add:item");
+    },
+    
+    regions: {
+      ptheaderRegion: '#ptheader-region',
+      ptlistRegion:   '#ptlist-region'
     }
   });
-*/
 
 
-/*
-  Edit.Panel = Marionette.ItemView.extend({
-    template: "#document-list-panel",
-
-    triggers: {
-      "click button.js-new": "document:new"
+  Edit.PTecnicoListItem = DocManager.DocsApp.Common.Views.Form.extend({
+    getTemplate: function(){
+      return utils.templates.DocumEditPTItem;
+    },
+    tagName:'form',
+    className: 'form-horizontal list-group-item',
+ 
+    //tagName: "li",
+    //className:"list-group-item",
+    initialize: function(options){
+      var self = this;
+      this.events = _.extend({},this.formevents,this.events);
+      this.delegateEvents();
     },
 
     events: {
-      "submit #filter-form": "filterReceipts"
+      "click .js-ptiremove": "ptiremove",
     },
 
-    ui: {
-      criterion: "input.js-filter-criterion"
+    triggers: {
+      //"click a": "document:new"
     },
 
-    filterReceipts: function(e){
-      e.preventDefault();
-      var criterion = this.$(".js-filter-criterion").val();
-      this.trigger("documents:filter", criterion);
+    ptiremove: function(){
+      this.trigger('pti:remove:item', this.model);
     },
 
-    onSetFilterCriterion: function(criterion){
-      this.ui.criterion.val(criterion);
+    onRender: function(){
     }
   });
-*/
+
+  Edit.PTecnicoList = Marionette.CollectionView.extend({
+    tagName: "div",
+    className: "list-group",
+
+    itemView: Edit.PTecnicoListItem,
+        
+    events: {
+    },
+
+    onFormSubmit:function(){
+      console.log('submit form:PTI-LIST');
+      this.trigger("pti:form:submit");
+
+    },
+
+  });
+
+});

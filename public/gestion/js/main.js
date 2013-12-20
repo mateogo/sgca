@@ -1,5 +1,5 @@
 utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView', 'DocumNavbar',
-    'DocumEditMin', 'DocumShowDef','DocumEditCore','DocumEditPT', 'SearchEntitiesForm' ], function() {
+    'DocumEditMin', 'DocumShowDef','DocumEditCore','DocumEditPT', 'SearchEntitiesForm','DocumEditPTLayout','DocumEditPTItem' ], function() {
     //app = new AppRouter();
     //utils.approuter = app;
     //Backbone.history.start();

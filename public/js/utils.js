@@ -156,12 +156,13 @@ window.utils = {
         {val:'no_definido'    , label:'tipo de comprobante'},
         {val:'ptecnico'       , label:'P/Técnico'},
     ],
+
     paOptionList: [
         {val:'no_definido'  , label:'Nivel de ejecución'},
         {val:'enproceso'    , label:'en proceso'},
         {val:'completado'   , label:'completado'},
         {val:'suspendido'   , label:'suspendido'},
-        {val:'archivo'      , label:'archivado'},
+        {val:'archivo'      , label:'archivado'}
     ],
 
     documexecutionOptionList: [
@@ -169,13 +170,50 @@ window.utils = {
         {val:'enproceso'    , label:'en proceso'},
         {val:'completado'   , label:'completado'},
         {val:'suspendido'   , label:'suspendido'},
-        {val:'archivo'      , label:'archivado'},
+        {val:'archivo'      , label:'archivado'}
+    ],
+
+    casosqcOptionList: [
+        {val:'AAnodefinido',   label:'Seleccione tipo de hallazgo'},
+        {val:'Aartefactos',    label:'A: Artefactos producidos por compresión / branding'},
+        {val:'Adropanalogico', label:'A: Drop de video analógico'},
+        {val:'Adropdigital',   label:'A: Drop de video digital'},
+        {val:'Agraficaaccion', label:'A: Gráfica fuera del margen de seguridad de acción'},
+        {val:'Agraficatexto',  label:'A: Gráfica fuera del margen de seguridad de texto'},
+        {val:'Amoirealiasing', label:'A: Moire / Aliasing'},
+        {val:'Anegrobloque',   label:'A: Negro entre bloques'},
+        {val:'Apconvframes',   label:'A: Problemas de conversión (repite frames)'},
+        {val:'Apconvgeneral',  label:'A: Problemas de conversión general'},
+        {val:'Apedicionvideo', label:'A: Problemas de edición de video'},
+        {val:'Apescaneo',      label:'A: Problemas de Escaneo'},
+        {val:'Apfocoplano',    label:'A: Problemas de foco en plano'},
+        {val:'Apposicionimg',  label:'A: Problemas de posición de imagen'},
+        {val:'Approcesam',     label:'A: Problemas de procesamiento generales'},
+        {val:'Apresolimagen',  label:'A: Problemas de resolución de imagen'},
+        {val:'Avalexcedido',   label:'A: Valores de video/chroma/hue exceden margen legal'},
+        {val:'Avarabruptacol', label:'A: Variación abrupta de corrección de color'},
+        {val:'Bdsinccanales',  label:'B: Descincronización entre canales de audio'},
+        {val:'Bdropanalogico', label:'B: Drop de audio analógico'},
+        {val:'Bdropdigital',   label:'B: Drop de audio digital'},
+        {val:'Bpedicionau',    label:'B: Problema de edición de audio'},
+        {val:'Bpasigcanlau',   label:'B: Problemas en asiganción de canales de audio'},
+        {val:'Bpmzclaruido',   label:'B: Problemas en mezcla (piso de ruido)'},
+        {val:'Bpmzcladial',    label:'B: Problemas en mezcla / diálogos bajs (-200dB FS)'},
+        {val:'Bpnivrelmzcla',  label:'B: Problemas en niveles relativos de mezcla'},
+        {val:'Clipsync',       label:'C: Descincronización de diálogo (lip-sync)'},
+        {val:'Dplacasinst',    label:'D: Placas institucionales no correspondientes'},
+        {val:'Dplanoseg',      label:'D: Plano de seguridad faltante (TCA:xx:xx:xx//xx:xx:xx)'},
+        {val:'Dplanosegerror', label:'D: Plano de seguridad no corresponde a capítulo'},
+        {val:'Dportografia',   label:'D: Problemas en paquete gráfico (error ortográfico)'},
+        {val:'Dptipografia',   label:'D: Problemas en paquete grafico (tipografía ilegible)'},
+        {val:'Dsaltotc',       label:'D: Salto en Timecode continuo'},
     ],
 
     estadoqcOptionList: [
+        {val:'enevaluacion', label:'EN EVALUACIÓN'},
         {val:'aprobado'    , label:'APROBADO'},
+        {val:'observado'   , label:'OBSERVADO'},
         {val:'rechazado'   , label:'RECHAZADO'},
-        {val:'observado'   , label:'OBSERVADO'}
     ],
 
     tipoComprobaneOptionList: [
@@ -344,7 +382,7 @@ window.utils = {
     ],
 
     audiocontentOptionList: [
-        {val:'no_definido'    , label:'no_definido'},
+        {val:'no_definido'    , label:'Contenido'},
         {val:'fullmix'        , label:'Full Mix'},
         {val:'musicayefectos' , label:'Musica y Efectos'},
         {val:'musica'         , label:'Música'},
@@ -355,7 +393,7 @@ window.utils = {
         {val:'mixminus'       , label:'Mix Minus'},
     ],
     audiocanalOptionList: [
-        {val:'no_definido'  , label:'no_definido'},
+        {val:'no_definido'  , label:'Canal'},
         {val:'mono'         , label:'Mono'},
         {val:'stereoder'    , label:'Stereo Der'},
         {val:'stereoizq'    , label:'Stereo Izq'},
@@ -520,7 +558,7 @@ window.utils = {
         template1 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><%= value %></td>"),
         template2 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><input name=tselect type=checkbox class=tselect ></td>"),
         template3 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink' title='editar item'><%= value %></button></td>"),
-        template4 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tedit' title='no implementado aun'><i class='icon-edit'></i></button><button class='btn-link tzoom' title='ver personas relacionadas' ><i class='icon-zoom-in'></i></button></td>"),
+        template4 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tedit' title='no implementado aun'><i class='icon-edit'></i></button><button class='btn-link tzoom' title='ver entidades relacionadas' ><i class='icon-zoom-in'></i></button></td>"),
         template5 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit' title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-zoom' title='entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></td>"),
         template6 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='ver'><%= value %></button></td>"),
     },
@@ -770,6 +808,52 @@ window.utils = {
         //});
 
         d3.select(self.frameElement).style("height", diameter - 150 + "px");
+    },
+
+    parseTC: function(str){
+          var frames = 25;
+          var tc = [0,0,0,0];
+          if(!str) return "00:00:00:00";
+          //var tokens = str.split(/(?:(\:))/gm);
+          var tokens = str.split(":");
+          if(tokens.length===1){
+            tc[1]=parseInt(tokens[0],10);
+
+          }
+          if(tokens.length===2){
+            tc[1]=parseInt(tokens[0],10);
+            tc[2]=parseInt(tokens[1],10);
+
+          }
+          if(tokens.length===3){
+            tc[1]=parseInt(tokens[0],10);
+            tc[2]=parseInt(tokens[1],10);
+            tc[3]=parseInt(tokens[2],10);
+          }
+          if(tokens.length===4){
+            tc[0]=parseInt(tokens[0],10);
+            tc[1]=parseInt(tokens[1],10);
+            tc[2]=parseInt(tokens[2],10);
+            tc[3]=parseInt(tokens[3],10);
+          }
+          if((tc[3]/frames)>1){
+            tc[2] += Math.floor(tc[3]/frames);
+            tc[3] = tc[3] % frames;
+          }
+           
+          return this.normalizeTC(tc).join(':');
+    },
+
+    normalizeTC : function(tc){
+          var divisor = 60;
+      for (var i = tc.length-2; i>0;i-=1 ){
+        if((tc[i]/divisor)>1){
+          tc[i-1] += Math.floor(tc[i]/divisor);
+          tc[i] = tc[i] % divisor;
+        }
+        
+      }
+      return tc;
     },
 
     parseDateStr: function(str) {

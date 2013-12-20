@@ -11,14 +11,14 @@
     <label for="fecomp" class="col-sm-2 control-label" >fecha / sujeto</label>
     <div class='row'>
       <div class="col-sm-3">
-         <input id="fecomp" name="fecomp" type="datetime-local" class="form-control" 
+         <input id="fecomp" name="fecomp" type="text" class="form-control js-datepicker" 
            value="<%= fecomp %>" placeholder="Fecha comprobante">
       </div>
       <div class="input-group col-sm-5">
         <span class="input-group-addon">@</span>
-          <input id="persona" name="persona" type="text" class="form-control" 
+          <input id="persona" name="persona" type="text" class="form-control " 
             value="<%= persona %>"  placeholder="contraparte">
-        <span class="input-group-btn"><button class="btn btn-default" type="button">Buscar</button></span>
+        <span class="input-group-btn"><button class="btn btn-default js-personsch" type="button">Buscar</button></span>
       </div>
       <span class="help-block"></span>
     </div>

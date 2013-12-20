@@ -12,13 +12,22 @@ window.ProjectView = Backbone.View.extend({
     },
 
     render: function () {
+        var self = this;
         $(this.el).html(this.template(this.model.toJSON()));
+        this.$(".datepicker").datepicker({
+                format: "dd/mm/yyyy"
+            }).on('changeDate',function(ev){
+                console.log('change DATEPICKER');
+                self.change(ev);
+
+            });
         return this;
     },
 
     events: {
         "change"                 : "change",
         "click .save"            : "beforeSave",
+        "click .clonar"          : "clone",
         "click .delete"          : "deleteProject",
         "click .addresources"    : "addResources",
         "click .browseresources" : "browseResources",
@@ -41,6 +50,7 @@ window.ProjectView = Backbone.View.extend({
 
         // Remove any existing alert message
         utils.hideAlert();
+        console.log('change');
 
         // Apply the change to the model
         var target = event.target;
@@ -97,6 +107,20 @@ window.ProjectView = Backbone.View.extend({
                 window.history.back();
             }
         });
+        return false;
+    },
+
+    clone: function () {
+        var self = this;
+        var check = this.model.validateAll();
+        if (check.isValid === false) {
+            utils.displayValidationErrors(check.messages);
+            return false;
+        }
+        app.navigate('proyectos/add', false);
+        this.model.unset('id',{ silent : true });
+        this.model.unset('_id',{ silent : true });
+        this.saveProject();
         return false;
     },
 

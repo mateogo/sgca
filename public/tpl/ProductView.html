@@ -24,7 +24,7 @@
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Nuevo<b class="caret"></b></a>
                           <ul class="dropdown-menu">
                               <li><a href="#productos/add">Producto</a></li>
-                              <li><a href="#proyectos/add">Proyecto</a></li>
+                              <li><a href="#proyectos/add">Procedencia</a></li>
                           </ul>
                       </li>
                   </ul>
@@ -67,8 +67,8 @@
                       <%= tipoproducto == 'paudiovisual' ? 'selected':'' %>>producto audiovisual</option>
                       <option value='micro'
                       <%= tipoproducto == 'micro' ? 'selected':'' %>>micro</option>
-                      <option value='curaduria'
-                      <%= tipoproducto == 'curaduria' ? 'selected':'' %>>curaduria</option>
+                      <option value='catalogo'
+                      <%= tipoproducto == 'catalogo' ? 'selected':'' %>>catalogo</option>
                       <option value='promo'
                       <%= tipoproducto == 'promo' ? 'selected':'' %>>promo</option>
                       <option value='imagen'
@@ -124,8 +124,8 @@
                     <%= nivel_importancia == 'medio' ? 'selected':'' %>>medio</option>
                     <option value='alto'
                     <%= nivel_importancia == 'alto' ? 'selected':'' %>>alto</option>
-                    <option value='critico'
-                    <%= nivel_importancia == 'critico' ? 'selected':'' %>>critico</option>
+                    <option value='urgente'
+                    <%= nivel_importancia == 'urgente' ? 'selected':'' %>>urgente</option>
                 </select>
 
 
@@ -134,6 +134,9 @@
                     <option value='no_definido' 
                     <%= nivel_ejecucion == 'no_definido' ? 'selected':'' %> >-nivel ejecucion-</option>
                   
+`                    <option value='enproceso' 
+                    <%= nivel_ejecucion == 'enproceso' ? 'selected':'' %>>en proceso</option>
+
 `                    <option value='observado' 
                     <%= nivel_ejecucion == 'observado' ? 'selected':'' %>>observado</option>
                   

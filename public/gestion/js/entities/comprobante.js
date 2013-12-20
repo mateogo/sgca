@@ -117,7 +117,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     model: Entities.Comprobante,
     comparator: "cnumber",
   });
-
+  /*
+   * ******* Parte TECNICO +**********
+   */
   Entities.DocumParteTecnico = Backbone.Model.extend({
     whoami: 'DocumParteTecnico:comprobante.js ',
 
@@ -142,6 +144,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         return errors;
       }
     },
+    insertItemCollection: function(itemCol) {
+        var self = this;
+        console.log('insert items begins items:[%s]', itemCol.length);
+        //var itemModel = self[item.get('tipoitem')].initNew(item.attributes);
+        self.set({items: itemCol.toJSON()});
+    },
+
+    getItems: function(){
+      var items = this.get('items');
+      return new Entities.PTecnicoItems(items);
+    },
 
     defaults: {
       tipoitem: "",
@@ -154,18 +167,81 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       vbloques:"",
       estado_alta:"",
       nivel_ejecucion:"",
-      estado_qc:"",
+      estado_qc:"ddd",
       resolucion:"",
       framerate:"",
       aspectratio:"",
       rolinstancia:"",
       formatoorig:"",
-
-
+      au1_content:"",
+      au1_channel:"",
+      au1_piclevel:"",
+      au2_content:"",
+      au2_channel:"",
+      au2_piclevel:"",
+      au3_content:"",
+      au3_channel:"",
+      au3_piclevel:"",
+      au4_content:"",
+      au4_channel:"",
+      au4_piclevel:"",
+      items:[]
 
     },
 
-   });
+  });
+
+  Entities.DocumParteTecnicoItem = Backbone.Model.extend({
+    whoami: 'DocumParteTecnicoItem:comprobante.js ',
+
+ 
+    validate: function(attrs, options) {
+      //if(!attrs) return;
+      var errors = {}
+      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'ptitcbco'), attrs.ptitcbco);
+      //utils.inspect(attrs,1,'pti');
+
+      if (_.has(attrs,'pticaso') && (!attrs.pticaso )) {
+        errors.pticaso = "No puede ser nulo";
+      }
+      if (_.has(attrs,'ptitcbco') && ! attrs.ptitcbco) {
+        errors.ptitcbco = "No puede ser nulo";
+      }
+      if (_.has(attrs,'ptitcbco')){
+        this.set('ptitcbco',utils.parseTC(attrs.ptitcbco));
+        console.log('ptitcbco: [%s]',this.get('ptitcbco'));
+      }
+      if (_.has(attrs,'ptiduracion')){
+        this.set('ptiduracion',utils.parseTC(attrs.ptiduracion));
+        console.log('ptiduracion: [%s]',this.get('ptiduracion'));
+      }
+      if (_.has(attrs,'ptitcabs')){
+        this.set('ptitcabs',utils.parseTC(attrs.ptitcabs));
+        console.log('ptitcabs: [%s]',this.get('ptitcabs'));
+      }
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+
+    defaults: {
+      pticaso: '',
+      ptiseveridad: '',
+      ptidescription: '',
+      ptitcbco: '',
+      ptiduracion: '',
+      pticanal: '',
+      ptitcabs: ''
+    },
+
+  });
+
+  Entities.PTecnicoItems = Backbone.Collection.extend({
+    whoami: 'Entities.ComprobanteFindOne:comprobante.js ',
+    model: Entities.DocumParteTecnicoItem,
+    comparator: "ptitcbco",
+  });
 
   var modelFactory = function(attrs, options){
     //utils.inspect(attrs,1,'modelFactory');
@@ -178,7 +254,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'Entities.ComprobanteItemsCollection:comprobante.js ',
 
     model: function(attrs, options){
-      console.log('collection MODEL FUNCTION: [%s]',attrs.tipoitem);
       return modelFactory(attrs, options);
       //if(attrs.tipoitem==='ptecnico') return new Entities.DocumParteTecnico(attrs, options);
       //return new Entities.DocumItemCoreFacet(attrs, options);

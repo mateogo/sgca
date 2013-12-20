@@ -42,10 +42,10 @@ var tpr_adapter = {
         base: 200000,
         prefix: 'M'
         },
-    curaduria:{
+    catalogo:{
         serie: 'cu101',
         base: 100000,
-        prefix:'K'
+        prefix:'C'
     },
     documento:{
         serie: 'do101',

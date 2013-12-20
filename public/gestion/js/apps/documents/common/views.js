@@ -72,6 +72,17 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
       "change": "change"
     },
 
+    onRender: function(){
+      var self = this;
+      this.$(".js-datepicker").datepicker({
+              format: "dd/mm/yyyy"
+          }).on('changeDate',function(ev){
+              console.log('change DATEPICKER');
+              self.change(ev);
+
+          });
+    },
+
     change: function (event) {
         //utils.hideAlert();
         var target = event.target;
