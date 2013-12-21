@@ -1278,6 +1278,9 @@ window.Product = Backbone.Model.extend({
         builder.nivel_importancia = self.get('nivel_importancia');
         builder.nivel_ejecucion = self.get('nivel_ejecucion');
         builder.estado_alta = self.get('estado_alta');
+        builder.patechfacet = self.get('patechfacet');
+        builder.realization = self.get('realization');
+        builder.clasification = self.get('clasification');
 
 
         for (var icap =data.numcapdesde; icap <= data.numcaphasta; icap +=1){
@@ -1584,24 +1587,10 @@ window.AddInstanceFacet = Backbone.Model.extend({
         return dao.extractData(this.attributes);
     },
 
-    /*
-    retrieveDatasss: function(){
-        var qobj = {};
-        var keys = _.keys(this.attributes);
-        for (var k=0;k<keys.length;k++){
-            var data = this.get(keys[k]);
-            if(! (data==null || data=="" || data == "0")){
-                qobj[keys[k]] = data;
-                console.log('retrievedata[%s][%s]',keys[k],data);
-            }
-        }
-        return qobj;
-    },
-    */
-
     schema: {
         tipoproducto: {type: 'Select', options: utils.tipoinstanciaOptionList },
-        rolinstancia: {type: 'Select', options: utils.rolinstanciasOptionList },
+        rolinstancia: {type: 'Select', options: utils.rolinstanciasGroup['video'] },
+        tipoarchivo:  {type: 'Text', editorAttrs: {placeholder: 'mimetype image/jpeg'}},
         slug:         {type: 'Text', editorAttrs: {placeholder: 'nombre de archivo'}},
         denom:        {type: 'Text', title: 'denominacion', editorAttrs: {placeholder: 'denominacion'}},
         descriptores: {type: 'Text', title: 'descriptores', editorAttrs:{placeholder: 'descriptores'}},
@@ -1610,10 +1599,11 @@ window.AddInstanceFacet = Backbone.Model.extend({
 
     defaults: {
         slug:'',
-        rolinstancia:'no_definido',
-        tipoproducto:'no_definido',
+        tipoproducto:'video',
+        rolinstancia:'masteraire',
         denom:'',
         descriptores:'',
+        tipoarchivo:'',
     }
 });
 
@@ -1782,8 +1772,9 @@ window.PaInstanceFacet = Backbone.Model.extend({
         return dao.extractData(this.attributes);
     },
 
-    schema: {
-        rolinstancia:   {type: 'Select',options: utils.rolinstanciasOptionList },
+
+   schema: {
+        rolinstancia:   {type: 'Select', options: utils.rolinstanciasGroup['video'] },
         size:           {type: 'Number', title: 'Tamaño archivo'},
         tipofile:       {type: 'Text', title: 'Tipo / MimeType'},
         framerate:      {type: 'Select',options: utils.framerateOptionList },

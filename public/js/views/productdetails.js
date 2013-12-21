@@ -79,7 +79,7 @@ window.ProductView = Backbone.View.extend({
         "click .uploadbrnd"  : "brandingUploadFiles",
         "click .discardbrnd" : "discardbrnd",
         "click .addnewbrnd"  : "addnewbrnd",
-        "click .cancelbrnd"  : "cancelinstance",
+        "click .cancelbrnd"  : "cancelbranding",
         "click .ptecnico"    : "altaptecnico",
 
         "dragover #filesdrop" : "dragoverHandler",
@@ -111,29 +111,18 @@ window.ProductView = Backbone.View.extend({
         $('.brandinghook').html(form.el); 
     },
 
-    formaddinstance: function () {
-        var self = this,
-            facet = dao.addinstancefacet.init(this.model),
-            form = new Backbone.Form({
-                model: facet,
-            }).render();
-
-        console.log('[%s] formaddinstance BEGINS',self.whoami);
-        
-        facet.on('change:slug', function(facet, slug) {
-            console.log('change slug [%s][%s]',slug, dao.addinstancefacet.getContent().slug);
-            form.setValue({slug:slug});
-        });
-
-        form.on('change', function(form, editor) {
-            var errors = form.commit();
-        });
-
-        $('.painstanciahook').html(form.el); 
+    cancelinstance: function () {
+        console.log('[%s] cancelinstance BEGINS toglle',this.whoami);
+        //$('#collapseOne').toggleClass('in');
+        $('#collapseOne').collapse('toggle');
+        return false;
     },
 
-    cancelinstance: function () {
-        console.log('[%s] cancelinstance BEGINS',this.whoami);      
+    cancelbranding: function () {
+        console.log('[%s] cancelbranding BEGINS toglle',this.whoami);
+        //$('#collapseOne').toggleClass('in');
+        $('#collapseBrnd').collapse('toggle');
+        return false;
     },
 
     discardcontent: function () {
@@ -150,13 +139,52 @@ window.ProductView = Backbone.View.extend({
     },
 
     addnewinstance: function () {
-        var productmodel = this.model;
+        var self = this, 
+            productmodel = this.model,
+            content = dao.addinstancefacet.getContent(),
+            asset = dao.addinstancefacet.getAsset();
+
+
+        if(!dao.addinstancefacet.getAsset() && content.url){
+            console.log('alta de instancia SIN asset, pero CON url');
+            //mgo1
+            var data = {
+                name: content.slug,
+                slug: content.slug,
+                denom: content.tipoarchivo,
+                urlpath: content.url,
+                type: content.tipoproducto,
+                versions:[{
+                    name: content.slug,
+                    urlpath: content.url,
+                    type: content.tipoproducto,
+                    uploadDate: new Date().getTime()
+                }]
+            };
+            var nasset = new Asset(data);
+             nasset.save(null, {
+                success: function (model) {
+                    console.log('addNewInstance: Success nasset created!');
+                    self.processnewinstance(self, productmodel, content, nasset);
+                },
+                error: function () {
+                    console.log('An error occurred while trying to delete this item');
+               }
+            });
+        }else {
+            console.log('alta de instancia CON asset');
+            self.processnewinstance(self, productmodel, content, asset);
+        }
+        return false;
+    },
+    processnewinstance: function (self, product, content, asset) {
         console.log('[%s] addnewinstance BEGINS',this.whoami);
-        productmodel.insertInstance(dao.addinstancefacet.getContent(),dao.addinstancefacet.getAsset(),function(){
-            //self.beforeSave();
-            console.log('formcapitulos:productdetails, ready to RELOAD CHAPTERS [%s]','productos/' + productmodel.id);
-            //self.renderChilds();
-            //utils.approuter.navigate('productos/' + productmodel.id, {trigger: true, replace: false});
+        product.insertInstance(content,asset,function(){
+            dao.addinstancefacet.reset();
+            console.log('addnewinstance, ready to RELOAD CHAPTERS [%s]','productos/' + product.id);
+            self.beforeSave();
+            self.renderChilds();
+            //utils.approuter.navigate('productos/' + product.id, {trigger: true, replace: false});
         });
         return false;
     },
@@ -247,7 +275,7 @@ window.ProductView = Backbone.View.extend({
         if(self.uploadingfiles.length <= self.loadedfiles) return false;
  
         dao.uploadFile(self.uploadingfiles[self.loadedfiles],progressbar,function(srvresponse, asset){
-            var filelink = 'Archivo subido: <a href="'+srvresponse.urlpath+'" >'+srvresponse.name+'</a>'
+            var filelink = 'Archivo subido:['+srvresponse.fileversion.type+'] <a href="'+srvresponse.urlpath+'" >'+srvresponse.name+'</a>'
             $(loaded).html(filelink);
             $(progressbar).css({'width':'100%;'});
 
@@ -281,7 +309,7 @@ window.ProductView = Backbone.View.extend({
         if(self.uploadingfiles.length <= self.loadedfiles) return false;
  
         dao.uploadFile(self.uploadingfiles[self.loadedfiles], progressbar, function(srvresponse, asset){
-            var filelink = 'Archivo subido: <a href="'+srvresponse.urlpath+'" >'+srvresponse.name+'</a>'
+            var filelink = 'Archivo subido:['+srvresponse.fileversion.type+'] <a href="'+srvresponse.urlpath+'" >'+srvresponse.name+'</a>'
             $(loaded).html(filelink);
             $(progressbar).css({'width':'100%;'});
 
@@ -289,7 +317,7 @@ window.ProductView = Backbone.View.extend({
 
             self.loadedfiles += 1;
             self.uploadedfile = srvresponse;
-            dao.addinstancefacet.setContent({slug:srvresponse.name});
+            dao.addinstancefacet.setContent({slug:srvresponse.name, tipoarchivo:srvresponse.fileversion.type});
             dao.addinstancefacet.setAsset(asset);
 
             self.showFilesDropped(dropped);
@@ -503,11 +531,52 @@ window.ProductView = Backbone.View.extend({
         $('.paclasifhook').html(form.el);
     }, 
 
+    formaddinstance: function () {
+        var self = this,
+            facet = dao.addinstancefacet.init(this.model);
+
+        var schema = facet.schema;
+        schema.rolinstancia.options = utils.rolinstanciasGroup[facet.get('tipoproducto')];
+
+        var form = new Backbone.Form({
+                model: facet,
+                schema:schema
+            });
+
+
+        console.log('[%s] formaddinstance BEGINS',self.whoami);
+        
+        facet.on('change:slug', function(facet, slug) {
+            console.log('change slug [%s][%s]',slug, dao.addinstancefacet.getContent().slug);
+            form.setValue({slug:slug});
+        });
+        facet.on('change:tipoarchivo', function(facet, tipo) {
+            console.log('change mimetype [%s][%s]',tipo, dao.addinstancefacet.getContent().tipoarchivo);
+            form.setValue({tipoarchivo:tipo});
+        });
+
+        form.on('tipoproducto:change', function(form, contenidoEditor) {
+            form.fields.rolinstancia.editor.setOptions( utils.rolinstanciasGroup[contenidoEditor.getValue()] );
+        });
+
+        form.on('change', function(form, editor) {
+            var errors = form.commit();
+            console.log('change: rolinstancia: [%s]',dao.addinstancefacet.getContent().rolinstancia)
+        });
+
+        $('.painstanciahook').html(form.render().el); 
+    },
+
     formintechfacet: function () {
         var self = this;
         var facet = dao.intechfacet.init(this.model);
+
+        var schema = facet.schema;
+        schema.rolinstancia.options = utils.rolinstanciasGroup[self.model.get('tipoproducto')];
+
         var form = new Backbone.Form({
             model: facet,
+            schema:schema
             });
 
         form.on('change', function(form, editor) {

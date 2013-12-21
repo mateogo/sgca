@@ -332,21 +332,6 @@ window.utils = {
         ],
     },
 
-    rolinstanciasOptionList: [
-        {val:'no_definido'      , label:'versión'},
-        {val:'masteraire'        , label:'Master Aire'},
-        {val:'mastertextless'    , label:'Master Text-less'},
-        {val:'matpromocion'      , label:'Material de promoción'},
-        {val:'grafica'           , label:'Gráfica'},
-        {val:'planosdeseguridad' , label:'Planos de seguridad'},
-        {val:'capituloprueba'    , label:'Capitulos de prueba'},
-        {val:'trailer'           , label:'trailer'},
-        {val:'audio_principal'   , label:'audio principal'},
-        {val:'audio_ambiente'    , label:'audio ambiente'},
-        {val:'audio_descripcion' , label:'audio descripcion'},
-        {val:'branding'          , label:'branding'},
-        {val:'script'            , label:'script'},
-    ],
     versionOptionList: [
     ],
 
@@ -448,13 +433,55 @@ window.utils = {
         {val:'curaduria',    label:'curaduria'},
     ],
 
+    rolinstanciasOptionList: [
+        {val:'no_definido'      , label:'versión'},
+        {val:'masteraire'        , label:'Master Aire'},
+        {val:'mastertextless'    , label:'Master Text-less'},
+        {val:'matpromocion'      , label:'Material de promoción'},
+        {val:'grafica'           , label:'Gráfica'},
+        {val:'planosdeseguridad' , label:'Planos de seguridad'},
+        {val:'capituloprueba'    , label:'Capitulos de prueba'},
+        {val:'trailer'           , label:'trailer'},
+        {val:'audio_principal'   , label:'audio principal'},
+        {val:'audio_ambiente'    , label:'audio ambiente'},
+        {val:'audio_descripcion' , label:'audio descripcion'},
+        {val:'branding'          , label:'branding'},
+        {val:'script'            , label:'script'},
+    ],
+
     tipoinstanciaOptionList:[
-        {val:'no_definido',  label:'tipo de instancia'},
+        {val:'no_definido',  label:'Ingrese opción'},
         {val:'video',        label:'video'},
         {val:'imagen',       label:'imagen'},
         {val:'audio',        label:'audio'},
         {val:'documento',    label:'documento'},
     ],
+    rolinstanciasGroup: {
+        no_definido:[
+            {val:'no_definido'       , label:'Ingrese opción'},
+        ],
+        video: [
+            {val:'masteraire'        , label:'Master Aire'},
+            {val:'mastertextless'    , label:'Master Text-less'},
+            {val:'matpromocion'      , label:'Material de promoción'},
+            {val:'planosdeseguridad' , label:'Planos de seguridad'},
+            {val:'capituloprueba'    , label:'Capitulos de prueba'},
+            {val:'trailer'           , label:'trailer'},
+            {val:'branding'          , label:'branding'},
+        ],
+        imagen: [
+            {val:'grafica'           , label:'Gráfica'},
+            {val:'matpromocion'      , label:'Material de promoción'},
+        ],
+        audio:[
+            {val:'audio_principal'   , label:'audio principal'},
+            {val:'audio_ambiente'    , label:'audio ambiente'},
+            {val:'audio_descripcion' , label:'audio descripcion'},
+        ],
+        documento:[
+            {val:'script'            , label:'script'},
+        ]
+    },
 
     nivelimportanciaOptionList:[
         {val:'bajo',    label:'bajo'},
@@ -743,14 +770,18 @@ window.utils = {
             eventFillColor: {no_definido:'lime',bajo:'green',medio:'blue',alto:'magenta',critico:'red'},
             fillOpacity:{no_definido:.1,planificado:.3,gestion:.6,recibido:.8,ingestado:.9,controlado:.9,aprobado:1,observado:1,archivado:1}
         },
-        project: {
-            eventText: {no_definido:' ',concurso: 'Conc',adhesion:'Adh',produccion:'Pro',cesion:'Ces', musica:'Mus', teatro:'Tea', musical:'Tmu', invantil:'Inf',circo:'Cir',cine:'Cin',festival:'Fes',fpopular:'FPo',danza:'Dza',congreso:'Con'},
+        project: { eventText: {no_definido:' ',concurso: 'Conc',convenio: 'Cnv', cesiones: 'Ces', 
+                    producciones: 'Pro', adhesiones:'Adh',produccion:'Pro',cesion:'Ces', infantil:'Inf', 
+                    musica:'Mus', teatro:'Tea', musical:'Tmu',
+                    circo:'Cir',cine:'Cin',festival:'Fes',fpopular:'FPo', danza:'Dza',congreso:'Con'
+            },
             eventFillColor: {no_definido:'lime',bajo:'green',medio:'blue',alto:'magenta',critico:'red'},
             ispropioText: {'1':'BACUA','0':'Ax'},
             fillOpacity:{no_definido:1,planificado:.4,produccion:1,posproduccion:.7,demorado:.4,reprogramado:.4,suspendido:.1,cumplido:.1},
         },
         resourcelist:[]
     },
+
     inspect: function  (target, deep, whoami) {
         var deep = deep+=1 || 1;
         var self = this;
@@ -811,6 +842,44 @@ window.utils = {
     },
 
     parseTC: function(str){
+        var frames = 25;
+        var tc = ["00","00","00","00"];
+        var offset = 0;
+        if(!str) return tc;
+
+        var tokens = str.split(":");
+        if(tokens.length===1){
+            if(str.length===2) str="00"+str+"0000";
+            if(str.length===4) str="00"+str+"00";
+            if(str.length===6) str="00"+str;
+            if(str.length!==8) return tc;
+            for(var i=0; i<8; i=i+2) tc[i/2] = str.substr(i,2);
+            return tc.join(":");
+        }else{
+            if(tokens.length>4) return tc;
+            if(tokens.length<4) offset=1;
+            for(var j=0;j<tokens.length;j+=1) tc[j+offset]=("00"+tokens[j]).substr(-2);
+        }
+        return tc.join(':');
+    },
+
+    validateTC: function(t){
+        var error = false;
+        var divisor = [99, 60, 60, 25];
+        var tc = t.split(":");
+        for (var i = 0 ; i< tc.length;i+=1 ){
+            if(isNaN(tc[i])) return error;
+            var n= parseInt(tc[i],10);
+            if(isNaN(n)) return error;
+            if(n % 1) return error;
+            if((n / divisor[i])>=1) return error;
+            if(n<0) return error;
+        }
+        return true;
+    },
+
+/*
+    parseTC: function(str){
           var frames = 25;
           var tc = [0,0,0,0];
           if(!str) return "00:00:00:00";
@@ -856,6 +925,7 @@ window.utils = {
       return tc;
     },
 
+*/
     parseDateStr: function(str) {
         var mx = str.match(/(\d+)/g);
         var ty = new Date();

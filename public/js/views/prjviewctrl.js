@@ -193,6 +193,10 @@ window.ReqResListView = Backbone.View.extend({
 });
 
 window.AssetAccordionView = Backbone.View.extend({
+    /*
+        <input type='text' placeholder='nombre corto' name='slug' value='<%= slug %>' >
+        <input type='text' placeholder='denominación' name='denom' value='<%= denom %>' >
+    */
 
     events: {
         "change"            : "change",
@@ -206,6 +210,8 @@ window.AssetAccordionView = Backbone.View.extend({
 
     render: function () {
         $(this.el).html(this.template(this.model.toJSON()));
+
+        this.$('.nailthumb-container').nailthumb();
         return this;
     },
     

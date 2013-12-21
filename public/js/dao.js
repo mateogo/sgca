@@ -93,6 +93,9 @@ window.dao = {
             console.log('add instancce facet init OK');
             return this.data;
         },
+        reset: function(){
+            this.asset = null;
+        },
         setContent: function  (data) {
             this.data.set(data);
         },
@@ -196,6 +199,16 @@ window.dao = {
         }
     },
 
+    intechfacet: {
+        init: function(product){
+            console.log('intechfacet: [%s]',product.get('slug'));
+            this.data = new PaInstanceFacet(product.get('painstancefacet'));
+            return this.data;
+        },
+        getContent: function(){
+            return this.data.retrieveData();
+        }
+    },
 
     contactfacet: {
         init: function(contact){
@@ -282,17 +295,6 @@ window.dao = {
         },
         get: function(item){
             return this.data.get(item);
-        }
-    },
-
-    intechfacet: {
-        init: function(product){
-            console.log('intechfacet: [%s]',product.get('slug'));
-            this.data = new PaInstanceFacet(product.get('painstancefacet'));
-            return this.data;
-        },
-        getContent: function(){
-            return this.data.retrieveData();
         }
     },
 
@@ -616,11 +618,11 @@ window.dao = {
         }
     },
 
-    pacontenidos: ['artecultura','cienciaTecnologia','cienciasSociales','deporte','educacionTrabajo','historia','infancia','juventud','sociedad','ficcion'],
     pageneros:['animacion', 'biografia', 'curso', 'ficcion', 'docuficcion', 'documental', 'entretenimiento', 'entrevistas', 'telenovela', 'reality', 'recital', 'periodistico', 'noticiero','inespecifico'],
     paformatos:['serie', 'serie-programas', 'unitario', 'videoclip', 'promo', 'miniserie', 'micro', 'micro-recital', 'cortometraje', 'largometraje', 'backstage','trailer',  'noticiero', 'periodistico', 'especial', 'inespecifico'],
     videotecas:['concurso', 'produccionPropia', 'adquisicion', 'coproduccion', 'cesion', 'banco','inespecifico'],
     etarios:['infantil', 'jovenes','adolescentes', 'adulto', 'mayores','inespecifico'],
+    pacontenidos: ['artecultura','cienciaTecnologia','cienciasSociales','deporte','educacionTrabajo','historia','infancia','juventud','sociedad','ficcion'],
     pasubcontenido: {
         artecultura: ['musica', 'plastica', 'fotografia', 'arteDigital', 'video', 'teatro', 'animacion', 'otros' ],
         cienciaTecnologia: ['astronomia', 'fisica', 'matematica', 'quimica','otros'],
