@@ -23,7 +23,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     
     initBeforeCreate: function(){
       var fealta = new Date();
-      this.set({fealta:fealta.getTime()});
+      var fecomp = utils.dateToStr(fealta);
+      this.set({fealta:fealta.getTime(), fecomp: fecomp});
     },
 
     beforeSave: function(){
@@ -48,13 +49,40 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     itemTypes: {
       ptecnico:{
-        initNew: function(attrs){
+        initNew: function(self, attrs){
           var ptecnico = new Entities.DocumParteTecnico(attrs);
           //console.log('initNew PARTE TECNICO [%s]',ptecnico.get('slug'));
           //do some initialization
           return ptecnico;
         }
-      }
+      },
+      nentrega:{
+        initNew: function(self, attrs){
+          var item = new Entities.DocumMovimRE(attrs);
+          item.set({
+            descripcion: self.get('description')
+          });
+          return item;
+        }
+      },
+      nrecepcion:{
+        initNew: function(self, attrs){
+          var item = new Entities.DocumMovimRE(attrs);
+          item.set({
+            descripcion: self.get('description')
+          });
+          return item;
+        }
+      },
+      pemision:{
+        initNew: function(self, attrs){
+          var item = new Entities.DocumParteEM(attrs);
+          item.set({
+            descripcion: self.get('description')
+          });
+          return item;
+        }
+      },
     },
 
     validate: function(attrs, options) {
@@ -90,7 +118,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     initNewItem: function(item){
       var self = this;
-      var itemModel = self.itemTypes[item.get('tipoitem')].initNew(item.attributes);
+      var itemModel = self.itemTypes[item.get('tipoitem')].initNew(self, item.attributes);
       return itemModel;
     },
 
@@ -103,7 +131,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
   });
 
-
+  //Comprobante Collection
   Entities.ComprobanteCollection = Backbone.Collection.extend({
     whoami: 'Entities.ComprobanteCollection:comprobante.js ',
     url: "/comprobantes",
@@ -117,6 +145,29 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     model: Entities.Comprobante,
     comparator: "cnumber",
   });
+
+  var modelFactory = function(attrs, options){
+    //utils.inspect(attrs,1,'modelFactory');
+    var model;
+    if(attrs.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnico(attrs);
+    if(attrs.tipoitem==='nrecepcion') model = new Entities.DocumMovimRE(attrs);
+    if(attrs.tipoitem==='nentrega')   model = new Entities.DocumMovimRE(attrs);
+    if(attrs.tipoitem==='pemision')   model = new Entities.DocumParteEM(attrs);
+    return model;
+  };
+
+  Entities.DocumItemsCollection = Backbone.Collection.extend({
+    whoami: 'Entities.DocumItemsCollection:comprobante.js ',
+
+    model: function(attrs, options){
+      return modelFactory(attrs, options);
+      //if(attrs.tipoitem==='ptecnico') return new Entities.DocumParteTecnico(attrs, options);
+      //return new Entities.DocumItemCoreFacet(attrs, options);
+    },
+
+  });
+
+
   /*
    * ******* Parte TECNICO +**********
    */
@@ -151,7 +202,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         self.set({items: itemCol.toJSON()});
     },
 
+    initNewItem: function(){
+      return new Entities.DocumParteTecnicoItem();
+    },
+
     getItems: function(){
+      console.log('getItems-2');
+
       var items = this.get('items');
       return new Entities.PTecnicoItems(items);
     },
@@ -162,7 +219,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       fept: "",
       revision:1,
       product: "",
-      productora:"",
+      pslug:"",
+      persona:"",
       sopoentrega:"",
       vbloques:"",
       estado_alta:"",
@@ -238,28 +296,195 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
   Entities.PTecnicoItems = Backbone.Collection.extend({
-    whoami: 'Entities.ComprobanteFindOne:comprobante.js ',
+    whoami: 'Entities.PTecnicoItems:comprobante.js ',
     model: Entities.DocumParteTecnicoItem,
     comparator: "ptitcbco",
   });
 
-  var modelFactory = function(attrs, options){
-    //utils.inspect(attrs,1,'modelFactory');
-    var model;
-    if(attrs.tipoitem==='ptecnico') model = new Entities.DocumParteTecnico(attrs);
-    return model;
-  };
 
-  Entities.DocumItemsCollection = Backbone.Collection.extend({
-    whoami: 'Entities.ComprobanteItemsCollection:comprobante.js ',
+  /*
+   * ******* Movim Recepcion Entrega +**********
+   */
+  Entities.DocumMovimRE = Backbone.Model.extend({
+    whoami: 'DocumMovimRE:comprobante.js ',
 
-    model: function(attrs, options){
-      return modelFactory(attrs, options);
-      //if(attrs.tipoitem==='ptecnico') return new Entities.DocumParteTecnico(attrs, options);
-      //return new Entities.DocumItemCoreFacet(attrs, options);
+    validate: function(attrs, options) {
+      //if(!attrs) return;
+      var errors = {}
+      console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
+
+      if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
+        errors.tipocomp = "No puede ser nulo";
+      }
+      if (_.has(attrs,'slug') && ! attrs.slug) {
+        errors.slug = "No puede ser nulo";
+      }
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+    insertItemCollection: function(itemCol) {
+        var self = this;
+        console.log('insert items begins items:[%s]', itemCol.length);
+        //var itemModel = self[item.get('tipoitem')].initNew(item.attributes);
+        self.set({items: itemCol.toJSON()});
+    },
+
+    getItems: function(){
+      console.log('getItems-1');
+      var items = this.get('items');
+      return new Entities.MovimREItems(items);
+    },
+
+    initNewItem: function(){
+      return new Entities.DocumMovimREItem();
+    },
+
+    defaults: {
+      tipoitem: "",
+      slug: "",
+      tipomov: "",
+      persona: "",
+      mediofisico: "",
+      soporte_slug: "",
+      soporte_id: "",
+      descripcion:"",
+      items:[]
     },
 
   });
+
+  Entities.DocumMovimREItem = Backbone.Model.extend({
+    whoami: 'DocumMovimREItem:comprobante.js ',
+
+ 
+    validate: function(attrs, options) {
+      //if(!attrs) return;
+      var errors = {}
+      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'ptitcbco'), attrs.ptitcbco);
+      //utils.inspect(attrs,1,'pti');
+
+      if (_.has(attrs,'product') && (!attrs.product )) {
+        errors.pticaso = "No puede ser nulo";
+      }
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+
+    defaults: {
+      product: '',
+      pslug:'',
+      comentario: '',
+      durnominal:'',
+    },
+  });
+
+  Entities.MovimREItems = Backbone.Collection.extend({
+    whoami: 'Entities.MovimREItems:comprobante.js ',
+    model: Entities.DocumMovimREItem,
+    comparator: "product",
+  });
+
+// fin Movim Recepcion entrega
+
+  /*
+   * ******* Parte de Emisión +**********
+   */
+  Entities.DocumParteEM = Backbone.Model.extend({
+    whoami: 'DocumParteEM:comprobante.js ',
+
+    validate: function(attrs, options) {
+      //if(!attrs) return;
+      var errors = {}
+      console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
+
+      if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
+        errors.tipocomp = "No puede ser nulo";
+      }
+      if (_.has(attrs,'slug') && ! attrs.slug) {
+        errors.slug = "No puede ser nulo";
+      }
+
+      if (_.has(attrs,'fedesde')){
+        var fecha = utils.buildDateNum(attrs['fedesde']);
+        this.set('fedesde_tc',fecha);
+      }
+      if (_.has(attrs,'fehasta')){
+        var fecha = utils.buildDateNum(attrs['fehasta']);
+        this.set('fehasta_tc',fecha);
+      }
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+    insertItemCollection: function(itemCol) {
+        var self = this;
+        console.log('insert items begins items:[%s]', itemCol.length);
+        self.set({items: itemCol.toJSON()});
+    },
+
+    getItems: function(){
+      var items = this.get('items');
+      return new Entities.ParteEMItems(items);
+    },
+
+    initNewItem: function(){
+      return new Entities.DocumParteEMItem();
+    },
+
+    defaults: {
+      tipoitem: "",
+      tipoemis:"",
+      slug: "",
+      fedesde:"",
+      fehasta:"",
+      cobertura:"",
+      fuente:"",
+      persona: "",
+      items:[]
+    },
+
+  });
+
+  Entities.DocumParteEMItem = Backbone.Model.extend({
+    whoami: 'DocumParteEMItem:comprobante.js ',
+
+ 
+    validate: function(attrs, options) {
+      //if(!attrs) return;
+      var errors = {}
+      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'ptitcbco'), attrs.ptitcbco);
+      //utils.inspect(attrs,1,'pti');
+
+      if (_.has(attrs,'product') && (!attrs.product )) {
+        errors.product = "No puede ser nulo";
+      }
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+
+    defaults: {
+      product: '',
+      pslug:'',
+      comentario: '',
+      durnominal:'',
+      qnopt:"",
+      qpt:"",
+    },
+  });
+
+  Entities.ParteEMItems = Backbone.Collection.extend({
+    whoami: 'Entities.ParteEMItems:comprobante.js ',
+    model: Entities.DocumParteEMItem,
+    comparator: "product",
+  });
+// fin Parte de emisión
+
+
 
   Entities.DocumItemCoreFacet = Backbone.Model.extend({
  
@@ -292,21 +517,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
    });
 
-
-
-
   Entities.DocumCoreFacet = Backbone.Model.extend({
-    urlRoot: "/comprobantes",
- 
+    //urlRoot: "/comprobantes",
     whoami: 'Comrpobante:comprobante.js ',
 
     schema: {
-        tipocomp: {type: 'Select',options: utils.tipoComprobaneOptionList },
-        slug:     {type: 'Text', title: 'Descripción corta'},
-        description:  {type: 'TextArea', title: 'Dato'},
+        tipocomp: {type: 'Select',options: utils.tipoComprobanteOptionList },
+        slug:     {type: 'Text', title: 'Asunto'},
+        description:  {type: 'Text', title: 'Descripción'},
     },
-
-    idAttribute: "_id",
+    //idAttribute: "_id",
 
     createNewDocument: function(cb){
       //console.log('create New Document BEGIN')
@@ -325,7 +545,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     defaults: {
       _id: null,
-      tipocomp: "",
+      tipocomp: "no_definido",
       cnumber: "",
       slug: "",
       description: ""

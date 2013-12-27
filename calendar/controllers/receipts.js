@@ -19,7 +19,7 @@ var MSGS = [
 ];
 
 //ATENCION: para agregar un serial, agregar entrada en tcomp_adapter y en series;
-var series = ['rent101','rsal101','ptec101','gcom101'];
+var series = ['rent101','rsal101','ptec101','gcom101','nemi101'];
 
 var seriales = {};
 
@@ -33,12 +33,17 @@ var tcomp_adapter = {
     nentrega: {
         serie: 'rsal101',
         base: 100000,
-        prefix:'E'
+        prefix:'S'
         },
     ptecnico: {
         serie: 'ptec101',
         base: 100000,
         prefix: 'T'
+        },
+    pemision: {
+        serie: 'nemi101',
+        base: 100050,
+        prefix: 'E'
         },
     poromision: {
         serie: 'gcom101',
@@ -97,6 +102,7 @@ var updateSerialCollection = function(serial){
 
 
 var setNodeCode = function(node){
+    console.log('setNodeCode:[%s]',node.tipocomp);
     var adapter = tcomp_adapter[node.tipocomp] || tcomp_adapter['poromision'];
     node.cnumber = nextSerial(adapter);
 
@@ -132,7 +138,7 @@ var fetchOne = function(query, cb) {
 };
 
 var insertNewReceipt = function (req, res, receipt){
-    console.log('insertNewReceipt:receipts.js BEGIN [%s]',receipt.name);
+    console.log('insertNewReceipt:receipts.js BEGIN [%s]',receipt.slug);
     //dbi.collection(receiptsCol, function(err, collection) {
 
     dbi.collection(receiptsCol).insert(receipt,{w:1}, function(err, result) {

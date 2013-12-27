@@ -19,7 +19,7 @@
   _.templateSettings = {
     interpolate: /\{\{(.+?)\}\}/g,
     evaluate: /<%([\s\S]+?)%>/g
-  };
+  }
 
   var template = _.template('\
     <div class="modal-dialog"><div class="modal-content">\
@@ -84,21 +84,6 @@
         if (this.options.okCloses) {
           this.close();
         }
-      },
-      'keypress': function(event) {
-        if (this.options.enterTriggersOk && event.which == 13) {
-          event.preventDefault();
-
-          this.trigger('ok');
-
-          if (this.options.content && this.options.content.trigger) {
-            this.options.content.trigger('ok', this);
-          }
-
-          if (this.options.okCloses) {
-            this.close();
-          }
-        }
       }
     },
 
@@ -108,15 +93,15 @@
      * @see http://twitter.github.com/bootstrap/javascript.html#modals
      *
      * @param {Object} options
-     * @param {String|View} [options.content]     Modal content. Default: none
-     * @param {String} [options.title]            Title. Default: none
-     * @param {String} [options.okText]           Text for the OK button. Default: 'OK'
-     * @param {String} [options.cancelText]       Text for the cancel button. Default: 'Cancel'. If passed a falsey value, the button will be removed
-     * @param {Boolean} [options.allowCancel      Whether the modal can be closed, other than by pressing OK. Default: true
-     * @param {Boolean} [options.escape]          Whether the 'esc' key can dismiss the modal. Default: true, but false if options.cancellable is true
-     * @param {Boolean} [options.animate]         Whether to animate in/out. Default: false
-     * @param {Function} [options.template]       Compiled underscore template to override the default one
-     * @param {Boolean} [options.enterTriggersOk] Whether the 'enter' key will trigger OK. Default: false
+     * @param {String|View} [options.content] Modal content. Default: none
+     * @param {String} [options.title]        Title. Default: none
+     * @param {String} [options.okText]       Text for the OK button. Default: 'OK'
+     * @param {String} [options.cancelText]   Text for the cancel button. Default: 'Cancel'. If passed a falsey value, the button will be removed
+     * @param {Boolean} [options.showFooter]  Whether the modal footer & buttons is shown. Default: true
+     * @param {Boolean} [options.allowCancel  Whether the modal can be closed, other than by pressing OK. Default: true
+     * @param {Boolean} [options.escape]      Whether the 'esc' key can dismiss the modal. Default: true, but false if options.cancellable is true
+     * @param {Boolean} [options.animate]     Whether to animate in/out. Default: false
+     * @param {Function} [options.template]   Compiled underscore template to override the default one
      */
     initialize: function(options) {
       this.options = _.extend({
@@ -129,8 +114,7 @@
         allowCancel: true,
         escape: true,
         animate: false,
-        template: template,
-        enterTriggersOk: false
+        template: template
       }, options);
     },
 
@@ -180,7 +164,7 @@
       }, this.options.modalOptions));
 
       //Focus OK button
-      $el.one('shown.bs.modal', function() {
+      $el.one('shown', function() {
         if (self.options.focusOk) {
           $el.find('.btn.ok').focus();
         }
@@ -246,7 +230,7 @@
         return;
       }
 
-      $el.one('hidden.bs.modal', function onHidden(e) {
+      $el.one('hidden', function onHidden(e) {
         // Ignore events propagated from interior objects, like bootstrap tooltips
         if(e.target !== e.currentTarget){
           return $el.one('hidden', onHidden);

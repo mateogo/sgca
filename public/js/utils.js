@@ -152,9 +152,13 @@ window.utils = {
             return this.map;
         }
     },
+
     tipoDocumItemOptionList: [
         {val:'no_definido'    , label:'tipo de comprobante'},
         {val:'ptecnico'       , label:'P/Técnico'},
+        {val:'nrecepcion'     , label:'N/Recepción'},
+        {val:'nentrega'       , label:'N/Entrega'},
+        {val:'pemision'       , label:'P/Emisión'},
     ],
 
     paOptionList: [
@@ -209,19 +213,59 @@ window.utils = {
         {val:'Dsaltotc',       label:'D: Salto en Timecode continuo'},
     ],
 
+    mediofisicoOptionList: [
+        {val:'no_definido', label:'Medio fisico'},
+        {val:'sopfisico'  , label:'Soporte fisico'},
+        {val:'transfer'   , label:'Transferencia'},
+    ],
+
+    coberturaOptionList: [
+        {val:'no_definido'  , label:'Región'},
+        {val:'tda'          , label:'tda'},
+        {val:'AMBA'         , label:'AMBA'},
+        {val:'mesopotamia'  , label:'mesopotamia'},
+        {val:'noroeste'     , label:'noroeste'},
+        {val:'cuyo'         , label:'cuyo'},
+        {val:'patagonia'    , label:'patagonia'},
+        {val:'centro'       , label:'centro'},
+    ],
+
+    tipoemisOptionList: [
+        {val:'no_definido', label:'Tipo de emisión'},
+        {val:'tda'        , label:'TDA'},
+        {val:'cable'      , label:'cable'},
+        {val:'satelite'   , label:'satélite'},
+        {val:'ott'        , label:'ott'},
+     ],
+
+    fuenteOptionList: [
+        {val:'no_definido', label:'Fuente de información'},
+        {val:'senial'     , label:'señal'},
+        {val:'propia'     , label:'propia'},
+        {val:'externo'    , label:'externo'},
+     ],
+
+    tipomovOptionList: [
+        {val:'no_definido', label:'Tipo de movimiento'},
+        {val:'recepcion'  , label:'RECEPCIÓN'},
+        {val:'entrega'    , label:'ENTREGA'},
+    ],
+
     estadoqcOptionList: [
+        {val:'no_definido', label:'Estado del parte técnico'},
         {val:'enevaluacion', label:'EN EVALUACIÓN'},
         {val:'aprobado'    , label:'APROBADO'},
-        {val:'observado'   , label:'OBSERVADO'},
+        {val:'aprobconobs' , label:'APROB C/OBSERVACIONES'},
         {val:'rechazado'   , label:'RECHAZADO'},
     ],
 
-    tipoComprobaneOptionList: [
+    tipoComprobanteOptionList: [
         {val:'no_definido'    , label:'tipo de comprobante'},
+        {val:'ptecnico'       , label:'P/Técnico'},
         {val:'nrecepcion'     , label:'N/Recepción'},
         {val:'nentrega'       , label:'N/Entrega'},
-        {val:'ptecnico'       , label:'P/Técnico'},
-    ],
+        {val:'pemision'       , label:'P/Emisión'},
+     ],
 
     tipoBrandingOptionList: [
         {val:'no_definido'      , label:'tipo de archivo'},
@@ -926,6 +970,14 @@ window.utils = {
     },
 
 */
+
+    dateToStr: function(date) {
+        var da = date.getDate();
+        var mo = date.getMonth()+1;
+        var ye = date.getFullYear();
+        return da+"/"+mo+"/"+ye;
+    },
+
     parseDateStr: function(str) {
         var mx = str.match(/(\d+)/g);
         var ty = new Date();

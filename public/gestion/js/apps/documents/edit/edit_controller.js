@@ -42,85 +42,104 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     }
   }
   var registerDocumItemsView = function(view){
-    view.on('itemview:item:edit',function(childView, ptmodel){
-      console.log('Parte tecnico BEGINS:[%s] [%s]',ptmodel.get('estado_qc'),ptmodel.whoami);
+    view.on('itemview:item:edit',function(childView, itemmodel){
+      console.log('ITEM EDIT BEGINS:[%s] - [%s]',itemmodel.get('tipoitem'),itemmodel.whoami);
 
-      var ptlayout = new Edit.PTecnicoLayout();
-      var ptecnico = new Edit.PTecnicoHeader({
-        model: ptmodel,
-      });
-
-      ptecnico.on('product:select',function(query, cb){
-        DocManager.request("product:search", query, function(model){
-          cb(model);
-        });      
-      });
-
-      ptecnico.on('person:select',function(query, cb){
-        DocManager.request("person:search", query, function(model){
-          cb(model);
-        });      
-      });
-
-      ptecnico.on("form:submit", function(model){
-        console.log('ptecico: form:submit [%s]',model.whoami,model.get('slug'));
-        Edit.Session.model.insertItemCollection(Edit.Session.items);
-        Edit.Session.model.update(function(err,model){
-          if(err){
-            ptecnico.triggerMethod("form:data:invalid", err);
-          }else{
-            ptecnico.close();
-          }
-        });
-      });
-
-      var pticollection = fetchPTItemsCollection(ptmodel);
-
-      var ptiview = new Edit.PTecnicoList({collection: pticollection});
-      ptiview.on("pti:form:submit",function(){
-        console.log('pti:form:submit');
-
-        var ptierr = false;
-        ptiview.children.each(function (view){
-          var err = view.model.validate(view.model.attributes);
-          view.onFormDataInvalid((err||{}));
-          if(err) ptierr = true;
+      //if(itemmodel.get('tipoitem')==='ptecnico'){
+      if(true){
+        var itemlayout = new Edit.ItemLayout();
+        var itemheader = new Edit.ItemHeader({
+          model: itemmodel,
+          itemtype: itemmodel.get('tipoitem')
         });
 
-        if(!ptierr){
-          ptmodel.insertItemCollection(pticollection);
+
+        itemheader.on('product:select',function(query, cb){
+          DocManager.request("product:search", query, function(model){
+            cb(model);
+          });      
+        });
+
+        itemheader.on('person:select',function(query, cb){
+          console.log('Person search');
+          DocManager.request("person:search", query, function(model){
+            cb(model);
+          });      
+        });
+
+        itemheader.on("form:submit", function(model){
+          console.log('form:submit [%s]',model.whoami,model.get('slug'));
           Edit.Session.model.insertItemCollection(Edit.Session.items);
-
           Edit.Session.model.update(function(err,model){
             if(err){
-              ptecnico.triggerMethod("form:data:invalid", err);
+              itemheader.triggerMethod("form:data:invalid", err);
             }else{
-              ptlayout.close();
+              itemheader.close();
             }
           });
-        }
-      });
+        });
 
-      ptiview.on("itemview:pti:remove:item",function(view, model){
-        removeItemFromCol(model, pticollection);
-      });
+        var sitcollection = fetchPTItemsCollection(itemmodel);
+
+        var sitview = new Edit.PTecnicoList({
+          collection: sitcollection,
+          itemtype: itemmodel.get('tipoitem')
+        });
+
+        sitview.on("sit:form:submit",function(){
+          console.log('sit:form:submit');
+
+          var siterr = false;
+          sitview.children.each(function (view){
+            var err = view.model.validate(view.model.attributes);
+            view.onFormDataInvalid((err||{}));
+            if(err) siterr = true;
+          });
+
+          if(!siterr){
+            itemmodel.insertItemCollection(sitcollection);
+            Edit.Session.model.insertItemCollection(Edit.Session.items);
+
+            Edit.Session.model.update(function(err,model){
+              if(err){
+                itemheader.triggerMethod("form:data:invalid", err);
+              }else{
+                itemlayout.close();
+              }
+            });
+          }
+        });
+
+        sitview.on("itemview:sit:remove:item",function(view, model){
+          removeItemFromCol(model, sitcollection);
+        });
+
+        sitview.on('itemview:product:select',function(view, query, cb){
+          DocManager.request("product:search", query, function(model){
+            cb(model);
+          });      
+        });
 
 
-      ptlayout.on("pti:add:item", function(){
-        addEmptyItemToCol(pticollection);
-      });
 
-      ptlayout.on("show", function(){
-          ptlayout.ptheaderRegion.show(ptecnico);
-          ptlayout.ptlistRegion.show(ptiview);
-      });
+        itemlayout.on("sit:add:item", function(){
+          addEmptyItemToCol(itemmodel, sitcollection);
+        });
 
-      ptlayout.on("form:submit", function(){
-        ptiview.triggerMethod("form:submit");
-      });
+        itemlayout.on("show", function(){
+            itemlayout.ptheaderRegion.show(itemheader);
+            itemlayout.ptlistRegion.show(sitview);
+        });
 
-      Edit.Session.layout.itemEditRegion.show(ptlayout);
-    });
+        itemlayout.on("form:submit", function(){
+          sitview.triggerMethod("form:submit");
+        });
+
+        Edit.Session.layout.itemEditRegion.show(itemlayout);
+
+      }//tipoitem === ptecnico
+
+    }); //view.on item:edit
 
   };
 
@@ -133,9 +152,10 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     col.remove(model);
   };
 
-  var addEmptyItemToCol = function(col){
-    var ptimodel = new DocManager.Entities.DocumParteTecnicoItem();
-    col.add(ptimodel);
+  var addEmptyItemToCol = function(model, col){
+    //var sitmodel = new DocManager.Entities.DocumParteTecnicoItem();
+    var sitmodel = model.initNewItem();
+    col.add(sitmodel);
   };
 
   var registerDocumentEntity = function(model) {

@@ -147,7 +147,9 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
 
     navigate: function(e){
       e.preventDefault();
+      e.stopPropagation();
       this.trigger(this.model.get('navigationTrigger'), this.model);
+      return false;
     },
 
     onRender: function(){
