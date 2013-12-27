@@ -42,7 +42,7 @@ var tcomp_adapter = {
         },
     pemision: {
         serie: 'nemi101',
-        base: 100050,
+        base: 100000,
         prefix: 'E'
         },
     poromision: {
