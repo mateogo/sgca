@@ -149,24 +149,6 @@
                 <span class="help-inline"></span>
               </div>
           </div>
-
-          <div class="control-group">
-            <!-- descriptores; -->
-                <label for="descriptores" class="control-label">descriptores (palabras claves separadas por ';'):</label>
-                <div class="controls">
-                    <textarea id="descriptores" name="descriptores" style="width: 90%;" 
-                    rows="2"><%= descriptores %></textarea>
-                </div>
-          </div>
-   
-          <div class="control-group">
-            <!-- description   -->
-                <label for="description" class="control-label">descripcion</label>
-                <div class="controls">
-                    <textarea id="description" name="description" style="width: 90%;" 
-                    rows="2"><%= description %></textarea>
-                </div>
-          </div>
         </fieldset>
         </form>
 
@@ -176,7 +158,8 @@
           <div class="accordion" id="accordion1">
             <div class="accordion-group">
               <div class="accordion-heading">
-                <a class="accordion-toggle painstancia" data-toggle="collapse"  href="#collapseOne">PA: Alta de Nueva Instancia</a>
+                <a class="accordion-toggle painstancia" data-toggle="collapse"  href="#collapseOne">
+                  <span class="badge badge-warning">Alta</span> Nueva Instancia</a>
               </div>
               <div id="collapseOne" class="accordion-body collapse">
                 <div class="accordion-inner painstanciahook"></div>
@@ -203,7 +186,8 @@
             </div>
             <div class="accordion-group">
               <div class="accordion-heading">
-                <a class="accordion-toggle paclasif" data-toggle="collapse"  href="#collapseTwo"> PA: Clasificación</a>
+                <a class="accordion-toggle paclasif" data-toggle="collapse"  href="#collapseTwo">
+                  <span class="badge badge-success">PA</span> Clasificación del contenido</a>
               </div>
               <div id="collapseTwo" class="accordion-body collapse">
                 <div class="accordion-inner paclasifhook"></div>
@@ -212,7 +196,8 @@
 
             <div class="accordion-group">
               <div class="accordion-heading">
-                <a class="accordion-toggle padatospro" data-toggle="collapse"  href="#collapseDP"> PA: Datos de producción</a>
+                <a class="accordion-toggle padatospro" data-toggle="collapse"  href="#collapseDP">
+                  <span class="badge badge-success">PA</span> Datos de Producción</a>
               </div>
               <div id="collapseDP" class="accordion-body collapse">
                 <div class="accordion-inner padatosprohook"></div>
@@ -221,7 +206,8 @@
 
             <div class="accordion-group">
               <div class="accordion-heading">
-                <a class="accordion-toggle parealiz" data-toggle="collapse" href="#collapseThree">PA: Realización</a>
+                <a class="accordion-toggle parealiz" data-toggle="collapse" href="#collapseThree">
+                  <span class="badge badge-success">PA</span> Datos de Realización y atribución intelectual</a>
               </div>
               <div id="collapseThree" class="accordion-body collapse">
                <div class="accordion-inner parealizhook"></div>
@@ -230,7 +216,18 @@
 
             <div class="accordion-group">
               <div class="accordion-heading">
-                <a class="accordion-toggle intechfacet" data-toggle="collapse" href="#collapseIND">IN: Datos instancia</a>
+                <a class="accordion-toggle curaduria" data-toggle="collapse" href="#collapseCuraduria">
+                  <span class="badge badge-success">PA</span> Curaduría</a>
+              </div>
+              <div id="collapseCuraduria" class="accordion-body collapse">
+               <div class="accordion-inner curaduriahook"></div>
+              </div>
+            </div>
+
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle intechfacet" data-toggle="collapse" href="#collapseIND">
+                  <span class="badge badge-success">INS</span> Datos de Instancia</a>
               </div>
               <div id="collapseIND" class="accordion-body collapse">
                <div class="accordion-inner intechfacethook"></div>
@@ -239,7 +236,8 @@
 
             <div class="accordion-group">
               <div class="accordion-heading">
-                <a class="accordion-toggle branding" data-toggle="collapse"  href="#collapseBrnd">Alta de material para branding</a>
+                <a class="accordion-toggle branding" data-toggle="collapse"  href="#collapseBrnd">
+                  <span class="badge badge-warning">Alta</span> Material para Branding</a>
               </div>
               <div id="collapseBrnd" class="accordion-body collapse">
                 <div class="accordion-inner brandinghook"></div>

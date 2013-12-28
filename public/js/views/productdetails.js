@@ -61,6 +61,7 @@ window.ProductView = Backbone.View.extend({
         "click .painstancia" : "formaddinstance",
         "click .branding"    : "formbranding",
         "click .parealiz"    : "formparealization",
+        "click .curaduria"   : "formcuraduria",
         "click .notas"       : "formnotas",
         "click .intechfacet" : "formintechfacet",
         "click .save"       : "beforeSave",
@@ -447,13 +448,13 @@ window.ProductView = Backbone.View.extend({
                 model: facet,
             });
         /*
-        form.on('contenido:change', function(form, contenidoEditor) {
-            var contenido = contenidoEditor.getValue(),
-                newOptions = dao.pasubcontenido[contenido];
-            form.fields.subcontenido.editor.setOptions(newOptions);
+        form.on('tematica:change', function(form, tematicaEditor) {
+            var tematica = tematicaEditor.getValue(),
+                newOptions = utils.subtematicasOptionList[tematica];
+            form.fields.subtematica.editor.setOptions(newOptions);
         });
         */
-        form.on('change', function(form, contenidoEditor) {
+        form.on('change', function(form, editorContent) {
             var errors = form.commit();
             dao.pacapitulosfacet.getContent();
         });
@@ -510,19 +511,19 @@ window.ProductView = Backbone.View.extend({
                 model: facet,
             }).render();
 
-        form.on('contenido:change', function(form, contenidoEditor) {
+        form.on('tematica:change', function(form, editorContent) {
             console.log('onchange:key');
-            var contenido = contenidoEditor.getValue(),
-                newOptions = dao.pasubcontenido[contenido];
-            form.fields.subcontenido.editor.setOptions(newOptions);
+            var tematica = editorContent.getValue(),
+                newOptions = utils.subtematicasOptionList[tematica];
+            form.fields.subtematica.editor.setOptions(newOptions);
         });
 
-        form.on('subcontenido:change', function(form, contenidoEditor) {
-            var scontenido = contenidoEditor.getValue();
-            console.log('onchange:SUB CONTENIDO key [%s]',scontenido);
+        form.on('subtematica:change', function(form, editorContent) {
+            var stematica = editorContent.getValue();
+            console.log('onchange:SUB CONTENIDO key [%s]',stematica);
         });
 
-        form.on('change', function(form, contenidoEditor) {
+        form.on('change', function(form, editorContent) {
             var errors = form.commit();
             console.log('onchange:key errors:[%s]',errors);
             
@@ -555,8 +556,8 @@ window.ProductView = Backbone.View.extend({
             form.setValue({tipoarchivo:tipo});
         });
 
-        form.on('tipoproducto:change', function(form, contenidoEditor) {
-            form.fields.rolinstancia.editor.setOptions( utils.rolinstanciasGroup[contenidoEditor.getValue()] );
+        form.on('tipoproducto:change', function(form, editorContent) {
+            form.fields.rolinstancia.editor.setOptions( utils.rolinstanciasGroup[editorContent.getValue()] );
         });
 
         form.on('change', function(form, editor) {
@@ -603,6 +604,20 @@ window.ProductView = Backbone.View.extend({
 
         });
         $('.parealizhook').html(form.render().el);
+    }, 
+
+    formcuraduria: function () {
+        var self = this;
+        var facet = dao.curaduriafacet.init(this.model);
+        var form = new Backbone.Form({
+            model: facet,
+            });
+
+        form.on('change', function(form, editor) {
+            var errors = form.commit();
+            self.model.set({'curaduria':dao.curaduriafacet.getContent()});
+        });
+        $('.curaduriahook').html(form.render().el);
     }, 
 
     formpatechfacet: function () {

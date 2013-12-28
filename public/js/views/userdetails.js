@@ -159,7 +159,7 @@ window.UserView = Backbone.View.extend({
         });
         console.log('form USER BEGINS2');
 
-        form.on('focus', function(form, contenidoEditor) {
+        form.on('focus', function(form, editorContent) {
             console.log('FOCUS!');
             //form.fields.subcontenido.editor.setOptions(utils.tipocontactoOL[contact.get('tipocontacto')]);
         });
@@ -204,30 +204,30 @@ window.UserView = Backbone.View.extend({
         });
         //console.log(utils.tipocontactoOL[contact.get('tipocontacto')]);
 
-        form.on('focus', function(form, contenidoEditor) {
+        form.on('focus', function(form, editorContent) {
             console.log('FOCUS!');
             //form.fields.subcontenido.editor.setOptions(utils.tipocontactoOL[contact.get('tipocontacto')]);
         });
 
-        form.on('tipocontacto:change', function(form, contenidoEditor) {
+        form.on('tipocontacto:change', function(form, editorContent) {
             console.log('onchange:key');
-            var contenido = contenidoEditor.getValue(),
+            var contenido = editorContent.getValue(),
                 newOptions = utils.tipocontactoOL[contenido];
             form.fields.subcontenido.editor.setOptions(newOptions);
         });
 
-        form.on('subcontenido:change', function(form, contenidoEditor) {
-            var scontenido = contenidoEditor.getValue();
+        form.on('subcontenido:change', function(form, editorContent) {
+            var scontenido = editorContent.getValue();
             //console.log('onchange:SUB CONTENIDO key [%s]',scontenido);
         });
 
-        form.on('contactdata:change', function(form, contenidoEditor) {
-            var contactdata = contenidoEditor.getValue();
+        form.on('contactdata:change', function(form, editorContent) {
+            var contactdata = editorContent.getValue();
             //console.log('onchange:SUB CONTENIDO key [%s]',contactdata);
         });
 
-        form.on('contactdata:blur', function(form, contenidoEditor) {
-            var contactdata = contenidoEditor.getValue();
+        form.on('contactdata:blur', function(form, editorContent) {
+            var contactdata = editorContent.getValue();
             var errors = form.commit();            
             console.log('onblur:SUB CONTENIDO key [%s]',contactdata);
             if(dao.contactfacet.getFacet().get('tipocontacto')==='direccion'){

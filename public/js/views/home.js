@@ -19,7 +19,7 @@ window.HomeView = Backbone.View.extend({
                 model: facet,
             });
 
-        form.on('change', function(form, contenidoEditor) {
+        form.on('change', function(form, editorContent) {
             var errors = form.commit();
         });
             

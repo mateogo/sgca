@@ -1279,8 +1279,8 @@ window.Product = Backbone.Model.extend({
         builder.nivel_ejecucion = self.get('nivel_ejecucion');
         builder.estado_alta = self.get('estado_alta');
         builder.patechfacet = self.get('patechfacet');
-        builder.realization = self.get('realization');
-        builder.clasification = self.get('clasification');
+        //builder.realization = self.get('realization');
+        //builder.clasification = self.get('clasification');
 
 
         for (var icap =data.numcapdesde; icap <= data.numcaphasta; icap +=1){
@@ -1672,27 +1672,30 @@ window.PaClasificationFacet = Backbone.Model.extend({
     },
 
     initialize: function () {
-        if(this.get('contenido')){
-            this.schema.subcontenido.options = dao.pasubcontenido[this.get('contenido')];
+        if(this.get('tematica')){
+            this.schema.subtematica.options = utils.subtematicasOptionList[this.get('tematica')];
         }
     },
 
     schema: {
-        contenido:    {type: 'Select',options: dao.pacontenidos },
-        subcontenido: {type: 'Select',options: dao.pasubcontenido.artecultura},
-        genero:       {type: 'Select',options: dao.pageneros},
-        formato:      {type: 'Select',options: dao.paformatos},
-        videoteca:    {type: 'Select',options: dao.videotecas},
-        etario:       {type: 'Select',options: dao.etarios},  
+        tematica:    {type: 'Select',options: utils.tematicasOptionList , title:'Temática'},
+        subtematica: {type: 'Select',options: utils.subtematicasOptionList.artecultura, title:'SubTemática'},
+        genero:       {type: 'Select',options: utils.generoOptionList, title: 'Género'},
+        formato:      {type: 'Select',options: utils.formatoOptionList, title: 'Formato'},
+        videoteca:    {type: 'Select',options: utils.videotecaOptionList, title: 'Videoteca'},
+        etario:       {type: 'Select',options: utils.etarioOptionList, title:'Tipo de audiencia'},  
+        descripcion:   {type: 'TextArea',editorAttrs:{placeholder:'descripción / sinopsis'},title:'Descripción:'},  
+        descriptores:  {type: 'TextArea',editorAttrs:{placeholder:'palabras claves separadas por ;'},title:'Palabras claves:'},  
    },
 
     defaults: {
-        contenido:'',
-        subcontenido:'',
+        tematica:'',
+        subtematica:'',
         genero:'',
         formato:'',
         videoteca:'',
         etario:'',
+        descripcion: '',
     }
 });
 
@@ -1705,26 +1708,29 @@ window.PaRealizationFacet = Backbone.Model.extend({
     },
 
     schema: {
-        realizadores: {type: 'TextArea',editorAttrs:{placeholder : 'realizadores'},editorClass:'input-large' },
-        productores: {type: 'TextArea',editorAttrs:{placeholder : 'productores'} },
-        coproductores: {type: 'TextArea',editorAttrs:{placeholder : 'co-productores'} },
-        conduccion: {type: 'TextArea',editorAttrs:{placeholder : 'conduccion'} },
-        reparto: {type: 'TextArea',editorAttrs:{placeholder : 'actores'} },
-        directores: {type: 'TextArea',editorAttrs:{placeholder : 'directores'} },
-        fotografia: {type: 'TextArea',editorAttrs:{placeholder : 'fotografia'} },
-        edicion: {type: 'TextArea',editorAttrs:{placeholder : 'edicion'} },
-        camaras: {type: 'TextArea',editorAttrs:{placeholder : 'camaras'} },
-        guionistas: {type: 'TextArea',editorAttrs:{placeholder : 'guionistas'} },
-        escenografia: {type: 'TextArea',editorAttrs:{placeholder : 'escenografia'} },
-        musicos: {type: 'TextArea',editorAttrs:{placeholder : 'musica original'} },
-        sonido: {type: 'TextArea',editorAttrs:{placeholder : 'sonido'} },
-        provincia: {type: 'Text',editorAttrs:{placeholder : 'provincia'} },
+        realizadores: {type: 'TextArea',editorAttrs:{placeholder : 'realizadores'},title: 'Realizadores'},
+        productores: {type: 'TextArea',editorAttrs:{placeholder : 'productores'}, title: 'Productores'},
+        coproductores: {type: 'TextArea',editorAttrs:{placeholder : 'co-productores'}, title: 'Co-productores' },
+        vocesautorizadas: {type: 'TextArea',editorAttrs:{placeholder : 'nombre (cargo)'}, title: 'Voces autorizadas' },
+        conduccion: {type: 'TextArea',editorAttrs:{placeholder : 'conduccion'}, title: 'Conducción' },
+        reparto: {type: 'TextArea',editorAttrs:{placeholder : 'actores'}, title: 'Reparto' },
+        directores: {type: 'TextArea',editorAttrs:{placeholder : 'directores'}, title: 'Directores' },
+        fotografia: {type: 'TextArea',editorAttrs:{placeholder : 'fotografia'}, title: 'Fotografía' },
+        edicion: {type: 'TextArea',editorAttrs:{placeholder : 'edicion'}, title: 'Edición' },
+        camaras: {type: 'TextArea',editorAttrs:{placeholder : 'camaras'}, title: 'Cámaras' },
+        guionistas: {type: 'TextArea',editorAttrs:{placeholder : 'guionistas'}, title: 'Guionistas' },
+        escenografia: {type: 'TextArea',editorAttrs:{placeholder : 'escenografia'}, title: 'Escenografía' },
+        musicos: {type: 'TextArea',editorAttrs:{placeholder : 'musica original'}, title: 'Músicos' },
+        sonido: {type: 'TextArea',editorAttrs:{placeholder : 'sonido'}, title: 'Sonido' },
+        provinciaprod: {type: 'Text',editorAttrs:{placeholder : 'provincia productora'}, title: 'Provincia' },
+        paisprod: {type: 'Text',editorAttrs:{placeholder : 'país productor'}, title: 'País' },
     },
 
     defaults: {
         realizadores:'',
         conduccion:'',
         productores:'',
+        vocesautorizadas:'',
         coproductores:'',
         fotografia:'',
         edicion:'',
@@ -1735,9 +1741,34 @@ window.PaRealizationFacet = Backbone.Model.extend({
         guionistas:'',
         musicos:'',
         sonido:'',
-        provincia:'',
+        provinciaprod:'',
+        paisprod: '',
     }
 });
+
+window.CuraduriaFacet = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    whoami:'curaduriafacet',
+
+    retrieveData: function(){
+        return dao.extractData(this.attributes);
+    },
+
+    schema: {
+        visualizador:  {type: 'Text', editorAttrs:{placeholder : 'visualizador'}, title: 'Visualizador' },
+        calificacion:  {type: 'Select', options: ['regular','bueno','muy bueno','excelente'] , title:'Calificación'},
+        aprobado:      {type: 'Select', options: ['SI','NO'] , title:'Aprobado'},
+        observaciones: {type: 'TextArea', editorAttrs:{placeholder : 'observaciones'},title: 'Observaciones'},
+    },
+
+    defaults: {
+        visualizador: '',
+        calificacion: 'bueno',
+        aprobado: 'NO',
+        observaciones: '',
+    }
+});
+
 window.BrandingFacet = Backbone.Model.extend({
     // ******************* BROWSE PRODUCTS ***************
     whoami:'brandingfacet',
@@ -1814,9 +1845,11 @@ window.PaTechFacet = Backbone.Model.extend({
     schema: {
         durnominal: {type: 'Text', title: 'Duración nominal', editorAttrs:{placeholder : 'duracion mm:ss'}},
         cantcapitulos: {type: 'Number', title: 'Cantidad de capítulos'},
-        fecreacion: {type: 'Text', title: 'Fecha de creación'},
+        cantbloques: {type: 'Number', title: 'Cantidad de bloques'},
+        fecreacion: {type: 'Text', title: 'Año de producción'},
+        temporada: {type: 'Number', title: 'Temporada Nro'},
         productora: {type: 'Text', title: 'Casa productora',editorAttrs:{placeholder:'casa productora'}},
-        lugares: {type: 'Text',editorAttrs:{placeholder : 'lugares'} },
+        lugares: {type: 'Text',editorAttrs:{placeholder : 'lugares'}, title: 'Lugar de rodaje' },
         locaciones: {type: 'Text',editorAttrs:{placeholder : 'locaciones'} },
         //productora: {type: 'Select',options:[{val:'perro',label: 'El perro en la luna'},{val:'occidente',label:'Occidente'}], title: 'casa Productora'},
     },
@@ -1827,6 +1860,7 @@ window.PaTechFacet = Backbone.Model.extend({
         productora:'',
         fecreacion:'',
         cantcapitulos:0,
+        cantbloques:1,
         lugares:'',
         locaciones:'',
     }

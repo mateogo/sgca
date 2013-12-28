@@ -123,13 +123,13 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
             });
 
 
-        form.on('change', function(form, contenidoEditor) {
+        form.on('change', function(form, editorContent) {
             console.log('change');
             var errors = form.commit();
             return false;
         });
 
-        form.on('blur', function(form, contenidoEditor) {
+        form.on('blur', function(form, editorContent) {
             console.log('blur');
             //var errors = form.commit();
             return false;
@@ -170,7 +170,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
                 model: facet,
             });
 
-        form.on('change', function(form, contenidoEditor) {
+        form.on('change', function(form, editorContent) {
             var errors = form.commit();
         });
             

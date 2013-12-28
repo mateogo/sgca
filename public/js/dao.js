@@ -249,6 +249,17 @@ window.dao = {
         }
     },
 
+    curaduriafacet: {
+        init: function(product){
+            console.log('curaduriafacet: [%s]',product.get('slug'));
+            this.data = new CuraduriaFacet(product.get('curaduria'));
+            return this.data;
+        },
+        getContent: function(){
+            return this.data.retrieveData();
+        }
+    },
+
     notasfacet: {
         init: function(ancestor){
             console.log('notasfacet: [%s]',ancestor.get('slug'));
@@ -616,24 +627,6 @@ window.dao = {
             node.children.push(newentry);
             return newentry;
         }
-    },
-
-    pageneros:['animacion', 'biografia', 'curso', 'ficcion', 'docuficcion', 'documental', 'entretenimiento', 'entrevistas', 'telenovela', 'reality', 'recital', 'periodistico', 'noticiero','inespecifico'],
-    paformatos:['serie', 'serie-programas', 'unitario', 'videoclip', 'promo', 'miniserie', 'micro', 'micro-recital', 'cortometraje', 'largometraje', 'backstage','trailer',  'noticiero', 'periodistico', 'especial', 'inespecifico'],
-    videotecas:['concurso', 'produccionPropia', 'adquisicion', 'coproduccion', 'cesion', 'banco','inespecifico'],
-    etarios:['infantil', 'jovenes','adolescentes', 'adulto', 'mayores','inespecifico'],
-    pacontenidos: ['artecultura','cienciaTecnologia','cienciasSociales','deporte','educacionTrabajo','historia','infancia','juventud','sociedad','ficcion'],
-    pasubcontenido: {
-        artecultura: ['musica', 'plastica', 'fotografia', 'arteDigital', 'video', 'teatro', 'animacion', 'otros' ],
-        cienciaTecnologia: ['astronomia', 'fisica', 'matematica', 'quimica','otros'],
-        cienciasSociales: ['antropologia', 'historia', 'sociologia', 'economia', 'politica', 'otros'],
-        deporte: ['historiaDeporte', 'actualidadDeporte', 'deporteAmateur', 'deporteProfesional','otros'],
-        educacionTrabajo:['educSexual', 'primerosAuxilios', 'educRural', 'oficios', 'debateEducativo','otros' ],
-        historia: ['universal', 'argentinaSXX', 'argentinaSXiX', 'biografia','otros'],
-        infancia: ['pedagogia', 'recreacion', 'curricula','otros'],
-        juventud: ['pedagogia', 'recreacion', 'curricula','otros'],
-        sociedad: ['gastronomia', 'ddhh', 'familia', 'respSocial', 'salud','otros' ],
-        ficcion: ['novela', 'thriller', 'drama', 'comedia', 'accion','otros' ],
     },
 
 
