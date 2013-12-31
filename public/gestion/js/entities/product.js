@@ -30,6 +30,29 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
+    loadchilds: function(ancestor, predicates, cb){
+        var self = this,
+            querydata = [],
+            products= new Entities.ProductChildCollection(),
+            query = {};
+
+        console.log('loadchilds:models.js BEGINS [%s] : [%s]',ancestor.get('productcode'),predicates);
+        if(!_.isArray(predicates))
+            if(_.isObject(predicates)) querydata.push(predicates);
+            else return null;
+        else querydata = predicates;
+
+        query = {$or: querydata };
+
+        products.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                if(cb) cb(products);
+            }
+        });
+    },
+
     validate: function(attrs, options) {
       var errors = {}
       if (! attrs.productcode) {
@@ -58,6 +81,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     comparator: "productcode"
   });
+
+  Entities.ProductChildCollection = Backbone.Collection.extend({
+
+    model: Entities.Product,
+
+    comparator: "productcode",
+
+    url: "/navegar/productos"
+});
+
 
   var filterFactory = function (entities){
     var fd = DocManager.Entities.FilteredCollection({

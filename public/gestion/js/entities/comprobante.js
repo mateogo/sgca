@@ -88,7 +88,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     validate: function(attrs, options) {
       //if(!attrs) return;
       var errors = {}
-      console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipocomp'), attrs.tipocomp);
+      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipocomp'), attrs.tipocomp);
 
       if (_.has(attrs,'tipocomp') && (!attrs.tipocomp|| attrs.tipocomp.length==0)) {
         errors.tipocomp = "No puede ser nulo";
@@ -111,8 +111,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     insertItemCollection: function(itemCol) {
         var self = this;
-        console.log('insert items begins items:[%s]', itemCol.length);
-        //var itemModel = self[item.get('tipoitem')].initNew(item.attributes);
         self.set({items: itemCol.toJSON()});
     },
 
@@ -122,13 +120,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return itemModel;
     },
 
-    loaditems: function(cb){
-        dao.contactfacet.setCol( new ContactFacetCollection(this.get('contactinfo')));
-
-        console.log('[%s] loadcontacts [%s] ',this.whoami, dao.contactfacet.getCol().length);
-
-        cb(dao.contactfacet.getCol());
-    },
   });
 
   //Comprobante Collection
@@ -182,7 +173,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     validate: function(attrs, options) {
       //if(!attrs) return;
       var errors = {}
-      console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
+      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
 
       if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
         errors.tipocomp = "No puede ser nulo";
@@ -195,10 +186,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         return errors;
       }
     },
+
     insertItemCollection: function(itemCol) {
         var self = this;
-        console.log('insert items begins items:[%s]', itemCol.length);
-        //var itemModel = self[item.get('tipoitem')].initNew(item.attributes);
         self.set({items: itemCol.toJSON()});
     },
 
@@ -207,10 +197,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     getItems: function(){
-      console.log('getItems-2');
-
       var items = this.get('items');
       return new Entities.PTecnicoItems(items);
+    },
+
+    productSelected: function(pr){
+      // fetching a product success. 
+
     },
 
     defaults: {
@@ -267,15 +260,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
       if (_.has(attrs,'ptitcbco')){
         this.set('ptitcbco',utils.parseTC(attrs.ptitcbco));
-        console.log('ptitcbco: [%s]',this.get('ptitcbco'));
       }
       if (_.has(attrs,'ptiduracion')){
         this.set('ptiduracion',utils.parseTC(attrs.ptiduracion));
-        console.log('ptiduracion: [%s]',this.get('ptiduracion'));
       }
       if (_.has(attrs,'ptitcabs')){
         this.set('ptitcabs',utils.parseTC(attrs.ptitcabs));
-        console.log('ptitcabs: [%s]',this.get('ptitcabs'));
       }
 
       if( ! _.isEmpty(errors)){
@@ -311,7 +301,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     validate: function(attrs, options) {
       //if(!attrs) return;
       var errors = {}
-      console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
+      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
 
       if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
         errors.tipocomp = "No puede ser nulo";
@@ -326,19 +316,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
     insertItemCollection: function(itemCol) {
         var self = this;
-        console.log('insert items begins items:[%s]', itemCol.length);
-        //var itemModel = self[item.get('tipoitem')].initNew(item.attributes);
         self.set({items: itemCol.toJSON()});
     },
 
     getItems: function(){
-      console.log('getItems-1');
-      var items = this.get('items');
-      return new Entities.MovimREItems(items);
+      var itemCol = new Entities.MovimREItems(this.get('items'));
+      return itemCol;
     },
 
     initNewItem: function(){
       return new Entities.DocumMovimREItem();
+    },
+
+    productSelected: function(pr){
+      // fetching a product success. 
+
     },
 
     defaults: {
@@ -360,10 +352,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
  
     validate: function(attrs, options) {
-      //if(!attrs) return;
       var errors = {}
-      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'ptitcbco'), attrs.ptitcbco);
-      //utils.inspect(attrs,1,'pti');
 
       if (_.has(attrs,'product') && (!attrs.product )) {
         errors.pticaso = "No puede ser nulo";
@@ -398,18 +387,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     validate: function(attrs, options) {
       //if(!attrs) return;
       var errors = {}
-      console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
+      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
 
       if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
-        errors.tipocomp = "No puede ser nulo";
+        errors.tipoitem = "No puede ser nulo";
       }
       if (_.has(attrs,'slug') && ! attrs.slug) {
         errors.slug = "No puede ser nulo";
       }
 
       if (_.has(attrs,'fedesde')){
-        var fecha = utils.buildDateNum(attrs['fedesde']);
-        this.set('fedesde_tc',fecha);
+        var fecha = utils.buildDate(attrs['fedesde']);
+        var fehasta = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()+6, 0, 0, 0, 0);
+        this.set('fedesde_tc',fecha.getTime());
+        this.set('fehasta_tc', fehasta.getTime());
+        this.set('fehasta', utils.dateToStr(fehasta));
+        if(fecha.getDay()!==1) errors.fedesde = "La fecha debe corresponder a un día lunes";
       }
       if (_.has(attrs,'fehasta')){
         var fecha = utils.buildDateNum(attrs['fehasta']);
@@ -422,18 +415,50 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
     insertItemCollection: function(itemCol) {
         var self = this;
-        console.log('insert items begins items:[%s]', itemCol.length);
-        self.set({items: itemCol.toJSON()});
+        var col = this.buildItemCollection(itemCol);
+        self.set({items: col.toJSON()});
+    },
+    buildItemCollection: function(col){
+      var itemCol = new Entities.ParteEMItems();
+      col.each(function(item){
+        if(item.hasData()){
+          itemCol.add(item);
+        }
+      });
+      return itemCol;
     },
 
     getItems: function(){
-      var items = this.get('items');
-      return new Entities.ParteEMItems(items);
+      var itemCol = new Entities.ParteEMItems(this.get('items'));
+      this.initDatesArray(itemCol)
+      return itemCol;
+    },
+
+    initDatesArray: function(col){
+      col.each(function(model){
+        var datecol = model.get('emisiones');
+        var emisiones = new Entities.ParteEMemisiones();
+        for (var i=0; i<7; i++){
+          var emision = datecol.find(function(elem){
+            return (elem.dayweek==i);
+          });
+          if(!emision) emision={
+            dayweek:i,
+          };
+          emisiones.add(new Entities.DocumParteEMItemDate(emision));
+        }
+        model.set({emisiones: emisiones});
+      });
+    },
+    findEmision: function(col){
+
+
     },
 
     initNewItem: function(){
       return new Entities.DocumParteEMItem();
     },
+
 
     defaults: {
       tipoitem: "",
@@ -442,6 +467,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       fedesde:"",
       fehasta:"",
       cobertura:"",
+      product:"",
+      pslug:"",
       fuente:"",
       persona: "",
       items:[]
@@ -466,21 +493,91 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         return errors;
       }
     },
+    hasData: function(){
+      var emisiones = this.get('emisiones');
+      var hasmovim = false;
+      var filtered = new Entities.ParteEMemisiones();
+
+      emisiones.each(function(elem){
+        if(elem.get('isActive')){
+          hasmovim=true;
+          filtered.add(elem);
+        }
+      });
+      this.set({emisiones: filtered.toJSON()});
+      return hasmovim;
+    },
+
+    initDatesArray: function(){
+        var emisiones = new Entities.ParteEMemisiones();
+        for (var i=0; i<7; i++){
+          var emision={
+            dayweek:i,
+          };
+          emisiones.add(new Entities.DocumParteEMItemDate(emision));
+        }
+        return emisiones;
+    },
 
     defaults: {
       product: '',
       pslug:'',
-      comentario: '',
       durnominal:'',
+      emisiones:[],
+    },
+  });
+
+  Entities.DocumParteEMItemDate = Backbone.Model.extend({
+    whoami: 'DocumParteEMItem:comprobante.js ',
+
+    schema: {
+        hourmain: {type: 'Select',options: utils.hourOptionList ,title:'Horario emisión'},
+        repite:  {type: 'Text', title: 'Repite',placeholder:'dia / hora repetición'},
+        chapter: {type: 'Select',options: ['cap1','cap2'] ,title:'Capítulo'},
+        comentario:     {type: 'Text', title: 'Comentario'},
+    },
+ 
+    validate: function(attrs, options) {
+      //if(!attrs) return;
+      var errors = {}
+      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'ptitcbco'), attrs.ptitcbco);
+      //utils.inspect(attrs,1,'pti');
+
+      if (_.has(attrs,'product') && (!attrs.product )) {
+        errors.product = "No puede ser nulo";
+      }
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+    updateData: function(){
+      if(this.get('hourmain')==='noem') this.set('isActive',false);
+      else this.set('isActive',true);
+    },
+
+    defaults: {
+      dayweek:'',
+      isActive:false,
+      chapter:'',
+      hourmain:'noem',
+      repite:'',
+      comentario: '',
       qnopt:"",
       qpt:"",
     },
   });
 
+
+
   Entities.ParteEMItems = Backbone.Collection.extend({
     whoami: 'Entities.ParteEMItems:comprobante.js ',
     model: Entities.DocumParteEMItem,
     comparator: "product",
+  });
+  Entities.ParteEMemisiones = Backbone.Collection.extend({
+    whoami: 'Entities.ParteEMIemisiones:comprobante.js ',
+    model: Entities.DocumParteEMItemDate,
+    comparator: "dayweek",
   });
 // fin Parte de emisión
 
@@ -496,15 +593,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     createNewDocument: function(cb){
-      //console.log('create New Document BEGIN')
       var self = this;
       var docum = new Entities.Comprobante(self.attributes);
-
       docum.initBeforeCreate();
 
       docum.save(null, {
         success: function(model){
-          //console.log('callback SUCCESS')
           cb(null,model);
         }
       });
@@ -529,7 +623,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     //idAttribute: "_id",
 
     createNewDocument: function(cb){
-      //console.log('create New Document BEGIN')
       var self = this;
       var docum = new Entities.Comprobante(self.attributes);
 
@@ -537,7 +630,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       docum.save(null, {
         success: function(model){
-          //console.log('callback SUCCESS')
           cb(null,model);
         }
       });
@@ -595,35 +687,27 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var API = {
     getEntities: function(){
-      //console.log('getFilteredCol: 1-01');
       var comprobantes = new Entities.ComprobanteCollection();
       var defer = $.Deferred();
       comprobantes.fetch({
         success: function(data){
-          //console.log('getFilteredCol: 1-02');
           defer.resolve(data);
         }
       });
       var promise = defer.promise();
-      //console.log('getFilteredCol: 1-03');
       return promise;
     },
 
     getFilteredCol: function(criteria, cb){
-      //console.log('getFilteredCol: 1');
       var fetchingDocuments = API.getEntities();
-      //console.log('getFilteredCol: 2');
 
       $.when(fetchingDocuments).done(function(documents){
-        //console.log('getFilteredCol: 3');
         var filteredDocuments = filterFactory(documents);
-        console.log('getFilteredCol: [%s]',criteria);
         if(criteria){
           filteredDocuments.filter(criteria);
         }
         if(cb) cb(filteredDocuments);
       });
-      //console.log('getFilteredCol: 5');
     },
 
     getEntity: function(entityId){
@@ -641,7 +725,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     fetchNextPrev: function(type, model, cb){
-      console.log('fetchNextPrev:comprobantes.js begins model:[%s]',model.get('cnumber'));
       var query = {};
       if(type === 'fetchnext') query.cnumber = { $gt : model.get('cnumber')}
       if(type === 'fetchprev') query.cnumber = { $lt : model.get('cnumber')}
@@ -651,7 +734,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           data: query,
           type: 'post',
           success: function() {
-              console.log('callback: length[%s]  model[%s]',comprobantes.length, comprobantes.at(0).get('cnumber'))
               if(cb) cb(comprobantes.at(0));
           }
       });

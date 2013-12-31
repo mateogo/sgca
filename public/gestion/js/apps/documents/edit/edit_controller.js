@@ -10,8 +10,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
      
       $.when(fetchingDocument).done(function(document){
         Edit.Session = {};
-
-        console.log('fetchingDocument callback [%s]',document.get('slug'));
     
         Edit.Session.model = document;
         registerDocumentEntity(document);
@@ -54,21 +52,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         });
 
 
-        itemheader.on('product:select',function(query, cb){
-          DocManager.request("product:search", query, function(model){
-            cb(model);
-          });      
-        });
-
-        itemheader.on('person:select',function(query, cb){
-          console.log('Person search');
-          DocManager.request("person:search", query, function(model){
-            cb(model);
-          });      
-        });
-
         itemheader.on("form:submit", function(model){
-          console.log('form:submit [%s]',model.whoami,model.get('slug'));
           Edit.Session.model.insertItemCollection(Edit.Session.items);
           Edit.Session.model.update(function(err,model){
             if(err){
@@ -79,11 +63,31 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
           });
         });
 
-        var sitcollection = fetchPTItemsCollection(itemmodel);
+        Edit.Session.sitcollection = fetchPTItemsCollection(itemmodel);
 
-        var sitview = new Edit.PTecnicoList({
-          collection: sitcollection,
-          itemtype: itemmodel.get('tipoitem')
+        var sitview = subItemFactoryView(itemmodel, Edit.Session.sitcollection);
+
+        if(itemmodel.get('tipoitem')==='pemision'){
+          loadProductChilds(Edit.Session.sitcollection, itemmodel);
+        }
+        itemheader.on('product:select',function(query, cb){
+          DocManager.request("product:search", query, function(product){
+
+            if(itemmodel.get('tipoitem')==='pemision'){
+              product.loadchilds(product, {'es_coleccion_de.id': product.id},function(products){
+                addProductsToCollection(Edit.Session.sitcollection, itemmodel, products );
+                cb(product);
+              });
+            }else{
+              cb(product);
+            }
+          });      
+        });
+
+        itemheader.on('person:select',function(query, cb){
+          DocManager.request("person:search", query, function(model){
+            cb(model);
+          });      
         });
 
         sitview.on("sit:form:submit",function(){
@@ -97,7 +101,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
           });
 
           if(!siterr){
-            itemmodel.insertItemCollection(sitcollection);
+            itemmodel.insertItemCollection(Edit.Session.sitcollection);
             Edit.Session.model.insertItemCollection(Edit.Session.items);
 
             Edit.Session.model.update(function(err,model){
@@ -110,8 +114,12 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
           }
         });
 
+        sitview.on("itemview:itemview:date:select",function(viewp, viewc, model,cb){
+          selectDate(model,viewp,cb);
+        });
+
         sitview.on("itemview:sit:remove:item",function(view, model){
-          removeItemFromCol(model, sitcollection);
+          removeItemFromCol(model, Edit.Session.sitcollection);
         });
 
         sitview.on('itemview:product:select',function(view, query, cb){
@@ -123,7 +131,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
 
         itemlayout.on("sit:add:item", function(){
-          addEmptyItemToCol(itemmodel, sitcollection);
+          addEmptyItemToCol(itemmodel, Edit.Session.sitcollection);
         });
 
         itemlayout.on("show", function(){
@@ -141,6 +149,94 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
     }); //view.on item:edit
 
+  };
+
+  var subItemFactoryView = function(itemmodel, subItemCol){
+
+    if(itemmodel.get('tipoitem')==='pemision'){
+      return ( new Edit.PEmisionList({
+              collection: subItemCol,
+              itemtype: itemmodel.get('tipoitem')
+            }));
+    }else {
+      return ( new Edit.PTecnicoList({
+              collection: subItemCol,
+              itemtype: itemmodel.get('tipoitem')
+            }));
+    }
+  };
+
+  var selectDate = function(model,view, cb){
+    console.log('model SELECT DATE: [%s][%s][%s]',model.get('hourmain'),view.model.get('productid'),model.schema.chapter.options);
+    if(view.model.get('productid')){
+      var product = new DocManager.Entities.Product({_id: view.model.get('productid')});
+
+      product.fetch({success: function(product) {           
+        console.log('product FETCH OK , [%s]',product.id,product.get('slug'));
+        product.loadchilds(product, {'es_capitulo_de.id': product.id},function(products){
+          console.log('product loadchilds, [%s]',products.length);
+          model.schema.chapter.options = buildChaptersOpstionList(products);
+          loadModalForm(model,view,cb)
+          //addProductsToCollection(sitcol, model, products );
+        });
+      }});
+    }else{
+      loadModalForm(model,view,cb)
+    }
+  };
+  var buildChaptersOpstionList = function(list){
+    var optionList = [];
+    list.each(function(pr){
+      optionList.push({
+          val:pr.get('productcode'),label:pr.get('slug')    
+      });
+    })
+    return optionList;
+  };
+
+  var loadModalForm = function(model,view,cb){
+
+      Edit.pemisHourEdit(model,function(model){
+        model.updateData();
+        if(cb) cb(model);
+      });
+  }
+
+
+  var loadProductChilds = function(sitcol,model){
+    if(!model.get('productid'))return;
+    console.log('loadProductChilds [%s][%s]',model.get('product'),model.get('productid'));
+
+    var product = new DocManager.Entities.Product({_id: model.get('productid')});
+
+    product.fetch({success: function() {           
+      product.loadchilds(product, {'es_coleccion_de.id': product.id},function(products){
+        addProductsToCollection(sitcol, model, products );
+      });
+    }});
+  };
+
+  var addProductsToCollection = function (sitcol, model, products ){
+    if(products.length){
+      products.each(function(pr){
+        var found = sitcol.find(function(sit){
+          return sit.get('productid')===pr.id;
+        })
+        if(!found){
+          var item = new DocManager.Entities.DocumParteEMItem({product:pr.get('productcode'),pslug:pr.get('slug'),productid: pr.id});
+          item.set({emisiones: item.initDatesArray()});
+          sitcol.add(item);          
+        }
+      });
+      //inspectCol(sitcol);
+    }
+  };
+  var inspectCol = function(col){
+    console.log('========= INSPECT COL =============')
+    col.each(function(model){
+      console.log('Collection: [%s] [%s]',model.get('pslug'),model.get('emisiones').length);
+
+    });
   };
 
   var fetchPTItemsCollection = function(model){

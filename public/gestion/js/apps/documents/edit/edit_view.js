@@ -159,6 +159,34 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         });
   };
 
+
+  // ventana modal Edición del horario de Emision
+  Edit.pemisHourEdit = function(model, cb){
+        console.log('Modal Parte de Emisión');
+        var form = new Backbone.Form({
+                model: model,
+            });
+
+        form.on('change', function(form, editorContent) {
+            var errors = form.commit();
+        });
+            
+        var modal = new Backbone.BootstrapModal({
+            content: form,
+            title: 'Horario de emisión',
+            okText: 'aceptar',
+            cancelText: 'cancelar',
+            animate: false
+        });
+
+        modal.open(function(){
+            var errors = form.commit();            
+            if(cb) cb(model);
+        });
+  };
+
+
+
   // ventana modal
   Edit.createItem = function(model){
         console.log('Modal ITEM NEW');
@@ -236,12 +264,13 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
           query = this.$('#product').val();
 
       this.trigger('product:select', query, function(entity){
-        console.log('callback: [%s] [%s]',entity.get('patechfacet'),entity.get('patechfacet').durnominal);
+        console.log('callback: [%s] [%s]',self.whoami,entity.get('slug'));
         var duracion="";
         if(entity.get('patechfacet')){
           duracion = entity.get('patechfacet').durnominal;
         }
-        self.model.set({product: entity.get('slug'), productid: entity.id, durnominal: duracion});
+
+        self.model.set({product:entity.get('productcode'), productid: entity.id,pslug:entity.get('slug'), durnominal: duracion});
         self.render();
       });
     },
@@ -370,5 +399,168 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     },
 
   });
+
+
+
+  Edit.PEmisionDateItem = Marionette.ItemView.extend({
+ 
+    getTemplate: function(){
+      if(this.model.get('isActive')){
+        return _.template('<button class="btn btn-info js-date" title="<%= repite %>  <%= comentario %> "><%= hourmain %></button>');
+      }else{
+        return _.template('<button class="btn btn-link js-date" title="ingrese horario <%= utils.dayweek[dayweek ]%>"><%= hourmain %></button>');
+      }
+    },
+
+    tagName:'td',
+    //className: 'col-sm-1',
+ 
+    //tagName: "li",
+    //className:"list-group-item",
+    initialize: function(options){
+      var self = this;
+      this.options = options;
+    },
+
+    events: {
+      "click .js-sitremove": "sitremove",
+      "click .js-productsch": "productsearch",
+      "click .js-date": "dateItem",
+
+    },
+
+    dateItem: function(){
+      var self = this;
+      console.log('dateItem CLICKED [%s]',self.model.get('dayweek'));
+      self.trigger('date:select',self.model,function(entity){
+        console.log('dateItem BACK');
+        self.render();
+      });
+    },
+
+    productsearch: function(){
+      var self = this,
+          query = this.$('#product').val();
+
+      this.trigger('product:select', query, function(entity){
+        console.log('callback: [%s] [%s]',entity.get('patechfacet'),entity.get('patechfacet').durnominal);
+        var duracion="";
+        if(entity.get('patechfacet')){
+          duracion = entity.get('patechfacet').durnominal;
+        }
+        self.model.set({product:entity.get('productcode'), productid: entity.id,pslug:entity.get('slug'), durnominal: duracion});
+        self.render();
+      });
+    },
+
+    triggers: {
+      //"click a": "document:new"
+    },
+
+    sitremove: function(){
+      this.trigger('sit:remove:item', this.model);
+    },
+
+    onRender: function(){
+    }
+  });
+
+
+  Edit.PEmisionListItem = Marionette.CompositeView.extend({
+    templates: {
+      pemision:   'DocumEditEMItem',
+    },
+
+    getTemplate: function(){
+      return utils.templates[this.templates[this.options.itemtype]];
+    },
+
+    tagName:'tr',
+    //className: 'list-group-item',
+    
+    itemView: Edit.PEmisionDateItem,
+    //itemViewContainer: "tr",
+
+    //tagName: "li",
+    //className:"list-group-item",
+    initialize: function(options){
+      console.log('PEmisionListItem: COMPOSITE INITIALIZE [%s]',options.itemtype);
+      var self = this;
+      this.options = options;
+      //this.collection = model.get('emisiones');
+      //console.log('PEmisionListItem: COMPOSITE INITIALIZE [%s]',this.collection.length);
+    },
+
+    events: {
+      "click .js-sitremove": "sitremove",
+      "click .js-productsch": "productsearch",
+    },
+
+    productsearch: function(){
+      var self = this,
+          query = this.$('#product').val();
+
+      this.trigger('product:select', query, function(entity){
+        console.log('callback: [%s] [%s]',entity.get('patechfacet'),entity.get('patechfacet').durnominal);
+        var duracion="";
+        if(entity.get('patechfacet')){
+          duracion = entity.get('patechfacet').durnominal;
+        }
+        self.model.set({product:entity.get('productcode'), productid: entity.id,pslug:entity.get('slug'), durnominal: duracion});
+        self.render();
+      });
+    },
+
+
+
+    triggers: {
+      //"click a": "document:new"
+    },
+
+    onFormDataInvalid: function(errors){
+
+    },
+
+    sitremove: function(){
+      this.trigger('sit:remove:item', this.model);
+    },
+
+    onRender: function(){
+      console.log('on render PEmisionListItem: COMPOSITE INITIALIZE');
+    }
+  });
+
+  Edit.PEmisionList = Marionette.CompositeView.extend({
+    tagName: "table",
+    className: "table table-bordered table-hover table-condensed hours",
+
+    getTemplate: function(){
+      return utils.templates['DocumEditEMHeader'];
+    },
+
+    itemView: Edit.PEmisionListItem,
+    itemViewContainer: "tbody",
+
+    initialize: function(options){
+      console.log('PEmisionList:INITIALIZE');
+      
+      this.options = options;
+    },
+
+    itemViewOptions: function(model, index) {
+      // do some calculations based on the model
+      console.log('PEmisionList:itemViewOptions [%s] [%s]',model.get('pslug'),index);
+      return {
+        collection: model.get('emisiones'),
+        itemtype:this.options.itemtype,
+      }
+    },
+
+    onFormSubmit:function(){
+      console.log('submit form:PTI-LIST');
+      this.trigger("sit:form:submit");
+    },
+  });
+
 
 });

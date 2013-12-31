@@ -1,6 +1,6 @@
 utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView', 'DocumNavbar',
     'DocumEditMin', 'DocumShowDef','DocumEditCore','DocumEditPT', 'SearchEntitiesForm','DocumEditPTLayout','DocumEditPTItem',
-    'DocumEditRE', 'DocumEditREItem','DocumEditEM','DocumEditEMItem' ], function() {
+    'DocumEditRE', 'DocumEditREItem','DocumEditEM','DocumEditEMItem','DocumEditEMHeader' ], function() {
 
     $('[data-toggle=offcanvas]').click(function() {
         $('.row-offcanvas').toggleClass('active');

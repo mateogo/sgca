@@ -74,10 +74,6 @@ window.utils = {
         return di+'/'+me+'/'+d.getFullYear();
     },
 
-    buildDateNum: function(str){
-        return this.parseDateStr(str).getTime();
-    },
-
     fetchFilteredEntries: function (model, entry,query){
         console.log('fetchfilteredEntries/utils: begins [%s]', model.get(entry).length);
         var filtered = [];
@@ -536,6 +532,7 @@ window.utils = {
 
     estadoaltaOptionList:[
         {val:'activo',     label:'activo'},
+        {val:'distribucion', label:'activo p/distribución'},
         {val:'suspendido', label:'suspendido'},
         {val:'cerrado',    label:'cerrado'},
         {val:'baja',       label:'baja'},
@@ -562,6 +559,7 @@ window.utils = {
         {val:'vinstitucional',label:'Video Institucional'},
         {val:'promo',        label:'Mat Promociones'},
         {val:'branding',     label:'Mat Branding'},
+        {val:'catalogo',     label:'Catálogo BACUA'},
     ],
 
     paexecutionOptionList:[
@@ -780,6 +778,61 @@ window.utils = {
         {val:'mayores',      label:'Tercera edad'},
         {val:'general',      label:'Público en general'},
         {val:'soloadultos',  label:'Sólo adultos'},
+    ],
+
+    dayweek:[ 'Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'],
+
+    hourOptionList:[
+        {val:'horario', label:'Horario emisión'},
+        {val:'noem', label:'No se emite'},
+        {val:'04:00', label:'04:00'},
+        {val:'04:30', label:'04:30'},
+        {val:'05:00', label:'05:00'},
+        {val:'05:30', label:'05:30'},
+        {val:'06:00', label:'06:00'},
+        {val:'06:30', label:'06:30'},
+        {val:'07:00', label:'07:00'},
+        {val:'07:30', label:'07:30'},
+        {val:'08:00', label:'08:00'},
+        {val:'08:30', label:'08:30'},
+        {val:'09:00', label:'09:00'},
+        {val:'09:30', label:'09:30'},
+        {val:'10:00', label:'10:00'},
+        {val:'10:30', label:'10:30'},
+        {val:'11:00', label:'11:00'},
+        {val:'11:30', label:'11:30'},
+        {val:'12:00', label:'12:00'},
+        {val:'12:30', label:'12:30'},
+        {val:'13:00', label:'13:00'},
+        {val:'13:30', label:'13:30'},
+        {val:'14:00', label:'14:00'},
+        {val:'14:30', label:'14:30'},
+        {val:'15:00', label:'15:00'},
+        {val:'15:30', label:'15:30'},
+        {val:'16:00', label:'16:00'},
+        {val:'16:30', label:'16:30'},
+        {val:'17:00', label:'17:00'},
+        {val:'17:30', label:'17:30'},
+        {val:'18:00', label:'18:00'},
+        {val:'18:30', label:'18:30'},
+        {val:'19:00', label:'19:00'},
+        {val:'19:30', label:'19:30'},
+        {val:'20:00', label:'20:00'},
+        {val:'20:30', label:'20:30'},
+        {val:'21:00', label:'21:00'},
+        {val:'21:30', label:'21:30'},
+        {val:'22:00', label:'22:00'},
+        {val:'22:30', label:'22:30'},
+        {val:'23:00', label:'23:00'},
+        {val:'23:30', label:'23:30'},
+        {val:'00:00', label:'00:00'},
+        {val:'00:30', label:'00:30'},
+        {val:'01:00', label:'01:00'},
+        {val:'01:30', label:'01:30'},
+        {val:'02:00', label:'02:00'},
+        {val:'02:30', label:'02:30'},
+        {val:'03:00', label:'03:00'},
+        {val:'03:30', label:'03:30'},
     ],
 
     buildSelectOptions: function(varname, data, actualvalue){
@@ -1198,6 +1251,14 @@ window.utils = {
     },
 
 */
+
+    buildDateNum: function(str){
+        return this.parseDateStr(str).getTime();
+    },
+
+    buildDate: function(str){
+        return this.parseDateStr(str);
+    },
 
     dateToStr: function(date) {
         var da = date.getDate();

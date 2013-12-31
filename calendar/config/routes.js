@@ -208,9 +208,9 @@ module.exports = function (config, app) {
     // products routes
     var product = require(rootPath + '/calendar/controllers/products');
     app.get('/productos', product.findAll);
+    app.get('/productos/:id',ensureAuthenticated, product.findById);
     app.post('/navegar/productos', product.find);
     app.get('/refine/productos', product.findAll);
-    app.get('/productos/:id',ensureAuthenticated, product.findById);
     app.post('/productos', product.add);
     app.put('/productos/:id', product.update);
     app.delete('/productos/:id', product.delete);

@@ -228,7 +228,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
     },
 
     navigate: function(e){
-      console.log('navigate event');
+      //console.log('navigate event');
       e.preventDefault();
       this.trigger('item:edit', this.model);
       return false;
