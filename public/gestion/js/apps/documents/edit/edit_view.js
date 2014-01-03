@@ -406,7 +406,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
  
     getTemplate: function(){
       if(this.model.get('isActive')){
-        return _.template('<button class="btn btn-info js-date" title="<%= repite %>  <%= comentario %> "><%= hourmain %></button>');
+        return _.template('<button class="btn btn-info js-date" title="Repite: <%= repite %>  <%= comentario %> "><%= hourmain %></button>');
       }else{
         return _.template('<button class="btn btn-link js-date" title="ingrese horario <%= utils.dayweek[dayweek ]%>"><%= hourmain %></button>');
       }

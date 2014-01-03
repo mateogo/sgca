@@ -14,7 +14,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
     }
   });
 
- List.Document = Marionette.ItemView.extend({
+  List.Document = Marionette.ItemView.extend({
     tagName: "tr",
 
     getTemplate: function(){
@@ -87,18 +87,24 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
     }
   });
 
+
+
+
   var NoDocumentsView = Marionette.ItemView.extend({
     template: _.template('<td colspan="3">No hay comprobantes para mostrar</td>'),
     tagName: "tr",
     className: "alert"
   });
 
+
+
+
   List.Documents = Marionette.CompositeView.extend({
     tagName: "table",
     className: "table table-bordered table-hover",
 
     getTemplate: function(){
-      console.log(utils.buildTableHeader(utils.documListTableHeader));
+      //console.log(utils.buildTableHeader(utils.documListTableHeader));
       return _.template(utils.buildTableHeader(utils.documListTableHeader)+'<tbody></tbody>');
     },
 
@@ -126,6 +132,50 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
     }
   });
 
+
+
+  // ventana modal
+  List.queryForm = function(view, cb){
+        var self = view,
+            facet = new DocManager.Entities.DocumQueryFacet(),
+            form = new Backbone.Form({
+                model: facet
+            });
+
+
+        form.on('change', function(form, editorContent) {
+            //console.log('change');
+            var errors = form.commit();
+            return false;
+        });
+
+        form.on('blur', function(form, editorContent) {
+            //console.log('blur');
+            //var errors = form.commit();
+            return false;
+        });
+
+        var modal = new Backbone.BootstrapModal({
+            content: form,
+            title: 'Consulta comprobantes',
+            okText: 'aceptar',
+            cancelText: 'cancelar',
+            enterTriggersOk: false,
+            animate: false
+        });
+
+        modal.on('ok',function(){
+          //console.log('MODAL ok FIRED');
+          //modal.preventClose();
+
+        });
+
+        modal.open(function(){
+            //console.log('modal CLOSE');
+            var errors = form.commit();
+            if(cb) cb(facet);
+        });
+  };
 
 
 });

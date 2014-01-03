@@ -470,7 +470,7 @@ window.utils = {
         {val:'no_definido',  label:'tipo de producto'},
         {val:'paudiovisual', label:'producto audiovisual'},
         {val:'micro',        label:'micro'},
-        {val:'curaduria',    label:'curaduria'},
+        {val:'catalogo',     label:'catálogo'},
     ],
 
     rolinstanciasOptionList: [
@@ -835,6 +835,15 @@ window.utils = {
         {val:'03:30', label:'03:30'},
     ],
 
+    validateInstance: function(pr){
+        // true if tipoproducto es una INSTANCIA 
+        var isInstance = false;
+        isInstance = _.find(this.tipoinstanciaOptionList, function(data){
+            return data.val === pr.get('tipoproducto');
+        })
+        return isInstance;
+    },
+
     buildSelectOptions: function(varname, data, actualvalue){
         var template = _.template("<option value='<%= val %>' <%= selected %> ><%= label %></option>");
         var optionStr = '';
@@ -889,9 +898,14 @@ window.utils = {
     documListTableHeader:[
         {id:0, tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',        label:'#'},
         {id:1, tt:'th', flag:1, tclass:'col1', tmpl: 'template6', val:'cnumber',       label:'comprob'},
-        {id:2, tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'tipocomp',      label:'tipo'},
-        {id:3, tt:'th', flag:1, tclass:'col3', tmpl: 'template1', val:'slug',          label:'asunto'},
-        {id:4, tt:'th', flag:1, tclass:'col4', tmpl: 'template5', val:'acciones',      label:'acciones'}
+        {id:2, tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'fecomp',        label:'fecha'},
+        {id:3, tt:'th', flag:0, tclass:'col2', tmpl: 'template1', val:'fechagestion',  label:'fecha'},
+        {id:4, tt:'th', flag:1, tclass:'col3', tmpl: 'template1', val:'tipocomp',      label:'tipo'},
+        {id:5, tt:'th', flag:1, tclass:'col4', tmpl: 'template1', val:'persona',       label:'persona'},
+        {id:6, tt:'th', flag:0, tclass:'col5', tmpl: 'template1', val:'product',       label:'producto'},
+        {id:7, tt:'th', flag:0, tclass:'col6', tmpl: 'template1', val:'tcomputo',      label:'tiempo'},
+        {id:8, tt:'th', flag:1, tclass:'col7', tmpl: 'template1', val:'slug',          label:'asunto'},
+        {id:9, tt:'th', flag:1, tclass:'col8', tmpl: 'template5', val:'acciones',      label:'acciones'}
     ],
 
     buildTableHeader: function(data){
@@ -1091,7 +1105,7 @@ window.utils = {
             fillOpacity:{no_definido:.1,planificado:.4,rfi:.6,tdr:.8,compras:.9,adjudicado:.9,a_entregar:1,entregado:1,cumplido:1}
         },
         product: {
-            tprText: {no_definido:' ', paudiovisual:'PA', micro:'Micro', promo:'Promo', imagen:'Img', curaduria:'Cur'},
+            tprText: {no_definido:' ', paudiovisual:'PA', micro:'Micro', promo:'Promo', imagen:'Img', curaduria:'Cur', catalogo: 'Cat'},
             eventFillColor: {no_definido:'lime',bajo:'green',medio:'blue',alto:'magenta',critico:'red'},
             fillOpacity:{no_definido:.1,planificado:.3,gestion:.6,recibido:.8,ingestado:.9,controlado:.9,aprobado:1,observado:1,archivado:1}
         },

@@ -10,7 +10,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var collection = collection || original;
       var criterion;
       if(filterStrategy == "filter"){
-        criterion = filterCriterion.trim();
+        //criterion = filterCriterion.trim();
+        criterion = filterCriterion;
       }
       else{
         criterion = filterCriterion;

@@ -21,12 +21,23 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
           registerDocumListEvents(documentsListView);
             layout.mainRegion.show(documentsListView);
           });
-      });  
+      });
+
+      hview.on('document:search',function(query, cb){
+        DocManager.request("document:query:search",query, function(model){
+          if(model){
+            Edit.Session.layout.close();
+            DocManager.trigger("document:edit", model);
+          }
+        });      
+
+      });
+
   };
 
   var initNavPanel = function(layout){
       var links = DocManager.request("docum:nav:entities");
-      console.log('initNavPanel BEGINS  [%s]', links.length);
+      //console.log('initNavPanel BEGINS  [%s]', links.length);
 
       var headers = new DocManager.DocsApp.Common.Views.NavPanel({collection: links});
       registerHeadersEvents(headers, layout);
@@ -43,9 +54,15 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
       var documLayout = new List.Layout();
       var documNavBar = initNavPanel(documLayout);
+      List.Session = {};
 
       DocManager.request("document:filtered:entities", criterion, function(documents){
-        console.log('callback from REQUEST: [%s]',documents.length);
+        console.log('ListDocuments BEGINS: [%s]',documents.length);
+        utils.documListTableHeader[6].flag=0;
+        utils.documListTableHeader[7].flag=0;
+        utils.documListTableHeader[3].flag=0;
+        utils.documListTableHeader[2].flag=1;
+
 
 /*        documNavBar.once("show", function(){
           documNavBar.triggerMethod("set:filter:criterion", criterion);
@@ -65,8 +82,8 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
         });
 */
 
+        List.Session.layout = documLayout;
         documLayout.on("show", function(){
-          console.log('on show');
           documLayout.navbarRegion.show(documNavBar);
           documLayout.mainRegion.show(documentsListView);
         });
@@ -94,6 +111,63 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
 
   };
+
+
+  var API = {
+    searchDocuments: function(query, cb){
+      console.log('LIST CONTROLLER searchDocuments API called: query:[%s]', query)
+      List.queryForm(query, function(qmodel){
+        console.log('callback: [%s] [%s] [%s]',qmodel.get('fedesde'),qmodel.get('resumen'),qmodel.get('tipocomp'));
+  
+        DocManager.request("document:query:entities", qmodel.attributes, function(documents){
+          utils.documListTableHeader[6].flag=1;
+          utils.documListTableHeader[7].flag=1;
+          utils.documListTableHeader[3].flag=1;
+          utils.documListTableHeader[2].flag=0;
+
+          var documentsListView = new List.Documents({
+            collection: documents
+          });
+          console.log('mainRegion SHOW')
+          registerDocumListEvents(documentsListView);
+          List.Session.layout.mainRegion.show(documentsListView);
+        });
+
+
+      });
+      //Edit.modalSearchEntities('documents', query, function(model){
+      //  cb(model);
+      //});
+    },
+    searchPersons: function(query, cb){
+      Edit.modalSearchEntities('persons', query, function(model){
+        cb(model);
+      });
+    },
+    searchProducts: function(query, cb){
+      Edit.modalSearchEntities('products', query, function(model){
+        cb(model);
+      });
+    },
+  };
+
+  DocManager.reqres.setHandler("document:query:search", function(query, cb){
+    API.searchDocuments(query, cb);
+  });
+
+  DocManager.reqres.setHandler("person:search", function(query, cb){
+    API.searchPersons(query, cb);
+  });
+
+  DocManager.reqres.setHandler("product:search", function(query, cb){
+    API.searchProducts(query, cb);
+  });
+
+
+
+
+
+
 
 });
 

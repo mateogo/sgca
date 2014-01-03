@@ -76,7 +76,7 @@ exports.validPassword = function(currentUser, password) {
  };
 
 exports.findOne = function(query, cb) {
-    console.log('findUser Retrieving user collection for passport');
+    //console.log('findUser Retrieving user collection for passport');
 
     dbi.collection(usersCol, function(err, collection) {
         collection.findOne(query, function(err, item) {
@@ -86,7 +86,7 @@ exports.findOne = function(query, cb) {
 };
 
 exports.fetchById = function(id, cb) {
-    console.log('findById: Retrieving %s id:[%s]', usersCol,id);
+    //console.log('findById: Retrieving %s id:[%s]', usersCol,id);
     dbi.collection(usersCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             cb(err, item);
@@ -96,7 +96,7 @@ exports.fetchById = function(id, cb) {
 
 exports.findById = function(req, res) {
     var id = req.params.id;
-    console.log('findById: Retrieving %s id:[%s]', usersCol,id);
+    //console.log('findById: Retrieving %s id:[%s]', usersCol,id);
     dbi.collection(usersCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             res.send(item);
@@ -107,7 +107,7 @@ exports.findById = function(req, res) {
 exports.find = function(req, res) {
     var query = req.body; //{};
 
-    console.log('find:user Retrieving user collection with query [%s]',query['es_usuario_de.id']);
+    //console.log('find:user Retrieving user collection with query [%s]',query['es_usuario_de.id']);
     for (var i in query){
         console.log(i,query[i]);
     }
@@ -121,7 +121,7 @@ exports.find = function(req, res) {
 };
 
 exports.findAll = function(req, res) {
-    console.log('findAll: Retrieving all instances of [%s] collection', usersCol);
+    //console.log('findAll: Retrieving all instances of [%s] collection', usersCol);
     dbi.collection(usersCol, function(err, collection) {
         collection.find().sort({username:1}).toArray(function(err, items) {
             res.send(items);
@@ -130,7 +130,7 @@ exports.findAll = function(req, res) {
 };
 
 exports.add = function(req, res) {
-    console.log('add:user.js: NEW PRODUCT BEGINS');
+    console.log('add:user.js: NEW USER BEGINS');
     var user = req.body;
     addNewUser(req, res, user);
 };

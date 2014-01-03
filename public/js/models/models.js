@@ -1057,8 +1057,15 @@ window.Product = Backbone.Model.extend({
 
     buildCapNumber: function(iter, prefix){
         var numcap = iter;
+        console.log('buildCAP NUMBER iter:[%s] prefix:[%s]',iter,prefix);
         if(prefix){
-            numcap += prefix;
+            if(parseInt(prefix,10)==0){
+                numcap = (prefix+iter).substr(-prefix.length);
+                console.log('prefix is O: [%s] numcap:[%s]',prefix, numcap);
+
+            }else{
+                numcap += prefix;
+            }
         }
         return numcap;
     },
@@ -1288,8 +1295,8 @@ window.Product = Backbone.Model.extend({
             var capitulo = new Product(builder);
             capitulo.buildTagList();
             capitulo = self.buildPredicateData(self, capitulo, icap,data.numcapprefix,predicate);
-            capitulo.set({slug:  name_template({numcap: self.buildCapNumber(icap,(data.numcapprefix||100)), name:self.get('slug') })});
-            capitulo.set({denom: name_template({numcap: self.buildCapNumber(icap,(data.numcapprefix||100)), name:self.get('denom')})});
+            capitulo.set({slug:  name_template({numcap: self.buildCapNumber(icap,(data.numcapprefix||"00")), name:self.get('slug') })});
+            capitulo.set({denom: name_template({numcap: self.buildCapNumber(icap,(data.numcapprefix||"00")), name:self.get('denom')})});
 
             //console.log('insertCapitulos:ready to insert: [%s] [%s]',icap,capitulo.get('slug'));
             defer = capitulo.save(null, {
@@ -1540,7 +1547,9 @@ window.BrowseProductsQuery = Backbone.Model.extend({
         tipoproducto: '',
         nivel_importancia: '',
         taglist: '',
- 
+        //'es_capitulo_de': {$exists: true},
+        es_capitulo_de:'false',
+
         prjdenom:'',
         rubro:'',
         responsable:'',
@@ -1618,7 +1627,7 @@ window.PaCapitulosFacet = Backbone.Model.extend({
     schema: {
         numcapdesde:  {type: 'Number', title: 'Capítulo desde'},
         numcaphasta:  {type: 'Number', title: 'Capítulo hasta'},
-        numcapprefix: {type: 'Number', title: 'Prefijo del código'},
+        numcapprefix: {type: 'Text', title: 'Prefijo del código'},
         tipoproducto:  {type: 'Select',options: utils.tipoproductoOptionList },
         durnominal:    {type: 'Text', title: 'Duración nominal', editorAttrs:{placeholder : 'duracion mm:ss'}},
         descriptores:  {type: 'Text', title: 'Descriptores', editorAttrs:{placeholder : 'descriptores separados por ;'}},
@@ -1627,7 +1636,7 @@ window.PaCapitulosFacet = Backbone.Model.extend({
     defaults: {
         numcapdesde:0,
         numcaphasta:0,
-        numcapprefix: 100,
+        numcapprefix: "00",
         tipoproducto:'paudiovisual',
         durnominal:'',
         descriptores:'',

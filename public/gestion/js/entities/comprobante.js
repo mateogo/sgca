@@ -98,7 +98,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
       if (_.has(attrs,'fecomp')){
         var fecomp_tc = utils.buildDateNum(attrs['fecomp']);
-        if(Math.abs(fecomp_tc-(new Date().getTime()))>(1000*60*60*24*30) ){
+        if(Math.abs(fecomp_tc-(new Date().getTime()))>(1000*60*60*24*30*6) ){
           errors.fecomp = 'fecha no valida';
         }
         this.set('fecomp_tc',fecomp_tc);
@@ -180,6 +180,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
       if (_.has(attrs,'slug') && ! attrs.slug) {
         errors.slug = "No puede ser nulo";
+      }
+
+      if (_.has(attrs,'fept')){
+        var fept_tc = utils.buildDateNum(attrs['fept']);
+        if(Math.abs(fept_tc-(new Date().getTime()))>(1000*60*60*24*30*6) ){
+          errors.fept = 'fecha no valida';
+        }
+        this.set('fept_tc',fept_tc);
       }
 
       if( ! _.isEmpty(errors)){
@@ -582,6 +590,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 // fin Parte de emisión
 
 
+  /*
+   * ******* ItemCoreFacet +**********
+   */
 
   Entities.DocumItemCoreFacet = Backbone.Model.extend({
  
@@ -610,6 +621,37 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
    });
+
+
+  // fin ItemCoreFacet
+
+  /*
+   * ******* QueryFacet +**********
+   */
+  Entities.DocumQueryFacet = Backbone.Model.extend({
+    //urlRoot: "/comprobantes",
+    whoami: 'DocumQueryFacet:comprobante.js ',
+
+    schema: {
+        fedesde:  {type: 'Date', title: 'Desde', placeholder:'dd/mm/aaaa'},
+        fehasta:  {type: 'Date', title: 'Hasta', placeholder:'dd/mm/aaaa'},
+        resumen: {type: 'Select', options:[
+            {val:'detallado', label:'Detallado'},
+            {val:'producto', label:'Resumen por producto'},
+            {val:'entidad', label:'Resumen por entidad / adherente'},
+          ], title: 'Resumen'},
+        tipocomp:  {type: 'Text', title: 'Tipocomp'},
+        estado:   {type: 'Text', title: 'Estado'},
+    },
+
+    defaults: {
+      tipocomp: '',
+      fedesde:'',
+      fehasta:'',
+      resumen:'detallado',
+      estado:''
+    }
+  });
 
   Entities.DocumCoreFacet = Backbone.Model.extend({
     //urlRoot: "/comprobantes",
@@ -671,7 +713,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         filterFunction: function(filterCriterion){
           var criteria = filterCriterion.toLowerCase();
           return function(document){
-            console.log('filterfunction:[%s]vs [%s]/[%s]/[%s]',criteria,document.get("tipocomp"),document.get("cnumber"),document.get("slug"));
+            //console.log('filterfunction:[%s]vs [%s]/[%s]/[%s]',criteria,document.get("tipocomp"),document.get("cnumber"),document.get("slug"));
             if(document.get("tipocomp").toLowerCase().indexOf(criteria) !== -1
               || document.get("slug").toLowerCase().indexOf(criteria) !== -1
               || document.get("cnumber").toLowerCase().indexOf(criteria) !== -1){
@@ -684,6 +726,197 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     return fd;
   };
 
+  var queryFactory = function (documents){
+    var fd = DocManager.Entities.FilteredCollection({
+        collection: documents,
+
+        filterFunction: function(query){
+          return function(document){
+            var test = true;
+            //console.log('filterfunction:[%s] vs [%s]/[%s]/[%s]',query.tipocomp,document.get("tipocomp"),document.get("cnumber"),(query.tipocomp.indexOf(document.get('tipocomp'))));
+            if(query.tipocomp) {
+              //if((query.tipocomp.trim().indexOf(document.get('tipocomp'))) === -1 ) test = false;
+              if(query.tipocomp.trim() !== document.get('tipocomp')) test = false;
+            }
+            if(query.fedesde.getTime()>document.get('fechagestion_tc')) test = false;
+            if(query.fehasta.getTime()<document.get('fechagestion_tc')) test = false;
+            if(test) return document;
+          }
+        }
+    });
+    return fd;
+  };
+
+  var queryCollection = function(query){
+      var comprobantes = new Entities.ComprobanteCollection();
+      var defer = $.Deferred();
+      comprobantes.fetch({
+        success: function(data){
+          defer.resolve(data);
+        }
+      });
+      var promise = defer.promise();
+      return promise;
+  };
+
+  var fetchDocumentItemlist = function(documents){
+    var itemCol = new Entities.ComprobanteCollection();
+    documents.each(function(model){
+      var items = model.get('items');
+      //console.log('Iterando doc:[%s] itmes[%s]',model.get('cnumber'),model.get('tipocomp'),items.length);
+      _.each(items, function(item){
+        if(item.tipoitem==='nentrega'||item.tipoitem==='nrecepcion'){
+          var sitems = item.items;
+          _.each(sitems, function(sitem){
+
+            var smodel = new Entities.Comprobante(model.attributes);
+            smodel.id = null;
+            smodel.set({
+              fechagestion: model.get('fecomp'),
+              fechagestion_tc: model.get('fecomp_tc'),
+              tipoitem: item.tipoitem,
+              tipomov: item.tipomov||item.tipoitem,
+              product: sitem.product,
+              productid: sitem.productid,
+              pslug: sitem.pslug,
+              tcomputo: sitem.durnominal
+            })
+            itemCol.add(smodel);
+
+          });
+
+        }else if (item.tipoitem==='pemision'){
+          var sitems = item.items;
+          _.each(sitems, function(sitem){
+            var emisiones = sitem.emisiones;
+            _.each(emisiones, function(emision){
+
+              var smodel = new Entities.Comprobante(model.attributes);
+              smodel.id = null;
+              smodel.set({
+                fechagestion: item.fedesde,
+                fechagestion_tc: item.fedesde_tc,
+                tipoitem: item.tipoitem,
+                tipomov: item.tipoitem,
+                product: sitem.product,
+                productid: sitem.productid,
+                pslug: sitem.pslug,
+                tcomputo: sitem.durnominal
+              })
+              itemCol.add(smodel);
+
+            });
+          });
+        }else if (item.tipoitem==='ptecnico'){
+
+          var smodel = new Entities.Comprobante(model.attributes);
+          smodel.id = null;
+          smodel.set({
+            fechagestion: item.fept,
+            fechagestion_tc: item.fept_tc,
+            tipoitem: item.tipoitem,
+            tipomov: item.estado_qc,
+            product: item.product,
+            productid: item.productid,
+            pslug: item.pslug,
+            tcomputo: item.durnominal
+          })
+          itemCol.add(smodel);
+
+        }
+      })
+
+    });
+    console.log('returning ItemCol [%s]',itemCol.length)
+    return itemCol;
+
+  };
+  var fetchProductDuration = function(col, cb){
+    var products = new DocManager.Entities.ProductCollection();
+    products.fetch({success: function() {
+      col.each(function(model){
+        var pr = products.find(function(produ){
+          //console.log('testing: [%s] vs [%s] / [%s] [%s]',produ.id, model.get('productid'), produ.get('productcode'),model.get('product'))
+          return produ.id===model.get('productid');
+        });
+        if(pr){
+          //console.log('pr:[%s] model:[%s]',pr.get('productcode'),model.get('product'));
+          var dur = pr.get('patechfacet').durnominal;
+          if(!dur ) dur = "0";
+          if(parseInt(dur,10)===NaN) dur="0";
+          model.set({tcomputo: dur});
+        }else{
+          model.set({tcomputo: '0'});
+        }
+      });
+      if(cb) cb();
+    }});
+  };
+  var groupByResults = function(query,col){
+    //console.log('groupByResults [%s] fecha:[%s]/[%s]',query.resumen,query.fedesde,query.fehasta);
+    var grupos = [];
+    if(query.resumen){
+      if(query.resumen==='producto'){
+        //console.log('groupByResults: PRODUCTO');
+        col.each(function(item){
+          var gr = _.find(grupos,function(elem){
+            //return (elem.productid == item.get('productid')&& elem.persona=== item.get('persona')&& elem.tipomov ===item.get('tipomov'));
+            return (elem.productid == item.get('productid') && elem.tipomov ===item.get('tipomov'));
+          })
+          if(gr){
+            gr.tcomputo += (parseInt(item.get('tcomputo'),10)==NaN) ? 0 : parseInt(item.get('tcomputo'),10) ;
+          }else{
+            var res = {
+              cnumber: 'resumen',
+              productid: item.get('productid'),
+              product: item.get('product'),
+              persona: '',
+              //persona: item.get('persona'),
+              tipomov: item.get('tipomov'),
+              tipocomp:item.get('tipomov'),
+              tcomputo: (parseInt(item.get('tcomputo'),10)==NaN) ? 0 : parseInt(item.get('tcomputo'),10)
+            }
+            grupos.push(res);
+          }
+        });
+        //console.log('GROUBY TERMINADO: [%s]',grupos.length)
+
+      } else if(query.resumen==='entidad'){
+        //console.log('groupByResults: ENTIDAD');
+        var grupos = [];
+        col.each(function(item){
+          var gr = _.find(grupos,function(elem){
+            return (elem.persona == item.get('persona') && elem.tipomov ===item.get('tipomov'));
+          })
+          if(gr){
+            gr.tcomputo += (parseInt(item.get('tcomputo'),10)===NaN) ? 0 : parseInt(item.get('tcomputo'),10) ;
+          }else{
+            var res = {
+              cnumber: 'resumen',
+              persona: item.get('persona'),
+              product:'',
+              productid:'',
+              tipocomp:item.get('tipomov'),
+              tipomov: item.get('tipomov'),
+              tcomputo: (parseInt(item.get('tcomputo'),10)===NaN) ? 0 : parseInt(item.get('tcomputo'),10)
+            }
+            grupos.push(res);
+          }
+        });
+        //console.log('GROUBY TERMINADO: [%s]',grupos.length)
+        //for (i in grupos){
+          //console.log('grupos:[%s] [%s] [%s] [%s] ',i,grupos[i].persona,grupos[i].tipomov,grupos[i].tcomputo);
+        //}
+      }
+    }
+    if(grupos.length){
+      _.each(grupos, function(item){
+        var docResumen = new Entities.Comprobante(item);
+        docResumen.set({fechagestion:'',});
+        col.add(docResumen);
+      })
+    }
+  };
 
   var API = {
     getEntities: function(){
@@ -707,6 +940,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           filteredDocuments.filter(criteria);
         }
         if(cb) cb(filteredDocuments);
+      });
+    },
+
+    getFilteredByQueryCol: function(query, cb){
+      var fetchingDocuments = queryCollection(query);
+
+      $.when(fetchingDocuments).done(function(documents){
+        var docitems = fetchDocumentItemlist(documents);
+
+        var filteredDocuments = queryFactory(docitems);
+        if(query){
+          filteredDocuments.filter(query);
+        }
+        fetchProductDuration(filteredDocuments,function(){
+          groupByResults(query,filteredDocuments);
+          if(cb) cb(filteredDocuments);
+        })
       });
     },
 
@@ -747,6 +997,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   DocManager.reqres.setHandler("document:filtered:entities", function(criteria, cb){
     return API.getFilteredCol(criteria,cb);
+  });
+
+  DocManager.reqres.setHandler("document:query:entities", function(query, cb){
+    return API.getFilteredByQueryCol(query,cb);
   });
 
   DocManager.reqres.setHandler("document:entity", function(id){

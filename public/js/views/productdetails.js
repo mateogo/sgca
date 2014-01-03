@@ -570,6 +570,10 @@ window.ProductView = Backbone.View.extend({
 
     formintechfacet: function () {
         var self = this;
+        if(!utils.validateInstance(this.model)){
+            utils.showAlert('Atención', 'El nodo no es una instancia', 'alert-warning');
+            return false;
+        }
         var facet = dao.intechfacet.init(this.model);
 
         var schema = facet.schema;

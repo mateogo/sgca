@@ -200,23 +200,30 @@ exports.findById = function(req, res) {
 
 exports.find = function(req, res) {
     var query = req.body; //{};
+    //OjO con esto MGO
+    if(query.es_capitulo_de){
+        if(query.es_capitulo_de==='false') query.es_capitulo_de={$exists:false};
+    }
+    
     /*
+    console.log('**********find:product Retrieving product collection with query');
     for(var key in query){
-        console.log('loop: [%s][%s]',key,query[key]['product']);
+        console.log('loop: [%s][%s]',key,query[key]['$exists']);
         var ob = query[key];
         for (var k2 in ob){
             console.log('s-loop: [%s] [%s]',k2,ob[k2]);
         }
     }
     */
+    
     //console.log('find: Retrieving query1:[%s]',((query.project)?query.project._id:'null'));
     //console.log('find:product Retrieving query:',((query.es_capitulo_de) ? query['es_capitulo_de.product']:'nada'));
-    console.log('find:product Retrieving product collection with query');
+    //console.log('**********find:product Retrieving product collection with query');
     //var qu = {};
     //var pr = {product:'522f7581992f753b09000001',capnum:{$gt:0}} ;
     //var pr = {product:'522f7581992f753b09000001',capnum:2} ;
     //var elmatch = {'$elemMatch': {'product': '522f7581992f753b09000001'}};
-    //var qu= {'es_capitulo_de.product':'522f7581992f753b09000001'};
+    //var qu= {'es_capitulo_de':{$exists:false}};
 
     //console.log('qu: [%s]',qu.es_capitulo_de.product);
 

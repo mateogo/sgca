@@ -360,6 +360,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   };
 
   DocManager.reqres.setHandler("document:search", function(query, cb){
+    console.log('editController: document search')
     API.searchDocuments(query, cb);
   });
 

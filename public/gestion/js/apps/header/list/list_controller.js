@@ -19,7 +19,7 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
     },
 
     setActiveHeader: function(headerUrl){
-      console.log('Set Active Header headerUrl [%s]',headerUrl);
+      //console.log('Set Active Header headerUrl [%s]',headerUrl);
       var links = DocManager.request("header:entities");
       var headerToSelect = links.find(function(header){ return header.get("url") === headerUrl; });
       headerToSelect.select();
