@@ -1,7 +1,9 @@
 window.ProductView = Backbone.View.extend({
     whoami:'ProductBrowseView:productlayout.js',
 
-    initialize:function () {
+    initialize:function (options) {
+        console.log('initialize [%s]',options)
+        this.options = options;
         this.loadSettings();
         this.loadProduct();
     },
@@ -226,7 +228,8 @@ window.ProductView = Backbone.View.extend({
 window.ProductViewJumboLayout = Backbone.View.extend({
     whoami:'bacua/productviewlayout:productview.js',
 
-    initialize:function () {
+    initialize:function (options) {
+        this.options = options;
         this.render();
     },
 
@@ -240,7 +243,8 @@ window.ProductViewJumboLayout = Backbone.View.extend({
 });
 
 window.ProductViewJumboHeader1 = Backbone.View.extend({
-    initialize: function () {
+    initialize: function (options) {
+        this.options = options;
         this.model.bind("change", this.render, this);
         this.model.bind("destroy", this.close, this);
         this.render();
@@ -255,7 +259,8 @@ window.ProductViewJumboHeader1 = Backbone.View.extend({
 
 
 window.ProductViewClasificationData = Backbone.View.extend({
-    initialize: function () {
+    initialize: function (options) {
+        this.options = options;
         console.log('initialize [%s]', this.options.acref)
         this.buildTemplate();
     },
@@ -287,7 +292,8 @@ window.ProductViewClasificationData = Backbone.View.extend({
 });
 
 window.ProductViewCoreData = Backbone.View.extend({
-    initialize: function () {
+    initialize: function (options) {
+        this.options = options;
         console.log('initialize [%s]', this.options.data.length)
         this.buildTemplate();
     },
@@ -378,7 +384,9 @@ window.ProductViewFeaturette1 = Backbone.View.extend({
 window.ProductViewLayout = Backbone.View.extend({
     whoami:'bacua/productviewlayout:productview.js',
 
-    initialize:function () {
+    initialize:function (options) {
+        this.options = options;
+
         this.render();
     },
 

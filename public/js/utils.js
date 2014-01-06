@@ -604,6 +604,7 @@ window.utils = {
 
     //patematicas: ['artecultura','cienciaTecnologia','cienciasSociales','deporte','educacionTrabajo','historia','infancia','juventud','sociedad','ficcion'],
     tematicasOptionList:[
+        {val:'nodefinido',   label:'Temáticas'},
         {val:'artecultura',  label:'Arte y cultura'},
         {val:'gastronomia',  label:'Gastronomía'},
         {val:'ecologia',     label:'Ecología'},
@@ -633,6 +634,7 @@ window.utils = {
 */
     subtematicasOptionList:{        
         artecultura:[
+            {val:'nodefinido',     label:'No definido'},
             {val:'literatura',     label:'Literatura'},
             {val:'musica',         label:'Música'},
             {val:'plastica',       label:'Plástica'},
@@ -653,23 +655,26 @@ window.utils = {
             {val:'artesescenicas', label:'Artes escénicas'},
         ],
         gastronomia:[
+            {val:'nodefinido',     label:'No definido'},
             {val:'cocina',  label:'Cocina'},
             {val:'recetas', label:'Recetas'},
         ],
         ecologia:[
+            {val:'nodefinido',     label:'No definido'},
             {val:'medioambiente',        label:'Medio ambiente'},
             {val:'polucion',             label:'Polución'},
             {val:'recursosnaturales',    label:'Recursos naturales'},
             {val:'energiasalternativas', label:'Energías alternativas'},
         ],
         educacion:[
+            {val:'nodefinido',     label:'No definido'},
             {val:'edudistancia',   label:'Educ a distancia'},
             {val:'edurural',       label:'Educ rural'},
             {val:'edusexual',      label:'Educ sexual'},
             {val:'edutecnica',     label:'Educ técnica'},
             {val:'eduvial',        label:'Educ vial'},
             {val:'seguridadsalud', label:'Seguridad y salud'},
-            {val:'primaruxilios',  label:'Primeros auxilios'},
+            {val:'primauxilios',   label:'Primeros auxilios'},
             {val:'aprendizaje',    label:'Aprendizaje'},
             {val:'oficios',        label:'Oficios'},
             {val:'escuelas',       label:'Escuelas'},
@@ -679,12 +684,14 @@ window.utils = {
             {val:'idiomas',        label:'Idiomas'},
         ],
         deporte:[
+            {val:'nodefinido',     label:'No definido'},
             {val:'historiadep',    label:'Historia del deporte'},
             {val:'actualdep',      label:'Actualidad deportiva'},
             {val:'depamateur',     label:'Deporte amateur'},
             {val:'depprofesional', label:'Deporte profesional'},
         ],
         historia:[
+            {val:'nodefinido',     label:'No definido'},
             {val:'biografias', label:'Biografías'},
             {val:'huniversal', label:'Historia universal'},
             {val:'hlatinoamericana', label:'Historia latinoamericana'},
@@ -693,17 +700,21 @@ window.utils = {
             {val:'heconomica', label:'Historia económica'},
         ],
         humor:[
+            {val:'nodefinido',     label:'No definido'},
             {val:'humoristico', label:'Humorístico'},
         ],
         viajes:[
+            {val:'nodefinido',     label:'No definido'},
             {val:'turismo', label:'Turismo'},
         ],
         infancia:[
+            {val:'nodefinido',     label:'No definido'},
             {val:'pedagogia',  label:'Pedagogía'},
             {val:'recreacion', label:'Recreación'},
             {val:'curricula',  label:'Currícula'},
         ],
         sociedad:[
+            {val:'nodefinido',     label:'No definido'},
             {val:'derhumanos', label:'Derechos humanos'},
             {val:'familia',    label:'Familia'},
             {val:'respsocial', label:'Responsabilidad Social'},
@@ -717,6 +728,7 @@ window.utils = {
             {val:'vcotidiana', label:'Vida Cotidiana'},
         ],
         cienciaTecnologia:[
+            {val:'nodefinido',     label:'No definido'},
             {val:'astronomia',    label:'Astronomía'},
             {val:'fisica',        label:'Física'},
             {val:'matematicas',   label:'Matemática'},
@@ -740,6 +752,7 @@ window.utils = {
             {val:'agricultura',   label:'Agricultura'},
         ],
         cienciasSociales:[
+            {val:'nodefinido',     label:'No definido'},
             {val:'derecho',      label:'Derecho'},
             {val:'antropologia', label:'Antropología'},
             {val:'cieninformacion', label:'Cs de la Información'},
@@ -1121,14 +1134,21 @@ window.utils = {
         resourcelist:[]
     },
 
-    inspect: function  (target, deep, whoami) {
+    inspect: function  (target, deep, whoami,maxdeep) {
+        //console.log('inspect usage: inspect(target, initial_deep, whoami, maxdeep');
+        //console.log('    suggested: inspect(oo, 0, myname,3');
         var deep = deep+=1 || 1;
+        var stop = maxdeep|| 3;
         var self = this;
-        console.log('[%s]:inspect CALLED: [%s]: [%s]',deep, whoami, target);
+        console.log('[%s]:inspect CALLED: key to inspect:[%s]: object:[%s]',deep, whoami, target);
         _.each(target, function(value, key){
-            console.log('[%s]:inspect: [%s] [%s]: [%s]',deep, whoami, key,value);
-            if( (_.isObject(value) && !_.isFunction(value)) && deep<4 ){
-                self.inspect(value, deep);
+            console.log('[%s]:inspecting each: [%s]: [%s] ',deep, key,value);
+            if( (_.isObject(value) && !_.isFunction(value)) && deep<stop ){
+                //if(key==='fields'||key==='contenido'||key==='subtematica'||key==='editor'||key==='nestedForm'||key==='rolinstancia'||key==='tipoproducto'){
+                //if(key==='fields'||key==='contenido'||key==='subtematica'||key==='editor'||key==='nestedForm'||key==='rolinstancia'||key==='tipoproducto'||key==='tematica'){
+                if(true){
+                    self.inspect(value, deep,key, maxdeep);
+                }
             }
         });
     },

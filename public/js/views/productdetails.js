@@ -349,7 +349,11 @@ window.ProductView = Backbone.View.extend({
         var change = {};
         change[target.name] = target.value;
         this.model.set(change);
-        //utils.showAlert('Success!', 'name:['+target.name+'] value:['+target.value+'] key:['+target.id+']', 'alert-success');
+        if(target.name==='slug' && !this.model.get('denom')){
+            this.model.set('denom',target.value);
+            this.$('#denom').val(target.value);
+        }
+        utils.showAlert('Success!', 'name:['+target.name+'] value:['+target.value+'] key:['+target.id+']', 'alert-success');
 
         // Run validation rule (if any) on changed item
         var check = this.model.validateItem(target.id);
@@ -380,7 +384,7 @@ window.ProductView = Backbone.View.extend({
         console.log('saveNode:productdetails begins');
         var self = this;
         // builds taglist array
-        self.model.buildTagList();
+        //self.model.buildTagList();
         //
         this.model.save(null, {
             success: function (model) {
@@ -511,25 +515,66 @@ window.ProductView = Backbone.View.extend({
                 model: facet,
             }).render();
 
-        form.on('tematica:change', function(form, editorContent) {
-            console.log('onchange:key');
-            var tematica = editorContent.getValue(),
-                newOptions = utils.subtematicasOptionList[tematica];
-            form.fields.subtematica.editor.setOptions(newOptions);
+        facet.on('change:cetiquetas', function(facet, cetiquetas) {
+            //console.log('change etiquetas [%s][%s]',cetiquetas, facet.get('cetiquetas'));
+            form.setValue({cetiquetas:cetiquetas});
         });
 
-        form.on('subtematica:change', function(form, editorContent) {
-            var stematica = editorContent.getValue();
-            console.log('onchange:SUB CONTENIDO key [%s]',stematica);
+        form.$('.js-addcontenido').click(function(e){
+            //var e = event.originalEvent;
+            e.stopPropagation();
+            e.preventDefault();
+
+            //console.log('grande JQUERY!!!![%s] [%s]',facet.get('contenido').tematica, facet.get('contenido').subtematica);
+            dao.paclasificationfacet.addEtiquetas();
+            return false;
+        });
+
+        form.on('contenido:focus', function(form, editorContent) {
+            console.log('contenido focus:key');
+        });
+        form.on('contenido:focus', function(form, editorContent) {
+            console.log('contenido focus:key');
+        });
+        form.on('contenido:change', function(form, editorContent) {
+            console.log('contenido change:key');
+        });
+        form.on('contenido:blur', function(form, editorContent) {
+            console.log('contenido blur:key');
+        });
+
+        form.on('contenido:tematica:change', function(form, editor, editorContent) {
+            var tematica = editor.nestedForm.fields.tematica.getValue(),
+              newOptions = utils.subtematicasOptionList[tematica];
+            //utils.inspect(editorContent,0,'editorContent',3);
+            form.fields.contenido.editor.nestedForm.fields.subtematica.editor.setOptions(newOptions);
+        });
+
+        form.on('contenido:subtematica:change', function(form, editor) {
+            var stematica = editor.nestedForm.fields.subtematica.getValue();
+            console.log('onchange:SUB TEMATICA key [%s]',stematica);
+        });
+
+        form.on('cetiquetas:change', function(form, editorContent) {
+            var cetiq = editorContent.getValue();
+            var errors = form.commit();
+            dao.paclasificationfacet.buildTagList();
+            console.log('cetiquetas:change');
         });
 
         form.on('change', function(form, editorContent) {
             var errors = form.commit();
-            console.log('onchange:key errors:[%s]',errors);
-            
-            self.model.set({'clasification':dao.paclasificationfacet.getContent()});
+            console.log('form onChange:key errors:[%s]',errors);
         });
+        form.on('blur', function(form, editorContent) {
+            var errors = form.commit();
+            console.log('form BLURR:key errors:[%s]',errors);
+            self.model.insertClasificationFacet();
+        });
+ 
         $('.paclasifhook').html(form.el);
+        $('input',form.el).addClass('input-block-level');
+        $('textarea',form.el).addClass('input-block-level').attr('rows',"4");
     }, 
 
     formaddinstance: function () {
@@ -558,6 +603,10 @@ window.ProductView = Backbone.View.extend({
 
         form.on('tipoproducto:change', function(form, editorContent) {
             form.fields.rolinstancia.editor.setOptions( utils.rolinstanciasGroup[editorContent.getValue()] );
+            //utils.inspect(form,0,'tipoproducto',8);
+
+            console.log('Tipoproducto [%s]',editorContent.getValue());
+
         });
 
         form.on('change', function(form, editor) {

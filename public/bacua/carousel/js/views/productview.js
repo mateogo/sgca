@@ -1,7 +1,9 @@
 window.ProductView = Backbone.View.extend({
     whoami:'ProductBrowseView:productlayout.js',
 
-    initialize:function () {
+    initialize:function (options) {
+        console.log('initialize [%s]',options)
+        this.options = options;
         this.loadSettings();
         this.loadProduct();
     },

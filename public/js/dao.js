@@ -312,11 +312,56 @@ window.dao = {
     paclasificationfacet: {
         init: function(product){
             this.data = new PaClasificationFacet(product.get('clasification'));
+            this.buildTagList();
             return this.data;
         },
         getContent: function(){
             return this.data.retrieveData();
+        },
+        getContentTags:function(){
+            return this.etqs;
+        },
+        getDescripTags:function(){
+            var tags = [],
+                separator = ';',
+                descr = this.data.get('descriptores');
+            if(descr.indexOf('|') !== -1) separator = '|';
+            tags = dao.buildTagList(descr, separator);
+            return tags;
+        },
+
+        buildTagList: function(){
+            this.etqs = dao.buildTagList(this.data.get('cetiquetas'), '|');
+            this.buildContentLabel()
+        },
+
+        buildContentLabel: function(){
+            var self = this;
+            var labels = self.etqs.join(' | ');
+            self.data.set({cetiquetas: labels});
+        },
+
+        addEtiquetas: function(){
+            var self = this;
+            var test=false;
+            if(self.data.get('contenido').tematica){
+                test=_.find(self.etqs,function(el) {return el===self.data.get('contenido').tematica;});
+                if(!test) self.etqs.push(self.data.get('contenido').tematica);
+            }
+            if(self.data.get('contenido').subtematica){
+                test=_.find(self.etqs,function(el) {return el===self.data.get('contenido').subtematica;});
+                if(!test) self.etqs.push(self.data.get('contenido').subtematica);
+            }
+            self.buildContentLabel();
+        },
+    },
+
+    buildTagList: function(stringData, separator){
+        var list = [];
+        if(stringData){
+            list = _.filter(_.map(stringData.split(separator),function(str){return $.trim(str)}),function(str){return str});
         }
+        return list;
     },
 
     productViewFactory: function(spec) {

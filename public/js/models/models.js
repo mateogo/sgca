@@ -1213,6 +1213,15 @@ window.Product = Backbone.Model.extend({
         });
     },
 
+    insertClasificationFacet: function(){
+        this.set({
+            clasification:  dao.paclasificationfacet.getContent(),
+            descripTagList: dao.paclasificationfacet.getDescripTags(),
+            contentTagList: dao.paclasificationfacet.getContentTags()
+        });
+
+    },
+
     insertBranding: function(data, asset){
         var self = this,
             entries = self.get('branding');
@@ -1322,17 +1331,6 @@ window.Product = Backbone.Model.extend({
         return this.get('taglist');
     },
 
-    buildTagList: function(){
-        var descriptores = this.get('descriptores');
-        if(descriptores){
-            var list = _.filter(_.map(descriptores.split(';'),function(str){return $.trim(str)}),function(str){return str});
-            //list = _.map(list,function(str){return {tag: str}; });
-            this.set({ taglist : list });
-        }else{
-            this.set({ taglist : [] });
-        }
-    },
-
     createNewPtecnico: function(cb){
         console.log('initNewPtecnico:Product:models.js');
         var self = this;
@@ -1341,8 +1339,8 @@ window.Product = Backbone.Model.extend({
         docum.initPtecnico(self,dt);
         docum.beforeSave();
         docum.update(cb);
-
     },
+
     getDatosTecnicos:function(){
         var dt = {};
         var patechfacet = this.get('patechfacet');
@@ -1546,7 +1544,9 @@ window.BrowseProductsQuery = Backbone.Model.extend({
         nivel_ejecucion:'',
         tipoproducto: '',
         nivel_importancia: '',
-        taglist: '',
+        descripTagList: '',
+        estado_alta: '',
+        contentTagList: '',
         //'es_capitulo_de': {$exists: true},
         es_capitulo_de:'false',
 
@@ -1677,34 +1677,62 @@ window.PaClasificationFacet = Backbone.Model.extend({
     whoami:'paclasificationfacet',
 
     retrieveData: function(){
-        return dao.extractData(this.attributes);
+        var data = {};
+        data.genero = this.get('genero');
+        data.cetiquetas = this.get('cetiquetas');
+        data.formato = this.get('formato');
+        data.videoteca = this.get('videoteca');
+        data.etario = this.get('etario');
+        data.descripcion = this.get('descripcion');
+        data.descriptores = this.get('descriptores');
+        return data;
     },
 
     initialize: function () {
         if(this.get('tematica')){
-            this.schema.subtematica.options = utils.subtematicasOptionList[this.get('tematica')];
+            this.schema.contenido.subSchema.subtematica.options = utils.subtematicasOptionList[this.get('tematica')];
         }
     },
 
     schema: {
-        tematica:    {type: 'Select',options: utils.tematicasOptionList , title:'Temática'},
-        subtematica: {type: 'Select',options: utils.subtematicasOptionList.artecultura, title:'SubTemática'},
         genero:       {type: 'Select',options: utils.generoOptionList, title: 'Género'},
+        contenido:{
+            type:'Object', title:'Selector',
+            template: _.template('\
+                <div class="control-group field-<%= key %>">\
+                  <label class="control-label" for="<%= editorId %>"><%= title %></label>\
+                  <div class="controls input-block-level">\
+                    <span  class="input-block-level" data-editor></span>\
+                    <div><button class="btn btn-link js-addcontenido">agregar</button></div>\
+                    <div class="help-inline" data-error></div>\
+                    <div class="help-block"><%= help %></div>\
+                  </div>\
+                </div>\
+                '),
+            subSchema:{
+                tematica:    {type: 'Select',options: utils.tematicasOptionList , title:'Temática'},
+                subtematica: {type: 'Select',options: utils.subtematicasOptionList.artecultura, title:'SubTemática'},
+        }},
+        cetiquetas:   {type: 'Text',title:'Contenido:'},  
         formato:      {type: 'Select',options: utils.formatoOptionList, title: 'Formato'},
         videoteca:    {type: 'Select',options: utils.videotecaOptionList, title: 'Videoteca'},
         etario:       {type: 'Select',options: utils.etarioOptionList, title:'Tipo de audiencia'},  
         descripcion:   {type: 'TextArea',editorAttrs:{placeholder:'descripción / sinopsis'},title:'Descripción:'},  
         descriptores:  {type: 'TextArea',editorAttrs:{placeholder:'palabras claves separadas por ;'},title:'Palabras claves:'},  
-   },
+    },
 
     defaults: {
-        tematica:'',
-        subtematica:'',
+        contenido:{
+            tematica:'',
+            subtematica:''
+        },
         genero:'',
+        cetiquetas:'',
         formato:'',
         videoteca:'',
         etario:'',
         descripcion: '',
+        descriptores: '',
     }
 });
 

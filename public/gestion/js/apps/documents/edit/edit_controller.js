@@ -70,10 +70,15 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         if(itemmodel.get('tipoitem')==='pemision'){
           loadProductChilds(Edit.Session.sitcollection, itemmodel);
         }
+
         itemheader.on('product:select',function(query, cb){
           DocManager.request("product:search", query, function(product){
 
             if(itemmodel.get('tipoitem')==='pemision'){
+              if(product.get('tipoproducto')==='paudiovisual'){
+                addProductsToCollection(Edit.Session.sitcollection, itemmodel, new DocManager.Entities.ProductChildCollection(product) );
+              }
+
               product.loadchilds(product, {'es_coleccion_de.id': product.id},function(products){
                 addProductsToCollection(Edit.Session.sitcollection, itemmodel, products );
                 cb(product);
@@ -91,7 +96,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         });
 
         sitview.on("sit:form:submit",function(){
-          console.log('sit:form:submit');
+          //console.log('sit:form:submit');
 
           var siterr = false;
           sitview.children.each(function (view){
@@ -167,14 +172,14 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   };
 
   var selectDate = function(model,view, cb){
-    console.log('model SELECT DATE: [%s][%s][%s]',model.get('hourmain'),view.model.get('productid'),model.schema.chapter.options);
+    //console.log('model SELECT DATE: [%s][%s][%s]',model.get('hourmain'),view.model.get('productid'),model.schema.chapter.options);
     if(view.model.get('productid')){
       var product = new DocManager.Entities.Product({_id: view.model.get('productid')});
 
       product.fetch({success: function(product) {           
-        console.log('product FETCH OK , [%s]',product.id,product.get('slug'));
+        //console.log('product FETCH OK , [%s]',product.id,product.get('slug'));
         product.loadchilds(product, {'es_capitulo_de.id': product.id},function(products){
-          console.log('product loadchilds, [%s]',products.length);
+          //console.log('product loadchilds, [%s]',products.length);
           model.schema.chapter.options = buildChaptersOpstionList(products);
           loadModalForm(model,view,cb)
           //addProductsToCollection(sitcol, model, products );
@@ -205,7 +210,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
   var loadProductChilds = function(sitcol,model){
     if(!model.get('productid'))return;
-    console.log('loadProductChilds [%s][%s]',model.get('product'),model.get('productid'));
+    //console.log('loadProductChilds [%s][%s]',model.get('product'),model.get('productid'));
 
     var product = new DocManager.Entities.Product({_id: model.get('productid')});
 
@@ -217,6 +222,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   };
 
   var addProductsToCollection = function (sitcol, model, products ){
+    //console.log('addProductToCollectin: [%s]',products.length);
     if(products.length){
       products.each(function(pr){
         var found = sitcol.find(function(sit){
@@ -360,7 +366,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   };
 
   DocManager.reqres.setHandler("document:search", function(query, cb){
-    console.log('editController: document search')
     API.searchDocuments(query, cb);
   });
 
