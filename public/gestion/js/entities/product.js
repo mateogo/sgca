@@ -8,26 +8,24 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     defaults: {
         _id: null,
-        project:{},
         tipoproducto:"",
         productcode:"",
  
         slug: "",
         denom: "",
-        notas:[],
-        branding:[],
-
-        descriptores: "",
-        taglist:[],
-        description: "",
 
         nivel_importancia: "medio",
         estado_alta: "activo",
         nivel_ejecucion: "planificado",
+
+        project:{},
         patechfacet:{},
+        clasification:{},
 
-        resources: []
-
+        notas:[],
+        branding:[],
+        descripTagList:[],
+        contentTagList:[],
     },
 
     loadchilds: function(ancestor, predicates, cb){

@@ -467,11 +467,16 @@ window.utils = {
     ],
 
     tipoproductoOptionList:[
-        {val:'no_definido',  label:'tipo de producto'},
+        {val:'nodefinido',   label:'tipo de producto'},
         {val:'paudiovisual', label:'producto audiovisual'},
         {val:'micro',        label:'micro'},
         {val:'catalogo',     label:'catálogo'},
-    ],
+        {val:'promo',        label:'promo'},
+        {val:'imagen',       label:'imagen'},
+        {val:'video',        label:'video'},
+        {val:'audio',        label:'audio'},
+        {val:'documento',    label:'documento'},
+     ],
 
     rolinstanciasOptionList: [
         {val:'no_definido'      , label:'versión'},
@@ -539,6 +544,7 @@ window.utils = {
     ],
 
     videotecaOptionList:[
+        {val:'nodefinido',     label:'Videoteca'},
         {val:'fomInca2010',    label:'Fomento Inca 2010'},
         {val:'fomInca2011',    label:'Fomento Inca 2011'},
         {val:'cesInca',        label:'Fomento Inca Termin'},
@@ -576,6 +582,7 @@ window.utils = {
 
     //pageneros:['animacion', 'biografia', 'curso', 'ficcion', 'docuficcion', 'documental', 'entretenimiento', 'entrevistas', 'telenovela', 'reality', 'recital', 'periodistico', 'noticiero',],
     generoOptionList:[
+        {val:'nodefinido',   label:'Género'},
         {val:'animacion',    label:'Animación'},
         {val:'biografia',    label:'Biografía'},
         {val:'crossmedia',   label:'Crossmedia'},
@@ -625,7 +632,7 @@ window.utils = {
         cienciasSociales: ['antropologia', 'historia', 'sociologia', 'economia', 'politica', 'otros'],
         deporte: ['historiaDeporte', 'actualidadDeporte', 'deporteAmateur', 'deporteProfesional','otros'],
         educacionTrabajo:['educSexual', 'primerosAuxilios', 'educRural', 'oficios', 'debateEducativo','otros' ],
-        historia: ['universal', 'argentinaSXX', 'argentinaSXiX', 'biografia','otros'],
+        historia: ['universal', 'ArgentinaSXX', 'ArgentinaSXiX', 'biografia','otros'],
         infancia: ['pedagogia', 'recreacion', 'curricula','otros'],
         juventud: ['pedagogia', 'recreacion', 'curricula','otros'],
         sociedad: ['gastronomia', 'ddhh', 'familia', 'respSocial', 'salud','otros' ],
@@ -771,6 +778,7 @@ window.utils = {
 
     //paformatos:['serie', 'serie-programas', 'unitario', 'videoclip', 'promo', 'miniserie', 'micro', 'micro-recital', 'cortometraje', 'largometraje', 'backstage','trailer',  'noticiero', 'periodistico', 'especial', ],
     formatoOptionList:[
+        {val:'nodefinido',    label:'Formato'},
         {val:'serie',         label:'Serie'},
         {val:'unitario',      label:'Unitario'},
         {val:'cortometraje',  label:'Cortometraje'},
@@ -784,6 +792,7 @@ window.utils = {
     ],
     //etarios:['infantil', 'jovenes','adolescentes', 'adulto', 'mayores',],
     etarioOptionList:[
+        {val:'nodefinido',   label:'Tipo de audiencia'},
         {val:'infantil',     label:'Infantil'},
         {val:'jovenes',      label:'Jóvenes'},
         {val:'adolescentes', label:'Adolescentes'},
@@ -847,6 +856,82 @@ window.utils = {
         {val:'03:00', label:'03:00'},
         {val:'03:30', label:'03:30'},
     ],
+    paisesOptionList: [
+        {val:'nodefinido'    , label:'PAIS PRODUCTOR'},
+        {val:'Argentina'     , label:'Argentina'},
+        {val:'Bolivia'       , label:'Bolivia'},
+        {val:'Brasil'        , label:'Brasil'},
+        {val:'Chile'         , label:'Chile'},
+        {val:'Colombia'      , label:'Colombia'},
+        {val:'Uruguay'       , label:'Uruguay'},
+        {val:'Venezuela'     , label:'Venezuela'},
+        {val:'Ecuador'       , label:'Ecuador'},
+        {val:'Peru'          , label:'Peru'},
+        {val:'Paraguay'      , label:'Paraguay'},
+        {val:'Mexico'        , label:'Mexico'},
+        {val:'Estadosunidos' , label:'Estados unidos'},
+        {val:'Canada'        , label:'Canada'},
+        {val:'Espana'        , label:'España'},
+        {val:'Francia'       , label:'Francia'},
+        {val:'Europa'        , label:'Europa'},
+    ],
+
+    provinciasOptionList:{
+        Argentina: [
+            {val:'CABA'       , label:'CABA'},
+            {val:'BuenosAires', label:'Buenos Aires'},
+            {val:'Cordoba'    , label:'Córdoba'},
+            {val:'SantaFe'    , label:'Santa Fe'},
+            {val:'Corrientes' , label:'Corrientes'},
+            {val:'Misiones'   , label:'Misiones'},
+            {val:'EntreRios'  , label:'Entre Rios'},
+            {val:'SantiagoDelEstero'  , label:'Santiago del Estero'},
+            {val:'Formosa'    , label:'Formosa'},
+            {val:'Chaco'      , label:'Chaco'},
+            {val:'Tucuman'    , label:'Tucumán'},
+            {val:'Jujuy'      , label:'Jujuy'},
+            {val:'Salta'      , label:'Salta'},
+            {val:'LaRioja'    , label:'La Rioja'},
+            {val:'Catamarca'  , label:'Catamarca'},
+            {val:'SanJuan'    , label:'San Juan'},
+            {val:'Mendoza'    , label:'Mendoza'},
+            {val:'SanLuis'    , label:'San luis'},
+            {val:'LaPampa'    , label:'La Pampa'},
+            {val:'RioNegro'   , label:'Rio Negro'},
+            {val:'Neuquen'    , label:'Neuquen'},
+            {val:'Chubut'     , label:'Chubut'},
+            {val:'SantaCruz'  , label:'Santa Cruz'},
+            {val:'TierraDelFuego', label:'Tierra del Fuego'},
+        ],
+        nodefinido: [
+            {val:'nodefinido'  , label:'Estado/provincia'},
+        ]
+    },
+
+    clasificationSch: [
+        {val:'genero'        , label:'Género:'},
+        {val:'cetiquetas'    , label:'Contenido:'},
+        {val:'formato'       , label:'Formato:'},
+        {val:'videoteca'     , label:'Procedencia:'},
+        {val:'etario'        , label:'Tipo de audiencia:'},
+        {val:'descripcion'   , label:'Sinopsis:'},
+        {val:'descriptores'  , label:'Descriptores: '},
+    ],
+    technicalSch: [
+        {val:'durnominal'     , label:'Duración Nominal (minutos):'},
+        {val:'productora'     , label:'Casa productora:'},
+        {val:'fecreacion'     , label:'Año de Producción:'},
+        {val:'cantcapitulos'  , label:'Cantidad de capítulos / unitarios:'},
+        {val:'cantbloques'    , label:'Cantidad de bloques:'},
+        {val:'lugares'        , label:'Lugar de producción'},
+        {val:'locaciones'     , label:'Locaciones: '},
+        {val:'temporada'      , label:'Temporada: '},
+     ],
+
+    fetchLabel:function(list,key){
+        var node = _.find(list, function(data){return data.val === key;});
+        return node ? node.label: key;
+    },
 
     validateInstance: function(pr){
         // true if tipoproducto es una INSTANCIA 

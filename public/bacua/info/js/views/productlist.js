@@ -49,7 +49,7 @@ window.ProductChaptersView = Backbone.View.extend({
     
     tagName:'ul',
     
-    className:'nav nav-list',
+    className:'list-group',
 
     changeevent: function(){
         console.log('changeevent:ChapterInlineView:productlist CHANGE');
@@ -89,8 +89,9 @@ window.ProductChaptersView = Backbone.View.extend({
 window.ChapterInlineView = Backbone.View.extend({
 
     tagName: "li",
+    className:"list-group-item",
     
-    template: _.template("<button class='btn-block btn-link chapteritem' title='<%= slug %>'><%= productcode %></button>"),
+    template: _.template("<button class='btn-block btn-link chapteritem' title='<%= slug %>' ><strong><%= productcode %></strong> <%= slug %></button>"),
 
     events: {
         "click  .chapteritem" : "chapteritem",

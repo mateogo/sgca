@@ -411,6 +411,11 @@ window.PersonView = Backbone.View.extend({
             change[target.name] = target.value;
             this.model.set(change);
         }
+        if(target.name==='nickName' && !this.model.get('displayName')){
+            this.model.set('displayName',target.value);
+            this.$('#displayName').val(target.value);
+        }
+
         //utils.showAlert('Success!', 'name:['+target.name+'] value:['+target.value+'] key:['+target.id+'] checked:['+target.checked+'] type:['+target.type+'] change:['+change[target.name]+']', 'alert-success');
 
         var check = this.model.validateItem(target.id);

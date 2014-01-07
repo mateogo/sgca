@@ -119,11 +119,11 @@ window.ProductView = Backbone.View.extend({
             data.push({key: key, value: value});
         })
         console.log('PATECHFACET render data leng[%s]', data.length);
-        var view = new ProductViewClasificationData({data: data, el:$(selector), acparent:'clasification', acref:'nodo2', acin:'',  title:'Datos técnicos'});
+        var view = new ProductViewTechnicalData({data: data, el:$(selector), acparent:'clasification', acref:'nodo2', acin:'',  title:'Datos técnicos'});
 
     },
     renderChapters: function (product){
-        var template = _.template('<div class="panel panel-info"><div class="panel-heading"><h5 class="panel-title text-center" ><a class="accordion-toggle" data-toggle="collapse" data-parent="#capitulos" href="#<%= acref %>"><%= title %></a></h5></div><div id="<%= acref %>" class="panel-collapse collapse <%= acin %>"><div id="chapcontent" class="panel-body" ></div></div></div>');
+        var template = _.template('<div class="panel panel-primary"><div class="panel-heading"><h5 class="panel-title text-center" ><a class="accordion-toggle" data-toggle="collapse" data-parent="#capitulos" href="#<%= acref %>"><%= title %></a></h5></div><div id="<%= acref %>" class="panel-collapse collapse <%= acin %>"><span id="chapcontent"></span></div></div>');
         var selector = '#capitulos';
 
         product.loadpacapitulos(function(chapters){
@@ -310,8 +310,42 @@ window.ProductViewClasificationData = Backbone.View.extend({
         //var view = new ProductViewClasificationData({data: data, el:$(selector), acparent:'clasification',acref:'nodo1',acin:tue,  title:'Clasificacion'});
 
     buildTemplate: function  () {
-        var header = _.template('<div class="panel panel-info"><div class="panel-heading"><h5 class="panel-title text-center" ><a class="accordion-toggle" data-toggle="collapse" data-parent="#clasificacion" href="#<%= acref %>"><%= title %></a></h5></div><div id="<%= acref %>" class="panel-collapse collapse <%= acin %>"><div class="panel-body" ><%= content %></div></div></div>');
-        var body = _.template('<dl class="dl-horizontal"><dt><%= key %></dt><dd><%= value %></dd></dl>');
+        var header = _.template('<div class="panel panel-primary"><div class="panel-heading"><h5 class="panel-title text-center" ><a class="accordion-toggle" data-toggle="collapse" data-parent="#clasificacion" href="#<%= acref %>"><%= title %></a></h5></div><div id="<%= acref %>" class="panel-collapse collapse <%= acin %>"><div class="panel-body" ><%= content %></div></div></div>');
+        var body = _.template('<dl><dt><%= utils.fetchLabel(utils.clasificationSch, key) %></dt><dd><%= value %></dd></dl>');
+        var content = '';
+
+        _.each(this.options.data, function(elem,key){
+            content += body(elem);
+        });
+
+        this.options.content = content;
+
+        var nodetemplate = header(this.options);
+        this.render (nodetemplate);
+    },
+
+    render: function (text) {
+        //console.log('[%s] rrender item [%s]',self.whoami, this.model.get('slug'));
+        this.$el.append(text);
+        return this;
+    }
+});
+
+window.ProductViewTechnicalData = Backbone.View.extend({
+    initialize: function (options) {
+        this.options = options;
+
+        console.log('initialize [%s]', this.options.acref)
+        this.buildTemplate();
+    },
+
+        //var view = new ProductViewTechnicalData({data: data, el:$(selector), acparent:'clasification',acref:'nodo1',acin:tue,  title:'Clasificacion'});
+
+    buildTemplate: function  () {
+        var header = _.template('<div class="panel panel-primary"><div class="panel-heading"><h5 class="panel-title text-center" ><a class="accordion-toggle" data-toggle="collapse" data-parent="#clasificacion" href="#<%= acref %>"><%= title %></a></h5></div><div id="<%= acref %>" class="panel-collapse collapse <%= acin %>"><ul class="list-group"><%= content %></ul></div></div>');
+        //var body = _.template('<dl class="dl-horizontal"><dt><%= key %></dt><dd><%= value %></dd></dl>');
+        //var body = _.template('<dl class="dl-horizontal"><dt><%= utils.fetchLabel(utils.technicalSch, key) %></dt><dd><%= value %></dd></dl>');
+        var body = _.template('<li class="list-group-item"><strong><%= utils.fetchLabel(utils.technicalSch, key) %></strong> <%= value %></li>');
         var content = '';
 
         _.each(this.options.data, function(elem,key){

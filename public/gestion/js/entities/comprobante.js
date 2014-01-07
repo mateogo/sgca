@@ -447,8 +447,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         var datecol = model.get('emisiones');
         var emisiones = new Entities.ParteEMemisiones();
         for (var i=0; i<7; i++){
-          var emision = datecol.find(function(elem){
-            return (elem.dayweek==i);
+          var emision = _.find(datecol,function(elem){
+            return (elem.dayweek===i);
           });
           if(!emision) emision={
             dayweek:i,

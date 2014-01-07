@@ -147,7 +147,7 @@ window.ProductView = Backbone.View.extend({
                 
                 article.set({active: (active ? 'active' : '')});
                 if(!article.get('slug')) article.set({slug: self.product.get('slug')});
-                if(!article.get('description')) article.set({description: self.product.get('description')});
+                if(!article.get('description')) article.set({description: self.product.get('clasification.descripcion')});
                 if(!article.get('url')) article.set({url: 'pa/ver/'+self.product.id});
 
                 //carousel

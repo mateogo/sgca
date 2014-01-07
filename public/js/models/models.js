@@ -114,21 +114,21 @@ window.Person = Backbone.Model.extend({
         var self = this;
         var entries = [];
 
-        console.log('[%s] insertcontact begins [%s]',self.whoami,data.contactdata);
+        //console.log('[%s] insertcontact begins [%s]',self.whoami,data.contactdata);
         var contacts = dao.contactfacet.getCol();
         contacts.each(function(elem){
             entries.push(elem.retrieveData());
 
         });
 
-        console.log('CONTACT hash insert [%s] ',entries.length);
+        //console.log('CONTACT hash insert [%s] ',entries.length);
         self.set({contactinfo: entries});
     },
 
     loadcontacts: function(cb){
         dao.contactfacet.setCol( new ContactFacetCollection(this.get('contactinfo')));
 
-        console.log('[%s] loadcontacts [%s] ',this.whoami, dao.contactfacet.getCol().length);
+        //console.log('[%s] loadcontacts [%s] ',this.whoami, dao.contactfacet.getCol().length);
 
         cb(dao.contactfacet.getCol());
     },
@@ -136,7 +136,7 @@ window.Person = Backbone.Model.extend({
 
     loadusers: function(cb){
         var self = this;
-        console.log('loadusers.Person:models.js begins es_usuario_de: [%s]',self.get('nickName'));
+        //console.log('loadusers.Person:models.js begins es_usuario_de: [%s]',self.get('nickName'));
         var query = {'es_usuario_de.id':self.id};
         var userCol= new UserCollection();
         dao.userfacet.setCol(userCol);
@@ -150,7 +150,7 @@ window.Person = Backbone.Model.extend({
     },
 
    insertuser: function(user, cb){
-        console.log('[%s] insert USER BEGINS',this.whoami);
+        //console.log('[%s] insert USER BEGINS',this.whoami);
         utils.inspect(user.attributes,0, 'INSERT USER');
         
         var self = this,
@@ -163,7 +163,7 @@ window.Person = Backbone.Model.extend({
         //user.set({denom:user.get('slug')});
 
         user = self.buildPredicateData(self, user, 1, 100, predicate);
-        console.log('[%s] insertUSER READY TO SAVE',this.whoami);
+        //console.log('[%s] insertUSER READY TO SAVE',this.whoami);
 
         defer = user.save(null, {
             success: function (user) {
@@ -198,7 +198,7 @@ window.Person = Backbone.Model.extend({
     loadnotas:function (cb) {
         var self = this;
         var list = self.get('notas');
-        console.log('mdel:loadnotas [%s]',list.length);
+        //console.log('mdel:loadnotas [%s]',list.length);
         var notas = _.map(list, function(elem){
             return new Article(elem);
         });
@@ -207,7 +207,7 @@ window.Person = Backbone.Model.extend({
     
     loadbranding:function (cb) {
         var self = this;
-        console.log('mdel:loadbranding');
+        //console.log('mdel:loadbranding');
 
         var brands = self.fetchBrandingEntries({});
         cb(brands);
@@ -222,14 +222,14 @@ window.Person = Backbone.Model.extend({
     },
 
     fetchBrandingEntries: function (query){
-        console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
+        //console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
 
         var filtered = _.filter(this.get('branding'),function(elem){
 
             console.log('filtered: [%s]', elem.assetName);
 
             var filter = _.reduce(query, function(memo, value, key){
-                console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
+                //console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
                 if(value != elem[key]) return memo && false;
                 return memo  && true;
             },true);
@@ -241,7 +241,7 @@ window.Person = Backbone.Model.extend({
             model: BrandingFacet
 
         });
-        //console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
+        ////console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
         return brandingCollection;
     },
 
@@ -252,10 +252,10 @@ window.Person = Backbone.Model.extend({
         if(!(branding && branding.length>0)) return;
 
         branding.each(function(brand){
-        console.log('brands iterate:[%s]',brand.get('slug'));
+        //console.log('brands iterate:[%s]',brand.get('slug'));
             brands.push(brand.attributes);
         });
-        console.log('brands length:[%s]',brands.length);
+        //console.log('brands length:[%s]',brands.length);
         this.set({branding:brands});
     },
 
@@ -272,14 +272,14 @@ window.Person = Backbone.Model.extend({
                 rawlist.add(list);
             }
         });
-        console.log('[%s]: loadpaancestors ends found:[%s]',self.whoami,rawlist.length);
+        //console.log('[%s]: loadpaancestors ends found:[%s]',self.whoami,rawlist.length);
         if(cb) cb(rawlist);
         return rawlist;
     },
 
     loadrelated: function(cb){
         var self = this;
-        console.log('[%s] loadrelated BEGIN [%s]',self.whoami, self.get('nickName'));
+        //console.log('[%s] loadrelated BEGIN [%s]',self.whoami, self.get('nickName'));
         var query = {$or: [{'es_relacion_de.id':self.id},{'es_miembro_de.id':self.id}, {'es_coleccion_de.id':self.id}]};
 
         var chapCol= new PersonCollection();
@@ -299,7 +299,7 @@ window.Person = Backbone.Model.extend({
             persons= new PersonCollection(),
             query = {};
 
-        console.log('loadchilds:models.js BEGINS [%s] : [%s]',ancestor.get('personcode'),predicates);
+        //console.log('loadchilds:models.js BEGINS [%s] : [%s]',ancestor.get('personcode'),predicates);
         if(!_.isArray(predicates))
             if(_.isObject(predicates)) querydata.push(predicates);
             else return null;
@@ -318,7 +318,7 @@ window.Person = Backbone.Model.extend({
 
     loadassets: function(cb){
         var self = this;
-        console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('personcode'));
+        //console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('personcode'));
         var query = {'es_asset_de.id':self.id};
         var assetCol= new AssetCollection();
         assetCol.fetch({
@@ -388,14 +388,14 @@ window.Person = Backbone.Model.extend({
     },
 
     fetchBrandingEntries: function (query){
-        console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
+        //console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
 
         var filtered = _.filter(this.get('branding'),function(elem){
 
-            console.log('filtered: [%s]', elem.assetName);
+            //console.log('filtered: [%s]', elem.assetName);
 
             var filter = _.reduce(query, function(memo, value, key){
-                console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
+                //console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
                 if(value != elem[key]) return memo && false;
                 return memo  && true;
             },true);
@@ -416,7 +416,7 @@ window.Person = Backbone.Model.extend({
             deferreds = [], 
             defer;
 
-        console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('nickName'));
+        //console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('nickName'));
         for (var i = childs.length - 1; i >= 0; i--) {
             var child = childs[i];
 
@@ -426,10 +426,10 @@ window.Person = Backbone.Model.extend({
             defer = child.save(null, {
                 success: function (model) {
                     //console.log('saveNode:persondetails success');
-                    console.log('insert ChildsToAncestor: SUCCESS: [%s] [%s] ',i,child.get('nickName'));
+                    //console.log('insert ChildsToAncestor: SUCCESS: [%s] [%s] ',i,child.get('nickName'));
                 },
                 error: function () {
-                    console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',i,child.get('nickName'));
+                    //console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',i,child.get('nickName'));
                 }
             });
             deferreds.push(defer);
@@ -446,19 +446,19 @@ window.Person = Backbone.Model.extend({
         var self = this,
             entries = self.get('branding');
 
-        console.log('insert branding:models.js begins [%s]',self.get('slug'));
+        //console.log('insert branding:models.js begins [%s]',self.get('slug'));
         if(!entries) entries = [];
 
         data.tc = new Date().getTime();
         data.assetId = asset.id;
         data.assetName = asset.get('name');
         entries.push(data);
-        console.log('BRANDING hash insert [%s] [%s]',entries.length, data.assetName);
+        //console.log('BRANDING hash insert [%s] [%s]',entries.length, data.assetName);
         self.set({branding: entries});
     },
 
    insertNota: function(article, cb){
-        console.log('[%s] insertNota BEGINS',this.whoami);
+        //console.log('[%s] insertNota BEGINS',this.whoami);
         var self = this,
             predicate = 'es_nota_de',
             notas = self.get('notas'),
@@ -621,7 +621,7 @@ window.Article = Backbone.Model.extend({
     loadnotas:function (cb) {
         var self = this;
         var list = self.get('notas');
-        console.log('mdel:loadnotas [%s]',list.length);
+        //console.log('mdel:loadnotas [%s]',list.length);
         var notas = _.map(list, function(elem){
             return new Article(elem);
         });
@@ -685,7 +685,7 @@ window.Article = Backbone.Model.extend({
                 rawlist = _.union(rawlist,list);
             }
         });
-        console.log('[%s]: loadpaancestors ends found:[%s]',self.whoami,rawlist.length);
+        //console.log('[%s]: loadpaancestors ends found:[%s]',self.whoami,rawlist.length);
         if(cb) cb(rawlist);
         return rawlist;
     },
@@ -693,7 +693,7 @@ window.Article = Backbone.Model.extend({
 
     loadassets: function(cb){
         var self = this;
-        console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('articlecode'));
+        //console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('articlecode'));
         var query = {'es_asset_de.id':self.id};
         var assetCol= new AssetCollection();
         assetCol.fetch({
@@ -753,13 +753,13 @@ window.Article = Backbone.Model.extend({
 
 
     fetchBrandingEntries: function (query){
-        console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
+        //console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
 
         var filtered = _.filter(this.get('branding'),function(elem){
 
-            console.log('filtered: [%s]', elem.assetName);
+            //console.log('filtered: [%s]', elem.assetName);
             var filter = _.reduce(query, function(memo, value, key){
-                console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
+                //console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
                 if(value != elem[key]) return memo && false;
                 return memo  && true;
             },true);
@@ -768,7 +768,7 @@ window.Article = Backbone.Model.extend({
         var brandingCollection = new Backbone.Collection(filtered,{
             model: BrandingFacet
         });
-        console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
+        //console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
         return brandingCollection;
     },
 
@@ -777,7 +777,7 @@ window.Article = Backbone.Model.extend({
             deferreds = [], 
             defer;
 
-        console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('articlecode'));
+        //console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('articlecode'));
         for (var i = childs.length - 1; i >= 0; i--) {
             var child = childs[i];
 
@@ -885,6 +885,10 @@ window.Product = Backbone.Model.extend({
         this.validators.slug = function (value) {
             return value.length > 0 ? {isValid: true} : {isValid: false, message: "Indique una descripción"};
         };
+
+        this.validators.tipoproducto = function (value) {
+            return (value.length > 0 && value!=='nodefinido') ? {isValid: true} : {isValid: false, message: "Indique una tipo de producto"};
+        };
     },
 
     validateItem: function (key) {
@@ -915,7 +919,7 @@ window.Product = Backbone.Model.extend({
     loadnotas:function (cb) {
         var self = this;
         var list = self.get('notas');
-        console.log('mdel:loadnotas [%s]',list.length);
+        //console.log('mdel:loadnotas [%s]',list.length);
         var notas = _.map(list, function(elem){
             return new Article(elem);
         });
@@ -924,21 +928,21 @@ window.Product = Backbone.Model.extend({
     
     loadbranding:function (cb) {
         var self = this;
-        console.log('mdel:loadbranding');
+        //console.log('mdel:loadbranding');
 
         var brands = self.fetchBrandingEntries({});
         cb(brands);
     },
 
     fetchBrandingEntries: function (query){
-        console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
+        //console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
 
         var filtered = _.filter(this.get('branding'),function(elem){
 
-            console.log('filtered: [%s]', elem.assetName);
+            //console.log('filtered: [%s]', elem.assetName);
 
             var filter = _.reduce(query, function(memo, value, key){
-                console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
+                //console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
                 if(value != elem[key]) return memo && false;
                 return memo  && true;
             },true);
@@ -961,10 +965,10 @@ window.Product = Backbone.Model.extend({
         if(!(branding && branding.length>0)) return;
 
         branding.each(function(brand){
-        console.log('brands iterate:[%s]',brand.get('slug'));
+        //console.log('brands iterate:[%s]',brand.get('slug'));
             brands.push(brand.attributes);
         });
-        console.log('brands length:[%s]',brands.length);
+        //console.log('brands length:[%s]',brands.length);
         this.set({branding:brands});
     },
 
@@ -981,14 +985,14 @@ window.Product = Backbone.Model.extend({
                 rawlist = _.union(rawlist,list);
             }
         });
-        console.log('[%s]: loadpaancestors ends found:[%s]',self.whoami,rawlist.length);
+        //console.log('[%s]: loadpaancestors ends found:[%s]',self.whoami,rawlist.length);
         if(cb) cb(rawlist);
         return rawlist;
     },
 
     loadpacapitulos: function(cb){
         var self = this;
-        console.log('loadpacapitulos:models.js begins es_capitulo_de: [%s]',self.get('productcode'));
+        //console.log('loadpacapitulos:models.js begins es_capitulo_de: [%s]',self.get('productcode'));
         var query = {$or: [{'es_capitulo_de.id':self.id},{'es_instancia_de.id':self.id}, {'es_coleccion_de.id':self.id}]};
 
         var chapCol= new ProductCollection();
@@ -1010,7 +1014,7 @@ window.Product = Backbone.Model.extend({
             products= new ProductCollection(),
             query = {};
 
-        console.log('loadchilds:models.js BEGINS [%s] : [%s]',ancestor.get('productcode'),predicates);
+        //console.log('loadchilds:models.js BEGINS [%s] : [%s]',ancestor.get('productcode'),predicates);
         if(!_.isArray(predicates))
             if(_.isObject(predicates)) querydata.push(predicates);
             else return null;
@@ -1057,7 +1061,7 @@ window.Product = Backbone.Model.extend({
 
     buildCapNumber: function(iter, prefix){
         var numcap = iter;
-        console.log('buildCAP NUMBER iter:[%s] prefix:[%s]',iter,prefix);
+        //console.log('buildCAP NUMBER iter:[%s] prefix:[%s]',iter,prefix);
         if(prefix){
             if(parseInt(prefix,10)==0){
                 numcap = (prefix+iter).substr(-prefix.length);
@@ -1103,14 +1107,14 @@ window.Product = Backbone.Model.extend({
     },
 
     fetchBrandingEntries: function (query){
-        console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
+        //console.log('filtered: begins [%s] [%s]', this.get('slug'),this.get('branding').length);
 
         var filtered = _.filter(this.get('branding'),function(elem){
 
-            console.log('filtered: [%s]', elem.assetName);
+            //console.log('filtered: [%s]', elem.assetName);
 
             var filter = _.reduce(query, function(memo, value, key){
-                console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
+                //console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
                 if(value != elem[key]) return memo && false;
                 return memo  && true;
             },true);
@@ -1131,7 +1135,7 @@ window.Product = Backbone.Model.extend({
             deferreds = [], 
             defer;
 
-        console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('productcode'));
+        //console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('productcode'));
         for (var i = childs.length - 1; i >= 0; i--) {
             var child = childs[i];
 
@@ -1141,10 +1145,10 @@ window.Product = Backbone.Model.extend({
             defer = child.save(null, {
                 success: function (model) {
                     //console.log('saveNode:productdetails success');
-                    console.log('insert ChildsToAncestor: SUCCESS: [%s] [%s] ',i,child.get('slug'));
+                    //console.log('insert ChildsToAncestor: SUCCESS: [%s] [%s] ',i,child.get('slug'));
                 },
                 error: function () {
-                    console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',i,child.get('slug'));
+                    //console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',i,child.get('slug'));
                 }
             });
             deferreds.push(defer);
@@ -1158,7 +1162,7 @@ window.Product = Backbone.Model.extend({
     },
 
     insertInstance: function(data, asset, cb){
-        console.log('[%s] insertInstance BEGINS',this.whoami);
+        //console.log('[%s] insertInstance BEGINS',this.whoami);
         var self = this,
             builder = {},
             predicate = 'es_instancia_de',
@@ -1168,7 +1172,6 @@ window.Product = Backbone.Model.extend({
 
         builder._id = null;
         builder.tipoproducto = data.tipoproducto || self.tipoproducto;
-        builder.descriptores = data.descriptores;
         builder.nivel_importancia = self.get('nivel_importancia');
         builder.nivel_ejecucion = self.get('nivel_ejecucion');
         builder.estado_alta = self.get('estado_alta');
@@ -1185,7 +1188,7 @@ window.Product = Backbone.Model.extend({
         builder.painstancefacet = instancefacet;
         /////////
         var instance = new Product(builder);
-        instance.buildTagList();
+        //instance.buildTagList();
 
         instance = self.buildPredicateData(self, instance, 1, 100, predicate);
 
@@ -1226,7 +1229,7 @@ window.Product = Backbone.Model.extend({
         var self = this,
             entries = self.get('branding');
 
-        console.log('insert branding:models.js begins [%s]',self.get('slug'));
+        //console.log('insert branding:models.js begins [%s]',self.get('slug'));
         if(!entries) entries = [];
 
         data.tc = new Date().getTime();
@@ -1238,7 +1241,7 @@ window.Product = Backbone.Model.extend({
     },
 
    insertNota: function(article, cb){
-        console.log('[%s] insertNota BEGINS',this.whoami);
+        //console.log('[%s] insertNota BEGINS',this.whoami);
         var self = this,
             predicate = 'es_nota_de',
             notas = self.get('notas'),
@@ -1281,7 +1284,7 @@ window.Product = Backbone.Model.extend({
     },
 
     insertCapitulos: function(data,cb){
-        console.log('insertCapitulos:models.js begins capdesde: [%s]',data.numcapdesde);
+        //console.log('insertCapitulos:models.js begins capdesde: [%s]',data.numcapdesde);
         var self = this,
             builder = {},
             predicate = 'es_capitulo_de',
@@ -1290,7 +1293,6 @@ window.Product = Backbone.Model.extend({
 
         builder._id = null;
         builder.tipoproducto = data.tipoproducto || self.tipoproducto;
-        builder.descriptores = data.descriptores;
         builder.nivel_importancia = self.get('nivel_importancia');
         builder.nivel_ejecucion = self.get('nivel_ejecucion');
         builder.estado_alta = self.get('estado_alta');
@@ -1302,7 +1304,7 @@ window.Product = Backbone.Model.extend({
         for (var icap =data.numcapdesde; icap <= data.numcaphasta; icap +=1){
  
             var capitulo = new Product(builder);
-            capitulo.buildTagList();
+            //capitulo.buildTagList();
             capitulo = self.buildPredicateData(self, capitulo, icap,data.numcapprefix,predicate);
             capitulo.set({slug:  name_template({numcap: self.buildCapNumber(icap,(data.numcapprefix||"00")), name:self.get('slug') })});
             capitulo.set({denom: name_template({numcap: self.buildCapNumber(icap,(data.numcapprefix||"00")), name:self.get('denom')})});
@@ -1332,7 +1334,7 @@ window.Product = Backbone.Model.extend({
     },
 
     createNewPtecnico: function(cb){
-        console.log('initNewPtecnico:Product:models.js');
+        //console.log('initNewPtecnico:Product:models.js');
         var self = this;
         var docum = new Comprobante();
         var dt = self.getDatosTecnicos();
@@ -1356,28 +1358,25 @@ window.Product = Backbone.Model.extend({
 
     defaults: {
         _id: null,
-        project:{},
         tipoproducto:"",
         productcode:"",
  
         slug: "",
         denom: "",
-        notas:[],
-        branding:[],
-
-        descriptores: "",
-        taglist:[],
-        description: "",
 
         nivel_importancia: "medio",
         estado_alta: "activo",
         nivel_ejecucion: "planificado",
+
+        project:{},
         patechfacet:{},
+        clasification:{},
 
-        resources: []
-
+        notas:[],
+        branding:[],
+        descripTagList: [],
+        contentTagList: [],
     }
-
 });
 
 //        patechfacet:{
@@ -1460,7 +1459,7 @@ window.Comprobante = Backbone.Model.extend({
       var self = this;
       self.beforeSave();
       var errors ;
-      console.log('ready to SAVE');
+      //console.log('ready to SAVE');
       if(!self.save(null,{
         success: function(model){
           //console.log('callback SUCCESS')
@@ -1570,7 +1569,7 @@ window.ManageTable = Backbone.Model.extend({
     },
 
     initialize: function () {
-        console.log('initialize');
+        //console.log('initialize');
         var TableSchema =  Backbone.Model.extend({
             toString: function() { return this.get('label'); }
             });
@@ -1602,7 +1601,6 @@ window.AddInstanceFacet = Backbone.Model.extend({
         tipoarchivo:  {type: 'Text', editorAttrs: {placeholder: 'mimetype image/jpeg'}},
         slug:         {type: 'Text', editorAttrs: {placeholder: 'nombre de archivo'}},
         denom:        {type: 'Text', title: 'denominacion', editorAttrs: {placeholder: 'denominacion'}},
-        descriptores: {type: 'Text', title: 'descriptores', editorAttrs:{placeholder: 'descriptores'}},
         url:          {type: 'Text', title: 'URI', editorAttrs:{placeholder: 'URL del objeto digital'}},
    },
 
@@ -1611,7 +1609,6 @@ window.AddInstanceFacet = Backbone.Model.extend({
         tipoproducto:'video',
         rolinstancia:'masteraire',
         denom:'',
-        descriptores:'',
         tipoarchivo:'',
     }
 });
@@ -1630,7 +1627,6 @@ window.PaCapitulosFacet = Backbone.Model.extend({
         numcapprefix: {type: 'Text', title: 'Prefijo del código'},
         tipoproducto:  {type: 'Select',options: utils.tipoproductoOptionList },
         durnominal:    {type: 'Text', title: 'Duración nominal', editorAttrs:{placeholder : 'duracion mm:ss'}},
-        descriptores:  {type: 'Text', title: 'Descriptores', editorAttrs:{placeholder : 'descriptores separados por ;'}},
    },
 
     defaults: {
@@ -1639,7 +1635,6 @@ window.PaCapitulosFacet = Backbone.Model.extend({
         numcapprefix: "00",
         tipoproducto:'paudiovisual',
         durnominal:'',
-        descriptores:'',
     }
 });
 
@@ -1744,6 +1739,17 @@ window.PaRealizationFacet = Backbone.Model.extend({
         return dao.extractData(this.attributes);
     },
 
+    initialize: function () {
+        if(this.get('paisprod')){
+            if(this.get('paisprod')==='Argentina'){
+                this.schema.provinciaprod.options = utils.provinciasOptionList['Argentina'];
+            }else{
+                this.schema.provinciaprod.options = utils.provinciasOptionList['nodefinido'];
+            }
+
+        }
+    },
+
     schema: {
         realizadores: {type: 'TextArea',editorAttrs:{placeholder : 'realizadores'},title: 'Realizadores'},
         productores: {type: 'TextArea',editorAttrs:{placeholder : 'productores'}, title: 'Productores'},
@@ -1759,8 +1765,8 @@ window.PaRealizationFacet = Backbone.Model.extend({
         escenografia: {type: 'TextArea',editorAttrs:{placeholder : 'escenografia'}, title: 'Escenografía' },
         musicos: {type: 'TextArea',editorAttrs:{placeholder : 'musica original'}, title: 'Músicos' },
         sonido: {type: 'TextArea',editorAttrs:{placeholder : 'sonido'}, title: 'Sonido' },
-        provinciaprod: {type: 'Text',editorAttrs:{placeholder : 'provincia productora'}, title: 'Provincia' },
-        paisprod: {type: 'Text',editorAttrs:{placeholder : 'país productor'}, title: 'País' },
+        paisprod: {type: 'Select',options: utils.paisesOptionList, title: 'País' },
+        provinciaprod: {type: 'Select',options: utils.provinciasOptionList['nodefinido'], title: 'Provincia' },
     },
 
     defaults: {
@@ -2132,7 +2138,7 @@ window.Project = Backbone.Model.extend({
         as.denom = as.name;
         as.related = {project:this.id};
 
-        console.log('prjmodel:creating new asset');
+        //console.log('prjmodel:creating new asset');
         var asset = new Asset(as);
         asset.save(null, {
             success: function (model) {
@@ -2293,7 +2299,7 @@ window.Resource = Backbone.Model.extend({
 
     loadassets: function(cb){
         var self = this;
-        console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('slug'));
+        //console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('slug'));
         var query = {'es_asset_de.id':self.id};
         var assetCol= new AssetCollection();
         assetCol.fetch({
@@ -2315,7 +2321,7 @@ window.Resource = Backbone.Model.extend({
         as.urlpath = data.urlpath;
         as.slug = as.name;
         as.denom = as.name;
-        console.log('resmodel:creating new asset: '+this.get('project')['_id']);
+        //console.log('resmodel:creating new asset: '+this.get('project')['_id']);
         as.related = { project: this.get('project')['_id'], resource: this.id};
 
         var asset = new Asset(as);
@@ -2424,7 +2430,7 @@ window.Asset = Backbone.Model.extend({
         // create new asset-entry
         versions.push(data.fileversion);
         self.set({name: data.name, urlpath:data.urlpath, type: data.fileversion.type, size: data.fileversion.size, slug:data.slug||data.name, denom: data.denom||data.name, versions:versions});
-        console.log('[%s] asset builded from data', self.whoami);
+        //console.log('[%s] asset builded from data', self.whoami);
     },
 
     fetchFilteredPredicateArray: function(predicate, child, ancestor){
@@ -2466,7 +2472,7 @@ window.Asset = Backbone.Model.extend({
             childs.push(tempo);
         }
 
-        console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('productcode'));
+        //console.log('[%s] linkChildsToAncestor:BEGIN predicate:[%s]  ancestor:[%s]',ancestor.whoami,predicate,ancestor.get('productcode'));
         for (var i = childs.length - 1; i >= 0; i--) {
             var child = childs[i];
 
@@ -2474,11 +2480,11 @@ window.Asset = Backbone.Model.extend({
             ///
             defer = child.save(null, {
                 success: function (child) {
-                    //console.log('saveNode:productdetails success');
-                    console.log('link Asset:SUCCESS:  [%s] ',child.get('slug'));
+                    ////console.log('saveNode:productdetails success');
+                    //console.log('link Asset:SUCCESS:  [%s] ',child.get('slug'));
                 },
                 error: function () {
-                    console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',i,child.get('slug'));
+                    //console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s] [%s]',i,child.get('slug'));
                 }
             });
             deferreds.push(defer);
@@ -2497,7 +2503,7 @@ window.Asset = Backbone.Model.extend({
 
         self.buildAssetData(data);
         self.linkChildsToAncestor(self, ancestor, predicate, cb);
-        console.log('[%s]/updateAsset: END:[%s] / [%s]: [%s]',this.whoami,i,predicate,self.get('slug'));
+        //console.log('[%s]/updateAsset: END:[%s] / [%s]: [%s]',this.whoami,i,predicate,self.get('slug'));
     },
 
     assetFolder: function(){
@@ -2588,7 +2594,7 @@ window.User = Backbone.Model.extend({
     loadcontacts: function(cb){
         dao.contactfacet.setCol( new ContactFacetCollection(this.get('contactinfo')));
 
-        console.log('[%s] loadcontacts [%s] ',this.whoami, dao.contactfacet.getCol().length);
+        //console.log('[%s] loadcontacts [%s] ',this.whoami, dao.contactfacet.getCol().length);
 
         cb(dao.contactfacet.getCol());
     },
@@ -2596,7 +2602,7 @@ window.User = Backbone.Model.extend({
 
     loadusers: function(cb){
         var self = this;
-        console.log('loadusers.Person:models.js begins es_asset_de: [%s]',self.get('nickName'));
+        //console.log('loadusers.Person:models.js begins es_asset_de: [%s]',self.get('nickName'));
         //var query = {'es_usuario_de.id':self.id};
         var query = {};
         query['es_usuario_de.id']= self.id;
@@ -2614,7 +2620,7 @@ window.User = Backbone.Model.extend({
 
     loadassets: function(cb){
         var self = this;
-        console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('personcode'));
+        //console.log('loadassets:models.js begins es_asset_de: [%s]',self.get('personcode'));
         var query = {'es_asset_de.id':self.id};
         var assetCol= new AssetCollection();
         assetCol.fetch({

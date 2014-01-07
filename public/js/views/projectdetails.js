@@ -57,6 +57,11 @@ window.ProjectView = Backbone.View.extend({
         var change = {};
         change[target.name] = target.value;
         this.model.set(change);
+        if(target.name==='slug' && !this.model.get('denom')){
+            this.model.set('denom',target.value);
+            this.$('#denom').val(target.value);
+        }
+
         //utils.showAlert('Success!', 'name:['+target.name+'] value:['+target.value+'] key:['+target.id+']', 'alert-success');
 
         // Run validation rule (if any) on changed item

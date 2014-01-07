@@ -32,7 +32,7 @@ window.ModelRelatedView = Backbone.View.extend({
     whoami: 'ModelRelatedView',
 
     initialize: function () {
-        console.log('[%s] INIT',this.whoami);
+        //console.log('[%s] INIT',this.whoami);
 
         this.listenTo(this.model, "change", this.changeevent,this);
         this.model.bind("change", this.changeevent, this);
@@ -47,21 +47,21 @@ window.ModelRelatedView = Backbone.View.extend({
     className:'nav nav-list',
 
     changeevent: function(){
-        console.log('[%s]:changeevent  CHANGE', this.whoami);
+        //console.log('[%s]:changeevent  CHANGE', this.whoami);
         this.render();
 
     },
     destroyevent: function () {
-        console.log('[%s]:changeevent  DESTROY', this.whoami);
+        //console.log('[%s]:changeevent  DESTROY', this.whoami);
         this.close();
     },
 
     relateditem:function(){
-        console.log('[%s] relateditem CLICK',this.whoami);
+        //console.log('[%s] relateditem CLICK',this.whoami);
     },
 
     render: function () {
-        console.log('[%s] render BEGIN',this.whoami);
+        //console.log('[%s] render BEGIN',this.whoami);
         var that = this;
         var items = this.model;
         var len = items.length;
@@ -85,7 +85,7 @@ window.ModelInlineView = Backbone.View.extend({
     },
 
     relateditem:function(){
-        console.log('[%s]: relateditem CLICK',this.whoami);
+        //console.log('[%s]: relateditem CLICK',this.whoami);
         utils.approuter.navigate('personas/'+this.model.id, true);
     },
 
@@ -101,12 +101,12 @@ window.ModelInlineView = Backbone.View.extend({
     },
 
     changeevent: function(){
-        console.log('[%s]: change EVENT',this.whoami);
+        //console.log('[%s]: change EVENT',this.whoami);
         this.render();
 
     },
     destroyevent: function () {
-        console.log('[%s]: destroy EVENT',this.whoami);
+        //console.log('[%s]: destroy EVENT',this.whoami);
         this.close();
     },
 });
@@ -118,7 +118,7 @@ window.ProductChaptersView = Backbone.View.extend({
         //$("#chapters").html(new ProductChaptersView({model: chapters}).render().el);
         //$("#chapters").html(new ProductChaptersView({model: chapters}).render().el);
 
-        console.log('ProductChaptersView:INIT');
+        //console.log('ProductChaptersView:INIT');
         this.listenTo(this.model, "change", this.changeevent,this);
         this.model.bind("change", this.changeevent, this);
         this.model.bind("destroy", this.destroyevent, this);
@@ -134,27 +134,27 @@ window.ProductChaptersView = Backbone.View.extend({
     className:'nav nav-list',
 
     changeevent: function(){
-        console.log('changeevent:ChapterInlineView:productlist CHANGE');
+        //console.log('changeevent:ChapterInlineView:productlist CHANGE');
         this.render();
 
     },
     destroyevent: function () {
-        console.log('destroyevent:ChapterInlineView:productlist DESTROY');
+        //console.log('destroyevent:ChapterInlineView:productlist DESTROY');
         this.close();
     },
 
     chapteritem:function(){
-        console.log('productChaptersView: CLICK');
+        //console.log('productChaptersView: CLICK');
 
     },
 
     testview: function(){
-        console.log('ProductChaptersView:productlist: CLICK');
+        //console.log('ProductChaptersView:productlist: CLICK');
 
     },
 
     render: function () {
-        console.log('ProductChaptersView: render BEGIN');
+        //console.log('ProductChaptersView: render BEGIN');
         var that = this;
         var products = this.model.models;
         var len = products.length;
@@ -180,12 +180,12 @@ window.ChapterInlineView = Backbone.View.extend({
     },
 
     testview: function(){
-        console.log('ChapterInLineView:productlist: CLICK');
+        //console.log('ChapterInLineView:productlist: CLICK');
 
     },
 
     chapteritem:function(){
-        console.log('ChapterINLINEView: CLICK');
+        //console.log('ChapterINLINEView: CLICK');
         utils.approuter.navigate('productos/'+this.model.id, true);
     },
 
@@ -201,12 +201,12 @@ window.ChapterInlineView = Backbone.View.extend({
         return this;
     },
     changeevent: function(){
-        console.log('changeevent:ChapterInlineView:productlist CHANGE');
+        //console.log('changeevent:ChapterInlineView:productlist CHANGE');
         this.render();
 
     },
     destroyevent: function () {
-        console.log('destroyevent:ChapterInlineView:productlist DESTROY');
+        //console.log('destroyevent:ChapterInlineView:productlist DESTROY');
         this.close();
     },
 });
@@ -216,7 +216,7 @@ window.BrandingEditView = Backbone.View.extend({
     whoami: 'BrandingEditView:productlist.js',
 
     initialize: function () {
-        console.log('[%s] initialize',this.whoami);
+        //console.log('[%s] initialize',this.whoami);
     },
 
     events: {
@@ -226,15 +226,15 @@ window.BrandingEditView = Backbone.View.extend({
     className:'accordion-group',
 
     changeevent: function(){
-        console.log('[%s] CHANGE',this.whoami);
+        //console.log('[%s] CHANGE',this.whoami);
         this.render();
     },
     destroyevent: function () {
-        console.log('[%s] DESTROY',this.whoami);
+        //console.log('[%s] DESTROY',this.whoami);
         this.close();
     },
     notaitem:function(){
-        console.log('[%s] NOTAITEM',this.whoami);
+        //console.log('[%s] NOTAITEM',this.whoami);
     },
 
     render: function () {
@@ -248,7 +248,7 @@ window.BrandingEditView = Backbone.View.extend({
         
         form.on('change', function(form) {
             var errors = form.commit();
-            console.log('form change!!:key editor');
+            //console.log('form change!!:key editor');
         });
 
         form.on('blur', function(form) {
@@ -269,7 +269,7 @@ window.UsersView = Backbone.View.extend({
     whoami: 'UsersView:productlist.js',
 
     initialize: function () {
-        console.log('[%s] initialize',this.whoami);
+        //console.log('[%s] initialize',this.whoami);
         //this.listenTo(this.model, "change", this.changeevent,this);
         //this.model.bind("change", this.changeevent, this);
         //this.model.bind("destroy", this.destroyevent, this);
@@ -286,7 +286,7 @@ window.UsersView = Backbone.View.extend({
         this.render();
     },
     destroyevent: function () {
-        console.log('[%s] DESTROY',this.whoami);
+        //console.log('[%s] DESTROY',this.whoami);
         this.close();
     },
 
@@ -295,10 +295,10 @@ window.UsersView = Backbone.View.extend({
         var that = this;
         var itemlist = this.model;
         var len = itemlist.length;
-        console.log('[%s] RENDER len:[%s]',this.whoami, len);
+        //console.log('[%s] RENDER len:[%s]',this.whoami, len);
 
         itemlist.each(function(element){
-            console.log('each: element: [%s]',element.get('username'));
+            //console.log('each: element: [%s]',element.get('username'));
             $(that.el).append(new UserInlineView({model: element}).render().el);
         });
         return this;
@@ -317,7 +317,7 @@ window.UserInlineView = Backbone.View.extend({
     },
 
     editItem:function(){
-        console.log('[%s] EDITITEM',this.whoami);
+        //console.log('[%s] EDITITEM',this.whoami);
         dao.userfacet.setFacet(this.model);
         //utils.approuter.navigate('productos/'+this.model.id, true);
     },
@@ -328,17 +328,17 @@ window.UserInlineView = Backbone.View.extend({
     },
 
     render: function () {
-        console.log('[%s] RENDER',this.whoami);
+        //console.log('[%s] RENDER',this.whoami);
         $(this.el).html(this.template(this.model.toJSON()));
         return this;
     },
     changeevent: function(){
-        console.log('[%s] changeevent',this.whoami);
+        //console.log('[%s] changeevent',this.whoami);
         this.render();
 
     },
     destroyevent: function () {
-        console.log('[%s] destroyevent',this.whoami);
+        //console.log('[%s] destroyevent',this.whoami);
         this.close();
     },
 });
@@ -348,7 +348,7 @@ window.ContactsView = Backbone.View.extend({
     whoami: 'ContactosView:productlist.js',
 
     initialize: function () {
-        console.log('[%s] initialize',this.whoami);
+        //console.log('[%s] initialize',this.whoami);
         //this.listenTo(this.model, "change", this.changeevent,this);
         //this.model.bind("change", this.changeevent, this);
         //this.model.bind("destroy", this.destroyevent, this);
@@ -361,16 +361,16 @@ window.ContactsView = Backbone.View.extend({
     className:'nav nav-list',
 
     changeevent: function(){
-        console.log('[%s] CHANGE',this.whoami);
+        //console.log('[%s] CHANGE',this.whoami);
         this.render();
     },
     destroyevent: function () {
-        console.log('[%s] DESTROY',this.whoami);
+        //console.log('[%s] DESTROY',this.whoami);
         this.close();
     },
 
     render: function () {
-        //console.log('[%s] RENDER',this.whoami);
+        ////console.log('[%s] RENDER',this.whoami);
         var that = this;
         var itemlist = this.model;
         var len = itemlist.length;
@@ -396,7 +396,7 @@ template: _.template("<a class='contactitem' title='<%= tipocontacto %> <%= subc
     },
 
     editItem:function(){
-        console.log('[%s] EDITITEM',this.whoami);
+        //console.log('[%s] EDITITEM',this.whoami);
         dao.contactfacet.setFacet(this.model);
         //utils.approuter.navigate('productos/'+this.model.id, true);
     },
@@ -407,17 +407,17 @@ template: _.template("<a class='contactitem' title='<%= tipocontacto %> <%= subc
     },
 
     render: function () {
-        console.log('[%s] RENDER',this.whoami);
+        //console.log('[%s] RENDER',this.whoami);
         $(this.el).html(this.template(this.model.toJSON()));
         return this;
     },
     changeevent: function(){
-        console.log('[%s] changeevent',this.whoami);
+        //console.log('[%s] changeevent',this.whoami);
         this.render();
 
     },
     destroyevent: function () {
-        console.log('[%s] destroyevent',this.whoami);
+        //console.log('[%s] destroyevent',this.whoami);
         this.close();
     },
 });
@@ -431,11 +431,11 @@ window.ProfileImageView = Backbone.View.extend({
     ),
     
     initialize: function () {
-        console.log('[%s] RENDER [%s]',this.whoami, this.model.get('slug'));
+        //console.log('[%s] RENDER [%s]',this.whoami, this.model.get('slug'));
     },
 
     render: function () {
-        console.log('[%s] RENDER',this.whoami);
+        //console.log('[%s] RENDER',this.whoami);
         $(this.el).html(this.template(this.model.toJSON()));
         return this;
     },
@@ -446,7 +446,7 @@ window.NotasView = Backbone.View.extend({
     whoami: 'NotasView:productlist.js',
 
     initialize: function () {
-        console.log('[%s] initialize',this.whoami);
+        //console.log('[%s] initialize',this.whoami);
         //this.listenTo(this.model, "change", this.changeevent,this);
         //this.model.bind("change", this.changeevent, this);
         //this.model.bind("destroy", this.destroyevent, this);
@@ -459,19 +459,19 @@ window.NotasView = Backbone.View.extend({
     className:'nav nav-list',
 
     changeevent: function(){
-        console.log('[%s] CHANGE',this.whoami);
+        //console.log('[%s] CHANGE',this.whoami);
         this.render();
     },
     destroyevent: function () {
-        console.log('[%s] DESTROY',this.whoami);
+        //console.log('[%s] DESTROY',this.whoami);
         this.close();
     },
     notaitem:function(){
-        console.log('[%s] NOTAITEM',this.whoami);
+        //console.log('[%s] NOTAITEM',this.whoami);
     },
 
     render: function () {
-        console.log('[%s] RENDER',this.whoami);
+        //console.log('[%s] RENDER',this.whoami);
         var that = this;
         var itemlist = this.model;
         var len = itemlist.length;
@@ -496,7 +496,7 @@ template: _.template("<a href='#articulos/<%= id %>' class='notaitem' title='<%=
     },
 
     notaitem:function(){
-        console.log('[%s] NOTAITEM',this.whoami);
+        //console.log('[%s] NOTAITEM',this.whoami);
         utils.approuter.navigate('productos/'+this.model.id, true);
     },
 
@@ -506,17 +506,17 @@ template: _.template("<a href='#articulos/<%= id %>' class='notaitem' title='<%=
     },
 
     render: function () {
-        console.log('[%s] RENDER',this.whoami);
+        //console.log('[%s] RENDER',this.whoami);
         $(this.el).html(this.template(this.model.toJSON()));
         return this;
     },
     changeevent: function(){
-        console.log('[%s] changeevent',this.whoami);
+        //console.log('[%s] changeevent',this.whoami);
         this.render();
 
     },
     destroyevent: function () {
-        console.log('[%s] destroyevent',this.whoami);
+        //console.log('[%s] destroyevent',this.whoami);
         this.close();
     },
 });
@@ -527,7 +527,7 @@ window.PersonAncestorView = Backbone.View.extend({
     className:'nav nav-list',
 
     render: function () {
-        console.log('PersonAncestorView: render BEGIN');
+        //console.log('PersonAncestorView: render BEGIN');
         var that = this;
         var products = this.model;
         products.each(function(element){
@@ -573,14 +573,14 @@ window.AncestorView = Backbone.View.extend({
     className:'nav nav-list',
 
     render: function () {
-        console.log('AncestorView: render BEGIN');
+        //console.log('AncestorView: render BEGIN');
         var that = this;
         var products = this.model;
         var len = products.length;
         //$(this.el).html('<ul class="nav nav-list"></ul>');
 
         _.each(products,function(element){
-            console.log('each: ELEMENT: [%s]',element.get('slug'));
+            //console.log('each: ELEMENT: [%s]',element.get('slug'));
             $(that.el).append(new AncestorInLineView({model: element}).render().el);
         });
         return this;
@@ -598,7 +598,7 @@ window.AncestorInLineView = Backbone.View.extend({
     },
 
     ancestorpa:function(){
-        console.log('ancestorView: CLICK');
+        //console.log('ancestorView: CLICK');
         utils.approuter.navigate('productos/'+this.model.id, true);
     },
 

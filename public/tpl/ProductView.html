@@ -61,24 +61,7 @@
                   <input id="project[id]" name="project[id]" type="text" 
                           value="<%= project._id === null ? '' : project._id %>"  disabled>
                   <select class="input-large" id="tipoproducto" name="tipoproducto" value="<%= tipoproducto %>">
-                      <option value='no_definido'
-                      <%= tipoproducto == 'no_definido' ? 'selected':'' %>>--tipo de producto--</option>
-                      <option value='paudiovisual'
-                      <%= tipoproducto == 'paudiovisual' ? 'selected':'' %>>producto audiovisual</option>
-                      <option value='micro'
-                      <%= tipoproducto == 'micro' ? 'selected':'' %>>micro</option>
-                      <option value='catalogo'
-                      <%= tipoproducto == 'catalogo' ? 'selected':'' %>>catalogo</option>
-                      <option value='promo'
-                      <%= tipoproducto == 'promo' ? 'selected':'' %>>promo</option>
-                      <option value='imagen'
-                      <%= tipoproducto == 'imagen' ? 'selected':'' %>>imagen</option>
-                      <option value='video'
-                      <%= tipoproducto == 'video' ? 'selected':'' %>>video</option>
-                      <option value='audio'
-                      <%= tipoproducto == 'audio' ? 'selected':'' %>>audio</option>
-                      <option value='documento'
-                      <%= tipoproducto == 'documento' ? 'selected':'' %>>documento</option>
+                    <%= utils.buildSelectOptions('tipoproducto',utils.tipoproductoOptionList, tipoproducto) %>
                    </select>
                   <input id="productcode" name="productcode" type="text" 
                           value="<%= productcode === null ? '' : productcode %>"  disabled>

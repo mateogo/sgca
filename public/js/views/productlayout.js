@@ -23,7 +23,6 @@ window.ProductBrowseModel = Backbone.Model.extend({
         numcapprefix: 100,
         tipoproducto:'paudiovisual',
         durnominal:'',
-        descriptores:'',
     }
 });
 
