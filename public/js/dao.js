@@ -270,6 +270,17 @@ window.dao = {
         }
     },
 
+    comprobantefacet: {
+        init: function(ancestor){
+            //console.log('notasfacet: [%s]',ancestor.get('slug'));
+            this.data = new Comprobante();
+            return this.data;
+        },
+        getContent: function(){
+            return this.data;
+        }
+    },
+
     managetable: {
         init: function(product){
             this.data = new ManageTable({

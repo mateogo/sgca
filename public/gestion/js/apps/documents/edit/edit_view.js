@@ -154,7 +154,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
             console.log('modal CLOSE');
             var errors = form.commit();
             facet.createNewDocument(function(err, model){
-              DocManager.trigger("documents:list");
+              DocManager.trigger("document:edit",model);
             });
         });
   };

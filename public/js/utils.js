@@ -172,7 +172,7 @@ window.utils = {
         {val:'suspendido'   , label:'suspendido'},
         {val:'archivo'      , label:'archivado'}
     ],
-
+/*
     casosqcOptionList: [
         {val:'AAnodefinido',   label:'Seleccione tipo de hallazgo'},
         {val:'Aartefactos',    label:'A: Artefactos producidos por compresión / branding'},
@@ -208,6 +208,52 @@ window.utils = {
         {val:'Dptipografia',   label:'D: Problemas en paquete grafico (tipografía ilegible)'},
         {val:'Dsaltotc',       label:'D: Salto en Timecode continuo'},
     ],
+*/
+    casosqcOptionList: [
+        {val:'nodefinido',        label:'-------  Seleccione tipo de hallazgo-------------------------------------'},
+        {val:'vvideo',            label:'------------- V I D E O -------------------------------------------------'},
+        {val:'vausvideo',         label:'Ausencia de video/media offline'},
+        {val:'vartefactos',       label:'Artefactos producidos por compresión/ banding'},
+        {val:'vdropanalogico',    label:'Drop de video analógico'},
+        {val:'vdropdigital',      label:'Drop de video digital'},
+        {val:'vflickering',       label:'Parpadeo (flickering)'},
+        {val:'vgraffseguraccion', label:'Gráfica fuera del margen de seguridad de acción'},
+        {val:'vgraffsegurtexto',  label:'Gráfica fuera del margen de seguridad de texto'},
+        {val:'vmoire',            label:'Moire / Aliasing'},
+        {val:'vconvgerepite',     label:'Problema de conversión general (repite cuadros'},
+        {val:'vconvgeneral',      label:'Problema de conversión general'},
+        {val:'vprobedicionvideo', label:'Problema de edición de video'},
+        {val:'vprobescaneo',      label:'Problema de escaneo'},
+        {val:'vprobfocoplano',    label:'Problema de foco en plano'},
+        {val:'vprobposimagen',    label:'Problema de posición de imagen'},
+        {val:'vprobprocgeneral',  label:'Problema de procesamiento general'},
+        {val:'vprobchromakey',    label:'Problema de recorte /chroma key'},
+        {val:'vprobresollimg',    label:'Problema de resolución de imagen'},
+        {val:'vvaloresexcedenlegal', label:'Valores de video/ chroma/ hue/ exceden margen legal'},
+        {val:'vvarabrupta',       label:'Variación abrupta de corrección de color / exposición'},
+        {val:'vvarcorreccion',    label:'Variación de corrección de color entre planos'},
+        {val:'vpixelquemado',     label:'Pixel quemado'},
+        {val:'aaudio',            label:'------------- A U D I O -----------------------------------------------'},
+        {val:'aausencia',         label:'Ausencia de audio'},
+        {val:'adesinccanales',    label:'Descincronización entre canales de audio'},
+        {val:'adropanalogico',    label:'Drop de audio analógico'},
+        {val:'adropdigital',      label:'Drop de audio digital'},
+        {val:'aprobedicion',      label:'Problema de edición de audio'},
+        {val:'aprobasignacion',   label:'Problema en asignación de canales de audio'},
+        {val:'aprobmezcla',       label:'Problema en mezcla (piso de ruido)'},
+        {val:'aprobdialogos',     label:'Problema en mezcla/ diálogos bajos'},
+        {val:'aprobnivelesre',    label:'Problema en niveles relativos de mezcla'},
+        {val:'alipsync',          label:'Desincronicación de dialogo (Lip-sync)'},
+        {val:'ggrafica',          label:'---------- G R A F I C A -----------------------------------------------'},
+        {val:'gplacasinstitucional', label:'Placas institucionales no correspondientes'},
+        {val:'gplanoseguridad',   label:'Plano de seguridad faltante (TC:xx:xx:xx:xx)'},
+        {val:'gplanonocorresp',   label:'Plano de seguridad no correspondiente'},
+        {val:'gprobpaqgrafico',   label:'Problema en paquete gráfico (ortografía/ gramática)'},
+        {val:'gprobtipografia',   label:'Problema en paquete gráfico (tipografía ilegible)'},
+        {val:'ootros',            label:'----------- O T R O S --------------------------------------------------'},
+        {val:'osaltotc',          label:'Salto de TC continuo'},
+        {val:'otcnocorresp',      label:'TC no correspondiente'},
+    ],
 
     mediofisicoOptionList: [
         {val:'no_definido', label:'Medio fisico'},
@@ -242,9 +288,24 @@ window.utils = {
      ],
 
     tipomovOptionList: [
+        {val:'no_definido'  , label:'Tipo de movimiento'},
+        {val:'nopentrada'   , label:'------ E N T R A D A S ------'},
+        {val:'recepcion'    , label:'Recepción Producto Audiovisual'},
+        {val:'entrada'      , label:'Recepciones varias'},
+        {val:'nopentrada'   , label:'------  S A L I D A S ------'},
+        {val:'distribucion' , label:'Distribución'},
+        {val:'entrega'      , label:'Entregas'},
+    ],
+    tipomovEntregaOptionList: [
         {val:'no_definido', label:'Tipo de movimiento'},
-        {val:'recepcion'  , label:'RECEPCIÓN'},
-        {val:'entrega'    , label:'ENTREGA'},
+        {val:'distribucion' , label:'Distribución'},
+        {val:'entrega'      , label:'Entregas'},
+    ],
+
+    tipomovRecepcionOptionList: [
+        {val:'no_definido', label:'Tipo de movimiento'},
+        {val:'recepcion'  , label:'Recepción Producto Audiovisual'},
+        {val:'entrada'    , label:'Recepciones varias'},
     ],
 
     estadoqcOptionList: [

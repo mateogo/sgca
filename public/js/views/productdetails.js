@@ -81,7 +81,7 @@ window.ProductView = Backbone.View.extend({
         "click .discardbrnd" : "discardbrnd",
         "click .addnewbrnd"  : "addnewbrnd",
         "click .cancelbrnd"  : "cancelbranding",
-        "click .ptecnico"    : "altaptecnico",
+        "click .comprobante"    : "formcomprobante",
 
         "dragover #filesdrop" : "dragoverHandler",
         "dragover #brnddrop"  : "dragoverHandler",
@@ -188,13 +188,6 @@ window.ProductView = Backbone.View.extend({
             //utils.approuter.navigate('productos/' + product.id, {trigger: true, replace: false});
         });
         return false;
-    },
-
-    altaptecnico: function(){
-        this.model.createNewPtecnico(function(err,docum){
-            window.open('/gestion/#comprobantes/'+docum.id+'/edit');
-            return false;
-        });
     },
 
     addnewbrnd: function () {
@@ -507,6 +500,32 @@ window.ProductView = Backbone.View.extend({
             });
         });
     }, 
+
+    formcomprobante: function(){
+        var self = this,
+            productmodel = this.model,
+            facet = dao.comprobantefacet.init(productmodel),
+            form = new Backbone.Form({
+                model: facet,
+            });
+
+        var modal = new Backbone.BootstrapModal({
+            content: form,
+            title: 'Alta rápida de comprobantes',
+            okText: 'guardar',
+            cancelText: 'cancelar',
+            animate: false
+        });
+
+        modal.open(function(){
+            var errors = form.commit();
+            productmodel.createNewDocument(facet, function(err,docum){
+            window.open('/gestion/#comprobantes/'+docum.id+'/edit');
+                return false;
+            });
+        });
+    },
+
 
     formpaclasification: function () {
         var self = this,

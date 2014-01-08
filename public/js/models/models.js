@@ -858,7 +858,6 @@ window.Article = Backbone.Model.extend({
 
 });
 
-
 window.ArticleCollection = Backbone.Collection.extend({
     // ******************* PROJECT COLLECTION ***************
 
@@ -1333,12 +1332,11 @@ window.Product = Backbone.Model.extend({
         return this.get('taglist');
     },
 
-    createNewPtecnico: function(cb){
+    createNewDocument: function(docum, cb){
         //console.log('initNewPtecnico:Product:models.js');
         var self = this;
-        var docum = new Comprobante();
         var dt = self.getDatosTecnicos();
-        docum.initPtecnico(self,dt);
+        docum.initDocum(self,dt);
         docum.beforeSave();
         docum.update(cb);
     },
@@ -1398,56 +1396,88 @@ window.ProductCollection = Backbone.Collection.extend({
 
   
 window.Comprobante = Backbone.Model.extend({
-    urlRoot: "/comprobantes",
     whoami: 'Comprobante:models.js ',
+
+    urlRoot: "/comprobantes",
 
     idAttribute: "_id",
 
-    defaults: {
-      _id: null,
-      tipocomp: "",
-      cnumber: "",
-      fecomp: "",
-      persona: "",
-      slug: "",
-      estado_alta:'activo',
-      nivel_ejecucion: 'alta',
-      description: "",
-      items:[]
+    schema: {
+        tipocomp: {type: 'Select',options: utils.tipoComprobanteOptionList },
+        slug:     {type: 'Text', title: 'Asunto'},
+        description:  {type: 'Text', title: 'Descripción'},
     },
 
     enabled_predicates:['es_relacion_de'],
 
-    initPtecnico: function(product, dt){
-      var fealta = new Date();
-      this.set({fealta: fealta.getTime()});
-      this.set({fecomp_tc: fealta.getTime()});
+    initDocum: function(product, dt){
+        var fealta = new Date(),
+            documitems=[];
 
-      this.set({fecomp: utils.displayDate(fealta)});
-      this.set({tipocomp: 'ptecnico'});
-      this.set({persona: dt.productora});
-      this.set({slug: 'PT:'+product.get('slug')});
-      this.set({estado_alta: 'activo'});
-      this.set({nivel_ejecucion: 'enproceso'});
+        this.set({fealta: fealta.getTime()});
+        this.set({fecomp_tc: fealta.getTime()});
 
-      var ptecnico = new DocumParteTecnico();
-      ptecnico.set({
-        tipoitem: 'ptecnico',
-        slug: this.get('slug'),
-        fept: this.get('fecomp'),
-        product:product.get('slug'),
-        productid: product.id,
-        productora: dt.productora, //x
-        sopoentrega: dt.sopoentrega,//
-        resolucion: dt.resolucion,//
-        framerate: dt.framerate,//
-        aspectratio: dt.aspectratio,//
-        rolinstancia: dt.rolinstancia,//
-        formatoorig: dt.formatoorig,//
-        estado_alta:'activo',
-        nivel_ejecucion:'enproceso'
-      });
-      this.get('items').push(ptecnico.attributes);
+        this.set({fecomp: utils.displayDate(fealta)});
+        this.set({estado_alta: 'activo'});
+        this.set({nivel_ejecucion: 'enproceso'});
+
+        //this.set({tipocomp: 'ptecnico'});
+        //this.set({slug: 'PT:'+product.get('slug')});
+
+        if(this.get('tipocomp')==='ptecnico'){
+            this.set({persona: dt.productora});
+            var ptecnico = new DocumPT();
+            ptecnico.set({
+                tipoitem: this.get('tipocomp'),
+                slug: this.get('slug'),
+                fept: this.get('fecomp'),
+                product:product.get('productcode'),
+                productid: product.id,
+                pslug: product.get('slug') ,
+                productora: dt.productora, //x
+                sopoentrega: dt.sopoentrega,//
+                resolucion: dt.resolucion,//
+                framerate: dt.framerate,//
+                aspectratio: dt.aspectratio,//
+                rolinstancia: dt.rolinstancia,//
+                formatoorig: dt.formatoorig,//
+                estado_alta:'activo',
+                nivel_ejecucion:'enproceso'
+            });
+            documitems.push(ptecnico.attributes);
+            this.set({items: documitems});
+        } else if(this.get('tipocomp')==='pemision'){
+            var parte = new DocumEM();
+            parte.set({
+                tipoitem: this.get('tipocomp'),
+                slug: this.get('slug'),
+                tipoemis:"tda",
+                product:product.get('productcode'),
+                productid: product.id,
+                pslug: product.get('slug') ,
+            });
+            documitems.push(parte.attributes);
+            this.set({items: documitems});
+        } else if(this.get('tipocomp')==='nentrega'||this.get('tipocomp')==='nrecepcion'){
+            var parte = new DocumRE(),
+                sitems = [];
+            parte.set({
+                tipoitem: this.get('tipocomp'),
+                slug: this.get('slug'),
+                tipomov: (this.get('tipocomp')==='nentrega') ? 'distribucion' : 'recepcion',
+            });
+            var sitem = new DocumREItem();
+            sitem.set({
+                product:product.get('productcode'),
+                productid: product.id,
+                pslug: product.get('slug'),
+                durnominal:dt.durnominal,
+            });
+            sitems.push(sitem.attributes);
+            parte.set({items: sitems});
+            documitems.push(parte.attributes);
+            this.set({items: documitems});
+        }
     },
 
     beforeSave: function(){
@@ -1469,11 +1499,24 @@ window.Comprobante = Backbone.Model.extend({
           cb(null,null);
       }    
     },
+    defaults: {
+      _id: null,
+      tipocomp: "",
+      cnumber: "",
+      fecomp: "",
+      persona: "",
+      slug: "",
+      description:"",
+      estado_alta:'activo',
+      nivel_ejecucion: 'alta',
+      items:[]
+    },
+
 
  });
 
 
-window.DocumParteTecnico = Backbone.Model.extend({
+window.DocumPT = Backbone.Model.extend({
     whoami: 'DocumParteTecnico:models.js ',
 
     defaults: {
@@ -1493,6 +1536,50 @@ window.DocumParteTecnico = Backbone.Model.extend({
       aspectratio:"",
       rolinstancia:"",
       formatoorig:"",
+    },
+});
+
+window.DocumRE = Backbone.Model.extend({
+    whoami: 'DocumRecepcion Entrega:models.js ',
+
+    defaults: {
+      tipoitem: "",
+      slug: "",
+      tipomov: "",
+      persona: "",
+      mediofisico: "",
+      soporte_slug: "",
+      soporte_id: "",
+      descripcion:"",
+      items:[]
+    },
+});
+
+window.DocumREItem = Backbone.Model.extend({
+    whoami: 'DocumRecepcionEntrega - ITEM:models.js ',
+    defaults: {
+        product: '',
+        pslug:'',
+        comentario: '',
+        durnominal:'',
+    },
+});
+
+window.DocumEM = Backbone.Model.extend({
+    whoami: 'DocumParte de emision : models.js ',
+
+    defaults: {
+      tipoitem: "",
+      tipoemis:"",
+      slug: "",
+      fedesde:"",
+      fehasta:"",
+      cobertura:"",
+      product:"",
+      pslug:"",
+      fuente:"",
+      persona: "",
+      items:[]
     },
 });
 
