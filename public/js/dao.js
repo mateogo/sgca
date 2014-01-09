@@ -68,6 +68,18 @@ window.dao = {
         }
     },
 
+    documentsCol:{
+        get: function (){
+            if (!this.docsCol) {
+                this.docsCol = new ComprobanteCollection();
+            }
+            return this.docsCol;
+        },
+        set: function(col){
+            this.docsCol = col;
+        }
+    },
+
     extractData: function(model){
         var qobj = {};
         _.each(model,function(value,key){
@@ -354,13 +366,23 @@ window.dao = {
         addEtiquetas: function(){
             var self = this;
             var test=false;
+            if(self.data.get('contenido').genero){
+                if(self.data.get('contenido').genero !== 'nodefinido'){
+                    test=_.find(self.etqs,function(el) {return el===self.data.get('contenido').genero;});
+                    if(!test) self.etqs.push(self.data.get('contenido').genero);
+               }
+            }
             if(self.data.get('contenido').tematica){
-                test=_.find(self.etqs,function(el) {return el===self.data.get('contenido').tematica;});
-                if(!test) self.etqs.push(self.data.get('contenido').tematica);
+                if(self.data.get('contenido').tematica !== 'nodefinido'){
+                    test=_.find(self.etqs,function(el) {return el===self.data.get('contenido').tematica;});
+                    if(!test) self.etqs.push(self.data.get('contenido').tematica);
+                }
             }
             if(self.data.get('contenido').subtematica){
-                test=_.find(self.etqs,function(el) {return el===self.data.get('contenido').subtematica;});
-                if(!test) self.etqs.push(self.data.get('contenido').subtematica);
+                if(self.data.get('contenido').subtematica !== 'nodefinido'){
+                    test=_.find(self.etqs,function(el) {return el===self.data.get('contenido').subtematica;});
+                    if(!test) self.etqs.push(self.data.get('contenido').subtematica);
+                }
             }
             self.buildContentLabel();
         },
@@ -392,6 +414,9 @@ window.dao = {
         };
         var loadNotas = function(cb){
             spec.product.loadnotas(cb);
+        };
+        var loadDocuments = function(cb){
+            spec.product.loaddocuments(cb);
         };
         var loadUsers = function(cb){
             spec.product.loadusers(cb);
@@ -449,6 +474,14 @@ window.dao = {
             if(items) spec.users = items;
             spec.usersview = new UsersView({model:spec.users});
             $(spec.usersselector, spec.context).html(spec.usersview.render().el);
+        };
+        var documentsRender = function(items){
+            //console.log('DOCUM renderview:callback: [%s]',spec.documentsselector);
+            if(items) spec.documents = items;
+            console.log('antes de crear Documents view');
+            spec.documview = new DocumentsView({collection:spec.documents});
+            console.log('doppo de crear Documents view');
+            $(spec.documentsselector, spec.context).html(spec.documview.render().el);
         };
         var notasRender = function(items){
             //console.log('NOTAS renderview:callback: [%s]',spec.notasselector);
@@ -541,6 +574,9 @@ window.dao = {
             },
             chrender: function() {
                 loadChilds(childsRender);
+            },
+            documrender: function() {
+                loadDocuments(documentsRender);
             },
             relrender: function() {
                 loadRelated(relatedRender);

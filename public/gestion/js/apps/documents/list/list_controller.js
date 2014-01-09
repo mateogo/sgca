@@ -98,7 +98,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
   var registerDocumListEvents = function(documentsListView) {
         
         documentsListView.on("itemview:document:show", function(childView, model){
-          DocManager.trigger("document:show", model);
+          DocManager.trigger("document:show", model.id);
         });
 
         documentsListView.on("itemview:document:edit", function(childView, model){
@@ -162,12 +162,6 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
   DocManager.reqres.setHandler("product:search", function(query, cb){
     API.searchProducts(query, cb);
   });
-
-
-
-
-
-
 
 });
 

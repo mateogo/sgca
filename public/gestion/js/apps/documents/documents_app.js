@@ -26,8 +26,9 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
       DocManager.execute("set:active:header", "comprobantes");
     },
 
-    showDocument: function(model){
-      DocsApp.Show.Controller.showDocument(model);
+    showDocument: function(id){
+      console.log('API: show document')
+      DocsApp.Show.Controller.showDocument(id);
       DocManager.execute("set:active:header", "comprobantes");
     },
 
@@ -62,10 +63,10 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
     API.listDocuments();
   });
 
-  DocManager.on("document:show", function(model){
-    console.log('DocManager: on SHOW [%s]',model.get('slug'));
-    DocManager.navigate("comprobantes/" + model.id);
-    API.showDocument(model);
+  DocManager.on("document:show", function(id){
+    console.log('DocManager: on SHOW');
+    DocManager.navigate("comprobantes/" + id);
+    API.showDocument(id);
   });
 
   DocManager.on("document:edit", function(model){

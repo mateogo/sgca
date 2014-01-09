@@ -925,6 +925,27 @@ window.Product = Backbone.Model.extend({
         cb(notas);
     },
     
+    loaddocuments:function (cb) {
+        var self = this;
+        //console.log('loadpacapitulos:models.js begins es_capitulo_de: [%s]',self.get('productcode'));
+        //var query = {$or: [{'es_capitulo_de.id':self.id},{'es_instancia_de.id':self.id}, {'es_coleccion_de.id':self.id}]};
+        //var query = {cnumber: 'T100006'};
+        //var query = {'items.productid': '5252a139a8907e8901000003'};
+        var query = {$or: [{'items.items.productid': self.id}, {'items.productid': self.id}]};
+
+        var documCol= new DocumentCollection();
+        //console.log('loadpacapitulos:models.js query  [%s] ',query['es_capitulo_de.id']);
+
+        documCol.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                dao.documentsCol.set(documCol);
+                if(cb) cb(dao.documentsCol.get());
+            }
+        });
+    },
+
     loadbranding:function (cb) {
         var self = this;
         //console.log('mdel:loadbranding');
@@ -1514,6 +1535,15 @@ window.Comprobante = Backbone.Model.extend({
 
 
  });
+window.DocumentCollection = Backbone.Collection.extend({
+    // ******************* PROJECT COLLECTION ***************
+
+    model: Comprobante,
+
+    url: "/navegar/comprobantes"
+
+});
+
 
 
 window.DocumPT = Backbone.Model.extend({
@@ -1760,13 +1790,13 @@ window.PaClasificationFacet = Backbone.Model.extend({
 
     retrieveData: function(){
         var data = {};
-        data.genero = this.get('genero');
         data.cetiquetas = this.get('cetiquetas');
         data.formato = this.get('formato');
         data.videoteca = this.get('videoteca');
         data.etario = this.get('etario');
         data.descripcion = this.get('descripcion');
         data.descriptores = this.get('descriptores');
+        data.vocesautorizadas = this.get('vocesautorizadas');
         return data;
     },
 
@@ -1777,7 +1807,6 @@ window.PaClasificationFacet = Backbone.Model.extend({
     },
 
     schema: {
-        genero:       {type: 'Select',options: utils.generoOptionList, title: 'Género'},
         contenido:{
             type:'Object', title:'Selector',
             template: _.template('\
@@ -1792,6 +1821,7 @@ window.PaClasificationFacet = Backbone.Model.extend({
                 </div>\
                 '),
             subSchema:{
+                genero:      {type: 'Select',options: utils.generoOptionList, title: 'Género'},
                 tematica:    {type: 'Select',options: utils.tematicasOptionList , title:'Temática'},
                 subtematica: {type: 'Select',options: utils.subtematicasOptionList.artecultura, title:'SubTemática'},
         }},
@@ -1801,10 +1831,12 @@ window.PaClasificationFacet = Backbone.Model.extend({
         etario:       {type: 'Select',options: utils.etarioOptionList, title:'Tipo de audiencia'},  
         descripcion:   {type: 'TextArea',editorAttrs:{placeholder:'descripción / sinopsis'},title:'Descripción:'},  
         descriptores:  {type: 'TextArea',editorAttrs:{placeholder:'palabras claves separadas por ;'},title:'Palabras claves:'},  
+        vocesautorizadas: {type: 'TextArea',editorAttrs:{placeholder : 'nombre (cargo);...'}, title: 'Voces autorizadas' },
     },
 
     defaults: {
         contenido:{
+            genero:'',
             tematica:'',
             subtematica:''
         },
@@ -1815,6 +1847,7 @@ window.PaClasificationFacet = Backbone.Model.extend({
         etario:'',
         descripcion: '',
         descriptores: '',
+        vocesautorizadas: '',
     }
 });
 
@@ -1841,12 +1874,12 @@ window.PaRealizationFacet = Backbone.Model.extend({
         realizadores: {type: 'TextArea',editorAttrs:{placeholder : 'realizadores'},title: 'Realizadores'},
         productores: {type: 'TextArea',editorAttrs:{placeholder : 'productores'}, title: 'Productores'},
         coproductores: {type: 'TextArea',editorAttrs:{placeholder : 'co-productores'}, title: 'Co-productores' },
-        vocesautorizadas: {type: 'TextArea',editorAttrs:{placeholder : 'nombre (cargo)'}, title: 'Voces autorizadas' },
         conduccion: {type: 'TextArea',editorAttrs:{placeholder : 'conduccion'}, title: 'Conducción' },
         reparto: {type: 'TextArea',editorAttrs:{placeholder : 'actores'}, title: 'Reparto' },
         directores: {type: 'TextArea',editorAttrs:{placeholder : 'directores'}, title: 'Directores' },
         fotografia: {type: 'TextArea',editorAttrs:{placeholder : 'fotografia'}, title: 'Fotografía' },
         edicion: {type: 'TextArea',editorAttrs:{placeholder : 'edicion'}, title: 'Edición' },
+        animacion : {type: 'TextArea',editorAttrs:{placeholder : 'animación'}, title: 'Animación' },
         camaras: {type: 'TextArea',editorAttrs:{placeholder : 'camaras'}, title: 'Cámaras' },
         guionistas: {type: 'TextArea',editorAttrs:{placeholder : 'guionistas'}, title: 'Guionistas' },
         escenografia: {type: 'TextArea',editorAttrs:{placeholder : 'escenografia'}, title: 'Escenografía' },
@@ -1860,10 +1893,10 @@ window.PaRealizationFacet = Backbone.Model.extend({
         realizadores:'',
         conduccion:'',
         productores:'',
-        vocesautorizadas:'',
         coproductores:'',
         fotografia:'',
         edicion:'',
+        animacion:'',
         camaras: '',
         escenografia:'',
         reparto:'',

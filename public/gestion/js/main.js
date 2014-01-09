@@ -1,10 +1,13 @@
 utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView', 'DocumNavbar',
     'DocumEditMin', 'DocumShowDef','DocumEditCore','DocumEditPT', 'SearchEntitiesForm','DocumEditPTLayout','DocumEditPTItem',
-    'DocumEditRE', 'DocumEditREItem','DocumEditEM','DocumEditEMItem','DocumEditEMHeader' ], function() {
+    'DocumEditRE', 'DocumEditREItem','DocumEditEM','DocumEditEMItem','DocumEditEMHeader', 'DocumShowLayoutView',
+    'DocumShowBranding', 'DocumShowHeader', 'DocumShowItemHeader', 'DocumShowItemLayoutView','DocumShowItemComposite',
+    'DocumShowItemDetail' ], function() {
 
     $('[data-toggle=offcanvas]').click(function() {
         $('.row-offcanvas').toggleClass('active');
     });
+    console.log('main: DocManagert.start')
     DocManager.start();
 });
 

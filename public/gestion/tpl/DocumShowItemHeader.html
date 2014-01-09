@@ -1,0 +1,49 @@
+<div class="row">
+	<div class="col-xs-3 col-sm-4" >
+		<div class='row'>
+		<div class="col-xs-6 col-sm-6" >
+		<p><strong>Fecha Revision: </strong><%= fept %></p>
+		<p><strong>Revisión Nro.: </strong><%= revision %></p>
+		<p><strong>Bloques de Video: </strong><%= vbloques %></p>
+		<p><strong>Resolución: </strong><%= resolucion %></p>
+		</div>
+		<div class="col-xs-6 col-sm-6" >
+		<p><strong>Frame rate: </strong><%= framerate %></p>
+		<p><strong>Aspect ratio: </strong><%= aspectratio %></p>
+		<p><strong>Formato original: </strong><%= formatoorig %></p>
+		<p><strong>Rol: </strong><%= rolinstancia %></p>
+		<p><strong>Soporte entrega: </strong><%= sopoentrega %></p>
+		</div>
+		</div>
+	</div>
+	<div class="col-xs-9 col-sm-8" >
+		<span class='col-sm-5 col-sm-offset-3 pull-right'><h4>CALIFICACIÓN: <%= utils.fetchLabel(utils.estadoqcOptionList, estado_qc) %></h4></span>
+		<span class='col-sm-7 col-sm-offset-1 pull-right'><strong>Código: <%=product %></strong> <%= pslug %></span>
+	</div>
+</div>
+<div class="row" >
+	<div class="col-xs-3 col-sm-3" >
+		<p><strong>AUDIO-1</strong></p>
+		<p><strong>Canal: </strong><%= au1_channel %></p>
+		<p><strong>Canal: </strong><%= au1_piclevel %></p>
+		<p><strong>Canal: </strong><%= au1_content %></p>
+	</div>
+	<div class="col-xs-3 col-sm-3" >
+		<p><strong>AUDIO-2</strong></p>
+		<p><strong>Canal: </strong><%= au2_channel %></p>
+		<p><strong>Canal: </strong><%= au2_piclevel %></p>
+		<p><strong>Canal: </strong><%= au2_content %></p>
+	</div>
+	<div class="col-xs-3 col-sm-3" >
+		<p><strong>AUDIO-3</strong></p>
+		<p><strong>Canal: </strong><%= au3_channel %></p>
+		<p><strong>Canal: </strong><%= au3_piclevel %></p>
+		<p><strong>Canal: </strong><%= au3_content %></p>
+	</div>
+	<div class="col-xs-3 col-sm-3" >
+		<p><strong>AUDIO-4</strong></p>
+		<p><strong>Canal: </strong><%= au4_channel %></p>
+		<p><strong>Canal: </strong><%= au4_piclevel %></p>
+		<p><strong>Canal: </strong><%= au4_content %></p>
+	</div>
+</div>

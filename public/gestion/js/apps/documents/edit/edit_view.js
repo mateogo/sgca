@@ -335,11 +335,17 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
       this.options = options;
+      this.model.bind("tc:change", this.tcChange, this);
     },
 
     events: {
       "click .js-sitremove": "sitremove",
       "click .js-productsch": "productsearch",
+    },
+
+    tcChange: function(key){
+      console.log('tcChange: [%s]',key);
+      this.$('#'+key).val(this.model.get(key));
     },
 
     productsearch: function(){

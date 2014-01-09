@@ -14,7 +14,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       persona: "",
       slug: "",
       estado_alta:'activo',
-      nivel_ejecucion: 'alta',
+      nivel_ejecucion: 'enproceso',
       description: "",
       items:[]
     },
@@ -294,12 +294,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
       if (_.has(attrs,'ptitcbco')){
         this.set('ptitcbco',utils.parseTC(attrs.ptitcbco));
+        if(this.get('ptitcbco') === "00:00:00:00") errors.ptitcbco = "error de time-code";
+        this.trigger('tc:change','ptitcbco');
       }
       if (_.has(attrs,'ptiduracion')){
         this.set('ptiduracion',utils.parseTC(attrs.ptiduracion));
+        if(this.get('ptiduracion') === "00:00:00:00") errors.ptiduracion = "error de time-code";
+        this.trigger('tc:change','ptiduracion');
       }
       if (_.has(attrs,'ptitcabs')){
         this.set('ptitcabs',utils.parseTC(attrs.ptitcabs));
+        if(this.get('ptitcabs') === "00:00:00:00") errors.ptitcabs = "error de time-code";
+        this.trigger('tc:change','ptitcabs');
       }
 
       if( ! _.isEmpty(errors)){

@@ -3,7 +3,7 @@ window.ProductView = Backbone.View.extend({
     whoami:'ProductView:productdetails',
 
     initialize: function () {
-        this.relatedController = dao.productViewFactory({product:this.model, chselector:'#chapters1',anselector:'#ancestor1',notasselector:'#notas1',brandingselector:'#brandingaccordion',asselector:'#assets1', context:this.el});
+        this.relatedController = dao.productViewFactory({product:this.model, chselector:'#chapters1',anselector:'#ancestor1',notasselector:'#notas1',brandingselector:'#brandingaccordion',asselector:'#assets1', documentsselector:'#docum1', context:this.el});
         this.renderall();
     },
 
@@ -14,10 +14,16 @@ window.ProductView = Backbone.View.extend({
         this.renderAssets();
         this.renderNotas();
         this.renderBranding();
+        this.renderDocuments();
     },
 
     render: function () {
         $(this.el).html(this.template(this.model.toJSON()));
+        return this;
+    },
+
+    renderDocuments: function(){
+        this.relatedController.documrender();
         return this;
     },
 

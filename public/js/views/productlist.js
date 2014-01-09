@@ -212,6 +212,80 @@ window.ChapterInlineView = Backbone.View.extend({
 });
 
 
+window.DocumentsView = Backbone.View.extend({
+
+    initialize: function () {
+        //this.listenTo(this.model, "change", this.changeevent,this);
+        //this.model.bind("change", this.changeevent, this);
+        //this.model.bind("destroy", this.destroyevent, this);
+    },
+
+    events: {
+        "click  .chapteritem" : "chapteritem",
+        "click  .testview" : "testview",
+    },
+    
+    tagName:'ul',    
+    className:'nav nav-list',
+
+    changeevent: function(){
+        this.render();
+    },
+    destroyevent: function () {
+        this.close();
+    },
+    chapteritem:function(){
+    },
+
+    testview: function(){
+    },
+
+    render: function () {
+        console.log('DocumentsView: render BEGIN');
+        var that = this;
+        var documents = this.collection;
+
+        documents.each(function(element){
+            console.log('each: element: [%s]',element.get('cnumber'));
+            $(that.el).append(new DocumentInlineView({model: element}).render().el);
+        });
+        return this;
+    }
+});
+
+window.DocumentInlineView = Backbone.View.extend({
+
+    tagName: "li",    
+    template: _.template("<button class='btn-block btn-link docitem' title='<%= slug %> [<%= fecomp %>][<%= nivel_ejecucion %>]'><%= cnumber %></button>"),
+
+    events: {
+        "click  .docitem" : "docitem",
+        "click  .testview" : "testview",
+    },
+
+    docitem:function(){
+        console.log('ChapterINLINEView: CLICK');
+        window.open('/gestion/#comprobantes/'+this.model.id+'/edit');
+    },
+
+    initialize: function () {
+        this.model.bind("change", this.changeevent, this);
+        this.model.bind("destroy", this.destroyevent, this);
+    },
+
+    render: function () {
+        //console.log('each2: element: [%s]',this.model.get('productcode'));
+        $(this.el).html(this.template(this.model.toJSON()));
+        return this;
+    },
+    changeevent: function(){
+        this.render();
+    },
+    destroyevent: function () {
+        this.close();
+    },
+});
+
 window.BrandingEditView = Backbone.View.extend({
     whoami: 'BrandingEditView:productlist.js',
 

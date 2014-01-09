@@ -316,6 +316,22 @@ window.utils = {
         {val:'rechazado'   , label:'RECHAZADO'},
     ],
 
+    severidadptOptionList: [
+        {val:'no_definido',  label:'Severidad'},
+        {val:'baja'  , label:'baja'},
+        {val:'media' , label:'media'},
+        {val:'alta'  , label:'alta'},
+    ],
+
+    canalptOptionList: [
+        {val:'no_definido',  label:'Canal'},
+        {val:'V1'  , label:'video'},
+        {val:'A1'  , label:'audio - 1'},
+        {val:'A2'  , label:'audio - 2'},
+        {val:'A3'  , label:'audio - 3'},
+        {val:'A4'  , label:'audio - 4'},
+    ],
+
     tipoComprobanteOptionList: [
         {val:'no_definido'    , label:'tipo de comprobante'},
         {val:'ptecnico'       , label:'P/Técnico'},
@@ -449,11 +465,12 @@ window.utils = {
     ],
 
     sopentregaOptionList: [
-        {val:'no_definido' , label:'no_definido'},
-        {val:'HD'          , label:'HD'},
+        {val:'no_definido' , label:'Soporte de entrega'},
+        {val:'HD'          , label:'HD externo'},
         {val:'Blue-ray'    , label:'Blue-ray'},
         {val:'Tape'        , label:'Tape'},
         {val:'DVD'         , label:'DVD'},
+        {val:'ftp'         , label:'ftp'},
         {val:'transfer'    , label:'Transfer'},
         {val:'Otro'        , label:'Otro'},
     ],
@@ -969,6 +986,12 @@ window.utils = {
         ]
     },
 
+    tipocompSch: [
+        {val:'ptecnico'    , label:'Parte Técnico: '},
+        {val:'nentrega'    , label:'Nota de Entrega: '},
+        {val:'nrecepcion'  , label:'Nota de Recepción: '},
+        {val:'pemision'    , label:'Parte de Emisión: '},
+    ],
     clasificationSch: [
         {val:'genero'        , label:'Género:'},
         {val:'cetiquetas'    , label:'Contenido:'},
@@ -1350,28 +1373,29 @@ window.utils = {
         var frames = 25;
         var tc = ["00","00","00","00"];
         var offset = 0;
-        if(!str) return tc;
+        if(!str) return tc.join(":");
 
         var tokens = str.split(":");
         if(tokens.length===1){
             if(str.length===2) str="00"+str+"0000";
             if(str.length===4) str="00"+str+"00";
             if(str.length===6) str="00"+str;
-            if(str.length!==8) return tc;
+            if(str.length!==8) return tc.join(":");
             for(var i=0; i<8; i=i+2) tc[i/2] = str.substr(i,2);
-            return tc.join(":");
+            return utils.validateTC(tc);
         }else{
-            if(tokens.length>4) return tc;
+            if(tokens.length>4) return tc.join(":");
             if(tokens.length<4) offset=1;
             for(var j=0;j<tokens.length;j+=1) tc[j+offset]=("00"+tokens[j]).substr(-2);
+            return utils.validateTC(tc);
         }
         return tc.join(':');
     },
 
-    validateTC: function(t){
-        var error = false;
+    validateTC: function(tc){
+        var error = "00:00:00:00";
         var divisor = [99, 60, 60, 25];
-        var tc = t.split(":");
+        //var tc = t.split(":");
         for (var i = 0 ; i< tc.length;i+=1 ){
             if(isNaN(tc[i])) return error;
             var n= parseInt(tc[i],10);
@@ -1380,7 +1404,7 @@ window.utils = {
             if((n / divisor[i])>=1) return error;
             if(n<0) return error;
         }
-        return true;
+        return tc.join(":");
     },
 
 /*

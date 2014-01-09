@@ -41,8 +41,9 @@
         <span class="input-group-btn"><button class="btn btn-default js-personsch" type="button">Buscar</button></span>
       </div>
       <div class="col-sm-5">
-        <input id="sopoentrega" name="sopoentrega" type="text" class="form-control" 
-            value="<%= sopoentrega %>" placeholder="soporte original" >
+          <select class="form-control input-sm" id="sopoentrega" name="sopoentrega" value="<%= sopoentrega %>">
+            <%= utils.buildSelectOptions('sopoentrega',utils.sopentregaOptionList, sopoentrega) %>
+          </select>
       <span class="help-block"></span>
       </div>
     </div>

@@ -6,8 +6,9 @@
         </select>
     </div>
     <div class="col-sm-2">
-        <input id="ptiseveridad" name="ptiseveridad" type="number" class="form-control input-sm" 
-           value="<%= ptiseveridad %>" placeholder="NivSeverid 123">
+        <select class="form-control input-sm" id="ptiseveridad" name="ptiseveridad" value="<%= ptiseveridad %>">
+            <%= utils.buildSelectOptions('ptiseveridad',utils.severidadptOptionList, ptiseveridad) %>
+        </select>
     </div>
     <div class="col-sm-9 col-sm-offset-2">
     <input id="ptidescription" name="ptidescription" type="text" class="form-control input-sm" 
@@ -27,8 +28,9 @@
            value="<%= ptiduracion %>" placeholder="duración">
       </div>
       <div class="col-sm-2">
-         <input id="pticanal" name="pticanal" type="number" class="form-control input-sm" 
-           value="<%= pticanal %>" placeholder="canal">
+        <select class="form-control input-sm" id="pticanal" name="pticanal" value="<%= pticanal %>">
+            <%= utils.buildSelectOptions('pticanal',utils.canalptOptionList, pticanal) %>
+        </select>
       </div>
       <div class="col-sm-2">
          <input id="ptitcabs" name="ptitcabs" type="number" class="form-control input-sm" 
