@@ -674,6 +674,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             {val:'entidad', label:'Resumen por entidad / adherente'},
           ], title: 'Resumen'},
         tipocomp:  {type: 'Text', title: 'Tipocomp'},
+        slug: {type: 'Text', title: 'Asunto'},
         estado:   {type: 'Text', title: 'Estado'},
     },
 
@@ -682,6 +683,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       fedesde:'',
       fehasta:'',
       resumen:'detallado',
+      slug: '',
       estado:''
     }
   });
@@ -771,8 +773,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               //if((query.tipocomp.trim().indexOf(document.get('tipocomp'))) === -1 ) test = false;
               if(query.tipocomp.trim() !== document.get('tipocomp')) test = false;
             }
+            if(query.estado) {
+              //if((query.tipocomp.trim().indexOf(document.get('tipocomp'))) === -1 ) test = false;
+              if(query.estado.trim() !== document.get('estado_alta')) test = false;
+            }
             if(query.fedesde.getTime()>document.get('fechagestion_tc')) test = false;
             if(query.fehasta.getTime()<document.get('fechagestion_tc')) test = false;
+
+            if(query.slug){
+              if(document.get("slug").toLowerCase().indexOf(query.slug) === -1 && document.get("cnumber").toLowerCase().indexOf(query.slug) === -1) test = false;
+            }
+
             if(test) return document;
           }
         }
@@ -796,6 +807,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     var itemCol = new Entities.ComprobanteCollection();
     documents.each(function(model){
       var items = model.get('items');
+      model.set({documid: model.id});
       //console.log('Iterando doc:[%s] itmes[%s]',model.get('cnumber'),model.get('tipocomp'),items.length);
       _.each(items, function(item){
         if(item.tipoitem==='nentrega'||item.tipoitem==='nrecepcion'){

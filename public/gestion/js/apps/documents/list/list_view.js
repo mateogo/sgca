@@ -135,9 +135,8 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
 
   // ventana modal
-  List.queryForm = function(view, cb){
-        var self = view,
-            facet = new DocManager.Entities.DocumQueryFacet(),
+  List.queryForm = function(query, cb){
+        var facet = new DocManager.Entities.DocumQueryFacet(query ),
             form = new Backbone.Form({
                 model: facet
             });

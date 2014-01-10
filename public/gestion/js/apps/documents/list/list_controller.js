@@ -24,6 +24,8 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
       });
 
       hview.on('document:search',function(query, cb){
+        console.log('list_controller: document:search EVENT');
+
         DocManager.request("document:query:search",query, function(model){
           if(model){
             Edit.Session.layout.close();
@@ -98,7 +100,8 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
   var registerDocumListEvents = function(documentsListView) {
         
         documentsListView.on("itemview:document:show", function(childView, model){
-          DocManager.trigger("document:show", model.id);
+          var documid = model.id || model.get('documid');
+          DocManager.trigger("document:show", documid);
         });
 
         documentsListView.on("itemview:document:edit", function(childView, model){
@@ -114,9 +117,16 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
 
   var API = {
-    searchDocuments: function(query, cb){
-      console.log('LIST CONTROLLER searchDocuments API called: query:[%s]', query)
-      List.queryForm(query, function(qmodel){
+    searchDocuments: function(squery, cb){
+      console.log('LIST CONTROLLER searchDocuments API called: query:[%s]', squery)
+      if(!List.Session.query) List.Session.query = {};
+      
+      List.Session.query.slug = squery;
+
+      List.queryForm(List.Session.query, function(qmodel){
+        
+        List.Session.query = qmodel.attributes;
+
         console.log('callback: [%s] [%s] [%s]',qmodel.get('fedesde'),qmodel.get('resumen'),qmodel.get('tipocomp'));
   
         DocManager.request("document:query:entities", qmodel.attributes, function(documents){

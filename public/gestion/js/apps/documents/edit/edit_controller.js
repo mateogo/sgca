@@ -318,6 +318,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       });
 
       hview.on('document:search',function(query, cb){
+        console.log('edit_controller: document:search EVENT');
         DocManager.request("document:search",query, function(model){
           if(model){
             Edit.Session.layout.close();

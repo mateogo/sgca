@@ -621,6 +621,17 @@ window.utils = {
         {val:'baja',       label:'baja'},
     ],
 
+    estadodocumOptionList: [
+        {val:'no_definido',  label:'Estado - prioridad'},
+        {val:'baja'      , label:'Baja'},
+        {val:'media'     , label:'Media'},
+        {val:'alta'      , label:'Alta'},
+        {val:'urgente'   , label:'Urgente'},
+        {val:'cumplido'  , label:'CUMPLIDO'},
+        {val:'suspendido', label:'Suspenedido'},
+        {val:'anulado'   , label:'Anulado'},
+    ],
+
     videotecaOptionList:[
         {val:'nodefinido',     label:'Videoteca'},
         {val:'fomInca2010',    label:'Fomento Inca 2010'},

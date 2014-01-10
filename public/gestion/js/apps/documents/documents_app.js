@@ -70,8 +70,10 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
   });
 
   DocManager.on("document:edit", function(model){
-    DocManager.navigate("comprobantes/" + model.id + "/edit");
-    API.editDocument(model.id);
+    console.log('docmanager EDIT [%s][%s]' , model.id, model.get('documid'));
+    var documid = model.id || model.get('documid');
+    DocManager.navigate("comprobantes/" + documid + "/edit");
+    API.editDocument(documid);
   });
 
   DocManager.addInitializer(function(){
