@@ -44,14 +44,21 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
    */
  Show.DocumentSubItem = Marionette.ItemView.extend({
     tagName: 'tr',
-    className: 'success',
+    //className: 'success',
 
     getTemplate: function(){
-      console.log('getTEMPLATE')
-      return utils.templates.DocumShowItemDetail;
+      console.log('getTEMPLATE [%s]',this.options.tpl)
+      if(this.options.tpl==='ptecnico'){
+        return utils.templates.DocumShowItemPTDetail;
+      }else if(this.options.tpl==='nrecepcion' || this.options.tpl==='nentrega'){
+        return utils.templates.DocumShowItemREDetail;
+      }else if(this.options.tpl==='pemision'){
+        return utils.templates.DocumShowItemPEDetail;
+      }
     },
-    initialize: function(){
+    initialize: function(options){
       console.log('ITEM SUB ITEM INIT [%s]',this.model.get('pticaso'));
+      this.options = options;
     },
  
     events: {
@@ -74,8 +81,19 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
       //pemision:   'DocumEditEMItem',
     },
 
+    initialize: function(options){
+      console.log('COMPOSITE DocumentItems [%s] options:[%s]',this.collection.length, options);
+      this.options = options;
+    },
+
     getTemplate: function(){
-      return utils.templates.DocumShowItemComposite;
+      if(this.options.tpl === 'ptecnico'){
+        return utils.templates.DocumShowItemPTComposite;
+      }else if(this.options.tpl === 'nrecepcion' || this.options.tpl==='nentrega'){
+        return utils.templates.DocumShowItemREComposite;
+      }else if(this.options.tpl === 'pemision'){
+        return utils.templates.DocumShowItemPEComposite;
+      }
     },
 
     tagName:'table',
@@ -87,22 +105,24 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
         
     events: {
     },
-    
-    initialize: function(options){
-      console.log('COMPOSITE DocumentItems [%s]',this.collection.length);
-      this.options = options;
-    },
 
     itemViewOptions: function(model, index) {
       // do some calculations based on the model
       console.log('itemViewOptions [%s]',model.whoami);
-      return {};
+      return {tpl: this.options.tpl};
     }
   });
 
+
   Show.DocumentItemHeader = Marionette.ItemView.extend({
    getTemplate: function(){
-      return utils.templates.DocumShowItemHeader;
+      if(this.model.get('tipoitem')==='ptecnico'){
+        return utils.templates.DocumShowItemPTHeader;
+      } else if(this.model.get('tipoitem')==='nrecepcion' || this.model.get('tipoitem')==='nentrega'){
+        return utils.templates.DocumShowItemREHeader;
+      } else if(this.model.get('tipoitem')==='pemision'){
+        return utils.templates.DocumShowItemPEHeader;
+      }
     },
     initialize: function(){
       console.log('ITEMHADER INIT [%s]',this.model.get('fept'));
@@ -130,13 +150,33 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
     },
     onShow:function(){
       console.log('onSHOW!!!!!!!!!!!!!!!!!!')
-      for (var i in arguments){console.log("[%s]: [%s]",i,arguments[i])}
+      //for (var i in arguments){console.log("[%s]: [%s]",i,arguments[i])}
+
       itemHeader = new Show.DocumentItemHeader({
         model: this.model
       });
+
       items = new Show.DocumentSubitems({
-        collection: new DocManager.Entities.PTecnicoItems(this.model.get('items'))
+          collection: new DocManager.Entities.DocumSubItemsCollection(this.model.get('items'),{
+            tipoitem: this.model.get('tipoitem'),
+          }),
+          tpl: this.model.get('tipoitem'),
       });
+
+/*      
+      if(this.model.get('tipoitem')==='ptecnico'){
+        items = new Show.DocumentSubitems({
+          collection: new DocManager.Entities.PTecnicoItems(this.model.get('items')),
+          tpl: 'ptecnico'
+        });
+      } else if(this.model.get('tipoitem')==='nrecepcion' || this.model.get('tipoitem')==='nentrega'){
+        items = new Show.DocumentSubitems({
+          collection: new DocManager.Entities.MovimREItems(this.model.get('items')),
+          tpl: 'nrecepcion'
+        });
+      }
+
+*/      
       this.itemHeaderRegion.show(itemHeader);
       this.itemMainRegion.show(items);
     },
@@ -144,6 +184,13 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
     getTemplate: function(){
       return utils.templates.DocumShowItemLayoutView;
     },
+
+    itemViewOptions: function(model, index) {
+      // do some calculations based on the model
+      console.log('LAYOUT itemViewOptions [%s]',model.whoami);
+      return {};
+    },
+
     
     regions: {
       itemHeaderRegion: '#itemheader-region',

@@ -95,12 +95,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         collection: entities,
 
         filterFunction: function(filterCriterion){
-          var criteria = filterCriterion.toLowerCase();
+          var criteria = utils.fstr(filterCriterion.toLowerCase());
           return function(document){
             //console.log('filterfunction:[%s]vs [%s]/[%s]/[%s]',criteria,document.get("tipocomp"),document.get("cnumber"),document.get("slug"));
             if(document.get("productcode").toLowerCase().indexOf(criteria) !== -1
               || document.get("denom").toLowerCase().indexOf(criteria) !== -1
-              || document.get("slug").toLowerCase().indexOf(criteria) !== -1){
+              || utils.fstr(document.get("slug").toLowerCase()).indexOf(criteria) !== -1){
               
               return document;
             }

@@ -60,11 +60,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
       DocManager.request("document:filtered:entities", criterion, function(documents){
         console.log('ListDocuments BEGINS: [%s]',documents.length);
-        utils.documListTableHeader[6].flag=0;
-        utils.documListTableHeader[7].flag=0;
-        utils.documListTableHeader[3].flag=0;
-        utils.documListTableHeader[2].flag=1;
-
+        setColumnTable('docum');
 
 /*        documNavBar.once("show", function(){
           documNavBar.triggerMethod("set:filter:criterion", criterion);
@@ -114,14 +110,39 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
 
   };
+  var setColumnTable = function (op){
+    if(op==='docum'){
+      utils.documListTableHeader[10].flag=0;
+      utils.documListTableHeader[9].flag=0;
+      utils.documListTableHeader[7].flag=0;
+      utils.documListTableHeader[6].flag=0;
+      utils.documListTableHeader[5].flag=0;
+      utils.documListTableHeader[3].flag=0;
+      
+      utils.documListTableHeader[4].flag=1;
+      utils.documListTableHeader[2].flag=1;
+
+    }else {
+      utils.documListTableHeader[10].flag=1;
+      utils.documListTableHeader[9].flag=1;
+      utils.documListTableHeader[7].flag=1;
+      utils.documListTableHeader[6].flag=1;
+      utils.documListTableHeader[5].flag=1;
+      utils.documListTableHeader[3].flag=1;
+
+      utils.documListTableHeader[4].flag=0;
+      utils.documListTableHeader[2].flag=0;
+
+    }
+  };
+
 
 
   var API = {
     searchDocuments: function(squery, cb){
       console.log('LIST CONTROLLER searchDocuments API called: query:[%s]', squery)
       if(!List.Session.query) List.Session.query = {};
-      
-      List.Session.query.slug = squery;
+      if(squery) List.Session.query.slug = squery;
 
       List.queryForm(List.Session.query, function(qmodel){
         
@@ -130,10 +151,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
         console.log('callback: [%s] [%s] [%s]',qmodel.get('fedesde'),qmodel.get('resumen'),qmodel.get('tipocomp'));
   
         DocManager.request("document:query:entities", qmodel.attributes, function(documents){
-          utils.documListTableHeader[6].flag=1;
-          utils.documListTableHeader[7].flag=1;
-          utils.documListTableHeader[3].flag=1;
-          utils.documListTableHeader[2].flag=0;
+          setColumnTable('documitems');
 
           var documentsListView = new List.Documents({
             collection: documents

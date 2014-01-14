@@ -101,7 +101,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
   List.Documents = Marionette.CompositeView.extend({
     tagName: "table",
-    className: "table table-bordered table-hover",
+    className: "table table-bordered table-hover table-condensed",
 
     getTemplate: function(){
       //console.log(utils.buildTableHeader(utils.documListTableHeader));

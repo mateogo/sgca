@@ -263,21 +263,21 @@ window.utils = {
 
     coberturaOptionList: [
         {val:'no_definido'  , label:'Región'},
-        {val:'tda'          , label:'tda'},
+        {val:'tda'          , label:'TDA'},
         {val:'AMBA'         , label:'AMBA'},
-        {val:'mesopotamia'  , label:'mesopotamia'},
-        {val:'noroeste'     , label:'noroeste'},
-        {val:'cuyo'         , label:'cuyo'},
-        {val:'patagonia'    , label:'patagonia'},
-        {val:'centro'       , label:'centro'},
+        {val:'mesopotamia'  , label:'Mesopotamia'},
+        {val:'noroeste'     , label:'Noroeste'},
+        {val:'cuyo'         , label:'Cuyo'},
+        {val:'patagonia'    , label:'Patagonia'},
+        {val:'centro'       , label:'Centro'},
     ],
 
     tipoemisOptionList: [
         {val:'no_definido', label:'Tipo de emisión'},
         {val:'tda'        , label:'TDA'},
-        {val:'cable'      , label:'cable'},
-        {val:'satelite'   , label:'satélite'},
-        {val:'ott'        , label:'ott'},
+        {val:'cable'      , label:'Cable'},
+        {val:'satelite'   , label:'Satélite'},
+        {val:'ott'        , label:'OTT'},
      ],
 
     fuenteOptionList: [
@@ -290,12 +290,30 @@ window.utils = {
     tipomovOptionList: [
         {val:'no_definido'  , label:'Tipo de movimiento'},
         {val:'nopentrada'   , label:'------ E N T R A D A S ------'},
-        {val:'recepcion'    , label:'Recepción Producto Audiovisual'},
+        {val:'recepcion'    , label:'Recepción Productos para chequeo'},
         {val:'entrada'      , label:'Recepciones varias'},
         {val:'nopentrada'   , label:'------  S A L I D A S ------'},
         {val:'distribucion' , label:'Distribución'},
         {val:'entrega'      , label:'Entregas'},
     ],
+    
+    tipomovqueryOptionList: [
+        {val:'no_definido'  , label:'Tipo de movimiento'},
+        {val:'nopentrada'   , label:'------ E N T R A D A S ------'},
+        {val:'recepcion'    , label:'Recepción Producto Audiovisual'},
+        {val:'entrada'      , label:'Recepciones varias'},
+        {val:'nopentrada'   , label:'------  S A L I D A S ------'},
+        {val:'distribucion' , label:'Distribución'},
+        {val:'entrega'      , label:'Entregas'},
+        {val:'nopentrada'   , label:'------  PARTE TECNICO ------'},
+        {val:'enevaluacion' , label:'En evaluación'},
+        {val:'aprobado'     , label:'Aprobado'},
+        {val:'aprobconobs'  , label:'Aprob c/observaciones'},
+        {val:'rechazado'    , label:'Rechazado'},
+        {val:'nopentrada'   , label:'------  PARTE EMISION ------'},
+        {val:'pemision'     , label:'Parte de emision'},
+    ],
+
     tipomovEntregaOptionList: [
         {val:'no_definido', label:'Tipo de movimiento'},
         {val:'distribucion' , label:'Distribución'},
@@ -1089,16 +1107,19 @@ window.utils = {
     ],
 
     documListTableHeader:[
-        {id:0, tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',        label:'#'},
-        {id:1, tt:'th', flag:1, tclass:'col1', tmpl: 'template6', val:'cnumber',       label:'comprob'},
-        {id:2, tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'fecomp',        label:'fecha'},
-        {id:3, tt:'th', flag:0, tclass:'col2', tmpl: 'template1', val:'fechagestion',  label:'fecha'},
-        {id:4, tt:'th', flag:1, tclass:'col3', tmpl: 'template1', val:'tipocomp',      label:'tipo'},
-        {id:5, tt:'th', flag:1, tclass:'col4', tmpl: 'template1', val:'persona',       label:'persona'},
-        {id:6, tt:'th', flag:0, tclass:'col5', tmpl: 'template1', val:'product',       label:'producto'},
-        {id:7, tt:'th', flag:0, tclass:'col6', tmpl: 'template1', val:'tcomputo',      label:'tiempo'},
-        {id:8, tt:'th', flag:1, tclass:'col7', tmpl: 'template1', val:'slug',          label:'asunto'},
-        {id:9, tt:'th', flag:1, tclass:'col8', tmpl: 'template5', val:'acciones',      label:'acciones'}
+        {id:0 , tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',        label:'#'},
+        {id:1 , tt:'th', flag:1, tclass:'col1', tmpl: 'template6', val:'cnumber',       label:'comprob'},
+        {id:2 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'fecomp',        label:'fecha'},
+        {id:3 , tt:'th', flag:0, tclass:'col3', tmpl: 'template1', val:'fechagestion',  label:'fecha'},
+        {id:4 , tt:'th', flag:1, tclass:'col4', tmpl: 'template1', val:'tipocomp',      label:'tipo'},
+        {id:5 , tt:'th', flag:0, tclass:'col5', tmpl: 'template1', val:'tipoitem',      label:'tipo'},
+        {id:6 , tt:'th', flag:0, tclass:'col6', tmpl: 'template1', val:'tipomov',       label:'movimiento'},
+        {id:7 , tt:'th', flag:0, tclass:'col7', tmpl: 'template1', val:'estado_alta',   label:'prioridad'},
+        {id:8 , tt:'th', flag:1, tclass:'col8', tmpl: 'template1', val:'persona',       label:'persona'},
+        {id:9 , tt:'th', flag:0, tclass:'col9', tmpl: 'template1', val:'product',       label:'producto'},
+        {id:10, tt:'th', flag:0, tclass:'cola', tmpl: 'template1', val:'tcomputo',      label:'tiempo'},
+        {id:11, tt:'th', flag:1, tclass:'colb', tmpl: 'template1', val:'slug',          label:'asunto'},
+        {id:12, tt:'th', flag:1, tclass:'colc', tmpl: 'template5', val:'acciones',      label:'acciones'}
     ],
 
     buildTableHeader: function(data){
@@ -1417,6 +1438,39 @@ window.utils = {
         }
         return tc.join(":");
     },
+    tc2Minutes: function(tc){
+        var min = 0,
+            tokens = tc.split(":");
+        if(tokens.length===1){
+            min =  this.valint(tc);
+        } else if(tokens.length === 2){
+            min = this.valint(tokens[0]) + ((this.valint(tokens[1]) > 30) ? 1 : 0);
+        } else if(tokens.length === 3){
+            min = this.valint(tokens[0]) + ((this.valint(tokens[1]) > 30) ? 1 : 0);
+        } else if(tokens.length === 4){
+            min = this.valint(tokens[0]) * 60 + this.valint(tokens[1]) + ((this.valint(tokens[2]) > 30) ? 1 : 0);
+        }
+        return min;
+    },
+    min2TC: function(min){
+        var tokens = [0,0,0,0],
+            val = this.valint(min);
+
+        tokens[1] = val % 60;
+        tokens[0] = Math.floor(val / 60);
+        return tokens.join(":");
+    },
+
+    addTC: function(memo, val){
+        var acum = this.tc2Minutes(memo) + this.tc2Minutes(val);
+        return this.min2TC(acum);
+    },
+
+    valint: function (s){
+        var n = 0;
+        if(parseInt(s,10) !== NaN) n = parseInt(s,10);
+        return n;
+    },
 
 /*
     parseTC: function(str){
@@ -1466,12 +1520,35 @@ window.utils = {
     },
 
 */
+    es_cutoff : {
+        "á" : "a",
+        "Á" : "A",
+        "é" : "e",
+        "É" : "E",
+        "í" : "i",
+        "Í" : "I",
+        "ó" : "o",
+        "Ó" : "O",
+        "ú" : "u",
+        "Ú" : "U",
+        "ñ" : "n"
+    },
+
+    fstr : function(strinput){
+        var self = this,
+            str = strinput;
+        str = str.split(' ').join('_');
+        str = str.replace(/[áÁéÉíÍóÓúÚñ]/g,function(c) { return self.es_cutoff[c]; });
+        return str;
+    },
 
     buildDateNum: function(str){
+        console.log('buildDateNUM BEGIN [%s]',str)
         return this.parseDateStr(str).getTime();
     },
 
     buildDate: function(str){
+        console.log('buildDate BEGIN [%s]',str)
         return this.parseDateStr(str);
     },
 
@@ -1483,6 +1560,8 @@ window.utils = {
     },
 
     parseDateStr: function(str) {
+    console.log('parseDate BEGIN [%s]',str)
+
         var mx = str.match(/(\d+)/g);
         var ty = new Date();
         if(mx.length === 0) return ty;

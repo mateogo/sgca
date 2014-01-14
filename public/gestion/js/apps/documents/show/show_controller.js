@@ -9,13 +9,17 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
       $.when(fetchingDocument).done(function(document){
         var documentView;
         if(document !== undefined){
-          var itemCol;
-          if(document.get('tipocomp') === 'ptecnico'){
+          var itemCol = new DocManager.Entities.DocumItemsCollection(document.get('items'));
+
+/*          if(document.get('tipocomp') === 'ptecnico'){
             itemCol = new DocManager.Entities.PTecnicoItems(document.get('items'));
             //console.log('Tipcomp= ptecnico [%s]',itemCol.length);
+          } else if(document.get('tipocomp') === 'nrecepcion' || document.get('tipocomp') === 'nentrega'){
+            itemCol = new DocManager.Entities.MovimREItems(document.get('items'));
+          } else if(document.get('tipocomp') === 'pemision'){
+            itemCol = new DocManager.Entities.MovimREItems(document.get('items'));
           }
-
-
+*/
           documentView = new Show.Document({
             model: document
           });
@@ -29,9 +33,7 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
 
           documentItems = new Show.DocumentItems({
             collection: itemCol
-
           });
-
  
           documLayout.on("show", function(){
             documLayout.brandingRegion.show(brandingView);

@@ -60,11 +60,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     beforeSave: function(){
+      console.log('initBefore SAVE')
       var feultmod = new Date();
       this.set({feultmod:feultmod.getTime()})
     },
 
     update: function(cb){
+      console.log('update')
       var self = this;
       self.beforeSave();
       var errors ;
@@ -73,10 +75,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         success: function(model){
           //console.log('callback SUCCESS')
           cb(null,model);
-        }
-      })) {
+         }
+        })) {
           cb(self.validationError,null);
       }    
+
+
     },
 
     itemTypes: {
@@ -103,9 +107,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       pemision:{
         initNew: function(self, attrs){
           var item = new Entities.DocumParteEM(attrs);
-          item.set({
-            descripcion: self.get('description')
-          });
           return item;
         }
       },
@@ -125,7 +126,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if (_.has(attrs,'fecomp')){
         var fecomp_tc = utils.buildDateNum(attrs['fecomp']);
         if(Math.abs(fecomp_tc-(new Date().getTime()))>(1000*60*60*24*30*6) ){
-          errors.fecomp = 'fecha no valida';
+          //errors.fecomp = 'fecha no valida';
         }
         this.set('fecomp_tc',fecomp_tc);
       }
@@ -192,7 +193,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'DocumParteTecnico:comprobante.js ',
 
     schema: {
-        tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList },
+        tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList, title:'Tipo Item' },
         slug:     {type: 'Text', title: 'Descripción corta'},
     },
 
@@ -211,7 +212,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if (_.has(attrs,'fept')){
         var fept_tc = utils.buildDateNum(attrs['fept']);
         if(Math.abs(fept_tc-(new Date().getTime()))>(1000*60*60*24*30*6) ){
-          errors.fept = 'fecha no valida';
+          //errors.fept = 'fecha no valida';
         }
         this.set('fept_tc',fept_tc);
       }
@@ -623,6 +624,35 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 // fin Parte de emisión
 
 
+
+  var modelSubItemFactory = function(attrs, options){
+    //utils.inspect(attrs,1,'modelFactory');
+    //console.log('modelSubFactory: [%s]',options.tipoitem)
+    var model;
+    if(options.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnicoItem(attrs);
+    if(options.tipoitem==='nrecepcion') model = new Entities.DocumMovimREItem(attrs);
+    if(options.tipoitem==='nentrega')   model = new Entities.DocumMovimREItem(attrs);
+    if(options.tipoitem==='pemision')   model = new Entities.DocumParteEMItem(attrs);
+    return model;
+  };
+
+  Entities.DocumSubItemsCollection = Backbone.Collection.extend({
+    whoami: 'Entities.DocumSubItemsCollection:comprobante.js ',
+    initialize: function(options){
+      this.options = options;
+    },
+
+    model: function(attrs, options){
+      return modelSubItemFactory(attrs, options);
+      //if(attrs.tipoitem==='ptecnico') return new Entities.DocumParteTecnico(attrs, options);
+      //return new Entities.DocumItemCoreFacet(attrs, options);
+    },
+
+  });
+
+
+
+
   /*
    * ******* ItemCoreFacet +**********
    */
@@ -632,7 +662,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'DocumItemCoreFacet:comprobante.js ',
 
     schema: {
-        tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList },
+        tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList, title:'Tipo ítem' },
         slug:     {type: 'Text', title: 'Descripción corta'},
     },
 
@@ -673,16 +703,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             {val:'producto', label:'Resumen por producto'},
             {val:'entidad', label:'Resumen por entidad / adherente'},
           ], title: 'Resumen'},
-        tipocomp:  {type: 'Text', title: 'Tipocomp'},
+        tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList, title:'Comprobante' },
+        tipomov: {type: 'Select',options: utils.tipomovqueryOptionList, title:'Movimiento' },
         slug: {type: 'Text', title: 'Asunto'},
         estado:   {type: 'Text', title: 'Estado'},
     },
 
     defaults: {
-      tipocomp: '',
       fedesde:'',
       fehasta:'',
       resumen:'detallado',
+      tipoitem: '',
+      tipomov: '',
       slug: '',
       estado:''
     }
@@ -693,7 +725,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'Comrpobante:comprobante.js ',
 
     schema: {
-        tipocomp: {type: 'Select',options: utils.tipoComprobanteOptionList },
+        tipocomp: {type: 'Select',options: utils.tipoComprobanteOptionList, title:'Tipo comprobante' },
         slug:     {type: 'Text', title: 'Asunto'},
         description:  {type: 'Text', title: 'Descripción'},
     },
@@ -769,19 +801,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           return function(document){
             var test = true;
             //console.log('filterfunction:[%s] vs [%s]/[%s]/[%s]',query.tipocomp,document.get("tipocomp"),document.get("cnumber"),(query.tipocomp.indexOf(document.get('tipocomp'))));
-            if(query.tipocomp) {
-              //if((query.tipocomp.trim().indexOf(document.get('tipocomp'))) === -1 ) test = false;
-              if(query.tipocomp.trim() !== document.get('tipocomp')) test = false;
+            //if((query.tipocomp.trim().indexOf(document.get('tipocomp'))) === -1 ) test = false;
+            if(query.tipoitem) {
+              if(query.tipoitem.trim() !== document.get('tipoitem')) test = false;
+            }
+            if(query.tipomov) {
+              if(query.tipomov.trim() !== document.get('tipomov')) test = false;
             }
             if(query.estado) {
-              //if((query.tipocomp.trim().indexOf(document.get('tipocomp'))) === -1 ) test = false;
               if(query.estado.trim() !== document.get('estado_alta')) test = false;
             }
             if(query.fedesde.getTime()>document.get('fechagestion_tc')) test = false;
             if(query.fehasta.getTime()<document.get('fechagestion_tc')) test = false;
 
             if(query.slug){
-              if(document.get("slug").toLowerCase().indexOf(query.slug) === -1 && document.get("cnumber").toLowerCase().indexOf(query.slug) === -1) test = false;
+              if(utils.fstr(document.get("slug").toLowerCase()).indexOf(utils.fstr(query.slug)) === -1 && document.get("cnumber").toLowerCase().indexOf(query.slug.toLowerCase()) === -1) test = false;
             }
 
             if(test) return document;
@@ -906,10 +940,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         col.each(function(item){
           var gr = _.find(grupos,function(elem){
             //return (elem.productid == item.get('productid')&& elem.persona=== item.get('persona')&& elem.tipomov ===item.get('tipomov'));
-            return (elem.productid == item.get('productid') && elem.tipomov ===item.get('tipomov'));
+            return (elem.productid == item.get('productid') && elem.tipoitem ===item.get('tipoitem') && elem.tipomov ===item.get('tipomov'));
           })
           if(gr){
-            gr.tcomputo += (parseInt(item.get('tcomputo'),10)==NaN) ? 0 : parseInt(item.get('tcomputo'),10) ;
+            gr.tcomputo = utils.addTC(gr.tcomputo, item.get('tcomputo'));
+            //(parseInt(item.get('tcomputo'),10)==NaN) ? 0 : parseInt(item.get('tcomputo'),10) ;
           }else{
             var res = {
               cnumber: 'resumen',
@@ -918,8 +953,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               persona: '',
               //persona: item.get('persona'),
               tipomov: item.get('tipomov'),
-              tipocomp:item.get('tipomov'),
-              tcomputo: (parseInt(item.get('tcomputo'),10)==NaN) ? 0 : parseInt(item.get('tcomputo'),10)
+              tipoitem:item.get('tipoitem'),
+              tipocomp:item.get('tipocomp'),
+              tcomputo: utils.addTC('00', item.get('tcomputo')),
+               //tcomputo: (parseInt(item.get('tcomputo'),10)==NaN) ? 0 : parseInt(item.get('tcomputo'),10)
             }
             grupos.push(res);
           }
@@ -931,19 +968,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         var grupos = [];
         col.each(function(item){
           var gr = _.find(grupos,function(elem){
-            return (elem.persona == item.get('persona') && elem.tipomov ===item.get('tipomov'));
+            return (elem.persona == item.get('persona') && elem.tipoitem ===item.get('tipoitem') && elem.tipomov ===item.get('tipomov'));
           })
           if(gr){
-            gr.tcomputo += (parseInt(item.get('tcomputo'),10)===NaN) ? 0 : parseInt(item.get('tcomputo'),10) ;
+            //gr.tcomputo += (parseInt(item.get('tcomputo'),10)===NaN) ? 0 : parseInt(item.get('tcomputo'),10) ;
+            gr.tcomputo = utils.addTC(gr.tcomputo, item.get('tcomputo'));
           }else{
             var res = {
               cnumber: 'resumen',
               persona: item.get('persona'),
               product:'',
               productid:'',
-              tipocomp:item.get('tipomov'),
+              tipoitem:item.get('tipoitem'),
+              tipocomp:item.get('tipocomp'),
               tipomov: item.get('tipomov'),
-              tcomputo: (parseInt(item.get('tcomputo'),10)===NaN) ? 0 : parseInt(item.get('tcomputo'),10)
+              tcomputo: utils.addTC('00', item.get('tcomputo')),
+              //tcomputo: (parseInt(item.get('tcomputo'),10)===NaN) ? 0 : parseInt(item.get('tcomputo'),10)
             }
             grupos.push(res);
           }

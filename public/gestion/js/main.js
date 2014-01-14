@@ -1,8 +1,9 @@
 utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView', 'DocumNavbar',
     'DocumEditMin', 'DocumShowDef','DocumEditCore','DocumEditPT', 'SearchEntitiesForm','DocumEditPTLayout','DocumEditPTItem',
     'DocumEditRE', 'DocumEditREItem','DocumEditEM','DocumEditEMItem','DocumEditEMHeader', 'DocumShowLayoutView',
-    'DocumShowBranding', 'DocumShowHeader', 'DocumShowItemHeader', 'DocumShowItemLayoutView','DocumShowItemComposite',
-    'DocumShowItemDetail' ], function() {
+    'DocumShowBranding', 'DocumShowHeader', 'DocumShowItemPTHeader', 'DocumShowItemLayoutView','DocumShowItemPTComposite',
+    'DocumShowItemPTDetail','DocumShowItemREHeader','DocumShowItemREComposite','DocumShowItemREDetail', 
+    'DocumShowItemPEHeader', 'DocumShowItemPEComposite', 'DocumShowItemPEDetail'], function() {
 
     $('[data-toggle=offcanvas]').click(function() {
         $('.row-offcanvas').toggleClass('active');

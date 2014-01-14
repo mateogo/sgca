@@ -595,7 +595,7 @@ window.Article = Backbone.Model.extend({
     },
 
     schema: {
-        tiponota:     {type: 'Select',options: utils.notasOptionList },
+        tiponota:     {type: 'Select',options: utils.notasOptionList , title:'Tipo Nota'},
         fecha:        {type: 'Text', title: 'Fecha', editorAttrs:{placeholder : 'fecha relevante'}},
         slug:         {type: 'Text', title: 'Asunto', editorAttrs:{placeholder : 'asunto'}},
         description:  {type: 'TextArea', title: 'Descripción'},
@@ -1377,7 +1377,7 @@ window.Product = Backbone.Model.extend({
 
     defaults: {
         _id: null,
-        tipoproducto:"",
+        tipoproducto:"paudiovisual",
         productcode:"",
  
         slug: "",
@@ -1410,6 +1410,7 @@ window.ProductCollection = Backbone.Collection.extend({
     // ******************* PROJECT COLLECTION ***************
 
     model: Product,
+    comparator: 'productcode',
 
     url: "/navegar/productos"
 
@@ -1424,7 +1425,7 @@ window.Comprobante = Backbone.Model.extend({
     idAttribute: "_id",
 
     schema: {
-        tipocomp: {type: 'Select',options: utils.tipoComprobanteOptionList },
+        tipocomp: {type: 'Select',options: utils.tipoComprobanteOptionList, title:'Tipo comprobante' },
         slug:     {type: 'Text', title: 'Asunto'},
         description:  {type: 'Text', title: 'Descripción'},
     },
@@ -1713,12 +1714,12 @@ window.AddInstanceFacet = Backbone.Model.extend({
     },
 
     schema: {
-        tipoproducto: {type: 'Select', options: utils.tipoinstanciaOptionList },
-        rolinstancia: {type: 'Select', options: utils.rolinstanciasGroup['video'] },
-        tipoarchivo:  {type: 'Text', editorAttrs: {placeholder: 'mimetype image/jpeg'}},
-        slug:         {type: 'Text', editorAttrs: {placeholder: 'nombre de archivo'}},
-        denom:        {type: 'Text', title: 'denominacion', editorAttrs: {placeholder: 'denominacion'}},
-        url:          {type: 'Text', title: 'URI', editorAttrs:{placeholder: 'URL del objeto digital'}},
+        tipoproducto: {type: 'Select', options: utils.tipoinstanciaOptionList, title: 'Tipo producto' },
+        rolinstancia: {type: 'Select', options: utils.rolinstanciasGroup['video'], title: 'Rol instancia' },
+        tipoarchivo:  {type: 'Text', editorAttrs: {placeholder: 'mimetype image/jpeg'}, title: 'Tipo archivo'},
+        slug:         {type: 'Text', editorAttrs: {placeholder: 'nombre de archivo'}, title: 'Denom corta'},
+        denom:        {type: 'Text', title: 'denominacion', editorAttrs: {placeholder: 'denominacion'}, title: 'Denominación'},
+        url:          {type: 'Text', title: 'URI', editorAttrs:{placeholder: 'URL del objeto digital'}, title: 'URL'},
    },
 
     defaults: {
@@ -1742,7 +1743,7 @@ window.PaCapitulosFacet = Backbone.Model.extend({
         numcapdesde:  {type: 'Number', title: 'Capítulo desde'},
         numcaphasta:  {type: 'Number', title: 'Capítulo hasta'},
         numcapprefix: {type: 'Text', title: 'Prefijo del código'},
-        tipoproducto:  {type: 'Select',options: utils.tipoproductoOptionList },
+        tipoproducto:  {type: 'Select',options: utils.tipoproductoOptionList, title:'Tipo producto' },
         durnominal:    {type: 'Text', title: 'Duración nominal', editorAttrs:{placeholder : 'duracion mm:ss'}},
    },
 
@@ -1764,13 +1765,13 @@ window.NotasFacet = Backbone.Model.extend({
     },
 
     schema: {
-        tiponota:    {type: 'Select',options: utils.notasOptionList },
+        tiponota:    {type: 'Select',options: utils.notasOptionList, title: 'Tipo Nota'},
         fecha:       {type: 'Text', title: 'Fecha', editorAttrs:{placeholder : 'fecha relevante'}},
-        slug:     {type: 'Text', title: 'Asunto', editorAttrs:{placeholder : 'asunto'}},
-        descr:    {type: 'TextArea', title: 'Descripción'},
-        url:      {type: 'Text', title: 'URL referencia', editorAttrs:{placeholder : 'fuente de dato- referencia'}},
-        responsable:    {type: 'Text', title: 'autor/responsable', editorAttrs:{placeholder : 'referente de la nota'}},
-        descriptores:    {type: 'Text', title: 'descriptores', editorAttrs:{placeholder : 'separados por ;'}},
+        slug:     {type: 'Text', title: 'Asunto', editorAttrs:{placeholder : 'asunto'}, title: 'Denom corta'},
+        descr:    {type: 'TextArea', title: 'Descripción', title: 'Descripción'},
+        url:      {type: 'Text', title: 'URL referencia', editorAttrs:{placeholder : 'fuente de dato- referencia'}, title: 'URL'},
+        responsable:    {type: 'Text', title: 'autor/responsable', editorAttrs:{placeholder : 'referente de la nota'}, title: 'Responsable'},
+        descriptores:    {type: 'Text', title: 'descriptores', editorAttrs:{placeholder : 'separados por ;'}, title: 'Descriptores'},
     },
 
     defaults: {
@@ -1941,12 +1942,12 @@ window.BrandingFacet = Backbone.Model.extend({
     },
 
     schema: {
-        tipobranding: {type: 'Select',options: utils.tipoBrandingOptionList },
-        rolbranding:  {type: 'Select',options: utils.rolBrandingOptionList },
-        slug: {type: 'Text',title:'copete', editorAttrs:{placeholder : 'bajada de información'} },
-        description: {type: 'TextArea',title:'descripción' },
-        url: {type: 'Text',titlo:'destino para más información' },
-        estado_alta:  {type: 'Select',options: utils.estadoaltaOptionList },
+        tipobranding: {type: 'Select',options: utils.tipoBrandingOptionList, title: 'Tipo branding' },
+        rolbranding:  {type: 'Select',options: utils.rolBrandingOptionList , title: 'Rol Branding'},
+        slug: {type: 'Text',title:'copete', editorAttrs:{placeholder : 'bajada de información'}, title: 'Denom corta' },
+        description: {type: 'TextArea',title:'descripción', title: 'Descripción' },
+        url: {type: 'Text',titlo:'destino para más información', title: 'URL' },
+        estado_alta:  {type: 'Select',options: utils.estadoaltaOptionList , title: 'Estado de Alta'},
     },
 
     defaults: {
@@ -1968,16 +1969,16 @@ window.PaInstanceFacet = Backbone.Model.extend({
 
 
    schema: {
-        rolinstancia:   {type: 'Select', options: utils.rolinstanciasGroup['video'] },
-        size:           {type: 'Number', title: 'Tamaño archivo'},
-        tipofile:       {type: 'Text', title: 'Tipo / MimeType'},
-        framerate:      {type: 'Select',options: utils.framerateOptionList },
-        codec:          {type: 'Select',options: utils.codecOptionList },
-        formatoorig:    {type: 'Select',options: utils.formatooriginalOptionList },
-        aspectratio:    {type: 'Select',options: utils.aspectratioOptionList },
-        sopentrega:     {type: 'Select',options: utils.sopentregaOptionList },
-        resolucion:     {type: 'Select',options: utils.resolucionOptionList },
-        observacion:    {type: 'TextArea'},
+        rolinstancia:   {type: 'Select', options: utils.rolinstanciasGroup['video'],title:'Rol instancia' },
+        size:           {type: 'Number', title: 'Tamaño archivo',title:'Tamaño' },
+        tipofile:       {type: 'Text', title: 'Tipo / MimeType',title:'MimeType' },
+        framerate:      {type: 'Select',options: utils.framerateOptionList ,title:'Frame-rate' },
+        codec:          {type: 'Select',options: utils.codecOptionList ,title:'Codec' },
+        formatoorig:    {type: 'Select',options: utils.formatooriginalOptionList,title:'Formato orig'  },
+        aspectratio:    {type: 'Select',options: utils.aspectratioOptionList,title:'Aspect-ratio'  },
+        sopentrega:     {type: 'Select',options: utils.sopentregaOptionList,title:'Sop de entrega'  },
+        resolucion:     {type: 'Select',options: utils.resolucionOptionList,title:'Resolución' },
+        observacion:    {type: 'TextArea',title:'Observación' },
     },
     
 
