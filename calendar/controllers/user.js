@@ -20,14 +20,18 @@ var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
     'ERROR: No se pudo borrar el nodo en la base de datos'
 ];
-//ATENCION: para agregar un serial, agregar entrada en tpr_adapter y en series;
 
-//ATENCION: para agregar un serial, agregar entrada en tpr_adapter y en series;
-
+var userlist = {};
+var getUserFromList = function(id){
+    return userlist[id];
+};
+var setUserInList = function(id, user){
+    console.log('updating USERLIST [%s] [%s]',user._id, user.username);
+    userlist[id] = user;
+};
 
 var addNewUser = function(req, res, node){
     console.log("addNewUser:users.js ");
-
     insertNewUser(req,res,node);
 };
 
@@ -64,13 +68,13 @@ exports.setBSON = function(bs) {
 
 
 exports.validPassword = function(currentUser, password) {
-    console.log('valid password BEGIN');
+    //console.log('valid password BEGIN');
     if(!currentUser) return false;
     if(password === currentUser.password){
-       console.log('valid password TRUE');
+       //console.log('valid password TRUE');
        return true;
     }else{
-       console.log('valid password FALSE');
+       //console.log('valid password FALSE');
        return false;
     }
  };
@@ -87,11 +91,20 @@ exports.findOne = function(query, cb) {
 
 exports.fetchById = function(id, cb) {
     //console.log('findById: Retrieving %s id:[%s]', usersCol,id);
-    dbi.collection(usersCol, function(err, collection) {
-        collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
-            cb(err, item);
+    var user = getUserFromList(id);
+    if(user){
+        //console.log('findById: USER FOUND in USER LIST');
+
+        cb(null,user);
+    } else {
+        dbi.collection(usersCol, function(err, collection) {
+            collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
+                console.log('findById: db findOne [%s]',item._id);
+                setUserInList(id,item);
+                cb(err, item);
+            });
         });
-    });
+    }
 };
 
 exports.findById = function(req, res) {
@@ -104,18 +117,22 @@ exports.findById = function(req, res) {
     });
 };
 
+exports.findCurrentUser = function(req, res) {
+    var user = req.user;
+    //console.log('findCurrentUser [%s]',user.username);
+    res.send(user);
+
+
+};
+
 exports.find = function(req, res) {
     var query = req.body; //{};
 
     //console.log('find:user Retrieving user collection with query [%s]',query['es_usuario_de.id']);
-    for (var i in query){
-        console.log(i,query[i]);
-    }
-
     dbi.collection(usersCol, function(err, collection) {
         collection.find(query).sort({username:1}).toArray(function(err, items) {
-            console.log('recuperados [%s]',items.length)
-            res.send(items[0]);
+            //console.log('recuperados [%s]',items.length)
+            res.send(items);
         });
     });
 };
@@ -139,8 +156,8 @@ exports.update = function(req, res) {
     var id = req.params.id;
     var user = req.body;
     delete user._id;
-    console.log('Updating node id:[%s] ',id);
-    console.log(JSON.stringify(user));
+    //console.log('Updating node id:[%s] ',id);
+    //console.log(JSON.stringify(user));
     dbi.collection(usersCol, function(err, collection) {
         collection.update({'_id':new BSON.ObjectID(id)}, user, {safe:true}, function(err, result) {
             if (err) {
@@ -148,6 +165,8 @@ exports.update = function(req, res) {
                 res.send({error: MSGS[0] + err});
             } else {
                 console.log('UPDATE: se insertaron exitosamente [%s] nodos',result);
+                user._id = id;
+                setUserInList(id, user);
                 res.send(user);
             }
         });

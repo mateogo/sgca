@@ -154,7 +154,46 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'Entities.ComprobanteCollection:comprobante.js ',
     url: "/comprobantes",
     model: Entities.Comprobante,
-    comparator: "cnumber",
+
+    sortfield: 'cnumber',
+    sortorder: -1,
+
+    comparator: function(left, right) {
+      var order = this.sortorder;
+      var l = left.get(this.sortfield);
+      var r = right.get(this.sortfield);
+
+      if (l === void 0) return -1 * order;
+      if (r === void 0) return 1 * order;
+
+      return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    },
+/*
+    comparator: function(model) {
+      return model.get(this.sortfield);
+    },
+*/
+  });
+
+  Entities.DocumentCollection = Backbone.Collection.extend({
+    whoami: 'Entities.DocumentCollection:comprobante.js ',
+
+    model: Entities.Comprobante,
+
+    url: "/navegar/comprobantes",
+
+    sortfield: 'cnumber',
+    sortorder: 1,
+    comparator: function(left, right) {
+      var order = this.sortorder;
+      var l = left.get(this.sortfield);
+      var r = right.get(this.sortfield);
+
+      if (l === void 0) return -1 * order;
+      if (r === void 0) return 1 * order;
+
+      return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    },
   });
 
   Entities.ComprobanteFindOne = Backbone.Collection.extend({
@@ -641,6 +680,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     initialize: function(options){
       this.options = options;
     },
+    comparator: 'product',
 
     model: function(attrs, options){
       return modelSubItemFactory(attrs, options);
@@ -704,9 +744,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             {val:'entidad', label:'Resumen por entidad / adherente'},
           ], title: 'Resumen'},
         tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList, title:'Comprobante' },
-        tipomov: {type: 'Select',options: utils.tipomovqueryOptionList, title:'Movimiento' },
-        slug: {type: 'Text', title: 'Asunto'},
-        estado:   {type: 'Text', title: 'Estado'},
+        tipomov:  {type: 'Select',options: utils.tipomovqueryOptionList, title:'Movimiento' },
+        slug:     {type: 'Text', title: 'Asunto'},
+        estado:   {type: 'Select',options: utils.estadodocumOptionList, title:'Estado' },
     },
 
     defaults: {
@@ -802,13 +842,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             var test = true;
             //console.log('filterfunction:[%s] vs [%s]/[%s]/[%s]',query.tipocomp,document.get("tipocomp"),document.get("cnumber"),(query.tipocomp.indexOf(document.get('tipocomp'))));
             //if((query.tipocomp.trim().indexOf(document.get('tipocomp'))) === -1 ) test = false;
-            if(query.tipoitem) {
+            if(query.tipoitem && query.tipoitem!=='no_definido') {
               if(query.tipoitem.trim() !== document.get('tipoitem')) test = false;
             }
-            if(query.tipomov) {
+            if(query.tipomov && query.tipomov !=='no_definido') {
               if(query.tipomov.trim() !== document.get('tipomov')) test = false;
             }
-            if(query.estado) {
+            if(query.estado && query.estado!=='no_definido') {
               if(query.estado.trim() !== document.get('estado_alta')) test = false;
             }
             if(query.fedesde.getTime()>document.get('fechagestion_tc')) test = false;

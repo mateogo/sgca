@@ -12,7 +12,7 @@ DocManager.module("HeaderApp", function(Header, DocManager, Backbone, Marionette
   });
 
   Header.on("start", function(){
-    console.log('header app started');
+    //console.log('header app started');
     API.listHeader();
   });
 });

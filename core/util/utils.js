@@ -53,6 +53,24 @@ var createFolder = function(publicPath, today){
     return serverPath;
 };
 
+var rutas = {
+    'no_definido'                  :'/#navegar/proyectos',
+    'procedencias:list'            :'/#navegar/proyectos',
+    'productos:list'               :'/#navegar/productos',
+    'gestion:comprobantes:list'    :'/gestion/#comprobantes'
+};
+
+exports.userHome = function (user){
+    var location;
+    if(user){
+        if(user.home) {
+            location = rutas[user.home];
+        }
+    }
+    return (location ? location : rutas['no_definido'])
+};
+
+
 exports.safeName = function (name){
     var str = name.toLowerCase();
     str = str.split(' ').join('-');

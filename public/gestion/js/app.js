@@ -22,7 +22,7 @@ DocManager.getCurrentRoute = function(){
 };
 
 DocManager.on("initialize:after", function(){
-  console.log('initialize:after!!');
+  console.log('DocManager History start: initialize:after');
   if(Backbone.history){
     Backbone.history.start();
 

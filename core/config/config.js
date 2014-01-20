@@ -50,10 +50,14 @@ var instanceDbListeners = function (db,BSON) {
 
 var routesBootstrap = function (app, express) {
 
-  passport.use(new LocalStrategy(
+
+
+
+  passport.use(new LocalStrategy({usernameField: 'username',passwordField: 'password'},
     // verify callback
     function(username, password, done) {
-      console.log('passport verify: username[%s] pass[%s] ',username,password);
+      //console.log('passport verify: username[%s] pass[%s] ',username,password);
+      // VERIFY CALLBACK
       //  return done(null, user); // ok
       //  return done(null, false, { message: 'Incorrect username.' }); // ToDo: implementar FLASH
       //  return done(err); // server error
@@ -63,20 +67,20 @@ var routesBootstrap = function (app, express) {
       
       user.findOne({ username: username }, function (err, userdao) {
         if (err) { 
-         console.log('passport error');
+          //console.log('passport error');
           return done(err); 
         }
         if (!userdao) {
-          console.log('passport USER NOT FOUND');
+          //console.log('passport USER NOT FOUND');
           //return done(null, false, { message: 'Incorrect username.' });
           return done(null, false);
         }
         if (!user.validPassword(userdao, password)) {
-          console.log('passport PASSWD ERROR');
+          //console.log('passport PASSWD ERROR');
           //return done(null, false, { message: 'Incorrect password.' });
           return done(null, false);
         }
-        console.log('passport USER:[%s] ',userdao.username);
+        //console.log('passport USER:[%s] ',userdao.username);
         return done(null, userdao);
       });
   
@@ -84,12 +88,12 @@ var routesBootstrap = function (app, express) {
   ));
 
   passport.serializeUser(function(user, done) {
-    console.log('serialize:[%s]',user.name);
+    //console.log('serialize:[%s]',user.name);
     done(null, user._id);
   });
 
   passport.deserializeUser(function(id, done) {
-    console.log('deserialize:[%s]',id);
+    //console.log('deserialize:[%s]',id);
     user.fetchById(id, function(err, user) {
       done(err, user);
     });

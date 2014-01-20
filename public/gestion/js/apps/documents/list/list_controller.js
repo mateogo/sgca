@@ -6,10 +6,13 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
       });
 
       hview.on("itemview:documents:list", function(childView, model){
-        var trigger = model.get("navigationTrigger");
-        DocManager.trigger(trigger);
+        //var trigger = model.get("navigationTrigger");
+        //DocManager.trigger(trigger);
+        DocManager.request("document:query:list","", function(model){
+          console.log('document LIST cb')
+        });      
       });
-
+      /*
       hview.on("documents:filtered:list", function(criteria){
         console.log('filtered list [%s]',criteria)
 
@@ -22,9 +25,8 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
             layout.mainRegion.show(documentsListView);
           });
       });
-
+      */
       hview.on('document:search',function(query, cb){
-        console.log('list_controller: document:search EVENT');
 
         DocManager.request("document:query:search",query, function(model){
           if(model){
@@ -39,7 +41,6 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
   var initNavPanel = function(layout){
       var links = DocManager.request("docum:nav:entities");
-      //console.log('initNavPanel BEGINS  [%s]', links.length);
 
       var headers = new DocManager.DocsApp.Common.Views.NavPanel({collection: links});
       registerHeadersEvents(headers, layout);
@@ -51,44 +52,47 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
     listDocuments: function(criterion){
       console.log('DocsAPP.List.Controller.listdocuments');
       // indicación de espera:
-      // var loadingView = new DocManager.Common.Views.Loading();
-      // DocManager.mainRegion.show(loadingView);
+      //var loadingView = new DocManager.Common.Views.Loading();
+      //DocManager.mainRegion.show(loadingView);
 
-      var documLayout = new List.Layout();
-      var documNavBar = initNavPanel(documLayout);
-      List.Session = {};
-
-      DocManager.request("document:filtered:entities", criterion, function(documents){
-        console.log('ListDocuments BEGINS: [%s]',documents.length);
-        setColumnTable('docum');
-
-/*        documNavBar.once("show", function(){
-          documNavBar.triggerMethod("set:filter:criterion", criterion);
-        });
-*/
-  
-        var documentsListView = new List.Documents({
-          collection: documents
-        });
-
-        
-        registerDocumListEvents(documentsListView);
-
-/*        documNavBar.on("documents:filter", function(filterCriterion){
-          filteredDocuments.filter(filterCriterion);
-          DocManager.trigger("documents:filter", filterCriterion);
-        });
-*/
-
-        List.Session.layout = documLayout;
-        documLayout.on("show", function(){
-          documLayout.navbarRegion.show(documNavBar);
-          documLayout.mainRegion.show(documentsListView);
-        });
-
-        DocManager.mainRegion.show(documLayout);
-
+      if(!List.Session) List.Session = {};
+      List.Session.layout = new List.Layout();
+      
+      List.Session.navbar = initNavPanel(List.Session.layout);
+      
+      List.Session.layout.on("show", function(){
+        List.Session.layout.navbarRegion.show(List.Session.navbar);
+      //List.Session.layout.mainRegion.show(loadingView);
       });
+      DocManager.mainRegion.show(List.Session.layout);
+
+      dao.gestionUser.getUser(function (user){
+        var query;
+
+        if(List.Session.query){
+          query = List.Session.query;
+        }else{
+          query = dao.gestionUser.getDocumQuery();
+          List.Session.query = query;
+        }
+
+        var tipolistado = dao.gestionUser.getDocumListType();
+
+        if(tipolistado === 'items'){
+          DocManager.request("document:query:items",query, function(model){
+            console.log('query lista CALLBACK - END');
+          });
+
+        }else {
+          DocManager.request("document:query:list","", function(model){
+            console.log('query lista CALLBACK - END');
+          });
+
+        }
+
+
+      });// currentUser
+
     }
   };
 
@@ -108,8 +112,234 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
           model.destroy();
         });
 
+        documentsListView.on("document:sort", function(sort){
+
+          console.log('REGISTERDOCUMLISTEVENTS: EVENT SORT [%s] [%s]', sort, this.collection.length);
+          
+          if(sort === 'fechagestion') sort = 'fechagestion_tc';
+          if(sort === 'fecomp') sort = 'fecomp_tc';
+          this.collection.sortfield = sort;
+          this.collection.sortorder = -this.collection.sortorder;
+          this.collection.sort();
+          this.render();
+        });
+
+        documentsListView.on("itemview:dcuments:related", function(childView, model, cb){
+          console.log('documents RELATED BEGIN [%s] [%s]  ',model.get('product'),model.get('productid') );
+          List.Session.relatedLayout = null;
+          loadProductChilds(childView, model, cb);
+        });
 
   };
+
+  /*
+   *
+   * RELATED VIEW
+   */
+  var loadProductChilds = function(view, model, cb){
+    var prId = (model.get('productid')|| model.id);
+    if(!prId) return;
+    //console.log('loadProductChilds [%s][%s]',model.get('product'),model.get('productid'));
+
+    var product = new DocManager.Entities.Product({_id: prId});
+    product.fetch({
+      success:function(){
+        console.log('NODE LOADED: [%s] [%s]',product.get('productcode'),product.get('slug'));
+
+          product.fetch({success: function() {
+            product.loadchilds(product,[ {'es_capitulo_de.id': product.id},{'es_instancia_de.id': product.id}],function(products){
+              console.log('LOAD CHILDS SUCCESS: [%s]',products.length)
+
+              product.loaddocuments(function(documents){
+                console.log('LOAD DOCUMENTS SUCCESS: [%s]',documents.length)
+                renderRelated(view, product, products, documents, cb);
+              });
+            });
+          }});
+      }
+    });
+  };
+
+  var renderRelated = function(view, product, products, documents, cb){
+    console.log('VIEW RELATED products:[%s]',products.length);
+
+    var relatedProductView = new List.ProductHeader({model: product});
+
+    var relatedProductsView = new List.RelatedProducts({collection: products});
+    registerRelatedProductEvents(relatedProductsView);
+    
+    var relatedDocumentsView = new List.RelatedDocuments({collection: documents});
+    registerRelatedDocumentEvents(relatedDocumentsView);
+
+    var relatedLayout = new List.RelatedLayout();
+
+
+    relatedLayout.on("show", function(){
+        relatedLayout.productRegion.show(relatedProductView);
+        relatedLayout.productsRegion.show(relatedProductsView);
+        relatedLayout.documentsRegion.show(relatedDocumentsView);
+    });
+
+    if(List.Session.relatedLayout){
+  
+      List.Session.relatedLayout.hookRegion.show(relatedLayout);
+      List.Session.relatedLayout = relatedLayout;
+
+    }else{
+      var renderId = view.model.get('documid');
+      view.$el.after('<tr><td colspan=8 id='+renderId+' ></td></tr>');
+
+      List.Session.layout.addRegion(renderId, view.$('#'+renderId));
+
+      view.layout = List.Session.layout;
+      List.Session.layout[renderId].show(relatedLayout);
+      List.Session.relatedLayout = relatedLayout;
+    }
+
+  };
+  
+  var registerRelatedProductEvents = function(view){
+
+    view.on("itemview:view:related:product", function(childView, model, cb){
+      console.log('Te tengo, malvado [%s] [%s]', model.get('productcode'), model.id);
+      loadProductChilds(childView, model, cb);
+    });
+  };
+
+  var registerRelatedDocumentEvents = function(view){
+
+    view.on("itemview:view:related:document", function(childView, model, cb){
+      console.log('Te tengo, malvado [%s] [%s]', model.get('cnumber'), model.id);
+      //loadProductChilds(childView, model, cb);
+
+      var documLayout = new DocManager.DocsApp.Show.Layout();
+
+      var fetchingDocument = DocManager.request("document:entity", model.id);
+      $.when(fetchingDocument).done(function(document){
+        var documentView;
+        if(document !== undefined){
+          var itemCol = new DocManager.Entities.DocumItemsCollection(document.get('items'));
+
+          documentView = new DocManager.DocsApp.Show.Document({
+            model: document
+          });
+          documentHeader = new DocManager.DocsApp.Show.Header({
+            model: document
+          });
+          brandingView = new DocManager.DocsApp.Show.Branding({
+              model: document
+          });
+          documentItems = new DocManager.DocsApp.Show.DocumentItems({
+            collection: itemCol
+          });
+ 
+          documLayout.on("show", function(){
+            documLayout.brandingRegion.show(brandingView);
+            documLayout.headerRegion.show(documentHeader);
+            documLayout.mainRegion.show(documentItems);
+          });
+          documentView.on("document:edit", function(model){
+            DocManager.trigger("document:edit", model);
+          });
+        }
+        else{
+          documentView = new DocManager.Show.MissingDocument();
+        }
+
+         List.viewDocument(documLayout, brandingView, documentHeader, documentItems);
+      });
+    });
+
+  };
+
+  var API = {
+    listDocuments: function(criterion, cb){
+        DocManager.request("document:filtered:entities", criterion, function(documents){
+          setColumnTable('docum');
+
+          /*  documNavBar.once("show", function(){
+            documNavBar.triggerMethod("set:filter:criterion", criterion);
+          });*/
+    
+          var documentsListView = new List.Documents({
+            collection: documents
+          });
+
+          registerDocumListEvents(documentsListView);
+
+          /* documNavBar.on("documents:filter", function(filterCriterion){
+            filteredDocuments.filter(filterCriterion);
+            DocManager.trigger("documents:filter", filterCriterion);
+          });*/
+/*
+          List.Session.layout.on("show", function(){
+            List.Session.layout.navbarRegion.show(List.Session.navbar);
+            List.Session.layout.mainRegion.show(documentsListView);
+          });
+
+          DocManager.mainRegion.show(List.Session.layout);
+*/
+          List.Session.layout.mainRegion.show(documentsListView);
+
+        });
+
+    },
+
+    listDocumentItems: function( squery ){
+        console.log('callback: [%s] [%s] [%s]', squery.fedesde, squery.resumen, squery.tipocomp);
+  
+        DocManager.request("document:query:entities", squery, function(documents){
+          setColumnTable('documitems');
+
+          var documentsListView = new List.Documents({
+            collection: documents
+          });
+
+          registerDocumListEvents(documentsListView);
+/*
+          List.Session.layout.on("show", function(){
+            List.Session.layout.navbarRegion.show(List.Session.navbar);
+            List.Session.layout.mainRegion.show(documentsListView);
+          });
+
+          DocManager.mainRegion.show(List.Session.layout);
+
+*/
+
+          List.Session.layout.mainRegion.show(documentsListView);
+        });
+    },
+
+    searchDocuments: function(squery, cb){
+      var self = this;
+      console.log('LIST CONTROLLER searchDocuments API called: query:[%s]', squery)
+      if(!List.Session.query) List.Session.query = {};
+      if(squery) List.Session.query.slug = squery;
+
+      List.queryForm(List.Session.query, function(qmodel){
+        
+        List.Session.query = qmodel.attributes;
+        dao.gestionUser.update('documQuery', qmodel.attributes);
+        self.listDocumentItems(List.Session.query);
+
+      });
+      //Edit.modalSearchEntities('documents', query, function(model){
+      //  cb(model);
+      //});
+    },
+
+    searchPersons: function(query, cb){
+      Edit.modalSearchEntities('persons', query, function(model){
+        cb(model);
+      });
+    },
+    searchProducts: function(query, cb){
+      Edit.modalSearchEntities('products', query, function(model){
+        cb(model);
+      });
+    },
+  };
+
   var setColumnTable = function (op){
     if(op==='docum'){
       utils.documListTableHeader[10].flag=0;
@@ -136,51 +366,16 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
     }
   };
 
-
-
-  var API = {
-    searchDocuments: function(squery, cb){
-      console.log('LIST CONTROLLER searchDocuments API called: query:[%s]', squery)
-      if(!List.Session.query) List.Session.query = {};
-      if(squery) List.Session.query.slug = squery;
-
-      List.queryForm(List.Session.query, function(qmodel){
-        
-        List.Session.query = qmodel.attributes;
-
-        console.log('callback: [%s] [%s] [%s]',qmodel.get('fedesde'),qmodel.get('resumen'),qmodel.get('tipocomp'));
-  
-        DocManager.request("document:query:entities", qmodel.attributes, function(documents){
-          setColumnTable('documitems');
-
-          var documentsListView = new List.Documents({
-            collection: documents
-          });
-          console.log('mainRegion SHOW')
-          registerDocumListEvents(documentsListView);
-          List.Session.layout.mainRegion.show(documentsListView);
-        });
-
-
-      });
-      //Edit.modalSearchEntities('documents', query, function(model){
-      //  cb(model);
-      //});
-    },
-    searchPersons: function(query, cb){
-      Edit.modalSearchEntities('persons', query, function(model){
-        cb(model);
-      });
-    },
-    searchProducts: function(query, cb){
-      Edit.modalSearchEntities('products', query, function(model){
-        cb(model);
-      });
-    },
-  };
-
   DocManager.reqres.setHandler("document:query:search", function(query, cb){
     API.searchDocuments(query, cb);
+  });
+
+  DocManager.reqres.setHandler("document:query:list", function(query, cb){
+    API.listDocuments(query, cb);
+  });
+
+  DocManager.reqres.setHandler("document:query:items", function(query, cb){
+    API.listDocumentItems(query, cb);
   });
 
   DocManager.reqres.setHandler("person:search", function(query, cb){

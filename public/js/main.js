@@ -3,8 +3,8 @@ var AppRouter = Backbone.Router.extend({
     whoami: 'AppRouter: ',
 
     routes: {
-        ""                       : "home",
-        "login"                  : "browseProjects",
+        ""                       : "login",
+        "home"                   : "home",
         "about"                  : "about",
 
         "ver/proyecto/:id"       : "viewprojectDetails",
@@ -56,8 +56,45 @@ var AppRouter = Backbone.Router.extend({
 
 
     initialize: function () {
-        this.headerView = new HeaderView();
-        $('.header').html(this.headerView.el);
+        var self = this;
+        dao.currentUser.getUser(function(user){
+            var theUser = user ? new User(user) : new User();
+            console.log('Initialize:main.js YES!!! [%s]',user.username);
+            if(!self.headerView){
+                self.headerView = new HeaderView({model: theUser});
+                $('.header').html(self.headerView.el);
+            }
+        });
+    },
+
+    home: function(){
+        var self = this;
+        dao.currentUser.getUser(function(user){
+            console.log('YES!!! [%s]',user.username);
+            this.headerView = new HeaderView({model: new User(user)});
+            $('.header').html(this.headerView.el);
+
+            if(false){
+                app.navigate('navegar/productos', false);
+                self.browseProducts();
+            } else {
+                window.location = '/gestion/#comprobantes';
+            }
+        });
+    },
+
+    login: function () {
+        console.log('login:main.js BEGINS');
+        var user = new UserLogin();
+        if (!this.homeView) {
+            this.homeView = new HomeView({model: user});
+        }
+        $('#content').html(this.homeView.el);
+        if(!this.headerView){
+            this.headerView = new HeaderView({model: new User()});
+            $('.header').html(this.headerView.el);
+        }
+        this.headerView.selectMenuItem('home-menu');
     },
 
     gestion: function () {
@@ -122,24 +159,13 @@ var AppRouter = Backbone.Router.extend({
         var browsepersons = new PersonBrowseView({page:p, el:'#content',parenttag:'content'});
     },
 
-
-    home: function () {
-        console.log('home:main.js');
-        var user = new User();
-        if (!this.homeView) {
-            this.homeView = new HomeView({model: user});
-        }
-        $('#content').html(this.homeView.el);
-        this.headerView.selectMenuItem('home-menu');
-    },
-
     about: function () {
         console.log('about:main.js');
         if (!this.aboutView) {
             this.aboutView = new AboutView();
         }
         $('#content').html(this.aboutView.el);
-        this.headerView.selectMenuItem('about-menu');
+        if(this.headerView) this.headerView.selectMenuItem('about-menu');
     },
 
     quotationDetails: function (id) {
@@ -153,7 +179,7 @@ var AppRouter = Backbone.Router.extend({
         quotation.fetch({success: function() {
             $("#listcontent").html(new QuotationView({model: quotation}).el);
         }});
-        this.headerView.selectMenuItem();
+        if(this.headerView) this.headerView.selectMenuItem();
     },
 
     browseQuotations: function(page) {
@@ -177,7 +203,7 @@ var AppRouter = Backbone.Router.extend({
                 $("#listcontent").html(new QuotationListView({model: quotationList, page: p}).el);
             }
         });
-        this.headerView.selectMenuItem('browse-menu');
+        if(this.headerView) this.headerView.selectMenuItem('browse-menu');
         //console.log("browse quotation end");
     },
 
@@ -191,8 +217,8 @@ var AppRouter = Backbone.Router.extend({
         //utils.editor.render('description');
         //var myEditor = new nicEditor({fullPanel : true }).panelInstance('description');
         //myEditor.addEvent('add', function() { alert( myEditor.instanceById('myArea2').getContent() );});});
-        this.headerView.selectMenuItem();
-        //this.headerView.selectMenuItem('add-menu');
+        if(this.headerView) this.headerView.selectMenuItem();
+        //if(this.headerView) this.headerView.selectMenuItem('add-menu');
     },
 
     addProduct: function() {
@@ -205,8 +231,8 @@ var AppRouter = Backbone.Router.extend({
         //utils.editor.render('description');
         //var myEditor = new nicEditor({fullPanel : true }).panelInstance('description');
         //myEditor.addEvent('add', function() { alert( myEditor.instanceById('myArea2').getContent() );});});
-        //this.headerView.selectMenuItem();
-        //this.headerView.selectMenuItem('add-menu');
+        //if(this.headerView) this.headerView.selectMenuItem();
+        //if(this.headerView) this.headerView.selectMenuItem('add-menu');
     },
 
     addArticle: function() {
@@ -265,7 +291,7 @@ var AppRouter = Backbone.Router.extend({
                 $("#listcontent").html(new ProductListView({model: productList, page: p}).el);
             }
         });
-        //this.headerView.selectMenuItem('browse-menu');
+        //if(this.headerView) this.headerView.selectMenuItem('browse-menu');
         */
     },
 
@@ -284,11 +310,12 @@ var AppRouter = Backbone.Router.extend({
         projectList.fetch({success: function() {
             $("#listcontent").html(new ProjectListView({model: projectList, page: p}).el);
         }});
-        this.headerView.selectMenuItem('home-menu');
+        if(this.headerView) this.headerView.selectMenuItem('home-menu');
     },
 
     browseProjects: function(page) {
         console.log('browseProjects:main.js');
+        
         $('#content').html(new ProjectListLayoutView({model: dao.projectsQueryData()}).el);
 
         var p = page ? parseInt(page, 10) : 1,
@@ -304,7 +331,7 @@ var AppRouter = Backbone.Router.extend({
                 $("#listcontent").html(new ProjectListView({model: projectList, page: p}).el);
             }
         });
-        this.headerView.selectMenuItem('browse-menu');
+        if(this.headerView) this.headerView.selectMenuItem('browse-menu');
     },
 
     viewprojectDetails: function (id) {
@@ -319,13 +346,13 @@ var AppRouter = Backbone.Router.extend({
             utils.currentproject = project;
             $("#content").html(new ProjectView({model: project}).el);
         }});
-        this.headerView.selectMenuItem();
+        if(this.headerView) this.headerView.selectMenuItem();
     },
 
     addProject: function() {
         var project = new Project();
         $('#content').html(new ProjectView({model: project}).el);
-        this.headerView.selectMenuItem('add-menu');
+        if(this.headerView) this.headerView.selectMenuItem('add-menu');
     },
 
     listResources: function(page) {
@@ -342,7 +369,7 @@ var AppRouter = Backbone.Router.extend({
         resourceList.fetch({success: function() {
             $("#listcontent").html(new ResourceListView({model: resourceList, page: p}).el);
         }});
-        this.headerView.selectMenuItem('browse-menu');
+        if(this.headerView) this.headerView.selectMenuItem('browse-menu');
     },
 
     resourceDetails: function (id) {
@@ -356,7 +383,7 @@ var AppRouter = Backbone.Router.extend({
         resource.fetch({success: function() {
             $("#listcontent").html(new ResourceView({model: resource}).el);
         }});
-        this.headerView.selectMenuItem();
+        if(this.headerView) this.headerView.selectMenuItem();
     },
 
     browseResources: function(page) {
@@ -381,7 +408,7 @@ var AppRouter = Backbone.Router.extend({
                 $("#content").html(rlv.el);
             }
         });
-        this.headerView.selectMenuItem('browse-menu');
+        if(this.headerView) this.headerView.selectMenuItem('browse-menu');
         //console.log("browse resource end");
     },
 
@@ -395,8 +422,8 @@ var AppRouter = Backbone.Router.extend({
         //utils.editor.render('description');
         //var myEditor = new nicEditor({fullPanel : true }).panelInstance('description');
         //myEditor.addEvent('add', function() { alert( myEditor.instanceById('myArea2').getContent() );});});
-        this.headerView.selectMenuItem();
-        //this.headerView.selectMenuItem('add-menu');
+        if(this.headerView) this.headerView.selectMenuItem();
+        //if(this.headerView) this.headerView.selectMenuItem('add-menu');
     },
 
     assetDetails: function(id)
@@ -416,7 +443,7 @@ var AppRouter = Backbone.Router.extend({
 
         }});
 
-        //this.headerView.selectMenuItem('browse-menu');
+        //if(this.headerView) this.headerView.selectMenuItem('browse-menu');
     },
 
     browseAssets: function()

@@ -1,9 +1,10 @@
-utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView', 'DocumNavbar',
+utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView', 'DocumListLayoutView', 'DocumNavbar',
     'DocumEditMin', 'DocumShowDef','DocumEditCore','DocumEditPT', 'SearchEntitiesForm','DocumEditPTLayout','DocumEditPTItem',
     'DocumEditRE', 'DocumEditREItem','DocumEditEM','DocumEditEMItem','DocumEditEMHeader', 'DocumShowLayoutView',
     'DocumShowBranding', 'DocumShowHeader', 'DocumShowItemPTHeader', 'DocumShowItemLayoutView','DocumShowItemPTComposite',
     'DocumShowItemPTDetail','DocumShowItemREHeader','DocumShowItemREComposite','DocumShowItemREDetail', 
-    'DocumShowItemPEHeader', 'DocumShowItemPEComposite', 'DocumShowItemPEDetail'], function() {
+    'DocumShowItemPEHeader', 'DocumShowItemPEComposite', 'DocumShowItemPEDetail',
+    'DocumRelatedLayout', 'DocumRelatedPRHeader', 'DocumRelatedPR', 'DocumRelatedDOC'], function() {
 
     $('[data-toggle=offcanvas]').click(function() {
         $('.row-offcanvas').toggleClass('active');

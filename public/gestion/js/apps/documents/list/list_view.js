@@ -3,7 +3,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
     className: 'row row-offcanvas row-offcanvas-left',
 
     getTemplate: function(){
-      return utils.templates.DocumEditLayoutView;
+      return utils.templates.DocumListLayoutView;
     },
     
     regions: {
@@ -46,6 +46,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
       "click button.js-delete": "deleteClicked",
       "click button.js-show": "showClicked",
       "click button.js-edit": "editClicked",
+      "click .js-zoom" : 'viewRelated', 
     },
 
     flash: function(cssClass){
@@ -56,6 +57,35 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
         }, 500);
       });
     },
+
+    viewRelated: function(){
+      var self = this;
+      console.log('View Related');
+      if(self.areRelatedVisible){
+
+          self.layout.removeRegion(self.model.get('documid'));
+
+          var tr = $('#'+self.model.get('documid')).closest('tr');
+          //tr.css("background-color","#FF3700");
+          tr.remove();
+          
+          /*tr.fadeOut(400, function(){
+              tr.remove();
+          });*/
+
+      }else{
+
+        this.trigger('dcuments:related',this.model, function(){
+          //no hay callbacl. futuros usos
+        });
+
+      }
+      self.areRelatedVisible = !self.areRelatedVisible;
+
+      return false;
+    },
+
+    areRelatedVisible: false,
 
     highlightName: function(e){
       this.$el.toggleClass("warning");
@@ -117,6 +147,17 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
     itemView: List.Document,
     itemViewContainer: "tbody",
 
+    events: {
+      "click .js-sortcolumn": "changeOrder",
+    },
+
+    changeOrder: function(event){
+
+      var target = event.target;
+      console.log('CLICKKKKKKKK!!!! [%s] [%s]',target,target.name);
+      this.trigger("document:sort", target.name);
+    },
+
     initialize: function(){
       this.listenTo(this.collection, "reset", function(){
         this.appendHtml = function(collectionView, itemView, index){
@@ -132,6 +173,138 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
     }
   });
 
+
+
+
+
+
+
+  List.RelatedDocument = Marionette.ItemView.extend({
+    tagName: "div",
+    //className: 'item-group',
+
+    getTemplate: function(){
+      return utils.templates.DocumRelatedDOC;
+    },
+    initialize: function(){
+      console.log('RelatedDocuments ITEM View: INIT')
+    },
+
+    events: {
+      "click .js-docview": "viewDocument",
+    },
+
+    viewDocument: function(){
+      console.log('clie View DOCUMENT!')
+
+      this.trigger('view:related:document',this.model, function(){
+        //no hay callbacl. futuros usos
+      });
+    },
+
+
+    remove: function(){
+      var self = this;
+      this.$el.fadeOut(function(){
+        Marionette.ItemView.prototype.remove.call(self);
+      });
+    }
+  });
+
+  List.ProductHeader = Marionette.ItemView.extend({
+    tagName: "div",
+    //className: 'item-group',
+
+    getTemplate: function(){
+      return utils.templates.DocumRelatedPRHeader;
+    },
+
+    initialize: function(){
+      console.log('RelatedProducts ITEM View: INIT')
+    },
+
+    events: {
+    },
+
+    remove: function(){
+      var self = this;
+      this.$el.fadeOut(function(){
+        Marionette.ItemView.prototype.remove.call(self);
+      });
+    }
+  });
+
+  List.RelatedProduct = Marionette.ItemView.extend({
+    tagName: "div",
+
+    getTemplate: function(){
+      return utils.templates.DocumRelatedPR;
+    },
+
+    initialize: function(){
+      console.log('RelatedProducts ITEM View: INIT')
+    },
+
+    events: {
+      "click .js-productbrowse": "viewProduct",
+    },
+
+    viewProduct: function(){
+      console.log('clie View PRODUCT!')
+
+      this.trigger('view:related:product',this.model, function(){
+          //no hay callbacl. futuros usos
+      });
+
+
+    },
+
+    remove: function(){
+      var self = this;
+      this.$el.fadeOut(function(){
+        Marionette.ItemView.prototype.remove.call(self);
+      });
+    }
+  });
+
+  List.RelatedProducts = Marionette.CollectionView.extend({
+    tagName: "div",
+    //className: "list-group",
+
+    itemView: List.RelatedProduct,
+
+    initialize: function(){
+      console.log('RelatedProducts View: INIT')
+    },
+
+  });
+
+  List.RelatedDocuments = Marionette.CollectionView.extend({
+    tagName: "div",
+    className: "list-group",
+
+    itemView: List.RelatedDocument,
+
+    initialize: function(){
+      console.log('RelatedDocuments View: INIT')
+    },
+
+  });
+
+
+  List.RelatedLayout = Marionette.Layout.extend({
+
+    getTemplate: function(){
+      return utils.templates.DocumRelatedLayout;
+    },
+    
+    regions: {
+      productRegion:   '#product-region',
+      productsRegion:  '#products-region',
+      documentsRegion: '#documents-region',
+      hookRegion:      '#hook-region'
+    }
+  });
 
 
   // ventana modal
@@ -174,6 +347,33 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
             var errors = form.commit();
             if(cb) cb(facet);
         });
+  };
+
+  // ventana modal
+  List.viewDocument = function(view, cb){
+
+
+    var modal = new Backbone.BootstrapModal({
+        content: view,
+        title: 'Vista comprobante',
+        okText: 'aceptar',
+        cancelText: 'cancelar',
+        enterTriggersOk: false,
+        animate: true
+    });
+
+    modal.on('shown', function(){
+      console.log('shown')
+      view.trigger('show');
+    });
+
+    modal.on('ok',function(){
+      console.log('yew, ok')
+    });
+
+    modal.open(function(){
+      console.log('open callback yew, ok')
+    });
   };
 
 

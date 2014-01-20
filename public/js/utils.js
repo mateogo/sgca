@@ -362,6 +362,21 @@ window.utils = {
         {val:'no_definido'      , label:'tipo de archivo'},
         {val:'imagen_web'       , label:''},
     ],
+    
+    userGroupsOptionList:[
+        {val:'no_definido'   , label:'Grupo principal'},
+        {val:'tecnica'       , label:'Técnica'},
+        {val:'produccion'    , label:'Producción'},
+        {val:'contenidos'    , label:'Contenidos'},
+        {val:'adherentes'    , label:'Despacho'},
+    ],
+
+    userHomeOptionList:[
+        {val:'no_definido'                  , label:'Locación de Inicio'},
+        {val:'procedencias:list'            , label:'navegar/procedencias'},
+        {val:'productos:list'               , label:'navegar/productos'},
+        {val:'gestion:comprobantes:list'    , label:'gestion/comprobantes'},
+    ],
 
     userStatusOptionList:[
         {val:'activo'        , label:'activo'},
@@ -639,6 +654,17 @@ window.utils = {
         {val:'baja',       label:'baja'},
     ],
 
+    emphasisDocumOptionList:[
+        {val:'no_definido',  label:''},
+        {val:'baja'      , label:'text-success'},
+        {val:'media'     , label:'text-info'},
+        {val:'alta'      , label:'text-warning'},
+        {val:'urgente'   , label:'text-danger'},
+        {val:'cumplido'  , label:'text-muted'},
+        {val:'suspendido', label:'text-muted'},
+        {val:'anulado'   , label:'text-muted'},
+    ],
+    
     estadodocumOptionList: [
         {val:'no_definido',  label:'Estado - prioridad'},
         {val:'baja'      , label:'Baja'},
@@ -1107,7 +1133,7 @@ window.utils = {
     ],
 
     documListTableHeader:[
-        {id:0 , tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',        label:'#'},
+        {id:0 , tt:'th', flag:1, tclass:'order', tmpl: 'template2', val:'select',        label:'#'},
         {id:1 , tt:'th', flag:1, tclass:'col1', tmpl: 'template6', val:'cnumber',       label:'comprob'},
         {id:2 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'fecomp',        label:'fecha'},
         {id:3 , tt:'th', flag:0, tclass:'col3', tmpl: 'template1', val:'fechagestion',  label:'fecha'},
@@ -1118,16 +1144,18 @@ window.utils = {
         {id:8 , tt:'th', flag:1, tclass:'col8', tmpl: 'template1', val:'persona',       label:'persona'},
         {id:9 , tt:'th', flag:0, tclass:'col9', tmpl: 'template1', val:'product',       label:'producto'},
         {id:10, tt:'th', flag:0, tclass:'cola', tmpl: 'template1', val:'tcomputo',      label:'tiempo'},
-        {id:11, tt:'th', flag:1, tclass:'colb', tmpl: 'template1', val:'slug',          label:'asunto'},
-        {id:12, tt:'th', flag:1, tclass:'colc', tmpl: 'template5', val:'acciones',      label:'acciones'}
+        {id:11, tt:'th', flag:1, tclass:'colb', tmpl: 'template1', val:'slug',          label:'a s u n t o   -   d e s c r i p c i ó n'},
+        {id:12, tt:'th', flag:1, tclass:'actions', tmpl: 'template5', val:'acciones',      label:'acciones'}
     ],
 
     buildTableHeader: function(data){
-        var template = _.template("<<%= tt %> name='<%= val %>' class='<%= tclass %>' ><%= label %></<%= tt %> >");
+        var template1 = _.template("<<%= tt %> name='<%= val %>' class='<%= tclass %> js-sortcolumn' ><button name='<%= val %>' type='button' class='btn btn-link btn-xs'><%= label %> <span class='glyphicon glyphicon-sort-by-attributes'></span></button></<%= tt %> >");
+        var template2 = _.template("<<%= tt %> name='<%= val %>' class='<%= tclass %>' ><%= label %></<%= tt %> >");
         var tabledata = '';
         _.each(data,function(element, index, list){
             if(element.flag){
-                tabledata += template(element);
+                if(element.tclass === 'order' || element.tclass === 'actions') tabledata += template2(element);
+                else tabledata += template1(element);
             }
         });
         //console.log('<thead><tr>'+tabledata+'</tr></thead>');

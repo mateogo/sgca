@@ -2,6 +2,137 @@ window.dao = {
 
     whoami:'daoutils',
 
+    gestionUser: {
+        getUser: function(cb){
+            if(! this.user){
+                this.fetchUser(cb);  
+            } else {
+                //console.log('getUser: currentUser')
+                cb(this.user);
+            }
+        },
+        fetchUser: function(cb){
+            //console.log('fetchUser: currentUser')
+            var self = this;
+            $.ajax({
+                type: 'get',
+                url: '/currentUser',
+                success: function(data) {
+                    //console.log('callback SUCCESS');
+                    self.user = new DocManager.Entities.User(data);
+                    //console.log('FETCH USER: [%s]',self.user.id);
+                    if(cb) cb( self.user);
+                }
+            });
+        },
+        getDocumQuery: function(){
+            var query;
+            if(this.user){
+                query =  this.user.get('documQuery');
+                if(query){
+                    query.fedesde = new Date(query.fedesde);
+                    query.fehasta = new Date(query.fehasta);
+                }
+            }
+            if(!query){
+                query = this.getDefaultQueryDocument();
+            }
+            return query;
+        },
+        getUserGroup: function(){
+            var grupo;
+            if(this.user){
+                grupo =  this.user.get('grupo');
+            }
+            return grupo || 'produccion';
+        },
+        getDefaultQueryDocument: function(){
+            var to = new Date();
+            var fedesde = new Date(to.getFullYear(),to.getMonth(),1,0,0,0,0);
+            var fehasta = new Date(to.getFullYear(),to.getMonth(),to.getDate(),0,0,0,0);
+            var resumen = 'detallado';
+            var tipoitem = 'nrecepcion';
+            var grupo = this.getUserGroup(); 
+            if(grupo === 'tecnica'){
+                resumen = 'producto';
+                tipoitem = 'nrecepcion';
+            }else if(grupo === 'produccion'){
+                resumen = 'entidad';
+                tipoitem = 'nrecepcion';
+            }else if(grupo === 'contenidos'){
+                resumen = 'entidad';
+                tipoitem = 'nrecepcion';
+            }else if(grupo === 'adherentes'){
+                resumen = 'producto';
+                tipoitem = 'pemision';
+            }
+            var query = new DocManager.Entities.DocumQueryFacet({
+                fedesde: fedesde,
+                fehasta: fehasta,
+                resumen: resumen,
+                tipoitem: tipoitem,
+            });
+            return query.attributes;
+        },
+
+        getDocumListType: function(){
+            var grupo = this.getUserGroup();
+            console.log('USER: [%s]', grupo);
+            var listado = 'items';
+            if(grupo === 'tecnica'){
+                listado = 'items';
+            }else if(grupo === 'produccion'){
+                listado = 'documentos';
+            }else if(grupo === 'contenidos'){
+                listado = 'documentos';
+            }else if(grupo === 'adherentes'){
+                listado = 'documentos';
+            }
+            return listado;
+        },
+        update : function(key, data){
+            var self = this;
+            self.getUser(function(user){
+                if(user){
+                    user.update(key, data, function(model){
+                        self.user = model;
+                    });
+                }
+            });
+        }
+    },
+//52d7e1bcdff70a4d02993dd8
+//52d93a0575aeda1802a24ae1
+//52d93c1475aeda1802a24ae2
+
+
+    currentUser: {
+        getUser: function(cb){
+            if(! this.user){
+                this.fetchUser(cb);  
+            } else {
+                console.log('getUser: currentUser')
+                cb(this.user);
+            }
+        },
+        fetchUser: function(cb){
+            console.log('fetchUser: currentUser')
+            var self = this;
+            $.ajax({
+                type: 'get',
+                url: '/currentUser',
+                success: function(data) {
+                    console.log('callback SUCCESS');
+                    self.user = data;
+                    if(cb) cb( self.user);
+                }
+            });
+        },
+    },
+    userHome:function(role){
+
+    },
+
     uploadFile: function(uploadingfile, progressbar, cb){
         var formData = new FormData();
         var folder = 'files';
@@ -722,3 +853,4 @@ window.dao = {
 
 
 };
+

@@ -28,7 +28,7 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
     className: "navbar navbar-inverse navbar-fixed-top",
 
     itemView: List.Header,
-    itemViewContainer: "ul",
+    itemViewContainer: "ul#taskmenu",
     
     getTemplate: function(){
       return utils.templates.HeaderView;

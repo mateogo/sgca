@@ -17,7 +17,7 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
 
     listProjects: function(criterion){
       console.log('API: listProjects');
-      window.open('/#navegar/proyectos');
+      window.location = '/#navegar/proyectos';
     },
 
     listDocuments: function(criterion){
@@ -64,13 +64,11 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
   });
 
   DocManager.on("document:show", function(id){
-    console.log('DocManager: on SHOW');
     DocManager.navigate("comprobantes/" + id);
     API.showDocument(id);
   });
 
   DocManager.on("document:edit", function(model){
-    console.log('docmanager EDIT [%s][%s]' , model.id, model.get('documid'));
     var documid = model.id || model.get('documid');
     DocManager.navigate("comprobantes/" + documid + "/edit");
     API.editDocument(documid);

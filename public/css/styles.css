@@ -264,7 +264,7 @@ legend {
 .front-card { width:838px; margin:auto;margin-top:20px;}
 
 
-.user-options{ float:right; width:300px;}
+.user-options{ float:right; width:300px;margin-top:60px;}
 
 .front-signin {
     padding:10px 0px 10px 10px;
@@ -295,7 +295,7 @@ legend {
     width: 520px;
 }
 
-.front-welcome img { margin-top:80px;margin-left:40px;}
+.front-welcome img { margin-top:40px;margin-left:40px;}
 
 .front-welcome-text {
     color: #eee;

@@ -2,20 +2,26 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
   List.Controller = {
     listHeader: function(){
       var links = DocManager.request("header:entities");
-      console.log('listHeader BEGINS  [%s]', links.length);
+      //console.log('listHeader BEGINS  [%s]', links.length);
+      dao.gestionUser.getUser(function (user){
+        user = (user || new User());
 
-      var headers = new List.Headers({collection: links});
+        var headers = new List.Headers({collection: links, model: user});
 
-      headers.on("brand:clicked", function(){
-        DocManager.trigger("documents:list");
+        headers.on("brand:clicked", function(){
+          DocManager.trigger("documents:list");
+        });
+
+        headers.on("itemview:navigate", function(childView, model){
+          var trigger = model.get("navigationTrigger");
+          DocManager.trigger(trigger);
+        });
+
+        DocManager.headerRegion.show(headers);
+
+
       });
 
-      headers.on("itemview:navigate", function(childView, model){
-        var trigger = model.get("navigationTrigger");
-        DocManager.trigger(trigger);
-      });
-
-      DocManager.headerRegion.show(headers);
     },
 
     setActiveHeader: function(headerUrl){

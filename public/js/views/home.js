@@ -2,11 +2,55 @@ window.HomeView = Backbone.View.extend({
 	whoami: 'homeview:home.js',
 
     initialize:function () {
+        console.log('HomeView initialize [%s]', this.model.get('username'));
         this.render();
     },
 
   	events: {
         "click .altausuario"       : "formuser",
+        "click .js-login-submit"   : 'loginuser',
+        "change": "change",
+    },
+    
+    loginuser: function(){
+        var self = this;
+        console.log('LOGIN user clic: [%s] [%s]', this.model.get('username'), this.model.get('password'));
+ /*       var usercol = new Backbone.Collection(this.model.attributes,{
+            url: "/login",
+            model: User
+        })
+*/
+/*
+        $.ajax({
+            data: {username:self.model.get('username'),password:self.model.get('password')},
+            //username: self.model.get('username'),
+            //password: self.model.get('password'),
+            username: self.model.get('username'),
+            password: self.model.get('password'),
+            type: 'post',
+            url: '/login',
+            success: function() {
+                console.log('callback SUCCESS');
+            }
+        });
+*/
+/*
+        this.model.save(null, {
+            success: function (model) {
+                console.log('Login Callback success[%s]', model);
+            },
+            error: function () {
+                console.log('Login Callback error');
+            }
+        });
+*/
+    },
+
+    change: function(event){
+        var target = event.target;
+        var change = {};
+        change[target.name] = target.value;
+        this.model.set(change);
     },
 
 
@@ -53,7 +97,7 @@ window.HomeView = Backbone.View.extend({
     }, 
 
     render:function () {
-        $(this.el).html(this.template());
+        $(this.el).html(this.template(this.model.toJSON()));
         return this;
     }
 

@@ -1533,9 +1533,8 @@ window.Comprobante = Backbone.Model.extend({
       nivel_ejecucion: 'alta',
       items:[]
     },
-
-
  });
+
 window.DocumentCollection = Backbone.Collection.extend({
     // ******************* PROJECT COLLECTION ***************
 
@@ -2695,6 +2694,22 @@ window.User = Backbone.Model.extend({
         this.set({username:this.get('mail')});
 
     },
+    update: function(cb){
+        var self = this;
+        self.beforeUpdate();
+        self.save({
+
+        })
+        self.save(null, {
+            success: function (user) {
+                console.log('insert user:SUCCESS: [%s] ',user.get('username'));
+                if(cb) cb(user);
+            },
+            error: function () {
+                console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',user.get('username'));
+            }
+        });
+    },
 
     fetchFilteredPredicateArray: function(predicate, child, ancestor){
         var tlist = child.get(predicate);
@@ -2765,8 +2780,10 @@ window.User = Backbone.Model.extend({
         displayName:   {type: 'Text', title: 'Nombre', editorAttrs:{placeholder : 'sera utilizado como saludo'}},
         mail:          {type: 'Text', title: 'EMail', editorAttrs:{placeholder : 'sera su nombre de usuario'}},
         password:      {type: 'Password', title: 'Clave' },
-        estado_alta:   {type: 'Select',options: utils.userStatusOptionList },
-        roles:         { type: 'List', itemType: 'Text' }
+        estado_alta:   {type: 'Select',options: utils.userStatusOptionList, title:'Estado' },
+        home:          {type: 'Select',options: utils.userHomeOptionList, title:'Loc de Inicio' },
+        grupo:         {type: 'Select',options: utils.userGroupsOptionList, title:'Grupo' },
+        roles:         { type: 'List', itemType: 'Text', title: 'Roles' }
     },
 
 
@@ -2778,7 +2795,8 @@ window.User = Backbone.Model.extend({
         mail:'',
         roles:[],
         fealta:'',
-
+        grupo: '',
+        roles: '',
         estado_alta:'pendaprobacion',
         verificado: {
             mail:false,
@@ -2824,6 +2842,25 @@ window.UserFacet = Backbone.Model.extend({
         conduso:[]
     }
 });
+
+window.UserLogin = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    whoami:'userLogin:models.js',
+
+    urlRoot: "/login",
+
+    idAttribute: "_id",
+
+    initialize: function(){
+    },
+    
+    defaults : {
+        _id: null,
+        username:'',
+        password:'',
+    }
+});
+
 
 window.UserCollection = Backbone.Collection.extend({
     // ******************* RESOURCE COLLECTION ***************

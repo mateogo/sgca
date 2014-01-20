@@ -14,24 +14,73 @@ module.exports = function (config, app) {
     var passport = require('passport');
 
     var ensureAuthenticated = function (req, res, next) {
-        console.log('autenticando!!!!');
+        //console.log('autenticando!!!!');
         if (req.isAuthenticated()) { return next(); }
-        res.redirect('/login')
+        res.redirect('/')
     };
 
     app.post('/login',
-      passport.authenticate('local', { successRedirect: '/',
-                                       failureRedirect: '/login',
-                                       failureFlash: true })
-    );
+        passport.authenticate('local'), function(req,res){
+            //console.log("/login [%s]", req.user.username);
+            //console.log('AUTHENTICATE OK!!!![%s] [%s]', req, res)
+            res.redirect(utils.userHome(req.user));
+    });
+    app.get('/logout', function(req, res){
+      req.logout();
+      res.redirect('/');
+    });
+    
+    app.get('/inicio', function(req,res,next){
+        //console.log("/inicio:routes.js ");
+        res.redirect(utils.userHome(req.user));
+    });
 
+
+
+
+/*
+    app.post('/login', function(req, res, next) {
+        console.log('athentication BEGINS: [%s] [%s]', req.password, req.username);
+        console.log('athentication BEGINS: [%s] [%s]', req.body.password, req.body.username);
+        //req.username = req.body.username;
+        //req.password = 'mateogo';
+        passport.authenticate('local', function(err, user, info) {
+            console.log('CALLBACK!! [%s],[%s] [%s]',err, user, info);
+
+            if (err) { return next(err); }
+            if (!user) { return res.send({username:'error'}); }
+            
+            req.logIn(user, function(err) {
+                if (err) { return next(err); }
+                return res.send(user);
+            });
+        })(req, res, next);
+    });
+*/
+
+/*
+    app.post('/login',
+
+        passport.authenticate('local', { successRedirect: '/',
+                                       failureRedirect: '/login',
+                                       failureFlash: false })
+    );
+*/
+
+/*
+    app.post('/login',function(req,res,next){
+        //console.log("/login [%s]  [%s]", req.user.username, req.body.username);
+        res.redirect('/gestion');
+
+    });
+*/
     app.post('/files', function(req,res,next){
-        console.log("/files:routes.js ");
+        //console.log("/files:routes.js ");
         utils.moveFile(req, res, rootPath);
     });
 
     app.get('/geocode', function(req,res){
-        console.log("/geocode:routes.js ");
+        //console.log("/geocode:routes.js ");
         //4266,conecpcion arenal,capitalfederal,argentina
 
         var pa = '/maps/api/geocode/json?address=';
@@ -40,7 +89,7 @@ module.exports = function (config, app) {
         pa += '&sensor=false';
         //console.log('feini: [%s]',req.query.feinicio);
         //console.log('fefin: [%s]',req.query.fefinal);
-        console.log('pa: [%s]',pa);
+        //console.log('pa: [%s]',pa);
 
         var options = {
             host: 'maps.googleapis.com',
@@ -48,28 +97,28 @@ module.exports = function (config, app) {
             path: pa
         };
 
-        console.log("/geocode:routes.js 1");
+        //console.log("/geocode:routes.js 1");
         http.get(options, function (http_res) {
             // initialize the container for our data
             var data = "";
 
             // this event fires many times, each time collecting another piece of the response
-            console.log("/geocode:routes.js 2");
+            //console.log("/geocode:routes.js 2");
             http_res.on("data", function (chunk) {
                 // append this chunk to our growing `data` var
-                console.log("/geocode:routes.js 3");
+                //console.log("/geocode:routes.js 3");
                 data += chunk;
             });
 
             http_res.on('error',function(e){
-                console.log("Error: " + e.message); 
-                console.log( e.stack );
+                //console.log("Error: " + e.message); 
+                //console.log( e.stack );
             });
 
             // this event fires *one* time, after all the `data` events/chunks have been gathered
             http_res.on("end", function () {
                 // you can use res.send instead of console.log to output via express
-                console.log(data);
+                //console.log(data);
                 res.send(data);
             });
         });
@@ -79,7 +128,7 @@ module.exports = function (config, app) {
 
 
     app.get('/agendacultural', function(req,res){
-        console.log("/agendacultural:routes.js ");
+        //console.log("/agendacultural:routes.js ");
 
         var http = require("http");
 
@@ -234,7 +283,8 @@ module.exports = function (config, app) {
 
     // user (usuarios) routes
     var user = require(rootPath + '/calendar/controllers/user');
-    app.post('/recuperar/usuarios', user.find);
+    app.post('/recuperar/usuarios', user.find);   
+    app.get('/currentuser', user.findCurrentUser);
     app.get('/usuarios/:id', user.findById);
     app.post('/usuarios', user.add);
     app.put('/usuarios/:id', user.update);

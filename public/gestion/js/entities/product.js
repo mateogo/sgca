@@ -51,6 +51,26 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         });
     },
 
+    loaddocuments:function (cb) {
+        var self = this;
+        //console.log('loadpacapitulos:models.js begins es_capitulo_de: [%s]',self.get('productcode'));
+        //var query = {$or: [{'es_capitulo_de.id':self.id},{'es_instancia_de.id':self.id}, {'es_coleccion_de.id':self.id}]};
+        //var query = {cnumber: 'T100006'};
+        //var query = {'items.productid': '5252a139a8907e8901000003'};
+        var query = {$or: [{'items.items.productid': self.id}, {'items.productid': self.id}]};
+
+        var documCol= new DocManager.Entities.DocumentCollection();
+        //console.log('loadpacapitulos:models.js query  [%s] ',query['es_capitulo_de.id']);
+
+        documCol.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                if(cb) cb(documCol);
+            }
+        });
+    },
+
     validate: function(attrs, options) {
       var errors = {}
       if (! attrs.productcode) {
