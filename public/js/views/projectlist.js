@@ -33,8 +33,44 @@ window.ProjectListItemView = Backbone.View.extend({
     tagName: "li",
     
     initialize: function () {
+        console.log('projectListItemView')
         this.model.bind("change", this.render, this);
         this.model.bind("destroy", this.close, this);
+        this.lookupTitles();
+     
+
+    },
+
+    lookupTitles: function(){
+        var self = this,
+            querymodel = new BrowseProductsQuery(),
+            productList = new ProductCollection();
+        
+        querymodel.setProject(this.model.id,'');
+        var query = querymodel.retrieveData();
+        
+        productList.fetch({
+            data: query,
+            type: 'post',
+            success: function(productList) {
+                if(productList.length>0){
+                    self.setTitle(productList);
+                }
+            }
+        });
+
+    },
+
+    setTitle: function(list){
+        var self = this,
+            titles = [],
+            title; 
+        list.each(function(model){
+            titles.push(model.get('productcode')+': '+model.get('slug'));
+        });
+        title = titles.join('\n');
+        self.$('a').attr('title',title);
+
     },
 
     render: function () {

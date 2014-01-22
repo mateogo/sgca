@@ -248,9 +248,18 @@ window.PersonTableLayoutView = Backbone.View.extend({
     },
 
     change: function (event) {
+        console.log('change')
         var target = event.target;
         var change = {};
-        change[target.name] = target.value;
+ 
+        if(target.type==='checkbox'){
+            change[target.name] = target.checked;
+        }else{
+            change[target.name] = target.value;
+        }
+
+        console.log('change [%s] ',change[target.name]);
+
         this.model.set(change);
         //alert("nos vamos?");
         //utils.approuter.navigate('navegar/requisitorias', true);

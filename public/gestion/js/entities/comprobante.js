@@ -203,6 +203,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     comparator: "cnumber",
   });
 
+  Entities.DocumentsUpdate = Backbone.Collection.extend({
+    whoami: 'Entities.DocumentsUpdate:comprobante.js ',
+    url: "/actualizar/comprobantes",
+    model: Entities.Comprobante,
+    comparator: "cnumber",
+  });
+
+
+
   var modelFactory = function(attrs, options){
     //utils.inspect(attrs,1,'modelFactory');
     var model;
@@ -790,6 +799,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       cnumber: "",
       slug: "",
       description: ""
+    },
+
+   });
+
+  Entities.DocumGropuEditFacet = Backbone.Model.extend({
+    //urlRoot: "/comprobantes",
+    whoami: 'DocumGroupEditFacet:comprobante.js ',
+
+    schema: {
+        estado_alta: {type: 'Select',options: utils.estadodocumOptionList, title:'Prioridad' },
+        nivel_ejecucion: {type: 'Select',options: utils.documexecutionOptionList, title:'Nivel de Ejecución' },
+    },
+    //idAttribute: "_id",
+
+    defaults: {
+      estado_alta: '',
+      nivel_ejecucion: '',
     },
 
    });

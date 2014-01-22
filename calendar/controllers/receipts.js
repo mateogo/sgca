@@ -248,6 +248,46 @@ exports.update = function(req, res) {
         });
     });
 };
+var buildTargetNodes = function(data){
+    if(!data.nodes) return;
+    var list = [];
+    var nodes = data.nodes;
+    for (var i = 0; i<nodes.length; i++){
+        var node = {};
+        node._id = new BSON.ObjectID(nodes[i]);
+        list.push(node);
+    }
+    if(list.length){
+        var query = {$or: list};
+        return query
+    }
+};
+
+var buildUpdateData = function(data){
+    if(!data.newdata) return;
+    return data.newdata;
+}
+
+exports.partialupdate = function(req, res) {
+    var id = req.params.id;
+    var data = req.body;
+    var query = buildTargetNodes(data);
+    var update = buildUpdateData(data);
+
+
+    console.log('Updating partial fields nodes:[%s] data:[%s] [%s] ', query.$or[0]._id, update.estado_alta, update.nivel_ejecucion);
+    //res.send({query:query, update:update});
+
+    dbi.collection(receiptsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
+        if (err) {
+            console.log('Error partial updating %s error: %s',receiptsCol,err);
+            res.send({error: MSGS[0] + err});
+        } else {
+            console.log('UPDATE: partial update success [%s] nodos',result);
+            res.send(result);
+        }
+    })
+};
 
 exports.delete = function(req, res) {
     var id = req.params.id;

@@ -20,11 +20,18 @@ module.exports = function (config, app) {
     };
 
     app.post('/login',
-        passport.authenticate('local'), function(req,res){
+        passport.authenticate('local', {failureRedirect:'/login'}), function(req, res){
             //console.log("/login [%s]", req.user.username);
             //console.log('AUTHENTICATE OK!!!![%s] [%s]', req, res)
             res.redirect(utils.userHome(req.user));
     });
+
+    app.get('/login', function(req,res,next){
+        console.log("/login:routes.js ");
+        res.redirect('/');
+    });
+
+
     app.get('/logout', function(req, res){
       req.logout();
       res.redirect('/');
@@ -303,6 +310,7 @@ module.exports = function (config, app) {
     // receipt (comprobantes) routes
     var receipt = require(rootPath + '/calendar/controllers/receipts');
     app.get ('/comprobantes',           receipt.findAll);
+    app.post('/actualizar/comprobantes', receipt.partialupdate);
     app.post('/recuperar/comprobantes', receipt.find);
     app.post('/comprobante/fetch',      receipt.findOne);
     app.post('/navegar/comprobantes',   receipt.find);

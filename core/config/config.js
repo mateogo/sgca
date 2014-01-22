@@ -50,9 +50,6 @@ var instanceDbListeners = function (db,BSON) {
 
 var routesBootstrap = function (app, express) {
 
-
-
-
   passport.use(new LocalStrategy({usernameField: 'username',passwordField: 'password'},
     // verify callback
     function(username, password, done) {
@@ -63,7 +60,6 @@ var routesBootstrap = function (app, express) {
       //  return done(err); // server error
       //  return (new Error('User ' + id + ' does not exist'));
       //  process.nextTick(function () {
-
       
       user.findOne({ username: username }, function (err, userdao) {
         if (err) { 

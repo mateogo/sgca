@@ -1625,6 +1625,10 @@ window.BrowsePersonsQuery = Backbone.Model.extend({
         nickName:'',
         tipopersona: '',
         taglist: '',
+        pjuridica: true,
+        pfisica: false,
+        pideal: false,
+        adherente: false,
 
     }
 });

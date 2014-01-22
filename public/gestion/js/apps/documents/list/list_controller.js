@@ -37,6 +37,51 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
       });
 
+      hview.on('document:group:edit',function(){
+        var self = this;
+        if(!List.Session.selectedDocumentList.length) return;
+        console.log('document:group:edit controller');
+
+        List.groupEditForm(function(qmodel){
+          
+          var data = qmodel.attributes;
+          console.log('Form CLOSE:[%s] [%s]',data.estado_alta, data.nivel_ejecucion);
+          updateSelectedDocuments(data, function(){
+            console.log('end-of-story')
+          });
+
+        });
+
+        
+      });
+
+  };
+  var updateSelectedDocuments = function(data, cb){
+    var actual = dao.extractData(data);
+    var query = buildQuery(data);
+    var update = new DocManager.Entities.DocumentsUpdate();
+    update.fetch({
+        data: query,
+        type: 'post',
+        success: function() {
+          console.log('success!!!!!')
+            if(cb) cb();
+        }
+    });
+
+  };
+
+  var buildQuery = function(data){
+    var query = {};
+
+    var list = [];
+    List.Session.selectedDocumentList.each(function(model){
+      list.push(model.id || model.get('documid'));
+    })
+    query.newdata = dao.extractData(data);
+    query.nodes = list;
+    return query;
+
   };
 
   var initNavPanel = function(layout){
@@ -130,6 +175,16 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
           loadProductChilds(childView, model, cb);
         });
 
+        documentsListView.on("itemview:document:row:selected", function(childView, mode, model){
+          console.log('Row CHECKBOX TOGGLE [%s] [%s]  ',model.get('cnumber'),mode);
+          if(mode){
+            List.Session.selectedDocumentList.add(model);
+          }else{
+            List.Session.selectedDocumentList.remove(model);
+
+          }
+          console.log('Row CHECKBOX TOGGLE [%s] [%s] [%s]  ',model.get('cnumber'),mode, List.Session.selectedDocumentList.length );
+        });
   };
 
   /*
@@ -204,6 +259,14 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
       console.log('Te tengo, malvado [%s] [%s]', model.get('productcode'), model.id);
       loadProductChilds(childView, model, cb);
     });
+
+    view.on("itemview:edit:related:product", function(childView, model, cb){
+      console.log('product EDIT [%s] [%s]', model.get('productcode'), model.id);
+      if(!model.id) return;
+      window.open('/#productos/'+model.id,'productos/edit');
+    });
+
+
   };
 
   var registerRelatedDocumentEvents = function(view){
@@ -265,6 +328,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
             collection: documents
           });
 
+          List.Session.selectedDocumentList = new DocManager.Entities.ComprobanteCollection();
           registerDocumListEvents(documentsListView);
 
           /* documNavBar.on("documents:filter", function(filterCriterion){
@@ -295,6 +359,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
             collection: documents
           });
 
+          List.Session.selectedDocumentList = new DocManager.Entities.ComprobanteCollection();
           registerDocumListEvents(documentsListView);
 /*
           List.Session.layout.on("show", function(){

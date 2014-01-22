@@ -164,7 +164,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
     className: "navbar navbar-default",
 
     itemView: Views.NavItem,
-    itemViewContainer: "ul",
+    itemViewContainer: "ul#taskmenu",
     
     getTemplate: function(){
       return utils.templates.DocumNavbar;
@@ -174,7 +174,18 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
       "click .js-prev": "fetchPrev",
       "click .js-next": "fetchNext",
       "click a.brand": "brandClicked",
-      "click .js-filter-by-id" : "documentSearch"
+      "click .js-filter-by-id" : "documentSearch",
+      "click .js-groupedit": 'groupEdit',
+    },
+
+    groupEdit: function(e){
+      e.preventDefault();
+      console.log('GroupEdit');
+      this.$('.dropdown-toggle').dropdown('toggle');
+
+      this.trigger('document:group:edit');
+      return false;
+
     },
 
     fetchPrev: function(){

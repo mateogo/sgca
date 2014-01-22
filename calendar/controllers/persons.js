@@ -94,14 +94,50 @@ exports.findById = function(req, res) {
 
 exports.find = function(req, res) {
     var query = req.body; //{};
+    query = normaliseQuery(query);
 
     console.log('find:person Retrieving person collection with query');
+//            res.send(query);
 
     dbi.collection(personsCol, function(err, collection) {
         collection.find(query).sort({personname:1}).toArray(function(err, items) {
             res.send(items);
         });
     });
+
+
+
+};
+var normaliseQuery = function(query){
+    var tipojuridico = {
+        pfisica: (query.pfisica==='true' ? true: false),
+        pjuridica: (query.pjuridica==='true' ? true: false),
+        pideal:(query.pideal==='true' ? true: false),
+    };
+    query.tipojuridico = tipojuridico;
+    delete query.pfisica;
+    delete query.pjuridica;
+    delete query.pideal;
+
+    query['roles.adherente'] = (query.adherente==='true' ? true: false);
+    delete query.adherente;
+
+
+    /*
+    if(query.hasOwnProperty('pjuridica')) {
+        console.log('pjuridica: [%s] [%s] [%s]',query.pjuridica, query.pjuridica === 'true', query.pjuridica === true);
+        query['tipojuridico.pjuridica'] = (query.pjuridica==='true' ? true: false);
+        delete query.pjuridica;
+    };
+    if(query.hasOwnProperty('pfisica')) {
+        query['tipojuridico.pfisica'] = (query.pfisica==='true' ? true: false);
+        delete query.pfisica;
+    };
+    if(query.hasOwnProperty('pideal')) {
+        query['tipojuridico.pideal'] = (query.pideal==='true' ? true: false);
+        delete query.pideal;
+    };*/
+    return query;
 };
 
 exports.findAll = function(req, res) {

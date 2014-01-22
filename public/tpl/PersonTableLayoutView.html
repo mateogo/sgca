@@ -10,6 +10,15 @@
       <li><input type='text' placeholder='identificador' class='input-small' id='nickName' name='nickName' value=<%= nickName %>></li>
       <li><input type='text' placeholder='tipo' class='input-small' id='tipopersona' name='tipopersona' value=<%= tipopersona %>></li>
       <li><input type='text' placeholder='descriptor' class='input-small' id='taglist' name='taglist' value=<%= taglist %> ></li>
+      <li><input type="checkbox" name='pjuridica' id='pjuridica' value=<%= pjuridica %> 
+        <%= (pjuridica  ? 'checked' : '') %>>Es persona jurídica?</li>
+      <li><input type="checkbox" name='pfisica' id='pfisica' value=<%= pfisica %> 
+        <%= (pfisica  ? 'checked' : '') %>>Es persona física?</li>
+      <li><input type="checkbox" name='pideal' id='pideal' value=<%= pideal %> 
+        <%= (pideal  ? 'checked' : '') %>>Es persona ideal?</li>
+      <li><input type="checkbox" name='adherente' id='adherente' value=<%= adherente %> 
+        <%= (adherente  ? 'checked' : '') %>>Es adherente?</li>
+
 
     </ul>
   </div><!--/.well side bar -->

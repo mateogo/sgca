@@ -46,7 +46,8 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
       "click button.js-delete": "deleteClicked",
       "click button.js-show": "showClicked",
       "click button.js-edit": "editClicked",
-      "click .js-zoom" : 'viewRelated', 
+      "click .js-zoom" : 'viewRelated',
+      "change .tselect"  : "checkbox",
     },
 
     flash: function(cssClass){
@@ -56,6 +57,11 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
           $view.toggleClass(cssClass)
         }, 500);
       });
+    },
+
+    checkbox: function(event){
+      if(event.target.checked)  this.trigger("document:row:selected", true, this.model);
+      if(!event.target.checked) this.trigger("document:row:selected", false, this.model);
     },
 
     viewRelated: function(){
@@ -247,6 +253,17 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
     events: {
       "click .js-productbrowse": "viewProduct",
+      "click .js-productedit": "editProduct",
+    },
+
+    editProduct: function(){
+      console.log('clie Edit PRODUCT!')
+
+      this.trigger('edit:related:product',this.model, function(){
+          //no hay callbacl. futuros usos
+      });
+
+
     },
 
     viewProduct: function(){
@@ -374,6 +391,40 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
     modal.open(function(){
       console.log('open callback yew, ok')
     });
+  };
+
+  // ventana modal
+  List.groupEditForm = function(cb){
+        var facet = new DocManager.Entities.DocumGropuEditFacet(),
+            form = new Backbone.Form({
+                model: facet
+            });
+
+        form.on('change', function(form, editorContent) {
+            var errors = form.commit();
+            return false;
+        });
+
+        form.on('blur', function(form, editorContent) {
+            return false;
+        });
+
+        var modal = new Backbone.BootstrapModal({
+            content: form,
+            title: 'Edición de comprobantes seleccionados',
+            okText: 'aceptar',
+            cancelText: 'cancelar',
+            enterTriggersOk: false,
+            animate: false
+        });
+
+        modal.on('ok',function(){
+        });
+
+        modal.open(function(){
+            var errors = form.commit();
+            if(cb) cb(facet);
+        });
   };
 
 
