@@ -264,6 +264,7 @@ module.exports = function (config, app) {
     // products routes
     var product = require(rootPath + '/calendar/controllers/products');
     app.get('/productos', product.findAll);
+    app.post('/actualizar/productos', product.partialupdate);
     app.get('/productos/:id',ensureAuthenticated, product.findById);
     app.post('/navegar/productos', product.find);
     app.get('/refine/productos', product.findAll);
@@ -279,6 +280,7 @@ module.exports = function (config, app) {
     app.put('/activos/:id', asset.update);
     app.delete('/activos/:id', asset.delete);
     app.get('/asset/render/img/:id', asset.renderImg);
+    app.get('/asset/render/video/:id', asset.renderVideo);
 
     // article (articulos) routes
     var article = require(rootPath + '/calendar/controllers/articles');

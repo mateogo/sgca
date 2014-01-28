@@ -73,10 +73,11 @@ window.ProductView = Backbone.View.extend({
         "click .save"       : "beforeSave",
         "click .delete"     : "deleteNode",
         "click .clonar"     : "clone",
-        "click .eventos"    : "eventos",
+        "click .eventos"    : "browseeventos",
         "click .browse"     : "browse",
         "click .vistacarousel" : "vistacarousel",
         "click .vistainfo"   : "vistainfo",
+        "click .vistamedia"   : "vistamedia",
 
         "click .uploadcontent"  : "instanceUploadFiles",
         "click .discardcontent" : "discardcontent",
@@ -161,10 +162,12 @@ window.ProductView = Backbone.View.extend({
                 denom: content.tipoarchivo,
                 urlpath: content.url,
                 type: content.tipoproducto,
+                size: 0,
                 versions:[{
                     name: content.slug,
                     urlpath: content.url,
                     type: content.tipoproducto,
+                    size:0,
                     uploadDate: new Date().getTime()
                 }]
             };
@@ -197,10 +200,52 @@ window.ProductView = Backbone.View.extend({
     },
 
     addnewbrnd: function () {
-        var productmodel = this.model;
-        //console.log('[%s] add branding BEGINS',this.whoami);
+        var self = this, 
+            productmodel = this.model,
+            content = dao.brandingfacet.getContent(),
+            asset = dao.brandingfacet.getAsset();
 
-        productmodel.insertBranding(dao.brandingfacet.getContent(),dao.brandingfacet.getAsset());
+        if(!asset && content.url){
+            //console.log('alta de instancia SIN asset, pero CON url');
+            //mgo1
+            var data = {
+                name: content.slug,
+                slug: content.slug,
+                denom: content.slug,
+                urlpath: content.url,
+                type: content.tipobranding,
+                size:0,
+                versions:[{
+                    name: content.slug,
+                    urlpath: content.url,
+                    type: content.tipobranding,
+                    size:0,
+                    uploadDate: new Date().getTime()
+                }]
+            };
+            var nasset = new Asset();
+            nasset.set(data);
+            // buildPredicateData: function (ancestor, child, predicate)
+
+            nasset.buildPredicateData(productmodel, nasset, 'es_asset_de');
+
+            nasset.save(null, {
+                success: function (model) {
+                    //console.log('addNewInstance: Success nasset created!');
+                    self.processnewbranding(self, productmodel, content, nasset);
+                },
+                error: function () {
+                    //console.log('An error occurred while trying to delete this item');
+               }
+            });
+        }else {
+            self.processnewbranding(self, productmodel, content, asset);
+        }
+        return false;
+    },
+
+    processnewbranding: function(self, product, content, asset){
+        product.insertBranding(content, asset);
         this.beforeSave();
         return false;
     },
@@ -427,13 +472,20 @@ window.ProductView = Backbone.View.extend({
         //utils.approuter.navigate(, true);
         return false;
     },
+
     vistainfo: function () {
         window.open('/bacua/info/#pa/ver/'+this.model.id);
         //utils.approuter.navigate(, true);
         return false;
     },
 
-    eventos: function () {
+    vistamedia: function () {
+        window.open('/media/#show/'+this.model.id);
+        //utils.approuter.navigate(, true);
+        return false;
+    },
+
+    browseeventos: function () {
         utils.approuter.navigate('navegar/proyectos', true);
         return false;
     },

@@ -3,24 +3,24 @@ window.dao = {
     whoami:'daoutils',
 
     gestionUser: {
-        getUser: function(cb){
+        getUser: function(app, cb){
             if(! this.user){
-                this.fetchUser(cb);  
+                this.fetchUser(app, cb);  
             } else {
                 //console.log('getUser: currentUser')
                 cb(this.user);
             }
         },
-        fetchUser: function(cb){
+        fetchUser: function(app, cb){
             //console.log('fetchUser: currentUser')
             var self = this;
             $.ajax({
                 type: 'get',
                 url: '/currentUser',
                 success: function(data) {
-                    //console.log('callback SUCCESS');
-                    self.user = new DocManager.Entities.User(data);
-                    //console.log('FETCH USER: [%s]',self.user.id);
+                    console.log('callback SUCCESS');
+                    self.user = new app.Entities.User(data);
+                    console.log('FETCH USER: [%s]',self.user.id);
                     if(cb) cb( self.user);
                 }
             });
@@ -90,9 +90,9 @@ window.dao = {
             }
             return listado;
         },
-        update : function(key, data){
+        update : function(app, key, data){
             var self = this;
-            self.getUser(function(user){
+            self.getUser(app, function(user){
                 if(user){
                     user.update(key, data, function(model){
                         self.user = model;

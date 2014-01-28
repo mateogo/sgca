@@ -357,11 +357,6 @@ window.utils = {
         {val:'nentrega'       , label:'N/Entrega'},
         {val:'pemision'       , label:'P/Emisión'},
      ],
-
-    tipoBrandingOptionList: [
-        {val:'no_definido'      , label:'tipo de archivo'},
-        {val:'imagen_web'       , label:''},
-    ],
     
     userGroupsOptionList:[
         {val:'no_definido'   , label:'Grupo principal'},
@@ -400,6 +395,7 @@ window.utils = {
     tipoBrandingOptionList: [
         {val:'no_definido'      , label:'tipo de archivo'},
         {val:'imagen_web'       , label:'Imagen Web'},
+        {val:'proxy_video'      , label:'Proxy video'},
     ],
     
     rolBrandingOptionList: [
@@ -408,6 +404,7 @@ window.utils = {
         {val:'carousel'         , label:'carousel'},
         {val:'destacado'        , label:'destacado'},
         {val:'perfil'           , label:'perfil'},
+        {val:'visualizacion'    , label:'visualizacion'},
     ],
 
     notasexecutionOptionList: [
@@ -913,6 +910,7 @@ window.utils = {
     formatoOptionList:[
         {val:'nodefinido',    label:'Formato'},
         {val:'serie',         label:'Serie'},
+        {val:'micros',        label:'Serie de micros'},
         {val:'unitario',      label:'Unitario'},
         {val:'cortometraje',  label:'Cortometraje'},
         {val:'largometraje',  label:'Largometraje'},

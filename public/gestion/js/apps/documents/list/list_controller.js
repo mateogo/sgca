@@ -111,7 +111,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
       });
       DocManager.mainRegion.show(List.Session.layout);
 
-      dao.gestionUser.getUser(function (user){
+      dao.gestionUser.getUser(DocManager, function (user){
         var query;
 
         if(List.Session.query){
@@ -194,19 +194,19 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
   var loadProductChilds = function(view, model, cb){
     var prId = (model.get('productid')|| model.id);
     if(!prId) return;
-    //console.log('loadProductChilds [%s][%s]',model.get('product'),model.get('productid'));
+    //console.log('loadProductChilds [%s][%s] [%s]',model.get('product'),model.get('productid'),prId);
 
     var product = new DocManager.Entities.Product({_id: prId});
     product.fetch({
       success:function(){
-        console.log('NODE LOADED: [%s] [%s]',product.get('productcode'),product.get('slug'));
+        //console.log('NODE LOADED: [%s] [%s]',product.get('productcode'),product.get('slug'));
 
           product.fetch({success: function() {
             product.loadchilds(product,[ {'es_capitulo_de.id': product.id},{'es_instancia_de.id': product.id}],function(products){
-              console.log('LOAD CHILDS SUCCESS: [%s]',products.length)
+              //console.log('LOAD CHILDS SUCCESS: [%s]',products.length)
 
               product.loaddocuments(function(documents){
-                console.log('LOAD DOCUMENTS SUCCESS: [%s]',documents.length)
+                //console.log('LOAD DOCUMENTS SUCCESS: [%s]',documents.length)
                 renderRelated(view, product, products, documents, cb);
               });
             });
@@ -384,7 +384,7 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
       List.queryForm(List.Session.query, function(qmodel){
         
         List.Session.query = qmodel.attributes;
-        dao.gestionUser.update('documQuery', qmodel.attributes);
+        dao.gestionUser.update(DocManager, 'documQuery', qmodel.attributes);
         self.listDocumentItems(List.Session.query);
 
       });

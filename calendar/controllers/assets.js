@@ -43,12 +43,21 @@ exports.findById = function(req, res) {
 
 exports.renderImg = function(req, res) {
     var id = req.params.id;
-    console.log('assets:renderById  Retrieving %s id:[%s]', assetsCol,id);
+    console.log('assets:renderImg  Retrieving %s id:[%s]', assetsCol,id);
     dbi.collection(assetsCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             console.log('assets:renderById  Retrieving urlpath:[%s]', item.urlpath);
             res.redirect(item.urlpath);
         });
+    });
+};
+
+exports.renderVideo = function(req, res) {
+    var id = req.params.id;
+    console.log('assets:renderVideo  Retrieving %s id:[%s]', assetsCol,id);
+    dbi.collection(assetsCol).findOne({'_id':new BSON.ObjectID(id)}, function(err, item){
+            console.log('assets:renderById  Retrieving urlpath:[%s]', item.urlpath);
+            res.send({url: item.urlpath});
     });
 };
 
