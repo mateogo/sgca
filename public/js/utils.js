@@ -154,6 +154,7 @@ window.utils = {
         {val:'ptecnico'       , label:'P/Técnico'},
         {val:'nrecepcion'     , label:'N/Recepción'},
         {val:'nentrega'       , label:'N/Entrega'},
+        {val:'npedido'        , label:'N/Pedido'},
         {val:'pemision'       , label:'P/Emisión'},
     ],
 
@@ -292,9 +293,11 @@ window.utils = {
         {val:'nopentrada'   , label:'------ E N T R A D A S ------'},
         {val:'recepcion'    , label:'Recepción Productos para chequeo'},
         {val:'entrada'      , label:'Recepciones varias'},
-        {val:'nopentrada'   , label:'------  S A L I D A S ------'},
+        {val:'nopsalida'    , label:'------  S A L I D A S ------'},
         {val:'distribucion' , label:'Distribución'},
         {val:'entrega'      , label:'Entregas'},
+        {val:'noppedido'    , label:'------  P E D I D O S  ------'},
+        {val:'reqadherente' , label:'Requerimiento de adherente'},
     ],
     
     tipomovqueryOptionList: [
@@ -305,6 +308,8 @@ window.utils = {
         {val:'nopentrada'   , label:'------  S A L I D A S ------'},
         {val:'distribucion' , label:'Distribución'},
         {val:'entrega'      , label:'Entregas'},
+        {val:'nopentrada'   , label:'------  P E D I D O S ------'},
+        {val:'reqadherente' , label:'Requerimiento de adherente'},
         {val:'nopentrada'   , label:'------  PARTE TECNICO ------'},
         {val:'enevaluacion' , label:'En evaluación'},
         {val:'aprobado'     , label:'Aprobado'},
@@ -324,6 +329,11 @@ window.utils = {
         {val:'no_definido', label:'Tipo de movimiento'},
         {val:'recepcion'  , label:'Recepción Producto Audiovisual'},
         {val:'entrada'    , label:'Recepciones varias'},
+    ],
+
+    tipomovPedidoOptionList: [
+        {val:'no_definido', label:'Tipo de movimiento'},
+        {val:'reqadherente' , label:'Requerimiento de adherente'},
     ],
 
     estadoqcOptionList: [
@@ -355,6 +365,7 @@ window.utils = {
         {val:'ptecnico'       , label:'P/Técnico'},
         {val:'nrecepcion'     , label:'N/Recepción'},
         {val:'nentrega'       , label:'N/Entrega'},
+        {val:'npedido'        , label:'N/Pedido'},
         {val:'pemision'       , label:'P/Emisión'},
      ],
     
@@ -1043,6 +1054,7 @@ window.utils = {
         {val:'ptecnico'    , label:'Parte Técnico: '},
         {val:'nentrega'    , label:'Nota de Entrega: '},
         {val:'nrecepcion'  , label:'Nota de Recepción: '},
+        {val:'npedido'     , label:'Nota de Pedido'},
         {val:'pemision'    , label:'Parte de Emisión: '},
     ],
     clasificationSch: [
@@ -1583,6 +1595,17 @@ window.utils = {
         var mo = date.getMonth()+1;
         var ye = date.getFullYear();
         return da+"/"+mo+"/"+ye;
+    },
+    addOffsetDay: function(numdate, offset){
+        var fe = {};
+        var date = new Date(numdate);
+        var da = date.getDate()+offset;
+
+        var ndate = new Date(date.getFullYear(), date.getMonth(), da, 0,0,0);
+        fe.date = utils.dateToStr(ndate);
+        fe.tc = ndate.getTime();
+        
+        return fe;
     },
 
     parseDateStr: function(str) {

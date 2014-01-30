@@ -91,8 +91,8 @@ legend {
     /*
         background-color: #3a92c8;
         background: -webkit-radial-gradient(circle,#94d2f8,#3a92c8);
-        background-image: url('img/bg.jpg'); 
     */
+    background-image: url('img/bg.jpg'); 
     background-size: cover;
     background-repeat: no-repeat;
     margin-top: -19px;
@@ -264,11 +264,11 @@ legend {
 .front-card { width:838px; margin:auto;margin-top:20px;}
 
 
-.user-options{ float:right; width:300px;margin-top:60px;}
+.user-options{ float:right; width:320px;margin-top:5px;}
 
 .front-signin {
     padding:10px 0px 10px 10px;
-    height: 108px;
+    height: 120px;
     left: 536px;
     width: 300px;
     border: 1px solid #ccc;
@@ -291,14 +291,14 @@ legend {
     -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 125px rgba(255,255,255,0.35);
     box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 125px rgba(255,255,255,0.35);*/
     display: block;
-    height: 380px;  
+    height: 250px;  
     width: 520px;
 }
 
 .front-welcome img { margin-top:40px;margin-left:40px;}
 
 .front-welcome-text {
-    color: #eee;
+    color: #ffffff;
     font-size: 20px;
     font-weight: 300;
     line-height: 22px;
@@ -473,3 +473,5 @@ body.ru .front-signup h2 strong,body.pl .front-signup h2 strong {
 *+html .floatFix {display:inline-block;}
 * html .floatFix {height:1%}
 .floatFix:after {content: ".";display: block;height: 0;clear: both;visibility: hidden;}
+
+

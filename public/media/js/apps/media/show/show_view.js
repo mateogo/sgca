@@ -16,6 +16,60 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
 
       "click a.js-realization": "realization",
       "click a.js-clasification": "clasification",
+      "click a.js-paisprov": "paisprov",
+      "click a.js-contenido": "contenido",
+      "click a.js-curaduria": "curaduria",
+      "click a.js-produccion": "produccion",
+      "click a.js-slug": "slug",
+    },
+
+    slug: function(e){
+      e.preventDefault();
+      var target = e.target;
+      console.log('slug [%s]', this.$(target).data('key'));
+      this.trigger('token:selected', this.$(target).data('key'));
+
+      return false;
+    },
+
+    produccion: function(e){
+      e.preventDefault();
+      var target = e.target;
+      console.log('Produccion [%s]', this.$(target).data('key'));
+      this.trigger('token:selected', this.$(target).data('key'));
+
+      return false;
+    },
+
+    curaduria: function(e){
+      e.preventDefault();
+      var target = e.target;
+      console.log('Contenido [%s]', this.$(target).data('key'));
+      this.trigger('token:selected', this.$(target).data('key'));
+
+      return false;
+    },
+
+    contenido: function(e){
+      e.preventDefault();
+      var target = e.target;
+      console.log('Contenido [%s]', this.$(target).data('key'));
+      //this.$(target).button();
+      //this.$(target).button('toggle');
+      this.trigger('token:selected', this.$(target).data('key'));
+
+      return false;
+    },
+
+    paisprov: function(e){
+      e.preventDefault();
+      var target = e.target;
+      console.log('Paisprov [%s]', this.$(target).data('key'));
+      //this.$(target).button();
+      //this.$(target).button('toggle');
+      this.trigger('token:selected', this.$(target).data('key'));
+
+      return false;
     },
 
     editCiclo: function(e){
@@ -96,6 +150,8 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
       console.log('onRender [%s]',$('#player-region'));
 
       self.$('#bform').html(self.options.form.el);
+      $('textarea',self.options.form.el).addClass('input-block-level').attr('rows',"6");
+
 
     },
 
@@ -118,6 +174,46 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
             }).render();
 
 
+        // FACETA: contenido
+        facet.on('change:cetiquetas', function(facet, cetiquetas) {
+            form.setValue({cetiquetas:cetiquetas});
+            var errors = form.commit();
+            product.setFacet(token, facet);
+        });
+
+        form.$('.js-addcontenido').click(function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            facet.addEtiquetas();
+
+            return false;
+        });
+
+        form.on('contenido:tematica:change', function(form, editor, editorContent) {
+            var tematica = editor.nestedForm.fields.tematica.getValue(),
+              newOptions = utils.subtematicasOptionList[tematica];
+            //utils.inspect(editorContent,0,'editorContent',3);
+            form.fields.contenido.editor.nestedForm.fields.subtematica.editor.setOptions(newOptions);
+        });
+
+        form.on('contenido:subtematica:change', function(form, editor) {
+            var stematica = editor.nestedForm.fields.subtematica.getValue();
+            //console.log('onchange:SUB TEMATICA key [%s]',stematica);
+        });
+
+        form.on('cetiquetas:blur', function(form, editorContent) {
+            var errors = form.commit();
+            facet.setTagList();
+            console.log('cetiquetas:blur [%s]', facet.get('cetiquetas'));
+        });
+
+
+        // FACETA: paisprov
+        form.on('paisprod:change', function(form, editorContent) {
+            var opt = editorContent.getValue()==='Argentina'? 'Argentina':'nodefinido';
+            form.fields.provinciaprod.editor.setOptions( utils.provinciasOptionList[opt]);
+        });
+
         form.on('change', function(form, editorContent) {
             console.log('change');
             var errors = form.commit();
@@ -126,7 +222,7 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
 
         form.on('blur', function(form, editorContent) {
             var errors = form.commit();
-            console.log('FORM BLUR [%s]', facet.get('datafield'));
+            console.log('FORM BLUR [%s]', facet.get('name'));
             product.setFacet(token, facet);
             return false;
         });
@@ -135,6 +231,7 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
           model:facet,
           form: form
         });
+
         return mediaView;
 
   };

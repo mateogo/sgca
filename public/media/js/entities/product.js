@@ -1,10 +1,10 @@
 MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Marionette, $, _){
 
-  var realization = ['directores', 'productores', 'coproductores', 'realizadores', 'guionistas', 'reparto', 'conduccion', 'fotografia', 'camaras', 'edicion', 'animacion', 'sonido', 'musicos', 'escenografia', 'paisprod', 'provinciaprod' ];
-  var realizationTitles = ['Director', 'Productor', 'Coproductor', 'Realizador', 'Guionistas', 'Actores', 'Conducción', 'DF', 'Cámaras', 'Edición', 'Animación', 'Sonido', 'Música original', 'Arte', 'País', 'Provincia' ];
+  var realization =       ['directores', 'productores', 'coproductores', 'realizadores', 'guionistas', 'reparto', 'conduccion', 'fotografia', 'camaras', 'edicion', 'animacion', 'sonido', 'musicos', 'escenografia', 'vocesoff' ];
+  var realizationTitles = ['Director',    'Productor', 'Coproductor',    'Realizador',   'Guionistas', 'Actores', 'Conducción', 'Director de fotografía', 'Cámaras', 'Edición', 'Animación', 'Sonido', 'Música original', 'Arte', 'Voces off relator locutor' ];
 
-  var clasification = ['vocesautorizadas', 'descriptores', 'descripcion' ];
-  var clasificationTitles = ['Voces autorizadas', 'Descriptores', 'Descripción' ];
+  var clasification = ['vocesautorizadas', 'descripcion' ];
+  var clasificationTitles = ['Voces autorizadas', 'Sinopsis' ];
 
 
   Entities.Product = Backbone.Model.extend({
@@ -95,7 +95,11 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
             }
         );
       }
+
       if(clasification.indexOf(token)!= -1){
+        if(!self.get('clasification')){
+          self.set('clasification',{});
+        }
         facet = new Entities.ProductTextFacet(
             { key:'clasification',
               datafield: self.get('clasification')[token],
@@ -104,8 +108,83 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
             }
         );
       }// endif
+      
+      if(token === 'paisprov'){
+        if(!self.get('realization')){
+          self.set('realization',{});
+        }
+        facet = new Entities.ProductPaisFacet(
+            { key: 'realization',
+              paisprod: self.get('realization')['paisprod'],
+              provinciaprod: self.get('realization')['provinciaprod'],
+              datatitle: 'País/ Prov productora',
+              name: token
+            }
+        );
+      }
 
-      console.log('RETURN FACET: [%s] [%s]',facet.get('datafield'),facet.get('datatitle'))
+      if(token === 'contenido'){
+        if(!self.get('clasification')){
+          self.set('clasification',{});
+        }
+        facet = new Entities.ProductContenidoFacet(
+            { key: 'clasification',
+              cetiquetas: self.get('clasification')['cetiquetas'],
+              formato: self.get('clasification')['formato'],
+              etario: self.get('clasification')['etario'],
+              descriptores: self.get('clasification')['descriptores'],
+              datatitle: 'Contenido',
+              name: token
+            }
+        );
+      }// endif
+
+      if(token === 'curaduria'){
+        if(!self.get('curaduria')){
+          self.set('curaduria',{});
+        }
+        facet = new Entities.ProductCuraduriaFacet(
+            { key: 'curaduria',
+              visualizador: self.get('curaduria')['visualizador'],
+              calificacion: self.get('curaduria')['calificacion'],
+              aprobado: self.get('curaduria')['aprobado'],
+              observaciones: self.get('curaduria')['observaciones'],
+              datatitle: 'Curaduría',
+              name: token
+            }
+        );
+      }// endif
+
+      if(token === 'slug'){
+        facet = new Entities.ProductTextFacet(
+            { key:'slug',
+              datafield: self.get('slug'),
+              datatitle: 'Denominación',
+              name: token
+            }
+        );
+      }// endif
+
+      if(token === 'produccion'){
+        if(!self.get('patechfacet')){
+          self.set('patechfacet',{});
+        }
+        facet = new Entities.ProductTechFacet(
+            { key: 'patechfacet',
+              durnominal: self.get('patechfacet')['durnominal'],
+              cantbloques: self.get('patechfacet')['cantbloques'],
+              fecreacion: self.get('patechfacet')['fecreacion'],
+              temporada: self.get('patechfacet')['temporada'],
+              productora: self.get('patechfacet')['productora'],
+              lugares:    self.get('patechfacet')['lugares'],
+              locaciones: self.get('patechfacet')['locaciones'],
+              datatitle: 'Producción',
+              name: token
+            }
+        );
+      }// endif
+
+      console.log('RETURN FACET: [%s] [%s]',facet.get('token'),facet.get('key'));
       return facet;
     },
 
@@ -115,16 +194,64 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
       var list = [];
 
       var key = facet.get('key');
+      var data = self.get(key) || {};
 
-      var data = self.get(key);
-      data[facet.get('name')] = facet.get('datafield');
-      
       list.push(self.id );
       query.nodes = list;
       query.newdata = {};
-      query.newdata[key] = data;
+
+      if(token==='paisprov'){
+        data['paisprod'] = facet.get('paisprod');
+        data['provinciaprod'] = facet.get('provinciaprod');
+
+        query.newdata[key] = data;
+
+      }else if(token ==='contenido'){
+        var ndata = facet.retrieveData();
+        data['cetiquetas'] = ndata['cetiquetas'];
+        data['formato'] = ndata['formato'];
+        data['etario'] = ndata['etario'];
+        data['descriptores'] = ndata['descriptores'];
+
+        query.newdata[key] = data;
+        query.newdata['descripTagList'] = facet.getDescripTagList();
+        query.newdata['contentTagList'] = facet.getContentTagList();
+
+
+      }else if(token ==='curaduria'){
+        var ndata = facet.retrieveData();
+        data['visualizador'] = ndata['visualizador'];
+        data['calificacion'] = ndata['calificacion'];
+        data['aprobado'] = ndata['aprobado'];
+        data['observaciones'] = ndata['observaciones'];
+
+        query.newdata[key] = data;
+
+      }else if(token ==='slug'){
+        query.newdata.slug  = facet.get('datafield');
+        query.newdata.denom = facet.get('datafield');
+
+      }else if(token ==='produccion'){
+        var ndata = facet.retrieveData();
+        data['durnominal'] = ndata['durnominal'];
+        data['cantbloques'] = ndata['cantbloques'];
+        data['fecreacion'] = ndata['fecreacion'];
+        data['temporada'] = ndata['temporada'];
+        data['productora'] = ndata['productora'];
+        data['lugares'] = ndata['lugares'];
+        data['locaciones'] = ndata['locaciones'];
+
+        query.newdata[key] = data;
+
+      }else{
+        data[facet.get('name')] = facet.get('datafield');
+
+        query.newdata[key] = data;
+      }
+
+      
  
-      console.log('UPDATE: [%s] [%s] [%s]', key, token, data[facet.get('name')])
+      console.log('UPDATE: [%s] [%s]', key, token)
       var update = new Entities.ProductsUpdate();
       update.fetch({
         data: query,
@@ -195,7 +322,216 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
   });
 
 
+  Entities.ProductPaisFacet = Backbone.Model.extend({
+    //urlRoot: "/comprobantes",
+    whoami: 'ProductPaisFacet:product.js ',
 
+    initialize: function () {
+        if(this.get('paisprod')){
+            if(this.get('paisprod')==='Argentina'){
+                this.schema.provinciaprod.options = utils.provinciasOptionList['Argentina'];
+            }else{
+                this.schema.provinciaprod.options = utils.provinciasOptionList['nodefinido'];
+            }
+
+        }
+    },
+
+    schema: {
+        paisprod: {type: 'Select',options: utils.paisesOptionList, title: 'País' },
+        provinciaprod: {type: 'Select',options: utils.provinciasOptionList['nodefinido'], title: 'Provincia' },
+    },
+    //idAttribute: "_id",
+
+    defaults: {
+      paisprod: "",
+      provinciaprod:"",
+      name:"",
+      key:"",
+      datatitle:"",
+
+    },
+
+  });
+  
+  Entities.ProductContenidoFacet = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    whoami:'ProuctContenidoFacet:product.js',
+
+    retrieveData: function(){
+        var data = {};
+        data.cetiquetas = this.get('cetiquetas');
+        data.formato = this.get('formato');
+        data.etario = this.get('etario');
+        data.descriptores = this.get('descriptores');
+        return data;
+    },
+    initialize: function(){
+      this.set('etqs', this.buildTagList(this.get('cetiquetas'),"|"));
+    },
+
+    schema: {
+        contenido:{
+            type:'Object', title:'Selector',
+            template: _.template('\
+                <div class="form-group field-<%= key %>">\
+                  <label class="control-label" for="<%= editorId %>"><%= title %></label>\
+                  <div class="input-group input-block-level">\
+                    <span  class="input-block-level" data-editor></span>\
+                    <div><button class="btn btn-link js-addcontenido">agregar</button></div>\
+                    <div class="help-inline" data-error></div>\
+                    <div class="help-block"><%= help %></div>\
+                  </div>\
+                </div>\
+                '),
+            subSchema:{
+                genero:      {type: 'Select',options: utils.generoOptionList, title: 'Género'},
+                tematica:    {type: 'Select',options: utils.tematicasOptionList , title:'Temática'},
+                subtematica: {type: 'Select',options: utils.subtematicasOptionList.artecultura, title:'SubTemática'},
+        }},
+        cetiquetas:   {type: 'Text',title:'Contenido:'},
+        formato:      {type: 'Select',options: utils.formatoOptionList, title: 'Formato'},
+        etario:       {type: 'Select',options: utils.etarioOptionList, title:'Tipo de audiencia'},
+        descriptores:  {type: 'TextArea',editorAttrs:{placeholder:'palabras claves separadas por ;'},title:'Palabras claves:'},
+    },
+
+    addEtiquetas: function(){
+        var self = this;
+        var test=false;
+        if(self.get('contenido').genero){
+            if(self.get('contenido').genero !== 'nodefinido'){
+                test=_.find(self.get('etqs'),function(el) {return el===self.get('contenido').genero;});
+                if(!test) self.get('etqs').push(self.get('contenido').genero);
+           }
+        }
+        if(self.get('contenido').tematica){
+            if(self.get('contenido').tematica !== 'nodefinido'){
+                test=_.find(self.get('etqs'),function(el) {return el===self.get('contenido').tematica;});
+                if(!test) self.get('etqs').push(self.get('contenido').tematica);
+            }
+        }
+        if(self.get('contenido').subtematica){
+            if(self.get('contenido').subtematica !== 'nodefinido'){
+                test=_.find(self.get('etqs'),function(el) {return el===self.get('contenido').subtematica;});
+                if(!test) self.get('etqs').push(self.get('contenido').subtematica);
+            }
+        }
+        self.buildContentLabel();
+    },
+    setTagList: function(){
+      this.set('etqs', this.buildTagList(this.get('cetiquetas'),"|"));
+      this.buildContentLabel();
+    },
+
+    getContentTagList: function(){
+      return this.get('etqs');
+    },
+
+    getDescripTagList: function(){
+      return this.buildDescripTagList();
+    },
+
+    buildTagList: function(stringData, separator){
+        var list = [];
+        if(stringData){
+            list = _.filter(_.map(stringData.split(separator),function(str){return $.trim(str)}),function(str){return str});
+        }
+        return list;
+    },
+
+    buildDescripTagList: function(){
+      var tags = [],
+          separator = ';',
+          descr = this.get('descriptores');
+      if(descr.indexOf('|') !== -1) separator = '|';
+
+      tags = this.buildTagList(descr, separator);
+
+      //console.log('buildDescripTagList: [%s] [%s] [%s]', descr, separator, tags);
+      this.set('descriptores', tags.join(separator));
+      return tags;
+    },
+
+    buildContentLabel: function(){
+        var self = this;
+        var labels = self.get('etqs').join(' | ');
+        self.set({cetiquetas: labels});
+    },
+
+    defaults: {
+        contenido:{
+            genero:'',
+            tematica:'',
+            subtematica:''
+        },
+        cetiquetas:'',
+        formato:'',
+        etario:'',
+        etqs: [],
+        name:"",
+        key:"",
+        datatitle:"",
+    }
+  });
+
+  Entities.ProductCuraduriaFacet = Backbone.Model.extend({
+      // ******************* BROWSE PRODUCTS ***************
+      whoami:'curaduriafacet',
+
+      retrieveData: function(){
+          var data = {};
+          data.visualizador = this.get('visualizador');
+          data.calificacion = this.get('calificacion');
+          data.aprobado = this.get('aprobado');
+          data.observaciones = this.get('observaciones');
+          return data;
+      },
+
+      schema: {
+          visualizador:  {type: 'Text', editorAttrs:{placeholder : 'visualizador'}, title: 'Visualizador' },
+          calificacion:  {type: 'Select', options: ['regular','bueno','muy bueno','excelente'] , title:'Calificación'},
+          aprobado:      {type: 'Select', options: ['SI','NO'] , title:'Aprobado'},
+          observaciones: {type: 'TextArea', editorAttrs:{placeholder : 'observaciones'},title: 'Observaciones'},
+      },
+
+      defaults: {
+          visualizador: '',
+          calificacion: 'bueno',
+          aprobado: 'NO',
+          observaciones: '',
+          name:"",
+          key:"",
+          datatitle:"",
+      }
+  });
+
+  Entities.ProductTechFacet = Backbone.Model.extend({
+      // ******************* BROWSE PRODUCTS ***************
+      whoami:'ProductTechFacet:product.js',
+      retrieveData: function(){
+          return dao.extractData(this.attributes);
+      },
+
+      schema: {
+          durnominal: {type: 'Text', title: 'Duración nominal', editorAttrs:{placeholder : 'duracion mm:ss'}},
+          cantbloques: {type: 'Number', title: 'Cantidad bloques'},
+          fecreacion: {type: 'Text', title: 'Año de producción'},
+          temporada: {type: 'Number', title: 'Temporada Nro'},
+          productora: {type: 'Text', title: 'Casa productora',editorAttrs:{placeholder:'casa productora'}},
+          lugares: {type: 'Text',editorAttrs:{placeholder : 'lugares'}, title: 'Lugar rodaje' },
+          locaciones: {type: 'Text',editorAttrs:{placeholder : 'locaciones'} },
+      },
+
+      defaults: {
+          durnominal:'',
+          cantbloques:1,
+          fecreacion:'',
+          temporada:'',
+          productora:'',
+          lugares:'',
+          locaciones:'',
+      }
+  });
 
   Entities.ProductTextFacet = Backbone.Model.extend({
     //urlRoot: "/comprobantes",

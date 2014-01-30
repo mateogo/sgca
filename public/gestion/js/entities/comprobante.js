@@ -13,7 +13,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       fecomp: "",
       persona: "",
       slug: "",
-      estado_alta:'activo',
+      estado_alta:'media',
       nivel_ejecucion: 'enproceso',
       description: "",
       items:[]
@@ -28,31 +28,32 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       this.set({fealta:fealta.getTime(), fecomp: fecomp});
 
-      if(this.get('tipocomp')==='ptecnico'){
+      if(dao.docum.isType(this.get('tipocomp'), 'ptecnico')){
           var ptecnico = new Entities.DocumParteTecnico();
           ptecnico.set({
               tipoitem: this.get('tipocomp'),
               slug: this.get('slug'),
               fept: this.get('fecomp'),
+              estado_qc: dao.docum.initval(this.get('tipocomp')).estado_qc,
           });
           documitems.push(ptecnico.attributes);
           this.set({items: documitems});
-      } else if(this.get('tipocomp')==='pemision'){
+      } else if(dao.docum.isType(this.get('tipocomp'), 'pemision')){
           var parte = new Entities.DocumParteEM();
           parte.set({
               tipoitem: this.get('tipocomp'),
               slug: this.get('slug'),
-              tipoemis:"tda",
+              tipoemis:dao.docum.initval(this.get('tipocomp')).tipoemis,
           });
           documitems.push(parte.attributes);
           this.set({items: documitems});
-      } else if(this.get('tipocomp')==='nentrega'||this.get('tipocomp')==='nrecepcion'){
+      } else if(dao.docum.isType(this.get('tipocomp'), 'notas')){
           var parte = new Entities.DocumMovimRE(),
               sitems = [];
           parte.set({
               tipoitem: this.get('tipocomp'),
               slug: this.get('slug'),
-              //tipomov: (this.get('tipocomp')==='nentrega') ? 'distribucion' : 'recepcion',
+              tipomov: dao.docum.initval(this.get('tipocomp')).tipomov,
           });
           documitems.push(parte.attributes);
           this.set({items: documitems});
@@ -99,6 +100,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         }
       },
       nrecepcion:{
+        initNew: function(self, attrs){
+          var item = new Entities.DocumMovimRE(attrs);
+          return item;
+        }
+      },
+      npedido:{
         initNew: function(self, attrs){
           var item = new Entities.DocumMovimRE(attrs);
           return item;
@@ -218,6 +225,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     if(attrs.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnico(attrs);
     if(attrs.tipoitem==='nrecepcion') model = new Entities.DocumMovimRE(attrs);
     if(attrs.tipoitem==='nentrega')   model = new Entities.DocumMovimRE(attrs);
+    if(attrs.tipoitem==='npedido')    model = new Entities.DocumMovimRE(attrs);
     if(attrs.tipoitem==='pemision')   model = new Entities.DocumParteEM(attrs);
     return model;
   };
@@ -227,8 +235,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     model: function(attrs, options){
       return modelFactory(attrs, options);
-      //if(attrs.tipoitem==='ptecnico') return new Entities.DocumParteTecnico(attrs, options);
-      //return new Entities.DocumItemCoreFacet(attrs, options);
     },
 
   });
@@ -680,6 +686,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     if(options.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnicoItem(attrs);
     if(options.tipoitem==='nrecepcion') model = new Entities.DocumMovimREItem(attrs);
     if(options.tipoitem==='nentrega')   model = new Entities.DocumMovimREItem(attrs);
+    if(options.tipoitem==='npedido')    model = new Entities.DocumMovimREItem(attrs);
     if(options.tipoitem==='pemision')   model = new Entities.DocumParteEMItem(attrs);
     return model;
   };
@@ -693,8 +700,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     model: function(attrs, options){
       return modelSubItemFactory(attrs, options);
-      //if(attrs.tipoitem==='ptecnico') return new Entities.DocumParteTecnico(attrs, options);
-      //return new Entities.DocumItemCoreFacet(attrs, options);
     },
 
   });
@@ -910,7 +915,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       model.set({documid: model.id});
       //console.log('Iterando doc:[%s] itmes[%s]',model.get('cnumber'),model.get('tipocomp'),items.length);
       _.each(items, function(item){
-        if(item.tipoitem==='nentrega'||item.tipoitem==='nrecepcion'){
+        if(dao.docum.isType(item.tipoitem, 'notas')){
           var sitems = item.items;
           _.each(sitems, function(sitem){
 
@@ -930,17 +935,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
           });
 
-        }else if (item.tipoitem==='pemision'){
+        }else if (dao.docum.isType(item.tipoitem, 'pemision')){
           var sitems = item.items;
           _.each(sitems, function(sitem){
             var emisiones = sitem.emisiones;
             _.each(emisiones, function(emision){
 
               var smodel = new Entities.Comprobante(model.attributes);
+              var feg = utils.addOffsetDay(item.fedesde_tc,emision.dayweek);
               smodel.id = null;
               smodel.set({
-                fechagestion: item.fedesde,
-                fechagestion_tc: item.fedesde_tc,
+                fechagestion: feg.date,
+                fechagestion_tc: feg.tc,
                 tipoitem: item.tipoitem,
                 tipomov: item.tipoitem,
                 product: sitem.product,
@@ -952,7 +958,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
             });
           });
-        }else if (item.tipoitem==='ptecnico'){
+        }else if (dao.docum.isType(item.tipoitem, 'ptecnico')){
 
           var smodel = new Entities.Comprobante(model.attributes);
           smodel.id = null;

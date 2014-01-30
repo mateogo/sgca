@@ -86,6 +86,11 @@ module.exports = function (config, app) {
         utils.moveFile(req, res, rootPath);
     });
 
+    app.get('/background/img', function(req,res,next){
+        //console.log("/files:routes.js ");
+        res.redirect(utils.getBgImage());
+    });
+
     app.get('/geocode', function(req,res){
         //console.log("/geocode:routes.js ");
         //4266,conecpcion arenal,capitalfederal,argentina

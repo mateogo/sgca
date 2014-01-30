@@ -88,7 +88,7 @@ window.ProductView = Backbone.View.extend({
         "click .discardbrnd" : "discardbrnd",
         "click .addnewbrnd"  : "addnewbrnd",
         "click .cancelbrnd"  : "cancelbranding",
-        "click .comprobante"    : "formcomprobante",
+        "click .comprobante" : "formcomprobante",
 
         "dragover #filesdrop" : "dragoverHandler",
         "dragover #brnddrop"  : "dragoverHandler",
@@ -470,20 +470,33 @@ window.ProductView = Backbone.View.extend({
     vistacarousel: function () {
         window.open('/bacua/carousel/#pa/ver/'+this.model.id);
         //utils.approuter.navigate(, true);
+        this.$('#vistas').dropdown('toggle');
         return false;
     },
 
     vistainfo: function () {
         window.open('/bacua/info/#pa/ver/'+this.model.id);
         //utils.approuter.navigate(, true);
+        this.$('#vistas').dropdown('toggle');
         return false;
     },
 
     vistamedia: function () {
-        window.open('/media/#show/'+this.model.id);
+        //window.open('/media/#show/'+this.model.id, '_self');
+        window.location.replace('/media/#show/'+this.model.id, '_self');
         //utils.approuter.navigate(, true);
+        //this.$('#vistas').dropdown('toggle');
         return false;
     },
+/*
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Acciones <b class="caret"></b></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a class="js-groupedit" href="#" >Editar prioridad</a></li>
+            </ul>
+        </li>
+
+*/
 
     browseeventos: function () {
         utils.approuter.navigate('navegar/proyectos', true);

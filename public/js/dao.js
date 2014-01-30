@@ -2,6 +2,41 @@ window.dao = {
 
     whoami:'daoutils',
 
+    docum: {
+        actualList:['nrecepcion','npedido', 'nentrega', 'ptecnico', 'pemision'],
+        ptecnico:['ptecnico'],
+        notas:['nrecepcion','npedido', 'nentrega'],
+        pemision: ['pemision'],
+
+        isType: function(comp, type){
+            return (this[type].indexOf(comp) !== -1 ? true : false);
+        },
+        initval: function(comp){
+            var data = {
+                estado_alta: 'media',
+                nivel_ejecucion: 'enproceso',
+            };
+            if(this.ptecnico.indexOf(comp) !== -1){
+                data.estado_qc = 'enevaluacion';
+                return data;
+
+            }
+            if(this.pemision.indexOf(comp) !== -1){
+                data.tipoemis = 'tda';
+                return data;
+
+            }
+            if(this.notas.indexOf(comp) !== -1){
+                data.tipomov = 'movimiento';
+                if(comp==='nentrega')   data.tipomov = 'distribucion';
+                if(comp==='nrecepcion') data.tipomov = 'recepcion';
+                if(comp==='npedido')    data.tipomov = 'reqadherente';
+                return data;
+            }
+        },
+
+    },
+
     gestionUser: {
         getUser: function(app, cb){
             if(! this.user){

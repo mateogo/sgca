@@ -118,6 +118,8 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
         jwplayer('player-region').setup({
           flashplayer: "jwplayer/player.swf",
           file: url,
+          height: 315,
+          width: 560,
           //image: "/files/assets/preview.jpg"
         });      
       } else {

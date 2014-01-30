@@ -48,11 +48,11 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
 
     getTemplate: function(){
       console.log('getTEMPLATE [%s]',this.options.tpl)
-      if(this.options.tpl==='ptecnico'){
+      if(dao.docum.isType(this.options.tpl, 'ptecnico')){
         return utils.templates.DocumShowItemPTDetail;
-      }else if(this.options.tpl==='nrecepcion' || this.options.tpl==='nentrega'){
+      }else if(dao.docum.isType(this.options.tpl, 'notas')){
         return utils.templates.DocumShowItemREDetail;
-      }else if(this.options.tpl==='pemision'){
+      }else if(dao.docum.isType(this.options.tpl, 'pemision')){
         return utils.templates.DocumShowItemPEDetail;
       }
     },
@@ -77,21 +77,18 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
    *
    */
   Show.DocumentSubitems = Marionette.CompositeView.extend({
-    templates: {
-      //pemision:   'DocumEditEMItem',
-    },
-
+ 
     initialize: function(options){
       console.log('COMPOSITE DocumentItems [%s] options:[%s]',this.collection.length, options);
       this.options = options;
     },
 
     getTemplate: function(){
-      if(this.options.tpl === 'ptecnico'){
+      if(dao.docum.isType(this.options.tpl, 'ptecnico')){
         return utils.templates.DocumShowItemPTComposite;
-      }else if(this.options.tpl === 'nrecepcion' || this.options.tpl==='nentrega'){
+      }else if(dao.docum.isType(this.options.tpl, 'notas')){
         return utils.templates.DocumShowItemREComposite;
-      }else if(this.options.tpl === 'pemision'){
+      }else if(dao.docum.isType(this.options.tpl, 'pemision')){
         return utils.templates.DocumShowItemPEComposite;
       }
     },
@@ -116,11 +113,11 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
 
   Show.DocumentItemHeader = Marionette.ItemView.extend({
    getTemplate: function(){
-      if(this.model.get('tipoitem')==='ptecnico'){
+      if(dao.docum.isType(this.model.get('tipoitem'), 'ptecnico')){
         return utils.templates.DocumShowItemPTHeader;
-      } else if(this.model.get('tipoitem')==='nrecepcion' || this.model.get('tipoitem')==='nentrega'){
+      } else if(dao.docum.isType(this.model.get('tipoitem'), 'notas')){
         return utils.templates.DocumShowItemREHeader;
-      } else if(this.model.get('tipoitem')==='pemision'){
+      } else if(dao.docum.isType(this.model.get('tipoitem'), 'pemision')){
         return utils.templates.DocumShowItemPEHeader;
       }
     },
@@ -163,20 +160,6 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
           tpl: this.model.get('tipoitem'),
       });
 
-/*      
-      if(this.model.get('tipoitem')==='ptecnico'){
-        items = new Show.DocumentSubitems({
-          collection: new DocManager.Entities.PTecnicoItems(this.model.get('items')),
-          tpl: 'ptecnico'
-        });
-      } else if(this.model.get('tipoitem')==='nrecepcion' || this.model.get('tipoitem')==='nentrega'){
-        items = new Show.DocumentSubitems({
-          collection: new DocManager.Entities.MovimREItems(this.model.get('items')),
-          tpl: 'nrecepcion'
-        });
-      }
-
-*/      
       this.itemHeaderRegion.show(itemHeader);
       this.itemMainRegion.show(items);
     },

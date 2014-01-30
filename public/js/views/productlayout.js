@@ -124,6 +124,7 @@ window.ProductListLayoutView = Backbone.View.extend({
         "click  .addassociated"  : "linkcassociated",
         "click  .managetableNOT" : "managetable",
         "click  .buildtree"      : "buildtree",
+        "click  .showmedia"      : 'showmedia',
     },
 
     buildtree: function  () {
@@ -196,6 +197,14 @@ window.ProductListLayoutView = Backbone.View.extend({
         d3.select(self.frameElement).style("height", diameter - 150 + "px");
     },
 
+    showmedia: function(){
+        var target = utils.selectedProducts.first();
+        if(target){
+            window.open('/media/#show/'+target.id, 'showmedia');
+        }else{
+            window.open('/media/#show', 'showmedia');
+        }
+    },
 
     linkchilds: function (predicate) {
         console.log('[%s] linkchilds:BEGIN predicate:[%s]',this.whoami, predicate);

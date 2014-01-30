@@ -28,7 +28,7 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
 
       this.set({fealta:fealta.getTime(), fecomp: fecomp});
 
-      if(this.get('tipocomp')==='ptecnico'){
+      if(dao.docum.isType(this.get('tipocomp'), 'ptecnico')){
           var ptecnico = new Entities.DocumParteTecnico();
           ptecnico.set({
               tipoitem: this.get('tipocomp'),
@@ -37,7 +37,7 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
           });
           documitems.push(ptecnico.attributes);
           this.set({items: documitems});
-      } else if(this.get('tipocomp')==='pemision'){
+      } else if(dao.docum.isType(this.get('tipocomp'), 'pemision')){
           var parte = new Entities.DocumParteEM();
           parte.set({
               tipoitem: this.get('tipocomp'),
@@ -46,13 +46,12 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
           });
           documitems.push(parte.attributes);
           this.set({items: documitems});
-      } else if(this.get('tipocomp')==='nentrega'||this.get('tipocomp')==='nrecepcion'){
+      } else if(dao.docum.isType(this.get('tipocomp'), 'notas')){
           var parte = new Entities.DocumMovimRE(),
               sitems = [];
           parte.set({
               tipoitem: this.get('tipocomp'),
               slug: this.get('slug'),
-              //tipomov: (this.get('tipocomp')==='nentrega') ? 'distribucion' : 'recepcion',
           });
           documitems.push(parte.attributes);
           this.set({items: documitems});
@@ -99,6 +98,12 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
         }
       },
       nrecepcion:{
+        initNew: function(self, attrs){
+          var item = new Entities.DocumMovimRE(attrs);
+          return item;
+        }
+      },
+      npedido:{
         initNew: function(self, attrs){
           var item = new Entities.DocumMovimRE(attrs);
           return item;
@@ -218,6 +223,7 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
     if(attrs.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnico(attrs);
     if(attrs.tipoitem==='nrecepcion') model = new Entities.DocumMovimRE(attrs);
     if(attrs.tipoitem==='nentrega')   model = new Entities.DocumMovimRE(attrs);
+    if(attrs.tipoitem==='npedido')    model = new Entities.DocumMovimRE(attrs);
     if(attrs.tipoitem==='pemision')   model = new Entities.DocumParteEM(attrs);
     return model;
   };
@@ -227,8 +233,6 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
 
     model: function(attrs, options){
       return modelFactory(attrs, options);
-      //if(attrs.tipoitem==='ptecnico') return new Entities.DocumParteTecnico(attrs, options);
-      //return new Entities.DocumItemCoreFacet(attrs, options);
     },
 
   });
@@ -680,6 +684,7 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
     if(options.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnicoItem(attrs);
     if(options.tipoitem==='nrecepcion') model = new Entities.DocumMovimREItem(attrs);
     if(options.tipoitem==='nentrega')   model = new Entities.DocumMovimREItem(attrs);
+    if(options.tipoitem==='npedido')    model = new Entities.DocumMovimREItem(attrs);
     if(options.tipoitem==='pemision')   model = new Entities.DocumParteEMItem(attrs);
     return model;
   };
@@ -693,8 +698,6 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
 
     model: function(attrs, options){
       return modelSubItemFactory(attrs, options);
-      //if(attrs.tipoitem==='ptecnico') return new Entities.DocumParteTecnico(attrs, options);
-      //return new Entities.DocumItemCoreFacet(attrs, options);
     },
 
   });
@@ -910,7 +913,7 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
       model.set({documid: model.id});
       //console.log('Iterando doc:[%s] itmes[%s]',model.get('cnumber'),model.get('tipocomp'),items.length);
       _.each(items, function(item){
-        if(item.tipoitem==='nentrega'||item.tipoitem==='nrecepcion'){
+        if(dao.docum.isType(item.tipoitem, 'notas')){
           var sitems = item.items;
           _.each(sitems, function(sitem){
 
@@ -930,7 +933,7 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
 
           });
 
-        }else if (item.tipoitem==='pemision'){
+        }else if (dao.docum.isType(item.tipoitem, 'pemision')){
           var sitems = item.items;
           _.each(sitems, function(sitem){
             var emisiones = sitem.emisiones;
@@ -952,7 +955,7 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
 
             });
           });
-        }else if (item.tipoitem==='ptecnico'){
+        }else if (dao.docum.isType(item.tipoitem, 'ptecnico')){
 
           var smodel = new Entities.Comprobante(model.attributes);
           smodel.id = null;

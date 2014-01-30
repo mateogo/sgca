@@ -1440,13 +1440,13 @@ window.Comprobante = Backbone.Model.extend({
         this.set({fecomp_tc: fealta.getTime()});
 
         this.set({fecomp: utils.displayDate(fealta)});
-        this.set({estado_alta: 'activo'});
-        this.set({nivel_ejecucion: 'enproceso'});
-
+        this.set({estado_alta: dao.docum.initval(this.get('tipocomp')).estado_alta});
+        this.set({nivel_ejecucion: dao.docum.initval(this.get('tipocomp')).nivel_ejecucion});
         //this.set({tipocomp: 'ptecnico'});
         //this.set({slug: 'PT:'+product.get('slug')});
 
-        if(this.get('tipocomp')==='ptecnico'){
+        if(dao.docum.isType(this.get('tipocomp'),'ptecnico')){
+            //this.get('tipocomp')==='ptecnico'){
             this.set({persona: dt.productora});
             var ptecnico = new DocumPT();
             ptecnico.set({
@@ -1463,30 +1463,33 @@ window.Comprobante = Backbone.Model.extend({
                 aspectratio: dt.aspectratio,//
                 rolinstancia: dt.rolinstancia,//
                 formatoorig: dt.formatoorig,//
-                estado_alta:'activo',
-                nivel_ejecucion:'enproceso'
+                estado_qc: dao.docum.initval(this.get('tipocomp')).estado_qc,
+                //estado_alta: dao.docum.initval(this.get('tipocomp')).estado_alta,
+                //nivel_ejecucion:dao.docum.initval(this.get('tipocomp')).nivel_ejecucion,
             });
             documitems.push(ptecnico.attributes);
             this.set({items: documitems});
-        } else if(this.get('tipocomp')==='pemision'){
+        } else if(dao.docum.isType(this.get('tipocomp'),'pemision')){
+            //this.get('tipocomp')==='pemision'){
             var parte = new DocumEM();
             parte.set({
                 tipoitem: this.get('tipocomp'),
                 slug: this.get('slug'),
-                tipoemis:"tda",
+                tipoemis: dao.docum.initval(this.get('tipocomp')).tipoemis,
                 product:product.get('productcode'),
                 productid: product.id,
                 pslug: product.get('slug') ,
             });
             documitems.push(parte.attributes);
             this.set({items: documitems});
-        } else if(this.get('tipocomp')==='nentrega'||this.get('tipocomp')==='nrecepcion'){
+        } else if(dao.docum.isType(this.get('tipocomp'),'notas')){
+            //this.get('tipocomp')==='nentrega'||this.get('tipocomp')==='nrecepcion'||this.get('tipocomp')==='npedido'){
             var parte = new DocumRE(),
                 sitems = [];
             parte.set({
                 tipoitem: this.get('tipocomp'),
                 slug: this.get('slug'),
-                tipomov: (this.get('tipocomp')==='nentrega') ? 'distribucion' : 'recepcion',
+                tipomov: dao.docum.initval(this.get('tipocomp')).tipomov,
             });
             var sitem = new DocumREItem();
             sitem.set({
@@ -1529,8 +1532,8 @@ window.Comprobante = Backbone.Model.extend({
       persona: "",
       slug: "",
       description:"",
-      estado_alta:'activo',
-      nivel_ejecucion: 'alta',
+      estado_alta:'media',
+      nivel_ejecucion: 'enproceso',
       items:[]
     },
  });
@@ -1769,12 +1772,12 @@ window.NotasFacet = Backbone.Model.extend({
 
     schema: {
         tiponota:    {type: 'Select',options: utils.notasOptionList, title: 'Tipo Nota'},
-        fecha:       {type: 'Text', title: 'Fecha', editorAttrs:{placeholder : 'fecha relevante'}},
-        slug:     {type: 'Text', title: 'Asunto', editorAttrs:{placeholder : 'asunto'}, title: 'Denom corta'},
-        descr:    {type: 'TextArea', title: 'Descripción', title: 'Descripción'},
-        url:      {type: 'Text', title: 'URL referencia', editorAttrs:{placeholder : 'fuente de dato- referencia'}, title: 'URL'},
-        responsable:    {type: 'Text', title: 'autor/responsable', editorAttrs:{placeholder : 'referente de la nota'}, title: 'Responsable'},
-        descriptores:    {type: 'Text', title: 'descriptores', editorAttrs:{placeholder : 'separados por ;'}, title: 'Descriptores'},
+        fecha:       {type: 'Text', editorAttrs:{placeholder : 'fecha relevante'}, title: 'Fecha'},
+        slug:     {type: 'Text', editorAttrs:{placeholder : 'asunto'}, title: 'Asunto'},
+        descr:    {type: 'TextArea', title: 'Descripción'},
+        url:      {type: 'Text', title: 'URL referencia', editorAttrs:{placeholder : 'fuente de dato- referencia'}},
+        responsable:    {type: 'Text', title: 'Autor/responsable', editorAttrs:{placeholder : 'referente de la nota'}},
+        descriptores:    {type: 'Text', title: 'Descriptores', editorAttrs:{placeholder : 'separados por ;'}},
     },
 
     defaults: {
@@ -1832,10 +1835,10 @@ window.PaClasificationFacet = Backbone.Model.extend({
         cetiquetas:   {type: 'Text',title:'Contenido:'},  
         formato:      {type: 'Select',options: utils.formatoOptionList, title: 'Formato'},
         videoteca:    {type: 'Select',options: utils.videotecaOptionList, title: 'Videoteca'},
-        etario:       {type: 'Select',options: utils.etarioOptionList, title:'Tipo de audiencia'},  
-        descriptores:  {type: 'TextArea',editorAttrs:{placeholder:'palabras claves separadas por ;'},title:'Palabras claves:'},  
+        etario:       {type: 'Select',options: utils.etarioOptionList, title:'Tipo de audiencia'},
+        descriptores:  {type: 'TextArea',editorAttrs:{placeholder:'palabras claves separadas por ;'},title:'Palabras claves:'},
         vocesautorizadas: {type: 'TextArea',editorAttrs:{placeholder : 'nombre (cargo);...'}, title: 'Voces autorizadas' },
-        descripcion:   {type: 'TextArea',editorAttrs:{placeholder:'descripción / sinopsis'},title:'Descripción:'},  
+        descripcion:   {type: 'TextArea',editorAttrs:{placeholder:'descripción / sinopsis'},title:'Descripción:'},
     },
 
     defaults: {
@@ -1881,6 +1884,7 @@ window.PaRealizationFacet = Backbone.Model.extend({
         guionistas: {type: 'TextArea',editorAttrs:{placeholder : 'guionistas'}, title: 'Guionistas' },
         reparto: {type: 'TextArea',editorAttrs:{placeholder : 'actores'}, title: 'Actores / Intepretación' },
         conduccion: {type: 'TextArea',editorAttrs:{placeholder : 'conduccion'}, title: 'Conducción' },
+        vocesoff: {type: 'TextArea',editorAttrs:{placeholder : 'voces en off; relator; locutor'}, title: 'Voces' },
         fotografia: {type: 'TextArea',editorAttrs:{placeholder : 'fotografia'}, title: 'Director de fotografía' },
         camaras: {type: 'TextArea',editorAttrs:{placeholder : 'camaras'}, title: 'Cámaras' },
         edicion: {type: 'TextArea',editorAttrs:{placeholder : 'edicion'}, title: 'Edición' },
@@ -1906,6 +1910,7 @@ window.PaRealizationFacet = Backbone.Model.extend({
         animacion:'',
         sonido:'',
         musicos:'',
+        vocesoff: '',
         escenografia:'',
         provinciaprod:'',
         paisprod: '',
@@ -2023,10 +2028,11 @@ window.PaTechFacet = Backbone.Model.extend({
 
     defaults: {
         durnominal:'',
-        productora:'',
-        fecreacion:'',
         cantcapitulos:0,
         cantbloques:1,
+        fecreacion:'',
+        temporada: '',
+        productora:'',
         lugares:'',
         locaciones:'',
     }

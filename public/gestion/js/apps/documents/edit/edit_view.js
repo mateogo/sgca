@@ -229,6 +229,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       ptecnico:   'DocumEditPT',
       nrecepcion: 'DocumEditRE',
       nentrega:   'DocumEditRE',
+      npedido:    'DocumEditRE',
       pemision:   'DocumEditEM',
     },
 
@@ -317,6 +318,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       ptecnico:   'DocumEditPTItem',
       nrecepcion: 'DocumEditREItem',
       nentrega:   'DocumEditREItem',
+      npedido:    'DocumEditREItem',
       pemision:   'DocumEditEMItem',
     },
 

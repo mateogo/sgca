@@ -9,7 +9,9 @@ $(function(){
 
     jwplayer("play1").setup({
         flashplayer: "lib/jwplayer.flash.swf",
-        file: "http://www.youtube.com/watch?v=qnNCjtvAe7c",
+        file: "http://cda.gob.ar/content/videos/clips/5/10355_700.mp4",
+
+
         // autostart: true,
         // controlbar: none|bottom,
         // duration: 57,

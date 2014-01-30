@@ -19,7 +19,7 @@ var MSGS = [
 ];
 
 //ATENCION: para agregar un serial, agregar entrada en tcomp_adapter y en series;
-var series = ['rent101','rsal101','ptec101','gcom101','nemi101'];
+var series = ['rent101','rsal101','ptec101','nemi101','nped101','gcom101'];
 
 var seriales = {};
 
@@ -34,6 +34,11 @@ var tcomp_adapter = {
         serie: 'rsal101',
         base: 100000,
         prefix:'S'
+        },
+    npedido: {
+        serie: 'nped101',
+        base: 100000,
+        prefix: 'P'
         },
     ptecnico: {
         serie: 'ptec101',

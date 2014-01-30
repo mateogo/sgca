@@ -1,16 +1,7 @@
 <form class='form' role="form">
   <div class="form-group">
     <select class="form-control" id="tipocomp" name="tipocomp" value="<%= tipocomp %>">
-        <option value='no_definido'
-        <%= tipocomp == 'no_definido' ? 'selected':'' %>>--tipo de comprobante--</option>
-        <option value='nrecepcion'
-        <%= tipocomp == 'nrecepcion' ? 'selected':'' %>>n/recepcion</option>
-        <option value='nentrega'
-        <%= tipocomp == 'nentrega' ? 'selected':'' %>>n/entrega</option>
-        <option value='ptecnico'
-        <%= tipocomp == 'ptecnico' ? 'selected':'' %>>p/tecnico</option>
-     </select>
-  </div>
+       <%= utils.buildSelectOptions('tipocomp',utils.tipoComprobanteOptionList, tipocomp) %>
   <div class="form-group">
     <label for="slug"  >descripción corta</label>
     <input id="slug" name="slug" type="text" class="form-control" 

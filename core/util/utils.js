@@ -21,6 +21,23 @@ var es_cutoff = {
     "Ú" : "U",
     "ñ" : "n"
 };
+var bgImages = [
+    '/css/img/bg-001.jpg',
+    '/css/img/bg-002.jpg',
+    '/css/img/bg-003.jpg',
+    '/css/img/bg-004.jpg',
+    '/css/img/bg-005.jpg',
+    '/css/img/bg-006.jpg',
+    '/css/img/bg-007.jpg',
+    '/css/img/bg-008.jpg',
+    '/css/img/bg-009.jpg',
+    '/css/img/bg-010.jpg',
+    '/css/img/bg-011.jpg',
+];
+
+var rndBetween = function (min,max){
+    return Math.floor(Math.random()*(max-min+1) + min);
+};
 
 var safeFileName = function(name){
 	var str = name;
@@ -60,6 +77,11 @@ var rutas = {
     'gestion:comprobantes:list'    :'/gestion/#comprobantes'
 };
 
+exports.getBgImage = function(){
+    var index = rndBetween(0,bgImages.length);
+    return bgImages[index];
+};
+
 exports.userHome = function (user){
     var location;
     if(user){
@@ -74,6 +96,13 @@ exports.userHome = function (user){
 exports.safeName = function (name){
     var str = name.toLowerCase();
     str = str.split(' ').join('-');
+    str = str.replace(/[áÁéÉíÍóÓúÚñ]/g,function(c) { return es_cutoff[c]; });
+    return str;
+};
+
+exports.safeAddress = function (name){
+    var str = name.toLowerCase();
+    str = str.split(' ').join('%20');
     str = str.replace(/[áÁéÉíÍóÓúÚñ]/g,function(c) { return es_cutoff[c]; });
     return str;
 };
