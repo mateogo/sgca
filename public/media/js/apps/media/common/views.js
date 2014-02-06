@@ -82,15 +82,26 @@ MediaManager.module("MediaApp.Common.Views", function(Views, MediaManager, Backb
 
           });
     },
+    onBeforeClose: function(){
+      console.log('¡¡¡¡ ME CERRARON   !!');
+      this.trigger("form:close");
+    },
 
     change: function (event) {
         //utils.hideAlert();
-        console.log('change!!')
+        console.log('change event!!')
         var target = event.target;
         var change = {};
-        change[target.name] = target.value;
-        console.log('change!![%s]  [%s]', target.name, target.value);
-        this.model.set(change);
+
+        if(target.type==='checkbox'){
+            console.log('change!! checkbox: name:[%s] value:[%s] check:[%s]',target.name, target.value,target.checked);
+            this.model.process(target);
+        }else{
+            change[target.name] = target.value;
+            console.log('change!! normal: name:[%s] value:[%s] ',target.name, target.value);
+            this.model.set(change);
+        }
+
         this.trigger("form:change", target.name, target.value);
         var err = this.model.validate(change);
         this.onFormDataInvalid((err||{}));

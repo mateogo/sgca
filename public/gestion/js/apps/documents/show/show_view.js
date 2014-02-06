@@ -90,6 +90,8 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
         return utils.templates.DocumShowItemREComposite;
       }else if(dao.docum.isType(this.options.tpl, 'pemision')){
         return utils.templates.DocumShowItemPEComposite;
+      }else if(dao.docum.isType(this.options.tpl, 'pdiario')){
+        return utils.templates.DocumShowItemPDComposite;
       }
     },
 
@@ -119,6 +121,8 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
         return utils.templates.DocumShowItemREHeader;
       } else if(dao.docum.isType(this.model.get('tipoitem'), 'pemision')){
         return utils.templates.DocumShowItemPEHeader;
+      } else if(dao.docum.isType(this.model.get('tipoitem'), 'pdiario')){
+        return utils.templates.DocumShowItemPDHeader;
       }
     },
     initialize: function(){

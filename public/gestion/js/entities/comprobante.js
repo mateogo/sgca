@@ -57,6 +57,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           });
           documitems.push(parte.attributes);
           this.set({items: documitems});
+      } else if(dao.docum.isType(this.get('tipocomp'), 'pdiario')){
+          var parte = new Entities.DocumParteDI(),
+              sitems = [];
+          parte.set({
+              tipoitem: this.get('tipocomp'),
+              slug: this.get('slug'),
+              tipomov: dao.docum.initval(this.get('tipocomp')).tipomov,
+          });
+          documitems.push(parte.attributes);
+          this.set({items: documitems});
       }
     },
 
@@ -75,7 +85,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if(!self.save(null,{
         success: function(model){
           //console.log('callback SUCCESS')
+          
+          // log Activity
+          logActivity(model);
+          // log Activity
+
+          //Change Product State
+          changeProductState(model);
+          //Change Product State
+
           cb(null,model);
+
          }
         })) {
           cb(self.validationError,null);
@@ -108,6 +128,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       npedido:{
         initNew: function(self, attrs){
           var item = new Entities.DocumMovimRE(attrs);
+          return item;
+        }
+      },
+      pdiario:{
+        initNew: function(self, attrs){
+          var item = new Entities.DocumParteDI(attrs);
           return item;
         }
       },
@@ -227,6 +253,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     if(attrs.tipoitem==='nentrega')   model = new Entities.DocumMovimRE(attrs);
     if(attrs.tipoitem==='npedido')    model = new Entities.DocumMovimRE(attrs);
     if(attrs.tipoitem==='pemision')   model = new Entities.DocumParteEM(attrs);
+    if(attrs.tipoitem==='pdiario')    model = new Entities.DocumParteDI(attrs);
     return model;
   };
 
@@ -679,6 +706,66 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
 
+  /*
+   * ******* Parte Diario +**********
+   */
+  Entities.DocumParteDI = Backbone.Model.extend({
+    whoami: 'DocumParteDI:comprobante.js ',
+
+    validate: function(attrs, options) {
+      //if(!attrs) return;
+      var errors = {}
+      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
+
+      if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
+        errors.tipocomp = "No puede ser nulo";
+      }
+      if (_.has(attrs,'slug') && ! attrs.slug) {
+        errors.slug = "No puede ser nulo";
+      }
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+    insertItemCollection: function(itemCol) {
+        var self = this;
+        self.set({items: itemCol.toJSON()});
+    },
+
+    getItems: function(){
+      var itemCol = new Entities.MovimREItems(this.get('items'));
+      return itemCol;
+    },
+
+    initNewItem: function(){
+      return new Entities.DocumMovimREItem();
+    },
+
+    productSelected: function(pr){
+      // fetching a product success. 
+
+    },
+
+    defaults: {
+      tipoitem: "",
+      slug: "",
+      tipomov: "",
+      activity:"",
+      entitytype:"",
+      entity:"",
+      docum:"",
+      result:"",
+      items:[],
+    },
+
+  });
+
+
+// fin Movim Parte Diario
+
+
+
   var modelSubItemFactory = function(attrs, options){
     //utils.inspect(attrs,1,'modelFactory');
     //console.log('modelSubFactory: [%s]',options.tipoitem)
@@ -844,6 +931,252 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   };
 */
 
+  var logActivity = function(docum){
+    var tipocomp = docum.get('tipocomp');
+    var entity = {
+      type:'producto',
+      code:'VARIOS',
+      id: null,
+    };
+    var result='ok';
+    var slug = 'alta / edición  de comprobantes';
+    var activity = 'alta/edición';
+
+    if(docum.get('items').length){
+      slug = docum.get('items')[0].slug;
+      
+      if(dao.docum.isType(tipocomp, 'ptecnico')){
+        entity.code = docum.get('items')[0].product;
+        entity.id = docum.get('items')[0].productid;
+        result = docum.get('items')[0].estado_qc || result;
+        activity = docum.get('cnumber') + ' Rev: ' + docum.get('items')[0].revision ;
+
+      }else{
+        activity = docum.get('cnumber') + ' Rev: ' + docum.get('items')[0].tipomov ;
+      }
+
+    }
+
+    var activity = new DocManager.Entities.Activity({
+        eventname:'user:pdiario',
+        data:{
+            header:{
+            },
+            item:{
+                tipoitem: 'pdiario',
+                slug: slug,
+                tipomov: tipocomp,
+                activity: activity,
+
+                entitytype: entity.type,
+                entity: entity.code,
+                entitiyid: entity.id,
+                
+                docum: docum.get('cnumber'),
+                documid: docum.id,
+                documslug: docum.get('slug'),
+                
+                result: result,
+            },
+        },
+        query:{
+            tipocomp: 'pdiario',
+            tipomov: tipocomp,
+            activity: activity,
+        }
+    });
+    activity.save();
+
+  };
+
+
+  var changeProductState = function(model){
+    var comprobantes = new Entities.ComprobanteCollection(model);
+
+    var docitems = fetchDocumentItemlist(comprobantes);
+
+    console.log('changeProductsState: [%s] items:[%s]', comprobantes.length, docitems.length);
+
+    docitems.each(function(item){
+      console.log('Iterating: item:[%s]  [%s]=[%s]  mov:[%s] [%s]', item.get('product'), item.get('tipocomp'), item.get('tipoitem'), item.get('tipomov'), item.get('productid'));
+      if(item.get('productid'))
+        var prid = item.get('productid');
+
+        if(dao.docum.isType(item.get('tipoitem'), 'notas')){
+          if(item.get('tipoitem')==='nrecepcion' && item.get('tipomov')==='recepcion' ){
+            console.log('Procesando NRECEPCION - movimiento: RECEPCION')
+            var product = new DocManager.Entities.Product({_id: prid});
+
+            product.fetch({success: function(model){
+                changeREState(product, item);
+            }});
+        
+          }else if(item.get('tipoitem')==='nentrega' && item.get('tipomov')==='distribucion' ){
+            console.log('Procesando NENTREGA - movimiento: DISTRIBUCION')
+            var product = new DocManager.Entities.Product({_id: prid});
+
+            product.fetch({success: function(model){
+                changeRSState(product, item);
+            }});
+
+          }else if(item.get('tipoitem')==='npedido' && item.get('tipomov')==='reqadherente' ){
+            console.log('Procesando NPEDIDO - movimiento: REQ ADHERENTE');
+            var product = new DocManager.Entities.Product({_id: prid});
+
+            product.fetch({success: function(model){
+                changePEState(product, item);
+            }});
+
+          }
+
+        }else if (dao.docum.isType(item.get('tipoitem'), 'pemision')){
+          console.log('Procesando EMISIÓN - movimiento: ')
+          var product = new DocManager.Entities.Product({_id: prid});
+
+          product.fetch({success: function(model){
+              changeEMState(product, item);
+          }});
+
+        }else if (dao.docum.isType(item.get('tipoitem'), 'pdiario')){
+
+        }else if (dao.docum.isType(item.get('tipoitem'), 'ptecnico')){
+          var product = new DocManager.Entities.Product({_id: prid});
+
+          product.fetch({success: function(model){
+              changePTState(product, item);
+
+
+          }});
+        
+        }
+
+    });
+
+  };
+
+  var moveForwardExecution = function(product, avance){
+    if(utils.paexecutionOrderList.indexOf(product.get('nivel_ejecucion')) < utils.paexecutionOrderList.indexOf(avance)){
+      product.set('nivel_ejecucion', avance);
+    }
+  };
+
+  var changePEState = function(product, item){
+    console.log('Iterating: item:[%s]  [%s]  [%s] = [%s]  [%s]', item.get('product'), product.get('slug'), item.get('tipocomp'), item.get('tipoitem'), product.id );
+    var token = 'editestados';
+ 
+    var avance = 'requisicion';
+    moveForwardExecution(product, avance);
+    
+    var facet = product.getFacet(token);
+
+
+    console.log('Product Colection:[%s]  estado:[%s] nivel_ejecucion:[%s] prioridad:[%s]',product.get('productcode'),product.get('estado_alta'), product.get('nivel_ejecucion'),product.get('nivel_importancia'));
+
+    _.each(facet.get('pendientes'),function(pend,key){
+        console.log('Facet: [%s]: estado:[%s] prioridad:[%s]', key, pend.estado, pend.prioridad);
+
+    });
+
+    product.setFacet(token, facet);
+
+
+  };  
+
+  var changeEMState = function(product, item){
+    console.log('Iterating: item:[%s]  [%s]  [%s] = [%s]  [%s]', item.get('product'), product.get('slug'), item.get('tipocomp'), item.get('tipoitem'), product.id );
+    var token = 'editestados';
+ 
+    var avance = 'emision';
+    moveForwardExecution(product, avance);
+    
+    var facet = product.getFacet(token);
+
+
+    console.log('Product Colection:[%s]  estado:[%s] nivel_ejecucion:[%s] prioridad:[%s]',product.get('productcode'),product.get('estado_alta'), product.get('nivel_ejecucion'),product.get('nivel_importancia'));
+
+    _.each(facet.get('pendientes'),function(pend,key){
+        console.log('Facet: [%s]: estado:[%s] prioridad:[%s]', key, pend.estado, pend.prioridad);
+
+    });
+
+    product.setFacet(token, facet);
+
+
+  };  
+
+  var changeRSState = function(product, item){
+    console.log('Iterating: item:[%s]  [%s]  [%s] [%s]', item.get('product'), product.get('slug'), item.get('tipocomp'), item.get('tipoitem'), item.get('tipomov'), item.get('productid'), product.id );
+    var token = 'editestados';
+ 
+    var avance = 'distribucion';
+    moveForwardExecution(product, avance);
+    
+    var facet = product.getFacet(token);
+
+
+    console.log('Product Colection:[%s]  estado:[%s] nivel_ejecucion:[%s] prioridad:[%s]',product.get('productcode'),product.get('estado_alta'), product.get('nivel_ejecucion'),product.get('nivel_importancia'));
+
+    _.each(facet.get('pendientes'),function(pend,key){
+        console.log('Facet: [%s]: estado:[%s] prioridad:[%s]', key, pend.estado, pend.prioridad);
+
+    });
+
+    product.setFacet(token, facet);
+
+
+  };
+
+  var changePTState = function(product, item){
+    console.log('Iterating: item:[%s]  [%s]  [%s] [%s]', item.get('product'), product.get('slug'), item.get('tipocomp'), item.get('tipoitem'), item.get('tipomov'), item.get('productid'), product.id );
+    var token = 'editestados';
+    var estado_qc = item.get('tipomov');
+
+    var avance = 'chequeado';
+    if(estado_qc === 'aprobado' || estado_qc === 'aprobconobs' || estado_qc === 'rechazado'){
+      avance = 'qcalidad';
+    }
+    moveForwardExecution(product, avance);
+    
+
+    var facet = product.getFacet(token);
+
+
+    console.log('Product Colection:[%s]  estado:[%s] nivel_ejecucion:[%s] prioridad:[%s]',product.get('productcode'),product.get('estado_alta'), product.get('nivel_ejecucion'),product.get('nivel_importancia'));
+
+    _.each(facet.get('pendientes'),function(pend,key){
+        console.log('Facet: [%s]: estado:[%s] prioridad:[%s]', key, pend.estado, pend.prioridad);
+
+    });
+
+    product.setFacet(token, facet);
+
+
+  };
+
+  var changeREState = function(product, item){
+    console.log('Iterating: item:[%s]  [%s]  [%s] [%s]', item.get('product'), product.get('slug'), item.get('tipocomp'), item.get('tipoitem'), item.get('tipomov'), item.get('productid'), product.id );
+    var token = 'editestados';
+ 
+    var avance = 'recibido';
+    moveForwardExecution(product, avance);
+    
+    var facet = product.getFacet(token);
+
+
+    console.log('Product Colection:[%s]  estado:[%s] nivel_ejecucion:[%s] prioridad:[%s]',product.get('productcode'),product.get('estado_alta'), product.get('nivel_ejecucion'),product.get('nivel_importancia'));
+
+    _.each(facet.get('pendientes'),function(pend,key){
+        console.log('Facet: [%s]: estado:[%s] prioridad:[%s]', key, pend.estado, pend.prioridad);
+
+    });
+
+    product.setFacet(token, facet);
+
+
+  };
+
+
+
   var filterFactory = function (documents){
     var fd = DocManager.Entities.FilteredCollection({
         collection: documents,
@@ -871,8 +1204,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         filterFunction: function(query){
           return function(document){
             var test = true;
-            //console.log('filterfunction:[%s] vs [%s]/[%s]/[%s]',query.tipocomp,document.get("tipocomp"),document.get("cnumber"),(query.tipocomp.indexOf(document.get('tipocomp'))));
             //if((query.tipocomp.trim().indexOf(document.get('tipocomp'))) === -1 ) test = false;
+            //console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.tipoitem,document.get("tipoitem"),document.get("cnumber"));
             if(query.tipoitem && query.tipoitem!=='no_definido') {
               if(query.tipoitem.trim() !== document.get('tipoitem')) test = false;
             }
@@ -958,6 +1291,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
             });
           });
+
+        }else if (dao.docum.isType(item.tipoitem, 'pdiario')){
+            var smodel = new Entities.Comprobante(model.attributes);
+            smodel.id = null;
+            smodel.set({
+              fechagestion: model.get('fecomp'),
+              fechagestion_tc: model.get('fecomp_tc'),
+              tipoitem: item.tipoitem,
+              tipomov: item.activity,
+              product: item.entity,
+              productid: item.entityid,
+              pslug: item.slug,
+              tcomputo: ( (item.feultmod - item.fealta) /1000*60)
+            })
+            itemCol.add(smodel);
+
         }else if (dao.docum.isType(item.tipoitem, 'ptecnico')){
 
           var smodel = new Entities.Comprobante(model.attributes);
@@ -978,7 +1327,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       })
 
     });
-    console.log('returning ItemCol [%s]',itemCol.length)
+    //console.log('returning ItemCol [%s]',itemCol.length)
     return itemCol;
 
   };
@@ -986,10 +1335,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     var products = new DocManager.Entities.ProductCollection();
     products.fetch({success: function() {
       col.each(function(model){
+
         var pr = products.find(function(produ){
           //console.log('testing: [%s] vs [%s] / [%s] [%s]',produ.id, model.get('productid'), produ.get('productcode'),model.get('product'))
           return produ.id===model.get('productid');
         });
+
         if(pr){
           //console.log('pr:[%s] model:[%s]',pr.get('productcode'),model.get('product'));
           var dur = pr.get('patechfacet').durnominal;
@@ -1000,6 +1351,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           model.set({tcomputo: '0'});
         }
       });
+
       if(cb) cb();
     }});
   };
@@ -1093,6 +1445,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       $.when(fetchingDocuments).done(function(documents){
         var filteredDocuments = filterFactory(documents);
+        console.log('getQuery')
         if(criteria){
           filteredDocuments.filter(criteria);
         }

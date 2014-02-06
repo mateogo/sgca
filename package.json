@@ -9,7 +9,8 @@
         "passport": "0.x",
         "passport-local": "0.x",
         "underscore": "1.x",
-        "socket.io": "0.10.x"
+        "backbone": "1.x",
+        //"socket.io": "0.10.x"
     },
     "engines": {
         "node": "0.10.4",

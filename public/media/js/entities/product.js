@@ -139,6 +139,26 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
         );
       }// endif
 
+      if(token === 'editestados'){
+/*
+        if(!self.get('pendientes')){
+          self.initPendientes();
+        }
+
+*/        
+        facet = new Entities.ProductStateFacet({
+              key: 'estado',
+              estado_alta: self.get('estado_alta'),
+              nivel_ejecucion: self.get('nivel_ejecucion'),
+              nivel_importancia: self.get('nivel_importancia'),
+              pendientes: self.get('pendientes'),
+              datatitle: 'Estados',
+              name: token
+        });
+        facet.initPendientes();
+
+      }
+
       if(token === 'curaduria'){
         if(!self.get('curaduria')){
           self.set('curaduria',{});
@@ -184,7 +204,6 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
         );
       }// endif
 
-      console.log('RETURN FACET: [%s] [%s]',facet.get('token'),facet.get('key'));
       return facet;
     },
 
@@ -217,6 +236,13 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
         query.newdata['descripTagList'] = facet.getDescripTagList();
         query.newdata['contentTagList'] = facet.getContentTagList();
 
+
+      }else if(token ==='editestados'){
+        query.newdata['estado_alta'] = facet.get('estado_alta');
+        query.newdata['nivel_ejecucion'] = facet.get('nivel_ejecucion');
+        query.newdata['nivel_importancia'] = facet.get('nivel_importancia');
+        query.newdata.pendientes = facet.get('pendientes');
+        //console.log('SAVING editestados [%s] [%s]', query.newdata.pendientes.qcalidad.cumplido,query.newdata.pendientes.qcalidad.cumplido===true);
 
       }else if(token ==='curaduria'){
         var ndata = facet.retrieveData();
@@ -252,15 +278,15 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
       
  
       console.log('UPDATE: [%s] [%s]', key, token)
-      var update = new Entities.ProductsUpdate();
-      update.fetch({
-        data: query,
-        type: 'post',
+      var update = new Entities.ProductUpdate(query);
+      update.save({
         success: function() {
-          console.log('success!!!!!')
-            if(cb) cb();
         }
       });
+      //log ACTIVITY
+      logActivity(token, self, data);
+      //
+
     },
 
     validate: function(attrs, options) {
@@ -280,6 +306,13 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
         return errors;
       }
     }
+  });
+
+  Entities.ProductUpdate = Backbone.Model.extend({
+    whoami: 'Entities.ProductUpdate:product.js ',
+
+    urlRoot: "/actualizar/productos",
+
   });
 
 
@@ -303,16 +336,6 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
     comparator: "productcode",
   });
 
-  Entities.ProductsUpdate = Backbone.Collection.extend({
-    whoami: 'Entities.ProductsUpdate:product.js ',
-
-    model: Entities.Product,
-
-    url: "/actualizar/productos",
-
-    comparator: "productcode",
-  });
-
   Entities.AssetVideoUrl = Backbone.Model.extend({
     whoami: 'AssetVideoUrl:product.js ',
     urlRoot: "/asset/render/video",
@@ -321,6 +344,153 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
     
   });
 
+  Entities.ProductStateFacet = Backbone.Model.extend({
+      whoami:'ProductTechFacet:product.js',
+      
+      retrieveData: function(){
+          return dao.extractData(this.attributes);
+      },
+
+      process: function(target){
+        if(target.type==='checkbox'){
+          console.log('PROCESS:product ProductStateFacet [%s] [%s] [%s]o[%s]', target.name, target.checked, (target.checked===false), (target.checked===true));
+          this.get('pendientes')[target.name].cumplido = target.checked;
+        }
+
+      },
+
+      togglePendings: function(target){
+        var newstate = this.changeState(this.get('pendientes')[target.name].prioridad);
+        this.get('pendientes')[target.name].prioridad = newstate;
+
+      },
+
+      getButtonType: function(key){
+        return utils.getUrgenciaButtonType(this.get('pendientes')[key].cumplido, this.get('pendientes')[key].prioridad,this.get('pendientes')[key].estado );
+      },
+
+      changeState: function(state){
+        var ind = utils.urgenciaList.indexOf(state)+1;
+        return utils.urgenciaList[((ind < utils.urgenciaList.length) ? ind : 0)];
+      },
+
+
+      //class="btn <%= utils.urgenciaButtonType[value.prioridad] %>"
+      //class="btn-group" data-toggle="buttons"
+      validate: function(attrs, options) {
+        var errors = {}
+/*
+        if (! attrs.productcode) {
+          errors.productcode = "no puede quedar en blanco";
+        }
+        if (! attrs.slug) {
+          errors.slug = "no puede quedar en blanco";
+        }
+        else{
+          if (attrs.denom.length < 2) {
+            errors.denom = "demasiado corto";
+          }
+        }
+        
+        if( ! _.isEmpty(errors)){
+          return errors;
+        }*/
+      },
+      initPendientes: function(){
+        //this.set('pendientes', null) ;
+        this.setPendingsFromExecutionState();
+    
+      },
+
+      setPendingsFromExecutionState: function(){
+        var nejecucion = this.get('nivel_ejecucion');
+        var pendientes = this.get('pendientes');
+        console.log('Nivel de ejecucion: [%s]',nejecucion);
+
+        //validacion-1
+        if(!pendientes){
+          pendientes = {};
+          _.each(utils.papendingsOptionList,function(token){
+            pendientes[token.val] = {
+                    cumplido: false,
+                    prioridad: 'media',
+                    estado:'noaplica'
+            };
+          });
+        }
+        //validacion-2
+        if(true){
+          _.each(utils.papendingsOptionList,function(token){
+            if(!pendientes[token.val]){
+              pendientes[token.val] = {
+                      cumplido: false,
+                      prioridad: 'media',
+                      estado:'noaplica'
+              };
+            }
+            if(!pendientes[token.val].cumplido) pendientes[token.val].cumplido = false;
+            if(!pendientes[token.val].prioridad) pendientes[token.val].prioridad = 'media';
+            if(!pendientes[token.val].estado) pendientes[token.val].estado = 'noaplica';
+          });
+        }
+
+
+        var cumplido = true;
+        //console.log('iterando en paexecutionOptionList')
+        _.each(utils.paexecutionOptionList, function(action){
+           //console.log('PRocessing paexecutionOptionList [%s]', action.pending);
+           if(!(action.pending === 'no_definido')){
+              //console.log('PRocessing paexecutionOptionList [%s]', action.pending);
+   
+              var pendiente = pendientes[action.pending];
+              if(cumplido){
+                pendiente.cumplido = true;
+                pendiente.estado = action.result;
+              }
+
+            }
+            // de acá en más no está cumplida la siguiente etapa
+            if(action.val === nejecucion) cumplido = false;
+        });
+
+        if(nejecucion !== 'no_definido'){
+          this.revisePendingList(pendientes);
+        }
+        this.set('pendientes', pendientes);
+      },
+
+      revisePendingList: function(pendientes){
+        _.each(utils.pendingsDependsOn, function(lista, key){
+          //console.log('revisePendingList: key[%s] lista:[%s]', key, lista)
+          var pendiente = pendientes[key];
+
+          //console.log('Revs PendingList: key:[%s]  cumplido:[%s]', key, pendiente.cumplido);
+          if(!pendiente.cumplido){
+            var required = _.every(lista, function(el){
+              return pendientes[el].cumplido;
+            });
+            //console.log('Revis PendingList Key: [%s] required:[%s]', key, required);
+
+            if(required){
+              pendiente.estado = 'pendiente';
+
+            }else{
+              pendiente.estado = 'noaplica';
+            }
+          }
+        });
+      },
+
+
+      defaults: {
+          estado_alta:'',
+          nivel_ejecucion: '',
+          nivel_importancia: '',
+          pendientes:{},
+          name:"",
+          key:"",
+      }
+  });
 
   Entities.ProductPaisFacet = Backbone.Model.extend({
     //urlRoot: "/comprobantes",
@@ -505,6 +675,7 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
       }
   });
 
+
   Entities.ProductTechFacet = Backbone.Model.extend({
       // ******************* BROWSE PRODUCTS ***************
       whoami:'ProductTechFacet:product.js',
@@ -552,7 +723,39 @@ MediaManager.module("Entities", function(Entities, MediaManager, Backbone, Mario
 
   });
 
+  var logActivity = function(result, product, data){
 
+    var activity = new MediaManager.Entities.Activity({
+        eventname:'user:pdiario',
+        data:{
+            header:{
+            },
+            item:{
+                tipoitem: 'pdiario',
+                slug:'modificación de datos',
+                tipomov: 'visualizacion',
+                activity: 'catalogacion',
+
+                entitytype: 'producto',
+                entity: product.get('productcode'),
+                entitiyid: product.id,
+                
+                docum: 'NONE',
+                documid: null,
+                documslug: null,
+                
+                result: result,
+            },
+        },
+        query:{
+            tipocomp: 'pdiario',
+            tipomov: 'visualizacion',
+            activity: 'catalogacion',
+        }
+    });
+    activity.save();
+
+  };
 
 
   var filterFactory = function (entities){

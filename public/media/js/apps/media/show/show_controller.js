@@ -41,6 +41,7 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
 
       return headers;
   };
+
   var registerLayoutEvents = function(layout){
     layout.on('chapter:serie:toggle', function(op){
       console.log('op layout:[%s]',op);
@@ -171,15 +172,22 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
  
   var renderMediaForm = function(){
     console.log('CURRENT EDITING: [%s]', Show.Session.currentEditing.get('slug'));
+    var mediaView;
 
-    var mediaView = Show.editProduct(Show.Session.currentEditing, Show.Session.currentToken );
+    if(Show.Session.currentToken === 'editestados'){
+      mediaView = Show.editProductState(Show.Session.currentEditing, Show.Session.currentToken );
+
+    }else{
+      mediaView = Show.editProduct(Show.Session.currentEditing, Show.Session.currentToken );
+    }
+
     Show.Session.layout.productRegion.show(mediaView);
 
   };
 
   var getIndexOf = function (id, list){
     for (var i =0; i<list.length;i++){
-      console.log('getIndexOf: [%s] [%s]',list[i].val, id);
+      //console.log('getIndexOf: [%s] [%s]',list[i].val, id);
       if(list[i].val === id) return i;
     }
     return -1;
@@ -191,7 +199,7 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
       var option = {};
       option.val = elem.id;
       option.label = elem.get('slug');
-      console.log('buildOptionsArrayList:[%s] [%s]',option.val, option.label);
+      //console.log('buildOptionsArrayList:[%s] [%s]',option.val, option.label);
       list.push(option);
 
     });

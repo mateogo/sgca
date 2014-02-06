@@ -18,6 +18,21 @@
           <input type="text" class="input-small"  multiple list='ejecucionList' placeholder='estado de alta' id="estado_alta" name="estado_alta" value=<%= estado_alta %> ></li>
       <li><datalist id='nivelimportancia'><%= utils.buildDatalistOptions('nivel_importancia',utils.nivelimportanciaOptionList) %></datalist>
           <input type="text" class="input-small"  multiple list='nivelimportancia' placeholder='nivel de importancia' id="nivel_importancia" name="nivel_importancia" value=<%= nivel_importancia %> ></li>
+
+      <li class="nav-header">Filtro por pendientes</li>
+      <li  style='color:#999999;font-size:11px;font-weight:bold;' >Pendiente
+          <select style="width:130px" class="input-medium" id="pendiente" name="pendiente" 
+                    value="<%= pendiente %>">
+          <%= utils.buildSelectOptions('pendiente<',utils.papendingsOptionList, pendiente) %>
+          </select>
+      </li>
+      <li  style='color:#999999;font-size:11px;font-weight:bold;' >Prioridad
+          <select style="width:130px" class="input-medium" id="prioridad" name="prioridad" 
+                    value="<%= prioridad %>">
+          <%= utils.buildSelectOptions('prioridad',utils.urgenciaOptionList, prioridad) %>
+          </select>
+      </li>
+
     </ul>
   </div><!--/.well side bar -->
 </div><!--/span3 side bar-->

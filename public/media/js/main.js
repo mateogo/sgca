@@ -1,5 +1,5 @@
 utils.loadTemplate(['HomeView', 'HeaderView','MediaShowLayout', 'MediaDataView', 'MediaNavbar',
-    'MediaShowHeadForm', 'SearchEntitiesForm'], function() {
+    'MediaShowHeadForm', 'SearchEntitiesForm', 'MediaShowStateForm'], function() {
 
     $('[data-toggle=offcanvas]').click(function() {
         $('.row-offcanvas').toggleClass('active');

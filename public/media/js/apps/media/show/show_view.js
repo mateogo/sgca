@@ -21,6 +21,15 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
       "click a.js-curaduria": "curaduria",
       "click a.js-produccion": "produccion",
       "click a.js-slug": "slug",
+      "click a.js-editestados": "estado",
+    },
+    estado: function(e){
+      e.preventDefault();
+      var target = e.target;
+      console.log('estado [%s]', this.$(target).data('key'));
+      this.trigger('token:selected', this.$(target).data('key'));
+
+      return false;
     },
 
     slug: function(e){
@@ -96,8 +105,8 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
       e.preventDefault();
       var target = e.target;
       console.log('Realization [%s]', this.$(target).data('key'));
-      this.$(target).button();
-      this.$(target).button('toggle');
+      //this.$(target).button();
+      //this.$(target).button('toggle');
       this.trigger('token:selected', this.$(target).data('key'));
 
       return false;
@@ -107,8 +116,8 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
       e.preventDefault();
       var target = e.target;
       console.log('Realization [%s]', this.$(target).data('key'));
-      this.$(target).button();
-      this.$(target).button('toggle');
+      //this.$(target).button();
+      //this.$(target).button('toggle');
       this.trigger('token:selected', this.$(target).data('key'));
 
       return false;
@@ -163,6 +172,82 @@ MediaManager.module("MediaApp.Show", function(Show, MediaManager, Backbone, Mari
       return url;
     },
   });
+
+
+  Show.StateForm = MediaManager.MediaApp.Common.Views.Form.extend({
+    
+    tagName:'div',
+
+    getTemplate: function(){
+      return utils.templates.MediaShowStateForm;
+    },
+
+    events: {
+        "click .js-pendings": "togglepending",
+    
+    },
+
+    togglepending: function(event){
+        var target = event.target;
+        console.log('Button Pendings: [%s] [%s]',target.type, target.id)
+        var btnstate = this.model.togglePendings(target);
+
+        this.trigger("form:change", target.name, target.value);
+        this.changeButton(target.name)
+
+    },
+
+    changeButton: function(key){
+      console.log('ChangeButton!');
+      var btnclass = this.model.getButtonType(key);
+      this.$('#'+key).toggleClass('btn-info btn-success btn-warning btn-danger btn-default disabled', false);
+      this.$('#'+key).toggleClass(btnclass, true);
+    },
+
+    initialize: function(options){
+      var self = this;
+      this.events = _.extend({},this.formevents,this.events);
+      this.delegateEvents();
+    },
+ 
+  });
+
+  Show.editProductState = function(product, token){
+        console.log('EditProductState [%s] [%s]',product.get('slug'),token);
+        var self = this,
+            facet = product.getFacet(token);
+        
+        var mediaView = new Show.StateForm({
+          model:facet,
+        });
+
+        mediaView.on('form:change',function(name, value){
+          console.log('Form Change: [%s] [%s]', name, value);
+          if(facet.get('name')==='editestados'){
+            if(name==='nivel_ejecucion'){
+              console.log('ATENCION CAMBIO NIVEL EJECUCION')
+              facet.setPendingsFromExecutionState();
+              mediaView.render();
+            }
+
+            product.setFacet(facet.get('name'),facet);
+          }
+
+          if(!(name==='estado_alta'|| name==='nivel_ejecucion' || name==='nivel_importancia')){
+            mediaView.changeButton(name);
+          }
+        });
+
+        mediaView.on('form:close',function(name,value){
+          console.log('gotITTTTTTTTTTTTTTTTT');
+          if(facet.get('name')==='editestados'){
+            product.setFacet(facet.get('name'),facet);
+          }
+        });
+
+        return mediaView;
+  };
+
 
   Show.editProduct = function(product, token){
         console.log('EditProduct [%s] [%s]',product.get('slug'),token);

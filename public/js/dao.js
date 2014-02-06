@@ -3,10 +3,11 @@ window.dao = {
     whoami:'daoutils',
 
     docum: {
-        actualList:['nrecepcion','npedido', 'nentrega', 'ptecnico', 'pemision'],
+        actualList:['nrecepcion','npedido', 'nentrega', 'ptecnico', 'pemision', 'pdiario'],
         ptecnico:['ptecnico'],
         notas:['nrecepcion','npedido', 'nentrega'],
         pemision: ['pemision'],
+        pdiario: ['pdiario'],
 
         isType: function(comp, type){
             return (this[type].indexOf(comp) !== -1 ? true : false);
@@ -23,6 +24,10 @@ window.dao = {
             }
             if(this.pemision.indexOf(comp) !== -1){
                 data.tipoemis = 'tda';
+                return data;
+
+            }
+            if(this.pdiario.indexOf(comp) !== -1){
                 return data;
 
             }

@@ -138,7 +138,7 @@ var buildUpdateData = function(data){
 }
 
 exports.partialupdate = function(req, res) {
-    var id = req.params.id;
+
     var data = req.body;
     var query = buildTargetNodes(data);
     var update = buildUpdateData(data);
@@ -153,7 +153,7 @@ exports.partialupdate = function(req, res) {
             res.send({error: MSGS[0] + err});
         } else {
             console.log('UPDATE: partial update success [%s] nodos',result);
-            res.send(result);
+            res.send({result: result});
         }
     })
 };
@@ -239,39 +239,77 @@ exports.findById = function(req, res) {
 
 exports.find = function(req, res) {
     var query = req.body; //{};
-    //OjO con esto MGO
-    if(query.es_capitulo_de){
-        if(query.es_capitulo_de==='false') query.es_capitulo_de={$exists:false};
-    }
-    
-    /*
-    console.log('**********find:product Retrieving product collection with query');
-    for(var key in query){
-        console.log('loop: [%s][%s]',key,query[key]['$exists']);
-        var ob = query[key];
-        for (var k2 in ob){
-            console.log('s-loop: [%s] [%s]',k2,ob[k2]);
-        }
-    }
-    */
-    
-    //console.log('find: Retrieving query1:[%s]',((query.project)?query.project._id:'null'));
-    //console.log('find:product Retrieving query:',((query.es_capitulo_de) ? query['es_capitulo_de.product']:'nada'));
-    //console.log('**********find:product Retrieving product collection with query');
-    //var qu = {};
-    //var pr = {product:'522f7581992f753b09000001',capnum:{$gt:0}} ;
-    //var pr = {product:'522f7581992f753b09000001',capnum:2} ;
-    //var elmatch = {'$elemMatch': {'product': '522f7581992f753b09000001'}};
-    //var qu= {'es_capitulo_de':{$exists:false}};
-
-    //console.log('qu: [%s]',qu.es_capitulo_de.product);
+    query = normaliseQuery(query);
+         
+    //res.send(query);
 
     dbi.collection(productsCol, function(err, collection) {
         collection.find(query).sort({slug:1}).toArray(function(err, items) {
             res.send(items);
         });
     });
+
+
 };
+
+var pends = [
+    {query: 'pendiente_qcalidad',     key: 'qcalidad'},
+    {query: 'pendiente_recepcion',    key: 'recepcion'},
+    {query: 'pendiente_ingreso',      key: 'ingreso'},
+    {query: 'pendiente_catalogacion', key: 'catalogacion'},
+    {query: 'pendiente_aprobacion',   key: 'aprobacion'},
+    {query: 'pendiente_ingesta',      key: 'ingesta'},
+];
+
+var normaliseQuery = function(query){
+    //OjO con esto MGO
+    if(query.es_capitulo_de){
+        if(query.es_capitulo_de==='false') query.es_capitulo_de={$exists:false};
+    }
+
+    if(query.productcode){
+        delete query.es_capitulo_de;
+    }
+
+    if(query.pendiente){
+        var prioridad = query.prioridad || 'no_requerido';
+        var base = 'pendientes.'+query.pendiente+'.';
+        if(prioridad !== 'no_requerido'){
+            delete query.es_capitulo_de;
+            query[base+'estado'] = 'pendiente';
+            if(prioridad!=='todas'){
+                query[base+'prioridad'] = prioridad;
+            }
+        }
+
+    }
+    
+    delete query.pendiente;
+    delete query.prioridad;
+
+/*    for (var i =0 ; i<pends.length; i+=1 ){
+        if(query[pends[i].query]) {
+            var request = query[pends[i].query];
+            delete query[pends[i].query];
+
+            if(request !== 'no_requerido'){
+                var pestado = 'pendientes.'+pends[i].key+'.estado';
+                var purgencia = 'pendientes.'+pends[i].key+'.urgencia';
+                delete query.es_capitulo_de;
+                if(request === 'todas'){
+                    query[pestado] = 'true';
+                }else{
+                    query[pestado] = 'true';
+                    query[purgencia] = request;
+                }
+            }
+
+        }
+    }
+*/
+    return query;
+};
+
 
 exports.findAll = function(req, res) {
     console.log('findAll: Retrieving all instances of [%s] collection', productsCol);

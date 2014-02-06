@@ -152,4 +152,11 @@ exports.moveFile = function(req, res, rootPath){
     });
 };
 
+exports.dateToStr = function(date) {
+    var prefix = '00';
 
+    var da = (prefix+date.getDate()).substr(-prefix.length);
+    var mo = (prefix+(date.getMonth()+1)).substr(-prefix.length);
+    var ye = date.getFullYear();
+    return da+"/"+mo+"/"+ye;
+};

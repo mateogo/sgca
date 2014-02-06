@@ -9,6 +9,14 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       var fetchingDocument = DocManager.request("document:entity", id);
      
       $.when(fetchingDocument).done(function(document){
+
+        // Es editable?
+        if(document.get('tipocomp')==='pdiario'){
+          return;
+        }
+        // End: Es editable?
+
+
         Edit.Session = {};
     
         Edit.Session.model = document;
@@ -43,7 +51,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     view.on('itemview:item:edit',function(childView, itemmodel){
       console.log('ITEM EDIT BEGINS:[%s] - [%s]',itemmodel.get('tipoitem'),itemmodel.whoami);
 
-      //if(itemmodel.get('tipoitem')==='ptecnico'){
       if(true){
         var itemlayout = new Edit.ItemLayout();
         var itemheader = new Edit.ItemHeader({

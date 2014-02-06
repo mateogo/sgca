@@ -888,6 +888,22 @@ window.Product = Backbone.Model.extend({
         this.validators.tipoproducto = function (value) {
             return (value.length > 0 && value!=='nodefinido') ? {isValid: true} : {isValid: false, message: "Indique una tipo de producto"};
         };
+
+
+        this.viewers.pendientes = function (list){
+            //console.log('yes yes YESSSSSSSSSSS [%s]',list)
+            if(!list) return '';
+            var keys = _.keys(list);
+            return  _.reduce(keys,function(memo, item){
+                if(list[item].estado === 'pendiente'){
+                    //return memo + "<button class='btn btn-mini "+utils.urgenciaButtonType[list[item].prioridad]+"' >"+item+"</button>";
+                    return memo + "<span style='"+utils.urgenciaTextColor[list[item].prioridad]+"' >" + utils.papendingsLabels[item] + " </span>";
+                }else{
+                    return memo;
+                }
+            },'');
+        };
+
     },
 
     validateItem: function (key) {
@@ -1660,6 +1676,14 @@ window.BrowseProductsQuery = Backbone.Model.extend({
         //this.set({prjdenom: (denom||'')});
         utils.viewData.currentProject = denom;
     },
+/*
+      <li>Pendiente: PTécnico<br>
+          <select class="input-medium" id="pendiente_ptecnico" name="pendiente_ptecnico" 
+                    value="<%= pendiente_ptecnico %>">
+                    <%= utils.buildSelectOptions('urgencia',utils.urgenciaOptionList, pendiente_ptecnico) %>
+      </li>
+
+*/    
 
     defaults: {
         project:{},
@@ -1677,6 +1701,8 @@ window.BrowseProductsQuery = Backbone.Model.extend({
         rubro:'',
         responsable:'',
         contraparte:'',
+        pendiente: 'recepcion',
+        prioridad:'no_requerido',
     }
 });
 

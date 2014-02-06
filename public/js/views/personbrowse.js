@@ -242,7 +242,6 @@ window.PersonTableLayoutView = Backbone.View.extend({
     },
 
     resetselection: function (event) {
-        //utils.buildDatalistOptions('nivel_ejecucion',utils.paexecutionOptionList,'planificado');
         dao.personsQueryData().setProject('','proyecto no seleccionado');
         utils.approuter.browsePersons();
     },

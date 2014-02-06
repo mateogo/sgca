@@ -251,7 +251,6 @@ window.ProductListLayoutView = Backbone.View.extend({
     },
 
     resetselection: function (event) {
-        //utils.buildDatalistOptions('nivel_ejecucion',utils.paexecutionOptionList,'planificado');
         dao.productsQueryData().setProject('','proyecto no seleccionado');
         utils.approuter.browseProducts();
     },

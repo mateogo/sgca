@@ -325,5 +325,9 @@ module.exports = function (config, app) {
     app.post('/comprobantes',           receipt.add);
     app.put ('/comprobantes/:id',       receipt.update);
     app.delete('/comprobantes/:id',     receipt.delete);
+
+    // activity (actividades - partes diarios) routes
+    var activity = require(rootPath + '/calendar/controllers/activities');
+    app.post ('/activities/controller',           activity.controller);
  
 };

@@ -156,6 +156,7 @@ window.utils = {
         {val:'nentrega'       , label:'N/Entrega'},
         {val:'npedido'        , label:'N/Pedido'},
         {val:'pemision'       , label:'P/Emisión'},
+        {val:'pdiario'        , label:'P/Diario'},
     ],
 
     paOptionList: [
@@ -299,6 +300,20 @@ window.utils = {
         {val:'noppedido'    , label:'------  P E D I D O S  ------'},
         {val:'reqadherente' , label:'Requerimiento de adherente'},
     ],
+ 
+    tipomovpdiarioOptionList: [
+        {val:'no_definido'    , label:'Tipo de movimiento'},
+        {val:'recepcion'      , label:'Recepción Producto Audiovisual'},
+        {val:'tecnica'        , label:'Técnica'},
+        {val:'ptecnico'       , label:'Parte Técnico'},
+        {val:'visualizacion'  , label:'Visualización'},
+    ],
+
+    tipoactividadOptionList: [
+        {val:'no_definido'    , label:'Tipo de movimiento'},
+        {val:'catalogacion'   , label:'Catalogación'},
+        {val:'verificacion'   , label:'Visualización'},
+    ],
     
     tipomovqueryOptionList: [
         {val:'no_definido'  , label:'Tipo de movimiento'},
@@ -367,6 +382,7 @@ window.utils = {
         {val:'nentrega'       , label:'N/Entrega'},
         {val:'npedido'        , label:'N/Pedido'},
         {val:'pemision'       , label:'P/Emisión'},
+        {val:'pdiario'        , label:'P/Diario'},
      ],
     
     userGroupsOptionList:[
@@ -655,11 +671,11 @@ window.utils = {
     ],
 
     estadoaltaOptionList:[
-        {val:'activo',     label:'activo'},
+        {val:'activo',       label:'activo'},
         {val:'distribucion', label:'activo p/distribución'},
-        {val:'suspendido', label:'suspendido'},
-        {val:'cerrado',    label:'cerrado'},
-        {val:'baja',       label:'baja'},
+        {val:'suspendido',   label:'suspendido'},
+        {val:'cerrado',      label:'cerrado'},
+        {val:'baja',         label:'baja'},
     ],
 
     emphasisDocumOptionList:[
@@ -671,6 +687,39 @@ window.utils = {
         {val:'cumplido'  , label:'text-muted'},
         {val:'suspendido', label:'text-muted'},
         {val:'anulado'   , label:'text-muted'},
+    ],
+
+    getUrgenciaButtonType: function(cumplido, prioridad, estado){
+        if(cumplido) return 'disabled';
+        if(estado==='noaplica'|| estado === 'ok' || estado === 'failed') return 'disabled';
+
+        return this.urgenciaButtonType[prioridad];
+    },
+
+    urgenciaButtonType:{
+        baja:     'btn-info',
+        media:    'btn-success',
+        alta:     'btn-warning',
+        urgente:  'btn-danger',
+    },
+
+    urgenciaTextColor:{
+        //primary: 006dcc
+        baja:     'color:#3a87ad;', // 
+        media:    'color:#468847;', //#468847;
+        alta:     'color:#c09853;', //  color: #c09853; #faa732
+        urgente:  'color:#da4f49;', // da4f49
+    },
+
+    urgenciaList:['baja', 'media', 'alta', 'urgente'],
+
+    urgenciaOptionList:[
+        {val:'no_requerido',  label:'No requerida'},
+        {val:'todas'     , label:'Todas'},
+        {val:'baja'      , label:'Baja'},
+        {val:'media'     , label:'Media'},
+        {val:'alta'      , label:'Alta'},
+        {val:'urgente'   , label:'Urgente'},
     ],
     
     estadodocumOptionList: [
@@ -709,18 +758,82 @@ window.utils = {
         {val:'catalogo',     label:'Catálogo BACUA'},
     ],
 
-    paexecutionOptionList:[
-        {val:'no_definido', label:'-nivel de ejecución-'},
-        {val:'planificado', label:'planificado'},
-        {val:'gestion',     label:'en gestión'},
-        {val:'recibido',    label:'recibido'},
-        {val:'ingestado',   label:'ingestado'},
-        {val:'controlado',  label:'controlado'},
-        {val:'observado',   label:'observado'},
-        {val:'rechazado',   label:'rechazado'},
-        {val:'archivado',   label:'archivado'}
+    paimportanciaOptionList:[
+        {val:'no_definido',  label:'Nivel de relevancia'},
+        {val:'baja'      , label:'Baja'},
+        {val:'media'     , label:'Media'},
+        {val:'alta'      , label:'Alta'},
+        {val:'urgente'   , label:'Urgente'},
+    ],
+    paexecutionOrderList:[
+        'no_definido',
+        'planificado',
+        'gestion',
+        'recibido',
+        'chequeado',
+        'qcalidad',
+        'catalogacion',
+        'observado',
+        'rechazado',
+        'aprobado',
+        'preservado', 
+        'requisicion',
+        'distribucion',
+        'emision',
     ],
 
+    paexecutionOptionList:[
+        {val:'no_definido', label:'-nivel de ejecución-', pending: 'no_definido', result:'ok'},
+        {val:'planificado', label:'planificado',  pending: 'no_definido',    result:'ok'},
+        {val:'gestion',     label:'en gestión',   pending: 'no_definido',    result:'ok'},
+        {val:'recibido',    label:'recibido',     pending: 'recepcion',    result:'ok'},
+        {val:'chequeado',   label:'chequeado',    pending: 'chequeo',      result:'ok'},
+        {val:'qcalidad',    label:'ctrl calidad', pending: 'qcalidad',     result:'ok'},
+        {val:'catalogacion',label:'catalogacion', pending: 'catalogacion', result:'ok'},
+        {val:'observado',   label:'observado',    pending: 'aprobacion',   result:'failed'},
+        {val:'rechazado',   label:'rechazado',    pending: 'aprobacion',   result:'failed'},
+        {val:'aprobado',    label:'aprobado',     pending: 'aprobacion',   result:'ok'},
+        {val:'preservado',  label:'preservado',   pending: 'preservacion', result:'ok'},
+        {val:'requisicion', label:'requisición',  pending: 'requisicion',  result:'ok'},
+        {val:'distribucion',label:'distribución', pending: 'distribucion', result:'ok'},
+        {val:'emision',     label:'emisión',      pending: 'emision',      result:'ok'},
+     ],
+
+    papendingsOptionList:[
+        {val:'recepcion',    label:'Recepción'},
+        {val:'chequeo',      label:'Chequeo'},
+        {val:'qcalidad',     label:'CtrlCalidad'},
+        {val:'catalogacion', label:'Catalog'},
+        {val:'aprobacion',   label:'Aprobación'},
+        {val:'preservacion', label:'Preservacion'},
+        {val:'requisicion',  label:'Requisición'},
+        {val:'distribucion', label:'Distribución'},
+        {val:'emision',      label:'Emisión'},
+    ],
+
+    papendingsLabels:{
+        recepcion:    'Recepción',
+        chequeo:      'Chequeo',
+        qcalidad:     'CtrlCalidad',
+        catalogacion: 'Catalog',
+        aprobacion:   'Aprobación',
+        preservacion: 'Preservacion',
+        requisicion:  'Requisición',
+        distribucion: 'Distribución',
+        emision:      'Emisión',
+    },
+
+    pendingsDependsOn:{
+        recepcion:[],
+        chequeo: ['recepcion'],
+        qcalidad: ['recepcion'],
+        catalogacion: ['recepcion', 'chequeo'],
+        aprobacion: ['recepcion', 'chequeo', 'qcalidad'],
+        preservacion: ['recepcion', 'chequeo', 'qcalidad'],
+        requisicion: ['aprobacion'],
+        distribucion: ['aprobacion'],
+        emision: ['distribucion'],
+    },
     //pageneros:['animacion', 'biografia', 'curso', 'ficcion', 'docuficcion', 'documental', 'entretenimiento', 'entrevistas', 'telenovela', 'reality', 'recital', 'periodistico', 'noticiero',],
     generoOptionList:[
         {val:'nodefinido',   label:'Género'},
@@ -1054,8 +1167,9 @@ window.utils = {
         {val:'ptecnico'    , label:'Parte Técnico: '},
         {val:'nentrega'    , label:'Nota de Entrega: '},
         {val:'nrecepcion'  , label:'Nota de Recepción: '},
-        {val:'npedido'     , label:'Nota de Pedido'},
+        {val:'npedido'     , label:'Nota de Pedido: '},
         {val:'pemision'    , label:'Parte de Emisión: '},
+        {val:'pdiario'     , label:'Parte Diario: '},
     ],
     clasificationSch: [
         {val:'genero'        , label:'Género:'},
@@ -1138,8 +1252,9 @@ window.utils = {
         {id:3, tt:'th', flag:1, tclass:'col3', tmpl: 'template1', val:'slug',              label:'denominación'},
         {id:4, tt:'th', flag:0, tclass:'col4', tmpl: 'template1', val:'project',           label:'proyecto'},
         {id:5, tt:'th', flag:1, tclass:'col5', tmpl: 'template1', val:'nivel_ejecucion',   label:'ejecución'},
-        {id:6, tt:'th', flag:1, tclass:'col6', tmpl: 'template1', val:'nivel_importancia', label:'importancia'},
-        {id:7, tt:'th', flag:1, tclass:'col7', tmpl: 'template4', val:'acciones',          label:'acciones'}
+        {id:6, tt:'th', flag:0, tclass:'col6', tmpl: 'template1', val:'nivel_importancia', label:'importancia'},
+        {id:7, tt:'th', flag:1, tclass:'col7', tmpl: 'template1', val:'pendientes',        label:'pendientes'},
+        {id:8, tt:'th', flag:1, tclass:'col8', tmpl: 'template4', val:'acciones',          label:'acciones'}
     ],
 
     documListTableHeader:[
