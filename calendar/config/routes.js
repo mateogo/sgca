@@ -21,8 +21,8 @@ module.exports = function (config, app) {
 
     app.post('/login',
         passport.authenticate('local', {failureRedirect:'/login'}), function(req, res){
-            //console.log("/login [%s]", req.user.username);
-            //console.log('AUTHENTICATE OK!!!![%s] [%s]', req, res)
+            console.log("/login [%s] [%s]", req.user.username, utils.anywModule());
+            console.log('AUTHENTICATE OK!!!![%s] [%s]', req, res)
             res.redirect(utils.userHome(req.user));
     });
 
@@ -87,7 +87,7 @@ module.exports = function (config, app) {
     });
 
     app.get('/background/img', function(req,res,next){
-        //console.log("/files:routes.js ");
+        console.log("/files:routes.js ");
         res.redirect(utils.getBgImage());
     });
 
@@ -326,8 +326,31 @@ module.exports = function (config, app) {
     app.put ('/comprobantes/:id',       receipt.update);
     app.delete('/comprobantes/:id',     receipt.delete);
 
+    // report (reportes) routes
+    var report = require(rootPath + '/calendar/controllers/reports');
+    app.get('/reportes', report.findAll);
+    app.post('/recuperar/reportes', report.find);
+    app.post('/navegar/reportes', report.find);
+    app.post('/reporte/fetch',  report.findOne);
+    app.get('/reportes/:id', report.findById);
+    app.post('/reportes', report.add);
+    app.put('/reportes/:id', report.update);
+    app.delete('/reportes/:id', report.delete);
+
     // activity (actividades - partes diarios) routes
     var activity = require(rootPath + '/calendar/controllers/activities');
     app.post ('/activities/controller',           activity.controller);
- 
+
+
+    // anyw (studio) routes
+    var anyw = require(rootPath + '/calendar/controllers/anyw');
+    app.get('/studio/login', anyw.login);
+    app.get('/studio/productions', anyw.findAllProductions);
+    app.get('/studio/producciones/:id', anyw.findById);
+    app.post('/studio/producciones', anyw.add);
+    app.post('/studio/entities', anyw.fetchEntities);
+    app.post('/studio/createentities', anyw.createEntities);
+    app.put('/studio/createentities', anyw.updateEntities);
+    app.post('/studio/pushsession', anyw.pushSession);
+    app.post('/studio/ingest', anyw.ingest);
 };

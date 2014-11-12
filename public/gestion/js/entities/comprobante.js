@@ -27,6 +27,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           documitems = [];
 
       this.set({fealta:fealta.getTime(), fecomp: fecomp});
+      console.log('alo!!!!!!!!!!!!!!!!!!!!! [%s][%s]', this.get('tipocomp'),dao.docum.isType(this.get('tipocomp'), 'nsolicitud'));
 
       if(dao.docum.isType(this.get('tipocomp'), 'ptecnico')){
           var ptecnico = new Entities.DocumParteTecnico();
@@ -37,6 +38,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               estado_qc: dao.docum.initval(this.get('tipocomp')).estado_qc,
           });
           documitems.push(ptecnico.attributes);
+          this.set({items: documitems});
+
+      } else if(dao.docum.isType(this.get('tipocomp'), 'nsolicitud')){
+        console.log('alo!!!!!!!!!!!!!!!!!!!!!')
+
+          var parte = new Entities.DocumMovimSO();
+          parte.set({
+              tipoitem: this.get('tipocomp'),
+              slug: this.get('slug'),
+              //tipomov: dao.docum.initval(this.get('tipocomp')).tipomov,
+          });
+          documitems.push(parte.attributes);
           this.set({items: documitems});
       } else if(dao.docum.isType(this.get('tipocomp'), 'pemision')){
           var parte = new Entities.DocumParteEM();
@@ -122,6 +135,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       nrecepcion:{
         initNew: function(self, attrs){
           var item = new Entities.DocumMovimRE(attrs);
+          return item;
+        }
+      },
+      nsolicitud:{
+        initNew: function(self, attrs){
+          var item = new Entities.DocumMovimSO(attrs);
           return item;
         }
       },
@@ -250,6 +269,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     var model;
     if(attrs.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnico(attrs);
     if(attrs.tipoitem==='nrecepcion') model = new Entities.DocumMovimRE(attrs);
+    if(attrs.tipoitem==='nsolicitud') model = new Entities.DocumMovimSO(attrs);
     if(attrs.tipoitem==='nentrega')   model = new Entities.DocumMovimRE(attrs);
     if(attrs.tipoitem==='npedido')    model = new Entities.DocumMovimRE(attrs);
     if(attrs.tipoitem==='pemision')   model = new Entities.DocumParteEM(attrs);
@@ -500,6 +520,104 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 // fin Movim Recepcion entrega
 
+  /*
+   * ******* Movim Solicitud de municipios +**********
+   */
+  Entities.DocumMovimSO = Backbone.Model.extend({
+    whoami: 'DocumMovimSO:comprobante.js ',
+
+    validate: function(attrs, options) {
+      //if(!attrs) return;
+      var errors = {}
+      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
+
+      if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
+        errors.tipocomp = "No puede ser nulo";
+      }
+      if (_.has(attrs,'slug') && ! attrs.slug) {
+        errors.slug = "No puede ser nulo";
+      }
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+
+    insertItemCollection: function(itemCol) {
+        var self = this;
+        console.log('INSERT ITEM COLLECTION!!!!!!!!!!!');
+        self.set({items: itemCol.toJSON()});
+    },
+
+    getItems: function(){
+      var itemCol = new Entities.MovimSOItems(this.get('items'));
+      return itemCol;
+    },
+
+    initNewItem: function(){
+      return new Entities.DocumMovimSOItem();
+    },
+
+    productSelected: function(pr){
+      // fetching a product success. 
+
+    },
+
+    defaults: {
+      tipoitem: "",
+      slug: "",
+      tipomov: "",
+      tipo_evento: "",
+      devento: "",
+      fevento: "",
+      leyendafecha: "",
+      lugar: "",
+      airelibre: "",
+      provevento: "",
+      locevento: "",
+      cpevento: "",
+      nsolicitante: "",
+      esolicitante: "",
+      tsolicitante: "",
+      ntecnico: "",
+      etecnico: "",
+      ttecnico: "",
+
+      items:[]
+    },
+
+  });
+
+  Entities.DocumMovimSOItem = Backbone.Model.extend({
+    whoami: 'DocumMovimSOItem:comprobante.js ',
+
+ 
+    validate: function(attrs, options) {
+      var errors = {}
+
+      if (_.has(attrs,'product') && (!attrs.product )) {
+        errors.pticaso = "No puede ser nulo";
+      }
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+
+    defaults: {
+      product: '',
+      pslug:'',
+      comentario: '',
+      durnominal:'',
+    },
+  });
+
+  Entities.MovimSOItems = Backbone.Collection.extend({
+    whoami: 'Entities.MovimSOItems:comprobante.js ',
+    model: Entities.DocumMovimSOItem,
+    comparator: "product",
+  });
+
+// fin Movim Recepcion entrega
   /*
    * ******* Parte de Emisión +**********
    */
@@ -772,6 +890,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     var model;
     if(options.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnicoItem(attrs);
     if(options.tipoitem==='nrecepcion') model = new Entities.DocumMovimREItem(attrs);
+    if(options.tipoitem==='nsolicitud') model = new Entities.DocumMovimSOItem(attrs);
     if(options.tipoitem==='nentrega')   model = new Entities.DocumMovimREItem(attrs);
     if(options.tipoitem==='npedido')    model = new Entities.DocumMovimREItem(attrs);
     if(options.tipoitem==='pemision')   model = new Entities.DocumParteEMItem(attrs);
@@ -875,6 +994,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     createNewDocument: function(cb){
       var self = this;
       var docum = new Entities.Comprobante(self.attributes);
+
+      console.log('CREATENEW DOCUMENT!!!!!!!!!!!')
 
       docum.initBeforeCreate();
 
@@ -1011,6 +1132,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
                 changeREState(product, item);
             }});
         
+          }else if(item.get('tipoitem')==='nsolicitud' && item.get('tipomov')==='municipio' ){
+            console.log('Procesando NSOLICITUD - movimiento: MUNICIPIO')
+            var product = new DocManager.Entities.Product({_id: prid});
+
+            product.fetch({success: function(model){
+                changeRSState(product, item);
+            }});
+
           }else if(item.get('tipoitem')==='nentrega' && item.get('tipomov')==='distribucion' ){
             console.log('Procesando NENTREGA - movimiento: DISTRIBUCION')
             var product = new DocManager.Entities.Product({_id: prid});
@@ -1205,7 +1334,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           return function(document){
             var test = true;
             //if((query.tipocomp.trim().indexOf(document.get('tipocomp'))) === -1 ) test = false;
-            //console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.tipoitem,document.get("tipoitem"),document.get("cnumber"));
+            console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.tipoitem,document.get("tipoitem"),document.get("cnumber"));
             if(query.tipoitem && query.tipoitem!=='no_definido') {
               if(query.tipoitem.trim() !== document.get('tipoitem')) test = false;
             }
@@ -1223,6 +1352,31 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             }
 
             if(test) return document;
+          }
+        }
+    });
+    return fd;
+  };
+
+  var reportQueryFactory = function (reports){
+    var fd = DocManager.Entities.FilteredCollection({
+        collection: reports,
+
+        filterFunction: function(query){
+          return function(report){
+            var test = true;
+            //if((query.tipocomp.trim().indexOf(report.get('tipocomp'))) === -1 ) test = false;
+            //console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.tipoitem,report.get("tipoitem"),report.get("cnumber"));
+
+            if(query.estado) {
+              if(query.estado.trim() !== report.get('estado_alta')) test = false;
+            }
+
+            if(query.slug){
+              if(utils.fstr(report.get("pslug").toLowerCase()).indexOf(utils.fstr(query.slug)) === -1 && report.get("cnumber").toLowerCase().indexOf(query.slug.toLowerCase()) === -1) test = false;
+            }
+
+            if(test) return report;
           }
         }
     });
@@ -1331,6 +1485,139 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     return itemCol;
 
   };
+  
+  var isValidDocum = function(docum, query){
+    if(query.tcompList.indexOf(docum.get('tipocomp')) === -1) return false;
+    return true;
+  };
+
+  var isValidNota = function(docum,item, query){
+    if(query.tcompList.indexOf(docum.get('tipocomp')) === -1) return false;
+    if(query.tmovList[docum.get('tipocomp')].indexOf(item.tipomov) === -1) return false;
+    if(query.fedesde > docum.get('fecomp_tc')) return false;
+    if(query.fehasta < docum.get('fecomp_tc')) return false;
+    return true;
+  };
+  var isValidPE = function(reportItem, query){
+    if(query.tcompList.indexOf(reportItem.get('tipocomp')) === -1) return false;
+    if(query.fedesde > reportItem.get('fechagestion_tc')) return false;
+    if(query.fehasta < reportItem.get('fechagestion_tc')) return false;
+    return true;
+  };
+  var isvalidPT = function(reportItem, query){
+    if(query.tcompList.indexOf(reportItem.get('tipocomp')) === -1) return false;
+    if(query.fedesde > reportItem.get('fechagestion_tc')) return false;
+    if(query.fehasta < reportItem.get('fechagestion_tc')) return false;
+    return true;
+  };
+
+
+  var fetchReportItems = function(docum, query, reportCol){
+      var items = docum.get('items');
+      //console.log('Iterando doc:[%s] itmes[%s]',docum.get('cnumber'),docum.get('tipocomp'),items.length);
+ 
+      _.each(items, function(item){
+        if(dao.docum.isType(item.tipoitem, 'notas')){
+          if(isValidNota(docum,item, query)){
+            var sitems = item.items;
+            _.each(sitems, function(sitem){
+              var reportItem = new Entities.ReportItem();
+              reportItem.set({
+                fechagestion: docum.get('fecomp'),
+                fechagestion_tc: docum.get('fecomp_tc'),
+                tipocomp: docum.get('tipocomp'),
+                tipoitem: item.tipoitem,
+                cnumber: docum.get('cnumber'),
+                documid: docum.id,
+                tipomov: item.tipomov||item.tipoitem,
+                product: sitem.product,
+                productid: sitem.productid,
+                pslug: sitem.pslug,
+                tcomputo: sitem.durnominal,
+                persona: docum.get('persona'),
+                personaid: docum.get('personaid'),
+                estado_alta: 'alta',
+              });
+
+              reportCol.add(reportItem);
+            });
+          }
+
+        }else if (dao.docum.isType(item.tipoitem, 'pemision')){
+          var sitems = item.items;
+          _.each(sitems, function(sitem){
+            var emisiones = sitem.emisiones;
+            _.each(emisiones, function(emision){
+              var feg = utils.addOffsetDay(item.fedesde_tc,emision.dayweek);
+              var reportItem = new Entities.ReportItem();
+              reportItem.set({
+                fechagestion: feg.date,
+                fechagestion_tc: feg.tc,
+                tipocomp: docum.get('tipocomp'),
+                tipoitem: item.tipoitem,
+                cnumber: docum.get('cnumber'),
+                documid: docum.id,
+                tipomov: item.tipoitem,
+                product: sitem.product,
+                productid: sitem.productid,
+                pslug: sitem.pslug,
+                tcomputo: sitem.durnominal,
+                persona: docum.get('persona'),
+                personaid: docum.get('personaid'),
+                estado_alta: 'alta',
+              });
+
+              if(isValidPE(reportItem, query)){
+                reportCol.add(reportItem);
+              }
+
+            });
+          });
+
+        }else if (dao.docum.isType(item.tipoitem, 'ptecnico')){
+          var reportItem = new Entities.ReportItem();
+          reportItem.set({
+            fechagestion: item.fept,
+            fechagestion_tc: item.fept_tc,
+            tipocomp: docum.get('tipocomp'),
+            tipoitem: item.tipoitem,
+            cnumber: docum.get('cnumber'),
+            documid: docum.id,
+            tipomov: item.estado_qc,
+            product: item.product,
+            productid: item.productid,
+            pslug: item.pslug,
+            tcomputo: item.durnominal,
+            persona: docum.get('persona'),
+            personaid: docum.get('personaid'),
+            estado_alta: 'alta',
+          });
+
+          if(isvalidPT(reportItem, query)){
+            reportCol.add(reportItem);
+          }
+
+        }
+      })
+
+  };
+
+  var buildReportItemList = function(documents, query){
+    var itemCol = new Entities.ReportItemCollection();
+    documents.each(function(model){
+      if(isValidDocum(model, query)){
+        fetchReportItems(model, query, itemCol);
+      }
+
+    });
+
+
+    //console.log('returning ItemCol [%s]',itemCol.length)
+    return itemCol;
+
+  };
+
+
   var fetchProductDuration = function(col, cb){
     var products = new DocManager.Entities.ProductCollection();
     products.fetch({success: function() {
@@ -1497,8 +1784,65 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               if(cb) cb(comprobantes.at(0));
           }
       });
+    },
+
+    buildReportData: function(report, cb){
+      console.log('buildReportData, ready to BEGIN');
+      var query = getQueryParameters(report);
+      //console.dir(query);
+
+
+      var fetchingDocuments = queryCollection(query);
+
+      $.when(fetchingDocuments).done(function(documents){
+        console.log('Documents  FETCHED [%s]',documents.length);
+        var docitems = buildReportItemList(documents, query);
+        console.log('Docu items FETCHED [%s]',docitems.length);
+
+        var filteredDocuments = reportQueryFactory(docitems);
+        if(query){
+          filteredDocuments.filter(query);
+        }
+        console.log('Docu Items FILTERED [%s]',filteredDocuments.length);
+
+        fetchProductDuration(filteredDocuments,function(){
+          console.log('Docu Items DURATION [%s]',filteredDocuments.length);
+          //groupByResults(query,filteredDocuments);
+          if(cb) cb(filteredDocuments);
+        })
+
+      });
+
     }
 
+  };
+  var getQueryParameters = function(report){
+    var query = {};
+    
+    query.fedesde = utils.buildDateNum(report.get('fedesde'));
+    query.fehasta = utils.buildDateNum(report.get('fehasta'));
+    /*
+     * Tipos de Movimiento:    tipomovqueryOptionList    / tipomovOptionList
+     * Tipos de Comprobantes:  tipoComprobanteOptionList / tipoDocumItemOptionList
+     *
+     *
+     *
+     *
+     */
+
+    if(report.get('tipomov')==='esitseniales'){
+      query.tipoinforme = report.get('tipomov');
+      query.tcompList = ['npedido', 'pemision', 'nentrega'];
+      query.tmovList ={
+        npedido:['reqadherente'],
+        pemision:['pemision'],
+        nentrega:['distribucion']
+      };
+      query.estado = 'alta';
+      query.slug = 'historia';
+    }
+
+    return query;
   };
 
   DocManager.reqres.setHandler("document:entities", function(){
@@ -1524,5 +1868,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   DocManager.reqres.setHandler("document:fetchnext", function(model, cb){
     return API.fetchNextPrev('fetchnext',model, cb);
   });
+
+
+  DocManager.reqres.setHandler("report:buildData", function(model, cb){
+    return API.buildReportData(model, cb);
+  });
+
 
 });

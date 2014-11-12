@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>SiGCA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet" media='screen'>
+    <link rel="icon" href="favicon.ico" type="image/x-icon"> 
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> 
+
+    <!-- link href="/bacua/css/bootstrap.min.css" rel="stylesheet" media='screen' -->
+
+    <style>
+        body {
+            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        }
+        .nav-list {
+            margin-bottom: 0;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .well {
+            background-color: #F5F5F5;
+            border: 1px solid #E3E3E3;
+            border-radius: 4px 4px 4px 4px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+            margin-bottom: 20px;
+            min-height: 20px;
+            padding: 19px;
+        }
+
+        .node circle {
+          fill: #fff;
+          stroke: steelblue;
+          stroke-width: 1.5px;
+        }
+
+        .node {
+          font: 10px sans-serif;
+        }
+
+        .link {
+          fill: none;
+          stroke: #ccc;
+          stroke-width: 1.5px;
+
+
+        }
+
+    </style>
+
+    <link href="lib/backbone-forms-bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/datepicker.css" rel="stylesheet">
+    <link href="css/jquery.nailthumb.1.1.min.css" rel="stylesheet" >
+   
+    <style>
+        #showmap {
+            height: 350px;
+            background-color: #eee;
+        }
+        .olControlAttribution {
+            bottom: 3px;
+            left: 10px;
+            line-height: 9px;
+            font-size: 9px;
+            color: #ccc;
+        }
+
+        img {
+            max-width: none;
+         }
+
+        img.profile {
+            max-width: 100%;
+         }
+
+       .square-thumb {
+            width: 150px;
+            height: 150px;
+        }
+
+    </style>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+
+    <![endif]-->
+
+    <script src="/css/andika.js"></script>
+    <script src="/css/arvo.js"></script>
+
+    <script>
+        // UNCOMMENT THIS CODE IF YOU USE THE "serverwithanalytics" SERVER
+        //   script type="text/javascript" src="socket.io/socket.io.js" /script
+        // var socket = io.connect();
+        // socket.on('connect', function () {
+        //     socket.send(window.location.href);
+        // });
+        // window.onhashchange = function () {
+        //     socket.send(window.location.href);
+        // }
+   </script>
+
+</head>
+
+<body>
+
+<div class="header"></div>
+
+<div class="container-fluid">
+
+    <div class="row-fluid">
+        <div id="content" class="span12>"></div>
+    </div>
+
+    <footer class="footer">
+        <table class='table'>
+            <tr>
+
+                <td><a href="http://www.iplusb.com.ar/" title="IPLUSB"  class="newWindow">
+                <img src="/img/iplusb_logo_small.jpg" alt="Logo, IPLUSB" /></a></td>
+
+            </tr>
+        </table>
+    </footer>
+</div>
+<div id='d3grafo'></div>
+<!-- /container -->
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="lib/jquery-1.8.2.min.js"></script>
+<script src="lib/underscore-min.js"></script>
+<script src="lib/backbone-min.js"></script>
+<script src="lib/bootstrap.min.js"></script>
+<script src="lib/backbone-forms.min.js"></script>
+<script src="lib/list.min.js"></script>
+<script src="lib/backbone.bootstrap-modal.js"></script>
+<script src="lib/backbone-forms-bootstrap.js"></script>
+<script src="lib/d3.v3.min.js"></script>
+<script src="lib/OpenLayers.js"></script>
+<script src="lib/bootstrap-datepicker.js"></script>
+<script src="lib/jquery.nailthumb.1.1.min.js"></script>
+
+<script type="text/javascript" src="http://js.nicedit.com/nicEdit-latest.js"></script>
+
+<script src="js/utils.js"></script>
+<script src="js/dao.js"></script>
+<script src="js/models/models.js"></script>
+
+<script src="js/views/paginator.js"></script>
+<script src="js/views/header.js"></script>
+<script src="js/views/home.js"></script>
+<script src="js/views/about.js"></script>
+
+<script src="js/views/prjviewctrl.js"></script>
+<script src="js/views/projectlist.js"></script>
+<script src="js/views/projectdetails.js"></script>
+<script src="js/views/projectlayout.js"></script>
+
+<script src="js/views/resourcelayout.js"></script>
+<script src="js/views/resourcelist.js"></script>
+<script src="js/views/resourcedetails.js"></script>
+<script src="js/views/resourcequote.js"></script>
+
+<script src="js/views/quotationlayout.js"></script>
+<script src="js/views/quotationlist.js"></script>
+<script src="js/views/quotationdetails.js"></script>
+<script src="js/views/quotationresource.js"></script>
+
+<script src="js/views/productlayout.js"></script>
+<script src="js/views/productdetails.js"></script>
+<script src="js/views/productlist.js"></script>
+<script src="js/views/productpatech.js"></script>
+
+<script src="js/views/articledetails.js"></script>
+
+<script src="js/views/assetListView.js"></script>
+<script src="js/views/assetView.js"></script>
+
+<script src="js/views/persondetails.js"></script>
+<script src="js/views/personlayout.js"></script>
+<script src="js/views/personbrowse.js"></script>
+
+
+<!-- Views for user module -->
+<script src="js/views/userbrowse.js"></script>
+<script src="js/views/userlayout.js"></script>
+<script src="js/views/userdetails.js"></script>
+<!-- Nuevo agregado para versiones -->
+<script src="js/views/assetlayoutview.js"></script>
+
+<script src="js/main.js"></script>
+
+<script type="text/javascript">
+ //<![CDATA[
+    bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+  //]]>
+</script> 
+</body>
+</html>

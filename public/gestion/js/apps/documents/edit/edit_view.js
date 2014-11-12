@@ -137,7 +137,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
         var modal = new Backbone.BootstrapModal({
             content: form,
-            title: 'Alta rápida comprobantes',
+            title: 'Alta rápida nuevo comprobante',
             okText: 'aceptar',
             cancelText: 'cancelar',
             enterTriggersOk: false,
@@ -218,7 +218,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   };
 
 
-  // PARTE TECNICO
+  // Cabecera del itam
   Edit.ItemHeader = DocManager.DocsApp.Common.Views.Form.extend({
     whoami:'ItemHeader:edit_view.js',
     
@@ -227,6 +227,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
     templates: {
       ptecnico:   'DocumEditPT',
+      nsolicitud: 'DocumEditSO',
       nrecepcion: 'DocumEditRE',
       nentrega:   'DocumEditRE',
       npedido:    'DocumEditRE',

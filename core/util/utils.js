@@ -8,6 +8,8 @@
 
 var fs = require('fs');
 
+var anyw = false;
+
 var es_cutoff = {
     "á" : "a",
     "Á" : "A",
@@ -74,8 +76,14 @@ var rutas = {
     'no_definido'                  :'/#navegar/proyectos',
     'procedencias:list'            :'/#navegar/proyectos',
     'productos:list'               :'/#navegar/productos',
-    'gestion:comprobantes:list'    :'/gestion/#comprobantes'
+    'gestion:comprobantes:list'    :'/gestion/#comprobantes',
+    'studio:producciones:list'     :'/studio'
 };
+
+exports.anywModule = function(){
+    return anyw;
+};
+
 
 exports.getBgImage = function(){
     var index = rndBetween(0,bgImages.length);

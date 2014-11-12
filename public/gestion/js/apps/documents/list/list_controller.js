@@ -5,6 +5,11 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
         DocManager.DocsApp.Edit.createInstance(this);
       });
 
+      hview.on("itemview:report:new", function(childView){
+        console.log('Report nuevo comprobante NEW!');
+        DocManager.DocsApp.Report.Edit.createInstance(this);
+      });
+
       hview.on("itemview:documents:list", function(childView, model){
         //var trigger = model.get("navigationTrigger");
         //DocManager.trigger(trigger);

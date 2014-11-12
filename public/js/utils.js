@@ -153,6 +153,7 @@ window.utils = {
         {val:'no_definido'    , label:'tipo de comprobante'},
         {val:'ptecnico'       , label:'P/Técnico'},
         {val:'nrecepcion'     , label:'N/Recepción'},
+        {val:'nsolicitud'     , label:'N/Solicitud'},
         {val:'nentrega'       , label:'N/Entrega'},
         {val:'npedido'        , label:'N/Pedido'},
         {val:'pemision'       , label:'P/Emisión'},
@@ -211,6 +212,17 @@ window.utils = {
         {val:'Dsaltotc',       label:'D: Salto en Timecode continuo'},
     ],
 */
+/* solicitudes municipios */
+   tipofiestaOptionList: [
+        {val:'no_definido', label:'Tipo de evento'},
+        {val:'fpopular', label:'Fiesta popular'},
+        {val:'fnacional'    , label:'Fiesta nacional'},
+        {val:'fregional' , label:'Fiesta regional'},
+        {val:'carnaval'   , label:'Carnaval'},
+    ],
+
+
+
     casosqcOptionList: [
         {val:'nodefinido',        label:'-------  Seleccione tipo de hallazgo-------------------------------------'},
         {val:'vvideo',            label:'------------- V I D E O -------------------------------------------------'},
@@ -298,12 +310,14 @@ window.utils = {
         {val:'distribucion' , label:'Distribución'},
         {val:'entrega'      , label:'Entregas'},
         {val:'noppedido'    , label:'------  P E D I D O S  ------'},
+        {val:'nsolicitud'   , label:'Solicitudes de Municipios'},
         {val:'reqadherente' , label:'Requerimiento de adherente'},
     ],
  
     tipomovpdiarioOptionList: [
         {val:'no_definido'    , label:'Tipo de movimiento'},
         {val:'recepcion'      , label:'Recepción Producto Audiovisual'},
+        {val:'rsolicitud'     , label:'Solicitud de Municipios'},
         {val:'tecnica'        , label:'Técnica'},
         {val:'ptecnico'       , label:'Parte Técnico'},
         {val:'visualizacion'  , label:'Visualización'},
@@ -324,6 +338,7 @@ window.utils = {
         {val:'distribucion' , label:'Distribución'},
         {val:'entrega'      , label:'Entregas'},
         {val:'nopentrada'   , label:'------  P E D I D O S ------'},
+        {val:'reqmunicipio' , label:'Requerimiento de municipio'},
         {val:'reqadherente' , label:'Requerimiento de adherente'},
         {val:'nopentrada'   , label:'------  PARTE TECNICO ------'},
         {val:'enevaluacion' , label:'En evaluación'},
@@ -347,7 +362,8 @@ window.utils = {
     ],
 
     tipomovPedidoOptionList: [
-        {val:'no_definido', label:'Tipo de movimiento'},
+        {val:'no_definido'  , label:'Tipo de movimiento'},
+        {val:'nsolicitud'   , label:'Nota de solicitud de Municipio'},
         {val:'reqadherente' , label:'Requerimiento de adherente'},
     ],
 
@@ -375,16 +391,32 @@ window.utils = {
         {val:'A4'  , label:'audio - 4'},
     ],
 
+    tipoInformeOptionList: [
+        {val:'no_definido'    , label:'tipo de informe'},
+        {val:'esitseniales'   , label:'Estado de Situación (ES-1)'},
+    ],
+
+    tipoReporteOptionList: [
+        {val:'no_definido'  , label:'tipo de reporte'},
+        {val:'resxsenial'   , label:'Resumido x Señal'},
+    ],
+
     tipoComprobanteOptionList: [
         {val:'no_definido'    , label:'tipo de comprobante'},
         {val:'ptecnico'       , label:'P/Técnico'},
         {val:'nrecepcion'     , label:'N/Recepción'},
         {val:'nentrega'       , label:'N/Entrega'},
+        {val:'nsolicitud'     , label:'N/Solicitud'},
         {val:'npedido'        , label:'N/Pedido'},
         {val:'pemision'       , label:'P/Emisión'},
         {val:'pdiario'        , label:'P/Diario'},
      ],
     
+    tipoProduccionOptionList: [
+        {val:'no_definido'    , label:'tipo de producción'},
+        {val:'anyw'           , label:'Anywhere'},
+    ],
+        
     userGroupsOptionList:[
         {val:'no_definido'   , label:'Grupo principal'},
         {val:'tecnica'       , label:'Técnica'},
@@ -398,6 +430,7 @@ window.utils = {
         {val:'procedencias:list'            , label:'navegar/procedencias'},
         {val:'productos:list'               , label:'navegar/productos'},
         {val:'gestion:comprobantes:list'    , label:'gestion/comprobantes'},
+        {val:'studio:producciones:list'    , label:'studio/producciones'},
     ],
 
     userStatusOptionList:[
@@ -1167,6 +1200,7 @@ window.utils = {
         {val:'ptecnico'    , label:'Parte Técnico: '},
         {val:'nentrega'    , label:'Nota de Entrega: '},
         {val:'nrecepcion'  , label:'Nota de Recepción: '},
+        {val:'nsolicitud'  , label:'Nota de Solicitud: '},
         {val:'npedido'     , label:'Nota de Pedido: '},
         {val:'pemision'    , label:'Parte de Emisión: '},
         {val:'pdiario'     , label:'Parte Diario: '},
@@ -1226,6 +1260,13 @@ window.utils = {
         return optionStr;
     },
 
+    productionsListTableHeader:[
+        {id:0, tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',            label:'#'},
+        {id:1, tt:'th', flag:1, tclass:'col1', tmpl: 'template3', val:'ea_productionId',      label:'Id'},
+        {id:2, tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'ea_lastModified',      label:'Fe Ult Mod'},
+        {id:3, tt:'th', flag:1, tclass:'col3', tmpl: 'template6', val:'productionName',        label:'Nombre'},
+        {id:4, tt:'th', flag:1, tclass:'col4', tmpl: 'template1', val:'productionDescription', label:'Descripcion'},
+    ], 
 
     userListTableHeader:[
         {id:0, tt:'th', flag:1, tclass:'col0', tmpl: 'template2', val:'select',            label:'#'},
@@ -1293,13 +1334,16 @@ window.utils = {
         template3 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink' title='editar item'><%= value %></button></td>"),
         template4 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tedit' title='no implementado aun'><i class='icon-edit'></i></button><button class='btn-link tzoom' title='ver entidades relacionadas' ><i class='icon-zoom-in'></i></button></td>"),
         template5 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit' title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-zoom' title='entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></td>"),
-        template6 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='ver'><%= value %></button></td>"),
+        template6 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='explorar   '><%= value %></button></td>"),
+        //template7 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='editar item'><%= value %></button></td>"),
+        //template3 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink'   title='editar item'><%= value %></button></td>"),
     },
 
     buildTableRow: function(data,model){
         var self = this;
         var tabledata = '';
         _.each(data,function(element, index, list){
+            console.log('******* 2 *********');
             if(element.flag){
                 element.value = (model.displayItem(element.val)||'#');
                 tabledata += self.buildTableRowTemplates[element.tmpl](element);
@@ -1312,6 +1356,7 @@ window.utils = {
     buildRowRenderTemplate: function(lista, templates){
         var items =[];
         _.each(lista, function(data,index){
+            console.log('******* 3 *********');
           if(data.flag){
             data.value = '<%= '+data.val+' %>';
             items.push(templates[data.tmpl](data));
@@ -1711,6 +1756,7 @@ window.utils = {
         var ye = date.getFullYear();
         return da+"/"+mo+"/"+ye;
     },
+
     addOffsetDay: function(numdate, offset){
         var fe = {};
         var date = new Date(numdate);

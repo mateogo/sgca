@@ -11,6 +11,13 @@
     Ojo: Administrar el cache: ver c´mo
 
  */
+
+var path = require('path');
+var rootPath = path.normalize(__dirname + '/../..');
+
+var utils = require(rootPath + '/core/util/utils');
+var anyw  = require(rootPath + '/calendar/controllers/anyw');
+
 var dbi ;
 var BSON;
 var config = {};
@@ -81,6 +88,7 @@ exports.validPassword = function(currentUser, password) {
 
 exports.findOne = function(query, cb) {
     //console.log('findUser Retrieving user collection for passport');
+    console.log("user/findOne [%s] [%s]", query, utils.anywModule());
 
     dbi.collection(usersCol, function(err, collection) {
         collection.findOne(query, function(err, item) {
@@ -94,14 +102,22 @@ exports.fetchById = function(id, cb) {
     var user = getUserFromList(id);
     if(user){
         //console.log('findById: USER FOUND in USER LIST');
-
         cb(null,user);
     } else {
         dbi.collection(usersCol, function(err, collection) {
             collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
                 console.log('findById: db findOne [%s]',item._id);
-                setUserInList(id,item);
-                cb(err, item);
+                if(utils.anywModule()){
+                    anyw.auth(item.displayName, item.password, function(token){
+                        item.anyw_token = token;
+                        console.log('findById: Token [%s]',item.anyw_token);
+                        setUserInList(id,item);
+                        cb(err, item);
+                    });
+                }else{
+                    setUserInList(id,item);
+                    cb(err, item);
+                }
             });
         });
     }

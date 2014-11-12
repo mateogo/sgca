@@ -3,8 +3,9 @@ window.dao = {
     whoami:'daoutils',
 
     docum: {
-        actualList:['nrecepcion','npedido', 'nentrega', 'ptecnico', 'pemision', 'pdiario'],
+        actualList:['nrecepcion','npedido', 'nentrega', 'ptecnico', 'pemision', 'pdiario','nsolicitud'],
         ptecnico:['ptecnico'],
+        nsolicitud:['nsolicitud'],
         notas:['nrecepcion','npedido', 'nentrega'],
         pemision: ['pemision'],
         pdiario: ['pdiario'],

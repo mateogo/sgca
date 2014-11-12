@@ -5,12 +5,14 @@ utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView',
     'DocumShowItemPTDetail','DocumShowItemREHeader','DocumShowItemREComposite','DocumShowItemREDetail', 
     'DocumShowItemPEHeader', 'DocumShowItemPEComposite', 'DocumShowItemPEDetail',
     'DocumRelatedLayout', 'DocumRelatedPRHeader', 'DocumRelatedPR', 'DocumRelatedDOC',
-    'DocumShowItemPDHeader', 'DocumShowItemPDComposite'], function() {
+    'DocumShowItemPDHeader', 'DocumShowItemPDComposite',
+    'DocumEditSO','DocumEditSOItem','DocumEditSOLayout',
+    'ReportEditLayoutView', 'ReportEditCore', 'ReportNavbar' ], function() {
 
     $('[data-toggle=offcanvas]').click(function() {
         $('.row-offcanvas').toggleClass('active');
     });
-    console.log('main: DocManagert.start')
+    console.log('main: DocManager.start')
     DocManager.start();
 });
 
