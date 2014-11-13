@@ -582,6 +582,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       ntecnico: "",
       etecnico: "",
       ttecnico: "",
+      aasignada: "",
+      rasignado: "",
+      rmail: "",
+      rtelef: "",
+      eavance: "",
+      eaprob: "",
+      ncriti: "",
+      resoluc: "",
 
       items:[]
     },

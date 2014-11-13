@@ -220,7 +220,14 @@ window.utils = {
         {val:'fregional' , label:'Fiesta regional'},
         {val:'carnaval'   , label:'Carnaval'},
     ],
-
+/* Estados de la solicitud */
+   estadoavanceOptionList: [
+        {val:'no_definido', label:'Estado'},
+        {val:'aprobado',    label:'Aprobado'},
+        {val:'rechazado',   label:'Rechazado'},
+        {val:'observado',   label:'Observado'},
+        {val:'pendiente',   label:'Pendiente'},
+    ],
 
 
     casosqcOptionList: [
