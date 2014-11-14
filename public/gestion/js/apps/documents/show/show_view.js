@@ -52,6 +52,8 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
         return utils.templates.DocumShowItemPTDetail;
       }else if(dao.docum.isType(this.options.tpl, 'notas')){
         return utils.templates.DocumShowItemREDetail;
+      }else if(dao.docum.isType(this.options.tpl, 'nsolicitud')){
+        return utils.templates.DocumShowItemSODetail;
       }else if(dao.docum.isType(this.options.tpl, 'pemision')){
         return utils.templates.DocumShowItemPEDetail;
       }
@@ -88,6 +90,8 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
         return utils.templates.DocumShowItemPTComposite;
       }else if(dao.docum.isType(this.options.tpl, 'notas')){
         return utils.templates.DocumShowItemREComposite;
+      }else if(dao.docum.isType(this.options.tpl, 'nsolicitud')){
+        return utils.templates.DocumShowItemSOComposite;
       }else if(dao.docum.isType(this.options.tpl, 'pemision')){
         return utils.templates.DocumShowItemPEComposite;
       }else if(dao.docum.isType(this.options.tpl, 'pdiario')){
@@ -119,6 +123,8 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
         return utils.templates.DocumShowItemPTHeader;
       } else if(dao.docum.isType(this.model.get('tipoitem'), 'notas')){
         return utils.templates.DocumShowItemREHeader;
+      } else if(dao.docum.isType(this.model.get('tipoitem'), 'nsolicitud')){
+        return utils.templates.DocumShowItemSOHeader;
       } else if(dao.docum.isType(this.model.get('tipoitem'), 'pemision')){
         return utils.templates.DocumShowItemPEHeader;
       } else if(dao.docum.isType(this.model.get('tipoitem'), 'pdiario')){

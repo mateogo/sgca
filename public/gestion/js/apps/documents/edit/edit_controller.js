@@ -18,19 +18,23 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
 
         Edit.Session = {};
+        registerDocumentEntity(document);
     
         Edit.Session.model = document;
-        registerDocumentEntity(document);
+        (document);
 
         var documEditView = new Edit.Document({
           model: document
         });
         registerDocumEditEvents(documEditView);
 
+        console.log('Aloooo2?')
+
         var documItemsView = new DocManager.DocsApp.Common.Views.SidebarPanel({
           itemView: DocManager.DocsApp.Common.Views.SidebarItem,
           collection: Edit.Session.items 
         });
+        console.log('Aloooo3?')
         registerDocumItemsView(documItemsView);
 
         //var searchItemsView = new Edit.Search();
@@ -39,6 +43,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         documLayout.on("show", function(){
           documLayout.navbarRegion.show(documNavBar);
           documLayout.mainRegion.show(documEditView);
+          console.log('Aloooo3?')
           documLayout.sidebarRegion.show(documItemsView);
         });
 
@@ -70,14 +75,17 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
           });
         });
 
+        // a laburar
         Edit.Session.sitcollection = fetchPTItemsCollection(itemmodel);
 
         var sitview = subItemFactoryView(itemmodel, Edit.Session.sitcollection);
 
+        // caso particular cuando se trata de un Parte de Emision
         if(itemmodel.get('tipoitem')==='pemision'){
           loadProductChilds(Edit.Session.sitcollection, itemmodel);
         }
 
+        // para cuando selecciona un articulo
         itemheader.on('product:select',function(query, cb){
           DocManager.request("product:search", query, function(product){
 
@@ -96,6 +104,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
           });      
         });
 
+        // para cuando selecciona una person desde el item
         itemheader.on('person:select',function(query, cb){
           DocManager.request("person:search", query, function(model){
             cb(model);
@@ -141,7 +150,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         });
 
 
-
+        // Agregar SubItem 
         itemlayout.on("sit:add:item", function(){
           addEmptyItemToCol(itemmodel, Edit.Session.sitcollection);
         });

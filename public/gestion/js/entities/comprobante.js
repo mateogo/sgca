@@ -603,8 +603,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     validate: function(attrs, options) {
       var errors = {}
 
-      if (_.has(attrs,'product') && (!attrs.product )) {
-        errors.pticaso = "No puede ser nulo";
+      if (_.has(attrs,'description') && (!attrs.description )) {
+        errors.description = "No puede ser nulo";
       }
       if( ! _.isEmpty(errors)){
         return errors;
@@ -612,17 +612,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     defaults: {
-      product: '',
-      pslug:'',
-      comentario: '',
-      durnominal:'',
+      requeridopor: 'requirente',
+      acargode: 'organismo',
+      trequerim: '',
+      itemaprob: '',
+      itemaprobreq: '',
+
+      description: '',
+      lugarfecha: '',
+      comentario: ''
     },
   });
 
   Entities.MovimSOItems = Backbone.Collection.extend({
     whoami: 'Entities.MovimSOItems:comprobante.js ',
     model: Entities.DocumMovimSOItem,
-    comparator: "product",
+    comparator: "trequerim",
   });
 
 // fin Movim Recepcion entrega
@@ -1425,6 +1430,27 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               productid: sitem.productid,
               pslug: sitem.pslug,
               tcomputo: sitem.durnominal
+            })
+            itemCol.add(smodel);
+
+          });
+
+        }else if (dao.docum.isType(item.tipoitem, 'nsolicitud')){
+          var sitems = item.items;
+          _.each(sitems, function(sitem){
+
+            var smodel = new Entities.Comprobante(model.attributes);
+            smodel.id = null;
+
+            smodel.set({
+              fechagestion: model.get('fecomp'),
+              fechagestion_tc: model.get('fecomp_tc'),
+              tipoitem: item.tipoitem,
+              tipomov: item.tipomov||item.tipoitem,
+              product: sitem.trequerim,
+              productid: "",
+              pslug: sitem.description,
+              tcomputo: ''
             })
             itemCol.add(smodel);
 

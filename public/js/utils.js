@@ -220,7 +220,54 @@ window.utils = {
         {val:'fregional' , label:'Fiesta regional'},
         {val:'carnaval'   , label:'Carnaval'},
     ],
+
+   tiporequerimOptionList: [
+        {val:'no_definido', label:'Tipo de requerimiento'},
+        {val:'artistica', label:'Artística'},
+        {val:'tecnica', label:'Técnica'},
+        {val:'movilidad', label:'Movilidad'},
+        {val:'alojamiento', label:'Alojamiento'},
+        {val:'pasajes', label:'Pasajes'},
+        {val:'seguridad', label:'Seguridad'},
+        {val:'escenario', label:'Escenario'},
+        {val:'catering', label:'Catering'},
+        {val:'banios', label:'Baños'},
+    ],
+   requeridoporOptionList: [
+        {val:'no_definido', label:'Requerido por...'},
+        {val:'requirente', label:'Requirente'},
+        {val:'organismo', label:'MCN'},
+    ],
+   acargodeOptionList: [
+        {val:'no_definido', label:'A cargo de...'},
+        {val:'requirente', label:'Requirente'},
+        {val:'organismo', label:'MCN'},
+    ],
+   itemaprobOptionList: [
+        {val:'no_definido', label:'MCN: Estado aprobación'},
+        {val:'aprobado',    label:'Aprobado'},
+        {val:'rechazado',   label:'Rechazado'},
+        {val:'observado',   label:'Observado'},
+        {val:'pendiente',   label:'Pendiente'},
+    ],
+   itemaprobreqOptionList: [
+        {val:'no_definido', label:'REQ: Estado aceptación'},
+        {val:'aprobado',    label:'Aprobado'},
+        {val:'rechazado',   label:'Rechazado'},
+        {val:'observado',   label:'Observado'},
+        {val:'pendiente',   label:'Pendiente'},
+    ],
+
+    estadosolicitudOptionList: [
+        {val:'no_definido', label:'Estado del parte técnico'},
+        {val:'enevaluacion', label:'EN EVALUACIÓN'},
+        {val:'aprobado'    , label:'APROBADO'},
+        {val:'aprobconobs' , label:'APROB C/OBSERVACIONES'},
+        {val:'rechazado'   , label:'RECHAZADO'},
+    ],
+
 /* Estados de la solicitud */
+   
    estadoavanceOptionList: [
         {val:'no_definido', label:'Estado'},
         {val:'aprobado',    label:'Aprobado'},
@@ -1234,6 +1281,7 @@ window.utils = {
 
     fetchLabel:function(list,key){
         var node = _.find(list, function(data){return data.val === key;});
+        console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
         return node ? node.label: key;
     },
 

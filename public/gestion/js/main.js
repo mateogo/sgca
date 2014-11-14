@@ -7,6 +7,7 @@ utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView',
     'DocumRelatedLayout', 'DocumRelatedPRHeader', 'DocumRelatedPR', 'DocumRelatedDOC',
     'DocumShowItemPDHeader', 'DocumShowItemPDComposite',
     'DocumEditSO','DocumEditSOItem','DocumEditSOLayout',
+    'DocumShowItemSODetail','DocumShowItemSOComposite','DocumShowItemSOHeader',
     'ReportEditLayoutView', 'ReportEditCore', 'ReportNavbar' ], function() {
 
     $('[data-toggle=offcanvas]').click(function() {

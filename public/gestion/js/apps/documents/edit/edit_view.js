@@ -317,6 +317,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   Edit.PTecnicoListItem = DocManager.DocsApp.Common.Views.Form.extend({
     templates: {
       ptecnico:   'DocumEditPTItem',
+      nsolicitud: 'DocumEditSOItem',
       nrecepcion: 'DocumEditREItem',
       nentrega:   'DocumEditREItem',
       npedido:    'DocumEditREItem',
