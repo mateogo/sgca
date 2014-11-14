@@ -15,6 +15,15 @@ var AppRouter = Backbone.Router.extend({
         "proyectos/add"          : "addProject",
         "proyectos/:id"          : "projectDetails",
 
+        "ver/solicitud/:id"       : "viewrequestDetails",
+        "solicitudes"              : "listRequests",
+        "navegar/solicitudes"      : "browseRequests",
+        "navegar/solicitudes/pag/:page"  : "browseRequests",
+        "solicitudes/pag/:page"    : "listRequests",
+        "solicitudes/add"          : "addRequest",
+        "solicitudes/:id"          : "requestDetails",
+
+
         "recursos"               : "browseResources",
         "navegar/recursos"       : "browseResources",
         "navegar/recursos/pag/:page"  : "browseResources",
@@ -95,6 +104,66 @@ var AppRouter = Backbone.Router.extend({
             $('.header').html(this.headerView.el);
         }
         this.headerView.selectMenuItem('home-menu');
+    },
+    listRequests: function(page) {
+        console.log('listRequests:main.js');
+        console.log('list:main.js');
+        var p = page ? parseInt(page, 10) : 1,
+            requestList = new RequestCollection();
+
+        if (!this.requestListLayoutView) {
+            this.requestListLayoutView = new RequestListLayoutView();
+        }
+        $('#content').html(this.requestListLayoutView.el);
+        requestList.fetch({success: function() {
+            $("#listcontent").html(new RequestListView({model: requestList, page: p}).el);
+        }});
+        if(this.headerView) this.headerView.selectMenuItem('home-menu');
+    },
+
+    browseRequests: function(page) {
+        console.log('browseRequests:main.js');
+        
+        $('#content').html(new RequestListLayoutView({model: dao.requestsQueryData()}).el);
+
+        var p = page ? parseInt(page, 10) : 1,
+            query = dao.requestsQueryData().retrieveData(),
+            requestList = new RequestCollection();
+
+        requestList.fetch({
+            data: query,
+            type: 'post',
+            //data: $.param({rubro:'tecnica'}),
+            //data: JSON.stringify({rubro:'tecnica'}),
+            success: function() {
+                console.log('requestlist SUCCESS: [%s]',requestList.length);
+                $("#listcontent").html(new RequestListView({model: requestList, page: p}).el);
+            }
+        });
+        if(this.headerView) this.headerView.selectMenuItem('browse-menu');
+    },
+
+
+
+    viewrequestDetails: function (id) {
+        console.log('viewrequestDetails:main.js');
+        $('#content').html(new RequestViewLayout({model: dao.resourcesQueryData()}).el);
+        requestview(id);
+    },
+
+    requestDetails: function (id) {
+        var request = new Request({ _id: id});
+        request.fetch({success: function() {
+            utils.currentrequest = request;
+            $("#content").html(new RequestView({model: request}).el);
+        }});
+        if(this.headerView) this.headerView.selectMenuItem();
+    },
+
+    addRequest: function() {
+        var request = new Request();
+        $('#content').html(new RequestView({model: request}).el);
+        if(this.headerView) this.headerView.selectMenuItem('add-menu');
     },
 
     gestion: function () {
@@ -472,11 +541,13 @@ var AppRouter = Backbone.Router.extend({
 });
 
 
-utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView', 'ProjectListLayoutView', 'ProjectView',
-    'ProjectListItemView', 'ResourceView', 'ResourceListItemView', 
+utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView', 
+    'ProjectListLayoutView', 'ProjectView','ProjectListItemView', 'ProjectViewLayout',
+    'RequestListLayoutView', 'RequestView','RequestListItemView', 'RequestViewLayout',
+    'ResourceView', 'ResourceListItemView', 
     'ResourceListLayoutView', 'ResourceQuoteView',
     'QuotationListLayoutView', 'QuotationView', 'QuotationResourceItemView', 'QuotationListItemView',
-    'PrjHeaderView','ProjectViewLayout','ReqResDetailView','AssetListItemView',
+    'PrjHeaderView','ReqResDetailView','AssetListItemView',
     'AssetAccordionView','AssetVersionListItemView','AssetView','AssetLayoutView',
     'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView',
     'ProductViewLayout','ArticleView', 'ArticleViewLayout','BrandingEditView',

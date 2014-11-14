@@ -835,6 +835,13 @@ window.dao = {
         return this.queryProjectData;
     },
 
+    requestsQueryData:function (){
+        if (!this.queryRequestData) {
+            this.queryRequestData = new BrowseRequestsQuery();
+        }
+        return this.queryRequestData;
+    },
+
     invertedAttributeList: function  (ancestor, products) {
         var self = this,
             data = {name: ancestor.get('productcode'), children:[]},

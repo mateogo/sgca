@@ -249,6 +249,15 @@ module.exports = function (config, app) {
     app.put('/proyectos/:id', project.update);
     app.delete('/proyectos/:id', project.delete);
 
+    // request routes
+    var request = require(rootPath + '/calendar/controllers/requests');
+    app.get('/solicitudes', request.findAll);
+    app.post('/navegar/solicitudes', request.find);
+    app.get('/solicitudes/:id', request.findById);
+    app.post('/solicitudes', request.add);
+    app.put('/solicitudes/:id', request.update);
+    app.delete('/solicitudes/:id', request.delete);
+
     // resources routes
     var resource = require(rootPath + '/calendar/controllers/resources');
     app.get('/recursos', resource.find);

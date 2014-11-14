@@ -11,6 +11,29 @@ window.projectview = function(id){
     utils.prjmodel.project.fetch({success: projectviewsuccess}); 
 };
 
+window.requestview = function(id){
+    console.log('requestview:requestviewctrl.js [%s]',id);
+    
+    utils.requestmodel = {};
+    utils.requestmodel.request = new Request({_id: id});
+    //utils.requestmodel.quotation = new Quotation();
+
+    var requestHeaderView = new PrjHeaderView({model:utils.requestmodel.request});
+    $('#prjheader').html(requestHeaderView.el);
+    
+    utils.requestmodel.request.fetch({success: requestviewsuccess}); 
+};
+
+var requestviewsuccess = function(request){
+    console.log('projectviewsuccess [%s]',request.get('slug'))
+    dao.resourcesQueryData().setProject(request.id,request.get('denom'));
+    dao.quotationsQueryData().setProject(request.id,request.get('denom'));
+    dao.productsQueryData().setProject(request.id,request.get('denom'));
+    resourceview();
+    assetsview();
+    productview();
+};
+
 var projectviewsuccess = function(prj){
     console.log('projectviewsuccess [%s]',prj.get('slug'))
     dao.resourcesQueryData().setProject(prj.id,prj.get('denom'));
@@ -318,6 +341,83 @@ window.ProjectViewLayout = Backbone.View.extend({
 
     addProducts: function () {
         //dao.resourcesQueryData().setProject(this.model.id,this.model.get('denom'));
+        utils.approuter.navigate('productos/add', true);
+        return false;
+    },
+
+});
+
+window.RequestViewLayout = Backbone.View.extend({
+
+    whoami:'RequestViewLayout',
+
+    initialize:function () {
+        this.render();
+    },
+
+    render:function () {
+        $(this.el).html(this.template(this.model.toJSON()));
+        return this;
+    },
+
+    events: {
+        "click .addresources" : "addResources",
+        "click .addproducts"  : "addProducts",
+        "click .addquotation" : "addQuotation",
+        "click .browsequotations" : "browseQuotations",
+        "click .browseproducts" : "browseProducts",
+        "click .browseresources" : "browseResources",
+        "click .browseprojects" : "browseRequests",
+        "change"           : "change"
+    },
+
+    change: function (event) {
+        var target = event.target;
+        var change = {};
+        change[target.name] = target.value;
+        this.model.set(change);
+        resourceview();
+    },
+
+    addQuotation: function () {
+        //dao.quotationsQueryData().setRequest(this.model.id,this.model.get('denom'));
+  
+        utils.approuter.navigate('requisitorias/add', true);
+        return false;
+    },
+
+    browseQuotations: function () {
+        //dao.quotationsQueryData().setRequest(this.model.id,this.model.get('denom'));
+        utils.approuter.navigate('navegar/requisitorias', true);
+        return false;
+    },
+
+    browseRequests: function () {
+        //dao.quotationsQueryData().setRequest(this.model.id,this.model.get('denom'));
+        utils.approuter.navigate('navegar/proyectos', true);
+        return false;
+    },
+
+    browseResources: function () {
+        //dao.quotationsQueryData().setRequest(this.model.id,this.model.get('denom'));
+        utils.approuter.navigate('navegar/recursos', true);
+        return false;
+    },
+
+    browseProducts: function () {
+        //dao.quotationsQueryData().setRequest(this.model.id,this.model.get('denom'));
+        utils.approuter.navigate('navegar/productos', true);
+        return false;
+    },
+
+    addResources: function () {
+        //dao.resourcesQueryData().setRequest(this.model.id,this.model.get('denom'));
+        utils.approuter.navigate('recursos/add', true);
+        return false;
+    },
+
+    addProducts: function () {
+        //dao.resourcesQueryData().setRequest(this.model.id,this.model.get('denom'));
         utils.approuter.navigate('productos/add', true);
         return false;
     },

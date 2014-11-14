@@ -2218,6 +2218,146 @@ window.BrowseQuotationsQuery = Backbone.Model.extend({
     }
 });
 
+// Begin solicitudes Request
+window.Request = Backbone.Model.extend({
+    // ******************* PROJECT ***************
+    urlRoot: "/solicitudes",
+
+    idAttribute: "_id",
+
+    initialize: function () {
+        this.validators = {};
+
+        this.viewers = {};
+
+        this.validators.slug = function (value) {
+            return value.length > 0 ? {isValid: true} : {isValid: false, message: "Indique la denominación identificatoria del evento"};
+        };
+
+        this.validators.denom = function (value) {
+            return value.length > 0 ? {isValid: true} : {isValid: false, message: "Indique denominación oficial del evento"};
+        };
+
+        this.validators.responsable = function (value) {
+            return value.length > 0 ? {isValid: true} : {isValid: false, message: "Indique un responsable"};
+        };
+
+        this.validators.organismo = function (value) {
+            return value.length > 0 ? {isValid: true} : {isValid: false, message: "Indique un organismo"};
+        };
+ 
+        this.validators.eventdatestr = function (value) {
+            var parsedate = utils.parseDateStr(value);
+            if(parsedate === null) return {isValid: false, message: "Fecha no válida"};
+            return {isValid: true} ;
+            //return value.length > 0 ? {isValid: true} : {isValid: false, message: "Fecha no válida"};
+        };
+    },
+
+    validateItem: function (key) {
+        return (this.validators[key]) ? this.validators[key](this.get(key)) : {isValid: true};
+    },
+
+    displayItem: function (key) {
+        return (this.viewers[key]) ? this.viewers[key](this.get(key)) : this.get(key) ;
+    },
+
+    // TODO: Implement Backbone's standard validate() method instead.
+    validateAll: function () {
+
+        var messages = {};
+
+        for (var key in this.validators) {
+            if(this.validators.hasOwnProperty(key)) {
+                var check = this.validators[key](this.get(key));
+                if (check.isValid === false) {
+                    messages[key] = check.message;
+                }
+            }
+        }
+
+        return _.size(messages) > 0 ? {isValid: false, messages: messages} : {isValid: true};
+    },
+ 
+
+    updateAsset: function(data, cb){
+        // create new asset-entry
+        var as = {};
+        as.versions = [];
+        as.name = data.name;
+        as.versions.push(data.fileversion);
+
+        as.urlpath = data.urlpath;
+        as.slug = as.name;
+        as.denom = as.name;
+        as.related = {request:this.id};
+
+        //console.log('prjmodel:creating new asset');
+        var asset = new Asset(as);
+        asset.save(null, {
+            success: function (model) {
+                cb('prjmodel: Success asset updated!');
+            },
+            error: function () {
+                cb('An error occurred while trying to delete this item');
+           }
+        });
+    },
+
+    assetFolder: function(){
+        return '/prj/' + (this.id || 'calendar');
+    },
+
+    defaults: {
+        _id: null,
+        denom: "",
+        slug: "",
+        genero: "",
+        isPropio: 1,
+        estado_alta: "activo",
+        nivel_ejecucion: "planificado",
+        nivel_importancia: "",
+        responsable: "",
+        organismo: "",
+        city: "CABA",
+        eventdatestr: "",
+        eventdate: new Date().getTime(),
+        description: "",
+        picture: null,
+    }
+});
+
+
+window.RequestCollection = Backbone.Collection.extend({
+    // ******************* PROJECT COLLECTION ***************
+
+    model: Request,
+
+    url: "/navegar/solicitudes"
+
+});
+
+
+window.BrowseRequestsQuery = Backbone.Model.extend({
+    // ******************* BROWSE PROJECT QUERY ***************
+    retrieveData: function(){
+        var query = {};
+        var keys = _.keys(this.attributes);
+        for (var k=0;k<keys.length;k++){
+            var data = this.get(keys[k]);
+            if(! (data==null || data=="" || data == "0")){
+                query[keys[k]] = data;
+            }
+        }
+        return query;
+    },
+
+    defaults: {
+        responsable:'',
+        contraparte:'',
+        nivel_ejecucion:''
+    }
+});
 
 
 window.Project = Backbone.Model.extend({
