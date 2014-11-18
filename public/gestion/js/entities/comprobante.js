@@ -21,99 +21,120 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     enabled_predicates:['es_relacion_de'],
     
-    initBeforeCreate: function(){
-      var fealta = new Date(),
+    initBeforeCreate: function(cb){
+      var self = this,
+          fealta = new Date(),
           fecomp = utils.dateToStr(fealta),
           documitems = [];
 
-      this.set({fealta:fealta.getTime(), fecomp: fecomp});
-      console.log('alo!!!!!!!!!!!!!!!!!!!!! [%s][%s]', this.get('tipocomp'),dao.docum.isType(this.get('tipocomp'), 'nsolicitud'));
+      self.set({fealta:fealta.getTime(), fecomp: fecomp});
+      console.log('alo!!!!!!!!!!!!!!!!!!!!! [%s][%s]', self.get('tipocomp'),dao.docum.isType(self.get('tipocomp'), 'nsolicitud'));
 
-      if(dao.docum.isType(this.get('tipocomp'), 'ptecnico')){
+      if(dao.docum.isType(self.get('tipocomp'), 'ptecnico')){
           var ptecnico = new Entities.DocumParteTecnico();
           ptecnico.set({
-              tipoitem: this.get('tipocomp'),
-              slug: this.get('slug'),
-              fept: this.get('fecomp'),
-              estado_qc: dao.docum.initval(this.get('tipocomp')).estado_qc,
+              tipoitem: self.get('tipocomp'),
+              slug: self.get('slug'),
+              fept: self.get('fecomp'),
+              estado_qc: dao.docum.initval(self.get('tipocomp')).estado_qc,
           });
           documitems.push(ptecnico.attributes);
-          this.set({items: documitems});
+          self.set({items: documitems});
 
-      } else if(dao.docum.isType(this.get('tipocomp'), 'nsolicitud')){
+      } else if(dao.docum.isType(self.get('tipocomp'), 'nsolicitud')){
         console.log('alo!!!!!!!!!!!!!!!!!!!!!')
 
           var parte = new Entities.DocumMovimSO();
           parte.set({
-              tipoitem: this.get('tipocomp'),
-              slug: this.get('slug'),
-              //tipomov: dao.docum.initval(this.get('tipocomp')).tipomov,
+              tipoitem: self.get('tipocomp'),
+              slug: self.get('slug'),
+              //tipomov: dao.docum.initval(self.get('tipocomp')).tipomov,
           });
           documitems.push(parte.attributes);
-          this.set({items: documitems});
-      } else if(dao.docum.isType(this.get('tipocomp'), 'pemision')){
+          self.set({items: documitems});
+      } else if(dao.docum.isType(self.get('tipocomp'), 'pemision')){
           var parte = new Entities.DocumParteEM();
           parte.set({
-              tipoitem: this.get('tipocomp'),
-              slug: this.get('slug'),
-              tipoemis:dao.docum.initval(this.get('tipocomp')).tipoemis,
+              tipoitem: self.get('tipocomp'),
+              slug: self.get('slug'),
+              tipoemis:dao.docum.initval(self.get('tipocomp')).tipoemis,
           });
           documitems.push(parte.attributes);
-          this.set({items: documitems});
-      } else if(dao.docum.isType(this.get('tipocomp'), 'notas')){
+          self.set({items: documitems});
+      } else if(dao.docum.isType(self.get('tipocomp'), 'notas')){
           var parte = new Entities.DocumMovimRE(),
               sitems = [];
           parte.set({
-              tipoitem: this.get('tipocomp'),
-              slug: this.get('slug'),
-              tipomov: dao.docum.initval(this.get('tipocomp')).tipomov,
+              tipoitem: self.get('tipocomp'),
+              slug: self.get('slug'),
+              tipomov: dao.docum.initval(self.get('tipocomp')).tipomov,
           });
           documitems.push(parte.attributes);
-          this.set({items: documitems});
-      } else if(dao.docum.isType(this.get('tipocomp'), 'pdiario')){
+          self.set({items: documitems});
+      } else if(dao.docum.isType(self.get('tipocomp'), 'pdiario')){
           var parte = new Entities.DocumParteDI(),
               sitems = [];
           parte.set({
-              tipoitem: this.get('tipocomp'),
-              slug: this.get('slug'),
-              tipomov: dao.docum.initval(this.get('tipocomp')).tipomov,
+              tipoitem: self.get('tipocomp'),
+              slug: self.get('slug'),
+              tipomov: dao.docum.initval(self.get('tipocomp')).tipomov,
           });
           documitems.push(parte.attributes);
-          this.set({items: documitems});
+          self.set({items: documitems});
       }
+
+      dao.gestionUser.getUser(DocManager, function (user){
+        self.set({useralta: user.id, userultmod: user.id});
+        var person;
+        var related = user.get('es_usuario_de');
+        if(related){
+          person = related[0];
+          if(person){
+            self.set({persona: person.code,personaid: person.id })
+          }
+        } 
+        if(cb) cb(self);
+      });
     },
 
-    beforeSave: function(){
+    beforeSave: function(cb){
+      var self = this;
       console.log('initBefore SAVE')
       var feultmod = new Date();
-      this.set({feultmod:feultmod.getTime()})
+      self.set({feultmod:feultmod.getTime()})
+      dao.gestionUser.getUser(DocManager, function (user){
+        if (! self.get('useralta')) self.set({useralta: user.id});
+        self.set({userultmod: user.id});
+        if(cb) cb(self);
+      });
+
     },
 
     update: function(cb){
       console.log('update')
       var self = this;
-      self.beforeSave();
-      var errors ;
-      console.log('ready to SAVE');
-      if(!self.save(null,{
-        success: function(model){
-          //console.log('callback SUCCESS')
-          
-          // log Activity
-          logActivity(model);
-          // log Activity
+      self.beforeSave(function(docum){
+        var errors ;
+        console.log('ready to SAVE');
+        if(!self.save(null,{
+          success: function(model){
+            //console.log('callback SUCCESS')
+            
+            // log Activity
+            logActivity(model);
+            // log Activity
 
-          //Change Product State
-          changeProductState(model);
-          //Change Product State
+            //Change Product State
+            changeProductState(model);
+            //Change Product State
 
-          cb(null,model);
+            cb(null,model);
 
-         }
-        })) {
-          cb(self.validationError,null);
-      }    
-
+           }
+          })) {
+            cb(self.validationError,null);
+        }            
+      });
 
     },
 
@@ -931,23 +952,26 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
    */
 
   Entities.DocumItemCoreFacet = Backbone.Model.extend({
+    //REVISAR ESTO URGENTE MGO. 18.11.2014
+    //Entiendo que esto debe crear un nuevo item a un comprobante existente,
+    // pero lo que está haciendo es crear un nuevo comprobante de cero.
  
     whoami: 'DocumItemCoreFacet:comprobante.js ',
 
     schema: {
-        tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList, title:'Tipo ítem' },
+        tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList, title:'Tipo ITEM' },
         slug:     {type: 'Text', title: 'Descripción corta'},
     },
 
     createNewDocument: function(cb){
       var self = this;
       var docum = new Entities.Comprobante(self.attributes);
-      docum.initBeforeCreate();
-
-      docum.save(null, {
-        success: function(model){
-          cb(null,model);
-        }
+      docum.initBeforeCreate(function(docum){
+          docum.save(null, {
+            success: function(model){
+              cb(null,model);
+            }
+          });
       });
     },
 
@@ -1010,13 +1034,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       console.log('CREATENEW DOCUMENT!!!!!!!!!!!')
 
-      docum.initBeforeCreate();
-
-      docum.save(null, {
-        success: function(model){
-          cb(null,model);
-        }
+      docum.initBeforeCreate(function(docum){
+        docum.save(null, {
+          success: function(model){
+            cb(null,model);
+          }
+        });
       });
+
     },
 
     defaults: {

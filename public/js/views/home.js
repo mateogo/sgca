@@ -64,7 +64,7 @@ window.HomeView = Backbone.View.extend({
     formuser: function () {
     	console.log('[%s] formuser BEGIN [%s][%s] [%s]', this.whoami, this.model.get('displayName'), this.model.get('mail'), this.model.get('description'));
         Backbone.Form.validators.errMessages.required = 'Dato requerido';
-        Backbone.Form.validators.errMessages.mail = 'No es un correo válido';
+        Backbone.Form.validators.errMessages.email = 'No es un correo válido';
         Backbone.Form.validators.errMessages.match = 'El dato no coincide';
         var self = this,
             //usermodel = this.model,
@@ -77,7 +77,7 @@ window.HomeView = Backbone.View.extend({
             //var errors = form.commit({validate:true});
             //console.log('***Blur:key: [%s] [%s]  ', editorContent.key, editorContent.getValue() );
 
-            //var errors = form.commit({validate:true});
+            var errors = form.commit({validate:true});
             //console.log('change: errors: [%s]', errors);
         });
 
