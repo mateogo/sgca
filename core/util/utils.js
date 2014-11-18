@@ -38,7 +38,11 @@ var bgImages = [
 ];
 
 var rndBetween = function (min,max){
-    return Math.floor(Math.random()*(max-min+1) + min);
+    //min: inclusive  max: exclusive
+    return Math.floor(Math.random() * (max-min) + min);
+
+    //min: inclusive  max: inclusive
+    //return Math.floor(Math.random() *(max - min + 1) + min);
 };
 
 var safeFileName = function(name){
@@ -75,6 +79,7 @@ var createFolder = function(publicPath, today){
 var rutas = {
     'no_definido'                  :'/#navegar/proyectos',
     'procedencias:list'            :'/#navegar/proyectos',
+    'solicitudes:list'             :'/#navegar/solicitudes',
     'productos:list'               :'/#navegar/productos',
     'gestion:comprobantes:list'    :'/gestion/#comprobantes',
     'studio:producciones:list'     :'/studio'
@@ -87,6 +92,7 @@ exports.anywModule = function(){
 
 exports.getBgImage = function(){
     var index = rndBetween(0,bgImages.length);
+    //console.log('getBgImate: index:[%s] l:[%s]',index, bgImages.length);
     return bgImages[index];
 };
 

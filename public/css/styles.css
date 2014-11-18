@@ -261,16 +261,16 @@ legend {
 
 .resend-password .separator
 
-.front-card { width:838px; margin:auto;margin-top:20px;}
+.front-card { width:838px; margin:auto; margin-top:20px;}
 
 
-.user-options{ float:right; width:320px;margin-top:5px;}
+.user-options{ float:right; width:345px; margin-top:5px;}
 
 .front-signin {
     padding:10px 0px 10px 10px;
-    height: 120px;
+    height: 150px;
     left: 536px;
-    width: 300px;
+    width: 320px;
     border: 1px solid #ccc;
 }
 
@@ -393,8 +393,8 @@ legend {
 
 .front-signin .remember-forgot {
    
-    margin: 0;
-    width: 276px;
+    margin-top: 5px;
+    width: 300px;
 }
 
 .front-signin .remember,.front-signin .forgot,.front-signin .separator {

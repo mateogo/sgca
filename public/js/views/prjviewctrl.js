@@ -18,7 +18,7 @@ window.requestview = function(id){
     utils.requestmodel.request = new Request({_id: id});
     //utils.requestmodel.quotation = new Quotation();
 
-    var requestHeaderView = new PrjHeaderView({model:utils.requestmodel.request});
+    var requestHeaderView = new RequestHeaderView({model:utils.requestmodel.request});
     $('#prjheader').html(requestHeaderView.el);
     
     utils.requestmodel.request.fetch({success: requestviewsuccess}); 
@@ -183,6 +183,20 @@ var quotationsuccess = function(quo){
     }
     utils.reqmodel.resources = resources;
 };
+
+window.RequestHeaderView = Backbone.View.extend({
+
+    initialize: function () {
+        this.listenTo(this.model, "change", this.render);
+        //this.listenTo(this.project,"change", this.render);
+    },
+
+    render: function () {
+        //alert(JSON.stringify(this.model.toJSON()));
+        $(this.el).html(this.template({prj: this.model.toJSON()}));
+        return this;
+    },
+});
 
 
 window.PrjHeaderView = Backbone.View.extend({

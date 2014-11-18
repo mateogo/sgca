@@ -472,16 +472,20 @@ window.utils = {
     ],
         
     userGroupsOptionList:[
-        {val:'no_definido'   , label:'Grupo principal'},
-        {val:'tecnica'       , label:'Técnica'},
-        {val:'produccion'    , label:'Producción'},
-        {val:'contenidos'    , label:'Contenidos'},
-        {val:'adherentes'    , label:'Despacho'},
+        {val:'no_definido'     , label:'Grupo principal'},
+        {val:'tecnica'         , label:'Técnica'},
+        {val:'produccion'      , label:'Producción'},
+        {val:'coordinacion'    , label:'Producción'},
+        {val:'administracion'  , label:'Producción'},
+        {val:'contenidos'       , label:'Contenidos'},
+        {val:'direccion'        , label:'Dirección'},
+        {val:'adherente'     , label:'Adherente'},
     ],
 
     userHomeOptionList:[
         {val:'no_definido'                  , label:'Locación de Inicio'},
         {val:'procedencias:list'            , label:'navegar/procedencias'},
+        {val:'solicitudes:list'             , label:'navegar/solicitudes'},
         {val:'productos:list'               , label:'navegar/productos'},
         {val:'gestion:comprobantes:list'    , label:'gestion/comprobantes'},
         {val:'studio:producciones:list'    , label:'studio/producciones'},

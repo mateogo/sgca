@@ -5,7 +5,7 @@ var AppRouter = Backbone.Router.extend({
     routes: {
         ""                       : "login",
         "home"                   : "home",
-        "about"                  : "about",
+        "terminosdeuso"                  : "about",
 
         "ver/proyecto/:id"       : "viewprojectDetails",
         "proyectos"              : "listProjects",
@@ -68,8 +68,8 @@ var AppRouter = Backbone.Router.extend({
         var self = this;
         dao.currentUser.getUser(function(user){
             var theUser = user ? new User(user) : new User();
-            console.log('Initialize:main.js YES!!! [%s]',user.username);
             if(!self.headerView){
+                console.log('INITIALIZE Header: main.js USER found: [%s]',theUser.get('displayName'));
                 self.headerView = new HeaderView({model: theUser});
                 $('.header').html(self.headerView.el);
             }
@@ -78,10 +78,11 @@ var AppRouter = Backbone.Router.extend({
 
     home: function(){
         var self = this;
+        console.log('******* HOME???');
         dao.currentUser.getUser(function(user){
-            console.log('YES!!! [%s]',user.username);
-            this.headerView = new HeaderView({model: new User(user)});
-            $('.header').html(this.headerView.el);
+            console.log('HOME Header: main.js USER found: [%s]',user.displayName);
+            self.headerView = new HeaderView({model: new User(user)});
+            $('.header').html(self.headerView.el);
 
             if(false){
                 app.navigate('navegar/productos', false);
@@ -94,13 +95,22 @@ var AppRouter = Backbone.Router.extend({
 
     login: function () {
         console.log('login:main.js BEGINS');
-        var user = new UserLogin();
+        //dao.currentUser.getUser(function(user){
+        //    console.log('Login:main.js USER found: [%s]',user.username);
+        //});
+
+
+        var userlogin = new UserLogin();
+        var user = new User();
         if (!this.homeView) {
-            this.homeView = new HomeView({model: user});
+            console.log('HomeView: Initialize:main.js ');
+            this.homeView = new HomeView({model: userlogin});
         }
         $('#content').html(this.homeView.el);
+
         if(!this.headerView){
-            this.headerView = new HeaderView({model: new User()});
+            console.log('LOGIN Header: main.js USER found: [%s]',user.get('displayName'));
+            this.headerView = new HeaderView({model: user});
             $('.header').html(this.headerView.el);
         }
         this.headerView.selectMenuItem('home-menu');
@@ -541,13 +551,14 @@ var AppRouter = Backbone.Router.extend({
 });
 
 
-utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView', 
-    'ProjectListLayoutView', 'ProjectView','ProjectListItemView', 'ProjectViewLayout',
-    'RequestListLayoutView', 'RequestView','RequestListItemView', 'RequestViewLayout',
+utils.loadTemplate(['HomeView', 'AboutView', 
+    'HeaderViewNotLogged','HeaderViewLogged','HeaderViewVisitor',
+    'ProjectListLayoutView', 'ProjectView','ProjectListItemView', 'ProjectViewLayout', 'PrjHeaderView',
+    'RequestListLayoutView', 'RequestView','RequestListItemView', 'RequestViewLayout', 'RequestHeaderView',
     'ResourceView', 'ResourceListItemView', 
     'ResourceListLayoutView', 'ResourceQuoteView',
     'QuotationListLayoutView', 'QuotationView', 'QuotationResourceItemView', 'QuotationListItemView',
-    'PrjHeaderView','ReqResDetailView','AssetListItemView',
+    'ReqResDetailView','AssetListItemView',
     'AssetAccordionView','AssetVersionListItemView','AssetView','AssetLayoutView',
     'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView',
     'ProductViewLayout','ArticleView', 'ArticleViewLayout','BrandingEditView',

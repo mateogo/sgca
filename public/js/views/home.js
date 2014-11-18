@@ -2,19 +2,26 @@ window.HomeView = Backbone.View.extend({
 	whoami: 'homeview:home.js',
 
     initialize:function () {
-        console.log('HomeView initialize [%s]', this.model.get('username'));
+        console.log('HomeView initialize [%s] [%s] [%s] ', this.model.get('mail2'), this.model.get('description'), this.model.get('mail'));
         this.render();
     },
 
   	events: {
         "click .altausuario"       : "formuser",
         "click .js-login-submit"   : 'loginuser',
+        "click .js-newUser"   : 'newuser',
         "change": "change",
+    },
+
+    newuser: function(){
+        var self = this;
+        console.log('New User');
+        self.formuser();
     },
     
     loginuser: function(){
         var self = this;
-        console.log('LOGIN user clic: [%s] [%s]', this.model.get('username'), this.model.get('password'));
+        console.log('********  LOGIN user clic: [%s] [%s]', this.model.get('username'), this.model.get('password'));
  /*       var usercol = new Backbone.Collection(this.model.attributes,{
             url: "/login",
             model: User
@@ -55,18 +62,43 @@ window.HomeView = Backbone.View.extend({
 
 
     formuser: function () {
-    	console.log('[%s] formuser BEGIN ', this.whoami);
+    	console.log('[%s] formuser BEGIN [%s][%s] [%s]', this.whoami, this.model.get('displayName'), this.model.get('mail'), this.model.get('description'));
+        Backbone.Form.validators.errMessages.required = 'Dato requerido';
+        Backbone.Form.validators.errMessages.mail = 'No es un correo válido';
+        Backbone.Form.validators.errMessages.match = 'El dato no coincide';
         var self = this,
-            usermodel = this.model,
-            facet = new UserFacet(usermodel),
+            //usermodel = this.model,
+            userfacet = new UserFacet(self.model),
             form = new Backbone.Form({
-                model: facet,
+                model: userfacet,
             });
 
-        form.on('change', function(form, editorContent) {
-            var errors = form.commit();
+        form.on('termsofuse:change', function(form, editorContent) {
+            //var errors = form.commit({validate:true});
+            //console.log('***Blur:key: [%s] [%s]  ', editorContent.key, editorContent.getValue() );
+
+            //var errors = form.commit({validate:true});
+            //console.log('change: errors: [%s]', errors);
         });
-            
+
+        form.on('username:blur', function(form, editorContent) {
+            console.log('***Blur:key: [%s] value:[%s]', editorContent.key,editorContent.getValue());
+
+            userfacet.validusername(editorContent.getValue(),function(error){
+                if(error){
+                    form.fields[editorContent.key].setError('Ya existe este usuario en la base de datos');
+                    //var errors = form.commit({validate:true});
+                }else{
+                    form.fields[editorContent.key].clearError();
+                    form.fields[editorContent.key].validate();
+                }
+            });
+        });
+ 
+        form.on('termsofuse:blur passwordcopia:blur username:blur mail:blur displayName:blur', function(form, editorContent) {
+            //var errors = form.fields[editorContent.key].validate();
+            //var errors = form.commit();
+        });
 
         var modal = new Backbone.BootstrapModal({
             content: form,
@@ -77,24 +109,26 @@ window.HomeView = Backbone.View.extend({
         });
 
         modal.open(function(){
-            var errors = form.commit();
-            usermodel.set({displayName:facet.get('displayName')});
-            usermodel.set({password:facet.get('password')});
-            usermodel.set({mail:facet.get('mail')});
-         	usermodel.set({username:facet.get('mail')});
-         	console.log('[%s] before SAVE',self.whoami);
+            var errors = form.commit({validate:true});
+            modal.preventClose();
 
-	        usermodel.save(null, {
-	            success: function (model) {
-	             	console.log('saveNode:newuser success');
-	                utils.showAlert('Exito!', 'El nodo se actualizó correctamente', 'alert-success');
-	            },
-	            error: function () {
-	                utils.showAlert('Error', 'Ocurrió un error al intentar actualizar este nodo', 'alert-error');
-	            }
-	        });
+            if(errors){
+                //console.log('hay errores [%s]', userfacet.get('username'));
+            }else{
+                userfacet.validusername(function(error){
+                    if(error){
+                        var errors = form.commit({validate:true});
+                    }else{
+                        userfacet.addNewUser();
+                        modal.close();
+                    }
+                });
+
+            }
+
         });
-    }, 
+    },
+
 
     render:function () {
         $(this.el).html(this.template(this.model.toJSON()));

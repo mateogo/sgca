@@ -515,6 +515,53 @@ window.Person = Backbone.Model.extend({
             this.set({ taglist : [] });
         }
     },
+    initBeforeSave: function(){
+      var feultmod = new Date();
+      this.set({feultmod:feultmod.getTime()})
+      if(! this.get('fealta')){
+        this.set({fealta:feultmod.getTime()});
+      }
+
+    },
+
+    factoryPerson: function(attrs, cb){
+        var person = this;
+
+        person.set({
+            "tipopersona": "persona",
+            "name": attrs.name,
+            "displayName": attrs.displayName,
+            "nickName": attrs.displayName,
+            "tipojuridico": {
+                "pfisica": true,
+                "pjuridica": false,
+                "pideal": false
+            },
+            "roles": {
+                "adherente": true,
+                "proveedor": false,
+            },
+            "estado_alta": "activo",
+            "descriptores": "formWeb",
+            "description": attrs.description,
+            "contactinfo": [{
+                "tipocontacto": "mail",
+                "subcontenido": "trabajo",
+                "contactdata": attrs.mail
+            }],
+        });
+        person.initBeforeSave();
+        person.save(null, {
+            success: function (model) {
+                console.log('Exito! se insertó una nueva Person');
+                if(cb) cb(model);
+            },
+            error: function () {
+                console.log('Error! Ocurrió un error al intentar insertar una nueva Person');
+                if(cb) cb(false);
+            }
+        });
+   },
 
     defaults: {
         _id: null,
@@ -540,7 +587,165 @@ window.Person = Backbone.Model.extend({
         notas:[],
         branding:[],
     }
+
 });
+
+window.UserFacet = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    whoami:'userfacet:models.js',
+
+    //urlRoot: "/usuario",
+
+    idAttribute: "_id",
+
+    // USER FACET
+    schema: {
+
+/*
+        displayName:    {type: 'Text', title: 'Nombre saludo', editorAttrs:{placeholder : 'sera utilizado como saludo'}, validators:['required']},
+        name:           {type: 'Text', title: 'Nombre completo', editorAttrs:{placeholder : 'nombre y apellido'}, validators:['required']},
+        username:       {type: 'Text', title: 'Correo electrónico', editorAttrs:{placeholder : 'sera su identificación como usuario'}},
+        mail:           {type: 'Text', title: 'Reingrese correo', editorAttrs:{placeholder : 'sera su correo de contacto'}},
+        password:       {type: 'Password', title: 'Clave de acceso' },
+        passwordcopia:  {type: 'Password', title: 'Reingrese clave'},
+        termsofuse:      {type: 'Checkbox',options: ['Aceptado'] , title:'Acepto los términos de uso y las políticas de privacidad del MCN'},
+*/
+        displayName:    {type: 'Text', title: 'Nombre saludo', editorAttrs:{placeholder : 'sera utilizado como saludo'}, validators:['required']},
+        name:           {type: 'Text', title: 'Nombre completo', editorAttrs:{placeholder : 'nombre y apellido'}, validators:['required']},
+        username:       {type: 'Text', title: 'Correo electrónico', editorAttrs:{placeholder : 'sera su identificación como usuario'},validators:['required','email']},
+        mail:           {type: 'Text', title: 'Reingrese correo', editorAttrs:{placeholder : 'sera su correo de contacto'}, validators:[
+                            {type:'required', message:'Favor ingrese el dato'},{type:'email', message:'no es una dirección válida'},{type:'match',field:'username',message:'Los correos no coinciden'}]},
+        description:    {type: 'Text', title: 'Comentario', editorAttrs:{placeholder : 'cuéntenos brevemente sobre Usted'}},
+        password:       {type: 'Password', title: 'Clave de acceso', validators:['required'] },
+        passwordcopia:  {type: 'Password', title: 'Reingrese clave', validators:[
+                            {type:'match', message:'Las claves no coinciden', field:'password'}]},
+        termsofuse:      {type: 'Checkbox',options: ['Aceptado'] , title:'Acepto los términos de uso y las políticas de privacidad del MCN'},
+    },
+    
+    addNewUser: function(){
+        var self = this,
+        pf = new Person(),
+        user = new User(),
+        userattrs = {};
+
+        userattrs.displayName = self.get('displayName');
+        userattrs.name = self.get('name');
+        userattrs.username = self.get('username');
+        userattrs.mail = self.get('mail');
+        userattrs.description = self.get('description');
+        userattrs.password = self.get('password');
+        userattrs.roles =   self.get('roles'),
+        userattrs.home =  self.get('home'),
+        userattrs.grupo = self.get('grupo'),
+
+        user.set(userattrs);
+
+        console.log('addNewUser');
+
+        pf.factoryPerson(userattrs,function(person){
+            if(person){
+                person.insertuser(user, function(user){
+                    if(user){
+                        console.log('Usuario insertado')
+                    }
+
+                });
+
+            }
+
+        });
+
+    },
+
+    loadusers: function(username, cb){
+        var self = this;
+        //console.log('loadusers: [%s]',self.get('username'));
+        var query = {'username':username};
+        var userCol= new UserCollection();
+        dao.userfacet.setCol(userCol);
+        userCol.fetch({
+            data: query,
+            type: 'post',
+            success: function() {
+                if(cb) cb(userCol);
+            }
+        });
+    },
+
+    validusername: function(username, cb) {
+        var self = this;
+        console.log('!!!UserValidation checking for:[%s]', username);
+        self.loadusers(username, function(userCol){
+            if(userCol){
+                console.log('User exists [%s] [%s]',userCol.length, username);
+                if(userCol.length){
+                    self.set('usernameconflict',self.get('username'));
+                }else {
+                    self.set('usernameconflict','zNoHallado');
+                }
+                cb(userCol.length);
+            }else cb(0);
+
+        });
+
+    },
+
+    validate: function(attrs, options) {
+      console.log('UserFacet VALIDATE attrs:[%s] options:[%s]',attrs,options);
+      var errors = {}
+      if (! attrs.username) {
+        console.log('UserFacet NOT username: ');
+        errors.username = "Usuario: dato requerido";
+        errors.otro = 'otro error no reconocido';
+      }
+      
+      if (attrs.username) {
+        console.log('UserFacet insert here validation USERname: [%s]', attrs.username);
+        if(attrs.username == this.get('usernameconflict')) {
+          errors.username = "Ya existe este usuario en la base de datos";
+        }
+        //errors.username = "Usuario: dato requerido";
+        //errors.otro = 'otro error no reconocido';
+      }
+      
+      if (! attrs.termsofuse) {
+        console.log('UserFacet termsofuse: [%s]', attrs.termsofuse);
+        errors.termsofuse = "Debe aceptar los términos de uso";
+        //errors.otro = 'otro error no reconocido';
+      }
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+
+    defaults : {
+        _id: null,
+        displayName:'',
+        name:'',
+        username:'',
+        mail:'',
+        description:'cuéntenos brevemente sobre Usted',
+        password:'',
+        passwordcopia:'',
+        fealta:'',
+        usernameconflict:'zNoTesteado',
+        roles: ['adherente'],
+        home: "solicitudes:list",
+        grupo:'adherente',
+        termsofuse: false,
+
+        estado_alta:'pendaprobacion',
+        verificado: {
+            mail:false,
+            feaprobado: null,
+            adminuser: '',
+        },
+        conduso:[]
+    }
+});
+
+
 
 window.PersonCollection = Backbone.Collection.extend({
     model: Person,
@@ -2864,6 +3069,7 @@ window.User = Backbone.Model.extend({
     retrieveData: function(){
         return dao.extractData(this.attributes);
     },
+
     beforeUpdate: function() {
         this.set({feum:new Date().getTime()});
         this.set({username:this.get('mail')});
@@ -2953,7 +3159,7 @@ window.User = Backbone.Model.extend({
 
     schema: {
         displayName:   {type: 'Text', title: 'Nombre', editorAttrs:{placeholder : 'sera utilizado como saludo'}},
-        mail:          {type: 'Text', title: 'EMail', editorAttrs:{placeholder : 'sera su nombre de usuario'}},
+        mail:          {type: 'Text', title: 'EMail', editorAttrs:{placeholder : 'mail de contacto'}},
         password:      {type: 'Password', title: 'Clave' },
         estado_alta:   {type: 'Select',options: utils.userStatusOptionList, title:'Estado' },
         home:          {type: 'Select',options: utils.userHomeOptionList, title:'Loc de Inicio' },
@@ -2968,6 +3174,7 @@ window.User = Backbone.Model.extend({
         username:'',
         password:'',
         mail:'',
+        description:'',
         roles:[],
         fealta:'',
         grupo: '',
@@ -2982,41 +3189,7 @@ window.User = Backbone.Model.extend({
     }
 });
 
-window.UserFacet = Backbone.Model.extend({
-    // ******************* BROWSE PRODUCTS ***************
-    whoami:'userfacet:models.js',
 
-    //urlRoot: "/usuario",
-
-    idAttribute: "_id",
-
-    // USER FACET
-    schema: {
-        displayName:   {type: 'Text', title: 'Nombre completo', editorAttrs:{placeholder : 'sera utilizado como saludo'}},
-        mail:          {type: 'Text', title: 'EMail', editorAttrs:{placeholder : 'sera su nombre de usuario'}},
-        password:      {type: 'Password', title: 'Clave' },
-        rolinstancia:   {type: 'Select',options: utils.rolinstanciasOptionList },
-    },
-    //    roles:         {type: 'Select',options: utils.userRolesOptionList },
-
-    defaults : {
-        _id: null,
-        displayName:'',
-        username:'',
-        password:'',
-        mail:'',
-        roles:[],
-        fealta:'',
-
-        estado_alta:'pendaprobacion',
-        verificado: {
-            mail:false,
-            feaprobado: null,
-            adminuser: '',
-        },
-        conduso:[]
-    }
-});
 
 window.UserLogin = Backbone.Model.extend({
     // ******************* BROWSE PRODUCTS ***************
