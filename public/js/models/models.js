@@ -151,7 +151,7 @@ window.Person = Backbone.Model.extend({
 
    insertuser: function(user, cb){
         //console.log('[%s] insert USER BEGINS',this.whoami);
-        utils.inspect(user.attributes,0, 'INSERT USER');
+        //utils.inspect(user.attributes,0, 'INSERT USER');
         
         var self = this,
             predicate = 'es_usuario_de',
@@ -3085,6 +3085,8 @@ window.User = Backbone.Model.extend({
 
     idAttribute: "_id",
 
+    enabled_predicates: ['es_usuario_de', 'es_miembro_de', 'es_representante_de'],
+
    initialize: function(){
         this.viewers = {};
    },
@@ -3101,9 +3103,7 @@ window.User = Backbone.Model.extend({
     update: function(cb){
         var self = this;
         self.beforeUpdate();
-        self.save({
 
-        })
         self.save(null, {
             success: function (user) {
                 console.log('insert user:SUCCESS: [%s] ',user.get('username'));
@@ -3113,6 +3113,75 @@ window.User = Backbone.Model.extend({
                 console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',user.get('username'));
             }
         });
+    },
+
+
+    loadPersons: function(cb){
+
+        var self = this,
+            list = [],
+            defer = $.Deferred(),
+            rawlist = new PersonCollection();
+
+            //defer.resolve(data);
+            // var promise = dever.promise();
+            // $.when(promis).done(function(entities){
+/*
+        self.templates = {};
+        $.each(views, function(index, view) {
+            if (window[view]) {
+                deferreds.push($.get('tpl/' + view + '.html', function(data) {
+                    window[view].prototype.template = _.template(data);
+                }));
+            } else {
+                console.log('WARINING: Marionette template. tpl/' + view + '.html' + " not FOUND!!");
+                deferreds.push($.get('tpl/' + view + '.html', function(data) {
+                    self.templates[view] = _.template(data);
+                }));
+
+            }
+        });
+        //$.when: Provides a way to execute callback functions based on one or more objects, 
+        //usually Deferred objects that represent asynchronous events.
+        // esta forma de invocacion de apply es par acuando se trata de un array de 'defereds'.
+        // el metodo apply espera en su segundo parametro un array.
+        $.when.apply(null, deferreds).done(callback);
+
+
+        $.each(self.enabled_predicates, function(index, elem) {
+            if(self.get(elem)){
+                list = _.map(self.get(elem),function(item){
+                    return new Person({_id:item.id, slug:item.slug, code:item.code, predicate:item.predicate});
+                });
+                rawlist.add(list);
+
+
+            if (window[view]) {
+                deferreds.push($.get('tpl/' + view + '.html', function(data) {
+                    window[view].prototype.template = _.template(data);
+                }));
+            } else {
+                console.log('WARINING: Marionette template. tpl/' + view + '.html' + " not FOUND!!");
+                deferreds.push($.get('tpl/' + view + '.html', function(data) {
+                    self.templates[view] = _.template(data);
+                }));
+
+            }
+        });
+*/
+
+        _.each(self.enabled_predicates, function(elem){
+            if(self.get(elem)){
+                list = _.map(self.get(elem),function(item){
+                    return new Person({_id:item.id, slug:item.slug, code:item.code, predicate:item.predicate});
+                });
+                rawlist.add(list);
+            }
+        });
+        console.log('[%s]: loadPersons:[%s]',self.whoami,rawlist.length);
+        if(cb) cb(rawlist);
+        return rawlist;
+
     },
 
     fetchFilteredPredicateArray: function(predicate, child, ancestor){
@@ -3125,6 +3194,24 @@ window.User = Backbone.Model.extend({
             });
         }
         return tlist;
+    },
+
+    buildPredicateData: function (ancestor, child, seq, numprefix, predicate) {
+        var ancestordata = {
+                id: ancestor.id,
+                code: ancestor.get('nickName'),
+                slug: ancestor.get('name'),
+                order: ancestor.buildRefNumber(seq,(numprefix||100)),
+                predicate: predicate
+            };
+        var tlist = child.fetchFilteredPredicateArray(predicate, child,ancestor);
+        tlist.push(ancestordata);
+        
+        if(predicate === 'es_usuario_de')   child.set({es_usuario_de: tlist});
+        if(predicate === 'es_miembro_de')   child.set({es_miembro_de: tlist});
+        if(predicate === 'es_representante_de')  child.set({es_representante_de: tlist});
+
+        return child;
     },
 
     displayItem: function (key) {

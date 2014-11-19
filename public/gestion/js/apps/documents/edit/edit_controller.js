@@ -28,8 +28,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         });
         registerDocumEditEvents(documEditView);
 
-
-
         var documItemsView = new DocManager.DocsApp.Common.Views.SidebarPanel({
           itemView: DocManager.DocsApp.Common.Views.SidebarItem,
           collection: Edit.Session.items 
