@@ -1911,6 +1911,29 @@ window.BrowseProductsQuery = Backbone.Model.extend({
     }
 });
 
+window.BrowseSolQuery = Backbone.Model.extend({
+    // ******************* BROWSE PRODUCTS ***************
+    retrieveData: function(){
+        return dao.extractData(this.attributes);
+    },
+    getPersona: function(){
+       
+         return this.get(persona);
+        
+    },
+    setPersona: function(persona){
+        
+        this.set({persona:});
+
+    },
+    defaults: {
+        tipocomp:'nsolicitud',
+        persona: ''
+
+    }
+});
+
+
 window.ManageTable = Backbone.Model.extend({
     // ******************* BROWSE PRODUCTS ***************
     whoami:'managetable',

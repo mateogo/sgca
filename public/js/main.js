@@ -164,7 +164,9 @@ var AppRouter = Backbone.Router.extend({
     },
 
     requestDetails: function (id) {
+        console.log('requestDetails:main.js');
         var request = new Request({ _id: id});
+        //
         request.fetch({success: function() {
             utils.currentrequest = request;
             $("#content").html(new RequestView({model: request}).el);
@@ -172,6 +174,7 @@ var AppRouter = Backbone.Router.extend({
         if(this.headerView) this.headerView.selectMenuItem();
     },
 
+            
     addRequest: function() {
         var request = new Request();
         $('#content').html(new RequestView({model: request}).el);
@@ -578,7 +581,7 @@ utils.loadTemplate(['HomeView', 'AboutView',
     'ReqResDetailView','AssetListItemView',
     'AssetAccordionView','AssetVersionListItemView','AssetView','AssetLayoutView',
     'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView',
-    'ProductViewLayout','ArticleView', 'ArticleViewLayout','BrandingEditView',
+    'ProductViewLayout','SolListItemView','ArticleView', 'ArticleViewLayout','BrandingEditView',
     'ProfileView','ProfileViewLayout', 'ProfilePersonView',
     'PersonView','PersonViewLayout','PersonTableLayoutView',
     'UserTableLayoutView','UserView','UserViewLayout'

@@ -1587,6 +1587,11 @@ window.utils = {
             eventFillColor: {no_definido:'lime',bajo:'green',medio:'blue',alto:'magenta',critico:'red'},
             fillOpacity:{no_definido:.1,planificado:.3,gestion:.6,recibido:.8,ingestado:.9,controlado:.9,aprobado:1,observado:1,archivado:1}
         },
+        //add sol
+        sol: {
+            eventFillColor: {no_definido:'lime',bajo:'green',medio:'blue',alto:'magenta',critico:'red'},
+            fillOpacity:{no_definido:.1,planificado:.3,gestion:.6,recibido:.8,ingestado:.9,controlado:.9,aprobado:1,observado:1,archivado:1}
+        },
         project: { eventText: {no_definido:' ',concurso: 'Conc',convenio: 'Cnv', cesiones: 'Ces', 
                     producciones: 'Pro', adhesiones:'Adh',produccion:'Pro',cesion:'Ces', infantil:'Inf', 
                     musica:'Mus', teatro:'Tea', musical:'Tmu',

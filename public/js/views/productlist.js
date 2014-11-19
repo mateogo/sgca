@@ -13,7 +13,7 @@ window.ProductViewLayout = Backbone.View.extend({
 
     events: {
         "click  .prjview"  : "prjview",
-        "click  .testview"    : "testview",
+        "click  .testview" : "testview",
     },
 
     testview: function(){

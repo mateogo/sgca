@@ -16,6 +16,10 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
       console.log('API: listProducts');
       window.open('/#navegar/productos');
     },
+    listSol: function(criterion){
+      console.log('API: listSol');
+      window.open('/#navegar/solicitudes');
+    },
 
     listProjects: function(criterion){
       console.log('API: listProjects');
@@ -63,6 +67,9 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
 
   DocManager.on("products:list", function(){
     API.listProducts();
+  });
+   DocManager.on("sol:list", function(){
+    API.listSol();
   });
 
   DocManager.on("projects:list", function(){
