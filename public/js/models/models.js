@@ -3126,7 +3126,7 @@ window.User = Backbone.Model.extend({
             //defer.resolve(data);
             // var promise = dever.promise();
             // $.when(promis).done(function(entities){
-
+/*
         self.templates = {};
         $.each(views, function(index, view) {
             if (window[view]) {
@@ -3168,6 +3168,7 @@ window.User = Backbone.Model.extend({
 
             }
         });
+*/
 
         _.each(self.enabled_predicates, function(elem){
             if(self.get(elem)){
