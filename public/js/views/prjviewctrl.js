@@ -29,9 +29,11 @@ var requestviewsuccess = function(request){
     dao.resourcesQueryData().setProject(request.id,request.get('denom'));
     dao.quotationsQueryData().setProject(request.id,request.get('denom'));
     dao.productsQueryData().setProject(request.id,request.get('denom'));
+
     resourceview();
     assetsview();
     productview();
+    solview();
 };
 
 var projectviewsuccess = function(prj){
@@ -62,8 +64,25 @@ window.productview = function(){
     });
 };
 
+window.solview = function(){
+    var query = dao.solQueryData().retrieveData(),
+        solList = new DocumentCollection();
+    $('#sollist').html('');
+    solList.fetch({
+        data: query,
+        type: 'post',
+        success: function(solList) {
+            if(solList.length>0){
+                //$('#reslist').append('<h3>recursos</h3>');
+                solList.each(solviewsuccess);   
+            }
+        }
+    });
+};
+
+
 var productviewsuccess = function(product){
-    //console.log('productviewsuccess: [%s]',product.get('slug'));
+    console.log('productviewsuccess: [%s]',product.get('slug'));
 
     var productListView = new ProductListItemView({model:product,tagName:'div'});
     $('#productlist').append(productListView.render().el);  
@@ -71,6 +90,16 @@ var productviewsuccess = function(product){
     //var reqResDetailView = new ReqResDetailView({model:product});
     //$('#productlist').append(reqResDetailView.render().el);
     // todo: listar los files del resource
+
+};
+
+var solviewsuccess = function(model){
+    console.log('solviewsuccess: [%s]',model.get('slug'));
+
+    var solListView = new SolListItemView({model:model,tagName:'div'});
+    $('#sollist').append(solListView.render().el);  
+
+
 
 };
 

@@ -228,7 +228,15 @@ window.dao = {
         return this.queryProductData;
     },
 
+    solQueryData:function (){
+        if (!this.querySolData) {
+            this.querySolData = new BrowseSolQuery();
+        }
+        return this.querySolData;
+    },
+    
     productsCol:{
+        
         get: function (){
             if (!this.productsCollectionRef) {
                 this.productsCollectionRef = new ProductCollection();
