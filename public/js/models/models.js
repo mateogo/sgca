@@ -1918,12 +1918,12 @@ window.BrowseSolQuery = Backbone.Model.extend({
     },
     getPersona: function(){
        
-         return this.get(persona);
+         return this.get('persona');
         
     },
-    setPersona: function(persona){
+    setPersona: function(person){
         
-        this.set({persona:});
+        this.set({persona:person});
 
     },
     defaults: {
