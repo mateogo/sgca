@@ -595,6 +595,48 @@ template: _.template("<a href='#articulos/<%= id %>' class='notaitem' title='<%=
     },
 });
 
+window.PersonsFromUserView = Backbone.View.extend({
+    //tagName:'ul',    
+    //className:'nav nav-list',
+
+    render: function () {
+        console.log('PersonFromUserView: render BEGIN');
+        var self = this;
+        var persons = this.model;
+        persons.each(function(person){
+            person.fetch({success: function() {
+                //$("#listcontent").html(new PersonView({model: person}).el);
+                $(self.el).append(new ProfilePersonView({model: person}).render().el);
+            }});
+
+        });
+        return this;
+    }
+});
+
+window.ProfilePersonView = Backbone.View.extend({
+    //tagName: "li",
+    //template: _.template("<button class='btn-block btn-link ancestorpa'><%= slug %></button>"),
+
+    events: {
+        "click  .ancestorpa" : "ancestorpa",
+    },
+
+    ancestorpa:function(){
+        utils.approuter.navigate('personas/'+this.model.id, true);
+    },
+
+    initialize: function () {
+        this.model.bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+    },
+
+    render: function () {
+        console.log('PeronITEM RENDER **********')
+        $(this.el).html(this.template(this.model.toJSON()));
+        return this;
+    }
+});
 
 window.PersonAncestorView = Backbone.View.extend({
     tagName:'ul',    

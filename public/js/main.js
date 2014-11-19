@@ -5,7 +5,7 @@ var AppRouter = Backbone.Router.extend({
     routes: {
         ""                       : "login",
         "home"                   : "home",
-        "terminosdeuso"                  : "about",
+        "terminosdeuso"          : "about",
 
         "ver/proyecto/:id"       : "viewprojectDetails",
         "proyectos"              : "listProjects",
@@ -46,6 +46,8 @@ var AppRouter = Backbone.Router.extend({
         "navegar/articulos"      : "browseArticles",
         "navegar/articulos/pag/:page"  : "browseArticles",
         "articulos/:id"          : "articleDetails",
+
+        "perfil"                : "editProfile",
 
         "personas/add"          : "addPerson",
         "navegar/personas"      : "browsePersons",
@@ -210,8 +212,23 @@ var AppRouter = Backbone.Router.extend({
 
     },
 
-    // User Module
 
+    editProfile: function() {
+
+        dao.currentUser.getUser(function(user){
+            var theUser = user ? new User(user) : new User();
+            console.log('editProfile:main.js');
+            $('#content').html(new ProfileViewLayout().el);
+
+            $('#listcontent').html(new ProfileView({model: theUser}).el);
+        });
+
+
+
+    },
+
+
+    // User Module
     addPerson: function() {
         console.log('addPerson:main.js');
         $('#content').html(new PersonViewLayout().el);
@@ -562,7 +579,10 @@ utils.loadTemplate(['HomeView', 'AboutView',
     'AssetAccordionView','AssetVersionListItemView','AssetView','AssetLayoutView',
     'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView',
     'ProductViewLayout','ArticleView', 'ArticleViewLayout','BrandingEditView',
-    'PersonView','PersonViewLayout','PersonTableLayoutView','UserTableLayoutView','UserView','UserViewLayout'], function() {
+    'ProfileView','ProfileViewLayout', 'ProfilePersonView',
+    'PersonView','PersonViewLayout','PersonTableLayoutView',
+    'UserTableLayoutView','UserView','UserViewLayout'
+    ], function() {
     app = new AppRouter();
     utils.approuter = app;
     Backbone.history.start();

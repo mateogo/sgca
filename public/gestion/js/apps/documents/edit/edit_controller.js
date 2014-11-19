@@ -28,13 +28,10 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         });
         registerDocumEditEvents(documEditView);
 
-        console.log('Aloooo2?')
-
         var documItemsView = new DocManager.DocsApp.Common.Views.SidebarPanel({
           itemView: DocManager.DocsApp.Common.Views.SidebarItem,
           collection: Edit.Session.items 
         });
-        console.log('Aloooo3?')
         registerDocumItemsView(documItemsView);
 
         //var searchItemsView = new Edit.Search();
@@ -43,7 +40,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         documLayout.on("show", function(){
           documLayout.navbarRegion.show(documNavBar);
           documLayout.mainRegion.show(documEditView);
-          console.log('Aloooo3?')
           documLayout.sidebarRegion.show(documItemsView);
         });
 

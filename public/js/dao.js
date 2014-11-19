@@ -59,9 +59,8 @@ window.dao = {
                 type: 'get',
                 url: '/currentUser',
                 success: function(data) {
-                    console.log('callback SUCCESS');
                     self.user = new app.Entities.User(data);
-                    console.log('FETCH USER: [%s]',self.user.id);
+                    //console.log('FETCH USER: [%s]',self.user.id);
                     if(cb) cb( self.user);
                 }
             });
@@ -156,6 +155,11 @@ window.dao = {
                 cb(this.user);
             }
         },
+ 
+        setUser: function(us){
+            self.user = us;
+        },
+        
         fetchUser: function(cb){
             console.log('fetchUser: currentUser')
             var self = this;
@@ -169,7 +173,15 @@ window.dao = {
                 }
             });
         },
+        personsList: function(persons){
+            if(persons){
+                this.persons = persons;
+            }else{
+                return persons;
+            }
+        }
     },
+
     userHome:function(role){
 
     },
@@ -578,6 +590,9 @@ window.dao = {
         var loadRelated = function(cb){
             spec.product.loadrelated(cb);
         };
+        var loadPersonsFromUser = function(cb){
+            spec.product.loadPersons(cb);
+        };
         var loadProfile = function(cb){
             spec.product.fetchProfileData(cb);
         };
@@ -673,6 +688,12 @@ window.dao = {
             spec.anview = new PersonAncestorView({model:spec.ancestors});
             $(spec.anselector,spec.context).html(spec.anview.render().el);
         };
+        var personsfromuserRender = function(persons){
+            if(persons) spec.persons = persons;
+            //console.log('ancestorRender:begins [%s] length:[%s]', spec.anselector, spec.persons.length)
+            spec.anview = new PersonsFromUserView({model:spec.persons});
+            $(spec.personsselector,spec.context).html(spec.anview.render().el);
+        };
         var relatedRender = function(related){
             //console.log('renderview:callback: [%S]',spec.chselector);
             if(related) spec.related = related;
@@ -720,6 +741,9 @@ window.dao = {
             fetchRelated: function(cb){
                 loadRelated(cb);
             },
+            fetchPersonsRelated: function() {
+                loadPersonsFromUser(cb);
+            },
             fetchAncestors: function(cb){
                 loadAncestors(cb);
             },
@@ -761,6 +785,9 @@ window.dao = {
             },
             personanrender: function() {
                 loadPersonAncestors(personancestorRender);
+            },
+            personsformuserrender: function() {
+                loadPersonsFromUser(personsfromuserRender);
             },
             profilerender: function() {
                 loadProfile(profileRender);

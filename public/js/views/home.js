@@ -77,7 +77,7 @@ window.HomeView = Backbone.View.extend({
             //var errors = form.commit({validate:true});
             //console.log('***Blur:key: [%s] [%s]  ', editorContent.key, editorContent.getValue() );
 
-            var errors = form.commit({validate:true});
+            //var errors = form.commit({validate:true});
             //console.log('change: errors: [%s]', errors);
         });
 
@@ -115,7 +115,7 @@ window.HomeView = Backbone.View.extend({
             if(errors){
                 //console.log('hay errores [%s]', userfacet.get('username'));
             }else{
-                userfacet.validusername(function(error){
+                userfacet.validusername(userfacet.get('username'),function(error){
                     if(error){
                         var errors = form.commit({validate:true});
                     }else{

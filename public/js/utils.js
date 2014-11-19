@@ -149,6 +149,13 @@ window.utils = {
         }
     },
 
+    userPredicateList: [
+        {val:'no_definido'      , label:'tipo de comprobante'},
+        {val:'es_usuario_de'    , label:'Mis datos personales'},
+        {val:'es_miembro_de'    , label:'miembro/ integrante/relacionado'},
+        {val:'es_responsable_de', label:'responsable/ coordinador/ enlace'},
+    ],
+
     tipoDocumItemOptionList: [
         {val:'no_definido'    , label:'tipo de comprobante'},
         {val:'ptecnico'       , label:'P/Técnico'},
@@ -1283,7 +1290,7 @@ window.utils = {
         {val:'temporada'      , label:'Temporada: '},
      ],
 
-    fetchLabel:function(list,key){
+    fetchLabel:function(list, key){
         var node = _.find(list, function(data){return data.val === key;});
         console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
         return node ? node.label: key;
