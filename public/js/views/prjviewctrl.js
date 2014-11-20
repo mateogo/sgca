@@ -11,11 +11,12 @@ window.projectview = function(id){
     utils.prjmodel.project.fetch({success: projectviewsuccess}); 
 };
 
-window.requestview = function(id){
+window.requestview = function(id, user){
     console.log('requestview:requestviewctrl.js [%s]',id);
     
     utils.requestmodel = {};
     utils.requestmodel.request = new Request({_id: id});
+    dao.solQueryData().setUser(user._id);
     //utils.requestmodel.quotation = new Quotation();
 
     var requestHeaderView = new RequestHeaderView({model:utils.requestmodel.request});
@@ -29,7 +30,7 @@ var requestviewsuccess = function(request){
     dao.resourcesQueryData().setProject(request.id,request.get('denom'));
     dao.quotationsQueryData().setProject(request.id,request.get('denom'));
     dao.productsQueryData().setProject(request.id,request.get('denom'));
-
+    
     resourceview();
     assetsview();
     productview();
@@ -41,6 +42,7 @@ var projectviewsuccess = function(prj){
     dao.resourcesQueryData().setProject(prj.id,prj.get('denom'));
     dao.quotationsQueryData().setProject(prj.id,prj.get('denom'));
     dao.productsQueryData().setProject(prj.id,prj.get('denom'));
+   
     resourceview();
     assetsview();
     productview();

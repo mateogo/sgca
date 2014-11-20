@@ -1916,19 +1916,19 @@ window.BrowseSolQuery = Backbone.Model.extend({
     retrieveData: function(){
         return dao.extractData(this.attributes);
     },
-    getPersona: function(){
-       
-         return this.get('persona');
+    getUser: function(){
+        var user = this.get('useralta');
+        console.log(user)
+        return user;
         
     },
-    setPersona: function(person){
-        
-        this.set({persona:person});
-
+    setUser: function(user){
+          this.set({useralta:user});
     },
+    
     defaults: {
         tipocomp:'nsolicitud',
-        persona: ''
+        useralta: ''
 
     }
 });

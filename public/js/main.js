@@ -158,9 +158,18 @@ var AppRouter = Backbone.Router.extend({
 
 
     viewrequestDetails: function (id) {
-        console.log('viewrequestDetails:main.js');
-        $('#content').html(new RequestViewLayout({model: dao.resourcesQueryData()}).el);
-        requestview(id);
+        
+        var self = this;
+        dao.currentUser.getUser(function(user){
+            
+          console.log('viewrequestDetails:main.js [%s]', user._id);
+          $('#content').html(new RequestViewLayout({model: dao.resourcesQueryData()}).el);
+          requestview(id,user);
+            
+        });
+        
+        
+
     },
 
     requestDetails: function (id) {
