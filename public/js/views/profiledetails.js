@@ -3,6 +3,7 @@ window.ProfileView = Backbone.View.extend({
     whoami:'PersonView:persondetails',
 
     initialize: function (opts) {
+        console.log('[%s]  ProfileView BEGINS', this.whoami);
         this.options = opts || {};
         this.relatedController = dao.productViewFactory({
             product:this.model, 

@@ -210,7 +210,7 @@ var AppRouter = Backbone.Router.extend({
 
         var user = new User({_id: id});
         user.fetch({success: function() {
-            $("#listcontent").html(new UserView({model: person}).el);     
+            $("#listcontent").html(new UserView({model: user}).el);     
         }});
     },
 

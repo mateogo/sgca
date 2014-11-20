@@ -59,8 +59,10 @@ window.Person = Backbone.Model.extend({
 
     enabled_predicates:['es_miembro_de', 'es_relacion_de', 'es_coleccion_de'],
 
-    initialize: function () {
+    initialize: function (attrs, options) {
         this.validators = {};
+        this.options = options;
+        console.log('[%s] INITIALIZE: [%s] [%s]', this.whoami, this.id, this.options);
 
         this.viewers = {};
 
@@ -3120,67 +3122,31 @@ window.User = Backbone.Model.extend({
 
         var self = this,
             list = [],
-            defer = $.Deferred(),
-            rawlist = new PersonCollection();
-
-            //defer.resolve(data);
-            // var promise = dever.promise();
-            // $.when(promis).done(function(entities){
-/*
-        self.templates = {};
-        $.each(views, function(index, view) {
-            if (window[view]) {
-                deferreds.push($.get('tpl/' + view + '.html', function(data) {
-                    window[view].prototype.template = _.template(data);
-                }));
-            } else {
-                console.log('WARINING: Marionette template. tpl/' + view + '.html' + " not FOUND!!");
-                deferreds.push($.get('tpl/' + view + '.html', function(data) {
-                    self.templates[view] = _.template(data);
-                }));
-
-            }
-        });
-        //$.when: Provides a way to execute callback functions based on one or more objects, 
-        //usually Deferred objects that represent asynchronous events.
-        // esta forma de invocacion de apply es par acuando se trata de un array de 'defereds'.
-        // el metodo apply espera en su segundo parametro un array.
-        $.when.apply(null, deferreds).done(callback);
-
-
-        $.each(self.enabled_predicates, function(index, elem) {
-            if(self.get(elem)){
-                list = _.map(self.get(elem),function(item){
-                    return new Person({_id:item.id, slug:item.slug, code:item.code, predicate:item.predicate});
-                });
-                rawlist.add(list);
-
-
-            if (window[view]) {
-                deferreds.push($.get('tpl/' + view + '.html', function(data) {
-                    window[view].prototype.template = _.template(data);
-                }));
-            } else {
-                console.log('WARINING: Marionette template. tpl/' + view + '.html' + " not FOUND!!");
-                deferreds.push($.get('tpl/' + view + '.html', function(data) {
-                    self.templates[view] = _.template(data);
-                }));
-
-            }
-        });
-*/
+            aperson,
+            rawlist =[]; // new PersonCollection();
+        
+        console.log('[%s]: loadPersons BEGINS',self.whoami);
 
         _.each(self.enabled_predicates, function(elem){
             if(self.get(elem)){
                 list = _.map(self.get(elem),function(item){
-                    return new Person({_id:item.id, slug:item.slug, code:item.code, predicate:item.predicate});
-                });
-                rawlist.add(list);
+                        console.log('iterando: enabled predicate:[%s] itemid:[%s] slug:[%s]',elem,item.id,item.slug)
+                        aperson = new Person({_id:item.id},item);
+                        
+                        var defer = $.Deferred();
+
+                        aperson.fetch({
+                            success: function(model){
+                                console.log('SUCCESS: [%s]',model.id);
+                                defer.resolve(aperson);
+                            }
+                        });
+                        return defer.promise();
+                    });
+                rawlist = _.union(rawlist,list);
             }
         });
-        console.log('[%s]: loadPersons:[%s]',self.whoami,rawlist.length);
-        if(cb) cb(rawlist);
-        return rawlist;
+        cb(rawlist)
 
     },
 

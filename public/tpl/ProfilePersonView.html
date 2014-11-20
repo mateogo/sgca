@@ -1,24 +1,29 @@
   <div class="row-fluid well">
   <div class="span6" >
     <div class='row-fluid'>
-    <h3> <%= slug %> </h3>
     <div class="span12" >
-      <p><strong> <%= utils.fetchLabel(utils.userPredicateList, predicate) %> </strong></p>
-      <p><strong>Cobertura: </strong></p>
-      <p><strong>Fuente: </strong></p>
+      <h3><%= utils.fetchLabel(utils.userPredicateList, predicate) %> </h3>
+      <p> <%= name %> </p>
+      <p><strong>Alias: </strong><%= displayName %></p>
+      <p><strong>Identificación: </strong><%= nickName %></p>
     </div>
     </div>
   </div>
   <div class="span6" >
     <div class='row-fluid'>
-    <span class='span12'><h3> <%= slug %></h3></span>
-    <span class='span12'><strong>Señal: </strong> algo</span>
+      <% 
+        if(contactinfo)
+          _.each(contactinfo,function(contact){ %>
 
-    <span class='span12'> algo</span>
-    <span class='span12'><%= description %></span>
+            <p><strong><%= contact.tipocontacto %> </strong><%= contact.subcontenido %></p>
+            <p> <%= contact.contactdata %> </p>
+            <hr>
+
+        <%  });
+        %>
+
     </div>
   </div>
 </div>
 
 <hr>
-<!-- %= utils.fetchLabel(utils.fuenteOptionList, fuente) %  -->

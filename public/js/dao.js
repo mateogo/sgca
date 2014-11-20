@@ -161,7 +161,7 @@ window.dao = {
         },
         
         fetchUser: function(cb){
-            console.log('fetchUser: currentUser')
+            console.log('fetchUser: currentUser');
             var self = this;
             $.ajax({
                 type: 'get',
@@ -698,7 +698,7 @@ window.dao = {
         };
         var personsfromuserRender = function(persons){
             if(persons) spec.persons = persons;
-            //console.log('ancestorRender:begins [%s] length:[%s]', spec.anselector, spec.persons.length)
+            console.log('personsfromuserRender:begins [%s] length:[%s]', spec.personsselector, spec.persons.length)
             spec.anview = new PersonsFromUserView({model:spec.persons});
             $(spec.personsselector,spec.context).html(spec.anview.render().el);
         };

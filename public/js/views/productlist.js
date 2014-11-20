@@ -600,14 +600,19 @@ window.PersonsFromUserView = Backbone.View.extend({
     //className:'nav nav-list',
 
     render: function () {
-        console.log('PersonFromUserView: render BEGIN');
         var self = this;
         var persons = this.model;
-        persons.each(function(person){
-            person.fetch({success: function() {
-                //$("#listcontent").html(new PersonView({model: person}).el);
+        console.log('PersonFromUserView: render BEGIN [%s]',persons.length);
+        _.each(persons,function(person){
+            $.when(person).done(function(person){
+               console.log('PersonFromUserView: iteration BEGIN [%s][%s]',person.id, person.options.predicate);
+               person.set('predicate',person.options.predicate );
+                //person.fetch({success: function() {
+                    //$("#listcontent").html(new PersonView({model: person}).el);
                 $(self.el).append(new ProfilePersonView({model: person}).render().el);
-            }});
+            //}});
+
+            })
 
         });
         return this;
