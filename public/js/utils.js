@@ -1399,7 +1399,7 @@ window.utils = {
         template1 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><%= value %></td>"),
         template2 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><input name=tselect type=checkbox class=tselect ></td>"),
         template3 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink' title='editar item'><%= value %></button></td>"),
-        template4 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tedit' title='no implementado aun'><i class='icon-edit'></i></button><button class='btn-link tzoom' title='ver entidades relacionadas' ><i class='icon-zoom-in'></i></button></td>"),
+        template4 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tedit' title='no implementado aun'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link tzoom' title='ver entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></button></td>"),
         template5 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit' title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-zoom' title='entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></td>"),
         template6 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='explorar   '><%= value %></button></td>"),
         //template7 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='editar item'><%= value %></button></td>"),

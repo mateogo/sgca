@@ -1,12 +1,12 @@
 <!--  ====================  ProductList LAYOUT SIDE-BAR ==========================  -->
-<div class="row-fluid">
+<div class="row">
 <!-- START selector column -->
-<div class="span2">
+<div class="col-md-2">
   <div class="well sidebar-nav">
     <ul class="nav nav-list">
       <li class="nav-header">Usuario Seleccionado</li>
       <li>
-          <button id='mastevale' class='btn btn-block btn-link prselected'>
+          <button id='mastevale' class='btn btn-default btn btn-default-block btn btn-default-link prselected'>
             <%=
                 utils.selectedUsers.getSelectedLabel() 
             %>
@@ -18,24 +18,24 @@
       <li><input type='text' placeholder='descriptor' class='input-small' id='taglist' name='taglist' value=<%= taglist %> ></li>
     </ul>
   </div><!--/.well side bar -->
-</div><!--/span3 side bar-->
+</div><!--/col-md-3 side bar-->
 <!-- START Content  tabs -->
-<div class="span10">
+<div class="col-md-10">
 
 <!-- START head-row -->
 <div class="navbar " style="z-index: 10;">
     <div class="navbar-inner">
         
         <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <a class="btn btn-default navbar-btn btn-default" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="icon-bar">1</span>
                 <span class="icon-bar">2</span>
                 <span class="icon-bar">3</span>
             </a>
 
-            <a class="brand" href="#navegar/personas">Usuarios</a>
+            <a class="navbar-brand" href="#navegar/personas">Usuarios</a>
 
-            <div class="nav-collapse collapse">
+            <div class="navbar-collapse collapse">
                 <ul class="nav">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Nuevo<b class="caret"></b></a>
@@ -46,11 +46,11 @@
                 </ul>
                 <ul class="nav pull-right"></ul>
             </div>
-            <!--/.nav-collapse -->
+            <!--/.navbar-collapse -->
         </div>
     </div>
 </div>
-    <div id="listcontent" class="content row-fluid"></div>    	      
-</div><!--/span10-->
-</div><!--row-fluid -->
+    <div id="listcontent" class="content row"></div>    	      
+</div><!--/col-md-10-->
+</div><!--row -->
 <hr>

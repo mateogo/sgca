@@ -20,6 +20,7 @@ module.exports = function (config, app) {
     };
 
     app.post('/login',
+        console.log("/login ");
         passport.authenticate('local', {failureRedirect:'/login'}), function(req, res){
             console.log("/login [%s] [%s]", req.user.username, utils.anywModule());
             console.log('AUTHENTICATE OK!!!![%s] [%s]', req, res)

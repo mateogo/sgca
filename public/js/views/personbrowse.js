@@ -31,13 +31,16 @@ window.PersonBrowseView = Backbone.View.extend({
     whoami:'PersonBrowseView:personlayout.js',
 
     initialize:function (options) {
+        console.log('[%s]',this.whoami);
         this.options = options;
         this.loadSettings();
         this.renderAll();
     },
 
     renderAll:function () {
+        console.log('[%s LAYOUT]',this.whoami);
         this.renderlayout();
+        console.log('[%s] CONTENT',this.whoami);
         this.rendercontent();
     },
 
@@ -60,6 +63,7 @@ window.PersonBrowseView = Backbone.View.extend({
             page = self.settings.get('page');
 
         self.personlist = new PersonCollection();
+        console.dir(query);
         self.personlist.fetch({
             data: query,
             type: 'post',
@@ -116,7 +120,7 @@ window.PersonTableLayoutView = Backbone.View.extend({
     },
 
     events: {
-        "change .nav-list"       : "change",
+        "change .js-query-person"  : "change",
         "click  .selperson"      : "selectPersonFromList",
         "click  .dselperson"     : "deselectPersonFromList",
         "click  .dselproject"    : "resetselection",
@@ -288,7 +292,7 @@ window.PersonListView = Backbone.View.extend({
         var endPos = Math.min(startPos + 12, len);
         console.log('[%s] render  BEGIN len:[%s]',this.whoami,len);
         
-        var html  = '<table class="table table-bordered">';
+        var html  = '<table class="table table-bordered table-hover table-condensed">';
             html +=  utils.buildTableHeader(utils.personListTableHeader);
             html += "<tbody class='tableitems'></tbody></table>";
 

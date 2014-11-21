@@ -19,9 +19,17 @@ window.HomeView = Backbone.View.extend({
         self.formuser();
     },
     
-    loginuser: function(){
+    loginuser: function(event){
+        var e = event.originalEvent;
+        //event.stopPropagation();
+        //event.preventDefault();
+        //e.stopPropagation();
+        //e.preventDefault();
+
         var self = this;
-        console.log('********  LOGIN user clic: [%s] [%s]', this.model.get('username'), this.model.get('password'));
+
+        console.log('********  LOGIN user submit: [%s] [%s]', this.model.get('username'), this.model.get('password'));
+
  /*       var usercol = new Backbone.Collection(this.model.attributes,{
             url: "/login",
             model: User

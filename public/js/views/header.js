@@ -2,7 +2,7 @@ window.HeaderView = Backbone.View.extend({
 
     initialize: function () {
         // model: User
-        console.log('headerView INIT');
+        //console.log('headerView INIT');
         this.render();
     },
 
@@ -24,7 +24,7 @@ window.HeaderView = Backbone.View.extend({
                 }
             }
         }
-        console.log('displayName:[%s] [%s]',menu, this.model.get('displayName'))
+        //console.log('displayName:[%s] [%s]',menu, this.model.get('displayName'))
         return utils.templates[this.templates[menu] ]; //'HeaderViewLogged'
     },
 
@@ -33,7 +33,7 @@ window.HeaderView = Backbone.View.extend({
         var self = this;
         var template = self.getTemplate();
 
-        console.log('HeaderView F:[%s]  O:[%s]', _.isFunction(template),_.isObject(template));
+        //console.log('HeaderView F:[%s]  O:[%s]', _.isFunction(template),_.isObject(template));
         //console.log('HeaderView [%s]', _.isFunction(template(self.model.toJSON()));
         //$(this.el).html((self.model.toJSON()));
         $(this.el).html(template(this.model.toJSON()));

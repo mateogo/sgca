@@ -611,6 +611,8 @@ window.UserFacet = Backbone.Model.extend({
         password:       {type: 'Password', title: 'Clave de acceso' },
         passwordcopia:  {type: 'Password', title: 'Reingrese clave'},
         termsofuse:      {type: 'Checkbox',options: ['Aceptado'] , title:'Acepto los términos de uso y las políticas de privacidad del MCN'},
+   termsofuse:      {type: 'Checkbox',options: ['Aceptado'] , title:'Acepto',editorAttrs:{placeholder : 'acepta los términos de referencia'}},
+    
 */
         displayName:    {type: 'Text', title: 'Nombre saludo', editorAttrs:{placeholder : 'sera utilizado como saludo'}, validators:['required']},
         name:           {type: 'Text', title: 'Nombre completo', editorAttrs:{placeholder : 'nombre y apellido'}, validators:['required']},
@@ -621,8 +623,13 @@ window.UserFacet = Backbone.Model.extend({
         password:       {type: 'Password', title: 'Clave de acceso', validators:['required'] },
         passwordcopia:  {type: 'Password', title: 'Reingrese clave', validators:[
                             {type:'match', message:'Las claves no coinciden', field:'password'}]},
-        termsofuse:      {type: 'Checkbox',options: ['Aceptado'] , title:'Acepto los términos de uso y las políticas de privacidad del MCN'},
+        //termsofuse:      {type: 'Radio',title: '¿Acepta condicones de uso?',options: [{label:'Acepto',val:'Aceptoval'},{label:'NoAcepto',val:'NoAceptoval'}] },
+        termsofuse:      {type: 'Checkbox',options: [{val:'Aceptado', label:'Aceptadísomo'}] , title:'Acepto'},
+    
+
     },
+
+
     
     addNewUser: function(){
         var self = this,
@@ -1851,10 +1858,10 @@ window.BrowsePersonsQuery = Backbone.Model.extend({
         nickName:'',
         tipopersona: '',
         taglist: '',
-        pjuridica: true,
-        pfisica: false,
+        pjuridica: false,
+        pfisica: true,
         pideal: false,
-        adherente: false,
+        adherente: true,
 
     }
 });

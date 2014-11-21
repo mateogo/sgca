@@ -1,11 +1,11 @@
-<div class="row-fluid">
+<div class="row">
   <!-- form-QUOTATION   parent:  -->
-  <form class="form-horizontal span12">
+  <form class="form-horizontal col-md-12">
     <fieldset>
       <div class="row">
-        <div class="span8">
+        <div class="col-md-8">
 
-          <div class="control-group">
+          <div class="form-group">
           <!-- _id ; prj._id:  -->
               <label for="quotationId" class="control-label">id:</label>
 
@@ -18,7 +18,7 @@
               </div>
           </div>
 
-          <div class="control-group">
+          <div class="form-group">
           <!-- slug   -->
               <label for="nro" class="control-label">número / descr:</label>
 
@@ -31,7 +31,7 @@
               </div>
           </div>
 
-          <div class="control-group">
+          <div class="form-group">
           <!-- nro, fesol, fenec, fesolstr, fenecstr   -->
               <label for="nro" class="control-label">fechas:</label>
 
@@ -43,7 +43,7 @@
               </div>
           </div>
 
-          <div class="control-group">
+          <div class="form-group">
           <!-- solname; soldata   -->
               <label for="solname" class="control-label">solicitante:</label>
 
@@ -56,7 +56,7 @@
               </div>
           </div>
 
-          <div class="control-group">
+          <div class="form-group">
           <!-- provname; provdata   -->
               <label for="provname" class="control-label">proveedor:</label>
 
@@ -69,7 +69,7 @@
               </div>
           </div>
 
-          <div class="control-group">
+          <div class="form-group">
           <!-- rubro  nivel_importancia estado_alta nivel_ejecucion -->
               <label for="rubro" class="control-label">datos:</label>
               <div class="controls">
@@ -148,7 +148,7 @@
               </div>
           </div>
 
-         <div class="control-group">
+         <div class="form-group">
           <!-- gencond; -->
               <label for="gencond" class="control-label">condiciones generales:</label>
               <div class="controls">
@@ -157,7 +157,7 @@
               </div>
           </div>
  
-         <div class="control-group">
+         <div class="form-group">
           <!-- partcond   -->
               <label for="partcond" class="control-label">condiciones particulares:</label>
               <div class="controls">
@@ -167,28 +167,28 @@
           </div>
         </div><!--  main first col content span 8 -->
 
-        <div class="span4"> <!--  main second col span 4 -->
+        <div class="col-md-4"> <!--  main second col span 4 -->
 
           <div class="well" style="width: 180px;text-align: center;width:50%;margin: 0px auto;">
-              <a href="#" class="btn btn-block btn-inverse clonar">Clonar requisitoria!</a>
-              <a href="#"  class="btn btn-block btn-success browse">Navegar requisitorias</a>
-              <a href="#"  id='nodalquote' class="btn btn-block btn-primary"
+              <a href="#" class="btn btn-default btn btn-default-block btn btn-default-inverse clonar">Clonar requisitoria!</a>
+              <a href="#"  class="btn btn-default btn btn-default-block btn btn-default-success browse">Navegar requisitorias</a>
+              <a href="#"  id='nodalquote' class="btn btn-default btn btn-default-block btn btn-default-primary"
                   data-toggle='modal' data-target='#quoteViewer'>Asociar recursos</a>
-              <a href="#"  class="btn btn-block btn-success vista">Vista</a>
+              <a href="#"  class="btn btn-default btn btn-default-block btn btn-default-success vista">Vista</a>
           </div>
         </div><!--  sidebar right span 4 -->
       </div><!--  end row  -->
 
     </fieldset>
-    <div class="form-actions span7">
-      <a href="#" class="btn btn-primary save">Guardar</a>
-      <a href="#" class="btn btn-danger delete">Eliminar</a>
+    <div class="form-actions col-md-7">
+      <a href="#" class="btn btn-default btn btn-default-primary save">Guardar</a>
+      <a href="#" class="btn btn-default btn btn-default-danger delete">Eliminar</a>
     </div>
   </form>
 </div>
 
-<div class="row-fluid status-bar">
-    <div class="span12">
+<div class="row status-bar">
+    <div class="col-md-12">
         <div class="alert alert-success" style="display: none">
             <b>INFO:</b> El registro se guardó exitosamente
         </div>
@@ -207,7 +207,7 @@
     <div id="resourcecallback" class="modal-body">
     </div>
     <div class="modal-footer">
-        <button class="btn btn-large btn-primary"  data-dismiss="modal"  
+        <button class="btn btn-default btn btn-default-large btn btn-default-primary"  data-dismiss="modal"  
         aria-hidden="true">Cerrar</button>
     </div>
 </div>

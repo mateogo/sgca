@@ -1,7 +1,7 @@
-  <div class="row-fluid well">
-  <div class="span6" >
-    <div class='row-fluid'>
-    <div class="span12" >
+  <div class="row well">
+  <div class="col-md-6" >
+    <div class='row'>
+    <div class="col-md-12" >
       <h3><%= utils.fetchLabel(utils.userPredicateList, predicate) %> </h3>
       <p> <%= name %> </p>
       <p><strong>Alias: </strong><%= displayName %></p>
@@ -9,8 +9,8 @@
     </div>
     </div>
   </div>
-  <div class="span6" >
-    <div class='row-fluid'>
+  <div class="col-md-6" >
+    <div class='row'>
       <% 
         if(contactinfo)
           _.each(contactinfo,function(contact){ %>

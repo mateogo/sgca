@@ -16,10 +16,10 @@ window.ProjectListView = Backbone.View.extend({
         var endPos = Math.min(startPos + 12, len);
 
 
-        $(this.el).html('<ul class="thumbnails"></ul>');
+        $(this.el).html('<div class="row js-hook"></div>');
 
         for (var i = startPos; i < endPos; i++) {
-            $('.thumbnails', this.el).append(new ProjectListItemView({model: projects[i]}).render().el);
+            $('.js-hook', this.el).append(new ProjectListItemView({model: projects[i]}).render().el);
         }
 
         $(this.el).append(new Paginator({model: this.model, paginatorPath: this.paginatorPath, page: this.options.page}).render().el);
@@ -30,7 +30,8 @@ window.ProjectListView = Backbone.View.extend({
 
 window.ProjectListItemView = Backbone.View.extend({
 
-    tagName: "li",
+    tagName: "div",
+    className:'col-md-4',
     
     initialize: function () {
         console.log('projectListItemView')

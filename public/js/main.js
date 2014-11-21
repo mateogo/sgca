@@ -71,7 +71,7 @@ var AppRouter = Backbone.Router.extend({
         dao.currentUser.getUser(function(user){
             var theUser = user ? new User(user) : new User();
             if(!self.headerView){
-                console.log('INITIALIZE Header: main.js USER found: [%s]',theUser.get('displayName'));
+                //console.log('INITIALIZE Header: main.js USER found: [%s]',theUser.get('displayName'));
                 self.headerView = new HeaderView({model: theUser});
                 $('.header').html(self.headerView.el);
             }
