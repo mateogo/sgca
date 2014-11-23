@@ -1,226 +1,237 @@
-<div class="row">
-<nav class="navbar navbar-default"  style="z-index: 10;" role="navigation">
-  <div class="container">
+
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mainmenu">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-navbar-brand" href="#navegar/personas">Edición de Personas</a>
+      <a class="navbar-brand" href="/">Persona</a>
     </div>
 
-    <div class="navbar-collapse collapse">
+    <div id='mainmenu' class="collapse navbar-collapse">
+
         <ul class="nav navbar-nav">
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Acciones<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a class='notas' ><i class="icon-check"></i> agregar nota</a></li>
-                    <li><a class='contacto' ><i class="icon-check"></i> datos de Contacto</a></li>
+
+                    <li><a class='notas' ><span class="glyphicon glyphicon-check"></span> agregar nota</a></li>
+                    <li><a class='contacto' ><span class="glyphicon glyphicon-check"></span> datos de Contacto</a></li>
                 </ul>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Nuevo<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="#personas/add">Persona</a></li>
+                    <li><a href="#proyectos/add">Procedencia</a></li>
                 </ul>
             </li>
         </ul>
 
-        <ul class="nav pull-right">
+        <ul class="nav navbar-nav pull-right">
           <li><a class='contacto' >Agregar contacto</a></li>
           <li><a class='usuario' >Agregar usuario</a></li>
           <li><a href="#" class='browse' >Navegar Personas</a></li>
-          <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Vista<b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                  <li><a href="#" class='vistacarousel' >Vista carousel</a></li>
-                  <li><a href="#" class='vistainfo'  >Vista info</a></li>
-              </ul>
-          </li>
         </ul>
+
+
     </div>
 
   </div><!--ends container -->
 </nav>
- 
-  <!-- form-PRODUCT   parent:  -->
-      <div class="row">
-        <div class="col-md-8">
-        <form class="form-horizontal col-md-12 core">
-          <fieldset>
-          <div class="form-group">
-              <label for="personId" class="control-label">id:</label>
 
-              <div class="controls">
-                  <input id="personId" name="id" type="text" value="<%= _id === null ? '' : _id %>"
-                         disabled >
-                  <select class="input-large" id="tipopersona" name="tipopersona" value="<%= tipopersona %>">
-                      <option value='no_definido'
-                          <%= tipopersona == 'no_definido' ? 'selected':'' %>>--tipo de persona--</option>
-                      <option value='persona'
-                          <%= tipopersona == 'persona' ? 'selected':'' %>>persona</option>
-                      <option value='grupo'
-                          <%= tipopersona == 'grupo' ? 'selected':'' %>>grupo</option>
-                      <option value='locacion'
-                          <%= tipopersona == 'locacion' ? 'selected':'' %>>locacion</option>
-                   </select>
-                  <span class="help-inline"></span>
-              </div>
-          </div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8">
+    <form class="form-horizontal js-coreform" role'form'>
 
-          <div class="form-group">
-          <!-- slug  / denom -->
-              <label for="nickName" class="control-label">nombres:</label>
+      <div class="form-group">
+        <label for="requestId" class="control-label col-md-3">Id:</label>
 
-              <div class="controls">
-                <input type="text" class="input-large" id="nickName" name="nickName" 
-                    placeholder='id persona' value="<%= nickName %>"/>
-                <input type="text" class="input-large" id="name" name="name" placeholder="nombre/razon social" 
-                     value="<%= name %>" >
-                <input type="text" class="input-large" id="displayName" name="displayName" 
-                     placeholder="nic o avatar" value="<%= displayName %>" >
-                <span class="help-inline"></span>
-              </div>
-          </div>
-
-          <div class="form-group">
-          <!-- rubro  nivel_importancia estado_alta nivel_ejecucion -->
-              <label for="estado_alta" class="control-label">estados:</label>
-              <div class="controls">
-
-                <select class="input-large" id="estado_alta" name="estado_alta" 
-                    value="<%= estado_alta %>">
-                    <option value='activo'
-                    <%= estado_alta == 'activo' ? 'selected':'' %>>activo</option>
-                    <option value='suspendido'
-                    <%= estado_alta == 'suspendido' ? 'selected':'' %>>suspendido</option>
-                    <option value='baja'
-                    <%= estado_alta == 'baja' ? 'selected':'' %>>baja</option>
-                </select>
-                <span class="help-inline"></span>
-              </div>
-          </div>
-          <div class="form-group">
-              <label for="ispf" class="control-label">Figura jurídica</label>
-              <div class="controls">
-                <label class="checkbox inline">
-                  <input type="checkbox" name='tipojuridico' id='pfisica' value='pfisica' 
-                    <%= tipojuridico['pfisica'] ? 'checked':'' %>>Es persona física?
-                </label>
-                <label class="checkbox inline">
-                  <input type="checkbox" name='tipojuridico' id='pjuridica' value='pjuridica' 
-                    <%= tipojuridico['pjuridica']  ? 'checked':'' %>>Es persona jurídica?
-                </label>
-                <label class="checkbox inline">
-                  <input type="checkbox" name='tipojuridico' id='pideal' value='pideal' 
-                    <%= tipojuridico['pideal']  ? 'checked':'' %>>Es persona ideal?
-                </label>
-                <span class="help-inline"></span>
-              </div>
-          </div>
-
-          <div class="form-group">
-              <label for="roles" class="control-label">Roles</label>
-              <div class="controls">
-                <label class="checkbox inline">
-                  <input type="checkbox" name='roles' value='adherente' id='adherente' 
-                    <%= roles['adherente'] ? 'checked':'' %>>Es adherente?
-                </label>
-                <label class="checkbox inline">
-                  <input type="checkbox" name='roles' value='proveedor' id='proveedor' 
-                    <%= roles['proveedor'] ? 'checked':'' %>>Es proveedor?
-                </label>
-                <span class="help-inline"></span>
-                <label class="checkbox inline">
-                  <input type="checkbox" name='roles' value='productor' id='productor'
-                    <%= roles['proveedor'] ? 'checked':'' %>>Es productor?
-                </label>
-                <label class="checkbox inline">
-                  <input type="checkbox" name='roles' value='artista' id='artista'
-                    <%= roles['artista'] ? 'checked':'' %>>Es artista / talento?
-                </label>
-                <span class="help-inline"></span>
-              </div>
-          </div>
-
-          <div class="form-group">
-            <!-- descriptores; -->
-                <label for="descriptores" class="control-label">descriptores (separadas por ';'):</label>
-                <div class="controls">
-                    <textarea id="descriptores" name="descriptores" style="width: 90%;" 
-                    rows="2"><%= descriptores %></textarea>
-                </div>
-          </div>
-   
-          <div class="form-group">
-            <!-- description   -->
-                <label for="description" class="control-label">Notas</label>
-                <div class="controls">
-                    <textarea id="description" name="description" style="width: 90%;" 
-                    rows="2"><%= description %></textarea>
-                </div>
-          </div>
-        </fieldset>
-        </form>
-
-        <form class="form-horizontal col-md-12 facets">
-        <fieldset>
-
-          <div class="accordion" id="accordion1">
-
-            <div class="accordion-group">
-              <div class="accordion-heading">
-                <a class="accordion-toggle branding" data-toggle="collapse"  href="#collapseBrnd">Alta de material para branding</a>
-              </div>
-              <div id="collapseBrnd" class="accordion-body collapse">
-                <div class="accordion-inner brandinghook"></div>
-                <div id='brndloaded' class='col-md-offset-2'></div>
-                <svg id='brnddrop' class='svgcontainer' width=700 height=160 >
-                     <rect x="2" y="5" rx="20" ry="20" width="680" height="150"
-                        style="fill:blue;stroke:black;stroke-width:3;fill-opacity:0.1;stroke-opacity:0.3"/>
-
-                    <text x=200   y=50   font-size=15 fill=3 fill-opacity=.5 font-family='Arvo' >arrastre y suelte los archivos aqui</text>
-                </svg>
-                <div class='col-md-offset-1'>
-                  <div class="brnddropped"></div> 
-                </div>
-                <div class="progress">
-                    <div id='brndprogressbar' class="bar" style="width: 0%;">progress</div>
-                </div> 
-                <div class="form-actions">
-                  <a href="#" class="btn btn-default btn btn-default-info    uploadbrnd">Subir contenido</a>
-                  <a href="#" class="btn btn-default btn btn-default-warning discardbrnd">Descartar contenido</a>
-                  <a href="#" class="btn btn-default btn btn-default-primary addnewbrnd">Alta nuevo branding</a>
-                  <a href="#" class="btn btn-default btn btn-default-warning cancelbrnd">Cancelar</a>
-                </div>
-              </div>
+        <div class="col-md-9">
+          <div class='row'>
+            <div class='col-md-5'>
+              <input id="requestId" name="id" type="text" 
+              value="<%= _id === null ? '' : _id %>" class='form-control' disabled/>
             </div>
-
-          </div><!--   ends accordio1 -->
-          <div class="accordion" id="brandingaccordion"></div>
-
-        </fieldset>
-
-          <div class="form-actions ">
-            <a href="#" class="btn btn-default btn btn-default-primary save">Guardar</a>
-            <a href="#" class="btn btn-default btn btn-default-danger delete">Eliminar</a>
-            <a href="#" class="btn btn-default btn btn-default-warning clonar">Clonar</a>
+          <div class='col-md-7'>
+            <select class="form-control" id="tipopersona" name="tipopersona" value="<%= tipopersona %>">
+              <option value='no_definido'
+                    <%= tipopersona == 'no_definido' ? 'selected':'' %>>--tipo de persona--</option>
+              <option value='persona'
+                  <%= tipopersona == 'persona' ? 'selected':'' %>>persona</option>
+              <option value='organismo'
+                  <%= tipopersona == 'organismo' ? 'selected':'' %>>organismo</option>
+              <option value='grupo'
+                  <%= tipopersona == 'grupo' ? 'selected':'' %>>grupo</option>
+              <option value='locacion'
+                  <%= tipopersona == 'locacion' ? 'selected':'' %>>locacion</option>
+            </select>
+            <span class="help-block"></span>
           </div>
-          <div class="row status-bar">
-              <div class="col-md-12">
-                  <div class="alert alert-success" style="display: none">
-                      <b>INFO:</b> El registro se guardó exitosamente
-                  </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="nickName" class="control-label col-md-3">Nombre:</label>
+      <div class="col-md-9">
+        <div class='row'>
+          <input type="text" class="form-control" id="nickName" name="nickName" 
+            placeholder="Nombre identificador" value="<%= nickName %>"> 
+
+          <input type="text" class="form-control" id="name" name="name" 
+            placeholder="nombre completo / razón social" value="<%= name %>">
+
+          <input type="text" class="form-control" id="displayName" name="displayName" 
+             placeholder="Saludo" value="<%= displayName %>">
+        </div>
+        <span class="help-inline"></span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="estado_alta" class="control-label col-md-3">Estados:</label>
+      <div class="col-md-9">
+        <div class='row'>
+          <div class='col-md-6'>
+            <select class="form-control" id="estado_alta" name="estado_alta" 
+                value="<%= estado_alta %>">
+              <option value='activo'
+              <%= estado_alta == 'activo' ? 'selected':'' %>>activo</option>
+              <option value='suspendido'
+              <%= estado_alta == 'suspendido' ? 'selected':'' %>>suspendido</option>
+              <option value='baja'
+              <%= estado_alta == 'baja' ? 'selected':'' %>>baja</option>
+            </select>
+            <span class="help-block"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="pfisica" class="control-label col-md-3">Figura jurídica</label>
+      <div class="col-md-9">
+        <label class="checkbox-inline">
+          <input type="checkbox" name='tipojuridico' id='pfisica' value='pfisica' 
+              <%= tipojuridico['pfisica'] ? 'checked':'' %> >¿Persona física?
+        </label>
+        <label class="checkbox-inline">
+          <input type="checkbox" name='tipojuridico' id='pjuridica' value='pjuridica' 
+            <%= tipojuridico['pjuridica']  ? 'checked':'' %> >¿Persona jurídica?
+        </label>
+        <label class="checkbox-inline">
+          <input type="checkbox" name='tipojuridico' id='pideal' value='pideal' 
+            <%= tipojuridico['pideal']  ? 'checked':'' %> >¿Persona ideal?
+        </label>
+        <label class="checkbox-inline">
+          <input type="checkbox" name='tipojuridico' id='porganismo' value='porganismo' 
+            <%= tipojuridico['porganismo']  ? 'checked':'' %> >¿Organismo o Institución oficial?
+        </label>
+        <span class="help-inline"></span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="roles" class="control-label col-md-3">Roles</label>
+      <div class="col-md-9">
+        <label class="checkbox-inline">
+          <input type="checkbox" name='roles' id='adherente' value='adherente' 
+            <%= tipojuridico['adherente']  ? 'checked':'' %> >¿Es adherente?
+        </label>
+
+        <label class="checkbox-inline">
+          <input type="checkbox" name='roles' id='proveedor' value='proveedor' 
+            <%= tipojuridico['proveedor']  ? 'checked':'' %> >¿Es proveedor?
+        </label>
+
+        <label class="checkbox-inline">
+          <input type="checkbox" name='roles' id='productor' value='productor' 
+            <%= tipojuridico['productor']  ? 'checked':'' %> >¿Es productor?
+        </label>
+
+       <label class="checkbox-inline">
+          <input type="checkbox" name='roles' id='artista' value='artista' 
+            <%= tipojuridico['artista']  ? 'checked':'' %> >¿Es artista?
+        </label>
+        <span class="help-inline"></span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="descriptores" class="control-label col-md-3">Descriptores (separador: ';'):</label>
+      <div class="col-md-9">
+        <textarea id="descriptores" name="descriptores" class='form-controls' 
+          style="width: 90%;" rows="2"><%= descriptores %></textarea>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description" class="control-label col-md-3">Notas </label>
+      <div class="col-md-9">
+        <textarea id="description" name="description" class='form-controls' 
+          style="width: 90%;" rows="2"><%= description %></textarea>
+      </div>
+    </div>
+
+    </form>
+
+    <form class="form-horizontal col-md-12 facets">
+
+      <div class="accordion" id="accordion1">
+
+        <div class="accordion-group">
+          <div class="accordion-heading">
+            <a class="accordion-toggle branding" data-toggle="collapse"  href="#collapseBrnd">Alta de material para branding</a>
+          </div>
+          <div id="collapseBrnd" class="accordion-body collapse">
+            <div class="accordion-inner brandinghook"></div>
+            <div id='brndloaded' class='col-md-offset-2'></div>
+            <svg id='brnddrop' class='svgcontainer' width=700 height=160 >
+                 <rect x="2" y="5" rx="20" ry="20" width="680" height="150"
+                    style="fill:blue;stroke:black;stroke-width:3;fill-opacity:0.1;stroke-opacity:0.3"/>
+
+                <text x=200   y=50   font-size=15 fill=3 fill-opacity=.5 font-family='Arvo' >arrastre y suelte los archivos aqui</text>
+            </svg>
+            <div class='col-md-offset-1'>
+              <div class="brnddropped"></div> 
+            </div>
+            <div class="progress">
+                <div id='brndprogressbar' class="bar" style="width: 0%;">progress</div>
+            </div> 
+            <div class="form-actions">
+              <a href="#" class="btn btn-default btn btn-default-info    uploadbrnd">Subir contenido</a>
+              <a href="#" class="btn btn-default btn btn-default-warning discardbrnd">Descartar contenido</a>
+              <a href="#" class="btn btn-default btn btn-default-primary addnewbrnd">Alta nuevo branding</a>
+              <a href="#" class="btn btn-default btn btn-default-warning cancelbrnd">Cancelar</a>
+            </div>
+          </div>
+        </div>
+
+      </div><!--   ends accordio1 -->
+      <div class="accordion" id="brandingaccordion"></div>
+
+
+      <div class="form-actions ">
+        <a href="#" class="btn btn-default btn btn-default-primary save">Guardar</a>
+        <a href="#" class="btn btn-default btn btn-default-danger delete">Eliminar</a>
+        <a href="#" class="btn btn-default btn btn-default-warning clonar">Clonar</a>
+      </div>
+      <div class="row status-bar">
+          <div class="col-md-12">
+              <div class="alert alert-success" style="display: none">
+                  <b>INFO:</b> El registro se guardó exitosamente
               </div>
           </div>
+      </div>
 
-        </form>
-   <div>
-  </div><!--/.well side bar -->
+    </form>
 
 
-      </div><!--  main first col content span 8 -->
+  </div><!--  main first col content span 8 -->
 
 
         <div class="col-md-4"> <!--  main second col span 4 -->
@@ -251,6 +262,5 @@
  
         </div><!--  sidebar right span 4 -->
  
-      </div><!--  end master row  -->
-  
-</div>
+  </div><!--  end master row  -->
+  </div><!--  end master row  -->

@@ -2,8 +2,9 @@ window.Paginator = Backbone.View.extend({
 
     whoami:'Paginator',
 
+    tagName:'nav',
 
-    className: "pagination pagination-centered",
+    //className: "pagination pagination-centered",
 
     initialize:function (options) {
         this.options = options;
@@ -17,10 +18,18 @@ window.Paginator = Backbone.View.extend({
         var len = items.length;
         var pageCount = Math.ceil(len / 12);
 
-        $(this.el).html('<ul />');
+        $(this.el).html('<ul class="pagination"></ul>');
 
         for (var i=0; i < pageCount; i++) {
-            $('ul', this.el).append("<li" + ((i + 1) === this.options.page ? " class='active'" : "") + "><a href='"+this.options.paginatorPath+(i+1)+"'>" + (i+1) + "</a></li>");
+            if((i + 1) === this.options.page){
+                active = ' class="active" ';
+                spanlabel = 'página corriente';
+            }else{
+                active = '';
+                spanlabel = '';            
+            }
+            //$('ul', this.el).append("<li" + ((i + 1) === this.options.page ? " class='active' ><span class='sr-only' >(selección activada)</span> " : ">") + "<a href='"+this.options.paginatorPath+(i+1)+"'>" + (i+1) + "</a></li>");
+            $('ul', this.el).append("<li" + active +  ">" + "<a href='"+this.options.paginatorPath+(i+1)+"'><span class='sr-only'>" + spanlabel + "</span> " + (i+1) + "</a></li>");
         }
 
         return this;

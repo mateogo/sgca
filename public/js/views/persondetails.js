@@ -82,7 +82,7 @@ window.PersonView = Backbone.View.extend({
     */
 
     events: {
-        "change .core"       : "change",
+        "change .js-coreform"  : "change",
         "click .contactitem" : "editcontact",
         "click .contacto"    : "newcontact",
         "click .usuario"     : "newuser",
