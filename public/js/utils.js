@@ -1603,7 +1603,7 @@ window.utils = {
             fillOpacity:{no_definido:1,planificado:.4,produccion:1,posproduccion:.7,demorado:.4,reprogramado:.4,suspendido:.1,cumplido:.1},
         },
 
-        request: { eventText: {no_definido:' ',solicitud:'Sol',concurso: 'Conc',convenio: 'Cnv', cesiones: 'Ces', 
+        request: { eventText: {no_definido:' ',solicitud:'SOLICITUDES TÉCNICO ARTÍSTICAS',concurso: 'Conc',convenio: 'Cnv', cesiones: 'Ces', 
                     producciones: 'Pro', adhesiones:'Adh',produccion:'Pro',cesion:'Ces', infantil:'Inf', 
                     musica:'Mus', teatro:'Tea', musical:'Tmu',
                     circo:'Cir',cine:'Cin',festival:'Fes',fpopular:'FPo', danza:'Dza',congreso:'Con'

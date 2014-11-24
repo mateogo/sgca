@@ -1,18 +1,23 @@
-<a href="#ver/solicitud/<%= _id %>" class="thumbnail plain" style="text-align: center;">
-    <svg class='svgcontainer' width=270 height=70>
-        <rect x='1' y='1' width="268" height="67" fill-opacity=<%= 1-utils.viewData.request.fillOpacity[nivel_ejecucion]%> 
-              style="fill:rgb(190,190,190);stroke-width:0;stroke:rgb(0,0,0)"/>
-    	
-    	<text x=25  y=35  font-size=30 fill=<%= utils.viewData.request.eventFillColor[nivel_importancia] %> 
-              fill-opacity=<%= utils.viewData.request.fillOpacity[nivel_ejecucion]%> font-family='Arvo' ><%= utils.viewData.request.eventText[genero] %></text>
-        <text x=35 y=60  font-size=15 fill-opacity=<%= utils.viewData.request.fillOpacity[nivel_ejecucion]%> fill='black' font-family='Arvo' ><%= utils.viewData.request.ispropioText[isPropio] %></text> 
-    	<text x=140 y=35 font-size=30 fill-opacity=<%= utils.viewData.request.fillOpacity[nivel_ejecucion]%> fill='black' font-family='Arvo' ><%= eventdatestr.substring(0,5) %></text>
-    </svg>
-
-
-    <!--  img src="<%= picture === null ? 'pics/prj-IC-M-TV.png' : 'pics/' + picture %>" height="150" width="125" alt=""  -->
-    <h4><%= denom %></h4>
-    <i class="icon-globe"></i> <%= city %><br/><%= organismo %>
-    <br/><%= responsable %><br/> [<%= nivel_ejecucion %>]
-    <br/> <%= eventdatestr %>
-</a>
+<div class="col-xs-pull-1 col-xs-push-1 col-xs-12 margin-section row req-list">
+  <article class="col-xs-12 col-sm-6 col-md-12 sistema-box">
+    <div class="content">
+        <h4>
+            <text><%= utils.viewData.request.eventText[genero] %></text>
+        </h4>  
+             <!-- BEG BODY -->
+             <div class="content-body">
+                  Formularios de solicitud de asistencias técnico-artísticas  
+                  <span class="label label-success">NUEVO!</span>
+             </div>
+             <!-- END BODY -->
+             <hr>
+             <!-- BEG BOTTOM -->
+             <div class="content-bottom">
+				  <h5>Estado de los requerimientos solicitados</h5>
+				  <p>Actulamente tiene iniciados X trámites</p>
+				  <a href="#ver/solicitud/<%= _id %>" class="btn btn-block btn-default">Ingresar</a>   
+             </div>
+            <!-- END BOTTOM -->
+    </div>
+  </article>
+</div>

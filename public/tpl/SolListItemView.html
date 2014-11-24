@@ -1,17 +1,55 @@
-<a href="/gestion/#comprobantes/<%= _id %>/edit" class="plain" >
-<div class='row col-md-9' >
-    
-    <svg class='svgcontainer' width=800 height=27>
-    	<text x=1  y=20  font-size=15 fill=<%= utils.viewData.sol.eventFillColor[nivel_ejecucion] %> 
-              fill-opacity=<%= utils.viewData.product.fillOpacity[nivel_ejecucion]%> font-family='Arvo' ><%= cnumber %>:</text>
-        <text x=80  y=20  font-size=18 fill=<%= utils.viewData.product.eventFillColor[nivel_ejecucion] %> 
-              fill-opacity=<%= utils.viewData.product.fillOpacity[nivel_ejecucion]%> font-family='Arvo' ><%= items[0].fevento %></text>
+<div class="col-xs-pull-1 col-xs-push-1 col-xs-12 margin-section row req-list">
+     <article class="col-xs-12 col-sm-6 col-md-12 sistema-box">
+              <div class="content">
+				      <h4>
+                           <text><%= slug %></text>
+                      </h4>   
+                          
+				    <!-- BEG BODY -->
+					<div class="content-body">
+					    <div class="req-row">Estado de Criticidad<span class="label label-danger">Alto</span></div>
+                        <!--Solo Usuarios MCN -->
+					</div>
+					<hr>
+                          
+					<div class="content-body">
+					     <h5>
+					      	<span class="glyphicon glyphicon-calendar"></span>  14 ENE 2015
+					     </h5>
+					<p><span class="glyphicon glyphicon-map-marker"></span> Mar del Plata, General Pueyrredón, Buenos Aires</p>
+					</div>
+                    <!-- END BODY -->
+				    <hr>
+                          
+				    <!-- BEG BOTTOM -->
+				    <div class="well transparent">
+					     <h5>Estado de los requerimientos solicitados</h5>
+					<!--BEG TABLA DE REQUERIMIENTOS-->
+					     <table id="example" class="table" cellspacing="0">
+				              <tr>
+				        	      <td>
+				        		      <span class="pull-right label label-info">Pendiente</span>
+				        		      <div><strong>14/02/2015</strong></div>
+				        		      <div class="clearfix">Solicitud del artísta Raly Barrionuevo para el cierre del festival</div>
+							      </td>
+			                  </tr>
+                             
+			                  <tr>
+				        	      <td>
+				        		      <span class="pull-right label label-success">Aprobado</span>
+				        		      <div><strong>14/02/2015</strong></div>
+				        		      <div class="clearfix">Alojamiento para el número de personas solicitadas por el artista para el día del show y su día previo</div>
+							      </td>
+			                  </tr>
+			              </table>
+                          <!--END TABLA DE REQUERIMIENTOS-->
+                        
+			              <div class="spacer"><a href="index2.html" class="btn btn-block btn-default">Ingresar</a></div>
+				    </div><!-- END BOTTOM -->	
+				 </div>
+       </article>
+</div>
 
-                <text x=200  y=20  font-size=18 fill=<%= utils.viewData.product.eventFillColor[nivel_ejecucion] %> 
-              fill-opacity=<%= utils.viewData.product.fillOpacity[nivel_ejecucion]%> font-family='Arvo' ><%= items[0].lugar %></text>
-    </svg>
-</div>
-<div class='row col-md-9' >
-    <%= slug %> / [<%= fecomp %>]-[<%= nivel_ejecucion %>]-[<%= description %>]-[<%= estado_alta %>]-[<%= persona %>]<br/>
-</div>
-</a>
+			
+			
+			

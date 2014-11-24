@@ -98,7 +98,7 @@ var productviewsuccess = function(product){
 var solviewsuccess = function(model){
     console.log('solviewsuccess: [%s]',model.get('slug'));
 
-    var solListView = new SolListItemView({model:model,tagName:'div'});
+    var solListView = new SolListItemView({model:model,tagName:'div',className:'col-md-4'});
     $('#sollist').append(solListView.render().el);  
 
 
