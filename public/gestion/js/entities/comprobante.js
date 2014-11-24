@@ -639,7 +639,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       itemaprob: '',
       itemaprobreq: '',
 
-      description: '',
+      description: 'complete su pedido',
       lugarfecha: '',
       comentario: ''
     },

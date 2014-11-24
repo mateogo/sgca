@@ -7,16 +7,21 @@
                           
 				    <!-- BEG BODY -->
 					<div class="content-body">
-					    <div class="req-row">Estado de Criticidad<span class="label label-danger">Alto</span></div>
+                        <div class="req-row">Estado de Criticidad<span class="label label-danger">
+                              <text><%= estado_alta %></text></span>
+                        </div>
                         <!--Solo Usuarios MCN -->
 					</div>
 					<hr>
                           
 					<div class="content-body">
 					     <h5>
-					      	<span class="glyphicon glyphicon-calendar"></span>  14 ENE 2015
+					      	<span class="glyphicon glyphicon-calendar"></span>
+                             <text><%= items[0].fevento %></text>
 					     </h5>
-					<p><span class="glyphicon glyphicon-map-marker"></span> Mar del Plata, General Pueyrredón, Buenos Aires</p>
+					<p><span class="glyphicon glyphicon-map-marker"></span> 
+                        <text><%= items[0].lugar %></text>
+                    </p>
 					</div>
                     <!-- END BODY -->
 				    <hr>
@@ -29,22 +34,16 @@
 				              <tr>
 				        	      <td>
 				        		      <span class="pull-right label label-info">Pendiente</span>
-				        		      <div><strong>14/02/2015</strong></div>
-				        		      <div class="clearfix">Solicitud del artísta Raly Barrionuevo para el cierre del festival</div>
-							      </td>
-			                  </tr>
-                             
-			                  <tr>
-				        	      <td>
-				        		      <span class="pull-right label label-success">Aprobado</span>
-				        		      <div><strong>14/02/2015</strong></div>
-				        		      <div class="clearfix">Alojamiento para el número de personas solicitadas por el artista para el día del show y su día previo</div>
+				        		      <div><strong><text><%= items[0].fevento %></text></strong></div>
+				        		      <div class="clearfix">
+                                            <text><%= items[0].items[0].description %></text>
+                                      </div>
 							      </td>
 			                  </tr>
 			              </table>
                           <!--END TABLA DE REQUERIMIENTOS-->
                         
-			              <div class="spacer"><a href="index2.html" class="btn btn-block btn-default">Ingresar</a></div>
+			              <div class="spacer"><a href="/gestion/#comprobantes/<%= _id %>/edit" class="btn btn-block btn-default">Ingresar</a></div>
 				    </div><!-- END BOTTOM -->	
 				 </div>
        </article>
