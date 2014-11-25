@@ -62,7 +62,7 @@ window.Person = Backbone.Model.extend({
     initialize: function (attrs, options) {
         this.validators = {};
         this.options = options;
-        console.log('[%s] INITIALIZE: [%s] [%s]', this.whoami, this.id, this.options);
+        //console.log('[%s] INITIALIZE: [%s] [%s]', this.whoami, this.id, this.options);
 
         this.viewers = {};
 
@@ -575,6 +575,7 @@ window.Person = Backbone.Model.extend({
             pfisica: true,
             pjuridica: false,
             pideal: true,
+            organismo: false,
         },
         roles:{
             adherente:false,
@@ -1852,16 +1853,18 @@ window.BrowsePersonsQuery = Backbone.Model.extend({
     retrieveData: function(){
         return dao.extractData(this.attributes);
     },
-    
+
     defaults: {
         name:'',
         nickName:'',
         tipopersona: '',
         taglist: '',
+        queryjuridico: true,
         pjuridica: false,
         pfisica: true,
         pideal: false,
-        adherente: true,
+        adherente: false,
+        porganismo: false,
 
     }
 });

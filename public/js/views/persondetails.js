@@ -15,6 +15,7 @@ window.PersonView = Backbone.View.extend({
         });
 
         this.renderall();
+
     },
 
     renderall: function(){
@@ -31,6 +32,8 @@ window.PersonView = Backbone.View.extend({
 
     render: function () {
         $(this.el).html(this.template(this.model.toJSON()));
+        //utils.editor.render();
+
         return this;
     },
 

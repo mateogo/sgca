@@ -257,7 +257,9 @@ var AppRouter = Backbone.Router.extend({
 
         var person = new Person({_id: id});
         person.fetch({success: function() {
-            $("#listcontent").html(new PersonView({model: person}).el);     
+            $("#listcontent").html(new PersonView({model: person}).el);
+            var niced = new nicEditor().panelInstance('description');
+
         }});
     },
 
@@ -597,5 +599,6 @@ utils.loadTemplate(['HomeView', 'AboutView',
     ], function() {
     app = new AppRouter();
     utils.approuter = app;
+
     Backbone.history.start();
 });

@@ -96,30 +96,39 @@ exports.find = function(req, res) {
     var query = req.body; //{};
     query = normaliseQuery(query);
 
-    console.log('find:person Retrieving person collection with query');
-//            res.send(query);
+    // console.log('find:person Retrieving person collection with query');
+    console.dir(query);
+    // res.send(query);
 
     dbi.collection(personsCol, function(err, collection) {
         collection.find(query).sort({personname:1}).toArray(function(err, items) {
             res.send(items);
         });
     });
-
-
-
 };
+
 var normaliseQuery = function(query){
     var tipojuridico = {
         pfisica: (query.pfisica==='true' ? true: false),
         pjuridica: (query.pjuridica==='true' ? true: false),
         pideal:(query.pideal==='true' ? true: false),
+        porganismo:(query.porganismo==='true' ? true: false),
     };
-    query.tipojuridico = tipojuridico;
+
+    console.log('pjuridica: tipojuridico[%s] aderente[%s] fisico[%s]',query.queryjuridico, query.adherente, query.pfisica);
+    if(query.queryjuridico === 'true'){
+        query.tipojuridico = tipojuridico;
+    }else{
+        delete query.tipojuridico;
+        delete query['roles.adherente'];
+    }
+    delete query.queryjuridico;
     delete query.pfisica;
     delete query.pjuridica;
     delete query.pideal;
+    delete query.porganismo;
 
-    query['roles.adherente'] = (query.adherente==='true' ? true: false);
+    if(query.adherente==='true') query['roles.adherente'] = true;
     delete query.adherente;
 
 

@@ -38,9 +38,9 @@ window.PersonBrowseView = Backbone.View.extend({
     },
 
     renderAll:function () {
-        console.log('[%s LAYOUT]',this.whoami);
+        //console.log('[%s LAYOUT]',this.whoami);
         this.renderlayout();
-        console.log('[%s] CONTENT',this.whoami);
+        //console.log('[%s] CONTENT',this.whoami);
         this.rendercontent();
     },
 
@@ -63,12 +63,12 @@ window.PersonBrowseView = Backbone.View.extend({
             page = self.settings.get('page');
 
         self.personlist = new PersonCollection();
-        console.dir(query);
+        //console.dir(query);
         self.personlist.fetch({
             data: query,
             type: 'post',
             success: function() {
-                console.log('[%s] fetch SUCCESS [%s]',self.whoami, selector);
+                //console.log('[%s] fetch SUCCESS [%s]',self.whoami, selector);
                 // PersonListView controller: personlist.js
                 $(selector).html(new PersonListView({model: self.personlist, page: page}).el);
             }
@@ -116,11 +116,21 @@ window.PersonTableLayoutView = Backbone.View.extend({
 
     render:function () {
         $(this.el).html(this.template(this.model.toJSON()));
+        console.log('RENDERING [%s]',this.model.get('queryjuridico'));
+        
+        if (this.model.get('queryjuridico')==false) {
+            $('.js-toggle',this.el).prop('disabled', true);
+
+        }else{
+            $('.js-toggle', this.el).prop('disabled',false);
+        }
+
         return this;
     },
 
     events: {
         "change .js-query-person"  : "change",
+        "change .js-toggle"     : "changeToggle",
         "click  .selperson"      : "selectPersonFromList",
         "click  .dselperson"     : "deselectPersonFromList",
         "click  .dselproject"    : "resetselection",
@@ -202,7 +212,7 @@ window.PersonTableLayoutView = Backbone.View.extend({
 
 
     linkchilds: function (predicate) {
-        console.log('[%s] linkchilds:BEGIN predicate:[%s]',this.whoami, predicate);
+        //console.log('[%s] linkchilds:BEGIN predicate:[%s]',this.whoami, predicate);
         var self = this,
             ancestor = utils.selectedPersons.getSelected(),
             childs = utils.selectedPersons.getList();
@@ -249,19 +259,21 @@ window.PersonTableLayoutView = Backbone.View.extend({
         dao.personsQueryData().setProject('','proyecto no seleccionado');
         utils.approuter.browsePersons();
     },
+    changeToggle: function  (event) {
+        console.log('change Toogle');
+    },
 
     change: function (event) {
-        console.log('change')
         var target = event.target;
         var change = {};
+        //console.log('[%s] CHANGE t.name:[%s] t.checked[%s] t.value:[%s] ',this.whoami, target.name, target.checked, target.value);
+        //console.dir(target);
  
         if(target.type==='checkbox'){
             change[target.name] = target.checked;
         }else{
             change[target.name] = target.value;
         }
-
-        console.log('change [%s] ',change[target.name]);
 
         this.model.set(change);
         //alert("nos vamos?");

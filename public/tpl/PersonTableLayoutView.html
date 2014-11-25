@@ -18,14 +18,18 @@
       <li class="list-group-item"><input type='text' placeholder='identificador' class='input-small' id='nickName' name='nickName' value=<%= nickName %>></li>
       <li class="list-group-item"><input type='text' placeholder='tipo' class='input-small' id='tipopersona' name='tipopersona' value=<%= tipopersona %>></li>
       <li class="list-group-item"><input type='text' placeholder='descriptor' class='input-small' id='taglist' name='taglist' value=<%= taglist %> ></li>
-      <li class="list-group-item"><input type="checkbox" name='pjuridica' id='pjuridica' value=<%= pjuridica %> 
-        <%= (pjuridica  ? 'checked' : '') %>>Es persona jurídica?</li>
-      <li class="list-group-item"><input type="checkbox" name='pfisica' id='pfisica' value=<%= pfisica %> 
-        <%= (pfisica  ? 'checked' : '') %>>Es persona física?</li>
-      <li class="list-group-item"><input type="checkbox" name='pideal' id='pideal' value=<%= pideal %> 
-        <%= (pideal  ? 'checked' : '') %>>Es persona ideal?</li>
-      <li class="list-group-item"><input type="checkbox" name='adherente' id='adherente' value=<%= adherente %> 
-        <%= (adherente  ? 'checked' : '') %>>Es adherente?</li>
+      <li class="list-group-item"><input type="checkbox" name='queryjuridico' id='queryjuridico' value=<%= queryjuridico %> 
+        <%= (queryjuridico  ? 'checked' : '') %>> ¿Filtra por tipo jurídico?</li>
+      <li class="list-group-item"><input type="checkbox" name='pjuridica' id='pjuridica' class='js-toggle' 
+        value=<%= pjuridica %> <%= (pjuridica  ? 'checked' : '') %>> --¿Es persona jurídica?</li>
+      <li class="list-group-item"><input type="checkbox" name='pfisica' id='pfisica' class='js-toggle'
+        value=<%= pfisica %> <%= (pfisica  ? 'checked' : '') %>> --¿Es persona física?</li>
+      <li class="list-group-item"><input type="checkbox" name='pideal' id='pideal' class='js-toggle'
+        value=<%= pideal %> <%= (pideal  ? 'checked' : '') %>> --¿Es persona ideal?</li>
+      <li class="list-group-item"><input type="checkbox" name='porganismo' id='porganismo'class='js-toggle'
+       value=<%= porganismo %> <%= (porganismo  ? 'checked' : '') %>> --¿Es porganismo?</li>
+      <li class="list-group-item"><input type="checkbox" name='adherente' id='adherente'
+        value=<%= adherente %> <%= (adherente  ? 'checked' : '') %>> Roles: ¿Es adherente?</li>
     </ul>
   </div>
 

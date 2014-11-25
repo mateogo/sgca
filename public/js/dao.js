@@ -167,7 +167,7 @@ window.dao = {
                 type: 'get',
                 url: '/currentUser',
                 success: function(data) {
-                    console.log('callback SUCCESS');
+                    //console.log('callback SUCCESS');
                     self.user = data;
                     if(cb) cb( self.user);
                 }

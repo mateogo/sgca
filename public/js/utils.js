@@ -1410,7 +1410,7 @@ window.utils = {
         var self = this;
         var tabledata = '';
         _.each(data,function(element, index, list){
-            console.log('******* 2 *********');
+            //console.log('******* 2 *********');
             if(element.flag){
                 element.value = (model.displayItem(element.val)||'#');
                 tabledata += self.buildTableRowTemplates[element.tmpl](element);
@@ -1423,7 +1423,7 @@ window.utils = {
     buildRowRenderTemplate: function(lista, templates){
         var items =[];
         _.each(lista, function(data,index){
-            console.log('******* 3 *********');
+            //console.log('******* 3 *********');
           if(data.flag){
             data.value = '<%= '+data.val+' %>';
             items.push(templates[data.tmpl](data));
