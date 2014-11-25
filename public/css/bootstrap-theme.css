@@ -9,12 +9,8 @@
  * Config saved to config.json and https://gist.github.com/664911044fbb6a571adf
  */
  
-@import url(http://fonts.googleapis.com/css?family=Oswald:400,700);
-
-@font-face { 
-    font-family: Oswald-Bold; 
-    src: url('Oswald-Bold.otf')
-}
+@import url(https://fonts.googleapis.com/css?family=Oswald:400,700);
+ 
 
 body.login { 
   background: url(/static/assets/bg/bg-sarli-bo.png) no-repeat center center fixed; 
@@ -328,6 +324,16 @@ body.login {
 .navbar-fixed-bottom {
   border-radius: 0;
 }
+
+.navbar-brand > img {
+  display: inline-block;
+}
+
+a.navbar-brand {
+  padding: 15px !important;
+}
+
+
 @media (max-width: 767px) {
   .navbar .navbar-nav .open .dropdown-menu > .active > a,
   .navbar .navbar-nav .open .dropdown-menu > .active > a:hover,
@@ -535,8 +541,8 @@ body.login {
 #header{
 	background:#f2f1ea;padding:30px 20px;color:#333
 }
-.navbar-brand{float:none}
-.footer{background-color:#E6E4D8;padding:60px 0;color:#333}
+.navbar-brand{float:left}
+.footer{background-color:#E6E4D8;padding:20px 0;color:#333}
 .nav-footer{margin-bottom:0;padding-left:0;list-style:none}
 .nav-footer strong{padding-top:20px;display:block;font-weight:bolder}
 .nav-footer li{position:relative;display:block;color:#333}
@@ -603,7 +609,7 @@ article.sistema-box {
 	padding: 20px;
 	line-height: 1.5em;
 	margin: 0;
-	font-family: 'Oswald-Bold', sans-serif;
+	font-family: 'Oswald', sans-serif;
 	font-weight: 400;
 	-webkit-border-top-left-radius: 3px;
 	-webkit-border-top-right-radius: 3px;

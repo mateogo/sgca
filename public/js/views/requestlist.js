@@ -22,7 +22,7 @@ window.RequestListView = Backbone.View.extend({
             $('.js-hook', this.el).append(new RequestListItemView({model: requests[i]}).render().el);
         }
 
-        $(this.el).append(new Paginator({model: this.model, paginatorPath: this.paginatorPath, page: this.options.page}).render().el);
+        //$(this.el).append(new Paginator({model: this.model, paginatorPath: this.paginatorPath, page: this.options.page}).render().el);
 
         return this;
     }
