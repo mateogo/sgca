@@ -38,10 +38,21 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
       DocManager.execute("set:active:header", "comprobantes");
     },
 
-    editDocument: function(id){
-      console.log('API: edit document')
-      DocsApp.Edit.Controller.editDocument(id);
-      DocManager.execute("set:active:header", "comprobantes");
+    editDocument: function(id, tipocomp){
+      console.log('API: edit document', id)
+      //elige el layout normal o el de solicitudes
+      if (tipocomp == 'nsolicitud')
+          {
+            console.log('es tipo nsolicitud')
+             DocsApp.SolEdit.Controller.editDocument(id);
+             DocManager.execute("set:active:header", "comprobantes");
+          }
+      else
+          {
+          
+             DocsApp.Edit.Controller.editDocument(id);
+             DocManager.execute("set:active:header", "comprobantes");
+          }
     },
 
     listReports: function(criterion){
@@ -97,8 +108,11 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
 
   DocManager.on("document:edit", function(model){
     var documid = model.id || model.get('documid');
+    //agrego tipo de comprobante para filtrar los nsolicitud y q se editen con un layout diferente al resto
+    var tcompro = model.tipocomp || model.get('tipocomp');
     DocManager.navigate("comprobantes/" + documid + "/edit");
-    API.editDocument(documid);
+    //agregue tcompro
+    API.editDocument(documid, tcompro);
   });
 
   DocManager.on("reports:list", function(){
