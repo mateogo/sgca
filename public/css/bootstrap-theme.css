@@ -26,6 +26,45 @@ body.login {
   min-height: 100%;
 
 }
+
+/*INI - Clases de style.css*/
+/*Se Agrego esta clase que la usa en cuadro de login, antes estaba en style.css*/
+.user-options{ float:right; width:345px; margin-top:5px;}
+
+.front-card { width:838px; margin:auto; margin-top:20px;}
+
+.front-signin {
+    padding:10px 10px 10px 10px;
+    height: 150px;
+    left: 536px;
+    width: 320px;
+    border: 1px solid #ccc;
+}
+
+.front-signin .remember-forgot {
+   
+    margin-top: 5px;
+    width: 300px;
+}
+
+.front-signin,.front-signup {
+    background: #fff;
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(100%,#ddd));
+    background: -webkit-linear-gradient(top,#fff 0,#ddd 100%);
+    background: -moz-linear-gradient(top,#fff 0,#ddd 100%);
+    background: -ms-linear-gradient(top,#fff 0,#ddd 100%);
+    background: -o-linear-gradient(top,#fff 0,#ddd 100%);
+    background: linear-gradient(top,#fff 0,#ddd 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#dddddd',GradientType=0);
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+}
+
+/*FIN - Clases de style.css*/
+
 #loginbox .panel,
 #signupbox .panel {
 	opacity: 0.95;
