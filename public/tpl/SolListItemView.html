@@ -1,5 +1,3 @@
-<div class="col-xs-pull-1 col-xs-push-1 col-xs-12 margin-section row req-list">
-     <article class="col-xs-12 col-sm-6 col-md-12 sistema-box">
               <div class="content">
 				      <h4>
                            <text><%= slug %></text>
@@ -7,8 +5,9 @@
                           
 				    <!-- BEG BODY -->
 					<div class="content-body">
-                        <div class="req-row">Estado de Criticidad<span class="label label-danger">
-                              <text><%= estado_alta %></text></span>
+                        <div class="req-row">Estado del trámite<span class="label label-<%= utils.fetchClass(utils.documexecutionOptionList, nivel_ejecucion) %>">
+                              <text><%= utils.fetchLabel(utils.documexecutionOptionList, nivel_ejecucion) %></text></span>
+ 
                         </div>
                         <!--Solo Usuarios MCN -->
 					</div>
@@ -28,26 +27,34 @@
                           
 				    <!-- BEG BOTTOM -->
 				    <div class="well transparent">
-					     <h5>Estado de los requerimientos solicitados</h5>
+					     <h5>Lista de requerimientos y solicitudes</h5>
 					<!--BEG TABLA DE REQUERIMIENTOS-->
-					     <table id="example" class="table" cellspacing="0">
-				              <tr>
-				        	      <td>
-				        		      <span class="pull-right label label-info">Pendiente</span>
-				        		      <div><strong><text><%= items[0].fevento %></text></strong></div>
-				        		      <div class="clearfix">
-                                            <text><%= items[0].items[0].description %></text>
-                                      </div>
-							      </td>
-			                  </tr>
-			              </table>
+						<table id="example" class="table" cellspacing="0">
+						<% 
+					     	subitems = items[0].items;
+							if(subitems){
+					     		_.each(subitems, function(sitem){
+					     			var fecha = sitem.lugarfecha || items[0].fevento 
+					     			var acepmcn = 
+					     %>
+  <tr>
+      <td>	      
+	      <div><strong><text><%= utils.fetchLabel(utils.tiporequerimOptionList, sitem.trequerim) + ":  " + fecha %></text></strong></div>
+	      <div class="clearfix">
+                <text><%= sitem.description %></text>
+          </div>
+	      <div><strong><text>A cargo de: </text></strong><span class="pull-right label label-info"><%= utils.fetchLabel(utils.acargodeOptionList, sitem.acargode) %></span></div>
+	      <div><text>Aceptación MCN: </text><span class="pull-right label label-<%= utils.fetchClass(utils.itemaprobOptionList, sitem.itemaprob) %>"><%= utils.fetchLabel(utils.itemaprobOptionList, sitem.itemaprob) %></span></div>
+	      <div><text>Aceptación Requirente: </text><span class="pull-right label label-<%= utils.fetchClass(utils.itemaprobreqOptionList, sitem.itemaprobreq) %>"><%= utils.fetchLabel(utils.itemaprobreqOptionList, sitem.itemaprobreq) %></span></div>
+      </td>
+  </tr>
+						<% })} %>
+						</table>
                           <!--END TABLA DE REQUERIMIENTOS-->
                         
 			              <div class="spacer"><a href="/gestion/#comprobantes/<%= _id %>/edit" class="btn btn-block btn-default">Ingresar</a></div>
 				    </div><!-- END BOTTOM -->	
 				 </div>
-       </article>
-</div>
 
 			
 			

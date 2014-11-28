@@ -64,10 +64,9 @@ a.plain:hover {
 
 h5 {
     width: 100%;
-    white-space: nowrap;
     margin-bottom: 4px;
 }
-
+/*Líneas de investigación */
 .thumbnail {
     min-width: 280px;
     max-width: 280px;

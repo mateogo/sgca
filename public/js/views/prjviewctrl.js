@@ -19,8 +19,8 @@ window.requestview = function(id, user){
     dao.solQueryData().setUser(user._id);
     //utils.requestmodel.quotation = new Quotation();
 
-    var requestHeaderView = new RequestHeaderView({model:utils.requestmodel.request});
-    $('#prjheader').html(requestHeaderView.el);
+    //var requestHeaderView = new RequestHeaderView({model:utils.requestmodel.request});
+    //$('#prjheader').html(requestHeaderView.el);
     
     utils.requestmodel.request.fetch({success: requestviewsuccess}); 
 };
@@ -98,7 +98,7 @@ var productviewsuccess = function(product){
 var solviewsuccess = function(model){
     console.log('solviewsuccess: [%s]',model.get('slug'));
 
-    var solListView = new SolListItemView({model:model,tagName:'div',className:'col-md-4'});
+    var solListView = new SolListItemView({model:model});
     $('#sollist').append(solListView.render().el);  
 
 
@@ -395,6 +395,8 @@ window.ProjectViewLayout = Backbone.View.extend({
 window.RequestViewLayout = Backbone.View.extend({
 
     whoami:'RequestViewLayout',
+    tagName:'section',
+    className:'page-view',
 
     initialize:function () {
         this.render();

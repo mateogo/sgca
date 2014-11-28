@@ -16,7 +16,8 @@ window.RequestListView = Backbone.View.extend({
         var endPos = Math.min(startPos + 12, len);
 
 
-        $(this.el).html('<div class="row js-hook"></div>');
+        //$(this.el).html('<div class="col-xs-pull-1 col-xs-push-1 col-xs-12 margin-section row req-list js-hook"></div>');
+        $(this.el).html('<div class="row margin-section req-list js-hook"></div>');
 
         for (var i = startPos; i < endPos; i++) {
             $('.js-hook', this.el).append(new RequestListItemView({model: requests[i]}).render().el);
@@ -30,8 +31,10 @@ window.RequestListView = Backbone.View.extend({
 
 window.RequestListItemView = Backbone.View.extend({
 
-    tagName: "div",
-    className:'col-md-4',
+    //tagName: "div",
+    //className:'col-xs-pull-1 col-xs-push-1 col-xs-12 margin-section row req-list',
+    tagName: "article",
+    className:'col-xs-12 col-sm-6 col-md-4 sistema-box',
 
     
     initialize: function () {

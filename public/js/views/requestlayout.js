@@ -2,6 +2,8 @@ window.RequestListLayoutView = Backbone.View.extend({
 
     whoami:'RequestListLayoutView',
 
+    tagName: 'section',
+    className: 'page-view',
 
     initialize:function () {
         this.render();

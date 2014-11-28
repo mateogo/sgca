@@ -323,7 +323,10 @@ window.ProductListItemView = Backbone.View.extend({
 
 window.SolListItemView = Backbone.View.extend({
 
-    tagName: "li",
+    tagName: "article",
+    className: "col-xs-12 col-sm-6 col-md-4 margin-section req-list sistema-box",
+
+
 
     initialize: function () {
         this.model.bind("change", this.render, this);
