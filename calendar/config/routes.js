@@ -14,9 +14,13 @@ module.exports = function (config, app) {
     var passport = require('passport');
 
     var ensureAuthenticated = function (req, res, next) {
-        //console.log('autenticando!!!!');
-        if (req.isAuthenticated()) { return next(); }
-        res.redirect('/')
+        console.log('autenticando!!!!');
+        if (req.isAuthenticated()) { 
+            console.log('Autenticación OK');
+            return next(); 
+        }
+        console.log('FALLÓ AUTENTICACIÓN!!!!');
+        res.redirect('/');
     };
 
     app.post('/login',
@@ -252,7 +256,7 @@ module.exports = function (config, app) {
     // request routes
     var request = require(rootPath + '/calendar/controllers/requests');
     app.get('/solicitudes', request.findAll);
-    app.post('/navegar/solicitudes', request.find);
+    app.post('/navegar/solicitudes', ensureAuthenticated, request.find);
     app.get('/solicitudes/:id', request.findById);
     app.post('/solicitudes', request.add);
     app.put('/solicitudes/:id', request.update);

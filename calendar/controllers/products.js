@@ -242,6 +242,8 @@ exports.find = function(req, res) {
     query = normaliseQuery(query);
          
     //res.send(query);
+    console.log('NEXT: PRODUCT FND!!!!');
+
 
     dbi.collection(productsCol, function(err, collection) {
         collection.find(query).sort({slug:1}).toArray(function(err, items) {

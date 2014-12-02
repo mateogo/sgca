@@ -1,23 +1,13 @@
-<div class="col-xs-pull-1 col-xs-push-1 col-xs-12 margin-section row req-list">
-  <article class="col-xs-12 col-sm-6 col-md-12 sistema-box">
-    <div class="content">
-        <h4>
-            <text><%= utils.viewData.request.eventText[genero] %></text>
-        </h4>  
-             <!-- BEG BODY -->
-             <div class="content-body">
-                  Formularios de solicitud de asistencias técnico-artísticas  
-                  <span class="label label-success">NUEVO!</span>
-             </div>
-             <!-- END BODY -->
-             <hr>
-             <!-- BEG BOTTOM -->
-             <div class="content-bottom">
-				  <h5>Estado de los requerimientos solicitados</h5>
-				  <p>Actulamente tiene iniciados X trámites</p>
-				  <a href="#ver/solicitud/<%= _id %>" class="btn btn-block btn-default">Ingresar</a>   
-             </div>
-            <!-- END BOTTOM-->
-    </div>
-  </article>
+<div class="content">
+<h4><text><%= slug %></text></h4>
+<div class="content-body">
+<%= denom %>
+<br/><span class="label label-success">Cierra: <%= eventdatestr %></span>
+</div>
+<hr>
+<div class="content-bottom">
+<h5>Pedidos en curso</h5>
+<p>Ingrese para consultar el estado de sus trámites/ solicitudes en curso</p>
+<a href="#ver/solicitud/<%= _id %>" class="btn btn-block btn-default">Ingresar</a>
+</div>
 </div>

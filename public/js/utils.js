@@ -177,11 +177,14 @@ window.utils = {
     ],
 
     documexecutionOptionList: [
-        {val:'no_definido'  , label:'Nivel de ejecución'},
-        {val:'enproceso'    , label:'en proceso'},
-        {val:'completado'   , label:'completado'},
-        {val:'suspendido'   , label:'suspendido'},
-        {val:'archivo'      , label:'archivado'}
+        {val:'no_definido'  , label:'Nivel de ejecución', classattr:'info'},
+        {val:'enpreparacion', label:'en preparación',     classattr:'info'},
+        {val:'completado'   , label:'completado',         classattr:'info'},
+        {val:'enevaluacion' , label:'en evaluación',      classattr:'warning'},
+        {val:'aprobado'     , label:'aprobado',           classattr:'success'},
+        {val:'suspendido'   , label:'suspendido',         classattr:'warning'},
+        {val:'rechazado'    , label:'rechazado',          classattr:'danger'},
+        {val:'archivo'      , label:'archivado',          classattr:'info'}
     ],
 /*
     casosqcOptionList: [
@@ -252,18 +255,18 @@ window.utils = {
         {val:'organismo', label:'MCN'},
     ],
    itemaprobOptionList: [
-        {val:'no_definido', label:'MCN: Estado aprobación'},
-        {val:'aprobado',    label:'Aprobado'},
-        {val:'rechazado',   label:'Rechazado'},
-        {val:'observado',   label:'Observado'},
-        {val:'pendiente',   label:'Pendiente'},
+        {val:'no_definido', label:'MCN: Estado aprobación', classattr:'info'},
+        {val:'aprobado',    label:'Aprobado'  , classattr:'success' },
+        {val:'rechazado',   label:'Rechazado' , classattr:'danger'  },
+        {val:'observado',   label:'Observado' , classattr:'warning' },
+        {val:'pendiente',   label:'Pendiente' , classattr:'warning' },
     ],
    itemaprobreqOptionList: [
-        {val:'no_definido', label:'REQ: Estado aceptación'},
-        {val:'aprobado',    label:'Aprobado'},
-        {val:'rechazado',   label:'Rechazado'},
-        {val:'observado',   label:'Observado'},
-        {val:'pendiente',   label:'Pendiente'},
+        {val:'no_definido', label:'REQ: Estado aceptación', classattr:'info'},
+        {val:'aprobado',    label:'Aprobado' , classattr:'success' },
+        {val:'rechazado',   label:'Rechazado', classattr:'danger'  },
+        {val:'observado',   label:'Observado', classattr:'warning' },
+        {val:'pendiente',   label:'Pendiente', classattr:'warning' },
     ],
 
     estadosolicitudOptionList: [
@@ -1293,8 +1296,13 @@ window.utils = {
 
     fetchLabel:function(list, key){
         var node = _.find(list, function(data){return data.val === key;});
-        console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
+        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
         return node ? node.label: key;
+    },
+    fetchClass:function(list, key){
+        var node = _.find(list, function(data){return data.val === key;});
+        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
+        return node ? node.classattr: "";
     },
 
     validateInstance: function(pr){

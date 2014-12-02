@@ -160,6 +160,8 @@ var AppRouter = Backbone.Router.extend({
     viewrequestDetails: function (id) {
         
         var self = this;
+        //console.log('viewrequestDetails:main.js [%s]', user._id);
+
         dao.currentUser.getUser(function(user){
             
           myheader = new HeaderCreateSol({cantsol: '3', user: user.displayName, es_usuario_de: user.es_usuario_de[0].id});
@@ -169,6 +171,11 @@ var AppRouter = Backbone.Router.extend({
           $('#content').html(new RequestViewLayout({model: dao.resourcesQueryData()}).el);
           requestview(id,user);
             
+            if(user){
+              $('#content').html(new RequestViewLayout({model: dao.resourcesQueryData()}).el);
+              requestview(id,user);
+
+            }
         });
         
         
@@ -379,7 +386,14 @@ var AppRouter = Backbone.Router.extend({
         $('#content').html(new ProductViewLayout({model: dao.productsQueryData()}).el);
 
         var product = new Product({_id: id});
-        product.fetch({success: function() {
+        product.fetch({
+            error: function(error, response, options){
+                //console.log('ERROR, ');
+                //console.dir(response);
+                //console.dir(options);
+
+            },
+            success: function() {
             $("#listcontent").html(new ProductView({model: product}).el);
 
             //product.loadpacapitulos(function(chapters){
