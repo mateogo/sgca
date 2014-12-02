@@ -1,3 +1,17 @@
+
+window.HeaderCreateSolView = Backbone.View.extend({
+initialize:function () {
+         console.log('Vista creada');
+        this.render();
+    },
+
+    render:function () {
+        this.$el.html(this.template(this.model.toJSON()));
+        return this;
+    },
+
+});
+
 window.HeaderView = Backbone.View.extend({
 
     initialize: function () {
@@ -10,6 +24,7 @@ window.HeaderView = Backbone.View.extend({
         logged:   'HeaderViewLogged',
         unlogged: 'HeaderViewNotLogged',
         visitor: 'HeaderViewVisitor',
+        solpub: 'HeaderViewPub',
     },
 
     getTemplate: function(){
@@ -18,11 +33,20 @@ window.HeaderView = Backbone.View.extend({
         if(this.model.get('displayName')){
             menu = 'logged'
             var roles = this.model.get('roles');
-            if(roles){
-                if(_.indexOf(roles,'adherente') != -1){
-                    menu = 'visitor';
-                }
+            var home = this.model.get('home');
+            if (home === "solicitudes:list")
+            {
+                menu = 'solpub';  //vista publica de solicitudes con nueva cabecera
             }
+            else
+            {
+               if(roles){
+                   if(_.indexOf(roles,'adherente') != -1){
+                       menu = 'visitor';
+                   }
+               }
+            }
+            
         }
         //console.log('displayName:[%s] [%s]',menu, this.model.get('displayName'))
         return utils.templates[this.templates[menu] ]; //'HeaderViewLogged'

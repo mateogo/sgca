@@ -315,6 +315,21 @@ window.ReqResDetailView = Backbone.View.extend({
     },
 });
 
+window.SolicitudViewLayout = Backbone.View.extend({
+
+    initialize:function () {
+         console.log('View created');
+        console.log('ver: [%s]', this.model.get('slug'));
+        this.render();
+    },
+
+    render:function () {
+        this.$el.html(this.template(this.model.toJSON()));
+        return this;
+    },
+
+})
+
 window.ProjectViewLayout = Backbone.View.extend({
 
     whoami:'ProjectViewLayout',

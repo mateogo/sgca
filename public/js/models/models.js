@@ -1779,6 +1779,36 @@ window.DocumentCollection = Backbone.Collection.extend({
 });
 
 
+window.SolicitudA = Backbone.Model.extend({
+
+    initialize: function(){
+          console.log('a new nsolicitud');
+          },
+    defaults: {
+      _id: null,
+      tipocomp: "",
+      cnumber: "",
+      fecomp: "",
+      persona: "",
+      slug: "",
+      estado_alta:'media',
+      nivel_ejecucion: 'enproceso',
+      description: "",
+      items:[]
+    },
+});
+
+window.HeaderCreateSol = Backbone.Model.extend({
+
+    initialize: function(){
+          console.log('una nueva Header para solicitud');
+          },
+      defaults: {
+              cantsol: '',
+              user: '',
+              es_usuario_de: '',
+},
+});
 
 window.DocumPT = Backbone.Model.extend({
     whoami: 'DocumParteTecnico:models.js ',

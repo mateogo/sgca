@@ -22,7 +22,7 @@ var AppRouter = Backbone.Router.extend({
         "solicitudes/pag/:page"    : "listRequests",
         "solicitudes/add"          : "addRequest",
         "solicitudes/:id"          : "requestDetails",
-
+        "solicitud/:id/edit"       : "editSolicitud",
 
         "recursos"               : "browseResources",
         "navegar/recursos"       : "browseResources",
@@ -162,6 +162,9 @@ var AppRouter = Backbone.Router.extend({
         var self = this;
         dao.currentUser.getUser(function(user){
             
+          myheader = new HeaderCreateSol({cantsol: '3', user: user.displayName, es_usuario_de: user.es_usuario_de[0].id});
+          $(".header").html(new HeaderCreateSolView({model: myheader}).el);
+            
           console.log('viewrequestDetails:main.js [%s]', user._id);
           $('#content').html(new RequestViewLayout({model: dao.resourcesQueryData()}).el);
           requestview(id,user);
@@ -194,6 +197,12 @@ var AppRouter = Backbone.Router.extend({
         console.log('bye')
         window.open('/gestion/#comprobantes');
         return false;
+    },
+    
+    editSolicitud: function(id){
+        console.log('editSolicitud', id);
+        mysolicitud = new SolicitudA();
+     $("#content").html(new SolicitudViewLayout({model: mysolicitud}).el);
     },
 
     addUser: function() {
@@ -583,7 +592,7 @@ var AppRouter = Backbone.Router.extend({
 
 
 utils.loadTemplate(['HomeView', 'AboutView', 
-    'HeaderViewNotLogged','HeaderViewLogged','HeaderViewVisitor',
+    'HeaderViewNotLogged','HeaderViewLogged','HeaderViewVisitor','HeaderViewPub', 'HeaderCreateSolView',
     'ProjectListLayoutView', 'ProjectView','ProjectListItemView', 'ProjectViewLayout', 'PrjHeaderView',
     'RequestListLayoutView', 'RequestView','RequestListItemView', 'RequestViewLayout', 'RequestHeaderView',
     'ResourceView', 'ResourceListItemView', 
@@ -592,7 +601,7 @@ utils.loadTemplate(['HomeView', 'AboutView',
     'ReqResDetailView','AssetListItemView',
     'AssetAccordionView','AssetVersionListItemView','AssetView','AssetLayoutView',
     'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView',
-    'ProductViewLayout','SolListItemView','ArticleView', 'ArticleViewLayout','BrandingEditView',
+    'ProductViewLayout','SolListItemView','SolicitudViewLayout','ArticleView', 'ArticleViewLayout','BrandingEditView',
     'ProfileView','ProfileViewLayout', 'ProfilePersonView',
     'PersonView','PersonViewLayout','PersonTableLayoutView',
     'UserTableLayoutView','UserView','UserViewLayout'
