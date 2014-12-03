@@ -19,8 +19,6 @@ window.requestview = function(id, user){
     dao.solQueryData().setUser(user._id);
     //utils.requestmodel.quotation = new Quotation();
 
-    //var requestHeaderView = new RequestHeaderView({model:utils.requestmodel.request});
-    //$('#prjheader').html(requestHeaderView.el);
     
     utils.requestmodel.request.fetch({success: requestviewsuccess}); 
 };

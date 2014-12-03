@@ -166,11 +166,7 @@ var AppRouter = Backbone.Router.extend({
             
           myheader = new HeaderCreateSol({cantsol: '3', user: user.displayName, es_usuario_de: user.es_usuario_de[0].id});
           $(".header").html(new HeaderCreateSolView({model: myheader}).el);
-            
-          console.log('viewrequestDetails:main.js [%s]', user._id);
-          $('#content').html(new RequestViewLayout({model: dao.resourcesQueryData()}).el);
-          requestview(id,user);
-            
+            console.log('usuario: ', user._id)
             if(user){
               $('#content').html(new RequestViewLayout({model: dao.resourcesQueryData()}).el);
               requestview(id,user);
