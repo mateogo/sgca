@@ -45,15 +45,16 @@ window.utils = {
     },
 
     addValidationError: function (field, message) {
-        var controlGroup = $('#' + field).parent().parent();
-        controlGroup.addClass('error');
-        $('.help-inline', controlGroup).html(message);
+        console.log('f[%s] [%s]','#' + field,message)
+        var controlGroup = $('#' + field).parent();
+        controlGroup.addClass('has-error');
+        $('.help-block', controlGroup).html(message);
     },
 
     removeValidationError: function (field) {
-        var controlGroup = $('#' + field).parent().parent();
-        controlGroup.removeClass('error');
-        $('.help-inline', controlGroup).html('');
+        var controlGroup = $('#' + field).parent();
+        controlGroup.removeClass('has-error');
+        $('.help-block', controlGroup).html('');
     },
 
     showAlert: function(title, text, klass) {

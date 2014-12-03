@@ -3,7 +3,8 @@ var AppRouter = Backbone.Router.extend({
     whoami: 'AppRouter: ',
 
     routes: {
-        ""                       : "login",
+        ""                       : "loginhome",
+        "login"                  : "login",
         "home"                   : "home",
         "terminosdeuso"          : "about",
 
@@ -78,6 +79,13 @@ var AppRouter = Backbone.Router.extend({
         });
     },
 
+    loginhome: function(){
+        var self = this;
+        console.log('******* LoginHome');
+        window.location = '/index-login.html';
+    },
+
+
     home: function(){
         var self = this;
         console.log('******* HOME???');
@@ -101,7 +109,6 @@ var AppRouter = Backbone.Router.extend({
         //    console.log('Login:main.js USER found: [%s]',user.username);
         //});
 
-
         var userlogin = new UserLogin();
         var user = new User();
         if (!this.homeView) {
@@ -117,6 +124,7 @@ var AppRouter = Backbone.Router.extend({
         }
         this.headerView.selectMenuItem('home-menu');
     },
+
     listRequests: function(page) {
         console.log('listRequests:main.js');
         console.log('list:main.js');
