@@ -630,9 +630,45 @@ window.UserFacet = Backbone.Model.extend({
 
     },
 
+    initialize: function () {
+        this.validators = {};
+
+        this.viewers = {};
+
+        this.validators.username = function (value) {
+            console.log('validators [%s]',value.length )
+            return value.length > 0 ? {isValid: true} : {isValid: false, message: "Indique una descripción"};
+        };
+    },
+
+    validateItem: function (key) {
+        //console.log('validateITEM [%s][%s]',key,this.validators[key] ? this.validators[key](this.get(key).message) : 'true')
+        return (this.validators[key]) ? this.validators[key](this.get(key)) : {isValid: true};
+    },
+
+    displayItem: function (key) {
+        return (this.viewers[key]) ? this.viewers[key](this.get(key)) : this.get(key) ;
+    },
+
+    // TODO: Implement Backbone's standard validate() method instead.
+    validateAll: function () {
+
+        var messages = {};
+
+        for (var key in this.validators) {
+            if(this.validators.hasOwnProperty(key)) {
+                var check = this.validators[key](this.get(key));
+                if (check.isValid === false) {
+                    messages[key] = check.message;
+                }
+            }
+        }
+
+        return _.size(messages) > 0 ? {isValid: false, messages: messages} : {isValid: true};
+    },
 
     
-    addNewUser: function(){
+    addNewUser: function(cb){
         var self = this,
         pf = new Person(),
         user = new User(),
@@ -657,6 +693,7 @@ window.UserFacet = Backbone.Model.extend({
                 person.insertuser(user, function(user){
                     if(user){
                         console.log('Usuario insertado')
+                        if(cb) cb(user);
                     }
 
                 });
@@ -702,29 +739,57 @@ window.UserFacet = Backbone.Model.extend({
 
     validate: function(attrs, options) {
       console.log('UserFacet VALIDATE attrs:[%s] options:[%s]',attrs,options);
-      var errors = {}
-      if (! attrs.username) {
-        console.log('UserFacet NOT username: ');
-        errors.username = "Usuario: dato requerido";
-        errors.otro = 'otro error no reconocido';
+      var errors = {},
+            strict = false;
+
+      if(options){
+        strict = options.strict || strict;
       }
-      
+
+      if(strict){
+            console.log('modo STRICT')
+          if (! attrs.username) {
+            errors.username = "Usuario: dato requerido";
+            //errors.otro = 'otro error no reconocido';
+          }
+
+          if (! attrs.termsofuse) {
+            errors.termsofuse = "Debe aceptar los términos de uso";
+            //errors.otro = 'otro error no reconocido';
+          }
+
+          if (! attrs.password) {
+            errors.password = "Debe indicar una clave de acceso";
+            //errors.otro = 'otro error no reconocido';
+          }
+
+          if(attrs.username !== attrs.mail){
+            errors.mail = "Las direcciones de correo no coinciden";
+          }
+
+          if(attrs.password !== attrs.passwordcopia){
+            errors.password = "Las claves no coinciden";
+          }
+
+      }
+
       if (attrs.username) {
-        console.log('UserFacet insert here validation USERname: [%s]', attrs.username);
         if(attrs.username == this.get('usernameconflict')) {
           errors.username = "Ya existe este usuario en la base de datos";
+        }
+      }
+
+      
+      if (attrs.password) {
+        if(attrs.password.length < 6 ) {
+          errors.password = "La clave es muy corta";
         }
         //errors.username = "Usuario: dato requerido";
         //errors.otro = 'otro error no reconocido';
       }
       
-      if (! attrs.termsofuse) {
-        console.log('UserFacet termsofuse: [%s]', attrs.termsofuse);
-        errors.termsofuse = "Debe aceptar los términos de uso";
-        //errors.otro = 'otro error no reconocido';
-      }
-
       if( ! _.isEmpty(errors)){
+        console.dir(errors)
         return errors;
       }
     },
