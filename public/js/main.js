@@ -663,5 +663,5 @@ utils.loadTemplate(['HomeView', 'AboutView',
     utils.approuter = app;
 
     Backbone.history.start();
-    testexcel();
+    //testexcel();
 });
