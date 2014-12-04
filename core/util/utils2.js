@@ -8,10 +8,6 @@
 
 var fs = require('fs');
 
-var _ = require('underscore');
-
-var SpreadsheetWriter = require('pyspreadsheet').SpreadsheetWriter;
-
 var anyw = false;
 
 var es_cutoff = {
@@ -110,89 +106,6 @@ exports.userHome = function (user){
     return (location ? location : rutas['no_definido'])
 };
 
-var isFalsey = function(data){
-    if (!data) return true;
-    
-    if (data === '0')
-    {
-        return true;
-    };
-    return false;
-};
-
-var parseData = function(data,options){
-   // var dateColumns = options.dateColumns;
-    var dateColumns =[3];
-    var booleanColumns =[5];
-    var parsed = [];
-    var numberColumns = [2,4];
-    
-    
-    if (dateColumns){
-        _.each(data,function(elem){
-            var row = _.map(elem,function(item, index){
-                         
-                if (_.indexOf(dateColumns,index) != -1){
-                    console.log(item,index,_.indexOf(dateColumns,index));
-                    return new Date(item);
-                }
-    
-                if (_.indexOf(booleanColumns,index) != -1){
-                    console.log(item,index,_.indexOf(booleanColumns,index));
-                    return (isFalsey(item) ? false : true);
-                }
-                if (_.indexOf(numberColumns,index) != -1){
-           
-                    return parseFloat(item);
-                }
-
-                return item;
-            });
-            parsed.push(row);
-        });
-        return parsed;
-    }
-    
-    
-};
-
-exports.excelBuilder = function (query,rootPath,cb){
-    console.log("utils:begin")
-    var data = query.data;
-    var heading = query.heading;
-    var options = query.options;
-
-    var publicPath = rootPath + '/public/';
-
-    var name = saveFileName(rootPath, query.name + '.xlsx');
-    console.log(name);
-    
-    var relativeName = name.substr(publicPath.length);
-
-    var writer = new SpreadsheetWriter(name);
-    
-    var pData = parseData(data,options);
-    
-    writer.addFormat('heading', { font: { bold: true } });
-    writer.write(0, 0, heading, 'heading');
-
-    writer.append(pData);
-
-    writer.addFormat('options', { font: { bold: true }, alignment: 'right' } );
-    writer.write('D5', options, 'options');
-
-    writer.save(function (err) {
-        if (err) throw err;
-        console.log('file saved');
-        if(cb){
-            var error = {
-                error: "save concretado",
-                file: relativeName
-            };
-        cb(error);    
-        }
-    });
-};
 
 exports.safeName = function (name){
     var str = name.toLowerCase();
@@ -251,22 +164,6 @@ exports.moveFile = function(req, res, rootPath){
             });                
         }
     });
-};
-
-var saveFileName = function(rootPath, name){
-    var today = new Date();
-    var times = today.getTime();
-    var times_str = times.toString()+'_';
-
-    var filename = safeFileName(name);
-
-    var publicPath = rootPath + '/public/';
-
-    var urlPath = createFolder(publicPath, today) + '/' + times_str + filename;
-
-    var serverPath = rootPath + '/public/' + urlPath;
-
-    return serverPath;
 };
 
 exports.dateToStr = function(date) {

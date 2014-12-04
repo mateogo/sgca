@@ -45,19 +45,6 @@ module.exports = function (config, app) {
         //console.log("/inicio:routes.js ");
         res.redirect(utils.userHome(req.user));
     });
-    
-    app.post('/excelbuilder', function(req,res,next){
-        console.log("/excelbuilder.js ");
-        
-        //validar datos
-        var error = utils.excelBuilder(req.body, rootPath, function(error){
-                    res.send(error)
-        });
-
-        
-        
-        //  res.redirect(utils.userHome(req.user));
-    });
 
 
 
