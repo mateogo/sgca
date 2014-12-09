@@ -1,57 +1,8 @@
-window.AboutView = Backbone.View.extend({
-    whoami: 'AboutView:mainlogin.js',
+window.HomeView = Backbone.View.extend({
+    whoami: 'homeview:home.js',
 
     initialize:function () {
-        console.log('[%s] INIT',this.whoami);
-        this.render();
-    },
-    render:function () {
-        $(this.el).html(this.template());
-        return this;
-    }
-});
-
-window.ContentView = Backbone.View.extend({
-    whoami: 'contentview:mainlogin.js',
-
-    initialize:function () {
-        console.log('[%s] INIT',this.whoami);
-
-        this.user = new UserFacet();
-        this.registrationView = new RegistrationView({model:this.user, el:'#signupbox'});
-    },
-
-    events: {
-        "click .js-about"   : 'about',
-        "click #asistencia" : 'needAssistance',
-
-    },
-
-    about: function(){
-        console.log('about')
-        
-        if (!this.aboutView) {
-            this.aboutView = new AboutView();
-        }
-        $('.js-about-content').html(this.aboutView.el);
-
-        $('#loginbox').hide(); $('#aboutbox').show();
-        //app.about();
-    },
-
-    needAssistance: function(){
-        $('#loginbox').hide(); $('#asistbox').show()
-    },
-
-});
-
-
-
-window.RegistrationView = Backbone.View.extend({
-    whoami: 'RegistrationView:mainlogin.js',
-
-    initialize:function () {
-        console.log('[%s] INIT',this.whoami);
+        console.log('HomeView initialize  ');
     },
 
     events: {
@@ -60,23 +11,14 @@ window.RegistrationView = Backbone.View.extend({
         
         "click .js-login-submit"   : 'loginuser',
         "click .js-newUser"   : 'newuser',
-
-        "click .js-about"   : 'about',
-
         "change": "change",
         "change:": "change",
     },
-
 
     newuser: function(){
         var self = this;
         console.log('New User');
         self.formuser();
-    },
-
-
-    about: function(){
-        $('#loginbox').hide(); $('#aboutbox').show()
     },
     
     loginuser: function(event){
@@ -219,25 +161,26 @@ window.RegistrationView = Backbone.View.extend({
 
 });
 
+var login = function () {
+    console.log('login:main.js BEGINS');
+    var user = new UserFacet();
+    var homeView = new HomeView({model:user, el:'#signupbox'});
+
+};
+
 
 var AppRouter = Backbone.Router.extend({
 
-    whoami: 'AppRouter:mainlogin.js',
+    whoami: 'mainlogin/AppRouter',
 
     routes: {
         ""                       : "login",
         "login"                  : "loginhome",
     },
 
+
     initialize: function () {
         console.log('[%s] BEGINS',this.whoami);
-        this.initContentView();
-    },
-
-    initContentView: function(){
-        if (!this.contentView) {
-            this.contentView = new ContentView({el:'.js-content'});
-        }
     },
 
     loginhome: function(){
@@ -246,19 +189,15 @@ var AppRouter = Backbone.Router.extend({
         window.location = '/';
     },
 
+
     login: function () {
-        console.log('login:mainlogin.js ROOT route');
+        console.log('login:main.js BEGINS');
     },
 
+
 });
 
-utils.loadTemplate([        
-        'AboutView', 
-    ], function() {
+window.app = new AppRouter();
 
-    window.app = new AppRouter();
-
-    Backbone.history.start();
-});
-
-
+Backbone.history.start();
+login();
