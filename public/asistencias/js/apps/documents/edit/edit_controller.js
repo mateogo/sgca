@@ -69,8 +69,12 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
   var registerDocumSidebarItemsView = function(view){
     //view.collection.bind("add", view.modelChanged, view);
-    view.listenTo(view.model, 'change', view.render);
-    view.listenTo(view.collection, 'add', view.render);
+    //view.listenTo(view.model, 'change', view.render);
+
+    view.listenTo(view.collection, 'add', function(mdel,col,op){
+      Edit.Session.layout.itemsInfoRegion.show(view);
+    });
+ 
   };
 
   var registerDocumSidebarView = function(view){
