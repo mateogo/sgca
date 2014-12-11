@@ -176,7 +176,7 @@ var AppRouter = Backbone.Router.extend({
             //$(".header").html(new HeaderCreateSolView({model: myheader}).el);
             
             console.log('viewrequestDetails:main.js [%s]', user._id);
-            
+
             if(user){
               $('#content').html(new RequestViewLayout({model: dao.resourcesQueryData()}).el);
               requestview(id,user);
@@ -628,38 +628,6 @@ var AppRouter = Backbone.Router.extend({
 
 });
 
-var testexcel = function(){
-    var heading = ['ID', 'Name', 'Age', 'Birthdate', 'Balance', 'Active?'];
-    var stringraro = 'pedro "toto" mendez';
-    var data =([
-        ['1', stringraro, 31, '2012-01-01T01:35:33Z', 55.34, 1],
-        ['2', 'John Dow', 34, '2013-02-03T01:35:33Z', 12.0002, 0],
-        ['3', 'John Doh', 33, '2014-03-06T01:35:33Z', 78.901, 1]
-    ]);
-
-    //var options = ('D5', ['Total:', '=SUM(E2:E4)'], { font: { bold: true }, alignment: 'right' });
-      var options = (['Total:', '=SUM(E2:E4)']);
-    var name = "ejemplo1";
-
-    var query = {
-        heading:heading,
-        data:data,
-        options:options,
-        name:name
-    };
-
-    $.ajax({
-            type: "POST",
-            url: "/excelbuilder",
-            dataType: "json",
-            data: query,
-            success: function(data){
-                console.dir(data);
-                window.open(data.file)
-            }
-    });
-};
-
 utils.loadTemplate(['HomeView', 'AboutView', 
     'HeaderViewNotLogged','HeaderViewLogged','HeaderViewVisitor','HeaderViewPub', 'HeaderCreateSolView',
     'ProjectListLayoutView', 'ProjectView','ProjectListItemView', 'ProjectViewLayout', 'PrjHeaderView',
@@ -679,5 +647,4 @@ utils.loadTemplate(['HomeView', 'AboutView',
     utils.approuter = app;
 
     Backbone.history.start();
-    //testexcel();
 });

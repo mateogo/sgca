@@ -162,7 +162,7 @@ exports.excelBuilder = function (query,rootPath,cb){
     var heading = query.heading;
     var options = query.options;
 
-    var publicPath = rootPath + '/public/';
+    var publicPath = rootPath + '/public/gestion/';
 
     var name = saveFileName(rootPath, query.name + '.xlsx');
     console.log(name);
@@ -171,12 +171,12 @@ exports.excelBuilder = function (query,rootPath,cb){
 
     var writer = new SpreadsheetWriter(name);
     
-    var pData = parseData(data,options);
+    //var pData = parseData(data,options);
     
     writer.addFormat('heading', { font: { bold: true } });
     writer.write(0, 0, heading, 'heading');
 
-    writer.append(pData);
+    writer.append(data);
 
     writer.addFormat('options', { font: { bold: true }, alignment: 'right' } );
     writer.write('D5', options, 'options');
@@ -260,11 +260,11 @@ var saveFileName = function(rootPath, name){
 
     var filename = safeFileName(name);
 
-    var publicPath = rootPath + '/public/';
+    var publicPath = rootPath + '/public/gestion/';
 
     var urlPath = createFolder(publicPath, today) + '/' + times_str + filename;
-
-    var serverPath = rootPath + '/public/' + urlPath;
+    console.log('3',urlPath)
+    var serverPath = rootPath + '/public/gestion/' + urlPath;
 
     return serverPath;
 };

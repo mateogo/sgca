@@ -184,8 +184,19 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
       "click a.brand": "brandClicked",
       "click .js-filter-by-id" : "documentSearch",
       "click .js-groupedit": 'groupEdit',
+      "click .js-exportarexcel": 'exportarExcel',
     },
 
+    exportarExcel: function(e){
+      e.preventDefault();
+      console.log('exporta Excel');
+      this.$('.dropdown-toggle').dropdown('toggle');
+
+      this.trigger('document:exportar:excel');
+      return false;
+
+    },
+      
     groupEdit: function(e){
       e.preventDefault();
       console.log('GroupEdit');

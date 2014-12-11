@@ -18,13 +18,13 @@
     <![endif]-->
 </head>
 <body class="login">
-    <div class="container js-content">
+    <div class="container">
     	<div id="loginbox" style="margin-top:90px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
             <div class="panel panel-secondary" >
                     <div class="panel-heading">
-                    	<a class="logo navbar-brand" href="http://www.cultura.gob.ar/"> <img src="img/logo-cultura-nacion.png" class="img-responsive text-center"></a>
+                    	<a class="logo navbar-brand" href="http://www.cultura.gob.ar/"> <img src="http://www.cultura.gob.ar/static/img/logo-cultura-nacion.png" class="img-responsive text-center"></a>
                         <div class="panel-title">Entrar</div>
-                        <div style="float:right; font-size: 80%; position: relative; top:-10px"><a id='asistencia' href="#">Recuperar contraseña</a></div>
+                        <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#">Recuperar contraseña</a></div>
                     </div>     
 
                     <div style="padding-top:30px" class="panel-body" >
@@ -71,20 +71,12 @@
                                         <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
                                             ¿Aún no tenés cuenta? 
 
-                                        <a href="#" onclick="$('#loginbox').hide(); $('#signupbox').show()">
+                                        <a href="#" onClick="$('#loginbox').hide(); $('#signupbox').show()">
                                             Registrate
                                         </a>
                                         </div>
-                                        <div style="padding-top:5px; font-size:85%" >
-                                            Términos de uso y las políticas de privacidad
-                                            <a href="#" class='js-about' >
-                                                Leelos acá
-                                            </a>
-                                        </div>
                                     </div>
                                 </div>    
-
-
                             </form>     
 
 
@@ -95,7 +87,7 @@
         <div id="signupbox" style="display:none; margin-top:90px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
         <div class="panel panel-secondary">
                         <div class="panel-heading">
-                        <a class="logo navbar-brand" href="http://www.cultura.gob.ar/"> <img src="img/logo-cultura-nacion.png" class="img-responsive text-center"></a>
+                        <a class="logo navbar-brand" href="http://www.cultura.gob.ar/"> <img src="http://www.cultura.gob.ar/static/img/logo-cultura-nacion.png" class="img-responsive text-center"></a>
                             <div class="panel-title">Registrate</div>
                             <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Entrar</a></div>
                         </div>  
@@ -183,30 +175,7 @@
                             </form>
                          </div>
                     </div>
-        </div> 
-        <div id="aboutbox" style="display:none; margin-top:90px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-        <div class="panel panel-secondary">
-            <div class="panel-heading">
-                <a class="logo navbar-brand" href="http://www.cultura.gob.ar/"><img src="img/logo-cultura-nacion.png" class="img-responsive text-center"></a>
-                <div class="panel-title">Términos de uso - Políticas de privacidad</div>
-                <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#aboutbox').hide(); $('#loginbox').show()">Entrar</a></div>
-            </div>  
-            <div class="panel-body js-about-content" >ABOUT BOX</div> 
-        </div> 
-        </div> 
-
-        <div id="asistbox" style="display:none; margin-top:90px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-        <div class="panel panel-secondary">
-            <div class="panel-heading">
-                <a class="logo navbar-brand" href="http://www.cultura.gob.ar/"> <img src="img/logo-cultura-nacion.png" class="img-responsive text-center"></a>
-                <div class="panel-title">Recuperar su contraseña</div>
-                <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#asistbox').hide(); $('#loginbox').show()">Entrar</a></div>
-            </div>  
-            <div class="panel-body js-about-content" >
-                Si tiene cualquier inconveniente para ingresar a la intranet del Ministerio de Cultura, consultas o sugerencias, no dude en contactarse por teléfono o correo electrónico.<br>Muchas gracias.<br><br><strong> Departamento de Sistemas<br>11 4129 2460<br>soporte@cultura.gob.ar</strong> </div> 
-        </div>
-        </div>
-
+	</div> 
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> 
 <script src="/lib/underscore-min.js"></script>

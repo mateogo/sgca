@@ -59,8 +59,60 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
         
       });
+      
+      hview.on('document:exportar:excel',function(){
+        var self = this;
+          //si no se selecciono nada retorna
+        if(!List.Session.selectedDocumentList.length) return;
+        console.log('document:exportar:excel controller');
+          var listcomp = ([]);
+          var listaux  = [];
+
+          List.Session.selectedDocumentList.each(function(model){
+                listaux.push(model.get('cnumber'));
+                listaux.push(model.get('fecomp'));
+                listaux.push(model.get('tipocomp'));
+                listaux.push(model.get('persona'));
+                listaux.push(model.get('slug')); 
+                
+                listcomp.push(listaux);
+                listaux  = [];
+           })
+          //
+          generarexcel(listcomp);
+
+        
+      });
 
   };
+
+var generarexcel = function(listcomp){
+
+    var heading = ['Comprob', 'fecha', 'tipo', 'persona', 'asunto-descripcion'];
+    var data =(listcomp);
+
+    //var options = ('D5', ['Total:', '=SUM(E2:E4)'], { font: { bold: true }, alignment: 'right' });
+     // var options = (['Total:', '=SUM(E2:E4)']);
+    var name = "ListaComprobantes";
+
+    var query = {
+        heading:heading,
+        data:data,
+        name:name
+    };
+
+    $.ajax({
+            type: "POST",
+            url: "/excelbuilder",
+            dataType: "json",
+            data: query,
+            success: function(data){
+                console.dir(data);
+                window.open(data.file)
+            }
+    });
+};
+    
   var updateSelectedDocuments = function(data, cb){
     var actual = dao.extractData(data);
     var query = buildQuery(data);
@@ -182,14 +234,18 @@ DocManager.module("DocsApp.List", function(List, DocManager, Backbone, Marionett
 
         documentsListView.on("itemview:document:row:selected", function(childView, mode, model){
           console.log('Row CHECKBOX TOGGLE [%s] [%s]  ',model.get('cnumber'),mode);
+
           if(mode){
             List.Session.selectedDocumentList.add(model);
           }else{
             List.Session.selectedDocumentList.remove(model);
 
           }
+
           console.log('Row CHECKBOX TOGGLE [%s] [%s] [%s]  ',model.get('cnumber'),mode, List.Session.selectedDocumentList.length );
+
         });
+                
   };
 
   /*
