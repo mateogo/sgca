@@ -162,12 +162,12 @@ exports.excelBuilder = function (query,rootPath,cb){
     var heading = query.heading;
     var options = query.options;
 
-    var publicPath = rootPath + '/public/gestion/';
+    var publicPath = rootPath + '/public/';
 
     var name = saveFileName(rootPath, query.name + '.xlsx');
     console.log(name);
     
-    var relativeName = name.substr(publicPath.length);
+    var relativeName = name.substr(publicPath.length - 1);
 
     var writer = new SpreadsheetWriter(name);
     
@@ -260,11 +260,11 @@ var saveFileName = function(rootPath, name){
 
     var filename = safeFileName(name);
 
-    var publicPath = rootPath + '/public/gestion/';
+    var publicPath = rootPath + '/public/';
 
     var urlPath = createFolder(publicPath, today) + '/' + times_str + filename;
-    console.log('3',urlPath)
-    var serverPath = rootPath + '/public/gestion/' + urlPath;
+
+    var serverPath = rootPath + '/public/' + urlPath;
 
     return serverPath;
 };
