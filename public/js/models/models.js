@@ -2561,6 +2561,7 @@ window.Request = Backbone.Model.extend({
     idAttribute: "_id",
 
     initialize: function () {
+        console.log('NEW REQUEST')
         this.validators = {};
 
         this.viewers = {};

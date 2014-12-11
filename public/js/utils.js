@@ -180,6 +180,7 @@ window.utils = {
     documexecutionOptionList: [
         {val:'no_definido'  , label:'Nivel de ejecución', classattr:'info'},
         {val:'enpreparacion', label:'en preparación',     classattr:'info'},
+        {val:'pendiente', label:'en preparación',     classattr:'info'},
         {val:'completado'   , label:'completado',         classattr:'info'},
         {val:'enevaluacion' , label:'en evaluación',      classattr:'warning'},
         {val:'aprobado'     , label:'aprobado',           classattr:'success'},

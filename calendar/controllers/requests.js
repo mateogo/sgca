@@ -35,6 +35,7 @@ exports.findById = function(req, res) {
     console.log('findById: Retrieving %s id:[%s]', requestsCol,id);
     dbi.collection(requestsCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
+            console.dir(item);
             res.send(item);
         });
     });

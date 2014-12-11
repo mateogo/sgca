@@ -23,7 +23,7 @@ var AppRouter = Backbone.Router.extend({
         "solicitudes/pag/:page"    : "listRequests",
         "solicitudes/add"          : "addRequest",
         "solicitudes/:id"          : "requestDetails",
-        "solicitud/:id/edit"       : "editSolicitud",
+        "solicitud/:id/edit"       : "requestDetails",
 
         "recursos"               : "browseResources",
         "navegar/recursos"       : "browseResources",
@@ -176,8 +176,6 @@ var AppRouter = Backbone.Router.extend({
             //$(".header").html(new HeaderCreateSolView({model: myheader}).el);
             
             console.log('viewrequestDetails:main.js [%s]', user._id);
-            $('#content').html(new RequestViewLayout({model: dao.resourcesQueryData()}).el);
-            requestview(id,user);
             
             if(user){
               $('#content').html(new RequestViewLayout({model: dao.resourcesQueryData()}).el);
@@ -188,17 +186,6 @@ var AppRouter = Backbone.Router.extend({
         
         
 
-    },
-
-    requestDetails: function (id) {
-        console.log('requestDetails:main.js');
-        var request = new Request({ _id: id});
-        //
-        request.fetch({success: function() {
-            utils.currentrequest = request;
-            $("#content").html(new RequestView({model: request}).el);
-        }});
-        if(this.headerView) this.headerView.selectMenuItem();
     },
 
             
@@ -215,10 +202,39 @@ var AppRouter = Backbone.Router.extend({
     },
     
     editSolicitud: function(id){
-        console.log('editSolicitud', id);
+        // deprecated
         mysolicitud = new SolicitudA();
-     $("#content").html(new SolicitudViewLayout({model: mysolicitud}).el);
+        $("#content").html(new SolicitudViewLayout({model: mysolicitud}).el);
     },
+
+    requestDetails: function(id) {
+        console.log('REQQUEST ******* requestDetails:main.js');
+        
+        var request = new Comprobante({ _id: id});
+        //
+        console.log('ready to request [%s]',id)
+        request.fetch({success: function() {
+           console.log('callback')
+            utils.currentrequest = request;
+            $('#content').html(new RequestViewLayout({model: request}).el);
+            $("#listcontent").html(new RequestView({model: request}).el);
+        }});
+
+        //if(this.headerView) this.headerView.selectMenuItem('browse-menu');
+    },
+
+    requestDetailsOld: function (id) {
+        console.log('requestDetails:main.js');
+        var request = new Request({ _id: id});
+        //
+        request.fetch({success: function() {
+            utils.currentrequest = request;
+            $("#content").html(new RequestView({model: request}).el);
+        }});
+        if(this.headerView) this.headerView.selectMenuItem();
+    },
+
+
 
     addUser: function() {
         console.log('addUser:main.js');
@@ -654,7 +670,7 @@ utils.loadTemplate(['HomeView', 'AboutView',
     'ReqResDetailView','AssetListItemView',
     'AssetAccordionView','AssetVersionListItemView','AssetView','AssetLayoutView',
     'ProductListLayoutView','ProductView','ProductListItemView','ProductPaTechFacetView',
-    'ProductViewLayout','SolListItemView','SolicitudViewLayout','ArticleView', 'ArticleViewLayout','BrandingEditView',
+    'ProductViewLayout','SolListItemView','ArticleView', 'ArticleViewLayout','BrandingEditView',
     'ProfileView','ProfileViewLayout', 'ProfilePersonView',
     'PersonView','PersonViewLayout','PersonTableLayoutView',
     'UserTableLayoutView','UserView','UserViewLayout'

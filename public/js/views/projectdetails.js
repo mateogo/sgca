@@ -9,11 +9,13 @@ window.ProjectView = Backbone.View.extend({
 
     initialize: function () {
         this.render();
+
     },
 
     render: function () {
         var self = this;
         $(this.el).html(this.template(this.model.toJSON()));
+        console.log('projecrview')
         this.$(".datepicker").datepicker({
                 format: "dd/mm/yyyy"
             }).on('changeDate',function(ev){
