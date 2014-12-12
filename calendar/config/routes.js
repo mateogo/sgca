@@ -59,7 +59,15 @@ module.exports = function (config, app) {
         //  res.redirect(utils.userHome(req.user));
     });
 
+    app.post('/sendmail', function(req,res,next){
+        console.log("/sendmail.js ");
+        
+        //validar datos
+        var error = utils.sendMail(req.body, function(error){
+                    res.send(error)
+        });
 
+    });
 
 
 /*

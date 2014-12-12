@@ -12,7 +12,29 @@ var _ = require('underscore');
 
 var SpreadsheetWriter = require('pyspreadsheet').SpreadsheetWriter;
 
+var nodemailer = require('nodemailer');
+
 var anyw = false;
+
+var transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'intranet.mcn@gmail.com',
+        pass: 'NaY-yZM-S9M-wVU'
+       }
+});
+
+var subjecttpl = _.template("[MCN] <%= subject %>");
+var bodytpl = _.template(
+            "<br>"+
+            "<div><%= body %></div>"+
+            "<br>"+
+            "<br>"+
+            "<br>"+
+            "<div>"+
+            "<p>Si usted esta recibiendo este mail en forma indebida, por favor comuniquese al teléfono (54 11) 4120 2400</p>"+
+            "<p><a href='http://www.cultura.gob.ar'>Ministerio de Cultura</a></p>"
+);
 
 var es_cutoff = {
     "á" : "a",
@@ -88,6 +110,7 @@ var rutas = {
     'gestion:comprobantes:list'    :'/gestion/#comprobantes',
     'studio:producciones:list'     :'/studio'
 };
+
 
 exports.anywModule = function(){
     return anyw;
@@ -192,6 +215,23 @@ exports.excelBuilder = function (query,rootPath,cb){
         cb(error);    
         }
     });
+};
+
+exports.sendMail = function (mailOptions,cb){
+    console.log("sendmail:begin")    
+    mailOptions.subject = subjecttpl({subject:mailOptions.subject});
+    mailOptions.html = bodytpl({body:mailOptions.html});
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) throw error;
+        if(cb){
+            var error = {
+                error: 'Message sent: ' + info.response,
+            };
+        cb(error);    
+        }
+    
+    }); 
 };
 
 exports.safeName = function (name){

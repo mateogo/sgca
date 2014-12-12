@@ -461,6 +461,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         }else{
           console.log('FINISHED!')
           //DocManager.trigger("document:edit", model);
+          //volver
+          enviarmail(model);
         }
       });
     });
@@ -482,6 +484,30 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     });
 
   };
+    
+var enviarmail = function(model){
+    var mailModel = new DocManager.Entities.SendMail({
+        from: 'intranet.mcn@gmail.com',
+        subject:'Solicitud de Asistencia',
+    });
+
+    mailModel.set('to',model.get('items')[0].eusuario);
+    if (Edit.Session.currentUser){
+        mailModel.set('cc',Edit.Session.currentUser.get('username'))
+    }
+    
+    //todo:ver donde configurar el servidor de produccion
+    model.set( 'server','https://localhost:3000');
+    var sendMail = new DocManager.DocsApp.Common.Views.SendMail({
+          model: model,
+    });
+    
+    mailModel.set('html',sendMail.getData());
+    //console.log(sendMail.getData());
+    //console.dir(mailModel.attributes);
+    mailModel.sendmail();
+};
+    
   var getUserMessage = function (user){
     var msgs = '';
     if(user){

@@ -9,7 +9,7 @@ utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView',
     'DocumEditSO','DocumEditSOItem','DocumEditSOLayout',
     'DocumEditPSO','DocumEditPSOItems','DocumEditPSOHeader', 'DocumEditPSOSItems','DocumEditPSOSDetailsHeader','DocumEditPSOSDetails',
     'DocumShowItemSODetail','DocumShowItemSOComposite','DocumShowItemSOHeader',
-    'ReportEditLayoutView', 'ReportEditCore', 'ReportNavbar' ], function() {
+    'ReportEditLayoutView', 'ReportEditCore', 'ReportNavbar','MailTemplateDefault' ], function() {
 
     $('[data-toggle=offcanvas]').click(function() {
         $('.row-offcanvas').toggleClass('active');

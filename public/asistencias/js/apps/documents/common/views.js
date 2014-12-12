@@ -450,6 +450,17 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
       this.trigger("sit:form:submit");
     },
   });
+    
+  Views.SendMail = Marionette.ItemView.extend({
+      
+      getTemplate: function(){
+          return utils.templates["MailTemplateDefault"];
+      },
+      
+       getData: function(){
+           return this.getTemplate()(this.model.toJSON());
+      },
+  })
 
   Views.SidebarPanel = Marionette.CollectionView.extend({
     //tagName: "div",
