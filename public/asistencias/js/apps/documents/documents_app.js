@@ -5,6 +5,7 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
       "comprobantes(/filter/criterion::criterion)": "listDocuments",
       "comprobantes/:id": "showDocument",
       "comprobantes/:id/edit": "editDocument",
+      "solicitudes/nueva": "editDocument",
       "reportes(/filter/criterion::criterion)": "listReports",
       "reportes/:id": "showReport",
       "reportes/:id/edit": "editReport"    }

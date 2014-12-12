@@ -12,7 +12,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       cnumber: "",
       fecomp: "",
       persona: "",
-      slug: "",
+      slug: "documento nuevoO",
       estado_alta:'media',
       nivel_ejecucion: 'enproceso',
       description: "",
@@ -110,17 +110,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
     
-    documFacetFactory: function(){
+    documSolicitudFacetFactory: function(){
       var self = this,
-          data;
-      if(dao.docum.isType(self.get('tipocomp'), 'nsolicitud')){
-        data = _.clone(self.attributes);
-        data = _.extend(data,self.get('items')[0]);
-        console.dir(data);
-        return new Entities.DocumSolicitudFacet(data);
-      }else{
-        return self;
+          data,
+          fealta = new Date();
+
+      if(!self.get('tipocomp')){
+        self.set('tipocomp', 'nsolicitud');
+        self.set('fecomp', utils.dateToStr(fealta));
       }
+
+      if(!self.id){
+        self.set('slug', 'Nueva Solicitud');
+      }
+
+      data = _.clone(self.attributes);
+      data = _.extend(data,self.get('items')[0]);
+      return new Entities.DocumSolicitudFacet(data);
     },
     
     update: function(cb){
@@ -2010,14 +2016,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     getEntity: function(entityId){
       var comprobante = new Entities.Comprobante({_id: entityId});
       var defer = $.Deferred();
-      comprobante.fetch({
-        success: function(data){
-          defer.resolve(data);
-        },
-        error: function(data){
-          defer.resolve(undefined);
-        }
-      });
+      if(entityId){
+        comprobante.fetch({
+          success: function(data){
+            defer.resolve(data);
+          },
+          error: function(data){
+            defer.resolve(undefined);
+          }
+       });
+      }else{
+        defer.resolve(comprobante);
+      }
       return defer.promise();
     },
 

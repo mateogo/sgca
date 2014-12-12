@@ -331,7 +331,7 @@ module.exports = function (config, app) {
 
     // user (usuarios) routes
     var user = require(rootPath + '/calendar/controllers/user');
-    app.post('/recuperar/usuarios', user.find);   
+    app.post('/recuperar/usuarios', user.find);
     app.get('/currentuser', user.findCurrentUser);
     app.get('/usuarios/:id', user.findById);
     app.post('/usuarios', user.add);

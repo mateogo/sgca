@@ -508,5 +508,3 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
   });
 
 });
-
-

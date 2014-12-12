@@ -10,7 +10,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
      
       $.when(fetchingDocument).done(function(document){
 
-        // Es editable?
+        console.log('DocsApp.Edit BEGIN', document.get('slug'));
+    
         if(document.get('tipocomp')==='pdiario'){
           return;
         }
@@ -371,7 +372,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   var registerDocumentEntity = function(model) {
     Edit.Session.solicitud = model;
 
-    Edit.Session.model = model.documFacetFactory();
+    Edit.Session.model = model.documSolicitudFacetFactory();
 
     Edit.Session.items = Edit.Session.model.getItems();
 
