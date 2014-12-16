@@ -2660,6 +2660,7 @@ window.Request = Backbone.Model.extend({
         eventdate: new Date().getTime(),
         description: "",
         picture: null,
+        items:[],
     }
 });
 

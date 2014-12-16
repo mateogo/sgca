@@ -1587,7 +1587,7 @@ window.utils = {
         {id:2 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'trim_fiscal',        label:'Trim fiscal'},
         {id:3 , tt:'th', flag:0, tclass:'col3', tmpl: 'template1', val:'cantidad',  label:'Cant'},
         {id:4 , tt:'th', flag:1, tclass:'col4', tmpl: 'template1', val:'ume',      label:'UME'},
-        {id:5 , tt:'th', flag:0, tclass:'col5', tmpl: 'template1', val:'importe',      label:'Importe'},
+        {id:5 , tt:'th', flag:1, tclass:'col5', tmpl: 'template7', val:'importe',      label:'Importe'},
         {id:11, tt:'th', flag:1, tclass:'colb', tmpl: 'template1', val:'slug',          label:'a s u n t o   -   d e s c r i p c i ó n'},
         {id:12, tt:'th', flag:1, tclass:'actions', tmpl: 'template5', val:'acciones',      label:'acciones'}
     ],
@@ -1613,6 +1613,7 @@ window.utils = {
         template4 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tedit' title='no implementado aun'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link tzoom' title='ver entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></button></td>"),
         template5 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit' title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-zoom' title='entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></td>"),
         template6 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='explorar   '><%= value %></button></td>"),
+        template7 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><span class='pull-right'><%= value %></span></td>"),
         //template7 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='editar item'><%= value %></button></td>"),
         //template3 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink'   title='editar item'><%= value %></button></td>"),
     },
@@ -1637,6 +1638,9 @@ window.utils = {
             //console.log('******* 3 *********');
           if(data.flag){
             data.value = '<%= '+data.val+' %>';
+            if(data.tmpl === 'template7'){
+                data.value = '<%= accounting.formatNumber('+data.val+') %>';
+            }
             items.push(templates[data.tmpl](data));
           }          
         });

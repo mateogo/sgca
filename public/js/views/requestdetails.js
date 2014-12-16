@@ -8,6 +8,7 @@ window.RequestView = Backbone.View.extend({
     whoami:'RequestView',
 
     initialize: function () {
+        console.log('[%s] INITIALIZE', this.whoami)
         this.render();
     },
 

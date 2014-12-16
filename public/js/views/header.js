@@ -13,6 +13,7 @@ initialize:function () {
 });
 
 window.HeaderView = Backbone.View.extend({
+    whoami:'HeaderView:header.js#16',
 
     initialize: function () {
         // model: User
@@ -23,8 +24,8 @@ window.HeaderView = Backbone.View.extend({
     templates: {
         logged:   'HeaderViewLogged',
         unlogged: 'HeaderViewNotLogged',
-        visitor: 'HeaderViewVisitor',
-        solpub: 'HeaderViewPub',
+        visitor:  'HeaderViewVisitor',
+        solpub:   'HeaderViewPub',
     },
 
     getTemplate: function(){
@@ -34,12 +35,10 @@ window.HeaderView = Backbone.View.extend({
             menu = 'logged'
             var roles = this.model.get('roles');
             var home = this.model.get('home');
-            if (home === "solicitudes:list")
-            {
+            if (home === "solicitudes:list"){
                 menu = 'solpub';  //vista publica de solicitudes con nueva cabecera
             }
-            else
-            {
+            else{
                if(roles){
                    if(_.indexOf(roles,'adherente') != -1){
                        menu = 'visitor';
@@ -48,10 +47,10 @@ window.HeaderView = Backbone.View.extend({
             }
             
         }
+        console.log('[%s] MenuSelected: [%s]',this.whoami, menu);
         //console.log('displayName:[%s] [%s]',menu, this.model.get('displayName'))
         return utils.templates[this.templates[menu] ]; //'HeaderViewLogged'
     },
-
 
     render: function () {
         var self = this;

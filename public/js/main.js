@@ -16,7 +16,7 @@ var AppRouter = Backbone.Router.extend({
         "proyectos/add"          : "addProject",
         "proyectos/:id"          : "projectDetails",
 
-        "ver/solicitud/:id"       : "viewrequestDetails",
+        "ver/solicitud/:id"       : "viewRequestDetails",
         "solicitudes"              : "listRequests",
         "navegar/solicitudes"      : "browseRequests",
         "navegar/solicitudes/pag/:page"  : "browseRequests",
@@ -165,17 +165,17 @@ var AppRouter = Backbone.Router.extend({
 
 
 
-    viewrequestDetails: function (id) {
+    viewRequestDetails: function (id) {
         
         var self = this;
-        //console.log('viewrequestDetails:main.js [%s]', user._id);
+        //console.log('viewRequestDetails:main.js [%s]', user._id);
 
         dao.currentUser.getUser(function(user){
             
             //myheader = new HeaderCreateSol({cantsol: '3', user: user.displayName, es_usuario_de: user.es_usuario_de[0].id});
             //$(".header").html(new HeaderCreateSolView({model: myheader}).el);
             
-            console.log('viewrequestDetails:main.js [%s]', user._id);
+            console.log('viewRequestDetails:main.js [%s]', user._id);
 
             if(user){
               $('#content').html(new RequestViewLayout({model: dao.resourcesQueryData()}).el);
@@ -207,7 +207,7 @@ var AppRouter = Backbone.Router.extend({
         $("#content").html(new SolicitudViewLayout({model: mysolicitud}).el);
     },
 
-    requestDetails: function(id) {
+    requestDetailsNew: function(id) {
         console.log('REQQUEST ******* requestDetails:main.js');
         
         var request = new Comprobante({ _id: id});
@@ -216,14 +216,14 @@ var AppRouter = Backbone.Router.extend({
         request.fetch({success: function() {
            console.log('callback')
             utils.currentrequest = request;
-            $('#content').html(new RequestViewLayout({model: request}).el);
-            $("#listcontent").html(new RequestView({model: request}).el);
+            //$('#content').html(new RequestViewLayout({model: request}).el);
+            $("#content").html(new RequestView({model: request}).el);
         }});
 
         //if(this.headerView) this.headerView.selectMenuItem('browse-menu');
     },
 
-    requestDetailsOld: function (id) {
+    requestDetails: function (id) {
         console.log('requestDetails:main.js');
         var request = new Request({ _id: id});
         //

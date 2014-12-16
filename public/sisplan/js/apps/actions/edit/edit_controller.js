@@ -254,7 +254,7 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
   };
   var initBudgetCollection = function(model){
     var budgetCol = new DocManager.Entities.BudgetNavCollection(model);
-    createBudgetView(budgetcol);
+    createBudgetView(budgetCol);
   };
 
 

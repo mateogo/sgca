@@ -208,7 +208,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         area:   {type: 'Select',options: utils.actionAreasOptionList, title:'Area ' },
         estado_alta:   {type: 'Select',options: utils.actionAltaOptionList, title:'Estado alta ' },
         nivel_ejecucion: {type: 'Select',options: utils.actionEjecucionOptionList, title:'Nivel ejecución' },
-        nivel_importancia: {type: 'Select',options: utils.actionEjecucionOptionList, title:'Importancia' },
+        nivel_importancia: {type: 'Select',options: utils.actionPrioridadOptionList, title:'Importancia' },
         descriptores: {type: 'Text', title: 'Descriptores'},
     },
     //idAttribute: "_id",
