@@ -79,6 +79,34 @@ window.dao = {
             }
             return query;
         },
+        getActionQuery: function(){
+            var query;
+            if(this.user){
+                query =  this.user.get('documQuery');
+                if(query){
+                    query.fedesde = new Date(query.fedesde);
+                    query.fehasta = new Date(query.fehasta);
+                }
+            }
+            if(!query){
+                query = this.getDefaultQueryDocument();
+            }
+            return query;
+        },
+        getBudgetQuery: function(){
+            var query;
+            if(this.user){
+                query =  this.user.get('documQuery');
+                if(query){
+                    query.fedesde = new Date(query.fedesde);
+                    query.fehasta = new Date(query.fehasta);
+                }
+            }
+            if(!query){
+                query = this.getDefaultQueryDocument();
+            }
+            return query;
+        },
         getUserGroup: function(){
             var grupo;
             if(this.user){
@@ -115,6 +143,38 @@ window.dao = {
             return query.attributes;
         },
 
+        getActionListType: function(){
+            var grupo = this.getUserGroup();
+            console.log('USER: [%s]', grupo);
+            var listado = 'documentos';
+ 
+            if(grupo === 'tecnica'){
+                listado = 'items';
+            }else if(grupo === 'produccion'){
+                listado = 'documentos';
+            }else if(grupo === 'contenidos'){
+                listado = 'documentos';
+            }else if(grupo === 'adherentes'){
+                listado = 'documentos';
+            }
+            return listado;
+        },
+        getBudgetListType: function(){
+            var grupo = this.getUserGroup();
+            console.log('USER: [%s]', grupo);
+            var listado = 'documentos';
+ 
+            if(grupo === 'tecnica'){
+                listado = 'items';
+            }else if(grupo === 'produccion'){
+                listado = 'documentos';
+            }else if(grupo === 'contenidos'){
+                listado = 'documentos';
+            }else if(grupo === 'adherentes'){
+                listado = 'documentos';
+            }
+            return listado;
+        },
         getDocumListType: function(){
             var grupo = this.getUserGroup();
             console.log('USER: [%s]', grupo);

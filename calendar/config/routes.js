@@ -264,7 +264,31 @@ module.exports = function (config, app) {
         //res.redirect();
     });
 
- 
+     // action (acciones) routes
+    var budget = require(rootPath + '/calendar/controllers/budgets');
+    app.get ('/presupuestos',            budget.findAll);
+    app.post('/actualizar/presupuestos', budget.partialupdate);
+    app.post('/recuperar/presupuestos',  budget.find);
+    app.post('/accion/fetch',        budget.findOne);
+    app.post('/navegar/presupuestos',    budget.find);
+    app.get ('/presupuestos/:id',        budget.findById);
+    app.post('/presupuestos',            budget.add);
+    app.put ('/presupuestos/:id',        budget.update);
+    app.delete('/presupuestos/:id',      budget.delete);
+
+
+
+    var action = require(rootPath + '/calendar/controllers/actions');
+    app.get ('/acciones',            action.findAll);
+    app.post('/actualizar/acciones', action.partialupdate);
+    app.post('/recuperar/acciones',  action.find);
+    app.post('/accion/fetch',        action.findOne);
+    app.post('/navegar/acciones',    action.find);
+    app.get ('/acciones/:id',        action.findById);
+    app.post('/acciones',            action.add);
+    app.put ('/acciones/:id',        action.update);
+    app.delete('/acciones/:id',      action.delete);
+
     // projects routes
     var project = require(rootPath + '/calendar/controllers/projects');
     app.get('/proyectos', project.findAll);

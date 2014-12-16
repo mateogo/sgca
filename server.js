@@ -3,15 +3,15 @@
  */
 var express = require('express');
 var path = require('path');
-var https = require('https');
+var http = require('http');
 var fs = require('fs');
 
 var coreApp  = __dirname + '/core';
 
-var options = {
-  key: fs.readFileSync('key.pem'),
-  cert: fs.readFileSync('key-cert.pem')
-}
+// var options = {
+//   key: fs.readFileSync('key.pem'),
+//   cert: fs.readFileSync('key-cert.pem')
+// }
 
 console.log('server: BEGIN at: ['+ __dirname +"]");
 console.log('NODE_APP_MODE: ['+process.env.NODE_APP_MODE +"]");
@@ -27,7 +27,8 @@ mongodb.connect(config);
 var app = express();
 config.routesBootstrap(app,express);
 //se agrego https conexion ssl
-var server = https.createServer(options, app);
+//var server = http.createServer(options, app);
+var server = http.createServer(app);
 server.listen(app.get('port'), function () {
     console.log("Express server listening on port " + app.get('port'));
 });

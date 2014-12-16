@@ -143,46 +143,44 @@ var isFalsey = function(data){
     return false;
 };
 
-var parseData = function(data,options){
-   // var dateColumns = options.dateColumns;
-    var dateColumns =[3];
-    var booleanColumns =[5];
-    var parsed = [];
-    var numberColumns = [2,4];
-    
-    
-    if (dateColumns){
-        _.each(data,function(elem){
-            var row = _.map(elem,function(item, index){
-                         
-                if (_.indexOf(dateColumns,index) != -1){
-                    console.log(item,index,_.indexOf(dateColumns,index));
-                    return new Date(item);
-                }
-    
-                if (_.indexOf(booleanColumns,index) != -1){
-                    console.log(item,index,_.indexOf(booleanColumns,index));
-                    return (isFalsey(item) ? false : true);
-                }
-                if (_.indexOf(numberColumns,index) != -1){
-           
-                    return parseFloat(item);
-                }
+var parseData = function(dataCol ,options){
+    var row,
+        parsedCol = [],
+        iType;
 
+    _.each(dataCol, function(itemRow){
+        row = _.map(itemRow, function(item, index){
+            iType = options[index].itemType 
+
+            //console.log('Element: [%s], index:[%s] iType:[%s]',item,index,iType);
+            if(iType === 'Text') {
                 return item;
-            });
-            parsed.push(row);
+            }else if(iType === 'Number') {
+                return parseFloat(item);
+            }else if(iType === 'Date') {
+                return new Date(item);
+            }else if(iType === 'Boolean') {
+                return (isFalsey(item) ? false : true);
+            }else{
+                return item;
+            }
         });
-        return parsed;
-    }
-    
-    
+        parsedCol.push(row);
+    });
+    return parsedCol;    
 };
+
+var excelHeadings = function(headings){
+    var labels = [];
+    _.each(headings, function(token){
+        labels.push(token.label);
+    })
+    return labels;
+}
 
 exports.excelBuilder = function (query,rootPath,cb){
     console.log("utils:begin")
-    var data = query.data;
-    var heading = query.heading;
+    var heading = excelHeadings(query.heading);
     var options = query.options;
 
     var publicPath = rootPath + '/public/';
@@ -194,12 +192,12 @@ exports.excelBuilder = function (query,rootPath,cb){
 
     var writer = new SpreadsheetWriter(name);
     
-    //var pData = parseData(data,options);
+    var pData = parseData(query.data, query.heading);
     
     writer.addFormat('heading', { font: { bold: true } });
     writer.write(0, 0, heading, 'heading');
 
-    writer.append(data);
+    writer.append(pData);
 
     writer.addFormat('options', { font: { bold: true }, alignment: 'right' } );
     writer.write('D5', options, 'options');

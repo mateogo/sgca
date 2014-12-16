@@ -150,6 +150,179 @@ window.utils = {
             return this.map;
         }
     },
+    //========= ACTIONS =========================
+    tipoBudgetMovimList: [
+        {val:'no_definido'      , label:'Sin especificar'},
+        {val:'artistica'        , label:'Artística'},
+        {val:'tecnica'          , label:'Técnica'},
+        {val:'viaje'            , label:'Viajes'},
+        {val:'evento'           , label:'Eventos'},
+        {val:'tecnologia'       , label:'Tecnología'},
+        {val:'biendeuso'        , label:'Bienes de Uso'},
+        {val:'bconsumible'      , label:'Bienes Consumibles'},
+        {val:'compras'          , label:'Otras compras'},
+        {val:'grafica'          , label:'Gráfica'},
+        {val:'capacitacion'     , label:'Capacitación'},
+        {val:'alquileres'       , label:'Alquileres'},
+        {val:'servicios'        , label:'Otros servicios'},
+        {val:'contratos'        , label:'Contratos'},
+        {val:'pasajes'          , label:'Pasajes'},
+        {val:'viaticos'         , label:'Viáticos'},
+        {val:'estadias'         , label:'Estadías'},
+        {val:'catering'         , label:'Catering'},
+        {val:'traslados'        , label:'Traslados'},
+        {val:'conectividad'     , label:'Conectividad'},
+        {val:'servbasicos'      , label:'Servicios Básicos'},
+        {val:'infraestructura'  , label:'Infraestructura'},
+    ],
+
+    umeList: [
+        {val:'no_definido'  , label:'Unidad de Medida'},
+        {val:'global'       , label:'GLOBAL'},
+        {val:'metro'        , label:'Metro'},
+        {val:'kilo'         , label:'Kilo'},
+        {val:'hora'         , label:'Hora'},
+        {val:'contrato'     , label:'Contrato'},
+        {val:'persona'      , label:'Persona'},
+        {val:'dia'          , label:'Día'},
+        {val:'hora'         , label:'Hora'},
+        {val:'mes'          , label:'Mes'},
+        {val:'unidad'       , label:'Unidad'},
+        {val:'equipo'       , label:'Equipo'},
+        {val:'instalacion'  , label:'Instalación'},
+        {val:'obraartistica', label:'Obra artística'},
+        {val:'ciclo'        , label:'Ciclo'},
+        {val:'publicacion'  , label:'Publicación'},
+        {val:'litro'        , label:'Litro'},
+        {val:'cubierto'     , label:'Cubierto'},
+        {val:'pasajes'      , label:'Pasaje'},
+        {val:'habitacion'   , label:'Habitación'},
+        {val:'funcion'      , label:'Función'},
+    ],
+
+    tipoActionEntityList: [
+        {val:'no_definido'   , label:'tipo de entidad'},
+        {val:'programa'      , label:'Programa'},
+        {val:'accion'        , label:'Acción'},
+        {val:'actividad'     , label:'Actividad'},
+    ],
+
+    tipoActionIniciativeList: [
+        {val: 'ballet',              label: 'Ballet'},
+        {val: 'campania',            label: 'Campaña'},
+        {val: 'congreso',            label: 'Congreso'},
+        {val: 'encuentrointl',       label: 'Encuentro Internacional'},
+        {val: 'encuentroregional',   label: 'Encuentro Regional'},
+        {val: 'evento',              label: 'Evento'},
+        {val: 'eventoic',            label: 'Evento IC'},
+        {val: 'fiestacarnaval',      label: 'Festejos Carnaval'},
+        {val: 'fiestanacional',      label: 'Fiesta Nacional'},
+        {val: 'fiestapopular',       label: 'Fiesta Popular'},
+        {val: 'foro',                label: 'Foro'},
+        {val: 'fortalecimiento',     label: 'Fortalecimiento'},
+        {val: 'mejoragestion',       label: 'Mejora en la Gestión'},
+        {val: 'muestra',             label: 'Muestra'},
+        {val: 'orquesta',            label: 'Orquesta'},
+        {val: 'platoformadigital',   label: 'Plataforma Digital'}
+    ],
+
+    actionAltaOptionList:[
+        {val:'activo',       label:'activo'},
+        {val:'suspendido',   label:'suspendido'},
+        {val:'cerrado',      label:'cerrado'},
+        {val:'media',        label:'corregir'},
+        {val:'baja',         label:'baja'},
+    ],
+
+    actionEjecucionOptionList:[
+        {val:'no_definido'   , label:'Nivel de ejecución', classattr:'info'},
+        {val:'enpreparacion' , label:'en preparación',     classattr:'info'},
+        {val:'enevaluacion'  , label:'en evaluacion',      classattr:'info'},
+        {val:'aprobarea'     , label:'aprob Area',         classattr:'info'},
+        {val:'aprobnodo'     , label:'aprob Nodo',         classattr:'warning'},
+        {val:'aprobdga'      , label:'aprob DGA',          classattr:'success'},
+        {val:'aprobum'       , label:'aprob UM',           classattr:'warning'},
+        {val:'enejecucion'   , label:'en ejecución',       classattr:'danger'},
+        {val:'terminada'     , label:'terminada',          classattr:'info'},
+        {val:'suspendido'    , label:'suspendida',         classattr:'danger'},
+        {val:'cerrado'       , label:'cerrado',            classattr:'danger'},
+        {val:'archivo'       , label:'archivado',          classattr:'info'}
+    ],
+
+    budgetOriginList:[
+        {val:'no_definido'      , label:'Origen de fondos',         classattr:'info'},
+        {val:'MCN'              , label:'MCN',                      classattr:'info'},
+        {val:'presidencia'      , label:'Presidencia',              classattr:'info'},
+        {val:'planificacion'    , label:'Minplan',                  classattr:'info'},
+        {val:'otrospublicos'    , label:'Otros organismos públicos',  classattr:'info'},
+        {val:'otrosprivados'    , label:'Otras fuentes privadas',   classattr:'info'},
+    ],
+
+    budgetTramitaPorList:[
+        {val:'no_definido'      , label:'Tramitación',      classattr:'info'},
+        {val:'MCN'              , label:'MCN',              classattr:'info'},
+        {val:'unsam'            , label:'UNSAM',            classattr:'info'},
+        {val:'untref'           , label:'UNTREF',           classattr:'info'},
+        {val:'minplan'          , label:'Minplan',          classattr:'info'},
+        {val:'presidencia'      , label:'Presidencia',      classattr:'info'},
+        {val:'unobs'            , label:'UNOBS',            classattr:'info'},
+        {val:'oei'              , label:'OEI',              classattr:'info'},
+        {val:'desconcentrado'   , label:'Org desconcen',    classattr:'info'},
+        {val:'descentralizado'  , label:'Org descentr',     classattr:'info'},
+    ],
+
+    budgetEjecucionOptionList:[
+        {val:'no_definido'   , label:'Nivel de ejecución', classattr:'info'},
+        {val:'enpreparacion' , label:'en preparación',     classattr:'info'},
+        {val:'enevaluacion'  , label:'en evaluacion',      classattr:'info'},
+        {val:'aprobarea'     , label:'aprob Area',         classattr:'info'},
+        {val:'aprobnodo'     , label:'aprob Nodo',         classattr:'warning'},
+        {val:'aprobdga'      , label:'aprob DGA',          classattr:'success'},
+        {val:'aprobum'       , label:'aprob UM',           classattr:'warning'},
+        {val:'enejecucion'   , label:'en ejecución',       classattr:'danger'},
+        {val:'terminada'     , label:'terminada',          classattr:'info'},
+        {val:'suspendido'    , label:'suspendida',         classattr:'danger'},
+        {val:'cerrado'       , label:'cerrado',            classattr:'danger'},
+        {val:'archivo'       , label:'archivado',          classattr:'info'}
+    ],
+
+    actionPrioridadOptionList:[
+        {val:'media'  ,  label:'media'},
+        {val:'alta'   ,  label:'alta'},
+        {val:'baja'   ,  label:'baja'},
+        {val:'urgente',  label:'urgente'}
+    ],
+
+    actionAreasOptionList:[
+        {val: 'CASAS'       ,nodo:'UM'      , label:'CASAS'},
+        {val: 'CCNK'        ,nodo:'UM'      , label:'Centro Cultural Nestor Kirchner'},
+        {val: 'CCV21'       ,nodo:'SPSC'    , label:'Centro Cultural Villa 21'},
+        {val: 'CCV31'       ,nodo:'SPSC'    , label:'Centro Cultural Villa 31'},
+        {val: 'DGA'         ,nodo:'SCCG'    , label:'DG de Administración (DGA)'},
+        {val: 'DJG'         ,nodo:'SCCG'    , label:'DG de Jurídicos (DGJ)'},
+        {val: 'DGTS'        ,nodo:'SCCG'    , label:'DG de Tecnología y Sistemas (DGTS)'},
+        {val: 'DNAF'        ,nodo:'SPSC'    , label:'DN de Acción Federal'},
+        {val: 'DNA'         ,nodo:'SGC'     , label:'DN de Artes'},
+        {val: 'DPD'         ,nodo:'UM'      , label:'DI de Prensa'},
+        {val: 'DNIC'        ,nodo:'SPSC'    , label:'DN de Industrias Culturales'},
+        {val: 'DNPOP'       ,nodo:'SPSC'    , label:'DN de Participación y Organización Popular'},
+        {val: 'DNPM'        ,nodo:'SGC'     , label:'DN de Patrimonio y Museos'},
+        {val: 'DNPAL'       ,nodo:'SCEPN'   , label:'DN de Pensamiento Argentino y Latinoamericano'},
+        {val: 'DNPA'        ,nodo:'UM'      , label:'DN de Planificación y Articulación'},
+        {val: 'DNPCCI'      ,nodo:'SGC'     , label:'DN de Políticas Culturales y Cooperación Internacional'},
+        {val: 'DNPDCDC'     ,nodo:'SPSC'    , label:'DN de Promoción de los Derechos Culturales y Diversidad Cultural'},
+        {val: 'MUSEOS'      ,nodo:'SGC'     , label:'MUSEOS'},
+        {val: 'ORGANISMOS'  ,nodo:'UM'      , label:'ORGANISMOS'},
+        {val: 'PNIC'        ,nodo:'UM'      , label:'PN Igualdad Cultural'},
+        {val: 'SCCG'        ,nodo:'UM'      , label:'SCCG'},
+        {val: 'SCEPN'       ,nodo:'UM'      , label:'SCEPN'},
+        {val: 'SGC'         ,nodo:'UM'      , label:'SGC'},
+        {val: 'SPSC'        ,nodo:'UM'      , label:'SPSC'},
+        {val: 'SSPDCPP'     ,nodo:'SPSC'    , label:'SSPDCPP'},
+        {val: 'UM'          ,nodo:'UM'      , label:'UM'},
+    ],
+
+    //========= ACTIONS END =========================
 
     userPredicateList: [
         {val:'no_definido'      , label:'tipo de comprobante'},
@@ -1307,6 +1480,12 @@ window.utils = {
         return node ? node.classattr: "";
     },
 
+    fetchNode:function(list, key){
+        var node = _.find(list, function(data){return data.val === key;});
+        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
+        return node ? node.nodo : "";
+    },
+
     validateInstance: function(pr){
         // true if tipoproducto es una INSTANCIA 
         var isInstance = false;
@@ -1387,6 +1566,28 @@ window.utils = {
         {id:8 , tt:'th', flag:1, tclass:'col8', tmpl: 'template1', val:'persona',       label:'persona'},
         {id:9 , tt:'th', flag:0, tclass:'col9', tmpl: 'template1', val:'product',       label:'producto'},
         {id:10, tt:'th', flag:0, tclass:'cola', tmpl: 'template1', val:'tcomputo',      label:'tiempo'},
+        {id:11, tt:'th', flag:1, tclass:'colb', tmpl: 'template1', val:'slug',          label:'a s u n t o   -   d e s c r i p c i ó n'},
+        {id:12, tt:'th', flag:1, tclass:'actions', tmpl: 'template5', val:'acciones',      label:'acciones'}
+    ],
+
+    actionListTableHeader:[
+        {id:0 , tt:'th', flag:1, tclass:'order', tmpl: 'template2', val:'select',        label:'#'},
+        {id:1 , tt:'th', flag:1, tclass:'col1', tmpl: 'template6', val:'cnumber',       label:'acción'},
+        {id:2 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'fecomp',        label:'fecha alta'},
+        {id:3 , tt:'th', flag:0, tclass:'col3', tmpl: 'template1', val:'faccion',  label:'fecha acción'},
+        {id:4 , tt:'th', flag:1, tclass:'col4', tmpl: 'template1', val:'tregistro',      label:'registro'},
+        {id:5 , tt:'th', flag:0, tclass:'col5', tmpl: 'template1', val:'taccion',      label:'tipo'},
+        {id:11, tt:'th', flag:1, tclass:'colb', tmpl: 'template1', val:'slug',          label:'a s u n t o   -   d e s c r i p c i ó n'},
+        {id:12, tt:'th', flag:1, tclass:'actions', tmpl: 'template5', val:'acciones',      label:'acciones'}
+    ],
+
+    budgetListTableHeader:[
+        {id:0 , tt:'th', flag:1, tclass:'order', tmpl: 'template2', val:'select',        label:'#'},
+        {id:1 , tt:'th', flag:1, tclass:'col1', tmpl: 'template6', val:'tgasto',       label:'Tipo Gasto'},
+        {id:2 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1', val:'trim_fiscal',        label:'Trim fiscal'},
+        {id:3 , tt:'th', flag:0, tclass:'col3', tmpl: 'template1', val:'cantidad',  label:'Cant'},
+        {id:4 , tt:'th', flag:1, tclass:'col4', tmpl: 'template1', val:'ume',      label:'UME'},
+        {id:5 , tt:'th', flag:0, tclass:'col5', tmpl: 'template1', val:'importe',      label:'Importe'},
         {id:11, tt:'th', flag:1, tclass:'colb', tmpl: 'template1', val:'slug',          label:'a s u n t o   -   d e s c r i p c i ó n'},
         {id:12, tt:'th', flag:1, tclass:'actions', tmpl: 'template5', val:'acciones',      label:'acciones'}
     ],

@@ -95,17 +95,21 @@ var routesBootstrap = function (app, express) {
     });
   });
 
-  app.configure(function () {
-    app.set('port', process.env.NODE_PORT || 3000);
-    app.use(express.logger('dev'));  /* 'default', 'short', 'tiny', 'dev' */
-    app.use(express.cookieParser());
-    app.use(express.bodyParser());
-    app.use(express.session({ secret: 'keyboard cat' }));
-    app.use(passport.initialize());
-    app.use(passport.session());
-    app.use(app.router);
-    app.use(express.static(publicPath));
-  });
+
+
+  app.set('port', 3000);
+  app.use(express.logger('dev'));  /* 'default', 'short', 'tiny', 'dev' */
+  app.use(express.cookieParser());
+  // deprecated: app.use(express.bodyParser());
+  // see: https://github.com/senchalabs/connect/wiki/Connect-3.0
+  //https://groups.google.com/forum/#!msg/express-js/iP2VyhkypHo/5AXQiYN3RPcJ
+  app.use(express.json());
+  app.use(express.urlencoded());
+  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use(app.router);
+  app.use(express.static(publicPath));
 
   for(var ix = 0; ix<apps.length; ix++){
       var routes_path = path.normalize( apps[ix] + '/config/routes.js');
