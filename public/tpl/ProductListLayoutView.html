@@ -4,15 +4,13 @@
 <div class="col-md-3">
           <div class="panel panel-default">
               <div class='panel-heading'>Producto seleccionado</div>
-              <div class='panel-body'></div>
                   <ul class="list-group">
                       <li class="list-group-item"><button id='mastevale' class='btn btn-default btn btn-default-block btn btn-default-link prselected'><%= utils.selectedProducts.getSelectedLabel() %></button></li>
                   </ul>
               <div class='panel-heading'>Procedencia seleccionado</div>
-              <div class='panel-body'></div>
                    <ul class="list-group">
-                       <li class="list-group-item"><button id='mastevale' class='btn btn-default btn btn-default-block btn btn-default-link prselected'><%= utils.viewData.currentProject %></button></li>
-                       <li><input type='hidden' placeholder='proyecto' disabled class='input-small' id='project[_id]' name='project[_id]' value=<%= project['_id'] %> ></li>
+                       <li class="list-group-item"><button class='btn btn-default btn btn-default-block btn btn-default-link prjview'><%= utils.viewData.currentProject %></button></li>
+                       <input type='hidden' placeholder='proyecto' disabled class='input-small' id='project[_id]' name='project[_id]' value=<%= project['_id'] %> >
                    </ul>
           </div>
  
@@ -48,8 +46,9 @@
                 </li>            
             </ul>
 </div>
-
 </div><!--/.well side bar -->
+
+    
 <!-- START Content  tabs -->
 <div class="col-md-9">
 <!-- START head-row -->
