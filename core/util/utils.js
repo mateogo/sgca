@@ -108,6 +108,7 @@ var rutas = {
     'solicitudes:list'             :'/#navegar/solicitudes',
     'productos:list'               :'/#navegar/productos',
     'gestion:comprobantes:list'    :'/gestion/#comprobantes',
+    'sisplan:acciones:list'        :'/sisplan/#acciones',
     'studio:producciones:list'     :'/studio'
 };
 

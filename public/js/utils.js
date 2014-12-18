@@ -722,6 +722,7 @@ window.utils = {
         {val:'solicitudes:list'             , label:'navegar/solicitudes'},
         {val:'productos:list'               , label:'navegar/productos'},
         {val:'gestion:comprobantes:list'    , label:'gestion/comprobantes'},
+        {val:'sisplan:acciones:list'        , label:'sisplan/acciones'},
         {val:'studio:producciones:list'    , label:'studio/producciones'},
     ],
 
