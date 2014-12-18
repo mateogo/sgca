@@ -9,7 +9,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     defaults: {
       _id: null,
       cnumber: "",
-      slug: "nueva acción",
+      slug: "",
       tregistro:"",
       taccion: "",
       feaccion: "",
@@ -26,6 +26,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       fecomp:"",
 
       objetivo:"",
+      planprod:"",
+      lineaaccion:"",
       nodo:"",
       area:"",
       requirente:"",

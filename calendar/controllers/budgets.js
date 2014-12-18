@@ -18,11 +18,97 @@ var MSGS = [
     'ERROR: No se pudo borrar el nodo en la base de datos'
 ];
 
+var series = ['budget101'];
+
+var seriales = {};
+
+//ATENCION: para agregar un serial, agregar entrada en taction_adapter y en series;
+var taction_adapter = {
+    presupuesto:{
+        serie: 'budget101',
+        base: 100000,
+        prefix: 'PRE'
+        },
+    poromision: {
+        serie: 'budget999',
+        base: 100000,
+        prefix: 'X'
+    }
+
+};
+
+var loadSeriales = function(){
+    for(var key in series){
+        fetchserial(series[key]);
+    }
+};
+
+var fetchserial = function(serie){
+    //console.log("INIT:fetchserie:action.js:[%s]",serie);
+    var collection = dbi.collection(serialCol);
+    collection.findOne({'serie':serie}, function(err, item) {
+        if(!item){
+            console.log('INIT:fetchserial:serial not found: [%s]',serie);
+            item = initSerial(serie);
+
+            collection.insert(item, {safe:true}, function(err, result) {
+                if (err) {
+                    console.log('Error initializing  [%s] error: %s',serialCol,err);
+                } else {
+                    console.log('NEW serial: se inserto nuevo [%s] [%s] nodos',serialCol,result);
+                    addSerial(serie,result[0]);
+                }
+            });
+        }else{
+            addSerial(serie,item);
+        }  
+    });
+};
+
+var addSerial = function(serial,data){
+    seriales[serial] = data;
+    //console.log('addSerial:action.js INIT con exito: [%s] next:[%s]',seriales[serial].serie,seriales[serial].nextnum);
+};
+
+var initSerial = function(serie){
+    var serial ={
+        _id: null,
+        serie: serie,
+        nextnum: 1,
+        feUltMod: new Date()
+    };
+    return serial;
+};
+
+var updateSerialCollection = function(serial){
+    var collection = dbi.collection(serialCol);    
+    collection.update( {'_id':serial._id}, serial,{w:1},function(err,result){});
+};
+
+
+var setNodeCode = function(node){
+    //console.log('setNodeCode:[%s]',node.tregistro);
+    var adapter = taction_adapter['presupuesto'] || taction_adapter['poromision'];
+    node.cnumber = nextSerial(adapter);
+
+};
+
+var nextSerial = function (adapter){
+    var serie = adapter.serie;
+    var nxt = seriales[serie].nextnum + adapter.base;
+    seriales[serie].nextnum += 1;
+    seriales[serie].feUltMod = new Date();
+    //
+    updateSerialCollection(seriales[serie]);
+    //
+    return adapter.prefix + nxt;
+};
 
 var addNewBudget = function(req, res, node, cb){
     console.log("addNewBudget:budgets.js ");
-    //OjO: No usamos seriales para budgets
-    //setNodeCode(node);
+
+    setNodeCode(node);
+    
     insertNewBudget(req, res, node, cb);
 };
 
@@ -228,3 +314,12 @@ exports.delete = function(req, res) {
         });
     });
 };
+
+
+exports.importNewAction = function (data, cb){
+
+    addNewBudget(null, null, data, cb);
+    //});
+};
+
+

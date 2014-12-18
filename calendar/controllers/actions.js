@@ -55,7 +55,7 @@ var loadSeriales = function(){
 };
 
 var fetchserial = function(serie){
-    console.log("INIT:fetchserie:action.js:[%s]",serie);
+    //console.log("INIT:fetchserie:action.js:[%s]",serie);
     var collection = dbi.collection(serialCol);
     collection.findOne({'serie':serie}, function(err, item) {
         if(!item){
@@ -78,7 +78,7 @@ var fetchserial = function(serie){
 
 var addSerial = function(serial,data){
     seriales[serial] = data;
-    console.log('addSerial:action.js INIT con exito: [%s] next:[%s]',seriales[serial].serie,seriales[serial].nextnum);
+    //console.log('addSerial:action.js INIT con exito: [%s] next:[%s]',seriales[serial].serie,seriales[serial].nextnum);
 };
 
 var initSerial = function(serie){
@@ -116,7 +116,7 @@ var nextSerial = function (adapter){
 };
 
 var addNewAction = function(req, res, node, cb){
-    console.log("addNewAction:actions.js ");
+    //console.log("addNewAction:actions.js ");
 
     setNodeCode(node);
     insertNewAction(req, res, node, cb);
@@ -157,6 +157,7 @@ var insertNewAction = function (req, res, action, cb){
 };
 
 exports.setDb = function(db) {
+    //console.log('***** Action setDB*******');
     dbi = db;
     loadSeriales();
     return this;
@@ -325,3 +326,11 @@ exports.delete = function(req, res) {
         });
     });
 };
+
+
+exports.importNewAction = function (data, cb){
+
+    addNewAction(null, null, data, cb);
+    //});
+};
+

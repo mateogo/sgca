@@ -42,7 +42,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       descriptores: "",
       useralta: "",
       fealta: "",
-      feumod: "",
+      feultmod: "",
     },
 
     enabled_predicates:['es_relacion_de'],
@@ -280,7 +280,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       descriptores: "",
       useralta: "",
       fealta: "",
-      feumod: "",
+      feultmod: "",
     },
 
    });
@@ -347,7 +347,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       descriptores: "",
       useralta: "",
       fealta: "",
-      feumod: "",
+      feultmod: "",
     },
 
    });

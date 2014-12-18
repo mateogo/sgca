@@ -83,7 +83,7 @@ var loadSeriales = function(){
 
 var addSerial = function(serial,data){
     seriales[serial] = data;
-    console.log('addSerial:product.js INIT con exito: [%s] next:[%s]',seriales[serial].serie,seriales[serial].nextnum);
+    //console.log('addSerial:product.js INIT con exito: [%s] next:[%s]',seriales[serial].serie,seriales[serial].nextnum);
 };
 
 var initSerial = function(serie){
@@ -97,7 +97,7 @@ var initSerial = function(serie){
 };
 
 var fetchserial = function(serie){
-    console.log("INIT:fetchserie:product.js:[%s]",serie);
+    //console.log("INIT:fetchserie:product.js:[%s]",serie);
     var collection = dbi.collection(serialCol);
     collection.findOne({'serie':serie}, function(err, item) {
         if(!item){

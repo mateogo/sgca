@@ -18,12 +18,12 @@ var utilcb;
 
 exports.connect = function (config){
     dburi = config.dburi;
-    console.log("dbconnect URI:[%s]",dburi);
+    //console.log("dbconnect URI:[%s]",dburi);
     MongoClient.connect(dburi, function (err, db){
         if(err){
             console.log("errors connecting to db!"+err.toString());
         }else{
-            console.log("dbconnect: connect.ok!");
+            //console.log("dbconnect: connect.ok!");
             // Bootstrap models
             dbdriver = db;
             config.connectionListeners(db,BSON);
