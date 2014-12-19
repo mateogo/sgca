@@ -537,7 +537,8 @@ window.Person = Backbone.Model.extend({
             "tipojuridico": {
                 "pfisica": true,
                 "pjuridica": false,
-                "pideal": false
+                "pideal": false,
+                "porganismo": false
             },
             "roles": {
                 "adherente": true,
@@ -809,6 +810,7 @@ window.UserFacet = Backbone.Model.extend({
         home: "solicitudes:list",
         grupo:'adherente',
         termsofuse: false,
+        areatrabajo: '',
 
         estado_alta:'pendaprobacion',
         verificado: {
@@ -3362,6 +3364,7 @@ window.User = Backbone.Model.extend({
         fealta:'',
         grupo: '',
         roles: '',
+        areatrabajo: '',
         estado_alta:'pendaprobacion',
         verificado: {
             mail:false,

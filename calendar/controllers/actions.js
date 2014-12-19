@@ -98,7 +98,7 @@ var updateSerialCollection = function(serial){
 
 
 var setNodeCode = function(node){
-    console.log('setNodeCode:[%s]',node.tregistro);
+    //console.log('setNodeCode:[%s]',node.tregistro);
     var adapter = taction_adapter[node.tregistro] || taction_adapter['poromision'];
     node.cnumber = nextSerial(adapter);
 
@@ -134,7 +134,7 @@ var fetchOne = function(query, cb) {
 };
 
 var insertNewAction = function (req, res, action, cb){
-    console.log('insertNewAction:actions.js BEGIN [%s]',action.slug);
+    //console.log('insertNewAction:actions.js BEGIN [%s]',action.slug);
     //dbi.collection(actionsCol, function(err, collection) {
 
     dbi.collection(actionsCol).insert(action,{w:1}, function(err, result) {
@@ -142,13 +142,14 @@ var insertNewAction = function (req, res, action, cb){
                 if(res){
                     res.send({'error':'An error has occurred'});
                 }else if(cb){
-                    cb({'error':'An error has occurred'})
+                    cb({'error':'An error has occurred:' + err})
                 }
             } else {
                 if(res){
                     console.log('3.1. ADD: se inserto correctamente el nodo %s', JSON.stringify(result[0]));
                     res.send(result[0]);
                 }else if(cb){
+                    console.log('3.1. ADD: se inserto correctamente el nodo [%s]  [%s] ', result[0]['_id'], JSON.stringify(result[0]['_id'].str));
                     cb({'model':result[0]})
                 }
             }
