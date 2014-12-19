@@ -26,12 +26,12 @@ var seriales = {};
 var taction_adapter = {
     presupuesto:{
         serie: 'budget101',
-        base: 100000,
+        base: 1000000,
         prefix: 'PRE'
         },
     poromision: {
         serie: 'budget999',
-        base: 100000,
+        base: 1000000,
         prefix: 'X'
     }
 

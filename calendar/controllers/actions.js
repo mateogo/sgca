@@ -27,22 +27,22 @@ var seriales = {};
 var taction_adapter = {
     accion:{
         serie: 'action101',
-        base: 100000,
+        base: 1000000,
         prefix: 'A'
         },
     programa:{
         serie: 'action102',
-        base: 100000,
+        base: 1000000,
         prefix: 'P'
         },
     actividad: {
         serie: 'action103',
-        base: 100000,
+        base: 1000000,
         prefix:'T'
         },
     poromision: {
         serie: 'action999',
-        base: 100000,
+        base: 1000000,
         prefix: 'X'
     }
 
