@@ -576,6 +576,30 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 
+  Entities.BudgetQueryFacet = Backbone.Model.extend({
+    //urlRoot: "/comprobantes",
+    whoami: 'ActionQueryFacet:comprobante.js ',
+
+    schema: {
+        fedesde:  {type: 'Date',   title: 'Desde', placeholder:'dd/mm/aaaa', yearEnd:2018},
+        fehasta:  {type: 'Date',   title: 'HastaA', placeholder:'dd/mm/aaaa', yearEnd:2018},
+        tipomov:  {type: 'Select', options: utils.tipoBudgetMovimList, title:'Tipo de Movimiento' },
+        area:     {type: 'Select', options: utils.actionAreasOptionList, title:'Área/Nodo' },
+        slug:     {type: 'Text',   title: 'Denominación'},
+        ejecucion:{type: 'Select', options: utils.budgetEjecucionOptionList, title:'Nivel ejecución' },
+    },
+
+    defaults: {
+      fedesde:'',
+      fehasta:'',
+      area: '',
+      slug: '',
+      ejecucion:''
+    }
+  });
+
+
+
 
   var filterFactory = function (budgets){
     var fd = DocManager.Entities.FilteredCollection({
@@ -605,18 +629,25 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           return function(budget){
             var test = true;
             //if((query.taccion.trim().indexOf(budget.get('taccion'))) === -1 ) test = false;
-            console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.tipoitem,budget.get("tipoitem"),budget.get("cnumber"));
-            if(query.tipoitem && query.tipoitem!=='no_definido') {
-              if(query.tipoitem.trim() !== budget.get('tipoitem')) test = false;
+            console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.tgasto,budget.get("tipomov"),budget.get("cnumber"));
+            if(query.tgasto && query.tgasto!=='no_definido') {
+              if(query.tgasto.trim() !== budget.get('tgasto')) test = false;
             }
+
+            if(query.area && query.area !=='no_definido') {
+              if(query.area.trim() !== budget.get('area')) test = false;
+            }
+
             if(query.tipomov && query.tipomov !=='no_definido') {
               if(query.tipomov.trim() !== budget.get('tipomov')) test = false;
             }
-            if(query.estado && query.estado!=='no_definido') {
-              if(query.estado.trim() !== budget.get('estado_alta')) test = false;
+
+            if(query.ejecucion && query.ejecucion!=='no_definido') {
+              if(query.ejecucion.trim() !== budget.get('nivel_ejecucion')) test = false;
             }
-            if(query.fedesde.getTime()>budget.get('fechagestion_tc')) test = false;
-            if(query.fehasta.getTime()<budget.get('fechagestion_tc')) test = false;
+
+            if(query.fedesde.getTime()>budget.get('fealta')) test = false;
+            if(query.fehasta.getTime()<budget.get('fealta')) test = false;
 
             if(query.slug){
               if(utils.fstr(budget.get("slug").toLowerCase()).indexOf(utils.fstr(query.slug)) === -1 && budget.get("cnumber").toLowerCase().indexOf(query.slug.toLowerCase()) === -1) test = false;
@@ -628,6 +659,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     });
     return fd;
   };
+
 
   var reportQueryFactory = function (reports){
     var fd = DocManager.Entities.FilteredCollection({
@@ -966,9 +998,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var fetchingBudgets = queryCollection(query);
 
       $.when(fetchingBudgets).done(function(budgets){
-        var docitems = fetchBudgetItemlist(budgets);
 
-        var filteredBudgets = queryFactory(docitems);
+        var filteredBudgets = queryFactory(budgets);
         if(query){
           filteredBudgets.filter(query);
         }

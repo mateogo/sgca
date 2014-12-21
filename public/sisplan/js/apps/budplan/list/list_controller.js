@@ -1,64 +1,174 @@
-DocManager.module("BudgetApp.List", function(List, DocManager, Backbone, Marionette, $, _){
+DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marionette, $, _){
 
-  var registerHeadersEvents = function(hview, layout){
-      hview.on("childview:budget:new", function(childView){
-        DocManager.BudgetApp.Edit.createInstance(this);
-      });
+	List.Controller = {
+		budgetPlanner: function(){
+			console.log('BudplanApp.List.Controller.budgetPlanner BEGIN');
+			// indicación de espera:
+			//var loadingView = new DocManager.Common.Views.Loading();
+			//DocManager.mainRegion.show(loadingView);
 
-      hview.on("childview:report:new", function(childView){
-        console.log('Report nuevo budget NEW!');
-        DocManager.BudgetApp.Report.Edit.createInstance(this);
-      });
+			if(!List.Session) List.Session = {};
 
-      hview.on("childview:exportar:registros", function(childView){
-        console.log('Exportar registros TRIGGER!', List.Session.budgetCol.length, List.Session.budgetCol.whoami);
-        List.Session.budgetCol.exportRecords();
-        console.log('me fui')
-        //budgetedititems
+     	dao.gestionUser.getUser(DocManager, function (user){
+     		List.Session.user = user;
+     		initModuleViews();
+				
+				DocManager.mainRegion.show(List.Session.layout);
 
-        //DocManager.BudgetApp.Report.Edit.createInstance(this);
-      });
+				loadRecordsFromDB(function(){
+					console.log('BudgetPlanner')
+
+				});
+
+        //DocManager.request("budget:query:search","", function(model){
+        //  console.log('query lista CALLBACK - END');
+        //});
+
+      });// currentUser
 
 
-
-      hview.on("childview:budgets:list", function(childView, model){
-        //var trigger = model.get("navigationTrigger");
-        //DocManager.trigger(trigger);
-        DocManager.request("budget:filtered:entities","", function(model){
-          console.log('budget LIST cb')
-        });      
-      });
-
-      hview.on('entities:search',function(query, cb){
-
-        DocManager.request("budget:query:search",query, function(model){
-          if(model){
-            Edit.Session.layout.close();
-            DocManager.trigger("budget:edit", model);
-          }
-        });      
-
-      });
-
-      hview.on('budget:group:edit',function(){
-        var self = this;
-        if(!List.Session.selectedBudgetList.length) return;
-        console.log('budget:group:edit controller');
-
-        List.groupEditForm(function(qmodel){
-          
-          var data = qmodel.attributes;
-          console.log('Form CLOSE:[%s] [%s]',data.estado_alta, data.nivel_ejecucion);
-          updateSelectedBudgets(data, function(){
-            console.log('end-of-story')
-          });
-
-        });
-
-        
-      });
-
+    }
   };
+
+	//================== LayoutView builder ==================
+	var initModuleViews = function(){
+			initFilterView();
+			buildAnalyseView();
+			buildLayoutView();
+	};
+
+	var buildLayoutView = function(){
+			List.Session.layout = new List.Layout();
+			registerLayoutViewEvents (List.Session.layout);
+	};
+
+	var registerLayoutViewEvents = function(layoutview){
+			layoutview.on("show", function(){
+				console.log('LAYOUT SHOW [%s]',List.Session.filterview.whoami)
+				layoutview.filterRegion.show(List.Session.filterview);
+				layoutview.analyseRegion.show(List.Session.analyseview);
+				layoutview.detailRegion.show(List.Session.detailedview);
+			});
+
+			layoutview.on("data:reloaded:from:server", function(){
+				console.log('LAYOUT: NUEVA COLECCION')
+
+				buildDetailedView();
+				layoutview.detailRegion.show(List.Session.detailedview);
+
+				buildSummaryView('nodo');
+				layoutview.summaryRegion.show(List.Session.summaryview);
+
+			});
+			
+
+	};
+
+
+	var initFilterView = function(){
+			List.Session.filtermodel = new DocManager.Entities.BudgetPlanner();
+			List.Session.filterview  = new List.FilterView({model: List.Session.filtermodel});
+			registerFilterViewEvents (List.Session.filterview);
+			registerFilterModelEvents(List.Session.filtermodel, List.Session.filterview);
+	};
+
+	var registerFilterViewEvents = function(view){
+
+	};
+
+	var registerFilterModelEvents = function(model, view){
+		model.on('change:filter', function(){
+			console.log('Bublle Model Changed!!!');
+			model.resetFilteredCol();
+			buildDetailedView();
+			//layoutview.detailRegion.show(List.Session.detailedview);
+			List.Session.detailedview.render();
+      model.trigger('new:filterd:col');
+
+
+
+		});
+
+	};
+
+	var buildSummaryView = function(type){
+      if(!List.Session.summaryview){
+
+        List.Session.summaryview = new List.SummaryPanel({
+          collection: List.Session.filtermodel.getSummaryCol(type),
+          model: List.Session.filtermodel
+        });
+        registerSummaryViewEvents (List.Session.filtermodel, List.Session.summaryview);
+
+      }else{
+        console.log('Refresco de la Summary View')
+        List.Session.summaryview.collection = List.Session.filtermodel.buildSummaryCol(type);
+        List.Session.summaryview.model = List.Session.filtermodel;
+        List.Session.summaryview.render();
+        //List.Session.layout.summaryRegion.show(List.Session.summaryview);
+      }
+      List.Session.filtermodel.showD3Pie(List.Session.layout.$('#d3-region')[0]);
+	};
+
+	var registerSummaryViewEvents = function(model, view){
+
+      model.on('new:filterd:col', function(){
+        console.log('Bubble: ready to update summary view');
+        buildSummaryView(model.get('vista_actual'));
+      });
+  };
+
+	var buildAnalyseView = function(){
+			List.Session.analyseview = new List.AnalyseView();
+			registerAnalyseViewEvents (List.Session.analyseview);
+	};
+
+	var registerAnalyseViewEvents = function(view){
+    view.on('render:summary:by', function(type, cb){
+      console.log('RENDER BUBBLE: [%s]',type);
+      buildSummaryView(type);
+    });
+
+	};
+
+	var buildDetailedView = function(){
+			if(!List.Session.detailedview){
+				List.Session.detailedview = new List.DetailedCompositeView({
+				  collection: List.Session.filtermodel.getFilteredCol()
+				});
+				registerDetailedViewEvents (List.Session.detailedview);
+			}else{
+				List.Session.detailedview.collection = List.Session.filtermodel.getFilteredCol();
+			}
+	};
+
+	var registerDetailedViewEvents = function(view){
+
+	};
+
+
+//================== LOAD DATA from database ==================
+
+var loadRecordsFromDB = function(cb){
+	List.Session.filtermodel.fetchData(null, null, function(col){
+		console.log('HERE: [%s]', col.length);
+		List.Session.layout.trigger('data:reloaded:from:server');
+		cb('ready');
+	});
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
   var updateSelectedBudgets = function(data, cb){
     var actual = dao.extractData(data);
     var query = buildQuery(data);
@@ -85,66 +195,6 @@ DocManager.module("BudgetApp.List", function(List, DocManager, Backbone, Marione
     query.nodes = list;
     return query;
 
-  };
-
-  var initNavPanel = function(layout){
-      var links = DocManager.request("budget:nav:entities");
-
-      var headers = new DocManager.BudgetApp.Common.Views.NavPanel({collection: links});
-      registerHeadersEvents(headers, layout);
-
-      return headers;
-  };
-
-  List.Controller = {
-    listBudgets: function(criterion){
-      console.log('BudgetApp.List.Controller.listbudgets HEY!!!!');
-      // indicación de espera:
-      //var loadingView = new DocManager.Common.Views.Loading();
-      //DocManager.mainRegion.show(loadingView);
-
-      if(!List.Session) List.Session = {};
-      List.Session.layout = new List.Layout();
-      
-      List.Session.navbar = initNavPanel(List.Session.layout);
-      
-      List.Session.layout.on("show", function(){
-        List.Session.layout.navbarRegion.show(List.Session.navbar);
-      //List.Session.layout.mainRegion.show(loadingView);
-      });
-      DocManager.mainRegion.show(List.Session.layout);
-
-      dao.gestionUser.getUser(DocManager, function (user){
-        var query;
-
-        if(List.Session.query){
-          query = List.Session.query;
-        }else{
-          query = dao.gestionUser.getBudgetQuery();
-          List.Session.query = query;
-        }
-
-        var tipolistado = dao.gestionUser.getBudgetListType();
-
-        DocManager.request("budget:query:search","", function(model){
-          console.log('query lista CALLBACK - END');
-        });
-
-        // if(tipolistado === 'items'){
-        //   DocManager.request("budget:query:items",query, function(model){
-        //     console.log('query lista CALLBACK - END');
-        //   });
-
-        // }else {
-        //   DocManager.request("budget:query:list","", function(model){
-        //     console.log('query lista CALLBACK - END');
-        //   });
-        //}
-
-
-      });// currentUser
-
-    }
   };
 
 
@@ -281,7 +331,7 @@ DocManager.module("BudgetApp.List", function(List, DocManager, Backbone, Marione
       console.log('Te tengo, malvado [%s] [%s]', model.get('cnumber'), model.id);
       //loadProductChilds(childView, model, cb);
 
-      var budgetLayout = new DocManager.BudgetApp.Show.Layout();
+      var budgetLayout = new DocManager.BudplanApp.Show.Layout();
 
       var fetchingBudget = DocManager.request("budget:entity", model.id);
       $.when(fetchingBudget).done(function(budget){
@@ -289,16 +339,16 @@ DocManager.module("BudgetApp.List", function(List, DocManager, Backbone, Marione
         if(budget !== undefined){
           var itemCol = new DocManager.Entities.BudgetItemsCollection(budget.get('items'));
 
-          budgetView = new DocManager.BudgetApp.Show.Budget({
+          budgetView = new DocManager.BudplanApp.Show.Budget({
             model: budget
           });
-          budgetHeader = new DocManager.BudgetApp.Show.Header({
+          budgetHeader = new DocManager.BudplanApp.Show.Header({
             model: budget
           });
-          brandingView = new DocManager.BudgetApp.Show.Branding({
+          brandingView = new DocManager.BudplanApp.Show.Branding({
               model: budget
           });
-          budgetItems = new DocManager.BudgetApp.Show.BudgetItems({
+          budgetItems = new DocManager.BudplanApp.Show.BudgetItems({
             collection: itemCol
           });
  

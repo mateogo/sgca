@@ -27,7 +27,8 @@ DocManager.on("start", function(){
     Backbone.history.start();
 
     if(this.getCurrentRoute() === ""){
-      DocManager.trigger("documents:list");
+      //DocManager.trigger("actions:list");
+      DocManager.trigger("budget:planner");
     }
   }
 });

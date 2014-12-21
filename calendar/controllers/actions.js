@@ -329,6 +329,33 @@ exports.delete = function(req, res) {
 };
 
 
+/*
+var fetchActions = function(query, cb) {
+    console.log('fetchActions: retrieven Actions Col');
+
+    dbi.collection(actionsCol, function(err, collection) {
+        collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
+            cb(items);
+        });
+    });
+};
+
+var buildActionBudgetCol = function(query, cb){
+    fetchActions(query, function(actionsCol){
+        
+
+    });
+
+};
+
+exports.fetchActionBudgetCol = function (req, res){
+    var query = req.body;
+    buildActionBudgetCol(query, function(col){
+        res.sen(col);
+    })
+};
+
+*/
 exports.importNewAction = function (data, cb){
 
     addNewAction(null, null, data, cb);

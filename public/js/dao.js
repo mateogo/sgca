@@ -82,28 +82,28 @@ window.dao = {
         getActionQuery: function(){
             var query;
             if(this.user){
-                query =  this.user.get('documQuery');
+                query =  this.user.get('actionQuery');
                 if(query){
                     query.fedesde = new Date(query.fedesde);
                     query.fehasta = new Date(query.fehasta);
                 }
             }
             if(!query){
-                query = this.getDefaultQueryDocument();
+                query = this.getDefaultQueryAction();
             }
             return query;
         },
         getBudgetQuery: function(){
             var query;
             if(this.user){
-                query =  this.user.get('documQuery');
+                query =  this.user.get('budgetQuery');
                 if(query){
                     query.fedesde = new Date(query.fedesde);
                     query.fehasta = new Date(query.fehasta);
                 }
             }
             if(!query){
-                query = this.getDefaultQueryDocument();
+                query = this.getDefaultQueryBudget();
             }
             return query;
         },
@@ -117,7 +117,7 @@ window.dao = {
         getDefaultQueryDocument: function(){
             var to = new Date();
             var fedesde = new Date(to.getFullYear(),to.getMonth(),1,0,0,0,0);
-            var fehasta = new Date(to.getFullYear(),to.getMonth(),to.getDate(),0,0,0,0);
+            var fehasta = new Date(to.getFullYear()+1,to.getMonth(),to.getDate(),0,0,0,0);
             var resumen = 'detallado';
             var tipoitem = 'nrecepcion';
             var grupo = this.getUserGroup(); 
@@ -142,37 +142,39 @@ window.dao = {
             });
             return query.attributes;
         },
+        getDefaultQueryAction: function(){
+            var to = new Date();
+            var fedesde = new Date(to.getFullYear(),to.getMonth(),1,0,0,0,0);
+            var fehasta = new Date(to.getFullYear()+1,to.getMonth(),to.getDate(),0,0,0,0);
+            var query = new DocManager.Entities.DocumQueryFacet({
+                fedesde: fedesde,
+                fehasta: fehasta,
+            });
+            return query.attributes;
+        },
+        getDefaultQueryBudget: function(){
+            var to = new Date();
+            var fedesde = new Date(to.getFullYear(),to.getMonth(),1,0,0,0,0);
+            var fehasta = new Date(to.getFullYear()+1,to.getMonth(),to.getDate(),0,0,0,0);
+            var query = new DocManager.Entities.DocumQueryFacet({
+                fedesde: fedesde,
+                fehasta: fehasta,
+            });
+            return query.attributes;
+        },
 
         getActionListType: function(){
             var grupo = this.getUserGroup();
             console.log('USER: [%s]', grupo);
             var listado = 'documentos';
  
-            if(grupo === 'tecnica'){
-                listado = 'items';
-            }else if(grupo === 'produccion'){
-                listado = 'documentos';
-            }else if(grupo === 'contenidos'){
-                listado = 'documentos';
-            }else if(grupo === 'adherentes'){
-                listado = 'documentos';
-            }
             return listado;
         },
         getBudgetListType: function(){
             var grupo = this.getUserGroup();
             console.log('USER: [%s]', grupo);
             var listado = 'documentos';
- 
-            if(grupo === 'tecnica'){
-                listado = 'items';
-            }else if(grupo === 'produccion'){
-                listado = 'documentos';
-            }else if(grupo === 'contenidos'){
-                listado = 'documentos';
-            }else if(grupo === 'adherentes'){
-                listado = 'documentos';
-            }
+
             return listado;
         },
         getDocumListType: function(){

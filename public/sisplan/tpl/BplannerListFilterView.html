@@ -1,0 +1,71 @@
+<!-- ul id="contextmenu-region" class="context-menu panel"    -->
+<!-- SidebarMenu:viesw.js 
+      js-newentity triggers:'entity.new'    
+      js-newbudget triggers:'budget.new'    
+<li>
+  <a href="#acciones/nueva" class="btn btn-block btn-danger js-newentity">Crear nueva acción</a>
+</li>
+<li>
+  <a href="#" class="others js-newbudget">
+    <span class="glyphicon glyphicon-pencil"></span>Nuevo item presupuesto <span class="label label-success">2</span>
+  </a>
+</li>
+<li>
+  <a href="#" class="others">
+              <span class="glyphicon glyphicon-pencil"></span> Mis borradores  <span class="label label-warning">4</span>
+  </a>
+</li>
+<li>
+  <a href="#/trash" class="others">
+              <span class="glyphicon glyphicon-trash"></span> Eliminados
+          </a>
+</li>
+-->
+
+<li>
+	<h3>Filtros</h3>
+</li>
+<li><button type="button" class="btn btn-default btn-block">Refrescar datos</button></li>	
+<li>
+	<div class="input-group">
+		<span class="input-group-addon"><input type="checkbox" name='nodoopt' value='nodoopt' checked='checked'></span>
+	  <select class="form-control" id="nodo" name="nodo">
+	    <%= utils.buildSelectOptions('nodo',utils.actionNodosOptionList, nodo) %>
+	  </select>
+	</div>
+</li>
+<li>
+	<div class="input-group">
+		<span class="input-group-addon"><input type="checkbox" name='areaopt' value='areaopt' checked='checked'></span>
+	  <select class="form-control" id="area" name="area">
+	    <%= utils.buildSelectOptions('area',utils.actionAreasOptionList, area) %>
+	  </select>
+	</div>
+</li>
+<li>
+	<div class="input-group">
+		<span class="input-group-addon"><input type="checkbox" name='tregistroopt' value='tregistroopt' checked='checked'></span>
+	  <select class="form-control" id="tregistro" name="tregistro">
+	    <%= utils.buildSelectOptions('tregistro',utils.tipoActionEntityList, tregistro) %>
+	  </select>
+	</div>
+</li>
+<li>
+	<div class="input-group">
+		<span class="input-group-addon"><input type="checkbox" name='taccionopt' value='taccionopt' checked='checked'></span>
+	  <select class="form-control" id="taccion" name="taccion">
+	    <%= utils.buildSelectOptions('taccion',utils.tipoActionIniciativeList, taccion) %>
+	  </select>
+	</div>
+</li>
+<li>
+	<div class="input-group">
+		<span class="input-group-addon"><input type="checkbox" name='tgastoopt' value='tgastoopt' checked='checked'></span>
+	  <select class="form-control" id="tgasto" name="tgasto">
+	    <%= utils.buildSelectOptions('tgasto',utils.tipoBudgetMovimList, tgasto) %>
+	  </select>
+	</div>
+</li>
+
+
+

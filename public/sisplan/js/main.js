@@ -9,6 +9,9 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'ActionShowLegacy','ActionShowHeader','ActionShowBranding','ActionShowBudgetComposite','ActionShowBudgetItem',
     'BudgetListLayoutView','BudgetMainHeader','BudgetNavbar',
     'BudgetShowLegacy','BudgetShowHeader','BudgetShowBranding',
+  
+    'BplannerListLayout', 'BplannerListFilterView', 'BplannerListAnalyseView',
+    'BplannerListSummaryView','BplannerListSummaryItem',
    
     'AboutView','DocumEditLayoutView','DocumEditSolLayoutView', 'DocumListLayoutView', 'DocumNavbar',
     'DocumEditMin', 'DocumShowDef','DocumEditCore','DocumEditPT', 'SearchEntitiesForm','DocumEditPTLayout','DocumEditPTItem',

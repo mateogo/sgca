@@ -277,7 +277,7 @@ DocManager.module("ActionsApp.Common.Views", function(Views, DocManager, Backbon
       "click .js-prev": "fetchPrev",
       "click .js-next": "fetchNext",
       "click a.brand": "brandClicked",
-      "click .js-filter-by-id" : "documentSearch",
+      "click .js-filter-by-id" : "entitiesSearch",
       "click .js-groupedit": 'groupEdit',
     },
 
@@ -307,12 +307,12 @@ DocManager.module("ActionsApp.Common.Views", function(Views, DocManager, Backbon
       });    
     },
 
-    documentSearch: function(){
+    entitiesSearch: function(){
       //console.log('documentList: [%s]',$('input',this.$el).val())
       var self = this,
           query = this.$('#search-by-id').val();
-      this.trigger('document:search', query, function(entity){
-        this.trigger('document:edit',entity);
+      this.trigger('entities:search', query, function(entity){
+        //this.trigger('document:edit',entity);
 
       });
 
