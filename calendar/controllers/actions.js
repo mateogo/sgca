@@ -282,7 +282,7 @@ var buildUpdateData = function(data){
     return data.newdata;
 }
 
-exports.partialupdate = function(req, res, data, cb) {
+exports.partialupdate = function(req, res) {
     if (req){
         data = req.body;
     }
@@ -290,7 +290,7 @@ exports.partialupdate = function(req, res, data, cb) {
     var update = buildUpdateData(data);
 
 
-    console.log('UPDATING partial fields nodes:[%s] data length[%s]', query.$or[0]._id , update.items.length);
+    console.log('UPDATING partial fields nodes:[%s]', query.$or[0]._id );
     //res.send({query:query, update:update});
 
     dbi.collection(actionsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {

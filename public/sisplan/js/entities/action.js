@@ -108,6 +108,48 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
+    partialUpdate: function(token, facet){
+      //facet: es un model o un hash de claves
+      //token: 'content': toma las keys directamente de facet
+      //       'estado_alta': solo actualiza esta key en base a facet
+      //
+      var self = this;
+      var query = {};
+      var list = [];
+
+      //var key = facet.get('key');
+      //var data = self.get(key) || {};
+
+      list.push(self.id );
+      query.nodes = list;
+      query.newdata = {};
+
+      if(token==='content'){
+        query.newdata = facet;
+
+      }else if(token ==='estado_alta'){
+        query.newdata['estado_alta'] = facet;
+
+      }else{
+        // no se qué hacer... mejor me voy
+        return;
+      }
+
+  
+      console.log('partial UPDATE: [%s] [%s]', token, facet);
+      var update = new Entities.ActionUpdate(query);
+      update.save({
+        success: function() {
+        }
+      });
+      //log ACTIVITY
+      //logActivity(token, self, data);
+      //
+    },
+
+
+
+
     validate: function(attrs, options) {
       //if(!attrs) return;
       var errors = {}
@@ -273,6 +315,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return l < r ? (1*order) : l > r ? (-1*order) : 0;
     },
   });
+
+
+  Entities.ActionUpdate = Backbone.Model.extend({
+    whoami: 'Entities.ActionUpdate:action.js ',
+
+    urlRoot: "/actualizar/acciones",
+
+  });
+
+
+
 
   Entities.ActionNavCollection = Backbone.Collection.extend({
     whoami: 'Entities.ActionCollection:action.js ',

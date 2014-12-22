@@ -1,0 +1,38 @@
+ord	taccion	slug	feaccion	programa.Área	nivel_ejecucion	estado_alta	contraparte	description	Requirente	Monto	objetivo	planprod	lineaaccion	area
+1	fortalecimiento	Programa Maravillosa Musica	01/01/2015	SPSC	enejecucion	activo	Bandas Jovenes	Concurso federal de Bandas, con alcance Nacional	Franco Vitali	45000000			Maravillosa música	SPSC
+2	evento	Año Gardeliano	01/01/2015	SPSC	enpreparacion	activo	Publico General	Realizacion de conciertos, milongas, encuentros, difusion y conmemoracion del 80º aniversario del fallecimiento de Carlos Gardel	Franco Vitali	8000000			Año Gardeliano	SPSC
+3	articulacioninstitu	Puntos de Aliento – Copa America	01/01/2015	SPSC	enpreparacion	activo	Publico General	Actividades culturales y transmision en vivo en funcion del desarrollo de los partidos de Futbol de la Seleccion Argentina en le Copa America. 	Franco Vitali	15000000			Puntos de Aliento	SPSC
+4	educacion	Ajedrecear	01/01/2015	SPSC	enejecucion	activo	Publico General		Franco Vitali	2600000			Ajedrecear	SPSC
+5	inclusion	Libros y Casas	01/01/2015	SPSC	enejecucion	activo	Programas de Vivienda Social	Creacion de bibliotecas en los hogares construidos por los planes federales de vivienda social.	Franco Vitali	24100000			Libros y Casa	SPSC
+6	actividadcentral	Programa Unidad Secretario	01/01/2015	SPSC	enpreparacion	activo			Franco Vitali	98760000			Actividades centrales	SPSC
+7	concurso	Concurso de Cuentos	01/01/2015	SPSC	enpreparacion	activo	Escritores de todo el pais.	Realizacion de 2 concursos de cuentos, de alcance Nacional.	Franco Vitali	520000			Concurso de Cuentos	SPSC
+8	feriadellibro	Ferias del Libro	01/01/2015	SPSC	enejecucion	activo	Ferias del libro de todo el pais	Fortalecimiento y participacion de las distintas ferias del libro que se realizaran durante el 2015	Franco Vitali	290000			Ferias del Libro	SPSC
+9	inclusion	Programa de Fomento a la Lectura	01/01/2015	SPSC	enejecucion	activo	Publico General	Difusion y puesta en valor de la lectura como forma de desarrollo de la cultura	Franco Vitali	470000			Fomento a la lectura	SPSC
+10	evento	Jornadas Argentinas de Humor (JAH)	01/01/2015	SPSC	enejecucion	activo	Publico General	Realizacion de jornadas de humor con artistas reconocidos y emergentes de todo el pais, abordando desde la risa tematicas sociales y politicas. 	Franco Vitali	1742000			Jornadas	SPSC
+11	publicaciones	Publicaciones Especiales	01/01/2015	SPSC	enpreparacion	activo	Instituciones interesadas	Publicacion y distribucion de libros, discos y otros materiales en sintonia con los lineamientos de la secretaria.	Franco Vitali	620000			Publicaciones Especiales	SPSC
+12	concurso	Slam de Poesia	01/01/2015	SPSC	enpreparacion	activo	Escritores de todo el pais.	Concurso federal de poesia.	Franco Vitali	852000			Poesía	SPSC
+13	teatro	Teatro	01/01/2015	SPSC	enejecucion	activo	Publico General y grupos teatrales comunitarios y/o emergentes.	Fortalecimiento de las expresiones teatrales de todos los generos, desarrollo de clinicas, concursos, clases abiertas, muestras, puestas en escena gratuitas y para todo publico.	Franco Vitali	5060000			Teatro	SPSC
+14	fortalecimiento	Afrodescendientes	01/01/2015	SSPDCPP	enejecucion	activo	Comunidades Afrodescendientes y Publico General	Fortalecimiento de las expresiones culturales de las distintas comunidades y organizaciones de Afrodescendientes	Franco Vitali	2133000			Afrodescendientes	SSPDCPP
+15	derechosculturales	Observatorio de Derechos Culturales	01/01/2015	SSPDCPP	enejecucion	activo			Franco Vitali	340900			Observatorio de Derechos Culturales	SSPDCPP
+16	inclusion	Cultura Accesible	01/01/2015	SSPDCPP	enejecucion	activo	Personas con diferentes dicapacidades	Garantizar el acceso a la cultura a las personas con discapacidad	Franco Vitali	2208500			Cultura Accesible	SSPDCPP
+17	fortalecimiento	Pueblos Indígenas	01/01/2015	SSPDCPP	enejecucion	activo	Comunidades Originarias y Publico General	Fortalecimiento de las expresiones culturales de las distintas comunidades y organizaciones de pueblos originarios	Franco Vitali	12670000			Pueblos Indígenas	SSPDCPP
+18	inclusion	DDHH – Línea Equidad de Géneros	01/01/2015	SSPDCPP	enejecucion	activo	Colectivos de LGBT	Desarrollo de actividades culturales tendientes a concientizar sobre la equidad de genero.	Franco Vitali	11080500			DDHH – Equidad de Géneros	SSPDCPP
+19	fortalecimiento	Colectividades	01/01/2015	SSPDCPP	enejecucion	activo	Colectividades latinoamericanas y de todo el mundo residentes en Argentina	Fortalecimiento de las expresiones culturales de las distintas colectividades extranjeras residentes en Argentina	Franco Vitali	9248400			Colectividades	SSPDCPP
+20	actividadcentral	Programa Unidad Sub Secretario	01/01/2015	SSPDCPP	enejecucion	activo			Franco Vitali	55190000			Actividades centrales	SSPDCPP
+21	inclusion	Promotores culturales	01/01/2015	SSPDCPP	enejecucion	activo			Franco Vitali	13150000			Promotores culturales	SSPDCPP
+22	inclusion	Acceso a la cultura	01/01/2015	SSPDCPP	enejecucion	activo	Publico General		Franco Vitali	27380000			Acceso a la cultura	SSPDCPP
+23	fortalecimiento	Cafe Cultura	01/01/2015	DNPOP	enejecucion	activo			Franco Vitali	10992000			Cafe Cultura	DNPOP
+24	evento	La Musica de Todos	01/01/2015	DNPOP	enejecucion	activo			Franco Vitali	2126000			La Musica de Todos	DNPOP
+25	fortalecimiento	Cultura y Sindicatos	01/01/2015	DNPOP	enejecucion	activo			Franco Vitali	1615000			Cultura y Sindicatos	DNPOP
+26	fortalecimiento	Casas de la Historia y la Cultura del Bicentenario	01/01/2015	DNPOP	enejecucion	activo			Franco Vitali	4477000			Casas de la Historia y la Cultura del Bicentenario	DNPOP
+27	infancia	Cultura y Infancia	01/01/2015	DNPOP	enejecucion	activo			Franco Vitali	19902500			Cultura y Infancia	DNPOP
+28	festivales	Festivales para Todos	01/01/2015	DNPOP	enejecucion	activo			Franco Vitali	74360000			Festivales para Todos	DNPOP
+29	fortalecimiento	Identidades Productivas	01/01/2015	DNPOP	enejecucion	activo			Franco Vitali	1523400			Identidades Productivas	DNPOP
+30	inclusion	Organizaciones Sociales y Cultura Comunitaria	01/01/2015	DNPOP	enejecucion	activo			Franco Vitali	24294500			Organizaciones Sociales y Cultura Comunitaria	DNPOP
+31	fortalecimiento	Puntos de Cultura	01/01/2015	DNPOP	enejecucion	activo			Franco Vitali	49427679			Puntos de Cultura	DNPOP
+32	fortalecimiento	Carnavales Federales	01/01/2015	DNAF	enejecucion	activo			Franco Vitali	4000000			Carnavales Federales	DNAF
+33	fortalecimiento	Fortalecimiento de las expresiones de Carnaval	01/01/2015	DNAF	enejecucion	activo			Franco Vitali	7586600			Carnavales Federales	DNAF
+34	fortalecimiento	Altos Pueblos	01/01/2015	DNAF	enejecucion	activo			Franco Vitali	3000000			Altos Pueblos	DNAF
+35	legislacioncultural	Consejo Federal de Cultura – Asamblea Ordinaria	01/01/2015	DNAF	enejecucion	activo			Franco Vitali	6000000			Consejo Federal de Cultura	DNAF
+36	participacion	Debates Culturales Federales	01/01/2015	DNAF	enejecucion	activo			Franco Vitali	3000000			Debates	DNAF
+37	fiestanacional	Fiestas Nacionales	01/01/2015	DNAF	enejecucion	activo			Franco Vitali	22300000			Fiestas Nacionales	DNAF
