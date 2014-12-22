@@ -201,6 +201,7 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
 
 
   List.ActionBudget = Marionette.ItemView.extend({
+    whoami: 'ListActionBudget: list_view.js',
     tagName: "tr",
 
     getTemplate: function(){
@@ -208,14 +209,16 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
     },
 
     events: {
+      "click td a.js-edit": "editClicked",
+      "click button.js-edit": "editClicked",
+      "change .tselect"  : "checkbox",
+      "click button.js-show": "editClicked",
+
       "click": "highlightName",
       "click td a.js-show": "showClicked",
-      "click td a.js-edit": "editClicked",
       "click button.js-delete": "deleteClicked",
-      "click button.js-show": "showClicked",
-      "click button.js-edit": "editClicked",
+      //"click button.js-show": "showClicked",
       "click .js-zoom" : 'viewRelated',
-      "change .tselect"  : "checkbox",
     },
 
     flash: function(cssClass){
@@ -230,6 +233,12 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
     checkbox: function(event){
       if(event.target.checked)  this.trigger("budget:row:selected", true, this.model);
       if(!event.target.checked) this.trigger("budget:row:selected", false, this.model);
+    },
+
+    onRender: function(){
+      if(this.model.get('estado_alta') === 'activo'){
+        this.$('.tselect').prop('checked', true);
+      }
     },
 
     areRelatedVisible: false,
@@ -275,9 +284,11 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
     },
 
     editClicked: function(e){
+      var self = this;
+      console.log('editClicked');
       e.preventDefault();
       e.stopPropagation();
-      this.trigger("budget:edit", this.model);
+      self.trigger("budget:edit", self.model);
     },
 
     deleteClicked: function(e){

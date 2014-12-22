@@ -143,26 +143,72 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
 	};
 
 	var registerDetailedViewEvents = function(view){
+      view.on('childview:budget:edit', function(chview, model){
+        console.log('EDIT bublled [%s] [%s]', chview.whoami, model.whoami);
+        inlineEditBudgetItem(chview, view, model);
+
+      });
+      view.on('childview:budget:row:selected', function(chview,checked, model){
+        console.log('CHECKBX bublled [%s] [%s]  [%s]', chview.whoami, model.whoami, checked);
+        if(checked){
+          model.set('estado_alta', 'activo');
+          model.partialUpdate('estado_alta', 'activo');
+        }else{
+          model.set('estado_alta', 'observado');
+          model.partialUpdate('estado_alta', 'observado');
+        }
+        //inlineEditBudgetItem(chview, view, model);
+        buildSummaryView(model.get('vista_actual'));
+
+
+      });
 
 	};
 
-
 //================== LOAD DATA from database ==================
-
 var loadRecordsFromDB = function(cb){
 	List.Session.filtermodel.fetchData(null, null, function(col){
 		console.log('HERE: [%s]', col.length);
 		List.Session.layout.trigger('data:reloaded:from:server');
 		cb('ready');
 	});
-
 };
 
 
+//================== INLINE BUDGET EDIT ==================
+  var inlineEditBudgetItem = function (chview,view, model){
+    var renderId = model.id,
+        opt;
 
+    chview.$el.after('<tr><td id='+renderId+' class="js-form-hook" colspan=8 ></td></tr>');
+    //Edit.Session.views.layout.addRegion(renderId, view.$('#'+renderId));
 
+    opt = {
+      view: view,
+      model: model,
+      facet: model.fetchEditFacet(),
+      hook: '#'+renderId,
+      captionlabel: 'Edición'
+    };
+    DocManager.ActionsApp.Edit.inlineedit(opt, function(facet, submit){
+      console.log('callback EDICION [%s] submit:[%s]', facet.get('slug'), submit);
+      view.$(opt.hook).closest('tr').remove();
+      if(submit){
+        facet.partialUdateModel(model);
+        timeDelay(function(){
 
+          buildSummaryView(model.get('vista_actual'));
+          chview.render();
+        });
+      }
+    });
+  };
 
+  var timeDelay = function(cb){
+    setTimeout(function(){
+      cb();
+    }, 1000);
+  };
 
 
 

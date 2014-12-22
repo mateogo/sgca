@@ -208,27 +208,31 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
     masterCol.each(function(model){
-      token = {
-        slug: fetchIndicator(query.type, model),
-        origenpresu: model.get('origenpresu'),
-        tramita: model.get('tramita'),
-        anio: model.get('anio_fiscal')
-      };
-      costo = {
-        type: query.type,
-        slug: model.get('slug'),
-        importe: model.get('importe'),
-        trimestre: model.get('trim_fiscal')
-      };
-      //console.log('ready to insert token: anio:[%s] /[%s] tim:[%s] /[%s]',model.get('anio_fiscal'), token.anio, model.get('trim_fiscal'), costo.trim);
+      if(model.get('estado_alta') === 'activo'){
+        token = {
+          slug: fetchIndicator(query.type, model),
+          origenpresu: model.get('origenpresu'),
+          tramita: model.get('tramita'),
+          anio: model.get('anio_fiscal')
+        };
+        costo = {
+          type: query.type,
+          slug: model.get('slug'),
+          importe: model.get('importe'),
+          trimestre: model.get('trim_fiscal')
+        };
+        //console.log('ready to insert token: anio:[%s] /[%s] tim:[%s] /[%s]',model.get('anio_fiscal'), token.anio, model.get('trim_fiscal'), costo.trim);
 
-      insertTokenInSummaryCol(token, costo, summaryCol);
+        insertTokenInSummaryCol(token, costo, summaryCol);        
+      }else{
+        console.log('registro excluido por no estar Activo:[%s]', model.get('cnumber'));
+      }
 
     });
-
     //console.log('summarColFctory ended:[%s]', summaryCol.length)
     return summaryCol;
   };
+
   var fetchIndicator = function(type, model){
     var indicator = '';
     if(!type) type = 'nodo';

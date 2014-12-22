@@ -133,6 +133,46 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
+
+    partialUpdate: function(token, facet){
+      //facet: es un model o un hash de claves
+      //token: 'content': toma las keys directamente de facet
+      //       'estado_alta': solo actualiza esta key en base a facet
+      //
+      var self = this;
+      var query = {};
+      var list = [];
+
+      //var key = facet.get('key');
+      //var data = self.get(key) || {};
+
+      list.push(self.id );
+      query.nodes = list;
+      query.newdata = {};
+
+      if(token==='content'){
+        query.newdata = facet;
+
+      }else if(token ==='estado_alta'){
+        query.newdata['estado_alta'] = facet;
+
+      }else{
+        // no se qué hacer... mejor me voy
+        return;
+      }
+
+  
+      console.log('partial UPDATE: [%s] [%s]', token, facet);
+      var update = new Entities.BudgetUpdate(query);
+      update.save({
+        success: function() {
+        }
+      });
+      //log ACTIVITY
+      //logActivity(token, self, data);
+      //
+    },
+
     validate: function(attrs, options) {
       //if(!attrs) return;
       var errors = {}
@@ -243,6 +283,31 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return model;
     },
 
+    partialUdateModel: function(model){
+      var self = this;
+      model.set(self.attributes)
+      var facetData = {
+          tgasto:       self.get('tgasto'),
+          slug:         self.get('slug'),
+          cantidad:     self.get('cantidad'),
+          ume:          self.get('ume'),
+          importe:      self.get('importe'),
+          fecha_prev:   self.get('fecha_prev'),
+          trim_fiscal:  self.get('trim_fiscal'),
+          anio_fiscal:  self.get('anio_fiscal'),
+          origenpresu:  self.get('origenpresu'),
+          tramita:      self.get('tramita'),
+          description:  self.get('description'),
+          presuprog:    self.get('presuprog'),
+          presuinciso:  self.get('presuinciso'),
+          estado_alta:  self.get('estado_alta'),
+          nivel_ejecucion: self.get('nivel_ejecucion'),
+          nivel_importancia:self.get('nivel_importancia'),      
+      };
+      model.partialUpdate('content', facetData);
+
+    },
+
     defaults: {
       _id: null,
       owner_id: "",
@@ -351,6 +416,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
    });
+
+
+  Entities.BudgetUpdate = Backbone.Model.extend({
+    whoami: 'Entities.BudgetUpdate:budget.js ',
+
+    urlRoot: "/actualizar/presupuestos",
+
+  });
+
+
 
   //Accion Collection
   Entities.BudgetCollection = Backbone.Collection.extend({

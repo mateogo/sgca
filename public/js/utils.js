@@ -278,6 +278,7 @@ window.utils = {
     actionAltaOptionList:[
         {val:'no_definido',  label:'Estado de Alta'},
         {val:'activo',       label:'activo'},
+        {val:'observado',    label:'observado'},
         {val:'suspendido',   label:'suspendido'},
         {val:'cerrado',      label:'cerrado'},
         {val:'media',        label:'corregir'},
