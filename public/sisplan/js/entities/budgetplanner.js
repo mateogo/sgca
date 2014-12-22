@@ -19,6 +19,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       nodo:"",
       area:"",
       tgasto:"",
+      taccion:"",
       areaopt:true,
       nodoopt:true,
       tgastoopt:true,
@@ -243,6 +244,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       indicator = model.get('area');
     }else if(type === 'tregistro'){
       indicator = model.get('tregistro');
+    }else if(type === 'lineaaccion'){
+      indicator = model.get('parent_action')['lineaaccion']
     }else if(type === 'taccion'){
       indicator = model.get('parent_action')['taccion']
     }else if(type === 'tgasto'){
@@ -328,6 +331,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     if(queryModel.get('taccionopt')){
       if(queryModel.get('taccion') && queryModel.get('taccion')!== 'no_definido' ){
         query.taccion = queryModel.get('taccion');
+      }
+    }
+    if(queryModel.get('lineaaccion')){
+      if(queryModel.get('lineaaccion') && queryModel.get('lineaaccion')!== 'no_definido' ){
+        query.lineaaccion = queryModel.get('lineaaccion');
       }
     }
     if(queryModel.get('tgastoopt')){

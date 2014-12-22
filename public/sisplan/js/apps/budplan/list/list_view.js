@@ -97,7 +97,8 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
     events: {
       "click .js-sumnodo": "summarybynodo",
       "click .js-sumarea": "summarybyarea",
-      "click .js-sumaction": "summarybyaction",
+      "click .js-sumtaccion": "summarybytaccion",
+      "click .js-sumlineaaccion": "summarybylineaaccion",
       "click .js-sumtgasto": "summarybytgasto",
     },
 
@@ -110,8 +111,11 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
     summarybyarea: function(e){
       this.summary(e, 'area');
     },
-    summarybyaction: function(e){
-      this.summary(e,'action');
+    summarybytaccion: function(e){
+      this.summary(e,'taccion');
+    },
+    summarybylineaaccion: function(e){
+      this.summary(e,'lineaaccion');
     },
     summarybytgasto: function(e){
       this.summary(e,'tgasto');

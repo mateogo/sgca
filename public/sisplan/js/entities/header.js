@@ -20,6 +20,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     Entities.headeritems = new Entities.HeaderCollection([
       { name: "Acciones",     url: "acciones",    navigationTrigger: "actions:list" },
       { name: "Presupuestos", url: "resupuestos", navigationTrigger: "budgets:list" },
+      { name: "Analizar presupuesto", url: "analyser", navigationTrigger: "budget:planner" },
       { name: "Nueva Acción", url: "nuevaaccion", navigationTrigger: "action:new" }
     ]);
   };

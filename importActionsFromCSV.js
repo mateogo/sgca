@@ -99,7 +99,7 @@ reader.addListener("data", function(row) {
   if (row["taccion"]) { // skip empty lines
    
     var accion = {
-      "tregistro":   'programa',
+      "tregistro":   'accion',
       "taccion":     row["taccion"],
       "slug":        row["slug"],
       "feaccion":    row["feaccion"],
