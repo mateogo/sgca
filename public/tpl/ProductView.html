@@ -48,63 +48,82 @@
     <div class="col-md-8">
        <form class="form-horizontal js-coreform" role'form'>
            <div class="form-group">
-               <label for="productId" class="control-label col-md-1">id:</label>
-                    <div class='col-md-7'>
+                 <div class="row">
+                    <div class="col-md-1">
+                        <label for="productId" class="control-label">id:</label>
+                     </div>
+                    <div class='col-md-10'>
                         <input id="productId" name="id" type="text" value="<%= _id === null ? '' : _id %>" class='form-control' disabled/>
                     </div>
+               </div>
            </div>
 
-           <div class="form-group col-md-6">
-               <select class="form-control" id="tipoproducto" name="tipoproducto" value="<%= tipoproducto %>">
-                    <%= utils.buildSelectOptions('tipoproducto',utils.tipoproductoOptionList, tipoproducto) %>
-               </select>
+           <div class="form-group">
+               <div class="row">
+                    <div class="col-md-6">
+                        <select class="form-control" id="tipoproducto" name="tipoproducto" value="<%= tipoproducto %>"><%= utils.buildSelectOptions('tipoproducto',utils.tipoproductoOptionList, tipoproducto) %>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <input id="productcode" name="productcode" type="text" value="<%= productcode === null ? '' : productcode %>"  class="form-control"disabled>
+                        <span class="help-inline"></span>
+                    </div>
+                </div>
             </div>
-            <div class="form-group col-md-2">
-            </div>
-            <div class="form-group col-md-3">
-                <input id="productcode" name="productcode" type="text" value="<%= productcode === null ? '' : productcode %>"  class="form-control"disabled>
-                <span class="help-inline"></span>
-            </div>
-            
-            <div class="form-group col-md-10">
-          <!-- slug  / denom -->
-              <label for="slug" class="control-label">DENOMINACION / título:</label>
-              <div class="controls">
-                <input type="text" "form-control" id="slug" name="slug" 
-                    placeholder='denominación corta' value="<%= slug %>"/>
-                <input type="text" "form-control" id="denom" name="denom" placeholder="título" 
-                     value="<%= denom %>" >
-                <span class="help-inline"></span>
-              </div>
+               
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <!-- slug  / denom -->
+                        <label for="slug" class="control-label">Denominacion corta:</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" "form-control" id="slug" name="slug" placeholder='denominación corta' value="<%= slug %>"/>
+                    </div>
+                </div>  
+           </div>
+               
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <!-- slug  / denom -->
+                        <label for="slug" class="control-label">Titulo:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" "form-control" id="denom" name="denom" placeholder="título" value="<%= denom %>">
+                        <span class="help-inline"></span>
+                    </div>
+                </div>  
            </div>
 
-          <div class="form-group col-md-6">
-          <!-- rubro  nivel_importancia estado_alta nivel_ejecucion -->
-              <label for="rubro" class="control-label">Estados:</label>
-
-                <select class="form-control" id="estado_alta" name="estado_alta" 
-                    value="<%= estado_alta %>">
-                    <%= utils.buildSelectOptions('nivel_importancia',utils.estadoaltaOptionList, estado_alta) %>
-                </select>
-
-                <select class="form-control" id="nivel_importancia" name="nivel_importancia" 
-                  value="<%= nivel_importancia %>">
-                    <%= utils.buildSelectOptions('nivel_importancia',utils.paimportanciaOptionList, nivel_importancia) %>
-                </select>
-
-
-                <select class="form-control" id="nivel_ejecucion" name="nivel_ejecucion" 
-                  value="<%= nivel_ejecucion %>">
-                    <%= utils.buildSelectOptions('nivel_ejecucion',utils.paexecutionOptionList, nivel_ejecucion) %>
-                 </select>
-                <span class="help-inline"></span>
-              </div>
-
+          <div class="form-group">
+                <div class="row">
+                    <div class="col-md-2">
+                        <!-- rubro  nivel_importancia estado_alta nivel_ejecucion -->
+                        <label for="rubro" class="control-label">Estados:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="estado_alta" name="estado_alta" value="<%= estado_alta %>">
+                        <%= utils.buildSelectOptions('nivel_importancia',utils.estadoaltaOptionList, estado_alta) %>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="nivel_importancia" name="nivel_importancia" 
+                        value="<%= nivel_importancia %>"><%=                                                                                    utils.buildSelectOptions('nivel_importancia',utils.paimportanciaOptionList, nivel_importancia) %>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="nivel_ejecucion" name="nivel_ejecucion" 
+                        value="<%= nivel_ejecucion %>">
+                        <%= utils.buildSelectOptions('nivel_ejecucion',utils.paexecutionOptionList, nivel_ejecucion) %>
+                        </select>
+                        <span class="help-inline"></span>
+                    </div>
+                </div>
+            </div>
         </form>
 
-        <form class="form-horizontal col-md-12 facets">
-
-
+        <form class="form-group col-md-12 facets">
           <div class="accordion" id="accordion1">
             <div class="accordion-group">
               <div class="accordion-heading">
@@ -114,11 +133,11 @@
               <div id="collapseOne" class="accordion-body collapse">
                 <div class="accordion-inner painstanciahook"></div>
                 <div id='instanceuploaded' class='col-md-offset-2'></div>
-                <svg id='filesdrop' class='svgcontainer' width=460 height=160 >
-                     <rect x="2" y="5" rx="20" ry="20" width="440" height="150"
+                <svg id='filesdrop' class='svgcontainer' width=540 height=160 >
+                     <rect x="2" y="5" rx="20" ry="20" width="520" height="150"
                         style="fill:blue;stroke:black;stroke-width:3;fill-opacity:0.1;stroke-opacity:0.3"/>
 
-                    <text x=100   y=50   font-size=15 fill=3 fill-opacity=.5 font-family='Arvo' >arrastre y suelte los archivos aqui</text>
+                    <text x=140   y=50   font-size=15 fill=3 fill-opacity=.5 font-family='Arvo' >arrastre y suelte los archivos aqui</text>
                 </svg>
                 <div class='col-md-offset-1'>
                   <div class="instancedropped"></div> 
@@ -193,11 +212,11 @@
               <div id="collapseBrnd" class="accordion-body collapse">
                 <div class="accordion-inner brandinghook"></div>
                 <div id='brndloaded' class='col-md-offset-2'></div>
-                <svg id='brnddrop' class='svgcontainer' width=460 height=160 >
-                     <rect x="2" y="5" rx="20" ry="20" width="440" height="150"
+                <svg id='brnddrop' class='svgcontainer' width=540 height=160 >
+                     <rect x="2" y="5" rx="20" ry="20" width="520" height="150"
                         style="fill:blue;stroke:black;stroke-width:3;fill-opacity:0.1;stroke-opacity:0.3"/>
 
-                    <text x=100   y=50   font-size=15 fill=3 fill-opacity=.5 font-family='Arvo' >arrastre y suelte los archivos aqui</text>
+                    <text x=140   y=50   font-size=15 fill=3 fill-opacity=.5 font-family='Arvo' >arrastre y suelte los archivos aqui</text>
                 </svg>
                 <div class='col-md-offset-1'>
                   <div class="brnddropped"></div> 

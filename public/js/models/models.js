@@ -537,7 +537,8 @@ window.Person = Backbone.Model.extend({
             "tipojuridico": {
                 "pfisica": true,
                 "pjuridica": false,
-                "pideal": false
+                "pideal": false,
+                "porganismo": false
             },
             "roles": {
                 "adherente": true,
@@ -809,6 +810,7 @@ window.UserFacet = Backbone.Model.extend({
         home: "solicitudes:list",
         grupo:'adherente',
         termsofuse: false,
+        areatrabajo: '',
 
         estado_alta:'pendaprobacion',
         verificado: {
@@ -2178,14 +2180,26 @@ window.PaClasificationFacet = Backbone.Model.extend({
         contenido:{
             type:'Object', title:'Selector',
             template: _.template('\
-                <div class="control-group field-<%= key %>">\
-                  <label class="control-label" for="<%= editorId %>"><%= title %></label>\
-                  <div class="controls input-block-level">\
-                    <span  class="input-block-level" data-editor></span>\
-                    <div><button class="btn btn-link js-addcontenido">agregar</button></div>\
-                    <div class="help-inline" data-error></div>\
-                    <div class="help-block"><%= help %></div>\
-                  </div>\
+                <div class="form-group field-<%= key %>">\
+                    <div class="row col-md-3">\
+                        <label class="control-label col-md-4" for="<%= editorId %>"><%= title %></label>\
+                    </div>\
+                    <div class="row col-md-6">\
+                        <span class="input-group" data-editor></span>\
+                        <br>\
+                        <br>\
+                        <br>\
+                        <br>\
+                        <br>\
+                        <br>\
+                        <br>\
+                        <br>\
+                    <div>\
+                        <button class="btn btn-link btn-default js-addcontenido">agregar</button>\
+                    <div class="row col-md-1">\
+                            <div class="help-block" data-error></div>\
+                            <div class="help-block"><%= help %></div>\
+                    </div>\
                 </div>\
                 '),
             subSchema:{
@@ -3362,6 +3376,7 @@ window.User = Backbone.Model.extend({
         fealta:'',
         grupo: '',
         roles: '',
+        areatrabajo: '',
         estado_alta:'pendaprobacion',
         verificado: {
             mail:false,

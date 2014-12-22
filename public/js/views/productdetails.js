@@ -666,8 +666,8 @@ window.ProductView = Backbone.View.extend({
         });
  
         $('.paclasifhook').html(form.el);
-        $('input',form.el).addClass('input-block-level');
-        $('textarea',form.el).addClass('input-block-level').attr('rows',"4");
+        $('input',form.el).addClass('form-group');
+        $('textarea',form.el).addClass('form-group').attr('rows',"4");
     }, 
 
     formaddinstance: function () {
@@ -706,7 +706,7 @@ window.ProductView = Backbone.View.extend({
             var errors = form.commit();
             //console.log('change: rolinstancia: [%s]',dao.addinstancefacet.getContent().rolinstancia)
         });
-
+console.log(form.fields)
         $('.painstanciahook').html(form.render().el); 
     },
 
