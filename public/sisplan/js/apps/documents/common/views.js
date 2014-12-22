@@ -250,7 +250,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
     },
 
     documentSearch: function(){
-      //console.log('documentList: [%s]',$('input',this.$el).val())
+      console.log('documentList: [%s]',$('input',this.$el).val())
       var self = this,
           query = this.$('#search-by-id').val();
       this.trigger('document:search', query, function(entity){

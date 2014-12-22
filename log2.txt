@@ -1,0 +1,963 @@
+Execution for processFile[ALGO] [0]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7d6]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'articulacioninstitu',
+     slug: 'Puntos de Aliento – Copa America',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enpreparacion',
+     estado_alta: 'activo',
+     contraparte: 'Publico General',
+     description: 'Actividades culturales y transmision en vivo en funcion del desarrollo de los partidos de Futbol de la Seleccion Argentina en le Copa America. ',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Puntos de Aliento',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275065999,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:25 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000076',
+     _id: 54986b3a1787e416034bd7d6 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Puntos de Aliento – Copa America]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7db]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'feriadellibro',
+     slug: 'Ferias del Libro',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Ferias del libro de todo el pais',
+     description: 'Fortalecimiento y participacion de las distintas ferias del libro que se realizaran durante el 2015',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Ferias del Libro',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066004,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000081',
+     _id: 54986b3a1787e416034bd7db } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Ferias del Libro]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7e0]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'teatro',
+     slug: 'Teatro',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Publico General y grupos teatrales comunitarios y/o emergentes.',
+     description: 'Fortalecimiento de las expresiones teatrales de todos los generos, desarrollo de clinicas, concursos, clases abiertas, muestras, puestas en escena gratuitas y para todo publico.',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Teatro',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066007,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000086',
+     _id: 54986b3a1787e416034bd7e0 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Teatro]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7e5]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'inclusion',
+     slug: 'DDHH – Línea Equidad de Géneros',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Colectivos de LGBT',
+     description: 'Desarrollo de actividades culturales tendientes a concientizar sobre la equidad de genero.',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'DDHH – Equidad de Géneros',
+     area: 'SSPDCPP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066033,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000091',
+     _id: 54986b3a1787e416034bd7e5 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [DDHH – Línea Equidad de Géneros]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7ea]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fortalecimiento',
+     slug: 'Cafe Cultura',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Cafe Cultura',
+     area: 'DNPOP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066037,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000096',
+     _id: 54986b3a1787e416034bd7ea } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Cafe Cultura]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7ef]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'festivales',
+     slug: 'Festivales para Todos',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Festivales para Todos',
+     area: 'DNPOP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066042,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000101',
+     _id: 54986b3a1787e416034bd7ef } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Festivales para Todos]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7f4]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fortalecimiento',
+     slug: 'Fortalecimiento de las expresiones de Carnaval',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Carnavales Federales',
+     area: 'DNAF',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066067,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000106',
+     _id: 54986b3a1787e416034bd7f4 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Fortalecimiento de las expresiones de Carnaval]
+3.1. ADD: se inserto correctamente el nodo [54986b391787e416034bd7d4]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fortalecimiento',
+     slug: 'Programa Maravillosa Musica',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Bandas Jovenes',
+     description: 'Concurso federal de Bandas, con alcance Nacional',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Maravillosa música',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275065992,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:25 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000074',
+     _id: 54986b391787e416034bd7d4 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Programa Maravillosa Musica]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7d9]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'actividadcentral',
+     slug: 'Programa Unidad Secretario',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enpreparacion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Actividades centrales',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066001,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000079',
+     _id: 54986b3a1787e416034bd7d9 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Programa Unidad Secretario]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7de]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'publicaciones',
+     slug: 'Publicaciones Especiales',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enpreparacion',
+     estado_alta: 'activo',
+     contraparte: 'Instituciones interesadas',
+     description: 'Publicacion y distribucion de libros, discos y otros materiales en sintonia con los lineamientos de la secretaria.',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Publicaciones Especiales',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066006,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000084',
+     _id: 54986b3a1787e416034bd7de } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Publicaciones Especiales]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7e3]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'inclusion',
+     slug: 'Cultura Accesible',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Personas con diferentes dicapacidades',
+     description: 'Garantizar el acceso a la cultura a las personas con discapacidad',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Cultura Accesible',
+     area: 'SSPDCPP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066031,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000089',
+     _id: 54986b3a1787e416034bd7e3 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Cultura Accesible]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7e8]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'inclusion',
+     slug: 'Promotores culturales',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Promotores culturales',
+     area: 'SSPDCPP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066035,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000094',
+     _id: 54986b3a1787e416034bd7e8 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Promotores culturales]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7ed]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fortalecimiento',
+     slug: 'Casas de la Historia y la Cultura del Bicentenario',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Casas de la Historia y la Cultura del Bicentenario',
+     area: 'DNPOP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066039,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000099',
+     _id: 54986b3a1787e416034bd7ed } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Casas de la Historia y la Cultura del Bicentenario]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7f2]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fortalecimiento',
+     slug: 'Puntos de Cultura',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Puntos de Cultura',
+     area: 'DNPOP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066066,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000104',
+     _id: 54986b3a1787e416034bd7f2 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Puntos de Cultura]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7f7]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'participacion',
+     slug: 'Debates Culturales Federales',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Debates',
+     area: 'DNAF',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066069,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000109',
+     _id: 54986b3a1787e416034bd7f7 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Debates Culturales Federales]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003007]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7d7]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'educacion',
+     slug: 'Ajedrecear',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Publico General',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Ajedrecear',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066000,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000077',
+     _id: 54986b3a1787e416034bd7d7 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Ajedrecear]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7dc]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'inclusion',
+     slug: 'Programa de Fomento a la Lectura',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Publico General',
+     description: 'Difusion y puesta en valor de la lectura como forma de desarrollo de la cultura',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Fomento a la lectura',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066005,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000082',
+     _id: 54986b3a1787e416034bd7dc } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Programa de Fomento a la Lectura]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7e1]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fortalecimiento',
+     slug: 'Afrodescendientes',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Comunidades Afrodescendientes y Publico General',
+     description: 'Fortalecimiento de las expresiones culturales de las distintas comunidades y organizaciones de Afrodescendientes',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Afrodescendientes',
+     area: 'SSPDCPP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066007,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000087',
+     _id: 54986b3a1787e416034bd7e1 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Afrodescendientes]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7e6]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fortalecimiento',
+     slug: 'Colectividades',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Colectividades latinoamericanas y de todo el mundo residentes en Argentina',
+     description: 'Fortalecimiento de las expresiones culturales de las distintas colectividades extranjeras residentes en Argentina',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Colectividades',
+     area: 'SSPDCPP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066033,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000092',
+     _id: 54986b3a1787e416034bd7e6 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Colectividades]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7eb]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'evento',
+     slug: 'La Musica de Todos',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'La Musica de Todos',
+     area: 'DNPOP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066038,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000097',
+     _id: 54986b3a1787e416034bd7eb } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [La Musica de Todos]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7f0]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fortalecimiento',
+     slug: 'Identidades Productivas',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Identidades Productivas',
+     area: 'DNPOP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066065,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000102',
+     _id: 54986b3a1787e416034bd7f0 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Identidades Productivas]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7f5]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fortalecimiento',
+     slug: 'Altos Pueblos',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Altos Pueblos',
+     area: 'DNAF',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066068,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000107',
+     _id: 54986b3a1787e416034bd7f5 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Altos Pueblos]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003005]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003010]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003015]
+3.1. ADD: se inserto correctamente el nodo [54986b391787e416034bd7d5]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'evento',
+     slug: 'Año Gardeliano',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enpreparacion',
+     estado_alta: 'activo',
+     contraparte: 'Publico General',
+     description: 'Realizacion de conciertos, milongas, encuentros, difusion y conmemoracion del 80º aniversario del fallecimiento de Carlos Gardel',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Año Gardeliano',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275065998,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:25 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000075',
+     _id: 54986b391787e416034bd7d5 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Año Gardeliano]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7da]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'concurso',
+     slug: 'Concurso de Cuentos',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enpreparacion',
+     estado_alta: 'activo',
+     contraparte: 'Escritores de todo el pais.',
+     description: 'Realizacion de 2 concursos de cuentos, de alcance Nacional.',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Concurso de Cuentos',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066003,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000080',
+     _id: 54986b3a1787e416034bd7da } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Concurso de Cuentos]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7df]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'concurso',
+     slug: 'Slam de Poesia',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enpreparacion',
+     estado_alta: 'activo',
+     contraparte: 'Escritores de todo el pais.',
+     description: 'Concurso federal de poesia.',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Poesía',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066006,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000085',
+     _id: 54986b3a1787e416034bd7df } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Slam de Poesia]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7e4]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fortalecimiento',
+     slug: 'Pueblos Indígenas',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Comunidades Originarias y Publico General',
+     description: 'Fortalecimiento de las expresiones culturales de las distintas comunidades y organizaciones de pueblos originarios',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Pueblos Indígenas',
+     area: 'SSPDCPP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066032,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000090',
+     _id: 54986b3a1787e416034bd7e4 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Pueblos Indígenas]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7e9]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'inclusion',
+     slug: 'Acceso a la cultura',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Publico General',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Acceso a la cultura',
+     area: 'SSPDCPP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066036,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000095',
+     _id: 54986b3a1787e416034bd7e9 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Acceso a la cultura]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7ee]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'infancia',
+     slug: 'Cultura y Infancia',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Cultura y Infancia',
+     area: 'DNPOP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066040,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000100',
+     _id: 54986b3a1787e416034bd7ee } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Cultura y Infancia]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7f3]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fortalecimiento',
+     slug: 'Carnavales Federales',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Carnavales Federales',
+     area: 'DNAF',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066067,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000105',
+     _id: 54986b3a1787e416034bd7f3 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Carnavales Federales]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7f8]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fiestanacional',
+     slug: 'Fiestas Nacionales',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Fiestas Nacionales',
+     area: 'DNAF',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066071,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000110',
+     _id: 54986b3a1787e416034bd7f8 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Fiestas Nacionales]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003008]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003013]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003018]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003023]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7d8]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'inclusion',
+     slug: 'Libros y Casas',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Programas de Vivienda Social',
+     description: 'Creacion de bibliotecas en los hogares construidos por los planes federales de vivienda social.',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Libros y Casa',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066001,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000078',
+     _id: 54986b3a1787e416034bd7d8 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Libros y Casas]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7dd]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'evento',
+     slug: 'Jornadas Argentinas de Humor (JAH)',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: 'Publico General',
+     description: 'Realizacion de jornadas de humor con artistas reconocidos y emergentes de todo el pais, abordando desde la risa tematicas sociales y politicas. ',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Jornadas',
+     area: 'SPSC',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066005,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'UM',
+     nivel_importancia: 'media',
+     cnumber: 'A1000083',
+     _id: 54986b3a1787e416034bd7dd } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Jornadas Argentinas de Humor (JAH)]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7e2]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'derechosculturales',
+     slug: 'Observatorio de Derechos Culturales',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Observatorio de Derechos Culturales',
+     area: 'SSPDCPP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066031,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000088',
+     _id: 54986b3a1787e416034bd7e2 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Observatorio de Derechos Culturales]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7e7]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'actividadcentral',
+     slug: 'Programa Unidad Sub Secretario',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Actividades centrales',
+     area: 'SSPDCPP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066033,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000093',
+     _id: 54986b3a1787e416034bd7e7 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Programa Unidad Sub Secretario]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7ec]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'fortalecimiento',
+     slug: 'Cultura y Sindicatos',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Cultura y Sindicatos',
+     area: 'DNPOP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066039,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000098',
+     _id: 54986b3a1787e416034bd7ec } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Cultura y Sindicatos]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7f1]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'inclusion',
+     slug: 'Organizaciones Sociales y Cultura Comunitaria',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Organizaciones Sociales y Cultura Comunitaria',
+     area: 'DNPOP',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066065,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000103',
+     _id: 54986b3a1787e416034bd7f1 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Organizaciones Sociales y Cultura Comunitaria]
+3.1. ADD: se inserto correctamente el nodo [54986b3a1787e416034bd7f6]  [undefined] 
+{ model: 
+   { tregistro: 'accion',
+     taccion: 'legislacioncultural',
+     slug: 'Consejo Federal de Cultura – Asamblea Ordinaria',
+     feaccion: '01/01/2015',
+     nivel_ejecucion: 'enejecucion',
+     estado_alta: 'activo',
+     contraparte: '',
+     description: '',
+     requirente: 'Franco Vitali',
+     objetivo: '',
+     planprod: '',
+     lineaaccion: 'Consejo Federal de Cultura',
+     area: 'DNAF',
+     loadtime: 'import-2014-12-18-01',
+     fealta: 1419275066069,
+     fecomp: '22/12/2014',
+     feultmod: Mon Dec 22 2014 16:04:26 GMT-0300 (ART),
+     nodo: 'SPSC',
+     nivel_importancia: 'media',
+     cnumber: 'A1000108',
+     _id: 54986b3a1787e416034bd7f6 } }
+addNewBudget:budgets.js 
+insertNewBudget:budgets.js BEGIN [Consejo Federal de Cultura – Asamblea Ordinaria]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003006]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003011]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003016]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003021]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003026]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003031]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003004]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003009]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003014]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003019]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003024]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003029]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003034]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003039]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003012]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003017]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003022]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003027]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003032]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003037]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003020]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003025]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003030]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003035]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003040]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003028]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003033]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003038]
+1.2. BUDGET Alta concretada de PRESUPUESTO:[PRE1003036]

@@ -26,12 +26,12 @@ var seriales = {};
 var taction_adapter = {
     presupuesto:{
         serie: 'budget101',
-        base: 100000,
+        base: 1000000,
         prefix: 'PRE'
         },
     poromision: {
         serie: 'budget999',
-        base: 100000,
+        base: 1000000,
         prefix: 'X'
     }
 
@@ -136,7 +136,7 @@ var insertNewBudget = function (req, res, budget, cb){
                 }
             } else {
                 if(res){
-                    console.log('3.1. ADD: se inserto correctamente el nodo %s', JSON.stringify(result[0]));
+                    //console.log('3.1. ADD: se inserto correctamente el nodo %s', JSON.stringify(result[0]));
                     res.send(result[0]);
                 }else if(cb){
                     cb({'model':result[0]})
@@ -148,8 +148,10 @@ var insertNewBudget = function (req, res, budget, cb){
 
 exports.setDb = function(db) {
     dbi = db;
+    loadSeriales();
     return this;
 };
+
 
 exports.setConfig = function(conf){
     config = conf;
@@ -164,11 +166,10 @@ exports.setBSON = function(bs) {
 exports.findOne = function(req, res) {
     var query = req.body;
 
-
     var sort = {cnumber: 1};
     if (query.cnumber['$lt']) sort = {cnumber: -1};
 
-    console.log('findONE:budget Retrieving budget collection with query [%s] sort:[%s]',query.cnumber, sort.cnumber);
+    //console.log('findONE:budget Retrieving budget collection with query [%s] sort:[%s]',query.cnumber, sort.cnumber);
  
     dbi.collection(budgetsCol, function(err, collection) {
         collection.find   (query).sort(sort).toArray(function(err, items) {
@@ -199,7 +200,7 @@ exports.findById = function(req, res) {
 exports.find = function(req, res) {
     var query = req.body; //{};
 
-    console.log('find:budget Retrieving budget collection with query');
+    //console.log('find:budget Retrieving budget collection with query');
 
     dbi.collection(budgetsCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
@@ -209,7 +210,7 @@ exports.find = function(req, res) {
 };
 
 exports.findAll = function(req, res) {
-    console.log('findAll: Retrieving all instances of [%s] collection', budgetsCol);
+    //console.log('findAll: Retrieving all instances of [%s] collection', budgetsCol);
     dbi.collection(budgetsCol, function(err, collection) {
         collection.find().sort({cnumber:1}).toArray(function(err, items) {
             res.send(items);
@@ -269,7 +270,7 @@ var buildUpdateData = function(data){
     return data.newdata;
 }
 
-exports.partialupdate = function(req, res, data, cb) {
+exports.partialupdate = function(req, res) {
     if (req){
         data = req.body;
     }
@@ -277,7 +278,7 @@ exports.partialupdate = function(req, res, data, cb) {
     var update = buildUpdateData(data);
 
 
-    console.log('UPDATING partial fields nodes:[%s] data length[%s]', query.$or[0]._id , update.items.length);
+    console.log('UPDATING partial fields nodes:[%s]', query.$or[0]._id );
     //res.send({query:query, update:update});
 
     dbi.collection(budgetsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
@@ -316,7 +317,7 @@ exports.delete = function(req, res) {
 };
 
 
-exports.importNewAction = function (data, cb){
+exports.importNewBudget = function (data, cb){
 
     addNewBudget(null, null, data, cb);
     //});

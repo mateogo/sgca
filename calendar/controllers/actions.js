@@ -27,22 +27,22 @@ var seriales = {};
 var taction_adapter = {
     accion:{
         serie: 'action101',
-        base: 100000,
+        base: 1000000,
         prefix: 'A'
         },
     programa:{
         serie: 'action102',
-        base: 100000,
+        base: 1000000,
         prefix: 'P'
         },
     actividad: {
         serie: 'action103',
-        base: 100000,
+        base: 1000000,
         prefix:'T'
         },
     poromision: {
         serie: 'action999',
-        base: 100000,
+        base: 1000000,
         prefix: 'X'
     }
 
@@ -98,7 +98,7 @@ var updateSerialCollection = function(serial){
 
 
 var setNodeCode = function(node){
-    console.log('setNodeCode:[%s]',node.tregistro);
+    //console.log('setNodeCode:[%s]',node.tregistro);
     var adapter = taction_adapter[node.tregistro] || taction_adapter['poromision'];
     node.cnumber = nextSerial(adapter);
 
@@ -134,7 +134,7 @@ var fetchOne = function(query, cb) {
 };
 
 var insertNewAction = function (req, res, action, cb){
-    console.log('insertNewAction:actions.js BEGIN [%s]',action.slug);
+    //console.log('insertNewAction:actions.js BEGIN [%s]',action.slug);
     //dbi.collection(actionsCol, function(err, collection) {
 
     dbi.collection(actionsCol).insert(action,{w:1}, function(err, result) {
@@ -142,13 +142,14 @@ var insertNewAction = function (req, res, action, cb){
                 if(res){
                     res.send({'error':'An error has occurred'});
                 }else if(cb){
-                    cb({'error':'An error has occurred'})
+                    cb({'error':'An error has occurred:' + err})
                 }
             } else {
                 if(res){
                     console.log('3.1. ADD: se inserto correctamente el nodo %s', JSON.stringify(result[0]));
                     res.send(result[0]);
                 }else if(cb){
+                    console.log('3.1. ADD: se inserto correctamente el nodo [%s]  [%s] ', result[0]['_id'], JSON.stringify(result[0]['_id'].str));
                     cb({'model':result[0]})
                 }
             }
@@ -281,7 +282,7 @@ var buildUpdateData = function(data){
     return data.newdata;
 }
 
-exports.partialupdate = function(req, res, data, cb) {
+exports.partialupdate = function(req, res) {
     if (req){
         data = req.body;
     }
@@ -289,7 +290,7 @@ exports.partialupdate = function(req, res, data, cb) {
     var update = buildUpdateData(data);
 
 
-    console.log('UPDATING partial fields nodes:[%s] data length[%s]', query.$or[0]._id , update.items.length);
+    console.log('UPDATING partial fields nodes:[%s]', query.$or[0]._id );
     //res.send({query:query, update:update});
 
     dbi.collection(actionsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
@@ -328,6 +329,33 @@ exports.delete = function(req, res) {
 };
 
 
+/*
+var fetchActions = function(query, cb) {
+    console.log('fetchActions: retrieven Actions Col');
+
+    dbi.collection(actionsCol, function(err, collection) {
+        collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
+            cb(items);
+        });
+    });
+};
+
+var buildActionBudgetCol = function(query, cb){
+    fetchActions(query, function(actionsCol){
+        
+
+    });
+
+};
+
+exports.fetchActionBudgetCol = function (req, res){
+    var query = req.body;
+    buildActionBudgetCol(query, function(col){
+        res.sen(col);
+    })
+};
+
+*/
 exports.importNewAction = function (data, cb){
 
     addNewAction(null, null, data, cb);

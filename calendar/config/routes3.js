@@ -45,6 +45,12 @@ module.exports = function (config, app) {
         //console.log("/inicio:routes.js ");
         res.redirect(utils.userHome(req.user));
     });
+
+    app.post('/actualizar/presupuestos', function(req, res){
+        console.log('Ruta encontrada')
+        res.send({succes: 'todo bien'});
+    });
+
     
     app.post('/excelbuilder', function(req,res,next){
         console.log("/excelbuilder.js ");
@@ -69,6 +75,43 @@ module.exports = function (config, app) {
 
     });
 
+
+/*
+    app.post('/login', function(req, res, next) {
+        console.log('athentication BEGINS: [%s] [%s]', req.password, req.username);
+        console.log('athentication BEGINS: [%s] [%s]', req.body.password, req.body.username);
+        //req.username = req.body.username;
+        //req.password = 'mateogo';
+        passport.authenticate('local', function(err, user, info) {
+            console.log('CALLBACK!! [%s],[%s] [%s]',err, user, info);
+
+            if (err) { return next(err); }
+            if (!user) { return res.send({username:'error'}); }
+            
+            req.logIn(user, function(err) {
+                if (err) { return next(err); }
+                return res.send(user);
+            });
+        })(req, res, next);
+    });
+*/
+
+/*
+    app.post('/login',
+
+        passport.authenticate('local', { successRedirect: '/',
+                                       failureRedirect: '/login',
+                                       failureFlash: false })
+    );
+*/
+
+/*
+    app.post('/login',function(req,res,next){
+        //console.log("/login [%s]  [%s]", req.user.username, req.body.username);
+        res.redirect('/gestion');
+
+    });
+*/
     app.post('/files', function(req,res,next){
         //console.log("/files:routes.js ");
         utils.moveFile(req, res, rootPath);
@@ -127,17 +170,108 @@ module.exports = function (config, app) {
     });
 
 
-     // action (acciones) routes
-    var budget = require(rootPath + '/calendar/controllers/budgets');
-    app.post('/actualizar/presupuestos', budget.partialupdate);
+    app.get('/agendacultural', function(req,res){
+        //console.log("/agendacultural:routes.js ");
 
-/*
-    app.post('/actualizar/presupuestos', function(req, res){
-        console.log('Ruta encontrada')
-        res.send({succes: 'todo bien'});
+        var http = require("http");
+
+        var pa = '/webservice/response/client.php?Method=GetEventosListFiltered&Latitud=-34.5919216&Longitud=-58.45105059999999&OrdenarPor=Distancia&Limit=30';
+
+        if(req.query.eventid){
+            pa += '&IdEvento='+req.query.eventid;
+        }else{
+            pa += '&FechaInicio='+req.query.feinicio;
+            pa += '&FechaFin='+req.query.fefinal;
+            if(req.query.tipoevento) pa += '&IdTipoEvento='+req.query.tipoevento;
+            if(req.query.title) pa += '&Titulo='+req.query.title;
+        }
+
+        //console.log('feini: [%s]',req.query.feinicio);
+        //console.log('fefin: [%s]',req.query.fefinal);
+        console.log('pa: [%s]',pa);
+
+        var options = {
+            host: 'agendacultural.buenosaires.gob.ar',
+            //path: '/webservice/response/client.php?Method=GetEventosListFiltered&FechaInicio=2013-10-28&FechaFin=2013-10-30&Latitud=-34.60834737727606&Longitud=-58.39688441711421&OrdenarPor=Distancia&Limit=10'
+            path: pa
+        };
+
+        console.log("/agendacultural:routes.js 1");
+        http.get(options, function (http_res) {
+            // initialize the container for our data
+            var data = "";
+
+            // this event fires many times, each time collecting another piece of the response
+            console.log("/agendacultural:routes.js 2");
+            http_res.on("data", function (chunk) {
+                // append this chunk to our growing `data` var
+                console.log("/agendacultural:routes.js 3");
+                data += chunk;
+            });
+
+            http_res.on('error',function(e){
+                console.log("Error: " + e.message); 
+                console.log( e.stack );
+            });
+
+            // this event fires *one* time, after all the `data` events/chunks have been gathered
+            http_res.on("end", function () {
+                // you can use res.send instead of console.log to output via express
+                console.log(data);
+                res.send(data);
+            });
+        });
+        //console.log("/agendacultural:routes.js ");
+        //res.redirect();
     });
 
-*/
+    app.get('/lugaresagenda', function(req,res){
+        console.log("/lugaresagenda:routes.js ");
+
+        var http = require("http");
+        var pa = '/webservice/response/client.php?Method=GetLugaresListFiltered&OrdenarPor=NombreUrl&Orden=ASC&Limit=10&Offset=0';
+
+        pa += '&NombreUrl='+utils.safeName(req.query.nombre);
+        
+        console.log('pa: [%s]',pa);
+
+        var options = {
+            host: 'agendacultural.buenosaires.gob.ar',
+            //path: '/webservice/response/client.php?Method=GetEventosListFiltered&FechaInicio=2013-10-28&FechaFin=2013-10-30&Latitud=-34.60834737727606&Longitud=-58.39688441711421&OrdenarPor=Distancia&Limit=10'
+            path: pa
+        };
+
+        console.log("/lugaresagenda:routes.js 1");
+        http.get(options, function (http_res) {
+            // initialize the container for our data
+            var data = "";
+
+            // this event fires many times, each time collecting another piece of the response
+            console.log("/lugaresagenda:routes.js 2");
+            http_res.on("data", function (chunk) {
+                // append this chunk to our growing `data` var
+                console.log("/lugaresagenda:routes.js 3");
+                data += chunk;
+            });
+
+            http_res.on('error',function(e){
+                console.log("Error: " + e.message); 
+                console.log( e.stack );
+            });
+
+            // this event fires *one* time, after all the `data` events/chunks have been gathered
+            http_res.on("end", function () {
+                // you can use res.send instead of console.log to output via express
+                console.log(data);
+                res.send(data);
+            });
+        });
+        //console.log("/agendacultural:routes.js ");
+        //res.redirect();
+    });
+
+     // action (acciones) routes
+    var budget = require(rootPath + '/calendar/controllers/budgets');
     app.get ('/presupuestos',            budget.findAll);
     app.post('/actualizar/presupuestos', budget.partialupdate);
     app.post('/recuperar/presupuestos',  budget.find);

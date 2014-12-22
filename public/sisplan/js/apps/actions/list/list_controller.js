@@ -18,12 +18,12 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
         });      
       });
 
-      hview.on('document:search',function(query, cb){
+      hview.on('entities:search',function(query, cb){
 
-        DocManager.request("document:query:search",query, function(model){
+        DocManager.request("actions:query:search",query, function(model){
           if(model){
             Edit.Session.layout.close();
-            DocManager.trigger("document:edit", model);
+            DocManager.trigger("action:edit", model);
           }
         });      
 
@@ -114,24 +114,13 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
         }
 
         var tipolistado = dao.gestionUser.getActionListType();
+        console.dir(query);
 
-        DocManager.request("action:query:list","", function(model){
+        DocManager.request("actions:query:search","", function(model){
           console.log('query lista CALLBACK - END');
         });
 
-        // if(tipolistado === 'items'){
-        //   DocManager.request("document:query:items",query, function(model){
-        //     console.log('query lista CALLBACK - END');
-        //   });
-
-        // }else {
-        //   DocManager.request("action:query:list","", function(model){
-        //     console.log('query lista CALLBACK - END');
-        //   });
-        //}
-
-
-      });// currentUser
+      });
 
     }
   };
@@ -345,16 +334,17 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
     },
 
     listActionItems: function( squery ){
-        console.log('callback: [%s] [%s] [%s]', squery.fedesde, squery.resumen, squery.tipocomp);
+        console.log('callback: [%s] [%s] [%s]', squery.fedesde, squery.taccion, squery.slug);
   
-        DocManager.request("document:query:entities", squery, function(documents){
-          setColumnTable('documitems');
+        DocManager.request("action:query:entities", squery, function(documents){
+          console.log('listaActions cb: [%s]', documents.length)
+          setColumnTable('docum');
 
           var documentsListView = new List.Actions({
             collection: documents
           });
 
-          List.Session.selectedActionList = new DocManager.Entities.ComprobanteCollection();
+          List.Session.selectedActionList = new DocManager.Entities.ActionCollection();
           registerActionListEvents(documentsListView);
 /*
           List.Session.layout.on("show", function(){
@@ -379,7 +369,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
       List.queryForm(List.Session.query, function(qmodel){
         
         List.Session.query = qmodel.attributes;
-        dao.gestionUser.update(DocManager, 'documQuery', qmodel.attributes);
+        dao.gestionUser.update(DocManager, 'actionQuery', qmodel.attributes);
         self.listActionItems(List.Session.query);
 
       });
@@ -430,7 +420,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
     API.listActions(query, cb);
   });
 
-  DocManager.reqres.setHandler("document:query:search", function(query, cb){
+  DocManager.reqres.setHandler("actions:query:search", function(query, cb){
     API.searchActions(query, cb);
   });
 
