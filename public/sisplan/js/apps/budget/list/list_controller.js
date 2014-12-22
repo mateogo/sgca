@@ -367,6 +367,8 @@ DocManager.module("BudgetApp.List", function(List, DocManager, Backbone, Marione
             collection: budgets
           });
 
+          List.Session.budgetCol = budgets;
+
           List.Session.selectedBudgetList = new DocManager.Entities.BudgetNavCollection();
           registerBudgetListEvents(budgetsListView);
 /*
