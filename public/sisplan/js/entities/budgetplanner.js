@@ -239,17 +239,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     if(!type) type = 'nodo';
 
     if(type === 'nodo'){
-      indicator = utils.fetchNode(utils.actionAreasOptionList, model.get('parent_action')['area']);
+      indicator = utils.fetchNode(utils.actionAreasOptionList, model.get('parent_action')['area'].trim());
     }else if(type === 'area'){
-      indicator = model.get('area');
+      indicator = model.get('parent_action')['area'].trim();
     }else if(type === 'tregistro'){
-      indicator = model.get('tregistro');
+      indicator = model.get('tregistro').trim();
     }else if(type === 'lineaaccion'){
-      indicator = model.get('parent_action')['lineaaccion']
+      indicator = model.get('parent_action')['lineaaccion'].trim()
     }else if(type === 'taccion'){
-      indicator = model.get('parent_action')['taccion']
+      indicator = model.get('parent_action')['taccion'].trim()
     }else if(type === 'tgasto'){
-      indicator = model.get('tgasto');
+      indicator = model.get('tgasto').trim();
     }else{
       indicator = 'NO-PREVISTO';
     }

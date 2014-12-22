@@ -530,21 +530,13 @@ var loadRecordsFromDB = function(cb){
   DocManager.reqres.setHandler("budget:query:list", function(query, cb){
     API.listBudgets(query, cb);
   });
-
+/*
   DocManager.reqres.setHandler("budget:query:search", function(query, cb){
     API.searchBudgets(query, cb);
   });
 
-  DocManager.reqres.setHandler("budget:query:items", function(query, cb){
+*/  DocManager.reqres.setHandler("budget:query:items", function(query, cb){
     API.listBudgetItems(query, cb);
-  });
-
-  DocManager.reqres.setHandler("person:search", function(query, cb){
-    API.searchPersons(query, cb);
-  });
-
-  DocManager.reqres.setHandler("product:search", function(query, cb){
-    API.searchProducts(query, cb);
   });
 
 });
