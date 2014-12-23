@@ -528,6 +528,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         success: function(data){
             console.dir(data);
             window.open(data.file)
+
         }
       });
 
