@@ -240,17 +240,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     if(!type) type = 'nodo';
 
     if(type === 'nodo'){
-      indicator = utils.fetchNode(utils.actionAreasOptionList, model.get('parent_action')['area'].trim());
+      indicator = utils.fetchNode(utils.actionAreasOptionList, model.get('parent_action')['area']);
     }else if(type === 'area'){
-      indicator = model.get('parent_action')['area'].trim();
+      indicator = model.get('parent_action')['area'];
     }else if(type === 'tregistro'){
-      indicator = model.get('tregistro').trim();
+      indicator = model.get('tregistro');
     }else if(type === 'lineaaccion'){
-      indicator = model.get('parent_action')['lineaaccion'].trim()
+      indicator = model.get('parent_action')['lineaaccion']
     }else if(type === 'taccion'){
-      indicator = model.get('parent_action')['taccion'].trim()
+      indicator = model.get('parent_action')['taccion']
     }else if(type === 'tgasto'){
-      indicator = model.get('tgasto').trim();
+      indicator = model.get('tgasto');
     }else{
       indicator = 'NO-PREVISTO';
     }
@@ -282,6 +282,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var createNewToken = function(token, costo){
     var smodel = new Entities.SummaryModel(token);
+    console.dir(token)
 
     console.log('New Token: orig:[%s] tram:[%s] ani:[%s] slug:[%s] ', token.origenpresu, token.tramita, token.anio, token.slug);
 
