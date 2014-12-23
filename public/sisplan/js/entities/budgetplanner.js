@@ -282,6 +282,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var createNewToken = function(token, costo){
     var smodel = new Entities.SummaryModel(token);
+
+    console.log('New Token: orig:[%s] tram:[%s] ani:[%s] slug:[%s] ', token.origenpresu, token.tramita, token.anio, token.slug);
+
     smodel.set('trim', [0,0,0,0]);
     smodel.set('costo_total', 0);
     acumCosto(smodel,costo);
@@ -306,6 +309,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     var newdata = {};
     // revisión de datos importados. esta función es auxiliar
     col.each(function(model){
+
+
 
       if(model.get('parent_action')['cnumber'] !== $.trim(model.get('parent_action')['cnumber'])){
         console.log('cnumber')
