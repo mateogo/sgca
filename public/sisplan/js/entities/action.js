@@ -18,11 +18,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       tipomov:"",
 
       description: "",
-
-      estado_alta:'media',
-      nivel_ejecucion: 'enproceso',
-      nivel_importancia: 'alta',
       descriptores: "",
+
       fecomp:"",
 
       objetivo:"",

@@ -36,7 +36,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     resetFilteredCol: function(){
       var self = this;
       self.filteredCol = filterActionBudgetCol(self.dbaseCol, self);
-      console.log('**********  reseted col[%s]', self.filteredCol.length)
+      console.log('**********  reseted col[%s]', self.filteredCol.length);
+      scanCollection(self.filteredCol);
       return self.filteredCol;
     },
 
@@ -301,6 +302,56 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
  
   };
 
+  var scanCollection = function(col){
+    var newdata = {};
+    // revisión de datos importados. esta función es auxiliar
+    col.each(function(model){
+
+      if(model.get('parent_action')['cnumber'] !== $.trim(model.get('parent_action')['cnumber'])){
+        console.log('cnumber')
+        newdata.cnumber = $.trim(model.get('parent_action')['cnumber']);
+      }
+      if(model.get('parent_action')['slug'] !== $.trim(model.get('parent_action')['slug'])){
+        console.log('slug')
+        newdata.slug = $.trim(model.get('parent_action')['slug']);
+      }
+      if(model.get('parent_action')['tregistro'] !== $.trim(model.get('parent_action')['tregistro'])){
+        console.log('tregistro')
+        newdata.tregistro = $.trim(model.get('parent_action')['tregistro']);
+      }
+      if(model.get('parent_action')['taccion'] !== $.trim(model.get('parent_action')['taccion'])){
+        console.log('taccion')
+        newdata.taccion = $.trim(model.get('parent_action')['taccion']);
+      }
+      if(model.get('parent_action')['tipomov'] !== $.trim(model.get('parent_action')['tipomov'])){
+        console.log('tipomov')
+        newdata.tipomov = $.trim(model.get('parent_action')['tipomov']);
+      }
+      if(model.get('parent_action')['estado_alta'] !== $.trim(model.get('parent_action')['estado_alta'])){
+        console.log('estado_alta')
+        newdata.estado_alta = $.trim(model.get('parent_action')['estado_alta']);
+      }
+      if(model.get('parent_action')['nivel_ejecucion'] !== $.trim(model.get('parent_action')['nivel_ejecucion'])){
+        console.log('nivel_ejecucion')
+        newdata.nivel_ejecucion = $.trim(model.get('parent_action')['nivel_ejecucion']);
+      }
+      if(model.get('parent_action')['nivel_importancia'] !== $.trim(model.get('parent_action')['nivel_importancia'])){
+        console.log('nivel_importancia')
+        newdata.nivel_importancia = $.trim(model.get('parent_action')['nivel_importancia']);
+      }
+      if(model.get('parent_action')['nodo'] !== $.trim(model.get('parent_action')['nodo'])){
+        console.log('nodo')
+        newdata.nodo = $.trim(model.get('parent_action')['nodo']);
+      }
+      if(model.get('parent_action')['area'] !== $.trim(model.get('parent_action')['area'])){
+        console.log('area')
+        newdata.area = $.trim(model.get('parent_action')['area']);
+      }
+
+    });
+    
+
+  };
 
   var filterActionBudgetCol = function(dbaseCol, queryModel){
       var query = buildQuery(queryModel);
