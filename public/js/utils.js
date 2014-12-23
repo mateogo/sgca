@@ -1670,16 +1670,16 @@ window.utils = {
 
     budgetListTableHeader:[
         {id:0 , tt:'th', flag:1, tclass:'order', tmpl: 'template2', val:'select',       label:'#'},
-        {id:1 , tt:'th', flag:1, tclass:'col1',  tmpl: 'template6', val:'cnumber',      label:'Identificador'},
-        {id:2 , tt:'th', flag:1, tclass:'col2',  tmpl: 'template1', val:'tgasto',       label:'Tipo Gasto'},
-        {id:3 , tt:'th', flag:1, tclass:'col3',  tmpl: 'template1', val:'area',         label:'Área'},
-        {id:4 , tt:'th', flag:1, tclass:'col4',  tmpl: 'template1', val:'origenpresu',  label:'Fuente'},
-        {id:5 , tt:'th', flag:1, tclass:'col5',  tmpl: 'template1', val:'tramita',      label:'Tramita'},
-        {id:6 , tt:'th', flag:1, tclass:'col6',  tmpl: 'template1', val:'trim_fiscal',  label:'Trim'},
-        {id:7 , tt:'th', flag:0, tclass:'col7',  tmpl: 'template1', val:'cantidad',     label:'Cant'},
-        {id:8 , tt:'th', flag:1, tclass:'col8',  tmpl: 'template1', val:'ume',          label:'UME'},
-        {id:9 , tt:'th', flag:1, tclass:'col9',  tmpl: 'template7', val:'importe',      label:'Importe'},
-        {id:11, tt:'th', flag:1, tclass:'colb',  tmpl: 'template1', val:'slug',         label:'a s u n t o   -   d e s c r i p c i ó n'},
+        {id:1,  tt:'th', flag:1, tclass:'colb',  tmpl: 'template1', val:'slug',         label:'a s u n t o   -   d e s c r i p c i ó n'},
+        {id:2 , tt:'th', flag:1, tclass:'col1',  tmpl: 'template6', val:'cnumber',      label:'Identificador'},
+        {id:3 , tt:'th', flag:1, tclass:'col2',  tmpl: 'template1', val:'tgasto',       label:'Tipo Gasto'},
+        {id:4 , tt:'th', flag:1, tclass:'col3',  tmpl: 'template1', val:'area',         label:'Área'},
+        {id:5 , tt:'th', flag:1, tclass:'col4',  tmpl: 'template1', val:'origenpresu',  label:'Fuente'},
+        {id:6 , tt:'th', flag:1, tclass:'col5',  tmpl: 'template1', val:'tramita',      label:'Tramita'},
+        {id:7 , tt:'th', flag:1, tclass:'col6',  tmpl: 'template1', val:'trim_fiscal',  label:'Trim'},
+        {id:8 , tt:'th', flag:0, tclass:'col7',  tmpl: 'template1', val:'cantidad',     label:'Cant'},
+        {id:9 , tt:'th', flag:1, tclass:'col8',  tmpl: 'template1', val:'ume',          label:'UME'},
+        {id:10 , tt:'th', flag:1, tclass:'col9',  tmpl: 'template7', val:'importe',      label:'Importe'},
         {id:12, tt:'th', flag:1, tclass:'actions', tmpl: 'template8', val:'acciones',  label:'acciones'}
     ],
 

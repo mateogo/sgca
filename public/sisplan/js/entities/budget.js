@@ -513,21 +513,24 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     processRequest: function(col){
       var self = this;
       var query = {
+          name: 'Items del Presupuesto',
           heading: self.fetchLabels(),
-          data: col,
-          name: 'Items del Presupuesto'
+          data: JSON.stringify(col)
       };
+      console.log(JSON.stringify(query));
 
       $.ajax({
         type: "POST",
         url: "/excelbuilder",
         dataType: "json",
+        //contentType:"application/jsonrequest",
         data: query,
         success: function(data){
-            //console.dir(data);
+            console.dir(data);
             window.open(data.file)
         }
       });
+
 
     }
   };
@@ -658,7 +661,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     schema: {
         fedesde:  {type: 'Date',   title: 'Desde', placeholder:'dd/mm/aaaa', yearEnd:2018},
         fehasta:  {type: 'Date',   title: 'HastaA', placeholder:'dd/mm/aaaa', yearEnd:2018},
-        tipomov:  {type: 'Select', options: utils.tipoBudgetMovimList, title:'Tipo de Movimiento' },
+        tgasto:   {type: 'Select', options: utils.tipoBudgetMovimList, title:'Tipo de Gasto' },
         area:     {type: 'Select', options: utils.actionAreasOptionList, title:'Área/Nodo' },
         slug:     {type: 'Text',   title: 'Denominación'},
         ejecucion:{type: 'Select', options: utils.budgetEjecucionOptionList, title:'Nivel ejecución' },
@@ -667,6 +670,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     defaults: {
       fedesde:'',
       fehasta:'',
+      tgasto:'',
       area: '',
       slug: '',
       ejecucion:''
@@ -701,20 +705,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         collection: budgets,
 
         filterFunction: function(query){
+          console.dir(query)
           return function(budget){
             var test = true;
             //if((query.taccion.trim().indexOf(budget.get('taccion'))) === -1 ) test = false;
-            console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.tgasto,budget.get("tipomov"),budget.get("cnumber"));
+            //console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.tgasto,budget.get("tipomov"),budget.get("cnumber"));
             if(query.tgasto && query.tgasto!=='no_definido') {
               if(query.tgasto.trim() !== budget.get('tgasto')) test = false;
             }
 
             if(query.area && query.area !=='no_definido') {
               if(query.area.trim() !== budget.get('area')) test = false;
-            }
-
-            if(query.tipomov && query.tipomov !=='no_definido') {
-              if(query.tipomov.trim() !== budget.get('tipomov')) test = false;
             }
 
             if(query.ejecucion && query.ejecucion!=='no_definido') {
@@ -773,274 +774,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return promise;
   };
 
-  var fetchBudgetItemlist = function(budgets){
-    var itemCol = new Entities.BudgetCollection();
-    budgets.each(function(model){
-      var items = model.get('items');
-      model.set({documid: model.id});
-      //console.log('Iterando doc:[%s] itmes[%s]',model.get('cnumber'),model.get('taccion'),items.length);
-      _.each(items, function(item){
-        if(dao.docum.isType(item.tipoitem, 'notas')){
-          var sitems = item.items;
-          _.each(sitems, function(sitem){
-
-            var smodel = new Entities.Budget(model.attributes);
-            smodel.id = null;
-            smodel.set({
-              fechagestion: model.get('fecomp'),
-              fechagestion_tc: model.get('fecomp_tc'),
-              tipoitem: item.tipoitem,
-              tipomov: item.tipomov||item.tipoitem,
-              product: sitem.product,
-              productid: sitem.productid,
-              pslug: sitem.pslug,
-              tcomputo: sitem.durnominal
-            })
-            itemCol.add(smodel);
-
-          });
-
-        }else if (dao.docum.isType(item.tipoitem, 'nsolicitud')){
-          var sitems = item.items;
-          _.each(sitems, function(sitem){
-
-            var smodel = new Entities.Budget(model.attributes);
-            smodel.id = null;
-
-            smodel.set({
-              fechagestion: model.get('fecomp'),
-              fechagestion_tc: model.get('fecomp_tc'),
-              tipoitem: item.tipoitem,
-              tipomov: item.tipomov||item.tipoitem,
-              product: sitem.trequerim,
-              productid: "",
-              pslug: sitem.description,
-              tcomputo: ''
-            })
-            itemCol.add(smodel);
-
-          });
-
-        }else if (dao.docum.isType(item.tipoitem, 'pemision')){
-          var sitems = item.items;
-          _.each(sitems, function(sitem){
-            var emisiones = sitem.emisiones;
-            _.each(emisiones, function(emision){
-
-              var smodel = new Entities.Budget(model.attributes);
-              var feg = utils.addOffsetDay(item.fedesde_tc,emision.dayweek);
-              smodel.id = null;
-              smodel.set({
-                fechagestion: feg.date,
-                fechagestion_tc: feg.tc,
-                tipoitem: item.tipoitem,
-                tipomov: item.tipoitem,
-                product: sitem.product,
-                productid: sitem.productid,
-                pslug: sitem.pslug,
-                tcomputo: sitem.durnominal
-              })
-              itemCol.add(smodel);
-
-            });
-          });
-
-        }else if (dao.docum.isType(item.tipoitem, 'pdiario')){
-            var smodel = new Entities.Budget(model.attributes);
-            smodel.id = null;
-            smodel.set({
-              fechagestion: model.get('fecomp'),
-              fechagestion_tc: model.get('fecomp_tc'),
-              tipoitem: item.tipoitem,
-              tipomov: item.activity,
-              product: item.entity,
-              productid: item.entityid,
-              pslug: item.slug,
-              tcomputo: ( (item.feultmod - item.fealta) /1000*60)
-            })
-            itemCol.add(smodel);
-
-        }else if (dao.docum.isType(item.tipoitem, 'ptecnico')){
-
-          var smodel = new Entities.Budget(model.attributes);
-          smodel.id = null;
-          smodel.set({
-            fechagestion: item.fept,
-            fechagestion_tc: item.fept_tc,
-            tipoitem: item.tipoitem,
-            tipomov: item.estado_qc,
-            product: item.product,
-            productid: item.productid,
-            pslug: item.pslug,
-            tcomputo: item.durnominal
-          })
-          itemCol.add(smodel);
-
-        }
-      })
-
-    });
-    //console.log('returning ItemCol [%s]',itemCol.length)
-    return itemCol;
-
-  };
-  
-  var isValidDocum = function(docum, query){
-    if(query.tcompList.indexOf(docum.get('taccion')) === -1) return false;
-    return true;
-  };
-
-  var isValidNota = function(docum,item, query){
-    if(query.tcompList.indexOf(docum.get('taccion')) === -1) return false;
-    if(query.tmovList[docum.get('taccion')].indexOf(item.tipomov) === -1) return false;
-    if(query.fedesde > docum.get('fecomp_tc')) return false;
-    if(query.fehasta < docum.get('fecomp_tc')) return false;
-    return true;
-  };
-  var isValidPE = function(reportItem, query){
-    if(query.tcompList.indexOf(reportItem.get('taccion')) === -1) return false;
-    if(query.fedesde > reportItem.get('fechagestion_tc')) return false;
-    if(query.fehasta < reportItem.get('fechagestion_tc')) return false;
-    return true;
-  };
-  var isvalidPT = function(reportItem, query){
-    if(query.tcompList.indexOf(reportItem.get('taccion')) === -1) return false;
-    if(query.fedesde > reportItem.get('fechagestion_tc')) return false;
-    if(query.fehasta < reportItem.get('fechagestion_tc')) return false;
-    return true;
-  };
-
-
-  var fetchReportItems = function(docum, query, reportCol){
-      var items = docum.get('items');
-      //console.log('Iterando doc:[%s] itmes[%s]',docum.get('cnumber'),docum.get('taccion'),items.length);
- 
-      _.each(items, function(item){
-        if(dao.docum.isType(item.tipoitem, 'notas')){
-          if(isValidNota(docum,item, query)){
-            var sitems = item.items;
-            _.each(sitems, function(sitem){
-              var reportItem = new Entities.ReportItem();
-              reportItem.set({
-                fechagestion: docum.get('fecomp'),
-                fechagestion_tc: docum.get('fecomp_tc'),
-                taccion: docum.get('taccion'),
-                tipoitem: item.tipoitem,
-                cnumber: docum.get('cnumber'),
-                documid: docum.id,
-                tipomov: item.tipomov||item.tipoitem,
-                product: sitem.product,
-                productid: sitem.productid,
-                pslug: sitem.pslug,
-                tcomputo: sitem.durnominal,
-                persona: docum.get('persona'),
-                personaid: docum.get('personaid'),
-                estado_alta: 'alta',
-              });
-
-              reportCol.add(reportItem);
-            });
-          }
-
-        }else if (dao.docum.isType(item.tipoitem, 'pemision')){
-          var sitems = item.items;
-          _.each(sitems, function(sitem){
-            var emisiones = sitem.emisiones;
-            _.each(emisiones, function(emision){
-              var feg = utils.addOffsetDay(item.fedesde_tc,emision.dayweek);
-              var reportItem = new Entities.ReportItem();
-              reportItem.set({
-                fechagestion: feg.date,
-                fechagestion_tc: feg.tc,
-                taccion: docum.get('taccion'),
-                tipoitem: item.tipoitem,
-                cnumber: docum.get('cnumber'),
-                documid: docum.id,
-                tipomov: item.tipoitem,
-                product: sitem.product,
-                productid: sitem.productid,
-                pslug: sitem.pslug,
-                tcomputo: sitem.durnominal,
-                persona: docum.get('persona'),
-                personaid: docum.get('personaid'),
-                estado_alta: 'alta',
-              });
-
-              if(isValidPE(reportItem, query)){
-                reportCol.add(reportItem);
-              }
-
-            });
-          });
-
-        }else if (dao.docum.isType(item.tipoitem, 'ptecnico')){
-          var reportItem = new Entities.ReportItem();
-          reportItem.set({
-            fechagestion: item.fept,
-            fechagestion_tc: item.fept_tc,
-            taccion: docum.get('taccion'),
-            tipoitem: item.tipoitem,
-            cnumber: docum.get('cnumber'),
-            documid: docum.id,
-            tipomov: item.estado_qc,
-            product: item.product,
-            productid: item.productid,
-            pslug: item.pslug,
-            tcomputo: item.durnominal,
-            persona: docum.get('persona'),
-            personaid: docum.get('personaid'),
-            estado_alta: 'alta',
-          });
-
-          if(isvalidPT(reportItem, query)){
-            reportCol.add(reportItem);
-          }
-
-        }
-      })
-
-  };
-
-  var buildReportItemList = function(budgets, query){
-    var itemCol = new Entities.ReportItemCollection();
-    budgets.each(function(model){
-      if(isValidDocum(model, query)){
-        fetchReportItems(model, query, itemCol);
-      }
-
-    });
-
-
-    //console.log('returning ItemCol [%s]',itemCol.length)
-    return itemCol;
-
-  };
-
-
-  var fetchProductDuration = function(col, cb){
-    var products = new DocManager.Entities.ProductCollection();
-    products.fetch({success: function() {
-      col.each(function(model){
-
-        var pr = products.find(function(produ){
-          //console.log('testing: [%s] vs [%s] / [%s] [%s]',produ.id, model.get('productid'), produ.get('productcode'),model.get('product'))
-          return produ.id===model.get('productid');
-        });
-
-        if(pr){
-          //console.log('pr:[%s] model:[%s]',pr.get('productcode'),model.get('product'));
-          var dur = pr.get('patechfacet').durnominal;
-          if(!dur ) dur = "0";
-          if(parseInt(dur,10)===NaN) dur="0";
-          model.set({tcomputo: dur});
-        }else{
-          model.set({tcomputo: '0'});
-        }
-      });
-
-      if(cb) cb();
-    }});
-  };
 
 
   var API = {
@@ -1078,9 +811,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         if(query){
           filteredBudgets.filter(query);
         }
-        fetchProductDuration(filteredBudgets,function(){
-          if(cb) cb(filteredBudgets);
-        })
+        if(cb) cb(filteredBudgets);
+
       });
     },
 

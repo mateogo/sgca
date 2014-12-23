@@ -47,16 +47,18 @@ module.exports = function (config, app) {
     });
     
     app.post('/excelbuilder', function(req,res,next){
-        console.log("/excelbuilder.js ");
+        var request = req.body;
+        request.data = JSON.parse(req.body.data); 
+
+        console.log("/excelbuilder.js [%s]", request.name);
         
         //validar datos
-        var error = utils.excelBuilder(req.body, rootPath, function(error){
-                    res.send(error)
+        var error = utils.excelBuilder(request, rootPath, function(error){
+            if(error.file) {
+                res.send(error);
+            }
         });
 
-        
-        
-        //  res.redirect(utils.userHome(req.user));
     });
 
     app.post('/sendmail', function(req,res,next){
