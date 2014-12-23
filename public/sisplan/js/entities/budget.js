@@ -249,7 +249,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         importe:      {type: 'Text',      title: 'Importe',           editorAttrs:{placeholder:'importe en pesos FINAL'}},
         fecha_prev:   {type: 'Text',      title: 'Fecha prev ejecución', editorAttrs:{placeholder:'dd/mm/aaaa'}},
         trim_fiscal:  {type: 'Number',    title: 'Trimestre fiscal',  editorAttrs:{placeholder:'Indique 1/2/3/4 Trimestre ejecución presupuestaria'}},
-        anio_fiscal:  {type: 'Number',    title: 'Año fiscal',        editorAttrs:{placeholder:'Indique año fiscal (2015)'}},
+        anio_fiscal:  {type: 'Text',      title: 'Año fiscal',        editorAttrs:{placeholder:'Indique año fiscal (2015)'}},
         origenpresu:  {type: 'Select',    title: 'Origen presupuesto', editorAttrs:{placeholder:'fuente presupuestaria'},options: utils.budgetOriginList },
         tramita:      {type: 'Select',    title: 'Tramitación',  editorAttrs:{placeholder:'unidad ejecutora'},options: utils.budgetTramitaPorList },
         description:  {type: 'TextArea',  title: 'Descripción ejecutiva'},
@@ -524,7 +524,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         dataType: "json",
         data: query,
         success: function(data){
-            console.dir(data);
+            //console.dir(data);
             window.open(data.file)
         }
       });

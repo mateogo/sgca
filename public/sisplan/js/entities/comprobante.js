@@ -638,7 +638,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       delete attrs.estado_alta;
       delete attrs.nivel_ejecucion;
       delete attrs.description;
-      console.dir(attrs);
+      //console.dir(attrs);
 
       items.push(attrs);
 

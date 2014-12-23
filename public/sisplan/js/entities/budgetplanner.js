@@ -37,7 +37,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var self = this;
       self.filteredCol = filterActionBudgetCol(self.dbaseCol, self);
       console.log('**********  reseted col[%s]', self.filteredCol.length);
-      scanCollection(self.filteredCol);
+      //scanCollection(self.filteredCol);
       return self.filteredCol;
     },
 
@@ -215,7 +215,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           slug: fetchIndicator(query.type, model),
           origenpresu: model.get('origenpresu'),
           tramita: model.get('tramita'),
-          anio: model.get('anio_fiscal')
+          anio: parseInt(model.get('anio_fiscal'))
         };
         costo = {
           type: query.type,
@@ -282,9 +282,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var createNewToken = function(token, costo){
     var smodel = new Entities.SummaryModel(token);
-    console.dir(token)
-
-    console.log('New Token: orig:[%s] tram:[%s] ani:[%s] slug:[%s] ', token.origenpresu, token.tramita, token.anio, token.slug);
+    //console.dir(token)
+    //console.log('New Token: orig:[%s] tram:[%s] ani:[%s] slug:[%s] ', token.origenpresu, token.tramita, token.anio, token.slug);
 
     smodel.set('trim', [0,0,0,0]);
     smodel.set('costo_total', 0);

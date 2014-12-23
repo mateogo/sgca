@@ -114,7 +114,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
         }
 
         var tipolistado = dao.gestionUser.getActionListType();
-        console.dir(query);
+        //console.dir(query);
 
         DocManager.request("actions:query:search","", function(model){
           console.log('query lista CALLBACK - END');
