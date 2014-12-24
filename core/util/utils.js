@@ -150,6 +150,10 @@ var parseData = function(dataCol ,options){
         iType;
 
     _.each(dataCol, function(itemRow){
+        console.log('ProgNum:[%s] tipomov:[%s] tagasto:[%s] cantidad:[%s] impo:[%s] nivel_ej:[%s] estado_alta:[%s] tramita:[%s] slug:[%s]',
+            itemRow[0], itemRow[1], itemRow[2], itemRow[3], itemRow[4], itemRow[18], itemRow[19], itemRow[13], itemRow[6] );
+
+
         row = _.map(itemRow, function(item, index){
             iType = options[index].itemType 
 
@@ -194,26 +198,34 @@ exports.excelBuilder = function (query,rootPath,cb){
     var writer = new SpreadsheetWriter(name);
     
     var pData = parseData(query.data, query.heading);
+
     
-    writer.addFormat('heading', { font: { bold: true } });
-    writer.write(0, 0, heading, 'heading');
+    // writer.addFormat('heading', { font: { bold: true } });
+    // writer.write(0, 0, heading, 'heading');
 
-    writer.append(pData);
+    // writer.append(pData);
 
-    writer.addFormat('options', { font: { bold: true }, alignment: 'right' } );
-    writer.write('D5', options, 'options');
+    // writer.addFormat('options', { font: { bold: true }, alignment: 'right' } );
+    // writer.write('D5', options, 'options');
 
-    writer.save(function (err) {
-        if (err) throw err;
-        console.log('file saved');
-        if(cb){
-            var error = {
-                error: "save concretado",
-                file: relativeName
-            };
-        cb(error);    
-        }
-    });
+    // writer.save(function (err) {
+    //     if (err) throw err;
+    //     console.log('file saved');
+    //     if(cb){
+    //         var error = {
+    //             error: "save concretado",
+    //             file: relativeName
+    //         };
+    //     cb(error);    
+    //     }
+    // });
+
+    var error = {
+        error: "save concretado",
+        file: relativeName
+    };
+    cb(error);    
+
 };
 
 exports.sendMail = function (mailOptions,cb){
