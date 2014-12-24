@@ -155,8 +155,8 @@ var parseData = function(dataCol ,options){
 
 
         row = _.map(itemRow, function(item, index){
-            if(!item)
-                return 'null'
+            if(!item || item === 'sin_dato')
+                return 'sin_dato';
 
             iType = options[index].itemType;
             //console.log('Element: [%s], index:[%s] iType:[%s]',item,index,iType);
@@ -173,8 +173,8 @@ var parseData = function(dataCol ,options){
             }
         });
         parsedCol.push(row);
-        console.log('ProgNum:[%s] tipomov:[%s] tagasto:[%s] cantidad:[%s] impo:[%s] nivel_ej:[%s] estado_alta:[%s] tramita:[%s] slug:[%s]',
-                itemRow[0], itemRow[1], itemRow[2], itemRow[3], itemRow[4], itemRow[18], itemRow[19], itemRow[13], itemRow[6] );
+        console.log('fecha:[%s ]ProgNum:[%s] tipomov:[%s] tagasto:[%s] cantidad:[%s] impo:[%s] nivel_ej:[%s] estado_alta:[%s] tramita:[%s] ',
+                itemRow[11],itemRow[0], itemRow[1], itemRow[2], itemRow[3], itemRow[4], itemRow[18], itemRow[19], itemRow[14] );
     });
     return parsedCol;    
 };
