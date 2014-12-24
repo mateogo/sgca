@@ -150,8 +150,7 @@ var parseData = function(dataCol ,options){
         iType;
 
     _.each(dataCol, function(itemRow){
-        console.log('ProgNum:[%s] tipomov:[%s] tagasto:[%s] cantidad:[%s] impo:[%s] nivel_ej:[%s] estado_alta:[%s] tramita:[%s] slug:[%s]',
-            itemRow[0], itemRow[1], itemRow[2], itemRow[3], itemRow[4], itemRow[18], itemRow[19], itemRow[13], itemRow[6] );
+        //console.log('ProgNum:[%s] tipomov:[%s] tagasto:[%s] cantidad:[%s] impo:[%s] nivel_ej:[%s] estado_alta:[%s] tramita:[%s] slug:[%s]',itemRow[0], itemRow[1], itemRow[2], itemRow[3], itemRow[4], itemRow[18], itemRow[19], itemRow[13], itemRow[6] );
 
 
         row = _.map(itemRow, function(item, index){
@@ -173,8 +172,7 @@ var parseData = function(dataCol ,options){
             }
         });
         parsedCol.push(row);
-        console.log('fecha:[%s ]ProgNum:[%s] tipomov:[%s] tagasto:[%s] cantidad:[%s] impo:[%s] nivel_ej:[%s] estado_alta:[%s] tramita:[%s] ',
-                row[11].getTime(),row[0], row[1], row[2], row[3], row[4], row[18], row[19], row[14] );
+        //console.log('fecha:[%s ]ProgNum:[%s] tipomov:[%s] tagasto:[%s] cantidad:[%s] impo:[%s] nivel_ej:[%s] estado_alta:[%s] tramita:[%s] ', row[11].getTime(),row[0], row[1], row[2], row[3], row[4], row[18], row[19], row[14] );
     });
     return parsedCol;    
 };
@@ -188,14 +186,13 @@ var excelHeadings = function(headings){
 }
 
 exports.excelBuilder = function (query,rootPath,cb){
-    console.log("utils:begin")
+    //console.log("utils:begin")
     var heading = excelHeadings(query.heading);
     var options = query.options;
 
     var publicPath = rootPath + '/public/';
 
     var name = saveFileName(rootPath, query.name + '.xlsx');
-    console.log(name);
     
     var relativeName = name.substr(publicPath.length - 1);
 
@@ -214,7 +211,7 @@ exports.excelBuilder = function (query,rootPath,cb){
 
     writer.save(function (err) {
         if (err) throw err;
-        console.log('file saved');
+
         if(cb){
             var error = {
                 error: "save concretado",
@@ -227,7 +224,6 @@ exports.excelBuilder = function (query,rootPath,cb){
 };
 
 exports.sendMail = function (mailOptions,cb){
-    console.log("sendmail:begin")    
     mailOptions.subject = subjecttpl({subject:mailOptions.subject});
     mailOptions.html = bodytpl({body:mailOptions.html});
     // send mail with defined transport object
@@ -278,8 +274,8 @@ exports.moveFile = function(req, res, rootPath){
 
     var serverPath = rootPath + '/public/' + urlPath;
 
-    console.log("req.body: "+JSON.stringify(req.body));
-    console.log("req.files: "+JSON.stringify(filename));
+    //console.log("req.body: "+JSON.stringify(req.body));
+    //console.log("req.files: "+JSON.stringify(filename));
 
     fs.rename(req.files.loadfiles.path, serverPath, function(error){
         if(error){

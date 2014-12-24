@@ -87,7 +87,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           fecomp = utils.dateToStr(fealta);
 
       self.set({fealta:fealta.getTime(), fecomp: fecomp});
-      console.log('InitBeforeCreate!!!!!!!!!!!!!!!!!!!!! [%s][%s]', self.get('gasto'),self.get('slug'));
+      //console.log('InitBeforeCreate!!!!!!!!!!!!!!!!!!!!! [%s][%s]', self.get('gasto'),self.get('slug'));
       self.updateInheritData(action);
       self.updateCurrentUsertData(cb);
  
@@ -95,7 +95,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     beforeSave: function(action, cb){
       var self = this;
-      console.log('initBefore SAVE')
+      //console.log('initBefore SAVE')
       var feultmod = new Date();
       self.set({feultmod:feultmod.getTime()})
 
@@ -110,7 +110,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var self = this;
       self.beforeSave(action, function(docum){
         var errors ;
-        console.log('ready to SAVE');
+        //console.log('ready to SAVE');
         if(!self.save(null,{
           success: function(model){
             //console.log('callback SUCCESS')
@@ -162,7 +162,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
 
   
-      console.log('partial UPDATE: [%s] [%s]', token, facet);
+      //console.log('partial UPDATE: [%s] [%s]', token, facet);
       var update = new Entities.BudgetUpdate(query);
       update.save({
         success: function() {
@@ -222,7 +222,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     initialize: function(attributes, options){
       var self = this;
       self.options = options;
-      console.log('[%s] INITIALIZE  [%s]',self.whoami, arguments.length);
+      //console.log('[%s] INITIALIZE  [%s]',self.whoami, arguments.length);
 
       if(options.formType === 'short'){
         self.schema = self.schema_short;
@@ -267,7 +267,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var self = this;
       var budget = new Entities.Budget(self.attributes);
 
-      console.log('[%s]: createNewBudget',self.whoami);
+      //console.log('[%s]: createNewBudget',self.whoami);
 
       budget.initBeforeCreate(action, user, function(budget){
         budget.save(null, {
@@ -450,7 +450,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var self = this;
       if(!self.length) return;
 
-      console.log('collection export [%s]',self.length);
+      //console.log('collection export [%s]',self.length);
 
 
       exportFactory.processRequest(exportFactory.fetchCollection(self));
@@ -517,7 +517,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           heading: self.fetchLabels(),
           data: JSON.stringify(col)
       };
-      console.log(JSON.stringify(query));
+      //console.log(JSON.stringify(query));
 
       $.ajax({
         type: "POST",
@@ -526,7 +526,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         //contentType:"application/jsonrequest",
         data: query,
         success: function(data){
-            console.dir(data);
+            //console.dir(data);
             window.open(data.file)
 
         }
@@ -600,17 +600,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var self = this,
           itemCol = self.getItems();
 
-      console.log('AddItem [%s] items before Insert:[%s]', model.get('description'), itemCol.length);
-
       itemCol.add(model);
-      console.log('AddItem [%s] items after Insert:[%s]', model.get('description'), itemCol.length);
       self.insertItemCollection(itemCol);
       return itemCol;
     },
 
     insertItemCollection: function(itemCol) {
         var self = this;
-        console.log('INSERT ITEM COLLECTION!!!!!!!!!!! [%s]', itemCol.length);
         self.set({items: itemCol.toJSON()});
         //console.dir(itemCol.toJSON());
     },
@@ -706,7 +702,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         collection: budgets,
 
         filterFunction: function(query){
-          console.dir(query)
           return function(budget){
             var test = true;
             //if((query.taccion.trim().indexOf(budget.get('taccion'))) === -1 ) test = false;
@@ -795,7 +790,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       $.when(fetchingBudgets).done(function(budgets){
         var filteredBudgets = filterFactory(budgets);
-        console.log('getQuery')
         if(criteria){
           filteredBudgets.filter(criteria);
         }
