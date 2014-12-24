@@ -155,8 +155,10 @@ var parseData = function(dataCol ,options){
 
 
         row = _.map(itemRow, function(item, index){
-            iType = options[index].itemType 
+            if(!item)
+                return 'null'
 
+            iType = options[index].itemType;
             //console.log('Element: [%s], index:[%s] iType:[%s]',item,index,iType);
             if(iType === 'Text') {
                 return item;
@@ -171,6 +173,8 @@ var parseData = function(dataCol ,options){
             }
         });
         parsedCol.push(row);
+        console.log('ProgNum:[%s] tipomov:[%s] tagasto:[%s] cantidad:[%s] impo:[%s] nivel_ej:[%s] estado_alta:[%s] tramita:[%s] slug:[%s]',
+                itemRow[0], itemRow[1], itemRow[2], itemRow[3], itemRow[4], itemRow[18], itemRow[19], itemRow[13], itemRow[6] );
     });
     return parsedCol;    
 };
@@ -200,31 +204,25 @@ exports.excelBuilder = function (query,rootPath,cb){
     var pData = parseData(query.data, query.heading);
 
     
-    // writer.addFormat('heading', { font: { bold: true } });
-    // writer.write(0, 0, heading, 'heading');
+    writer.addFormat('heading', { font: { bold: true } });
+    writer.write(0, 0, heading, 'heading');
 
-    // writer.append(pData);
+    writer.append(pData);
 
-    // writer.addFormat('options', { font: { bold: true }, alignment: 'right' } );
-    // writer.write('D5', options, 'options');
+    writer.addFormat('options', { font: { bold: true }, alignment: 'right' } );
+    writer.write('D5', options, 'options');
 
-    // writer.save(function (err) {
-    //     if (err) throw err;
-    //     console.log('file saved');
-    //     if(cb){
-    //         var error = {
-    //             error: "save concretado",
-    //             file: relativeName
-    //         };
-    //     cb(error);    
-    //     }
-    // });
-
-    var error = {
-        error: "save concretado",
-        file: relativeName
-    };
-    cb(error);    
+    writer.save(function (err) {
+        if (err) throw err;
+        console.log('file saved');
+        if(cb){
+            var error = {
+                error: "save concretado",
+                file: relativeName
+            };
+        cb(error);    
+        }
+    });
 
 };
 
