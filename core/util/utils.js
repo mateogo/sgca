@@ -165,7 +165,7 @@ var parseData = function(dataCol ,options){
             }else if(iType === 'Number') {
                 return parseFloat(item);
             }else if(iType === 'Date') {
-                return new Date(item);
+                return parseDateStr(item);
             }else if(iType === 'Boolean') {
                 return (isFalsey(item) ? false : true);
             }else{
@@ -174,7 +174,7 @@ var parseData = function(dataCol ,options){
         });
         parsedCol.push(row);
         console.log('fecha:[%s ]ProgNum:[%s] tipomov:[%s] tagasto:[%s] cantidad:[%s] impo:[%s] nivel_ej:[%s] estado_alta:[%s] tramita:[%s] ',
-                itemRow[11],itemRow[0], itemRow[1], itemRow[2], itemRow[3], itemRow[4], itemRow[18], itemRow[19], itemRow[14] );
+                row[11].getTime(),row[0], row[1], row[2], row[3], row[4], row[18], row[19], row[14] );
     });
     return parsedCol;    
 };
@@ -326,3 +326,41 @@ exports.dateToStr = function(date) {
     var ye = date.getFullYear();
     return da+"/"+mo+"/"+ye;
 };
+
+var parseDateStr = function(str) {
+    //console.log('parseDate BEGIN [%s]',str)
+
+    var mx = str.match(/(\d+)/g);
+    var ty = new Date();
+    if(mx.length === 0) return ty;
+    if(mx.length === 1){
+        if(mx[0]<0 || mx[0]>31) return null;
+        else return new Date(ty.getFullYear(),ty.getMonth(),mx[0]);
+    }
+    if(mx.length === 2){
+        if(mx[0]<0 || mx[0]>31) return null;
+        if(mx[1]<0 || mx[1]>12) return null;
+        else return new Date(ty.getFullYear(),mx[1]-1,mx[0]);
+    }
+    if(mx.length === 3){
+        if(mx[0]<0 || mx[0]>31) return null;
+        if(mx[1]<0 || mx[1]>12) return null;
+        if(mx[2]<1000 || mx[2]>2020) return null;
+        else return new Date(mx[2],mx[1]-1,mx[0]);
+    }
+    if(mx.length === 4){
+        if(mx[0]<0 || mx[0]>31) return null;
+        if(mx[1]<0 || mx[1]>12) return null;
+        if(mx[2]<1000 || mx[2]>2020) return null;
+        if(mx[3]<0 || mx[3]>24) return null;
+        else return new Date(mx[2],mx[1]-1,mx[0],mx[3],0);
+    }
+    if(mx.length === 5){
+        if(mx[0]<0 || mx[0]>31) return null;
+        if(mx[1]<0 || mx[1]>12) return null;
+        if(mx[2]<1000 || mx[2]>2020) return null;
+        if(mx[3]<0 || mx[3]>24) return null;
+        if(mx[4]<0 || mx[4]>60) return null;
+        else return new Date(mx[2],mx[1]-1,mx[0],mx[3],mx[4]);
+    }
+}
