@@ -357,12 +357,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     comparator: "cnumber",
   });
 
-  Entities.ActionBudgetCol = Backbone.Collection.extend({
-    whoami: 'Entities.ActionBudgetCol:action.js ',
-    comparator: "cnumber",
-  });
-
-
   /*
    * ******* FACETA PARA CREAR UNA NUEVA ACCION +**********
    */
@@ -615,7 +609,37 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   };
 
   var API = {
+
     loadActionBudgetCol: function(query, opt, cb){
+      console.log('loadActionBudgetCol BEGIN')
+      var self = this,
+          fetchingActions = API.getActionBudgetCol(query);
+
+      $.when(fetchingActions).done(function(actions){
+        cb(actions);
+      });
+
+    },
+
+    getActionBudgetCol: function(query){
+      var defer = $.Deferred();
+
+      $.ajax({
+        data: query,
+        type: 'post',
+        url: "/actionbudget/fetch",
+
+        success: function(data){
+          defer.resolve(data);
+        }
+      });
+   
+      var promise = defer.promise();
+      return promise;
+    },
+
+    loadActionBudgetColOld: function(query, opt, cb){
+      //deprecated
       var self = this,
           deferredCol = [],
           resultCol = [],
@@ -634,6 +658,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
             budgetCol.each(function(budgetModel){
               budgetModel.set('parent_action',model.attributes);
+              budgetModel.set('importe_num', parseInt(budgetModel.get('importe')))
               resultCol.push(budgetModel);
 
             });

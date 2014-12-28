@@ -32,7 +32,8 @@ DocManager.module("ActionsApp.Show", function(Show, DocManager, Backbone, Marion
 
     editClicked: function(e){
       e.preventDefault();
-      this.trigger("actionedit", this.model);
+      //DocManager.trigger("action:edit",this.model);
+      this.trigger("action:edit", this.model);
     }
   });
 

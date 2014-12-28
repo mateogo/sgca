@@ -12,7 +12,12 @@ var dbi ;
 var BSON;
 var config = {};
 var actionsCol = 'actions';
+var budgetsCol = 'budgets';
 var serialCol = 'seriales';
+
+var _ = require('underscore');
+
+
 var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
     'ERROR: No se pudo borrar el nodo en la base de datos'
@@ -280,7 +285,37 @@ var buildTargetNodes = function(data){
 var buildUpdateData = function(data){
     if(!data.newdata) return;
     return data.newdata;
-}
+};
+
+exports.fetchActionBudgetCol = function(req,res){
+    var query = req.body || {};
+    var resultCol;
+    console.log('fetchActionBudgetCol BEGIN')
+    dbi.collection(actionsCol).find(query).sort({cnumber:1}).toArray(function(err, actItems) {
+        dbi.collection(budgetsCol).find().sort({owner_id:1}).toArray(function(err, budItems) {
+            resultCol = loadActionBudgetCol(actItems, budItems);
+            res.send(resultCol);
+        });
+    });
+};
+
+var loadActionBudgetCol = function(actions, budgets){
+    var resultCol = [],
+        budgetsGroup = _.groupBy(budgets, 'owner_id');
+
+    _.each(actions, function(action){
+        _.each(budgetsGroup[action._id], function(budget){
+            budget.parent_action = action;
+            resultCol.push(budget);
+        });
+
+    })
+
+    console.log('resultCol leng[%s]', resultCol.length);
+    return resultCol;
+};
+
+
 
 exports.partialupdate = function(req, res) {
     if (req){
@@ -348,17 +383,13 @@ var buildActionBudgetCol = function(query, cb){
 
 };
 
-exports.fetchActionBudgetCol = function (req, res){
-    var query = req.body;
-    buildActionBudgetCol(query, function(col){
-        res.sen(col);
-    })
-};
-
 */
 exports.importNewAction = function (data, cb){
 
     addNewAction(null, null, data, cb);
     //});
 };
+
+
+
 

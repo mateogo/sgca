@@ -1,24 +1,241 @@
-DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marionette, $, _){
-  List.Layout = Marionette.LayoutView.extend({
-    className: 'row row-offcanvas row-offcanvas-left',
+DocManager.module("ActionsApp.Report", function(Report, DocManager, Backbone, Marionette, $, _){
+  Report.MainLayout = Marionette.LayoutView.extend({
+    //className: 'row row-offcanvas row-offcanvas-left',
 
     getTemplate: function(){
-      return utils.templates.ActionListLayoutView;
+      return utils.templates.ActionReportLayoutView;
     },
-    
     regions: {
-      navbarRegion:  '#navbar-region',
-      sidebarRegion: '#sidebar-region',
-      linksRegion:   '#panel-region',
-      mainRegion:    '#main-region'
+      reportRegion:    '#report-hook'
     }
   });
 
-  List.Action = Marionette.ItemView.extend({
+
+
+  Report.BudgetItem = Marionette.ItemView.extend({
+    tagName: 'tr',
+    whoami:'ActionReportBudgetItem',
+    //className: 'success',
+
+    getTemplate: function(){
+      return utils.templates.ActionReportBudgetItem;
+    },
+    initialize: function(options){
+      console.log('[%s] INIT [%s]',this.whoami, this.model.get('slug'));
+      this.options = options;
+    },
+ 
+    events: {
+      "click a.js-edit": "editClicked"
+    },
+
+    editClicked: function(e){
+      e.preventDefault();
+      this.trigger("action:edit", this.model);
+    }
+  });
+
+  Report.BudgetComposite = Marionette.CompositeView.extend({
+    tagName:'div',
+    className:"col-xs-12 col-md-12",
+    whoami:'BudgetComposite',
+
+    initialize: function(options){
+      console.log('[%s]: [%s] options:[%s]',this.whoami, this.collection.length, options);
+      this.options = options;
+    },
+
+    getTemplate: function(){
+      return utils.templates.ActionReportBudgetComposite;
+    },
+
+    childView: Report.BudgetItem,
+    childViewContainer: "tbody",
+        
+    events: {
+    },
+
+    childViewOptions: function(model, index) {
+      // do some calculations based on the model
+      console.log('childViewOptions [%s]',model.whoami);
+      return {tpl: this.options.tpl};
+    }
+  });
+
+
+
+  Report.Branding = Marionette.ItemView.extend({
+   getTemplate: function(){
+      return utils.templates.ActionReportBranding;
+    }, 
+    events: {
+    },
+
+  });
+
+
+  Report.ActionLayout = Marionette.LayoutView.extend({
+    className: 'row well',
+    //
+    onShow:function(){
+      var self = this;
+
+      console.log('onSHOW!!!!!!!!!!!!!!!!!!')
+      //for (var i in arguments){console.log("[%s]: [%s]",i,arguments[i])}
+
+      var branding = new Report.Branding({
+        model: self.model
+      });
+
+      this.brandingRegion.show(branding);
+      loadBudgets(self.model, self)
+    },
+
+    getTemplate: function(){
+      return utils.templates.ActionReportItemLayout;
+    },
+    
+    regions: {
+      brandingRegion:   '#branding-region',
+      budgetRegion:     '#budget-region',
+    }
+  });
+
+  Report.ReportCollection = Marionette.CollectionView.extend({
+    tagName: "div",
+    //className: "list-group",
+
+    childView: Report.ActionLayout,
+
+    initialize: function(){
+      console.log('ReportCollection View: INIT')
+    },
+
+  });
+
+  var loadBudgets = function(entity, layoutview){
+      DocManager.request('action:fetch:budget',entity, null,function(budgetCol){
+        console.log('BudgetCol REQUEST CB:[%s][%s]',budgetCol.length, budgetCol.whoami);
+        if(budgetCol.length){
+          var costoTotal = DocManager.request('action:evaluate:cost',budgetCol);
+
+          var budgetView = new Report.BudgetComposite({
+            model: new Backbone.Model({costo_total: costoTotal}),
+            collection: budgetCol
+          });
+          layoutview.budgetRegion.show(budgetView)
+        }
+
+      });
+  };
+
+  Report.Headers = Marionette.ItemView.extend({
+    //childView: List.Header,
+    //childViewContainer: "ul#taskmenu",
+    
+    getTemplate: function(){
+      return utils.templates.ActionReportHeader;
+    },
+    
+    events: {
+      "click a.brand": "brandClicked"
+    },
+
+    brandClicked: function(e){
+      e.preventDefault();
+      this.trigger("brand:clicked");
+    }
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Report.Header = Marionette.ItemView.extend({
+   getTemplate: function(){
+      return utils.templates.ActionReportHeader;
+    },
+ 
+    events: {
+      "click a.js-edit": "editClicked"
+    },
+
+    editClicked: function(e){
+      e.preventDefault();
+      this.trigger("actionedit", this.model);
+    }
+  });
+
+  Report.ActionReportBudgetItem = Marionette.ItemView.extend({
+    tagName: 'tr',
+    whoami:'ActionReportBudgetItem',
+    //className: 'success',
+
+    getTemplate: function(){
+      return utils.templates.ActionReportBudgetItem;
+    },
+    initialize: function(options){
+      console.log('[%s] INIT [%s]',this.whoami, this.model.get('slug'));
+      this.options = options;
+    },
+ 
+    events: {
+      "click a.js-edit": "editClicked"
+    },
+
+    editClicked: function(e){
+      e.preventDefault();
+      this.trigger("action:edit", this.model);
+    }
+  });
+
+  Report.ActionReportBudget = Marionette.CompositeView.extend({
+    tagName:'div',
+    className:'panel',
+    whoami:'ActionReportBudget',
+
+    initialize: function(options){
+      console.log('[%s]: [%s] options:[%s]',this.whoami, this.collection.length, options);
+      this.options = options;
+    },
+
+    getTemplate: function(){
+      return utils.templates.ActionReportBudgetComposite;
+    },
+
+    childView: Report.ActionReportBudgetItem,
+    childViewContainer: "tbody",
+        
+    events: {
+    },
+
+    childViewOptions: function(model, index) {
+      // do some calculations based on the model
+      console.log('childViewOptions [%s]',model.whoami);
+      return {tpl: this.options.tpl};
+    }
+  });
+
+
+
+
+
+
+
+  Report.Action = Marionette.ItemView.extend({
     tagName: "tr",
 
     getTemplate: function(){
-      return _.template(utils.buildRowRenderTemplate(utils.actionListTableHeader,utils.buildTableRowTemplates));
+      return _.template(utils.buildRowRenderTemplate(utils.actionReportTableHeader,utils.buildTableRowTemplates));
     },
 
     events: {
@@ -119,18 +336,18 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
 
 
 
-  List.Actions = Marionette.CompositeView.extend({
+  Report.Actions = Marionette.CompositeView.extend({
     tagName: "table",
     className: "table table-bordered table-hover table-condensed",
 
     getTemplate: function(){
-      //console.log(utils.buildTableHeader(utils.documListTableHeader));
-      return _.template(utils.buildTableHeader(utils.actionListTableHeader)+'<tbody></tbody>');
+      //console.log(utils.buildTableHeader(utils.documReportTableHeader));
+      return _.template(utils.buildTableHeader(utils.actionReportTableHeader)+'<tbody></tbody>');
     },
 
 
     emptyView: NoActionsView,
-    childView: List.Action,
+    childView: Report.Action,
     childViewContainer: "tbody",
 
     events: {
@@ -165,7 +382,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
 
 
 
-  List.RelatedAction = Marionette.ItemView.extend({
+  Report.RelatedAction = Marionette.ItemView.extend({
     tagName: "div",
     //className: 'item-group',
 
@@ -197,7 +414,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
     }
   });
 
-  List.ProductHeader = Marionette.ItemView.extend({
+  Report.ProductHeader = Marionette.ItemView.extend({
     tagName: "div",
     //className: 'item-group',
 
@@ -220,7 +437,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
     }
   });
 
-  List.RelatedProduct = Marionette.ItemView.extend({
+  Report.RelatedProduct = Marionette.ItemView.extend({
     tagName: "div",
 
     getTemplate: function(){
@@ -264,11 +481,11 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
     }
   });
 
-  List.RelatedProducts = Marionette.CollectionView.extend({
+  Report.RelatedProducts = Marionette.CollectionView.extend({
     tagName: "div",
     //className: "list-group",
 
-    childView: List.RelatedProduct,
+    childView: Report.RelatedProduct,
 
     initialize: function(){
       console.log('RelatedProducts View: INIT')
@@ -276,11 +493,11 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
 
   });
 
-  List.RelatedActions = Marionette.CollectionView.extend({
+  Report.RelatedActions = Marionette.CollectionView.extend({
     tagName: "div",
     className: "list-group",
 
-    childView: List.RelatedAction,
+    childView: Report.RelatedAction,
 
     initialize: function(){
       console.log('RelatedActions View: INIT')
@@ -289,7 +506,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
   });
 
 
-  List.RelatedLayout = Marionette.LayoutView.extend({
+  Report.RelatedLayout = Marionette.LayoutView.extend({
 
     getTemplate: function(){
       return utils.templates.ActionRelatedLayout;
@@ -305,7 +522,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
 
 
   // ventana modal
-  List.queryForm = function(query, cb){
+  Report.queryForm = function(query, cb){
         var facet = new DocManager.Entities.ActionQueryFacet(query ),
             form = new Backbone.Form({
                 model: facet
@@ -347,7 +564,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
   };
 
   // ventana modal
-  List.viewAction = function(view, cb){
+  Report.viewAction = function(view, cb){
 
 
     var modal = new Backbone.BootstrapModal({
@@ -374,7 +591,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
   };
 
   // ventana modal
-  List.groupEditForm = function(cb){
+  Report.groupEditForm = function(cb){
         var facet = new DocManager.Entities.ActionGropuEditFacet(),
             form = new Backbone.Form({
                 model: facet
@@ -413,7 +630,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
 
 
 /*
-  List.Panel = Marionette.ItemView.extend({
+  Report.Panel = Marionette.ItemView.extend({
     template: "#document-list-panel",
 
     triggers: {

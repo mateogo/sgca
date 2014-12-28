@@ -1,6 +1,15 @@
 DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marionette, $, _){
 
   var registerHeadersEvents = function(hview, layout){
+      hview.on("childview:imprimir:registros", function(childView){
+        //DocManager.ActionsApp.Edit.createInstance(this);
+        console.log('ImprimirRegistros BUBBLED');
+        DocManager.request("print:filtered:actions");
+
+      });
+
+
+
       hview.on("childview:document:new", function(childView){
         DocManager.ActionsApp.Edit.createInstance(this);
       });
@@ -77,7 +86,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
   };
 
   var initNavPanel = function(layout){
-      var links = DocManager.request("action:edit:entities");
+      var links = DocManager.request("action:list:entities");
 
       var headers = new DocManager.ActionsApp.Common.Views.NavPanel({collection: links});
       registerHeadersEvents(headers, layout);
@@ -87,6 +96,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
 
   List.Controller = {
     listActions: function(criterion){
+
       console.log('ActionsApp.List.Controller.listactions HEY!');
       // indicación de espera:
       //var loadingView = new DocManager.Common.Views.Loading();
@@ -104,27 +114,55 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
       DocManager.mainRegion.show(List.Session.layout);
 
       dao.gestionUser.getUser(DocManager, function (user){
-        var query;
 
-        if(List.Session.query){
-          query = List.Session.query;
-        }else{
-          query = dao.gestionUser.getActionQuery();
-          List.Session.query = query;
-        }
+        List.Session.query = dao.gestionUser.getActionQuery();
 
-        var tipolistado = dao.gestionUser.getActionListType();
-        //console.dir(query);
-
-        DocManager.request("actions:query:search","", function(model){
-          console.log('query lista CALLBACK - END');
-        });
+        DocManager.request("action:query:list", new DocManager.Entities.ActionQueryFacet(List.Session.query).attributes);
 
       });
 
+    },
+    reportActions: function(){
+      console.log('ActionsApp.List.Controller.reportActions!');
+      DocManager.headerRegion.empty();
+
+      dao.gestionUser.getUser(DocManager, function (user){
+
+        var query = dao.gestionUser.getActionQuery();
+
+        DocManager.request("action:query:entities", query, function(actions){
+          console.log('listaActions cb: [%s]', actions.length)
+          printActionReport(actions);
+        });
+
+      });
     }
   };
 
+  var printActionReport = function(col){
+    //var branding = new DocManager.ActionsApp.Report.Branding(model);
+    //var layout = new DocManager.ActionsApp.Report.ActionLayout(model);
+
+    var sortOrder = ['nodo', 'area', 'taccion', 'cnumber'];
+    orderCollectionToPrint(col, sortOrder);
+
+    //var header = new DocManager.ActionsApp.Report.Headers();
+
+    var mainLayout = new DocManager.ActionsApp.Report.MainLayout();
+
+    var reportView  = new DocManager.ActionsApp.Report.ReportCollection({
+      collection: col
+    });
+    
+    mainLayout.on("show", function(){
+      console.log('mainLayout SHOWED!');
+      mainLayout.reportRegion.show(reportView);
+    });
+
+    DocManager.mainRegion.show(mainLayout);
+    //DocManager.headerRegion.show(header);
+    //DocManager.headerRegion.empty();
+  };
 
   var registerActionListEvents = function(documentsListView) {
         
@@ -312,6 +350,8 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
             collection: documents
           });
 
+          List.Session.filteredCol = documents;
+
           List.Session.selectedActionList = new DocManager.Entities.ActionCollection();
           registerActionListEvents(documentsListView);
 
@@ -332,6 +372,9 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
         });
 
     },
+    printActions: function(){
+      DocManager.trigger("actions:report");
+    },
 
     listActionItems: function( squery ){
         console.log('callback: [%s] [%s] [%s]', squery.fedesde, squery.taccion, squery.slug);
@@ -344,6 +387,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
             collection: documents
           });
 
+          List.Session.filteredCol = documents;
           List.Session.selectedActionList = new DocManager.Entities.ActionCollection();
           registerActionListEvents(documentsListView);
 /*
@@ -390,6 +434,25 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
     },
   };
 
+
+  var orderCollectionToPrint = function (col, order){
+    var orderfield;
+    col.each(function(model){
+      model.set('sortfield', buildOrderField(model, order));
+    })
+    col.sortfield = 'sortfield';
+    col.sortorder = -1;
+    col.sort();
+  };
+
+  var buildOrderField = function(model, order){
+    var tx = '';
+    _.each(order, function(item){
+      tx += ('************************' + model.get(item) + '|').substr(-20);
+    });
+    return tx;
+  };
+
   var setColumnTable = function (op){
     if(op==='docum'){
       utils.documListTableHeader[10].flag=0;
@@ -416,20 +479,27 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
     }
   };
 
-  DocManager.reqres.setHandler("action:query:list", function(query, cb){
-    API.listActions(query, cb);
+  DocManager.reqres.setHandler("action:query:list", function(query){
+    API.listActionItems(query);
   });
 
   DocManager.reqres.setHandler("actions:query:search", function(query, cb){
     API.searchActions(query, cb);
   });
 
-  DocManager.reqres.setHandler("document:query:list", function(query, cb){
-    API.listActions(query, cb);
+  DocManager.reqres.setHandler("print:filtered:actions", function(){
+    console.log('aca vamos')
+    API.printActions();
   });
+
+
 
   DocManager.reqres.setHandler("document:query:items", function(query, cb){
     API.listActionItems(query, cb);
+  });
+
+  DocManager.reqres.setHandler("document:query:list", function(query, cb){
+    API.listActions(query, cb);
   });
 
   DocManager.reqres.setHandler("person:search", function(query, cb){

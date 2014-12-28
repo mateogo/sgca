@@ -34,6 +34,7 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
 	var initModuleViews = function(){
 			initFilterView();
 			buildAnalyseView();
+      buildMultieditView();
 			buildLayoutView();
 	};
 
@@ -47,6 +48,7 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
 				console.log('LAYOUT SHOW [%s]',List.Session.filterview.whoami)
 				layoutview.filterRegion.show(List.Session.filterview);
 				layoutview.analyseRegion.show(List.Session.analyseview);
+        layoutview.multieditRegion.show(List.Session.multieditview);
 				layoutview.detailRegion.show(List.Session.detailedview);
 			});
 
@@ -73,8 +75,8 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
 	};
 
 	var registerFilterViewEvents = function(view){
-
 	};
+
 
 	var registerFilterModelEvents = function(model, view){
 		model.on('change:filter', function(){
@@ -122,14 +124,109 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
 			List.Session.analyseview = new List.AnalyseView();
 			registerAnalyseViewEvents (List.Session.analyseview);
 	};
-
-	var registerAnalyseViewEvents = function(view){
+  var registerAnalyseViewEvents = function(view){
     view.on('render:summary:by', function(type, cb){
       console.log('RENDER BUBBLE: [%s]',type);
       buildSummaryView(type);
     });
 
+  };
+
+  var buildMultieditView = function(){
+      List.Session.multieditview = new List.MultieditView();
+      registerMultieditViewEvents (List.Session.multieditview);
+  };
+
+	var registerMultieditViewEvents = function(view){
+    view.on('multi:edit:selected', function(){
+      //var budgetCol = fetchSelectedModels();
+      inlineEditSelected(view)
+    });
+
 	};
+
+  var inlineEditSelected = function (view, col){
+    var opt,
+        updateList = [],
+        updateData;
+
+    var actualAttrs = fetchCommonAttrs(List.Session.filtermodel.getFilteredCol(), updateList);
+
+    //Edit.Session.views.layout.addRegion(renderId, view.$('#'+renderId));
+    opt = {
+      view: view,
+      //model: model,
+      collection: col,
+      facet: new DocManager.Entities.BudgetCoreFacet(actualAttrs,{formType: 'multiedit'}),
+      hook: '.js-form-hook',
+      captionlabel: ''
+    };
+
+    if(!actualAttrs){
+      view.$(opt.hook).html('debe seleccionar al menos un presupuesto de la tabla detallada');
+      return;
+    }
+
+    DocManager.ActionsApp.Edit.inlineedit(opt,function(facet, submit){
+      console.log('callback EDICION [%s] submit:[%s]', facet.get('tgasto'), submit);
+      view.$(opt.hook).empty();
+      if(submit){
+        updateData = facet.multiupdate(updateList);
+        updateSelectedList(List.Session.filtermodel.getFilteredCol(), updateData);
+        buildSummaryView(List.Session.filtermodel.get('vista_actual'));
+      }
+    });
+  };
+
+  var updateSelectedList = function(col, data){
+    var parent;
+    col.each(function(model){
+      if(model.get('selectedxedit')){
+        model.set(data);
+        parent = model.get('parent_action');
+        _.extend(parent, data);
+      }
+    });
+  };
+
+  var fetchCommonAttrs = function(col, ulist){
+    var facet = new DocManager.Entities.BudgetCoreFacet(null,{formType: 'multiedit'}),
+        attrlist = _.keys(facet.schema_multiedit),
+        attrobject = {},
+        attResult = {},
+        selectedModels = 0,
+        attribute;
+
+    _.each(attrlist, function(key){
+      attrobject[key] = [];
+    });
+    
+    col.each(function(model){
+      if(model.get('selectedxedit')){
+        selectedModels += 1;
+        ulist.push(model.id);
+        _.each(attrlist, function(key){
+          attribute = model.get(key);
+          if(_.indexOf(attrobject[key],attribute) === -1){
+              attrobject[key].push(attribute);
+          }
+        });
+      }
+    });
+
+    _.each(attrlist, function(key){
+      if(attrobject[key].length === 1){
+        attResult[key] = attrobject[key][0];
+      }else{
+        attResult[key] = '';
+      }
+    });
+
+    if(selectedModels){
+      return attResult;
+    }
+  };
+
 
 	var buildDetailedView = function(){
 			if(!List.Session.detailedview){
@@ -148,14 +245,39 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
         inlineEditBudgetItem(chview, view, model);
 
       });
-      view.on('childview:budget:row:selected', function(chview,checked, model){
-        console.log('CHECKBX bublled [%s] [%s]  [%s]', chview.whoami, model.whoami, checked);
-        if(checked){
-          model.set('estado_alta', 'activo');
-          model.partialUpdate('estado_alta', 'activo');
-        }else{
+
+      view.on('childview:budget:show', function(chview, model){
+        console.log('SHOW bublled [%s] [%s]', chview.whoami, model.whoami);
+        inlineShowAction(chview, view, model);
+
+      });
+
+      view.on('childview:budget:row:selected', function(chview, checked, model){
+        console.log('CHECKED bublled [%s] [%s]', chview.whoami, model.whoami);
+        model.set('selectedxedit', checked);
+      });
+
+      view.on("budget:sort", function(sort){
+        console.log('Col Sort: EVENT SORT [%s] [%s]', sort, this.collection.length);
+        
+        if(sort === 'fechagestion') sort = 'fechagestion_tc';
+        if(sort === 'fecomp') sort = 'fecomp_tc';
+        if(sort === 'importe') sort = 'importe_num'
+        this.collection.sortfield = sort;
+        this.collection.sortorder = -this.collection.sortorder;
+        this.collection.sort();
+        this.render();
+      });
+
+      view.on('childview:trash:budget:onoff', function(chview, model, cb){
+        console.log('TRASH bublled [%s] [%s] ', chview.whoami, model.whoami);
+
+        if(model.get('estado_alta') === 'activo'){
           model.set('estado_alta', 'observado');
           model.partialUpdate('estado_alta', 'observado');
+        }else{
+          model.set('estado_alta', 'activo');
+          model.partialUpdate('estado_alta', 'activo');
         }
         //inlineEditBudgetItem(chview, view, model);
         buildSummaryView(model.get('vista_actual'));
@@ -176,6 +298,54 @@ var loadRecordsFromDB = function(cb){
 
 
 //================== INLINE BUDGET EDIT ==================
+  var inlineShowAction = function (chview, view, model){
+    var renderId = model.id,
+        opt;
+
+    chview.$el.after('<tr><td id='+renderId+' class="js-show-hook" colspan=8 >Algo</td></tr>');
+    //Edit.Session.views.layout.addRegion(renderId, view.$('#'+renderId));
+
+    opt = {
+      view: view,
+      chview: chview,
+      model: model,
+      hook: '#'+renderId,
+      captionlabel: 'Vista Acción'
+    };
+ 
+    DocManager.ActionsApp.Show.Controller.inlineShowAction(model.get('owner_id'), function(showLayout){
+      console.log('Ready to render layout:[%s] ', opt.hook)
+      List.Session.layout.addRegion(renderId, chview.$(opt.hook));
+      List.Session.layout[renderId].show(showLayout);
+
+      chview.on('close:inline:show:view', function(){
+        console.log('close show form BUBBLED: Ready to destroy view');
+        showLayout.destroy();
+        view.$(opt.hook).closest('tr').remove();
+      });
+
+    });
+
+
+
+    // DocManager.ActionsApp.Edit.inlineedit(opt, function(facet, submit){
+    //   console.log('callback EDICION [%s] submit:[%s]', facet.get('slug'), submit);
+    //   //view.$(opt.hook).closest('tr').fadeOut(400, function(){this.remove()});
+    //   view.$(opt.hook).closest('tr').remove();
+    //   if(submit){
+    //     facet.partialUdateModel(model);
+    //     timeDelay(function(){
+
+    //       buildSummaryView(model.get('vista_actual'));
+    //       chview.render();
+    //     });
+    //   }
+    // });
+
+
+  };
+
+//================== INLINE BUDGET EDIT ==================
   var inlineEditBudgetItem = function (chview,view, model){
     var renderId = model.id,
         opt;
@@ -185,13 +355,15 @@ var loadRecordsFromDB = function(cb){
 
     opt = {
       view: view,
+      chview: chview,
       model: model,
       facet: model.fetchEditFacet(),
       hook: '#'+renderId,
-      captionlabel: 'Edición'
+      captionlabel: 'Edición ítem presupuesto'
     };
     DocManager.ActionsApp.Edit.inlineedit(opt, function(facet, submit){
       console.log('callback EDICION [%s] submit:[%s]', facet.get('slug'), submit);
+      //view.$(opt.hook).closest('tr').fadeOut(400, function(){this.remove()});
       view.$(opt.hook).closest('tr').remove();
       if(submit){
         facet.partialUdateModel(model);
@@ -247,12 +419,14 @@ var loadRecordsFromDB = function(cb){
   var registerBudgetListEvents = function(budgetsListView) {
         
         budgetsListView.on("childview:budget:show", function(childView, model){
+          //deprecated
           var budgetid = model.id || model.get('budgetid');
-          DocManager.trigger("budget:show", budgetid);
+          DocManager.trigger("budget:sh", budgetid);
         });
 
         budgetsListView.on("childview:budget:edit", function(childView, model){
-          DocManager.trigger("budget:edit", model);
+          //deprecated
+          DocManager.trigger("budget:ed", model);
         });
 
         budgetsListView.on("childview:budget:delete", function(childView, model){
@@ -261,7 +435,7 @@ var loadRecordsFromDB = function(cb){
 
         budgetsListView.on("budget:sort", function(sort){
 
-          console.log('REGISTERDOCUMLISTEVENTS: EVENT SORT [%s] [%s]', sort, this.collection.length);
+          console.log('deprecated: REGISTERDOCUMLISTEVENTS: EVENT SORT [%s] [%s]', sort, this.collection.length);
           
           if(sort === 'fechagestion') sort = 'fechagestion_tc';
           if(sort === 'fecomp') sort = 'fecomp_tc';
@@ -527,16 +701,16 @@ var loadRecordsFromDB = function(cb){
     }
   };
 
+/*
   DocManager.reqres.setHandler("budget:query:list", function(query, cb){
     API.listBudgets(query, cb);
   });
-/*
   DocManager.reqres.setHandler("budget:query:search", function(query, cb){
     API.searchBudgets(query, cb);
   });
 
-*/  DocManager.reqres.setHandler("budget:query:items", function(query, cb){
+ DocManager.reqres.setHandler("budget:query:items", function(query, cb){
     API.listBudgetItems(query, cb);
   });
-
+*/ 
 });

@@ -205,7 +205,7 @@ window.utils = {
     ],
 
     tipoActionEntityList: [
-        {val:'no_definido'   , label:'tipo de entidad'},
+        {val:'no_definido'   , label:'Tipo de Entidad'},
         {val:'programa'      , label:'Programa'},
         {val:'accion'        , label:'Acción'},
         {val:'actividad'     , label:'Actividad'},
@@ -319,7 +319,7 @@ window.utils = {
     ],
 
     budgetTramitaPorList:[
-        {val:'no_definido'      , label:'Tramitación',      classattr:'info'},
+        {val:'no_definido'      , label:'Forma de Tramitación', classattr:'info'},
         {val:'MCN'              , label:'MCN',              classattr:'info'},
         {val:'unsam'            , label:'UNSAM',            classattr:'info'},
         {val:'untref'           , label:'UNTREF',           classattr:'info'},
@@ -332,7 +332,7 @@ window.utils = {
     ],
 
     budgetEjecucionOptionList:[
-        {val:'no_definido'   , label:'Nivel de ejecución', classattr:'info'},
+        {val:'no_definido'   , label:'Nivel de Ejecución', classattr:'info'},
         {val:'enpreparacion' , label:'en preparación',     classattr:'info'},
         {val:'enevaluacion'  , label:'en evaluacion',      classattr:'info'},
         {val:'aprobarea'     , label:'aprob Area',         classattr:'info'},
@@ -347,18 +347,19 @@ window.utils = {
     ],
 
     actionPrioridadOptionList:[
-        {val:'media'  ,  label:'media'},
-        {val:'alta'   ,  label:'alta'},
-        {val:'baja'   ,  label:'baja'},
-        {val:'urgente',  label:'urgente'}
+        {val:'no_definido', label:'Nivel de Prioridad'},
+        {val:'media'  ,     label:'media'},
+        {val:'alta'   ,     label:'alta'},
+        {val:'baja'   ,     label:'baja'},
+        {val:'urgente',     label:'urgente'}
     ],
     actionNodosOptionList:[
-        {val:'no_definido'  ,nodo:'no_definido' , label:'Nodos'},
+        {val:'no_definido'  ,nodo:'no_definido' , label:'NODOS'},
         {val: 'CASAS'       ,nodo:'UM'      , label:'CASAS'},
         {val: 'CCNK'        ,nodo:'UM'      , label:'Centro Cultural Nestor Kirchner'},
         {val: 'CCV21'       ,nodo:'SPSC'    , label:'Centro Cultural Villa 21'},
         {val: 'CCNK'        ,nodo:'UM'      , label:'Centro Cultural Nestor Kirchner'},
-        {val: 'DPD'         ,nodo:'UM'      , label:'DI de Prensa'},
+        {val: 'DPD'         ,nodo:'UM'      , label:'DI de Prensa y Difusión'},
         {val: 'DNPA'        ,nodo:'UM'      , label:'DN de Planificación y Articulación'},
         {val: 'MUSEOS'      ,nodo:'SGC'     , label:'MUSEOS'},
         {val: 'ORGANISMOS'  ,nodo:'UM'      , label:'ORGANISMOS'},
@@ -371,7 +372,7 @@ window.utils = {
     ],
 
     actionAreasOptionList:[
-        {val:'no_definido'  ,nodo:'no_definido' , label:'Áreas'},
+        {val:'no_definido'  ,nodo:'no_definido' , label:'ÁREAS'},
         {val: 'DNA'         ,nodo:'SGC'     , label:'DN de Artes'},
         {val: 'DNIC'        ,nodo:'SGC'     , label:'DN de Industrias Culturales'},
         {val: 'DNPM'        ,nodo:'SGC'     , label:'DN de Patrimonio y Museos'},
@@ -1671,21 +1672,22 @@ window.utils = {
     budgetListTableHeader:[
         {id:0 , tt:'th', flag:1, tclass:'order', tmpl: 'template2', val:'select',       label:'#'},
         {id:1,  tt:'th', flag:1, tclass:'colb',  tmpl: 'template1', val:'slug',         label:'a s u n t o   -   d e s c r i p c i ó n'},
-        {id:2 , tt:'th', flag:1, tclass:'col1',  tmpl: 'template6', val:'cnumber',      label:'Identificador'},
-        {id:3 , tt:'th', flag:1, tclass:'col2',  tmpl: 'template1', val:'tgasto',       label:'Tipo Gasto'},
-        {id:4 , tt:'th', flag:1, tclass:'col3',  tmpl: 'template1', val:'area',         label:'Área'},
-        {id:5 , tt:'th', flag:1, tclass:'col4',  tmpl: 'template1', val:'origenpresu',  label:'Fuente'},
-        {id:6 , tt:'th', flag:1, tclass:'col5',  tmpl: 'template1', val:'tramita',      label:'Tramita'},
-        {id:7 , tt:'th', flag:1, tclass:'col6',  tmpl: 'template1', val:'trim_fiscal',  label:'Trim'},
-        {id:8 , tt:'th', flag:0, tclass:'col7',  tmpl: 'template1', val:'cantidad',     label:'Cant'},
-        {id:9 , tt:'th', flag:1, tclass:'col8',  tmpl: 'template1', val:'ume',          label:'UME'},
-        {id:10 , tt:'th', flag:1, tclass:'col9',  tmpl: 'template7', val:'importe',      label:'Importe'},
-        {id:12, tt:'th', flag:1, tclass:'actions', tmpl: 'template8', val:'acciones',  label:'acciones'}
+        {id:2 , tt:'th', flag:1, tclass:'col2',  tmpl: 'template6', val:'parent_cnumber', label:'Acción'},
+        {id:3 , tt:'th', flag:1, tclass:'col3',  tmpl: 'templatea', val:'cnumber',      label:'Presupuesto'},
+        {id:4 , tt:'th', flag:1, tclass:'col4',  tmpl: 'template1', val:'tgasto',       label:'Tipo Gasto'},
+        {id:5 , tt:'th', flag:1, tclass:'col5',  tmpl: 'template1', val:'area',         label:'Área'},
+        {id:6,  tt:'th', flag:1, tclass:'col6',  tmpl: 'template1', val:'origenpresu',  label:'Fuente'},
+        {id:7,  tt:'th', flag:1, tclass:'col7',  tmpl: 'template1', val:'tramita',      label:'Tramita'},
+        {id:8 , tt:'th', flag:1, tclass:'col8',  tmpl: 'template1', val:'trim_fiscal',  label:'Trim'},
+        {id:9 , tt:'th', flag:0, tclass:'col9',  tmpl: 'template1', val:'cantidad',     label:'Cant'},
+        {id:10, tt:'th', flag:1, tclass:'col10', tmpl: 'template1', val:'ume',          label:'UME'},
+        {id:11, tt:'th', flag:1, tclass:'col11', tmpl: 'template7', val:'importe',      label:'Importe'},
+        {id:12, tt:'th', flag:1, tclass:'actions', tmpl: 'template9', val:'acciones',  label:'acciones'}
     ],
 
     buildTableHeader: function(data){
-        var template1 = _.template("<<%= tt %> name='<%= val %>' class='<%= tclass %> js-sortcolumn' ><button name='<%= val %>' type='button' class='btn btn-link btn-xs'><%= label %> <span class='glyphicon glyphicon-sort-by-attributes'></span></button></<%= tt %> >");
-        var template2 = _.template("<<%= tt %> name='<%= val %>' class='<%= tclass %>' ><%= label %></<%= tt %> >");
+        var template1 = _.template("<<%= tt %> data-name='<%= val %>' class='<%= tclass %> js-sortcolumn' ><button name='<%= val %>' type='button' class='btn btn-link btn-xs'><%= label %> <span class='glyphicon glyphicon-sort-by-attributes'></span></button></<%= tt %> >");
+        var template2 = _.template("<<%= tt %> data-name='<%= val %>' class='<%= tclass %>' ><%= label %></<%= tt %> >");
         var tabledata = '';
         _.each(data,function(element, index, list){
             if(element.flag){
@@ -1698,17 +1700,19 @@ window.utils = {
     },
 
     buildTableRowTemplates:{
-        template1 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><%= value %></td>"),
-        template2 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><input name=tselect type=checkbox class=tselect ></td>"),
-        template3 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink' title='editar item'><%= value %></button></td>"),
-        template4 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tedit' title='no implementado aun'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link tzoom' title='ver entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></button></td>"),
-        template6 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='explorar   '><%= value %></button></td>"),
-        template7 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><span class='pull-right'><%= value %></span></td>"),
-        template7 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><span class='pull-right'><%= value %></span></td>"),
-        //template7 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='editar item'><%= value %></button></td>"),
-        template5 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit' title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-zoom' title='entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></td>"),
-        template8 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit' title='editar'><span class='glyphicon glyphicon-edit'></span></button></td>"),
-        //template3 : _.template("<td name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink'   title='editar item'><%= value %></button></td>"),
+        template1 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><%= value %></td>"),
+        template2 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><input name=tselect type=checkbox class=tselect ></td>"),
+        template3 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink' title='editar item'><%= value %></button></td>"),
+        template4 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tedit' title='no implementado aun'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link tzoom' title='ver entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></button></td>"),
+        template6 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='explorar   '><%= value %></button></td>"),
+        template7 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><span class='pull-right'><%= value %></span></td>"),
+        template7 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><span class='pull-right'><%= value %></span></td>"),
+        //template7 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='editar item'><%= value %></button></td>"),
+        template5 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit'  title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-zoom' title='entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></td>"),
+        template8 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit'  title='editar'><span class='glyphicon glyphicon-edit'></span></button></td>"),
+        template9 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-trash' title='observar'><span class='glyphicon glyphicon-ok'></span></button></td>"),
+        templatea : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit'  title='editar  '><%= value %></button></td>"),
+        //template3 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink'   title='editar item'><%= value %></button></td>"),
     },
 
     buildTableRow: function(data,model){

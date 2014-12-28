@@ -134,20 +134,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
 
-    partialUpdate: function(token, facet){
+    partialUpdate: function(token, facet, list){
       //facet: es un model o un hash de claves
       //token: 'content': toma las keys directamente de facet
       //       'estado_alta': solo actualiza esta key en base a facet
+      // list: opcional. Un array con la lista de _id de registros a actualizar.
       //
       var self = this;
       var query = {};
-      var list = [];
 
-      //var key = facet.get('key');
-      //var data = self.get(key) || {};
+      if(list){
+        query.nodes = list;
+      }else{
+        query.nodes = [self.id];
+      }
 
-      list.push(self.id );
-      query.nodes = list;
       query.newdata = {};
 
       if(token==='content'){
@@ -226,6 +227,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       if(options.formType === 'short'){
         self.schema = self.schema_short;
+
+      }else if(options.formType === 'multiedit'){
+        self.schema = self.schema_multiedit;
+      
       }else{
         self.schema = self.schema_long;
       }
@@ -258,6 +263,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         estado_alta:  {type: 'Select',options: utils.actionAltaOptionList, title:'Estado alta ' },
         nivel_ejecucion: {type: 'Select',options: utils.budgetEjecucionOptionList, title:'Nivel ejecución' },
         nivel_importancia: {type: 'Select',options: utils.actionPrioridadOptionList, title:'Importancia' },
+    },
+
+    schema_multiedit: {
+        tgasto:       {type: 'Select',    title: 'Tipo Gasto', options: utils.tipoBudgetMovimList },
+        trim_fiscal:  {type: 'Number',    title: 'Trim Fiscal',  editorAttrs:{placeholder:'Indique 1/2/3/4 Trimestre ejecución presupuestaria'}},
+        origenpresu:  {type: 'Select',    title: 'Orig Presupuesto', editorAttrs:{placeholder:'fuente presupuestaria'},options: utils.budgetOriginList },
+        tramita:      {type: 'Select',    title: 'Forma Tramitación',  editorAttrs:{placeholder:'unidad ejecutora'},options: utils.budgetTramitaPorList },
+        estado_alta:  {type: 'Select',options: utils.actionAltaOptionList, title:'Estado alta ' },
+        nivel_ejecucion: {type: 'Select',options: utils.budgetEjecucionOptionList, title:'Nivel ejecución' },
+        nivel_importancia: {type: 'Select',options: utils.actionPrioridadOptionList, title:'Nivel Importancia' },
     },
 
 
@@ -306,6 +321,25 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       };
       model.partialUpdate('content', facetData);
 
+    },
+
+    multiupdate: function(list){
+      console.log('multiupdate BEGIN:[%s]', list);
+      var self = this,
+          attrlist = _.keys(self.schema_multiedit),
+          facetData = {},
+          attResult = {},
+          selectedModels = 0,
+          attribute;
+
+      _.each(attrlist, function(key){
+        if(self.get(key) && self.get(key) !== 'no_definido'){
+          facetData[key] = self.get(key);
+        }
+      });
+      var model = new Entities.Budget(facetData);
+      model.partialUpdate('content',facetData, list);
+      return facetData;
     },
 
     defaults: {

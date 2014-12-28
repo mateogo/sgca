@@ -114,7 +114,7 @@ var addNewBudget = function(req, res, node, cb){
 
 
 var fetchOne = function(query, cb) {
-    console.log('findBudget Retrieving budget collection for passport');
+    //console.log('findBudget Retrieving budget collection for passport');
 
     dbi.collection(budgetsCol, function(err, collection) {
         collection.findOne(query, function(err, item) {
@@ -124,7 +124,7 @@ var fetchOne = function(query, cb) {
 };
 
 var insertNewBudget = function (req, res, budget, cb){
-    console.log('insertNewBudget:budgets.js BEGIN [%s]',budget.slug);
+    //console.log('insertNewBudget:budgets.js BEGIN [%s]',budget.slug);
     //dbi.collection(budgetsCol, function(err, collection) {
 
     dbi.collection(budgetsCol).insert(budget,{w:1}, function(err, result) {
@@ -199,13 +199,10 @@ exports.findById = function(req, res) {
 
 exports.find = function(req, res) {
     var query = req.body; //{};
+    //console.dir(query);
 
-    //console.log('find:budget Retrieving budget collection with query');
-
-    dbi.collection(budgetsCol, function(err, collection) {
-        collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
+    dbi.collection(budgetsCol).find(query).toArray(function(err, items) {
             res.send(items);
-        });
     });
 };
 
@@ -219,12 +216,12 @@ exports.findAll = function(req, res) {
 };
 
 exports.createNew = function(docum, cb) {
-    console.log('createNew:budget.js: NEW RECEIPT BEGINS');
+    //console.log('createNew:budget.js: NEW RECEIPT BEGINS');
     addNewBudget(null, null, docum, cb);
 };
 
 exports.add = function(req, res) {
-    console.log('add:budget.js: NEW RECEIPT BEGINS');
+    //console.log('add:budget.js: NEW RECEIPT BEGINS');
     var budget = req.body;
     addNewBudget(req, res, budget);
 };

@@ -56,6 +56,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       else
         return self.buildSummaryCol(type);
     },
+
     showD3Pie: function(selector){
       var self = this;
       var opt = buildOptForD3(self);
@@ -98,7 +99,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   });
 
-  Entities.ActionBudget = Backbone.Model.extend({
+/*  Entities.ActionBudget = Backbone.Model.extend({
     whoami: 'Entities.ActionBudget:budgetplanner.js ',
 
     idAttribute: "_id",
@@ -111,7 +112,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
   });
-
+*/
   Entities.SummaryModel = Backbone.Model.extend({
     whoami: 'Entities.SummaryModel:budgetplanner.js ',
 
@@ -121,8 +122,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       slug: '',
       origenpresu: '',
       tramita: '',
-      trim_fiscal:'',
-      importe:0,
+      trim_fiscal: '',
+      costo_total: 0,
     },
     
     initBeforeCreate: function(cb){
@@ -133,7 +134,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   Entities.ActionBudgetCol = Backbone.Collection.extend({
     whoami: 'Entities.ActionBudgetCol:budgetplanner.js ',
     url: "/acciones",
-    model: Entities.ActionBudget,
+    model: Entities.Budget,
     sortfield: 'cnumber',
     sortorder: -1,
 
@@ -151,8 +152,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   Entities.SummaryCol = Backbone.Collection.extend({
     whoami: 'Entities.SummaryCol:budgetplanner.js ',
-    sortfield: 'slug',
-    sortorder: -1,
+    sortfield: 'costo_total',
+    sortorder: 1,
     model: Entities.SummaryModel,
 
     comparator: function(left, right) {
@@ -189,13 +190,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var d3ArrayFactory = function(col){
     var d3Array = [],
+        colorIdx = 0,
         item;
-    col.each(function(model){
+    col.each(function(model, index){
+      colorIdx = (colorIdx < colorArray.length) ? colorIdx : 0;
       item = {
         label: model.get('slug'),
         value: model.get('costo_total'),
-        color: colorArray[Math.floor(Math.random() * colorArray.length)].color
+        //color: colorArray[Math.floor(Math.random() * colorArray.length)].color
+        color: colorArray[colorIdx].color
       }
+      colorIdx += 1;
       d3Array.push(item);
     });
     return d3Array;
@@ -232,6 +237,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     });
     //console.log('summarColFctory ended:[%s]', summaryCol.length)
+    summaryCol.sort();
     return summaryCol;
   };
 
@@ -292,14 +298,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   };
 
   var acumCosto = function(model, costo){
-    var importe = parseInt(costo.importe);
-    var trimIndex = parseInt(costo.trimestre)-1;
+    var importe = parseInt(costo.importe), 
+        costoacum = (model.get('costo_total') + importe),
+        trimIndex = parseInt(costo.trimestre) - 1;
 
     if(trimIndex == NaN) trimIndex = 0;
     if(trimIndex>3 || trimIndex<0) trimIndex = 0;
 
     var trimArray = model.get('trim');
-    model.set('costo_total', model.get('costo_total') + importe);
+    model.set('costo_total', costoacum);
     trimArray[trimIndex] += importe;
     //console.log('AcumCosto: [%s]  importe:[%s] acumtrim:[%s] trim:[%s]:[%s]  ', model.get('slug'),           importe,   trimArray[trimIndex],costo.trimestre, trimIndex);
  

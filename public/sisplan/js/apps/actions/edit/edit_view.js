@@ -117,6 +117,14 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
         });
 
         opt.view.$(formHook).html(formContainer.render().el);
+        if(opt.chview){
+          opt.chview.on('close:inline:edit:form', function(){
+            console.log('close edit form BUBBLED: Ready to destroy form');
+            submitform = false;
+            formCleanClose();
+
+          });
+        }
         
         var formCleanClose = function(){
           formContainer.destroy();

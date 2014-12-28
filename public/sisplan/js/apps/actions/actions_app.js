@@ -3,6 +3,7 @@ DocManager.module("ActionsApp", function(ActionsApp, DocManager, Backbone, Mario
   ActionsApp.Router = Marionette.AppRouter.extend({
     appRoutes: {
       "acciones(/filter/criterion::criterion)": "listActions",
+      "acciones/informe": "reportActions",
       "acciones/:id/edit": "editAction",
       "acciones/:id": "showAction",
     }
@@ -13,6 +14,11 @@ DocManager.module("ActionsApp", function(ActionsApp, DocManager, Backbone, Mario
       console.log('API: edit accion', id)
       ActionsApp.Edit.Controller.editAction(id);
       DocManager.execute("set:active:header", "acciones");
+    },
+    reportActions: function(col, opt){
+      console.log('API: reportActions');
+      ActionsApp.List.Controller.reportActions();
+      //DocManager.execute("set:active:header", "acciones");
     },
     listActions: function(criterion){
       console.log('API: listActions');
@@ -43,6 +49,12 @@ DocManager.module("ActionsApp", function(ActionsApp, DocManager, Backbone, Mario
   DocManager.on("actions:list", function(){
     DocManager.navigate("acciones");
     API.listActions();
+  });
+
+  DocManager.on("actions:report", function(){
+    console.log('actions_app')
+    DocManager.navigate("acciones/informe");
+    API.reportActions();
   });
 
   DocManager.on("action:edit", function(model){

@@ -132,16 +132,7 @@ module.exports = function (config, app) {
      // action (acciones) routes
     var budget = require(rootPath + '/calendar/controllers/budgets');
     app.post('/actualizar/presupuestos', budget.partialupdate);
-
-/*
-    app.post('/actualizar/presupuestos', function(req, res){
-        console.log('Ruta encontrada')
-        res.send({succes: 'todo bien'});
-    });
-
-*/
     app.get ('/presupuestos',            budget.findAll);
-    app.post('/actualizar/presupuestos', budget.partialupdate);
     app.post('/recuperar/presupuestos',  budget.find);
     app.post('/accion/fetch',        budget.findOne);
     app.post('/navegar/presupuestos',    budget.find);
@@ -153,8 +144,9 @@ module.exports = function (config, app) {
 
 
     var action = require(rootPath + '/calendar/controllers/actions');
-    app.get ('/acciones',            action.findAll);
+    app.post('/actionbudget/fetch',  action.fetchActionBudgetCol);
     app.post('/actualizar/acciones', action.partialupdate);
+    app.get ('/acciones',            action.findAll);
     app.post('/recuperar/acciones',  action.find);
     app.post('/accion/fetch',        action.findOne);
     app.post('/navegar/acciones',    action.find);

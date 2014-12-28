@@ -11,12 +11,60 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
       breadcrumbRegion: 	'#breadcrumb-region',
       filterRegion: 			'#filter-region',
       analyseRegion: 			'#analyse-region',
+      multieditRegion:    '#multiedit-region',
       messagesRegion: 		'#messages-region',
       d3Region: 					'#d3-region',
       summaryRegion: 			'#summary-region',
       detailRegion: 			'#detail-region',
     }
   });
+
+  List.MultieditView = Marionette.ItemView.extend({
+    //article id="sidebar-region" role="navigation" class="sistema-box" -->
+    whoami: 'List.MultieditView: list_view.js',
+
+    //tagName: "ul",
+    //className:"context-menu panel",
+    //attributes: {
+    //},
+
+    initialize: function(options){
+      var self = this;
+      this.options = options;
+    },
+
+    templates: {
+      multiedit:   'BplannerMultieditView',
+    },
+
+    getTemplate: function(){
+      return utils.templates[this.templates['multiedit']];
+    },
+
+    events: {
+      "click .js-edit-selected": "editselected",
+     },
+
+    triggers: {
+      //"click a": "document:new"
+    },
+
+    editselected: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+
+      console.log('Edit Selected CLICKED');
+      this.trigger('multi:edit:selected');
+    },
+
+    modelChanged: function(){
+      console.log('bind EVENT SIDEBAR ITEM')
+    },
+
+    onRender: function(){
+    }
+  });
+
 
 
   List.FilterView = Marionette.ItemView.extend({
@@ -216,7 +264,8 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
       "click td a.js-edit": "editClicked",
       "click button.js-edit": "editClicked",
       "change .tselect"  : "checkbox",
-      "click button.js-show": "editClicked",
+      "click button.js-show": "showClicked",
+      "click button.js-trash": "trashClicked",
 
       "click": "highlightName",
       "click td a.js-show": "showClicked",
@@ -240,47 +289,72 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
     },
 
     onRender: function(){
-      if(this.model.get('estado_alta') === 'activo'){
-        this.$('.tselect').prop('checked', true);
+      if(this.model.get('estado_alta') !== 'activo'){
+        this.$el.toggleClass("danger");
+        this.$('.js-trash span').removeClass('glyphicon glyphicon-ok').addClass( "glyphicon glyphicon-trash" );
+        this.isModelActive = false;
+        //this.$('.tselect').prop('checked', true);
+      }
+      if(this.model.get('nivel_importancia') === 'alta'){
+        this.$el.toggleClass("success");
+      }
+      if(this.model.get('nivel_importancia') === 'urgente'){
+        this.$el.toggleClass("warning");
       }
     },
 
-    areRelatedVisible: false,
+    isShowViewVisible: false,
+    isEditFormVisible: false,
+    isModelActive: true,
 
-    viewRelated: function(){
+    trashClicked: function(e){
       var self = this;
-      console.log('View Related');
-      if(self.areRelatedVisible){
-        console.log('ready to REMOVE DOCUMENTS:RELATED');
+      e.preventDefault();
+      e.stopPropagation();
 
-          self.layout.removeRegion(self.model.get('budgetid'));
+      if(self.isModelActive){
+        console.log('trash CLICKED model ACTIVE [%s]',this.model.get('slug'));
+        this.$el.toggleClass("danger");
+        self.trigger("trash:budget:onoff", self.model);
+        this.$('.js-trash span').removeClass('glyphicon glyphicon-ok').addClass( "glyphicon glyphicon-trash" );
+  
+      }else{
+        console.log('trash CLICKED model not-ACTIVE [%s]',this.model.get('slug'));
+        this.$el.toggleClass("danger");
+        self.trigger("trash:budget:onoff", self.model);
+        this.$('.js-trash span').removeClass('glyphicon glyphicon-trash').addClass( "glyphicon glyphicon-ok" );
+      }
 
-          var tr = $('#'+self.model.get('budgetid')).closest('tr');
-          //tr.css("background-color","#FF3700");
-          tr.remove();
-          
-          /*tr.fadeOut(400, function(){
-              tr.remove();
-          });*/
+      self.isModelActive = !self.isModelActive;
+
+      return false;
+    },
+
+    showClicked: function(e){
+      var self = this;
+      e.preventDefault();
+      e.stopPropagation();
+
+
+      if(self.isShowViewVisible){
+        console.log('CLOSE showCLICKED in ITEM VIESW [%s]',this.model.get('slug'));
+        self.trigger("close:inline:show:view", self.model);
+        self.$('#'+self.model.id).closest('tr').remove();
 
       }else{
-        console.log('ready to trigger DOCUMENTS:RELATED');
-
-        this.trigger('dcuments:related',this.model, function(){
-          //no hay callbacl. futuros usos
-        });
-
+        this.trigger("budget:show", this.model);
       }
-      self.areRelatedVisible = !self.areRelatedVisible;
+
+      self.isShowViewVisible = !self.isShowViewVisible;
 
       return false;
     },
 
     highlightName: function(e){
-      this.$el.toggleClass("warning");
+      this.$el.toggleClass("info");
     },
 
-    showClicked: function(e){
+    viewRelated: function(e){
       console.log('showCLICKED in ITEM VIESW [%s]',this.model.get('slug'));
       e.preventDefault();
       e.stopPropagation();
@@ -292,7 +366,14 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
       console.log('editClicked');
       e.preventDefault();
       e.stopPropagation();
-      self.trigger("budget:edit", self.model);
+
+      if(self.isEditFormVisible){
+        self.trigger("close:inline:edit:form", self.model);
+      }else{
+        self.trigger("budget:edit", self.model);
+      }
+
+      self.isEditFormVisible = !self.isEditFormVisible;
     },
 
     deleteClicked: function(e){
@@ -341,7 +422,7 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
     changeOrder: function(event){
 
       var target = event.target;
-      console.log('CLICKKKKKKKK!!!! [%s] [%s]',target,target.name);
+      console.log('CLICK!!!! [%s]  name:[%s]',target, target.name);
       this.trigger("budget:sort", target.name);
     },
 
@@ -610,34 +691,3 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
 
 
 });
-
-
-
-/*
-  List.Panel = Marionette.ItemView.extend({
-    template: "#budget-list-panel",
-
-    triggers: {
-      "click button.js-new": "budget:new"
-    },
-
-    events: {
-      "submit #filter-form": "filterBudgets"
-    },
-
-    ui: {
-      criterion: "input.js-filter-criterion"
-    },
-
-    filterBudgets: function(e){
-      e.preventDefault();
-      var criterion = this.$(".js-filter-criterion").val();
-      this.trigger("budgets:filter", criterion);
-    },
-
-    onSetFilterCriterion: function(criterion){
-      this.ui.criterion.val(criterion);
-    }
-  });
-*/
-

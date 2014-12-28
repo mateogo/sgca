@@ -7,11 +7,16 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'ActionListLayoutView',
     'ActionBudgetHeader','ActionBudgetItem',
     'ActionShowLegacy','ActionShowHeader','ActionShowBranding','ActionShowBudgetComposite','ActionShowBudgetItem',
+
+    'ActionReportLayoutView',
+    'ActionReportItemLayout','ActionReportBranding','ActionReportBudgetComposite','ActionReportBudgetItem','ActionReportHeader',
+
     'BudgetListLayoutView','BudgetMainHeader','BudgetNavbar',
     'BudgetShowLegacy','BudgetShowHeader','BudgetShowBranding',
+
   
     'BplannerListLayout', 'BplannerListFilterView', 'BplannerListAnalyseView',
-    'BplannerListSummaryView','BplannerListSummaryItem',
+    'BplannerListSummaryView','BplannerListSummaryItem','BplannerMultieditView',
    
     'AboutView','DocumEditLayoutView','DocumEditSolLayoutView', 'DocumListLayoutView', 'DocumNavbar',
     'DocumEditMin', 'DocumShowDef','DocumEditCore','DocumEditPT', 'SearchEntitiesForm','DocumEditPTLayout','DocumEditPTItem',

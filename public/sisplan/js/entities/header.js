@@ -25,6 +25,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     ]);
   };
 
+  var initactionlistheaders = function(){
+    Entities.actionlistitems = new Entities.HeaderCollection([
+      { name: "imprimir", url: "imprimir", navigationTrigger: "imprimir:registros" },
+    ]);
+  };
   var initactioneditheaders = function(){
     Entities.actionedititems = new Entities.HeaderCollection([
       //{ name: "nuevo", url: "nuevo", navigationTrigger: "action:new" },
@@ -76,6 +81,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
       return Entities.headeritems;
     },
+
+    getActionListCol: function(){
+      if(Entities.actionlistitems === undefined){
+        initactionlistheaders();
+      }
+      return Entities.actionlistitems;
+    },
     getActionEditCol: function(){
       if(Entities.actionedititems === undefined){
         initactioneditheaders();
@@ -113,9 +125,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   DocManager.reqres.setHandler("header:entities", function(){
     return API.getHeaders();
   });
+
   DocManager.reqres.setHandler("action:edit:entities", function(){
     return API.getActionEditCol();
   });
+  DocManager.reqres.setHandler("action:list:entities", function(){
+    return API.getActionListCol();
+  });
+
+
   DocManager.reqres.setHandler("budget:nav:entities", function(){
     return API.getBudgetEditCol();
   });
