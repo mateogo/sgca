@@ -379,7 +379,6 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
         console.log('callback: [%s] [%s] [%s]', squery.fedesde, squery.taccion, squery.slug);
   
         DocManager.request("action:query:entities", squery, function(documents){
-          console.log('listaActions cb: [%s]', documents.length)
           setColumnTable('docum');
 
           var documentsListView = new List.Actions({

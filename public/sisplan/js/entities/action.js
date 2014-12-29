@@ -449,13 +449,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'ActionQueryFacet:comprobante.js ',
 
     schema: {
-        fedesde:  {type: 'Date',   title: 'Desde', placeholder:'dd/mm/aaaa', yearEnd:2018},
-        fehasta:  {type: 'Date',   title: 'Hasta', placeholder:'dd/mm/aaaa', yearEnd:2018},
-        taccion:  {type: 'Select', options: utils.tipoActionIniciativeList, title:'Tipo de Acción' },
-        tregistro:  {type: 'Select', options: utils.tipoActionEntityList, title:'Programa/ Acción' },
-        area:     {type: 'Select', options: utils.actionAreasOptionList, title:'Área/Nodo' },
-        slug:     {type: 'Text',   title: 'Denominación'},
-        ejecucion:{type: 'Select', options: utils.actionEjecucionOptionList, title:'Nivel ejecución' },
+        fedesde:   {type: 'Date',   title: 'Desde', placeholder:'dd/mm/aaaa', yearEnd:2018},
+        fehasta:   {type: 'Date',   title: 'Hasta', placeholder:'dd/mm/aaaa', yearEnd:2018},
+        taccion:   {type: 'Select', options: utils.tipoActionIniciativeList, title:'Tipo de Acción' },
+        tregistro: {type: 'Select', options: utils.tipoActionEntityList, title:'Programa/ Acción' },
+        nodo:      {type: 'Select', options: utils.actionNodosOptionList, title:'Nodo' },
+        area:      {type: 'Select', options: utils.actionAreasOptionList, title:'Área' },
+        slug:      {type: 'Text',   title: 'Denominación'},
+        ejecucion: {type: 'Select', options: utils.actionEjecucionOptionList, title:'Nivel ejecución' },
     },
 
     defaults: {
@@ -463,6 +464,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       fehasta:'',
       taccion: '',
       area: '',
+      nodo: '',
       slug: '',
       ejecucion:''
     }
@@ -504,8 +506,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             if(query.taccion && query.taccion!=='no_definido') {
               if(query.taccion.trim() !== action.get('taccion')) test = false;
             }
+
             if(query.area && query.area !=='no_definido') {
               if(query.area.trim() !== action.get('area')) test = false;
+            }
+
+            if(query.nodo && query.nodo !=='no_definido') {
+              if(query.nodo.trim() !== utils.fetchNode(utils.actionAreasOptionList, action.get('area'))){
+               test = false;
+             }
             }
 
             if(query.tregistro && query.tregistro !=='no_definido') {

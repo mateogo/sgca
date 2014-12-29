@@ -117,18 +117,9 @@ DocManager.module("BudgetApp.List", function(List, DocManager, Backbone, Marione
       dao.gestionUser.getUser(DocManager, function (user){
         var query;
 
-        if(List.Session.query){
-          query = List.Session.query;
-        }else{
-          query = dao.gestionUser.getBudgetQuery();
-          List.Session.query = query;
-        }
+        List.Session.query = dao.gestionUser.getBudgetQuery();
 
-        var tipolistado = dao.gestionUser.getBudgetListType();
-
-        DocManager.request("budget:query:search","", function(model){
-          console.log('query lista CALLBACK - END');
-        });
+        DocManager.request("budget:query:list", new DocManager.Entities.BudgetQueryFacet(List.Session.query).attributes);
 
         // if(tipolistado === 'items'){
         //   DocManager.request("budget:query:items",query, function(model){
@@ -368,7 +359,6 @@ DocManager.module("BudgetApp.List", function(List, DocManager, Backbone, Marione
           });
 
           List.Session.budgetCol = budgets;
-
           List.Session.selectedBudgetList = new DocManager.Entities.BudgetNavCollection();
           registerBudgetListEvents(budgetsListView);
 /*
@@ -433,16 +423,12 @@ DocManager.module("BudgetApp.List", function(List, DocManager, Backbone, Marione
     }
   };
 
-  DocManager.reqres.setHandler("budget:query:list", function(query, cb){
-    API.listBudgets(query, cb);
+  DocManager.reqres.setHandler("budget:query:list", function(query){
+    API.listBudgetItems(query);
   });
 
   DocManager.reqres.setHandler("budget:query:search", function(query, cb){
     API.searchBudgets(query, cb);
-  });
-
-  DocManager.reqres.setHandler("budget:query:items", function(query, cb){
-    API.listBudgetItems(query, cb);
   });
 
   DocManager.reqres.setHandler("person:search", function(query, cb){

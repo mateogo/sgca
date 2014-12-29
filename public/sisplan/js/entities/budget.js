@@ -693,6 +693,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         fedesde:  {type: 'Date',   title: 'Desde', placeholder:'dd/mm/aaaa', yearEnd:2018},
         fehasta:  {type: 'Date',   title: 'HastaA', placeholder:'dd/mm/aaaa', yearEnd:2018},
         tgasto:   {type: 'Select', options: utils.tipoBudgetMovimList, title:'Tipo de Gasto' },
+        nodo:     {type: 'Select', options: utils.actionNodosOptionList, title:'Nodo' },
         area:     {type: 'Select', options: utils.actionAreasOptionList, title:'Área/Nodo' },
         slug:     {type: 'Text',   title: 'Denominación'},
         ejecucion:{type: 'Select', options: utils.budgetEjecucionOptionList, title:'Nivel ejecución' },
@@ -746,6 +747,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
             if(query.area && query.area !=='no_definido') {
               if(query.area.trim() !== budget.get('area')) test = false;
+            }
+
+            if(query.nodo && query.nodo !=='no_definido') {
+              if(query.nodo.trim() !== utils.fetchNode(utils.actionAreasOptionList, budget.get('area'))){
+               test = false;
+             }
             }
 
             if(query.ejecucion && query.ejecucion!=='no_definido') {
