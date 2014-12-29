@@ -195,6 +195,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     schema: {
         tregistro: {type: 'Select',options: utils.tipoActionEntityList, title:'Tipo de entidad' },
         taccion:   {type: 'Select',options: utils.tipoActionIniciativeList, title:'Tipo de iniciativa' },
+        area:   {type: 'Select',options: utils.actionAreasOptionList, title:'Area ' },
         slug:      {type: 'Text', title: 'Denominación'},
         description: {type: 'TextArea', title: 'Descripción'},
     },
@@ -226,10 +227,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       tregistro:"",
       taccion: "",
       feaccion: "",
-      slug: "nueva acción",
-      estado_alta:'media',
-      nivel_ejecucion: 'enproceso',
-      nivel_importancia: 'alta',
+      area: "",
+      slug: "",
+      estado_alta:'activo',
+      nivel_ejecucion: 'enpreparacion',
+      nivel_importancia: 'media',
       description: "",
 
     },

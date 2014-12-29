@@ -195,7 +195,7 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
 
         var modal = new Backbone.BootstrapModal({
             content: form,
-            title: opt.cation,
+            title: opt.caption,
             okText: 'aceptar',
             cancelText: 'cancelar',
             enterTriggersOk: false,
