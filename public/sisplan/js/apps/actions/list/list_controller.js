@@ -124,7 +124,6 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
     },
     reportActions: function(){
       console.log('ActionsApp.List.Controller.reportActions!');
-      DocManager.headerRegion.empty();
 
       dao.gestionUser.getUser(DocManager, function (user){
 

@@ -448,9 +448,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     schema: {
         fedesde:  {type: 'Date',   title: 'Desde', placeholder:'dd/mm/aaaa', yearEnd:2018},
-        fehasta:  {type: 'Date',   title: 'HastaA', placeholder:'dd/mm/aaaa', yearEnd:2018},
+        fehasta:  {type: 'Date',   title: 'Hasta', placeholder:'dd/mm/aaaa', yearEnd:2018},
         taccion:  {type: 'Select', options: utils.tipoActionIniciativeList, title:'Tipo de Acción' },
-        tregistro:  {type: 'Select', options: utils.tipoActionEntityList, title:'Programa/Acción' },
+        tregistro:  {type: 'Select', options: utils.tipoActionEntityList, title:'Programa/ Acción' },
         area:     {type: 'Select', options: utils.actionAreasOptionList, title:'Área/Nodo' },
         slug:     {type: 'Text',   title: 'Denominación'},
         ejecucion:{type: 'Select', options: utils.actionEjecucionOptionList, title:'Nivel ejecución' },
