@@ -91,6 +91,7 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
               caption: opt.captionlabel,
               submit: 'Aceptar',
               cancel: 'Cancelar',
+              content: 'aForm'
             });
 
         form.on('change', function(form, editorContent) {
