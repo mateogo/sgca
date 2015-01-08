@@ -14,6 +14,7 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'BudgetListLayoutView','BudgetMainHeader','BudgetNavbar',
     'BudgetShowLegacy','BudgetShowHeader','BudgetShowBranding',
 
+    'BudgetBuildLayout','BudgetBuildArtisticaComposite','BudgetBuildArtisticaItem',
   
     'BplannerListLayout', 'BplannerListFilterView', 'BplannerListAnalyseView',
     'BplannerListSummaryView','BplannerListSummaryItem','BplannerMultieditView',

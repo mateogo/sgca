@@ -4,7 +4,9 @@ DocManager.module("BudgetApp", function(BudgetApp, DocManager, Backbone, Marione
     appRoutes: {
       "presupuestos(/filter/criterion::criterion)": "listBudgets",
       "presupuestos/:id/edit": "editBudget",
+      "presupuestos/:id/edit": "editBudget",
       "presupuestos/:id": "showBudget",
+      "costo/accion/:id/edit": "buildBudget",
     }
   });
 
@@ -13,6 +15,12 @@ DocManager.module("BudgetApp", function(BudgetApp, DocManager, Backbone, Marione
     listBudgets: function(criterion){
       console.log('API: listBudgets');
       BudgetApp.List.Controller.listBudgets(criterion);
+      //DocManager.execute("set:active:header", "presupuestos");
+    },
+
+    buildBudget: function(id){
+      console.log('API: buidlBudget');
+      BudgetApp.Build.Controller.buildBudget(id);
       //DocManager.execute("set:active:header", "presupuestos");
     },
 
@@ -51,9 +59,15 @@ DocManager.module("BudgetApp", function(BudgetApp, DocManager, Backbone, Marione
   });
 
   DocManager.on("budget:edit", function(model){
-    var budgetid = model.id || model.get('budgetid');
+    var budgetid = model.id;
     DocManager.navigate("presupuestos/" + budgetid + "/edit");
     API.editBudget(budgetid);
+  });
+
+  DocManager.on("budget:build", function(model){
+    var actionid = model.id;
+    DocManager.navigate("costo/accion/" + actionid + "/edit");
+    API.buildBudget(actionid);
   });
 
   DocManager.addInitializer(function(){
