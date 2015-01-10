@@ -1,0 +1,69 @@
+<div class="panel-body">
+	<div class='row'>
+		<div class="col-xs-12 col-md-12">
+
+			<table class="table table-condensed table-bordered">
+					<colgroup>
+						<col style='width:  3%;'>
+						<col style='width:  8%;'>
+						<col style='width: 29%;'>
+						<col style='width:  7%;'>
+						<col style='width:  7%;'>
+						<col style='width:  6%;'>
+						<col style='width: 12%;'>
+						<col style='width: 12%;'>
+						<col style='width: 13%;'>
+						<col style='width: 3%;'>
+					</colgroup>
+					<thead>
+						<tr>
+							<td><input class='js-head-chbx' name='headchbx' type='checkbox'></td>
+							<th><%= utils.fetchLabel(utils.tipoBudgetMovimList, tgasto) %></th>
+							<th><%= slug %></th>
+							<th>Activo?</th>
+							<th>Cantidad</th>
+							<th>UME</th>
+							<th><span class='pull-right'>Desagregado</span></th>
+							<th><span class='pull-right'>Monto</span></th>
+							<th><span class='pull-right'>Presupuestado</span></th>
+							<th></th>
+						</tr> 
+
+					</thead>
+
+					<tbody>
+						<tr>
+							<td><input class='js-row-chbx' name='rowchbx' type='checkbox'></td>
+							<td><button class='btn-link js-edit'  title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-clone' title='entidades relacionadas' ><span class='glyphicon glyphicon-plus-sign'></span></button></td>
+							<td><%= slug %></td>
+							<td><input class='form-control' id='isactive' name='isactive' value='<%= isactive %>'></td>
+							<td><input class='form-control' id='cantidad' name='cantidad' value='<%= cantidad %>'></td>
+							<td><%= ume %></td>
+							<td><span class="pull-right"><%= accounting.formatNumber(punit) %></span></td>
+							<td><span class="pull-right"><%= accounting.formatNumber(cantidad * isactive * freq * punit) %></span></td>
+							<td><span class="pull-right"><strong><%= accounting.formatNumber(importe) %></strong></span></td>
+							<td><button class='btn-link js-trash'  title='eliminar'><span class='glyphicon glyphicon-trash'></span></button></td>
+						</tr>
+					</tbody>
+			</table>
+
+		</div>
+		<div class="col-xs-12 col-md-12">
+			<table class="table table-condensed table-bordered">
+					<colgroup>
+						<col style='width:  3%;'>
+						<col style='width:  8%;'>
+						<col style='width: 29%;'>
+						<col style='width:  7%;'>
+						<col style='width:  7%;'>
+						<col style='width:  6%;'>
+						<col style='width: 12%;'>
+						<col style='width: 12%;'>
+						<col style='width: 13%;'>
+						<col style='width: 3%;'>
+					</colgroup>
+					<tbody id='budgetitems'></tbody>
+			</table>
+		</div>
+	</div>
+</div>
