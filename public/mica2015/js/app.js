@@ -2,12 +2,12 @@ var DocManager = new Marionette.Application();
 
 DocManager.addRegions({
   headerRegion: "#header-region",
-  mainRegion: "#main-region",
+  mainRegion: 	"#main-region",
   footerRegion: "#footer-region",
-  dialogRegion: Marionette.Region.Dialog.extend({
+	
+	dialogRegion: Marionette.Region.Dialog.extend({
     el: "#dialog-region"
-  })
-  
+  }) 
 });
 
 DocManager.navigate = function(route,  options){
@@ -27,7 +27,7 @@ DocManager.on("start", function(){
     Backbone.history.start();
 
     if(this.getCurrentRoute() === ""){
-      DocManager.trigger("register:show");
+			DocManager.trigger("home:show");
     }
   }
 });

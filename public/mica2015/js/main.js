@@ -1,4 +1,4 @@
-utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView','DocumEditSolLayoutView', 'DocumListLayoutView', 'DocumNavbar',
+utils.loadTemplate(['HeaderView', 'AboutView','DocumEditLayoutView','DocumEditSolLayoutView', 'DocumListLayoutView', 'DocumNavbar',
     'DocumEditMin', 'DocumShowDef','DocumEditCore','DocumEditPT', 'SearchEntitiesForm','DocumEditPTLayout','DocumEditPTItem',
     'DocumEditRE', 'DocumEditREItem','DocumEditEM','DocumEditEMItem','DocumEditEMHeader', 'DocumShowLayoutView',
     'DocumShowBranding', 'DocumShowHeader', 'DocumShowItemPTHeader', 'DocumShowItemLayoutView','DocumShowItemPTComposite',
@@ -9,7 +9,7 @@ utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView',
     'DocumEditSO','DocumEditSOItem','DocumEditSOLayout',
     'DocumEditPSO','DocumEditPSOItems','DocumEditPSOHeader', 'DocumEditPSOSItems','DocumEditPSOSDetailsHeader','DocumEditPSOSDetails',
     'DocumShowItemSODetail','DocumShowItemSOComposite','DocumShowItemSOHeader',
-    'ReportEditLayoutView', 'ReportEditCore', 'ReportNavbar','MailTemplateDefault','InscripcionShow','NegocioShow','PhotosShow', ], function() {
+    'ReportEditLayoutView', 'ReportEditCore', 'ReportNavbar','MailTemplateDefault','HomeShowLayoutView','HomeIntroView','HomeFeatureBlockView','HomeGalleryGridView',], function() {
 
     $('[data-toggle=offcanvas]').click(function() {
         $('.row-offcanvas').toggleClass('active');
