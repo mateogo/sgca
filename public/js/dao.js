@@ -3,12 +3,13 @@ window.dao = {
     whoami:'daoutils',
 
     docum: {
-        actualList:['nrecepcion','npedido', 'nentrega', 'ptecnico', 'pemision', 'pdiario','nsolicitud'],
+        actualList:['nrecepcion','npedido', 'nentrega', 'ptecnico', 'pemision', 'pdiario','nsolicitud','inscripcion'],
         ptecnico:['ptecnico'],
         nsolicitud:['nsolicitud'],
         notas:['nrecepcion','npedido', 'nentrega'],
         pemision: ['pemision'],
-        pdiario: ['pdiario'],
+        pdiario: ['pdiario'], 
+				inscripcion: ['inscripcion'],
 
         isType: function(comp, type){
             return (this[type].indexOf(comp) !== -1 ? true : false);
