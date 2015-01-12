@@ -75,6 +75,35 @@ DocManager.module("ActionsApp.Show", function(Show, DocManager, Backbone, Marion
     }
   });
 
+
+  Show.ActionShowBudgetInstance = Marionette.CompositeView.extend({
+    tagName: 'table',
+    className: 'table table-condensed table-bordered',
+    whoami:'ActionShowBudgetInstance',
+    //className: 'success',
+
+    getTemplate: function(){
+      return utils.templates.ActionShowBudgetInstance;
+    },
+    initialize: function(options){
+      console.log('[%s] INIT [%s]',this.whoami, this.model.get('slug'));
+      this.collection = new DocManager.Entities.BudgetItemsCollection(this.model.get('items'));
+      this.options = options;
+    },
+ 
+    childView: Show.ActionShowBudgetItem,
+    childViewContainer: "tbody",
+        
+    events: {
+      "click a.js-edit": "editClicked"
+    },
+
+    editClicked: function(e){
+      e.preventDefault();
+      this.trigger("action:edit", this.model);
+    }
+  });
+
   Show.ActionShowBudget = Marionette.CompositeView.extend({
     tagName:'div',
     className:'panel',
@@ -89,8 +118,8 @@ DocManager.module("ActionsApp.Show", function(Show, DocManager, Backbone, Marion
       return utils.templates.ActionShowBudgetComposite;
     },
 
-    childView: Show.ActionShowBudgetItem,
-    childViewContainer: "tbody",
+    childView: Show.ActionShowBudgetInstance,
+    childViewContainer: "div#budgetinstance",
         
     events: {
     },

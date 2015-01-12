@@ -18,9 +18,10 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
     },
     
     regions: {
-      actionRegion:        '#action-region',
-      //navbarRegion:  '#navbar-region',
-      mainRegion:        '#main-region',
+      actionRegion:     '#action-region',
+      mainRegion:       '#main-region',
+      summaryRegion:    '#summary-region',
+      controlRegion:    '#control-region',
       artisticaRegion:   {
         regionClass: BudgetRegion,
         selector: '#artistica-region'
@@ -29,8 +30,95 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
     }
   });
 
+  // ============ ControlPanel View ===============
+    Build.ControlPanelView = Marionette.ItemView.extend({
+    whoami: 'Build.ControlPanelView :build_views',
 
-  // ============ ITEM PRESUPUESTO ===============
+    tagName: "div",
+
+    attributes: {
+      id: 'controlpanelView',
+      class: 'col-xs-12 col-md-12'
+    },
+
+    templates: {
+      ctrlpanel: 'BudgetBuildControlPanelView'
+    },
+
+    getTemplate: function(){
+      return utils.templates[this.templates['ctrlpanel']];
+    },
+
+    initialize: function(options){
+      var self = this;
+      this.options = options;
+    },
+
+    events: {
+      "click a.js-rubros": "loadfilter",
+      "click .js-save": 'saveall',
+      "click .js-showaction": 'showaction',
+      "click .js-editaction": 'editaction',
+    },
+
+
+    showaction: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.trigger('show:action');
+    },
+    editaction: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.trigger('edit:action');
+    },
+
+    saveall: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.trigger('save:all');
+    },
+
+    cancelall: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.trigger('cancel:all');
+    },
+
+    loadfilter: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.trigger('load:filter:rubros');
+    },
+
+  });
+
+
+  // ============ Summary View ===============
+    Build.SummaryView = Marionette.ItemView.extend({
+    whoami: 'Build.SummaryView :build_views',
+
+    tagName: "div",
+
+    attributes: {
+      id: 'summaryView',
+      class: 'col-xs-12 col-md-12'
+    },
+
+    getTemplate: function(){
+      return _.template('<h2><span class="pull-right">Presupuesto total: $<%= accounting.format(costo_total) %></span></h2>');
+    },
+
+    initialize: function(options){
+      var self = this;
+      this.options = options;
+      this.model.bind('change', this.render, this);
+    },
+
+  });
+
+
+  // ============ ITEM BUDGET COL ===============
   Build.BudgetItem = Marionette.ItemView.extend({
     whoami: 'Build.BudgetItem ItemView:build_views',
     tagName: "tr",
@@ -44,9 +132,10 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
     },
 
     initialize: function(options){
-      console.log('[%s] BEGINS',this.whoami);
+      //console.log('[%s] BEGINS',this.whoami);
       var self = this;
       this.options = options;
+      this.model.on('cost:evaluated', this.render, this);
       this.parentView = options.parentView;
     },
 
@@ -54,15 +143,37 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
       "change .js-row-chbx":  'rowchbx',
       "change .js-head-chbx": 'headchbx',
       "change": "change",
+
+      "click .js-isactive": 'isactive',
+      "click .js-trash": 'trashitem',
+      "click .js-clone": 'cloneitem',
       "click a": "navigate",
       "click .js-edit": 'editBudget',
     },
 
+    cloneitem: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.trigger('clone:budget:item', this.model);
+ 
+    },
     editBudget: function(e){
       e.preventDefault();
       e.stopPropagation();
       this.trigger('edit:budget:item', this.model);
  
+    },
+    trashitem: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.trigger('trash:budget:item', this.model);
+    },
+
+    isactive: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.model.toggleActivate();
+      this.trigger('changed:budget:item', this.model);
     },
 
     rowchbx: function (e) {
@@ -87,7 +198,8 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
         var target = event.target;
  
         this.model.set(target.name, target.value);
-        this.render();
+
+        this.trigger('changed:budget:item', this.model);
         //console.log('CHANGE: [%s]: [%s]',target.name, target.value);
         //var err = this.model.validate(change);
         //this.onFormDataInvalid((err||{}));
@@ -113,6 +225,7 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
     }
   });
 
+  // ============ BUDGET COL COMPOSITE===============
   Build.BudgetComposite = Marionette.CompositeView.extend({
     whoami: 'Build.BudgetComposite:build_views',
     tagName: "div",
@@ -125,8 +238,13 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
       budget:      'BudgetBuildArtisticaComposite'
     },
 
+    getTemplate: function(){
+      //var template = this.options.navtemplate || 'docum';
+      return utils.templates[this.templates['budget']];
+    },
+
     initialize: function(options){
-      console.log('[%s] BEGINS importe:[%s]',this.whoami,  this.model.get('importe'));
+      //console.log('[%s] BEGINS importe:[%s]',this.whoami,  this.model.get('importe'));
       var self = this;
       this.options = options;
     },
@@ -136,27 +254,61 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
     },
 
     childEvents: {
-      'edit:budget:item': function(view, model){
-        console.log('bubled EDIT [%s]', arguments.length);
-        this.trigger('edit:budget:item', view, model);
-      }
-    },
+      'changed:budget:item': function(view, item){
+        //console.log('bubled item CHANGED [%s]', arguments.length);
+        this.refreshView()
+      },
 
-    getTemplate: function(){
-      //var template = this.options.navtemplate || 'docum';
-      return utils.templates[this.templates['budget']];
+      'clone:budget:item': function(view, item){
+        //console.log('bubled EDIT [%s]', arguments.length);
+        this.trigger('clone:budget:item', view, item);
+      },
+
+      'edit:budget:item': function(view, item){
+        //console.log('bubled EDIT [%s]', arguments.length);
+        this.trigger('edit:budget:item', view, item);
+      },
+
+      'trash:budget:item': function(view, item){
+        //console.log('bubled TRASH [%s]', arguments.length);
+        this.trigger('trash:budget:item', view, item);
+      }
     },
 
     events: {
       "change .js-row-chbx":  'rowchbx',
       "change .js-head-chbx": 'headchbx',
       "change": "change",
+      "click .js-isactive": 'isactive',
+      "click .js-clone": 'clonebudget',
       "click .js-edit": 'editBudget',
+      "click .js-trash": 'trashbudget',
     },
 
     editBudget: function(e){
      this.trigger('edit:budget', this.model);
  
+    },
+
+    clonebudget: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.trigger('clone:budget', this.model);
+ 
+    },
+
+    isactive: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.model.set('isactive', (1 - this.model.get('isactive')))
+      this.refreshView();
+
+    },
+
+    trashbudget: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.trigger('trash:budget', this.model);
     },
 
     rowchbx: function (e) {
@@ -178,12 +330,17 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
         var target = event.target;
  
         this.model.set(target.name, target.value);
-        this.render();
+        this.refreshView();
         //console.log('CHANGE: [%s]: [%s]',target.name, target.value);
         //var err = this.model.validate(change);
         //this.onFormDataInvalid((err||{}));
     },
 
+    refreshView: function(){
+        //this.model.evaluateCosto();
+        this.trigger('cost:changed', this.model);
+        //this.render();
+    },
 
     brandClicked: function(e){
       e.preventDefault();
@@ -192,8 +349,6 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
   });
 
   Build.modaledit = function(view, model, facet, captionlabel, cb){
-        console.log('modal EDIT [%s]', facet.get('tgasto'));
-
         var self = view,
             form = new Backbone.Form({
                 model: facet,

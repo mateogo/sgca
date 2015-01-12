@@ -1,32 +1,32 @@
 <div class="panel-heading">
-	<div class="caption">Presupuesto</div>
+	<div class="caption"><span class="pull-right">Presupuesto total: <%= accounting.formatMoney(costo_total) %></span></div>
 </div>
 <div class="panel-body">
-	<table class="table table-condensed table-bordered">
-		<thead>
-			<tr>
-				<th>Costo total</th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th><span class="pull-right"><%= accounting.formatMoney(costo_total) %></span></th>
-			</tr> 
-			<tr>
-				<th>Tramitación</th>
-				<th>Ejecución</th>
-				<th>Trim</th>
-				<th>Tramita</th>
-				<th>PrgPre</th>
-				<th>Inc/Act</th>
-				<th>Cant</th>
-				<th>UME</th>
-				<th>Importe</th>
-			</tr> 
-		</thead>
-		<tbody></tbody>
-	</table>
+	<div id='theader'>
+		<table class="table table-condensed table-bordered">
+					<colgroup>
+						<col style='width: 30%;'>
+						<col style='width:  7%;'>
+						<col style='width:  7%;'>
+						<col style='width:  7%;'>
+						<col style='width:  7%;'>
+						<col style='width: 15%;'>
+						<col style='width: 12%;'>
+						<col style='width: 15%;'>
+					</colgroup>
+			<thead>
+				<tr>
+					<th>Tramitación</th>
+					<th>Ejecución</th>
+					<th>Trim</th>
+					<th>Tramita</th>
+					<th>Prg/Inc</th>
+					<th>Cantidad</th>
+					<th><span class="pull-right">Unitario</span></th>
+					<th><span class="pull-right">Importe</span></th>
+				</tr> 
+			</thead>
+		</table>
+	</div>
+	<div id='budgetinstance'></div>
 </div>
