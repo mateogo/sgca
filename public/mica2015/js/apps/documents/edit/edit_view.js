@@ -190,51 +190,17 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         });
   };
 
-  // ventana modal
   Edit.createInstance = function(view){
-        console.log('modal DOCUM NEW');
-        var self = view,
-            facet = new DocManager.Entities.DocumCoreFacet(),
-            form = new Backbone.Form({
-                model: facet
-            });
-
-
-        form.on('change', function(form, editorContent) {
-            console.log('change');
-            var errors = form.commit();
-            return false;
-        });
-
-        form.on('blur', function(form, editorContent) {
-            console.log('blur');
-            //var errors = form.commit();
-            return false;
-        });
-
-        var modal = new Backbone.BootstrapModal({
-            content: form,
-            title: 'Alta rápida nuevo comprobante',
-            okText: 'aceptar',
-            cancelText: 'cancelar',
-            enterTriggersOk: false,
-            animate: false
-        });
-
-        modal.on('ok',function(){
-          console.log('MODAL ok FIRED');
-          //modal.preventClose();
-
-        });
-
-        modal.open(function(){
-            console.log('modal CLOSE');
-            var errors = form.commit();
-            facet.createNewDocument(function(err, model){
-              DocManager.trigger("document:edit",model);
-            });
-        });
-  };
+		console.log('Nuevo Comprobante');
+		var self = view,
+				facet = new DocManager.Entities.DocumCoreFacet(),
+				form = new Backbone.Form({
+					model: facet
+				});
+		facet.createNewDocument(function(err, model){
+			DocManager.trigger("document:edit",model);
+		});
+	};
 
 
   // ventana modal Edición del horario de Emision

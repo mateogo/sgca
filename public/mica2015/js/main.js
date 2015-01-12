@@ -9,12 +9,12 @@ utils.loadTemplate(['HeaderView', 'AboutView','DocumEditLayoutView','DocumEditSo
     'DocumEditSO','DocumEditSOItem','DocumEditSOLayout',
     'DocumEditPSO','DocumEditPSOItems','DocumEditPSOHeader', 'DocumEditPSOSItems','DocumEditPSOSDetailsHeader','DocumEditPSOSDetails',
     'DocumShowItemSODetail','DocumShowItemSOComposite','DocumShowItemSOHeader',
-    'ReportEditLayoutView', 'ReportEditCore', 'ReportNavbar','MailTemplateDefault','HomeShowLayoutView','HomeIntroView','HomeFeatureBlockView','HomeGalleryGridView',], function() {
+    'ReportEditLayoutView', 'ReportEditCore', 'ReportNavbar','MailTemplateDefault','HomeShowLayoutView','HomeShowIntroView','HomeShowFeatureItemComposite','HomeShowFeatureItemDetail','HomeShowGalleryItemsView',], function() {
 
     $('[data-toggle=offcanvas]').click(function() {
         $('.row-offcanvas').toggleClass('active');
     });
-    //$.datepicker.setDefaults( $.datepicker.regional[ "es" ] );
+	
     console.log('main: DocManager.start')
     DocManager.start();
 });

@@ -28,74 +28,29 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           documitems = [];
 
       self.set({fealta:fealta.getTime(), fecomp: fecomp});
-      console.log('alo!!!!!!!!!!!!!!!!!!!!! [%s][%s]', self.get('tipocomp'),dao.docum.isType(self.get('tipocomp'), 'nsolicitud'));
 
-      if(dao.docum.isType(self.get('tipocomp'), 'ptecnico')){
-          var ptecnico = new Entities.DocumParteTecnico();
-          ptecnico.set({
-              tipoitem: self.get('tipocomp'),
-              slug: self.get('slug'),
-              fept: self.get('fecomp'),
-              estado_qc: dao.docum.initval(self.get('tipocomp')).estado_qc,
-          });
-          documitems.push(ptecnico.attributes);
-          self.set({items: documitems});
-
-      } else if(dao.docum.isType(self.get('tipocomp'), 'nsolicitud')){
-        console.log('alo!!!!!!!!!!!!!!!!!!!!!')
-
-          var parte = new Entities.DocumMovimSO();
+      if(dao.docum.isType(self.get('tipocomp'), 'inscripcion')){
+				var parte = new Entities.DocumMovimIN();
           parte.set({
-              tipoitem: self.get('tipocomp'),
-              slug: self.get('slug'),
-              //tipomov: dao.docum.initval(self.get('tipocomp')).tipomov,
-          });
-          documitems.push(parte.attributes);
-          self.set({items: documitems});
-      } else if(dao.docum.isType(self.get('tipocomp'), 'pemision')){
-          var parte = new Entities.DocumParteEM();
-          parte.set({
-              tipoitem: self.get('tipocomp'),
-              slug: self.get('slug'),
-              tipoemis:dao.docum.initval(self.get('tipocomp')).tipoemis,
-          });
-          documitems.push(parte.attributes);
-          self.set({items: documitems});
-      } else if(dao.docum.isType(self.get('tipocomp'), 'notas')){
-          var parte = new Entities.DocumMovimRE(),
-              sitems = [];
-          parte.set({
-              tipoitem: self.get('tipocomp'),
-              slug: self.get('slug'),
-              tipomov: dao.docum.initval(self.get('tipocomp')).tipomov,
-          });
-          documitems.push(parte.attributes);
-          self.set({items: documitems});
-      } else if(dao.docum.isType(self.get('tipocomp'), 'pdiario')){
-          var parte = new Entities.DocumParteDI(),
-              sitems = [];
-          parte.set({
-              tipoitem: self.get('tipocomp'),
-              slug: self.get('slug'),
-              tipomov: dao.docum.initval(self.get('tipocomp')).tipomov,
-          });
-          documitems.push(parte.attributes);
-          self.set({items: documitems});
-      }
-
-      dao.gestionUser.getUser(DocManager, function (user){
-        self.set({useralta: user.id, userultmod: user.id});
+						tipoitem: self.get('tipocomp'),
+						slug: self.get('slug'),
+					});
+				documitems.push(parte.attributes);
+				self.set({items: documitems});
+			}
+			dao.gestionUser.getUser(DocManager, function (user){
+				self.set({useralta: user.id, userultmod: user.id});
         var person;
         var related = user.get('es_usuario_de');
-        if(related){
-          person = related[0];
-          if(person){
+				if(related){
+					person = related[0];
+					if(person){
             self.set({persona: person.code,personaid: person.id })
           }
         } 
         if(cb) cb(self);
-      });
-    },
+			});
+		},
 
     beforeSave: function(cb){
       var self = this;
@@ -107,16 +62,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         self.set({userultmod: user.id});
         if(cb) cb(self);
       });
-
-    },
-    
-    documSolicitudFacetFactory: function(){
+		}, 
+		
+		documInscripcionFacetFactory: function(){
       var self = this,
           data,
           fealta = new Date();
 
       if(!self.get('tipocomp')){
-        self.set('tipocomp', 'nsolicitud');
+        self.set('tipocomp', 'inscripcion');
         self.set('fecomp', utils.dateToStr(fealta));
       }
 
@@ -126,7 +80,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       data = _.clone(self.attributes);
       data = _.extend(data,self.get('items')[0]);
-      return new Entities.DocumSolicitudFacet(data);
+      return new Entities.DocumInscripcionFacet(data);
     },
     
     update: function(cb){
@@ -151,54 +105,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
            }
           })) {
-            cb(self.validationError,null);
-        }            
-      });
+					cb(self.validationError,null);
+				}            
+			});
+		},
 
-    },
-
-    itemTypes: {
-      ptecnico:{
+    itemTypes: {   
+			inscripcion:{
         initNew: function(self, attrs){
-          var ptecnico = new Entities.DocumParteTecnico(attrs);
-          //console.log('initNew PARTE TECNICO [%s]',ptecnico.get('slug'));
-          //do some initialization
-          return ptecnico;
-        }
-      },
-      nentrega:{
-        initNew: function(self, attrs){
-          var item = new Entities.DocumMovimRE(attrs);
-          return item;
-        }
-      },
-      nrecepcion:{
-        initNew: function(self, attrs){
-          var item = new Entities.DocumMovimRE(attrs);
-          return item;
-        }
-      },
-      nsolicitud:{
-        initNew: function(self, attrs){
-          var item = new Entities.DocumMovimSO(attrs);
-          return item;
-        }
-      },
-      npedido:{
-        initNew: function(self, attrs){
-          var item = new Entities.DocumMovimRE(attrs);
-          return item;
-        }
-      },
-      pdiario:{
-        initNew: function(self, attrs){
-          var item = new Entities.DocumParteDI(attrs);
-          return item;
-        }
-      },
-      pemision:{
-        initNew: function(self, attrs){
-          var item = new Entities.DocumParteEM(attrs);
+          var item = new Entities.DocumMovimIN(attrs);
           return item;
         }
       },
@@ -229,8 +144,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     insertItemCollection: function(itemCol) {
-        var self = this;
-        self.set({items: itemCol.toJSON()});
+			var self = this;
+      self.set({items: itemCol.toJSON()});
     },
 
     initNewItem: function(item){
@@ -307,13 +222,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var modelFactory = function(attrs, options){
     //utils.inspect(attrs,1,'modelFactory');
     var model;
-    if(attrs.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnico(attrs);
-    if(attrs.tipoitem==='nrecepcion') model = new Entities.DocumMovimRE(attrs);
-    if(attrs.tipoitem==='nsolicitud') model = new Entities.DocumMovimSO(attrs);
-    if(attrs.tipoitem==='nentrega')   model = new Entities.DocumMovimRE(attrs);
-    if(attrs.tipoitem==='npedido')    model = new Entities.DocumMovimRE(attrs);
-    if(attrs.tipoitem==='pemision')   model = new Entities.DocumParteEM(attrs);
-    if(attrs.tipoitem==='pdiario')    model = new Entities.DocumParteDI(attrs);
+    if(attrs.tipoitem==='inscripcion') model = new Entities.DocumMovimIN(attrs);
     return model;
   };
 
@@ -325,251 +234,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
   });
-
-
-  /*
-   * ******* Parte TECNICO +**********
-   */
-  Entities.DocumParteTecnico = Backbone.Model.extend({
-    whoami: 'DocumParteTecnico:comprobante.js ',
-
-    schema: {
-        tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList, title:'Tipo Item' },
-        slug:     {type: 'Text', title: 'Descripción corta'},
-    },
+	
+	Entities.DocumInscripcionFacet = Backbone.Model.extend({
+    whoami: 'DocumINscricpionFacet:comprobante.js ',
 
     validate: function(attrs, options) {
-      //if(!attrs) return;
       var errors = {}
-      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
-
-      if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
-        errors.tipocomp = "No puede ser nulo";
-      }
-      if (_.has(attrs,'slug') && ! attrs.slug) {
-        errors.slug = "No puede ser nulo";
-      }
-
-      if (_.has(attrs,'fept')){
-        var fept_tc = utils.buildDateNum(attrs['fept']);
-        if(Math.abs(fept_tc-(new Date().getTime()))>(1000*60*60*24*30*6) ){
-          //errors.fept = 'fecha no valida';
-        }
-        this.set('fept_tc',fept_tc);
-      }
-
-      if( ! _.isEmpty(errors)){
-        return errors;
-      }
-    },
-
-    insertItemCollection: function(itemCol) {
-        var self = this;
-        self.set({items: itemCol.toJSON()});
-    },
-
-    initNewItem: function(){
-      return new Entities.DocumParteTecnicoItem();
-    },
-
-    getItems: function(){
-      var items = this.get('items');
-      return new Entities.PTecnicoItems(items);
-    },
-
-    productSelected: function(pr){
-      // fetching a product success. 
-
-    },
-
-    defaults: {
-      tipoitem: "",
-      slug: "",
-      fept: "",
-      revision:1,
-      product: "",
-      pslug:"",
-      persona:"",
-      sopoentrega:"",
-      vbloques:"",
-      estado_alta:"",
-      nivel_ejecucion:"",
-      estado_qc:"ddd",
-      resolucion:"",
-      framerate:"",
-      aspectratio:"",
-      rolinstancia:"",
-      formatoorig:"",
-      au1_content:"",
-      au1_channel:"",
-      au1_piclevel:"",
-      au2_content:"",
-      au2_channel:"",
-      au2_piclevel:"",
-      au3_content:"",
-      au3_channel:"",
-      au3_piclevel:"",
-      au4_content:"",
-      au4_channel:"",
-      au4_piclevel:"",
-      description: "",
-      items:[]
-
-    },
-
-  });
-  Entities.DocumParteTecnicoItem = Backbone.Model.extend({
-    whoami: 'DocumParteTecnicoItem:comprobante.js ',
-
- 
-    validate: function(attrs, options) {
-      //if(!attrs) return;
-      var errors = {}
-      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'ptitcbco'), attrs.ptitcbco);
-      //utils.inspect(attrs,1,'pti');
-
-      if (_.has(attrs,'pticaso') && (!attrs.pticaso )) {
-        errors.pticaso = "No puede ser nulo";
-      }
-      if (_.has(attrs,'ptitcbco') && ! attrs.ptitcbco) {
-        errors.ptitcbco = "No puede ser nulo";
-      }
-      if (_.has(attrs,'ptitcbco')){
-        this.set('ptitcbco',utils.parseTC(attrs.ptitcbco));
-        if(this.get('ptitcbco') === "00:00:00:00") errors.ptitcbco = "error de time-code";
-        this.trigger('tc:change','ptitcbco');
-      }
-      if (_.has(attrs,'ptiduracion')){
-        this.set('ptiduracion',utils.parseTC(attrs.ptiduracion));
-        if(this.get('ptiduracion') === "00:00:00:00") errors.ptiduracion = "error de time-code";
-        this.trigger('tc:change','ptiduracion');
-      }
-      if (_.has(attrs,'ptitcabs')){
-        this.set('ptitcabs',utils.parseTC(attrs.ptitcabs));
-        if(this.get('ptitcabs') === "00:00:00:00") errors.ptitcabs = "error de time-code";
-        this.trigger('tc:change','ptitcabs');
-      }
-
-      if( ! _.isEmpty(errors)){
-        return errors;
-      }
-    },
-
-    defaults: {
-      pticaso: '',
-      ptiseveridad: '',
-      ptidescription: '',
-      ptitcbco: '',
-      ptiduracion: '',
-      pticanal: '',
-      ptitcabs: ''
-    },
-
-  });
-
-  Entities.PTecnicoItems = Backbone.Collection.extend({
-    whoami: 'Entities.PTecnicoItems:comprobante.js ',
-    model: Entities.DocumParteTecnicoItem,
-    comparator: "ptitcbco",
-  });
-
-
-  /*
-   * ******* Movim Recepcion Entrega +**********
-   */
-  Entities.DocumMovimRE = Backbone.Model.extend({
-    whoami: 'DocumMovimRE:comprobante.js ',
-
-    validate: function(attrs, options) {
-      //if(!attrs) return;
-      var errors = {}
-      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
-
-      if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
-        errors.tipocomp = "No puede ser nulo";
-      }
-      if (_.has(attrs,'slug') && ! attrs.slug) {
-        errors.slug = "No puede ser nulo";
-      }
-
-      if( ! _.isEmpty(errors)){
-        return errors;
-      }
-    },
-    insertItemCollection: function(itemCol) {
-        var self = this;
-        self.set({items: itemCol.toJSON()});
-    },
-
-    getItems: function(){
-      var itemCol = new Entities.MovimREItems(this.get('items'));
-      return itemCol;
-    },
-
-    initNewItem: function(){
-      return new Entities.DocumMovimREItem();
-    },
-
-    productSelected: function(pr){
-      // fetching a product success. 
-
-    },
-
-    defaults: {
-      tipoitem: "",
-      slug: "",
-      tipomov: "",
-      persona: "",
-      mediofisico: "",
-      soporte_slug: "",
-      soporte_id: "",
-      description:"",
-      items:[]
-    },
-
-  });
-
-  Entities.DocumMovimREItem = Backbone.Model.extend({
-    whoami: 'DocumMovimREItem:comprobante.js ',
-
- 
-    validate: function(attrs, options) {
-      var errors = {}
-
-      if (_.has(attrs,'product') && (!attrs.product )) {
-        errors.pticaso = "No puede ser nulo";
-      }
-      if( ! _.isEmpty(errors)){
-        return errors;
-      }
-    },
-
-    defaults: {
-      product: '',
-      pslug:'',
-      comentario: '',
-      durnominal:'',
-    },
-  });
-
-  Entities.MovimREItems = Backbone.Collection.extend({
-    whoami: 'Entities.MovimREItems:comprobante.js ',
-    model: Entities.DocumMovimREItem,
-    comparator: "product",
-  });
-
-// fin Movim Recepcion entrega
-
-  /*
-   * ******* Movim Solicitud de municipios +**********
-   */
-  Entities.DocumSolicitudFacet = Backbone.Model.extend({
-    whoami: 'DocumSolicitudFacet:comprobante.js ',
-
-    validate: function(attrs, options) {
-      //if(!attrs) return;
-      var errors = {}
-      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
 
       if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
         errors.tipocomp = "No puede ser nulo";
@@ -606,7 +276,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     getItems: function(){
-      var itemCol = new Entities.MovimSOItems(this.get('items'));
+      var itemCol = new Entities.MovimINItems(this.get('items'));
       return itemCol;
 
     },
@@ -648,7 +318,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     initNewItem: function(){
-      var sitem = new Entities.DocumMovimSOItem();
+      var sitem = new Entities.DocumMovimINItem();
 
       sitem.set({
           requeridopor: 'requirente',
@@ -725,13 +395,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
   });
-
-
-
-
-
-  Entities.DocumMovimSO = Backbone.Model.extend({
-    whoami: 'DocumMovimSO:comprobante.js ',
+	
+	Entities.DocumMovimIN = Backbone.Model.extend({
+    whoami: 'DocumMovimIN:comprobante.js ',
 
     validate: function(attrs, options) {
       //if(!attrs) return;
@@ -767,13 +433,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     getItems: function(){
-      var itemCol = new Entities.MovimSOItems(this.get('items'));
+      var itemCol = new Entities.MovimINItems(this.get('items'));
       console.log('getItems: [%s]',itemCol.length)
       return itemCol;
     },
 
     initNewItem: function(){
-      return new Entities.DocumMovimSOItem();
+      return new Entities.DocumMovimINItem();
     },
 
     productSelected: function(pr){
@@ -812,10 +478,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       items:[]
     },
 
-  });
-
-  Entities.DocumMovimSOItem = Backbone.Model.extend({
-    whoami: 'DocumMovimSOItem:comprobante.js ',
+  }); 
+	
+	Entities.DocumMovimINItem = Backbone.Model.extend({
+    whoami: 'DocumMovimINItem:comprobante.js ',
 
  
     validate: function(attrs, options) {
@@ -840,347 +506,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       lugarfecha: '',
       comentario: ''
     },
-  });
-
-  Entities.MovimSOItems = Backbone.Collection.extend({
-    whoami: 'Entities.MovimSOItems:comprobante.js ',
-    model: Entities.DocumMovimSOItem,
+  }); 
+	
+	Entities.MovimINItems = Backbone.Collection.extend({
+    whoami: 'Entities.MovimINItems:comprobante.js ',
+    model: Entities.DocumMovimINItem,
     comparator: "trequerim",
   });
-
-// fin Movim Recepcion entrega
-  /*
-   * ******* Parte de Emisión +**********
-   */
-  Entities.DocumParteEM = Backbone.Model.extend({
-    whoami: 'DocumParteEM:comprobante.js ',
-
-    validate: function(attrs, options) {
-      //if(!attrs) return;
-      var errors = {}
-      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
-
-      if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
-        errors.tipoitem = "No puede ser nulo";
-      }
-      if (_.has(attrs,'slug') && ! attrs.slug) {
-        errors.slug = "No puede ser nulo";
-      }
-
-      if (_.has(attrs,'fedesde')){
-        var fecha = utils.buildDate(attrs['fedesde']);
-        var fehasta = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()+6, 0, 0, 0, 0);
-        this.set('fedesde_tc',fecha.getTime());
-        this.set('fehasta_tc', fehasta.getTime());
-        this.set('fehasta', utils.dateToStr(fehasta));
-        if(fecha.getDay()!==1) errors.fedesde = "La fecha debe corresponder a un día lunes";
-      }
-      if (_.has(attrs,'fehasta')){
-        var fecha = utils.buildDateNum(attrs['fehasta']);
-        this.set('fehasta_tc',fecha);
-      }
-
-      if( ! _.isEmpty(errors)){
-        return errors;
-      }
-    },
-    insertItemCollection: function(itemCol) {
-        var self = this;
-        var col = this.buildItemCollection(itemCol);
-        self.set({items: col.toJSON()});
-    },
-    buildItemCollection: function(col){
-      var itemCol = new Entities.ParteEMItems();
-      col.each(function(item){
-        if(item.hasData()){
-          itemCol.add(item);
-        }
-      });
-      return itemCol;
-    },
-
-    getItems: function(){
-      var itemCol = new Entities.ParteEMItems(this.get('items'));
-      this.initDatesArray(itemCol)
-      return itemCol;
-    },
-
-    initDatesArray: function(col){
-      col.each(function(model){
-        var datecol = model.get('emisiones');
-        var emisiones = new Entities.ParteEMemisiones();
-        for (var i=0; i<7; i++){
-          var emision = _.find(datecol,function(elem){
-            return (elem.dayweek===i);
-          });
-          if(!emision) emision={
-            dayweek:i,
-          };
-          emisiones.add(new Entities.DocumParteEMItemDate(emision));
-        }
-        model.set({emisiones: emisiones});
-      });
-    },
-    findEmision: function(col){
-
-
-    },
-
-    initNewItem: function(){
-      return new Entities.DocumParteEMItem();
-    },
-
-
-    defaults: {
-      tipoitem: "",
-      tipoemis:"",
-      slug: "",
-      fedesde:"",
-      fehasta:"",
-      cobertura:"",
-      product:"",
-      pslug:"",
-      fuente:"",
-      persona: "",
-      description:"",
-      items:[]
-    },
-
-  });
-
-  Entities.DocumParteEMItem = Backbone.Model.extend({
-    whoami: 'DocumParteEMItem:comprobante.js ',
-
- 
-    validate: function(attrs, options) {
-      //if(!attrs) return;
-      var errors = {}
-      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'ptitcbco'), attrs.ptitcbco);
-      //utils.inspect(attrs,1,'pti');
-
-      if (_.has(attrs,'product') && (!attrs.product )) {
-        errors.product = "No puede ser nulo";
-      }
-      if( ! _.isEmpty(errors)){
-        return errors;
-      }
-    },
-    hasData: function(){
-      var emisiones = this.get('emisiones');
-      var hasmovim = false;
-      var filtered = new Entities.ParteEMemisiones();
-
-      emisiones.each(function(elem){
-        if(elem.get('isActive')){
-          hasmovim=true;
-          filtered.add(elem);
-        }
-      });
-      this.set({emisiones: filtered.toJSON()});
-      return hasmovim;
-    },
-
-    initDatesArray: function(){
-        var emisiones = new Entities.ParteEMemisiones();
-        for (var i=0; i<7; i++){
-          var emision={
-            dayweek:i,
-          };
-          emisiones.add(new Entities.DocumParteEMItemDate(emision));
-        }
-        return emisiones;
-    },
-
-    defaults: {
-      product: '',
-      pslug:'',
-      durnominal:'',
-      emisiones:[],
-    },
-  });
-
-  Entities.DocumParteEMItemDate = Backbone.Model.extend({
-    whoami: 'DocumParteEMItem:comprobante.js ',
-
-    schema: {
-        hourmain: {type: 'Select',options: utils.hourOptionList ,title:'Horario emisión'},
-        repite:  {type: 'Text', title: 'Repite',placeholder:'dia / hora repetición'},
-        chapter: {type: 'Select',options: ['cap1','cap2'] ,title:'Capítulo'},
-        comentario:     {type: 'Text', title: 'Comentario'},
-    },
- 
-    validate: function(attrs, options) {
-      //if(!attrs) return;
-      var errors = {}
-      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'ptitcbco'), attrs.ptitcbco);
-      //utils.inspect(attrs,1,'pti');
-
-      if (_.has(attrs,'product') && (!attrs.product )) {
-        errors.product = "No puede ser nulo";
-      }
-      if( ! _.isEmpty(errors)){
-        return errors;
-      }
-    },
-    updateData: function(){
-      if(this.get('hourmain')==='noem') this.set('isActive',false);
-      else this.set('isActive',true);
-    },
-
-    defaults: {
-      dayweek:'',
-      isActive:false,
-      chapter:'',
-      hourmain:'noem',
-      repite:'',
-      comentario: '',
-      qnopt:"",
-      qpt:"",
-    },
-  });
-
-
-
-  Entities.ParteEMItems = Backbone.Collection.extend({
-    whoami: 'Entities.ParteEMItems:comprobante.js ',
-    model: Entities.DocumParteEMItem,
-    comparator: "product",
-  });
-  Entities.ParteEMemisiones = Backbone.Collection.extend({
-    whoami: 'Entities.ParteEMIemisiones:comprobante.js ',
-    model: Entities.DocumParteEMItemDate,
-    comparator: "dayweek",
-  });
-// fin Parte de emisión
-
-
-
-  /*
-   * ******* Parte Diario +**********
-   */
-  Entities.DocumParteDI = Backbone.Model.extend({
-    whoami: 'DocumParteDI:comprobante.js ',
-
-    validate: function(attrs, options) {
-      //if(!attrs) return;
-      var errors = {}
-      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
-
-      if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
-        errors.tipocomp = "No puede ser nulo";
-      }
-      if (_.has(attrs,'slug') && ! attrs.slug) {
-        errors.slug = "No puede ser nulo";
-      }
-
-      if( ! _.isEmpty(errors)){
-        return errors;
-      }
-    },
-    insertItemCollection: function(itemCol) {
-        var self = this;
-        self.set({items: itemCol.toJSON()});
-    },
-
-    getItems: function(){
-      var itemCol = new Entities.MovimREItems(this.get('items'));
-      return itemCol;
-    },
-
-    initNewItem: function(){
-      return new Entities.DocumMovimREItem();
-    },
-
-    productSelected: function(pr){
-      // fetching a product success. 
-
-    },
-
-    defaults: {
-      tipoitem: "",
-      slug: "",
-      tipomov: "",
-      activity:"",
-      entitytype:"",
-      entity:"",
-      docum:"",
-      result:"",
-      items:[],
-    },
-
-  });
-
-
-// fin Movim Parte Diario
-
-
 
   var modelSubItemFactory = function(attrs, options){
     //utils.inspect(attrs,1,'modelFactory');
     //console.log('modelSubFactory: [%s]',options.tipoitem)
     var model;
-    if(options.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnicoItem(attrs);
-    if(options.tipoitem==='nrecepcion') model = new Entities.DocumMovimREItem(attrs);
-    if(options.tipoitem==='nsolicitud') model = new Entities.DocumMovimSOItem(attrs);
-    if(options.tipoitem==='nentrega')   model = new Entities.DocumMovimREItem(attrs);
-    if(options.tipoitem==='npedido')    model = new Entities.DocumMovimREItem(attrs);
-    if(options.tipoitem==='pemision')   model = new Entities.DocumParteEMItem(attrs);
+    if(options.tipoitem==='inscripcion') model = new Entities.DocumMovimINItem(attrs);
     return model;
   };
-
-  Entities.DocumSubItemsCollection = Backbone.Collection.extend({
-    whoami: 'Entities.DocumSubItemsCollection:comprobante.js ',
-    initialize: function(options){
-      this.options = options;
-    },
-    comparator: 'product',
-
-    model: function(attrs, options){
-      return modelSubItemFactory(attrs, options);
-    },
-
-  });
-
-
-
-
-  /*
-   * ******* ItemCoreFacet +**********
-   */
-
-  Entities.DocumItemCoreFacet = Backbone.Model.extend({
-    //REVISAR ESTO URGENTE MGO. 18.11.2014
-    //Entiendo que esto debe crear un nuevo item a un comprobante existente,
-    // pero lo que está haciendo es crear un nuevo comprobante de cero.
- 
-    whoami: 'DocumItemCoreFacet:comprobante.js ',
-
-    schema: {
-        tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList, title:'Tipo ITEM' },
-        slug:     {type: 'Text', title: 'Descripción corta'},
-    },
-
-    createNewDocument: function(cb){
-      var self = this;
-      var docum = new Entities.Comprobante(self.attributes);
-      docum.initBeforeCreate(function(docum){
-          docum.save(null, {
-            success: function(model){
-              cb(null,model);
-            }
-          });
-      });
-    },
-
-    defaults: {
-      tipoitem: "",
-      slug: "",
-    },
-
-   });
-
-
-  // fin ItemCoreFacet
 
   /*
    * ******* QueryFacet +**********
@@ -1243,9 +583,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     defaults: {
       _id: null,
-      tipocomp: "no_definido",
+      tipocomp: "inscripcion",
       cnumber: "",
-      slug: "",
+      slug: "nuevo",
       description: ""
     },
 
@@ -1267,25 +607,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
    });
-
-
-  //Entities.configureStorage(Entities.Comprobante);
-
-
-  //Entities.configureStorage(Entities.ComprobanteCollection);
-/*
-  var initializeComprobantes = function(){
-    comprobantes = new Entities.ComprobanteCollection([
-      { id: 1, firstName: "Alice", lastName: "Arten", phoneNumber: "555-0184" },
-      { id: 2, firstName: "Bob", lastName: "Brigham", phoneNumber: "555-0163" },
-      { id: 3, firstName: "Charlie", lastName: "Campbell", phoneNumber: "555-0129" }
-    ]);
-    comprobantes.forEach(function(comprobante){
-      comprobante.save();
-    });
-    return comprobantes.models;
-  };
-*/
 
   var logActivity = function(docum){
     var tipocomp = docum.get('tipocomp');

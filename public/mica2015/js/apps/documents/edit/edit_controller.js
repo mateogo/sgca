@@ -372,7 +372,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   var registerDocumentEntity = function(model) {
     Edit.Session.solicitud = model;
 
-    Edit.Session.model = model.documSolicitudFacetFactory();
+    Edit.Session.model = model.documInscripcionFacetFactory();
 
     Edit.Session.items = Edit.Session.model.getItems();
 

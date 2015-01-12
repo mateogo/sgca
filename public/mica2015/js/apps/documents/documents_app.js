@@ -2,10 +2,9 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
 
   DocsApp.Router = Marionette.AppRouter.extend({
     appRoutes: {
-      "comprobantes(/filter/criterion::criterion)": "listDocuments",
-      "comprobantes/:id": "showDocument",
-      "comprobantes/:id/edit": "editDocument",
-      "solicitudes/nueva": "editDocument",
+      "rondas/comprobantes(/filter/criterion::criterion)": "listDocuments",
+      "rondas/comprobantes/:id": "showDocument",
+      "rondas/comprobante/:id/edit": "editDocument",
       "reportes(/filter/criterion::criterion)": "listReports",
       "reportes/:id": "showReport",
       "reportes/:id/edit": "editReport",
@@ -38,17 +37,20 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
       console.log('API: show document')
       DocsApp.Show.Controller.showDocument(id);
       DocManager.execute("set:active:header", "comprobantes");
-    },
+    }, 
 
     editDocument: function(id){
-      console.log('API: edit document', id)
-      //elige el layout normal o el de solicitudes
-            // console.log('es tipo nsolicitud')
-            //  DocsApp.SolEdit.Controller.editDocument(id);
-            //  DocManager.execute("set:active:header", "comprobantes");
-      DocsApp.Edit.Controller.editDocument(id);
-      DocManager.execute("set:active:header", "comprobantes");
-    },
+			if (id == ':id')
+			{
+				console.log('no existe, es nuevo');
+				DocsApp.Edit.createInstance();
+			}
+			else{
+				console.log('API: edit document', id)
+				DocsApp.Edit.Controller.editDocument(id);
+				DocManager.execute("set:active:header", "comprobantes");	
+			}
+    },   
 
     listReports: function(criterion){
       console.log('API: listReports');
@@ -103,10 +105,8 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
 	
   DocManager.on("document:edit", function(model){
     var documid = model.id || model.get('documid');
-    //agrego tipo de comprobante para filtrar los nsolicitud y q se editen con un layout diferente al resto
-    //var tcompro = model.tipocomp || model.get('tipocomp');
-    //agregue tcompro
     DocManager.navigate("comprobantes/" + documid + "/edit");
+		console.log('0');
     API.editDocument(documid);
   });
 

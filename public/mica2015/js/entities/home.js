@@ -8,10 +8,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 		},
 		
 		defaults: {
-			volanta: "rondas de negocio",
+			volanta: "RONDAS DE NEGOCIO",
 			titulo: "MICA 2015",
 			slug: "MERCADO DE INDUSTRIAS CULTURALES ARGENTINAS",
-			items: [] //falta laburar botones
+			items: [{
+				buttontext:'INSCRIBITE A LAS RONDAS DE NEGOCIOS',
+				buttonroute:'#rondas/comprobante/:id/edit',
+			}]
 		},		
 	});
 	
