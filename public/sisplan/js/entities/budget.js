@@ -6,43 +6,57 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     idAttribute: "_id",
 
+
+
+
+
     defaults: {
       _id: null,
+
+      // datos heredados de Action
       owner_id: "",
       owner_type: 'action',
-      program_cnumber: '',
-      tipomov: "presupuesto",
-      slug: "",
-      nodo: "",
-      area: "",
       parent_cnumber: '',
       parent_slug: '',
+      program_cnumber: '',
+      nodo: "",
+      area: "",
 
 
+      tipomov: "presupuesto",
+      slug: "",
+
+      tramita: "MCN",
+      origenpresu: "MCN",
+      anio_fiscal: "2015",
+      trim_fiscal: "1",
       fecha_prev: "",
-      anio_fiscal: "",
-      trim_fiscal: "",
-
-      tramita: "",
-      origenpresu: "",
+      description: "",
       presuprog: "",
       presuinciso: "",
 
-      tgasto: "",
-      cantidad: "",
-      punit: "",
-      importe: "",
+
+      tgasto: "no_definido",
+      cgasto: "111.111",
+      importe: "0",
+      isactive: "1",
+      freq: "1",
+      umefreq: "global",
+      cantidad: "1",
       ume: "global",
-      coldh: "",
-      analitica: "",
+      punit: "0",
+      monto: "0",
+      coldh: "0",
+      presuprog: "",
+      presuinciso: "",
 
       nivel_ejecucion: "enevaluacion",
-      estado_alta: "",
-      nivel_importancia: "",
-      descriptores: "",
+      estado_alta: "activo",
+      nivel_importancia: "media",
       useralta: "",
       fealta: "",
       feultmod: "",
+      items:[],
     },
 
     enabled_predicates:['es_relacion_de'],
@@ -61,14 +75,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     updateCurrentUsertData: function(cb){
-      var self = this;
+      var self = this,
+          person;
       dao.gestionUser.getUser(DocManager, function (user){
-        if(!self.get('useralta')){
+        if(!self.get('useralta' || !self.id)){
           self.set('useralta', user.id);
         }
         self.set('userultmod', user.id);
 
-        var person;
         var related = user.get('es_usuario_de');
         if(related){
           person = related[0];
@@ -95,12 +109,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     beforeSave: function(action, cb){
       var self = this;
+      var fecha = new Date();
       //console.log('initBefore SAVE')
-      var feultmod = new Date();
-      self.set({feultmod:feultmod.getTime()})
+      if(!self.id || !self.get('feata')){
+        self.set({fealta:fecha.getTime()})
+        fecomp = utils.dateToStr(fecha);
+      }
+      self.set({feultmod:fecha.getTime()})
+      self.set('cgasto', utils.fetchListKey(utils.tipoBudgetMovimList, self.get('tgasto'))['cgasto'] );
 
       self.updateInheritData(action);
       self.updateCurrentUsertData(cb);
+
 
     },
     
@@ -213,7 +233,78 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return new Entities.BudgetCoreFacet(this.attributes,{formType:'long'});
     },
 
+    saveFromPlanningFacet: function(){
+
+    },
   });
+
+
+  Entities.BudgetPlanningCollection = Backbone.Collection.extend({
+    whoami: 'Entities.BudgetPlanningCollection:budget.js ',
+    url: "/navegar/presupuestos",
+    model: Entities.BudgetPlanningFacet,
+    sortfield: 'tgasto',
+    sortorder: -1,
+
+    comparator: function(left, right) {
+      var order = this.sortorder;
+      var l = left.get(this.sortfield);
+      var r = right.get(this.sortfield);
+
+      if (l === void 0) return -1 * order;
+      if (r === void 0) return 1 * order;
+
+      return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    },
+
+    saveAll: function(action, user, opt){
+      var self = this,
+          budget;
+
+      console.log('SaveAll BEGINS [%s]', self.length);
+      self.each(function (budFacet){
+        budget = budFacet.budgetFactory();
+        if(budget){
+          console.log('BINGO: ready to update[%s] items:[%s]', budget.get('tgasto'), budget.get('items').length)
+          budget.update(action, function(error, budget){
+            console.log('budget Saved: [%s]', budget.get('tgasto'));
+          });
+
+        }
+      })
+    },
+
+    addBudget: function(budget){
+      this.add(budget);
+      this.listenTo(budget, 'budget:cost:changed', this.evaluateTotalCost);
+      //budget.on('budget:cost:changed', this.evaluateTotalCost, this);
+      //this.evaluateTotalCost();
+    },
+
+    removeBudget: function(budget){
+      this.remove(budget);
+    },
+
+    evaluateTotalCost: function(){
+      console.log('TOTAL COST BEGINGS')
+      if(!this.costoactual){
+        this.costoactual = 0;
+      }
+      var costo_total = 0;
+
+      this.each(function(budget){
+        costo_total += budget.evaluateCosto();
+      });
+      if (this.costoactual !== costo_total){
+        console.log('COSTO TOTAL ACCION: [%s] >> [%s]', this.costoactual, costo_total);
+        this.trigger('action:cost:changed', costo_total);
+      }
+      this.costoactual = costo_total;
+      return costo_total;
+    },
+
+  });
+
 
 
   Entities.BudgetCoreFacet = Backbone.Model.extend({
@@ -366,20 +457,35 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       presuinciso: "",
 
       tgasto: "no_definido",
+      cgasto: "111.111",
       cantidad: "1",
       punit: "1",
       importe: "",
       ume: "global",
       coldh: "0",
-      analitica: "",
 
       nivel_ejecucion: "enevaluacion",
       estado_alta: "activo",
       nivel_importancia: "media",
-      descriptores: "",
       useralta: "",
       fealta: "",
       feultmod: "",
+    },
+
+   });
+
+  Entities.BudgetTypeFacet = Backbone.Model.extend({
+    //urlRoot: "/comprobantes",
+    whoami: 'BudgetTypeFacet:budget.js ',
+
+    schema: {
+      roles:         { type: 'List', itemType: 'Text', title: 'Rubros de Presupuesto' }
+    },
+
+    defaults: {
+      _id: null,
+      roles:['global', 'artistica', 'tecnica','contratos', 'muestras', 'derechos','logistica','impresiones','difusion'],
+      tgasto:'',
     },
 
    });
@@ -435,9 +541,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       description: "",
 
       tgasto: "no_definido",
-      importe: "",
+      cgasto: "111.111",
+       importe: "",
       isactive: "1",
       freq: "1",
+      umefreq: "global",
       cantidad: "",
       ume: "global",
       punit: "",
@@ -445,7 +553,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       coldh: "0",
       presuprog: "",
       presuinciso: "",
-      analitica: "",
 
       nivel_ejecucion: "enevaluacion",
       estado_alta: "activo",
@@ -465,28 +572,34 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     urlRoot: "/actualizar/presupuestos",
 
     initialize: function(options){
-      if(this.get('montomanual') === '0'){
+ 
+      if(!parseInt(this.get('montomanual'))){
         this.set('montomanual', this.get('importe'));
       }
-      //this.schema.tgasto.options = utils.budgetTemplate[this.get('tgasto')];
+ 
+      if(this.get('tgasto') === 'global'){
+        this.set('isdetallado', this.get('isdetallado') || '0');
+      }else{
+        this.set('isdetallado', this.get('isdetallado') || '1');
+      }
 
     },
 
     schema: {
-        slug:         {type: 'Text',      title: 'Asunto',            editorAttrs:{placeholder:'descripción corta'}},
-        isactive:     {type: 'Number',    title: 'Presupuesto Activo? (1/0)',          editorAttrs:{placeholder:'1: Activo - 0: Inactivo'}},
-        freq:         {type: 'Number',    title: 'Frecuencia (días/ shows/ etc.)',    editorAttrs:{placeholder:'veces que aplica a la cantidad'}},
+        slug:         {type: 'Text',      title: 'Descripción ejecutiva',            editorAttrs:{placeholder:'descripción corta'}},
+        freq:         {type: 'Number',    title: 'Frecuencia (días/show)',    editorAttrs:{placeholder:'veces que aplica a la cantidad'}},
+        umefreq:      {type: 'Select',    title: 'Unidad de frecuencia',  editorAttrs:{placeholder:'unidad de frecuencia (show/día/mes/etc.'},options: utils.umeFreqList },
         cantidad:     {type: 'Number',    title: 'Cantidad',          editorAttrs:{placeholder:'en unidades'}},
         ume:          {type: 'Select',    title: 'Unidad de medida',  editorAttrs:{placeholder:'unidad de medida'},options: utils.umeList },
+ 
+        fecha_prev:   {type: 'Text',      title: 'Fecha prev ejecución', editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        trim_fiscal:  {type: 'Number',    title: 'Trimestre fiscal',  editorAttrs:{placeholder:'Indique 1/2/3/4 Trimestre ejecución presupuestaria'}},
+        anio_fiscal:  {type: 'Text',      title: 'Año fiscal',        editorAttrs:{placeholder:'Indique año fiscal (2015)'}},
+        origenpresu:  {type: 'Select',    title: 'Origen presupuesto', editorAttrs:{placeholder:'fuente presupuestaria'},options: utils.budgetOriginList },
+        tramita:      {type: 'Select',    title: 'Tramitación',  editorAttrs:{placeholder:'unidad ejecutora'},options: utils.budgetTramitaPorList },
+        description:  {type: 'TextArea',  title: 'Descripción ejecutiva'},
         isdetallado:  {type: 'Number',    title: 'Presupuesto Detallado? (1/0)',  editorAttrs:{placeholder:'1: Detallado - 0: Costo total informado manualmente'}},
         montomanual:  {type: 'Text',      title: 'Costo informado manual',        editorAttrs:{placeholder:'importe en pesos FINAL informado.'}},
- 
-        fecha_prev:   {type: 'Text',      title: 'Fecha prev ejecución', editorAttrs:{placeholder:'dd/mm/aaaa'}},
-        trim_fiscal:  {type: 'Number',    title: 'Trimestre fiscal',  editorAttrs:{placeholder:'Indique 1/2/3/4 Trimestre ejecución presupuestaria'}},
-        anio_fiscal:  {type: 'Text',      title: 'Año fiscal',        editorAttrs:{placeholder:'Indique año fiscal (2015)'}},
-        origenpresu:  {type: 'Select',    title: 'Origen presupuesto', editorAttrs:{placeholder:'fuente presupuestaria'},options: utils.budgetOriginList },
-        tramita:      {type: 'Select',    title: 'Tramitación',  editorAttrs:{placeholder:'unidad ejecutora'},options: utils.budgetTramitaPorList },
-        description:  {type: 'TextArea',  title: 'Descripción ejecutiva'},
         presuprog:    {type: 'Text',      title: 'Programa presupuestrio',  editorAttrs:{placeholder:'fuente de crédito presupuestario'}},
         presuinciso:  {type: 'Text',      title: 'Inciso / actividad',  editorAttrs:{placeholder:'fuente de crédito presupuestario'}},
 
@@ -495,41 +608,45 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         nivel_importancia: {type: 'Select',options: utils.actionPrioridadOptionList, title:'Importancia' },
     },
 
-    score_sch: {
-        tgasto:       {type: 'Select',    title:'Tipo de Gasto', options: utils.budgetTemplate['artistica'] },
-        //schema.tgasto.options = utils.budgetTemplate[facet.get('tgasto')];
-
-        slug:         {type: 'Text',      title: 'Asunto',            editorAttrs:{placeholder:'descripción corta'}},
-        montomanual:  {type: 'Text',      title: 'Importe',           editorAttrs:{placeholder:'importe informado'}},
- 
-        isactive:     {type: 'Number',    title: 'Activo',            editorAttrs:{placeholder:'0:inactivo 1:activo'}},
-        cantidad:     {type: 'Number',    title: 'Cantidad',          editorAttrs:{placeholder:'en unidades'}},
-        freq:         {type: 'Number',    title: 'Frecuencia (días/ shows/ etc.)',    editorAttrs:{placeholder:'veces que aplica a la cantidad'}},
-        ume:          {type: 'Select',    title: 'Unidad de medida',  editorAttrs:{placeholder:'unidad de medida'},options: utils.umeList },
-        punit:        {type: 'Text',      title: 'Importe',           editorAttrs:{placeholder:'costo/ precio unitario'}},
- 
-        fecha_prev:   {type: 'Text',      title: 'Fecha prev ejecución', editorAttrs:{placeholder:'dd/mm/aaaa'}},
-        trim_fiscal:  {type: 'Number',    title: 'Trimestre fiscal',  editorAttrs:{placeholder:'Indique 1/2/3/4 Trimestre ejecución presupuestaria'}},
-        anio_fiscal:  {type: 'Text',      title: 'Año fiscal',        editorAttrs:{placeholder:'Indique año fiscal (2015)'}},
-        origenpresu:  {type: 'Select',    title: 'Origen presupuesto', editorAttrs:{placeholder:'fuente presupuestaria'},options: utils.budgetOriginList },
-        tramita:      {type: 'Select',    title: 'Tramitación',  editorAttrs:{placeholder:'unidad ejecutora'},options: utils.budgetTramitaPorList },
-        description:  {type: 'TextArea',  title: 'Descripción ejecutiva'},
-        presuprog:    {type: 'Text',      title: 'Programa presupuestrio',  editorAttrs:{placeholder:'fuente de crédito presupuestario'}},
-        presuinciso:  {type: 'Text',      title: 'Inciso / actividad',  editorAttrs:{placeholder:'fuente de crédito presupuestario'}},
-
-        estado_alta:  {type: 'Select',options: utils.actionAltaOptionList, title:'Estado alta ' },
-        nivel_ejecucion: {type: 'Select',options: utils.budgetEjecucionOptionList, title:'Nivel ejecución' },
-        nivel_importancia: {type: 'Select',options: utils.actionPrioridadOptionList, title:'Importancia' },
+    addItemBudget: function(item){
+      this.itemsCol.add(item);
+      this.listenTo(item, 'budgetitem:cost:changed', this.evaluateCosto);
+      this.trigger('item:budget:added');
+      //this.evaluateCosto();
     },
+
+    trashItem:function(item){
+      this.itemsCol.remove(item);
+      this.trigger('item:budget:removed');
+      this.evaluateCosto();
+    },
+
+    trashMe: function(){
+      if(this.get('_id')){
+        this.set('estado_alta', 'baja');
+        this.evaluateCosto();
+        return true;
+      }else{
+        return false;
+      }
+    },
+
+    cloneMe: function(){
+      var self = this;
+      var clone = self.budgetFactory();
+      return clone;
+    },
+
     evaluateItems: function(){
       var items = this.itemsCol;
       var costodetallado = 0;
-      
+
       if(items){
-        console.log('evaluando ITEMS:[%s]',items.length);
         if(items.length){
           items.each(function(item){
-            costodetallado += item.evaluateCosto();
+            var itemcost = item.evaluateCosto();
+            costodetallado += itemcost;
+            //console.log('evaluate Items[%s] [%s]', itemcost, costodetallado)
           })
         }
       }
@@ -537,18 +654,28 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     evaluateCosto: function(){
+      console.log('EvaluateCosto CABECERA BEGIN');
+      var previouscost = parseInt(this.get('importe'));
       var isactive = parseInt(this.get('isactive')) === 1 ? 1 : 0;
       var isdetallado = parseInt(this.get('isdetallado')) === 1 ? 1 : 0;
+      var isvalid = this.get('estado_alta') === 'activo' ? 1 : 0;
       var freq = parseInt(this.get('freq'));
       var cantidad = parseInt(this.get('cantidad'));
       var montomanual = parseInt(this.get('montomanual'));
 
       var punit = this.evaluateItems();
-      console.log('isactive:[%s] isdetallado:[%s]  freq:[%s]  montomanual:[%s] ',isactive, isdetallado, freq, montomanual)
-      var importe = (isactive * isdetallado * freq * cantidad * punit) + (1-isdetallado) * (isactive * montomanual);
+
+      var importe = (isvalid * isactive * isdetallado * freq * cantidad * punit) + (1-isdetallado) * (isvalid * isactive * montomanual);
+      console.log('CABECERA: isactive:[%s] isdetallado:[%s]  freq:[%s] cant:[%s] montomanual:[%s] punit:[%s] importe:[%s] previouscost:[%s]',isactive, isdetallado, freq, cantidad, montomanual, punit, importe, previouscost)
 
       this.set('punit', punit);
       this.set('importe', importe);
+
+      if(previouscost !== importe){
+        console.log(' BUDGET: triggering cost:changed');
+        this.trigger('budget:cost:changed');
+      }
+      return importe;
     },
 
     fetchBudgetItems: function(stype){
@@ -559,40 +686,85 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           type = self.get('tgasto'),
           deflist = utils.budgetTemplate[type];
 
-      console.log('fetch Budgets Item:[%s] [%s]', stype, self.get('tgasto'))
-
       if(self.itemsCol) return itemsCol;
 
       items = self.get('items');
 
       if(items.length){
-        console.log('have itmes length')
         budgetsCol = new DocManager.Entities.BudgetItemsCollection(items);
+        self.itemsCol = budgetsCol;
 
       }else{
-        console.log('NOT have itmes length')
         var budgetsCol = new DocManager.Entities.BudgetItemsCollection();
+        self.itemsCol = budgetsCol;
+
         _.each(deflist, function(elem){
           if(elem.val !== 'no_definido'){
             budgetItem = new DocManager.Entities.BudgetItemFacet(self.attributes);
 
             budgetItem.set({
               sgasto:elem.val,
+              cgasto: elem.cgasto,
+              slug: '',
+              ume:elem.ume,
               importe: 0,
               montomanual: 0,
               punit: 0,
             })
+            budgetItem.evaluateCosto();
 
-            budgetsCol.add(budgetItem);
+            self.addItemBudget(budgetItem);
           }
         });        
       }
 
-      self.itemsCol = budgetsCol;
       return budgetsCol;
     },
 
+    budgetFactory: function(){
+      var self = this,
+          budget;
 
+      if(self.hasRelevantCost()){
+        self.buildItemsArray();
+        budget = new Entities.Budget(self.attributes);
+        return budget;
+      }else{
+        return null;
+      }
+    },
+
+    hasRelevantCost: function(){
+      var self = this,
+          importe;
+
+      importe = self.evaluateCosto();
+      if (importe || !parseInt(this.get('isactive')) ){
+        return true;
+      }
+      return false;
+    },
+
+    buildItemsArray: function(){
+      var self = this,
+          items=[],
+          importe;
+      
+      console.log('BudgetFactory: building items:[%s]', self.itemsCol.length);
+
+      if(self.itemsCol){
+        console.log('BudgetFactory: building items:[%s]', self.itemsCol.length);
+        self.itemsCol.each(function(budgetItem){
+          importe = budgetItem.evaluateCosto();
+          console.log('BudgetFactory: building items:[%s] [%s]', budgetItem.get('sgasto'), importe);
+          if(importe || !parseInt(budgetItem.get('isactive')) ){
+            budgetItem.set('cgasto', utils.fetchListKey(utils.budgetTemplate[budgetItem.get('tgasto')], budgetItem.get('sgasto'))['cgasto'] );
+            items.push(budgetItem.attributes);
+          }
+        });
+      }
+      self.set('items', items);
+    },
 
     defaults: {
       _id: null,
@@ -606,19 +778,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       description: "",
 
       tgasto: "no_definido",
-      cgasto: "",
+      cgasto: "111.111",
       montomanual: "0",
-      importe: "",
+      importe: "0",
       isactive: "1",
-      isdetallado: "0",
       freq: "1",
-      cantidad: "0",
+      umefreq: "global",
+      cantidad: "1",
       ume: "global",
       punit: "1",
       monto: "0",
       coldh: "0",
       presuprog: "",
       presuinciso: "",
+
+      estado_alta: "activo",
+      nivel_ejecucion: "enevaluacion",
+      nivel_importancia: "media",
 
       items:[],
     },
@@ -629,54 +805,67 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     urlRoot: "/actualizar/presupuestos",
     initialize: function(options){
-        this.schema.sgasto.options = utils.budgetTemplate['global'];
+      //console.log('[%s] INITIALIZE: Tipo de gasto:[%s]',this.whoami, this.get('tgasto'))
+      this.schema = this.buildSchema();
 
     },
 
-
-
-
-    schema: {
-        sgasto:       {type: 'Select',    title:'Tipo de Gasto', options: utils.budgetTemplate['tecnica'] },
-        //schema.tgasto.options = utils.budgetTemplate[facet.get('tgasto')];
-
-        slug:         {type: 'Text',      title: 'Asunto',            editorAttrs:{placeholder:'descripción corta'}},
-        isactive:     {type: 'Number',    title: 'Presupuesto Activo? (1/0)',          editorAttrs:{placeholder:'1: Activo - 0: Inactivo'}},
-        freq:         {type: 'Number',    title: 'Frecuencia (días/ shows/ etc.)',    editorAttrs:{placeholder:'veces que aplica a la cantidad'}},
-        cantidad:     {type: 'Number',    title: 'Cantidad',          editorAttrs:{placeholder:'en unidades'}},
-        ume:          {type: 'Select',    title: 'Unidad de medida',  editorAttrs:{placeholder:'unidad de medida'},options: utils.umeList },
-
-        punit:        {type: 'Text',      title: 'Costo unitario',           editorAttrs:{placeholder:'costo/ precio unitario'}},
- 
-        fecha_prev:   {type: 'Text',      title: 'Fecha prev ejecución', editorAttrs:{placeholder:'dd/mm/aaaa'}},
-        trim_fiscal:  {type: 'Number',    title: 'Trimestre fiscal',  editorAttrs:{placeholder:'Indique 1/2/3/4 Trimestre ejecución presupuestaria'}},
-        anio_fiscal:  {type: 'Text',      title: 'Año fiscal',        editorAttrs:{placeholder:'Indique año fiscal (2015)'}},
-        origenpresu:  {type: 'Select',    title: 'Origen presupuesto', editorAttrs:{placeholder:'fuente presupuestaria'},options: utils.budgetOriginList },
-        tramita:      {type: 'Select',    title: 'Tramitación',  editorAttrs:{placeholder:'unidad ejecutora'},options: utils.budgetTramitaPorList },
-        description:  {type: 'TextArea',  title: 'Descripción ejecutiva'},
-        presuprog:    {type: 'Text',      title: 'Programa presupuestrio',  editorAttrs:{placeholder:'fuente de crédito presupuestario'}},
-        presuinciso:  {type: 'Text',      title: 'Inciso / actividad',  editorAttrs:{placeholder:'fuente de crédito presupuestario'}},
-
-        isdetallado:  {type: 'Number',    title: 'Presupuesto Detallado? (1/0)',  editorAttrs:{placeholder:'1: Detallado - 0: Costo total informado manualmente'}},
-        montomanual:  {type: 'Text',      title: 'Costo informado manual',        editorAttrs:{placeholder:'importe en pesos FINAL informado.'}},
-
+    getOptions: function(){
+      return utils.budgetTemplate[this.get('tgasto')];
     },
 
+    buildSchema: function(){
+      var self = this;
+      var schema = {
+          sgasto:       {type: 'Select',    title:'Tipo de Gasto', options: self.getOptions() },
+
+          slug:         {type: 'Text',      title: 'Descripción del gasto',            editorAttrs:{placeholder:'descripción corta'}},
+          freq:         {type: 'Number',    title: 'Frecuencia (días/ show)',    editorAttrs:{placeholder:'veces que aplica a la cantidad'}},
+          umefreq:      {type: 'Select',    title: 'Unidad de frecuencia',  editorAttrs:{placeholder:'unidad de frecuencia (show/día/mes/etc.'},options: utils.umeFreqList },
+          cantidad:     {type: 'Number',    title: 'Cantidad',          editorAttrs:{placeholder:'en unidades'}},
+          ume:          {type: 'Select',    title: 'Unidad de medida',  editorAttrs:{placeholder:'unidad de medida'},options: utils.umeList },
+
+          punit:        {type: 'Text',      title: 'Costo unitario',           editorAttrs:{placeholder:'costo/ precio unitario'}},
+   
+          fecha_prev:   {type: 'Text',      title: 'Fecha prev ejecución', editorAttrs:{placeholder:'dd/mm/aaaa'}},
+          trim_fiscal:  {type: 'Number',    title: 'Trimestre fiscal',  editorAttrs:{placeholder:'Indique 1/2/3/4 Trimestre ejecución presupuestaria'}},
+          anio_fiscal:  {type: 'Text',      title: 'Año fiscal',        editorAttrs:{placeholder:'Indique año fiscal (2015)'}},
+          origenpresu:  {type: 'Select',    title: 'Origen presupuesto', editorAttrs:{placeholder:'fuente presupuestaria'},options: utils.budgetOriginList },
+          tramita:      {type: 'Select',    title: 'Tramitación',  editorAttrs:{placeholder:'unidad ejecutora'},options: utils.budgetTramitaPorList },
+          description:  {type: 'TextArea',  title: 'Descripción ejecutiva'},
+          presuprog:    {type: 'Text',      title: 'Programa presupuestrio',  editorAttrs:{placeholder:'fuente de crédito presupuestario'}},
+          presuinciso:  {type: 'Text',      title: 'Inciso / actividad',  editorAttrs:{placeholder:'fuente de crédito presupuestario'}},
+
+          isdetallado:  {type: 'Number',    title: 'Presupuesto Detallado? (1/0)',  editorAttrs:{placeholder:'1: Detallado - 0: Costo total informado manualmente'}},
+          montomanual:  {type: 'Text',      title: 'Costo informado manual',        editorAttrs:{placeholder:'importe en pesos FINAL informado.'}},
+
+      };
+      return schema;
+    },
+
+    toggleActivate: function(){
+      this.model.set('isactive', (1 - this.model.get('isactive')));
+    },
 
     evaluateCosto: function(){
-      var isactive = this.get('isactive') === '1'? 1:0;
-      var isdetallado = this.get('isdetallado') === '1'? 1:0;
+      var previouscost = parseInt(this.get('importe'));
+      var isactive = parseInt(this.get('isactive')) === 1 ? 1 : 0;
+      var isdetallado = parseInt(this.get('isdetallado')) === 1 ? 1 : 0;
       var freq = parseInt(this.get('freq'));
       var cantidad = parseInt(this.get('cantidad'));
+
       var punit = parseInt(this.get('punit'));
       var montomanual = parseInt(this.get('montomanual'));
+      
+      console.log('DETALLE: isactive:[%s] isdetallado:[%s]  freq:[%s]  montomanual:[%s] punit:[%s] ',isactive, isdetallado, freq, montomanual, punit)
       var importe = (isactive * isdetallado * freq * cantidad * punit) + (1-isdetallado) * (isactive * montomanual);
       this.set('importe', importe);
+      if(previouscost !== importe){
+        console.log(' ITEM: triggering cost:changed');
+        this.trigger('budgetitem:cost:changed');
+      }
       return importe;
     },
-
-
-
 
     defaults: {
       _id: null,
@@ -685,12 +874,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       slug: "",
       tgasto: "",
       sgasto: "",
-      cgasto: "",
+      cgasto: "111.111",
       importe: "0",
       montomanual: "0",
       isactive: "1",
       isdetallado: "1",
       freq: "1",
+      umefreq: "global",
       cantidad: "0",
       ume: "global",
       punit: "0",
@@ -708,6 +898,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     sortfield: 'tgasto',
     sortorder: -1,
 
+    getByCid: function(model){
+      return this.filter(function(val) {
+        return val.cid === model.cid;
+      })
+    },
+
     comparator: function(left, right) {
       var order = this.sortorder;
       var l = left.get(this.sortfield);
@@ -721,15 +917,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 
-
   Entities.BudgetUpdate = Backbone.Model.extend({
     whoami: 'Entities.BudgetUpdate:budget.js ',
 
     urlRoot: "/actualizar/presupuestos",
 
   });
-
-
 
 
   //Accion Collection
@@ -845,7 +1038,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'Entities.BudgetNavCollection:accion.js ',
     url: "/navegar/presupuestos",
     model: Entities.Budget,
-    sortfield: 'tgasto',
+    sortfield: 'cgasto',
     sortorder: -1,
 
     comparator: function(left, right) {

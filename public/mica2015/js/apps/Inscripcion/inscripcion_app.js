@@ -11,16 +11,15 @@ DocManager.module("InscripcionApp", function(InscripcionApp, DocManager, Backbon
 
   var API = {
 
-	showRegister: function(){
+  	showRegister: function(){
       console.log('API: showRegister');
-	  InscripcionApp.Show.Controller.showRegister();
+  	  InscripcionApp.Show.Controller.showRegister();
     },
-	  
-	editRegister: function(id){
-      console.log('API: edit register', id)
-      InscripcionApp.Edit.Controller.editRegister(id);
+  	  
+  	editRegister: function(id){
+        console.log('API: edit register', id)
+        InscripcionApp.Edit.Controller.editRegister(id);
     },
-
   };
 
   DocManager.on("register:show", function(){

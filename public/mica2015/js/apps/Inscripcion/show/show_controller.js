@@ -8,37 +8,37 @@ DocManager.module("InscripcionApp.Show", function(Show, DocManager, Backbone, Ma
       var fetchingRegister = DocManager.request("inscripcion:entity");
 		
       $.when(fetchingRegister).done(function(inscripcion){
-        
-		var registerView;
-		var negociosView;
-		var photosView;
+  		  var registerView,
+            negociosView,
+            photosView;
 
         if(inscripcion !== undefined){
-          
-		  registerView = new Show.Register({
+  
+    		  registerView = new Show.Register({
             model: inscripcion
           });
-			
-		  negociosView = new Show.Negocio({
+    			
+    		  negociosView = new Show.Negocio({
             model: inscripcion
           });
-		  photosView = new Show.Photos({
+    		  
+          photosView = new Show.Photos({
             model: inscripcion
           });
- 	
-            documLayout.on("show", function(){
+     	
+          documLayout.on("show", function(){
             documLayout.mainRegion.show(registerView);
-			documLayout.negocioRegion.show(negociosView);
-			documLayout.photosRegion.show(photosView);
+            documLayout.negocioRegion.show(negociosView);
+            documLayout.photosRegion.show(photosView);
           });
-
-        }
-        else{
-          registerView = new Show.MissingDocument();
+        
+        }else{
+            registerView = new Show.MissingDocument();
         }
 
         DocManager.mainRegion.show(documLayout);
       });
     }
+
   }
 });

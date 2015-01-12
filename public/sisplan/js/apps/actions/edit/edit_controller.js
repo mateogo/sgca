@@ -200,6 +200,8 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
     });
 
     view.on('budget:new',function(view){
+      DocManager.trigger('budget:build', Edit.Session.model);
+/*
       console.log('NEW BUDGET BUBBLE');
       var opt = {
         view: view,
@@ -215,6 +217,8 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
         }
 
       });
+
+*/      
     });
   };
 

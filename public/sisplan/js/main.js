@@ -6,7 +6,7 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'ActionInlineFormHook',
     'ActionListLayoutView',
     'ActionBudgetHeader','ActionBudgetItem',
-    'ActionShowLegacy','ActionShowHeader','ActionShowBranding','ActionShowBudgetComposite','ActionShowBudgetItem',
+    'ActionShowLegacy','ActionShowHeader','ActionShowBranding','ActionShowBudgetComposite','ActionShowBudgetItem','ActionShowBudgetInstance',
 
     'ActionReportLayoutView',
     'ActionReportItemLayout','ActionReportBranding','ActionReportBudgetComposite','ActionReportBudgetItem','ActionReportHeader',
@@ -14,7 +14,7 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'BudgetListLayoutView','BudgetMainHeader','BudgetNavbar',
     'BudgetShowLegacy','BudgetShowHeader','BudgetShowBranding',
 
-    'BudgetBuildLayout','BudgetBuildArtisticaComposite','BudgetBuildArtisticaItem',
+    'BudgetBuildLayout','BudgetBuildArtisticaComposite','BudgetBuildArtisticaItem','BudgetBuildControlPanelView',
   
     'BplannerListLayout', 'BplannerListFilterView', 'BplannerListAnalyseView',
     'BplannerListSummaryView','BplannerListSummaryItem','BplannerMultieditView',
