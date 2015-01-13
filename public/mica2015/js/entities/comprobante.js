@@ -12,7 +12,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       cnumber: "",
       fecomp: "",
       persona: "",
-      slug: "documento nuevoO",
+      slug: "documento nuevo",
       estado_alta:'media',
       nivel_ejecucion: 'enproceso',
       description: "",
@@ -28,18 +28,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           documitems = [];
 
       self.set({fealta:fealta.getTime(), fecomp: fecomp});
-
-      if(dao.docum.isType(self.get('tipocomp'), 'inscripcion')){
+			
+			dao.gestionUser.getUser(DocManager, function (user){
+				self.set({useralta: user.id, userultmod: user.id});
 				var parte = new Entities.DocumMovimIN();
           parte.set({
 						tipoitem: self.get('tipocomp'),
-						slug: self.get('slug'),
+						rmail: user.attributes.mail,
 					});
 				documitems.push(parte.attributes);
 				self.set({items: documitems});
-			}
-			dao.gestionUser.getUser(DocManager, function (user){
-				self.set({useralta: user.id, userultmod: user.id});
+			
         var person;
         var related = user.get('es_usuario_de');
 				if(related){
@@ -187,7 +186,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     model: Entities.Comprobante,
 
-    url: "/navegar/comprobantes",
+    url: "/rondas/navegar/comprobantes",
 
     sortfield: 'cnumber',
     sortorder: 1,
@@ -205,14 +204,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   Entities.ComprobanteFindOne = Backbone.Collection.extend({
     whoami: 'Entities.ComprobanteFindOne:comprobante.js ',
-    url: "/comprobante/fetch",
+    url: "/rondas/comprobante/fetch",
     model: Entities.Comprobante,
     comparator: "cnumber",
   });
 
   Entities.DocumentsUpdate = Backbone.Collection.extend({
     whoami: 'Entities.DocumentsUpdate:comprobante.js ',
-    url: "/actualizar/comprobantes",
+    url: "/rondas/actualizar/comprobantes",
     model: Entities.Comprobante,
     comparator: "cnumber",
   });
@@ -283,7 +282,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     beforeUpdate: function(){
 
-    },
+    },  
 
     update: function(model, cb){
       var self = this,
@@ -356,20 +355,32 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     // Docum Items[]
     tipoitem: "",
     organismo: "Encuentro",
-    slug: "",
-    tipomov: "",
-    tipo_evento: "",
-    devento: "",
-    fevento: "",
-    leyendafecha: "",
-    lugar: "",
-    airelibre: "",
-
-    provevento: "",
-    locevento: "",
-    cpevento: "",
-    
-    nsolicitante: "",
+			
+		aliasempre: "",
+		razonempre: "",
+		descempre: "",
+		paisempre: "",
+		provempre: "",
+		locempre: "",
+		cuitempre: "",
+		domempre: "",
+		cpempre: "",
+		mailempre: "",
+		webempre: "",
+		afunempre: "",
+		nempempre: "",
+		factaempre: "",
+		rmail: "",
+		rnombre: "",
+		rcargo: "",
+		rdni: "",
+		rfecnac: "",
+		rtel: "",
+		rcelular: "",
+		ridiomas: "",
+			
+		tipomov: "",
+		nsolicitante: "",
     esolicitante: "",
     tsolicitante: "",
 
@@ -449,31 +460,28 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     defaults: {
       tipoitem: "",
-      slug: "",
-      tipomov: "",
-      tipo_evento: "",
-      devento: "",
-      fevento: "",
-      leyendafecha: "",
-      lugar: "",
-      airelibre: "",
-      provevento: "",
-      locevento: "",
-      cpevento: "",
-      nsolicitante: "",
-      esolicitante: "",
-      tsolicitante: "",
-      ntecnico: "",
-      etecnico: "",
-      ttecnico: "",
-      aasignada: "",
-      rasignado: "",
-      rmail: "",
-      rtelef: "",
-      eavance: "",
-      eaprob: "",
-      ncriti: "",
-      resoluc: "",
+			aliasempre: "",
+			razonempre: "",
+			descempre: "",
+			paisempre: "",
+			provempre: "",
+			locempre: "",
+			cuitempre: "",
+			domempre: "",
+			cpempre: "",
+			mailempre: "",
+			webempre: "",
+			afunempre: "",
+			nempempre: "",
+			factaempre: "",
+			rmail: "",
+			rnombre: "",
+			rcargo: "",
+			rdni: "",
+			rfecnac: "",
+			rtel: "",
+			rcelular: "",
+			ridiomas: "",
 
       items:[]
     },
@@ -585,7 +593,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       _id: null,
       tipocomp: "inscripcion",
       cnumber: "",
-      slug: "nuevo",
+      slug: "Acreditacion MICA 2015",
       description: ""
     },
 

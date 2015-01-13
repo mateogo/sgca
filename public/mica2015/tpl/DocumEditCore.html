@@ -1,12 +1,12 @@
 <div class="fuelux">
-  <section class="page-view">
-    <div role="main">
-      <div class="row margin-section">          
-        <div class="form col-xs-12 col-md-12">
-          <!--BEG FORM-->
-          <div class="fu-example section">
-            <div class="wizard" data-initialize="wizard" id="myWizard">
-              <ul class="steps" style="margin-left: 0">
+	<section class="page-view">
+		<div role="main">
+			<div class="row margin-section">  
+				<div class="form col-xs-12 col-md-12">
+					<!--BEG FORM-->
+					<div class="fu-example section">
+						<div class="wizard" data-initialize="wizard" id="myWizard">
+							<ul class="steps" style="margin-left: 0">
                 <li data-step="1" class="active"><span class="badge badge-info">1</span>Empresa<span class="chevron"></span></li>
                 <li data-step="2"><span class="badge">2</span>Representantes<span class="chevron"></span></li>
                 <li data-step="3"><span class="badge">3</span>Comprar<span class="chevron"></span></li>
@@ -17,167 +17,165 @@
 								<button class="btn btn-default btn-prev" disabled="disabled"><span class="glyphicon glyphicon-arrow-left"></span></button>
 								<button class="btn btn-default btn-next" data-last="FINALIZAR"><span class="glyphicon glyphicon-arrow-right"></span></button>
 							</div>
-
-              <div class="step-content">
-
-                <div class="step-pane active" data-step="1">
-
-                  <h4>Datos de la Empresa o Institución</h4>
+							
+							<div class="step-content">
+								<div class="step-pane active" data-step="1">
+									<h4>Datos de la Empresa o Institución</h4>
+									<div class="avatar-upload">
+										<div id="cropContainerEyecandy"></div>
+									</div>
                   <div class="form-group">
-                    <div class="row">
-                      <div class="col-sm-8">
-                        <label class="control-label">Denominación del evento</label>
-                        <input type="text" class="form-control" name="slug" value='<%= slug %>'>
-                      </div>
-                      <div class="col-sm-4 selectContainer">
-                        <label class="control-label">Tipo de evento</label>
-                        <select class="form-control" name="tipo_evento">
-                          <%= utils.buildSelectOptions('proevento',utils.tipofiestaOptionList, tipo_evento) %>
-                        </select>
-                      </div>
+										<div class="row">
+											<div class="col-sm-5 col-xs-9">
+												<label class="control-label">Nombre de la Empresa (alias)</label>
+												<input type="text" class="form-control" id="aliasempre" name="aliasempre" value='<%= aliasempre %>'/>
+											</div>
+											<div class="col-sm-5 col-xs-9">
+												<label class="control-label">Razón social</label>
+												<input type="text" class="form-control" id="razonempre" name="razonempre" value='<%= razonempre %>'/>
+											</div>
                     </div>
                   </div>
-                  
-                  <div class="form-group">
-                    <div class="row">
-                      <div class="col-sm-4 selectContainer">
-                        <label class="control-label">Provincia</label>
-                        <select class="form-control" id="proevento" name="provevento">
-                          <%= utils.buildSelectOptions('proevento',utils.provinciasOptionList.Argentina, provevento) %>
-                        </select>
-                      </div>    
-                      <div class="col-sm-6">
-                          <label class="control-label">Localidad</label>
-                          <input type="text" class="form-control" id="locevento" name="locevento" 
-                                  value="<%= locevento %>" >
-                      </div>
-            
-                      <div class="col-sm-2">
-                          <label class="control-label">CP</label>
-                          <input type="text" class="form-control" name="cpevento"
-                                  value="<%= cpevento %>"  >
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="form-group">
-                      <label class="control-label">Descripción del evento</label>
-                      <textarea class="form-control" name="devento" rows="10"><%= devento %></textarea>
-                  </div>
-                
-                  <div class="row col-sm-12">
-                    <div class="form-group well-transparent bg-info col-sm-6">
-                      <div class="row">
-                        <div class='col-sm-12'>
-                          <label class="control-label">Fecha y hora del evento</label>
-                          <div class='input-group'>
-                            <input type='text' class="form-control js-datepicker" id='fevento' name="fevento" 
-                                    value="<%= fevento %>" >
-                            <span class="input-group-addon">
-                              <span class="glyphicon glyphicon-th"></span>
-                            </span>
-                          </div>
-                        </div>
-                        <div class='col-sm-12'>
-                          <label class="control-label">Texto descriptivo de la fecha y horario seleccionada</label>
-                          <textarea class="form-control" name="leyendafecha" rows="4"><%= leyendafecha %></textarea>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group col-sm-5 col-sm-push-1">
-                      <div class="row">
-                        <label class="control-label">Lugar donde se realizará el evento
-                        </label>
-                        <textarea class="form-control" name="lugar" rows="4"
-                        value="<%= lugar %>"><%= lugar %>
-                        </textarea>
-                      </div>
-                    </div>
-                    <div class="form-group col-sm-5 col-sm-push-1">
-                      <div class="row">
-                        <label class="control-label">¿El evento es al aire libre?</label>
-                        <input type="checkbox" name="airelibre" id="airelibre" checked>
-                      </div>
-                    </div>
-                  </div>
+									<div class="form-group col-sm-10">
+										<div class="row">
+											<label class="control-label">Describa el perfil de la empresa/institución</label>
+											<textarea class="form-control" id="descempre" name="descempre" rows="2" <%= descempre %> placeholder="Escriba su descripción en un máximo de 140 caracteres"></textarea>
+											<p id="limit-chars"></p>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-4 selectContainer">
+												<label class="control-label">País</label>
+												<select class="form-control" id="paisempre" name="paisempre">
+													<%= utils.buildSelectOptions('paisempre',utils.paisesOptionList.Paises, paisempre) %>
+												</select>
+											</div>
+											<div class="col-sm-4 selectContainer">
+												<label class="control-label">Provincia</label>
+												<select class="form-control" id="provempre" name="provempre">
+														<%= utils.buildSelectOptions('provempre',utils.provinciasOptionList.Argentina, provempre) %>
+												</select>
+											</div>
+										
+											<div class="col-sm-4">
+												<label class="control-label">Localidad</label>
+												<input type="text" class="form-control" id="locempre" name="locempre" value="<%= locempre %>" >
+											</div>
+										</div>
+									</div>
+										
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-4 selectContainer">
+												<label class="control-label">CUIT</label>
+												<input type="text" class="form-control" id="cuitempre" name="cuitempre" value='<%= cuitempre %>'/>
+											</div>
+											<div class="col-sm-8">
+												<label class="control-label">Domicilio</label>
+												<input type="text" class="form-control" id="domempre" name="domempre" value='<%= domempre %>'/>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+
+											<div class="col-sm-2 selectContainer">
+												<label class="control-label">CP</label>
+												<input type="text" class="form-control" id="cpempre"name="cpempre" value='<%= cpempre %>'/>
+											</div>
+
+											<div class="col-sm-5">
+												<label class="control-label">Email</label>
+												<input type="email" class="form-control" id="mailempre" name="mailempre" value='<%= mailempre %>'>
+											</div>
+
+											<div class="col-sm-5">
+													<label class="control-label">Web</label>
+													<input type="text" class="form-control" id="webempre" name="webempre" value='<%= webempre %>'/>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-4">
+												<label class="control-label">Año de Fundación</label>
+												<input type="text" class="form-control" id="afunempre" name="afunempre" value='<%= afunempre %>'>
+											</div>
+
+											<div class="col-sm-4">
+												<label class="control-label">Nro. de empleados</label>
+												<input type="text" class="form-control" id="nempempre" name="nempempre" value='<%= nempempre %>'/>
+											</div>
+
+											<div class="col-sm-4">
+												<label class="control-label">Facturación anual</label>
+												<input type="text" class="form-control" id="factaempre" name="factaempre" value='<%= factaempre %>'>
+											</div>
+										</div>
+									</div>
                 </div><!-- END EVENTO --> 
                 
                 <div class="step-pane" data-step="2">
-                  
-                  <h4>Municipio u Organismo Público solicitante - Datos de contacto</h4>
-                  <p>Esta solicitud sólo puede ser cursada por un Municipio u Organismo Público. En este segundo paso le requerimos que seleccione el nombre de dicho Municipio u Organismo. Asimismo le requerimos los datos de contacto de los responsables nominados para la prosecución de la tramitación. </p>
-                  <hr>
-                  <h4>Municipio u Organismo Público</h4>
-                  <p>Seleccione el Municipio u Organismo con el botón 'Buscar'</p>
-                  <div class="form-group row">
-                    <div class="col-sm-8">
-                      <div class="input-group">
-                        <span class="input-group-addon">@</span>
-                        <input id="organismosch" name="organismo" type="text" class="form-control " 
-                            value="<%= organismo %>"  placeholder="Seleccione un organismo con el boton buscar" readonly>
-                        <span class="input-group-btn"><button class="btn btn-default js-organismosch" type="button">Buscar</button></span>
-                      </div> 
-                    </div> 
-                  </div>
-                  <hr>
-                  <h4>Datos del contacto</h4>
-                  <p>Indicar aquí el nombre y cargo de la persona responsable del seguimiento operativo de esta solicitud. La dirección de correo electónico que se indique a continuación será <strong>utilizada para toda comunicación oficial con relación a esta solicitud</strong> y también será la clave de usuario par el acceso a la Intranet del Ministerio de Cultura</p>
-                  <div class="form-group row">
-                    <div class="col-sm-8">
-                      <label class="control-label">Correo electrónico principal</label>
-                      <input type="email" id='eusuario' class="form-control" id="eusuario" name="eusuario" value="<%=eusuario %>" placeholder="dirección de correo electrónica">
-                      <span class="help-block"></span>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <div class="col-sm-8">
-                      <label class="control-label">Nombre y apellido del contacto principal</label>
-                      <input type="text" class="form-control" id="nusuario" name="nusuario" value="<%=nusuario %>" placeholder="Nombre y apellido">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <div class="col-sm-8">
-                      <label class="control-label">Cargo o rol</label>
-                      <input type="text" class="form-control" id="cargo" name:'rolusuario' value="<%=rolusuario %>" placeholder="Cargo o rol que ocupa en esta solicitud">
-                    </div>
-                  </div>
+									<h4>Representante que participará de la ronda</h4>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-12">
+												<label class="control-label">Email del Responsable</label>
+												<input type="text" class="form-control" id="rmail" name="rmail" value='<%= rmail %>' disabled><!--A completar automáticamente-->
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-8">
+												<label class="control-label">Nombre y apellido del Responsable</label>
+												<input type="text" class="form-control" id="rnombre" name="rnombre" value='<%= rnombre %>'/>
+												<!--A completar automáticamente-->
+											</div>
+											<div class="col-sm-4">
+												<label class="control-label">Cargo</label>
+												<input type="text" class="form-control" id="rcargo" name="rcargo" value='<%= rcargo %>'/>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-3">
+												<label class="control-label">DNI</label>
+												<input type="text" class="form-control" id="rdni" name="rdni" placeholder="XXXXXXXX" value='<%= rdni %>' disabled/><!--A completar automáticamente-->
+											</div>
+											
+											<div class="col-sm-3">
+												<label class="control-label">Fecha de nacimiento</label>
+												<input type="text" class="form-control" id="rfecnac" name="rfecnac" value='<%= rfecnac %>'/>
+											</div>
+											
+											<div class="col-sm-3">
+												<label class="control-label">Teléfono</label>
+												<input type="text" class="form-control" id="rtel" name="rtel" value='<%= rtel %>'/>
+											</div>
 
-                  <h4>Responsable Político</h4>
-                  <div class="form-group">
-                    <div class="row">
-                      <div class="col-sm-4">
-                        <label class="control-label">Nombre y apellido</label>
-                        <input type="text" class="form-control" name="nsolicitante"  value="<%= nsolicitante %>" >
-                      </div>
-                      <div class="col-sm-4">
-                          <label class="control-label">Email</label>
-                          <input type="email" class="form-control" name="esolicitante" value="<%= esolicitante %>"placeholder="Email">
-                      </div>             
-                      <div class="col-sm-4">
-                        <label class="control-label">Teléfono</label>
-                        <input type="text" class="form-control" name="tsolicitante" value="<%= tsolicitante %>">
-                      </div>
-                    </div>
-                  </div>
-                  <hr>
-                  <h4>Responsable Técnico</h4>
-                  <div class="form-group">
-                    <div class="row">
-                      <div class="col-sm-4">
-                        <label class="control-label">Nombre y apellido</label>
-                        <input type="text" class="form-control" name="ntecnico" value="<%= ntecnico %>" >
-                      </div>              
-                      <div class="col-sm-4">
-                        <label class="control-label">Email</label>
-                        <input type="email" class="form-control" name="etecnico" value="<%= etecnico %>" placeholder="Email">
-                      </div>              
-                      <div class="col-sm-4">
-                        <label class="control-label">Teléfono</label>
-                        <input type="text" class="form-control" name="ttecnico" value="<%= ttecnico %>" >
-                      </div>
-                    </div>
-                  </div>
-                </div><!-- END RESPONSABLES -->
+											<div class="col-sm-3">
+												<label class="control-label">Teléfono móvil</label>
+												<input type="text" class="form-control" id="rcelular" name="rcelular" value='<%= rcelular %>'/>
+											</div>
+
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-12">
+												<label class="control-label">Idiomas que domina</label>
+												<input type="text" class="form-control" id="ridiomas" name="ridiomas">
+											</div>
+										</div>
+									</div>
+									<hr class="spacer">
+									<a href="#" id="nuevo-req-btn" onclick="return false">
+										<button id="itemFormBtn" type="button" class="btn btn-primary">Agregar otro representante</button>
+									</a>
+								</div><!-- END RESPONSABLES -->
   
                 <div class="step-pane" data-step="3">
                   <h4>Requerimientos</h4>

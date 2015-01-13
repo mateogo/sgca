@@ -4,7 +4,7 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
     appRoutes: {
       "rondas/comprobantes(/filter/criterion::criterion)": "listDocuments",
       "rondas/comprobantes/:id": "showDocument",
-      "rondas/comprobante/:id/edit": "editDocument",
+      "rondas/comprobantes/:id/edit": "editDocument",
       "reportes(/filter/criterion::criterion)": "listReports",
       "reportes/:id": "showReport",
       "reportes/:id/edit": "editReport",
@@ -105,7 +105,7 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
 	
   DocManager.on("document:edit", function(model){
     var documid = model.id || model.get('documid');
-    DocManager.navigate("comprobantes/" + documid + "/edit");
+    DocManager.navigate("rondas/comprobantes/" + documid + "/edit");
 		console.log('0');
     API.editDocument(documid);
   });
