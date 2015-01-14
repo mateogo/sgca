@@ -36,7 +36,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     resetFilteredCol: function(){
       var self = this;
       self.filteredCol = filterActionBudgetCol(self.dbaseCol, self);
-      console.log('**********  reseted col[%s]', self.filteredCol.length);
+      //console.log('**********  reseted col[%s]', self.filteredCol.length);
       //scanCollection(self.filteredCol);
       return self.filteredCol;
     },
@@ -232,7 +232,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
         insertTokenInSummaryCol(token, costo, summaryCol);        
       }else{
-        console.log('registro excluido por no estar Activo:[%s]', model.get('cnumber'));
+        //console.log('registro excluido por no estar Activo:[%s]', model.get('cnumber'));
       }
 
     });
@@ -593,7 +593,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var API = {
     loadRecords: function(query, opt, cb){
       DocManager.request('action:fetch:actionbudget:col',query, opt, function(budgetArray){
-        console.log('BINGO: [%s]',budgetArray.length);
+        //console.log('BINGO: [%s]',budgetArray.length);
         cb(budgetArray);
 
       });

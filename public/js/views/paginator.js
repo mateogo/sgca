@@ -18,6 +18,9 @@ window.Paginator = Backbone.View.extend({
         var len = items.length;
         var pageCount = Math.ceil(len / 12);
 
+        //chancho:
+        if(pageCount > 10) pageCount = 10;
+
         $(this.el).html('<ul class="pagination"></ul>');
 
         for (var i=0; i < pageCount; i++) {

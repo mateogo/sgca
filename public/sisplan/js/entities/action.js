@@ -634,6 +634,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     getActionBudgetCol: function(query){
       var defer = $.Deferred();
+      console.log('ready to fetch: QUERY:[%s]', query.areas);
 
       $.ajax({
         data: query,

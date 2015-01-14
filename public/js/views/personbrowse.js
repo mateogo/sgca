@@ -68,7 +68,7 @@ window.PersonBrowseView = Backbone.View.extend({
             data: query,
             type: 'post',
             success: function() {
-                //console.log('[%s] fetch SUCCESS [%s]',self.whoami, selector);
+                console.log('[%s] fetch SUCCESS [%s]',self.whoami, selector);
                 // PersonListView controller: personlist.js
                 $(selector).html(new PersonListView({model: self.personlist, page: page}).el);
             }

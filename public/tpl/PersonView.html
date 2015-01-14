@@ -68,6 +68,8 @@
                     <%= tipopersona == 'grupo' ? 'selected':'' %>>grupo</option>
                 <option value='locacion'
                     <%= tipopersona == 'locacion' ? 'selected':'' %>>locacion</option>
+                <option value='municipio'
+                    <%= tipopersona == 'municipio' ? 'selected':'' %>>municipio</option>
               </select>
               <span class="help-block"></span>
             </div>
@@ -151,6 +153,11 @@
           <label class="checkbox-inline">
             <input type="checkbox" name='roles' id='productor' value='productor' 
               <%= roles['productor']  ? 'checked':'' %> >¿Es productor?
+          </label>
+
+          <label class="checkbox-inline">
+            <input type="checkbox" name='roles' id='empleado' value='empleado' 
+              <%= roles['empleado']  ? 'checked':'' %> >¿Es empleado?
           </label>
 
          <label class="checkbox-inline">

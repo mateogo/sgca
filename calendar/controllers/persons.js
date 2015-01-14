@@ -183,6 +183,19 @@ exports.update = function(req, res) {
     });
 };
 
+exports.importNewPerson = function(person, cb) {
+    dbi.collection(personsCol).insert(person,{w:1}, function(err, result) {
+            if (err){
+                if(cb) cb({'error':'An error has occurred'})
+            } else {
+                if(cb){
+                    //console.log('3.1. ADD: se inserto correctamente el nodo [%s]  [%s] ', result[0]['_id'], JSON.stringify(result[0]['_id'].str));
+                    cb({'model':result[0]})
+                }
+            }
+        });
+};
+
 exports.delete = function(req, res) {
     var id = req.params.id;
     console.log('Deleting node: [%s] ', id);

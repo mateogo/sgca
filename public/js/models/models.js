@@ -526,35 +526,98 @@ window.Person = Backbone.Model.extend({
 
     },
 
-    factoryPerson: function(attrs, cb){
-        var person = this;
+    buildDefaultsFor: function(target, attrs){
+        var self = this;
+        if(target=== 'sisplan'){
+            console.log('PERSON: build defaults for SISPLAN')
+            self.set({
+                "tipopersona": "persona",
+                "name": attrs.name,
+                "displayName": attrs.displayName,
+                "nickName": attrs.displayName,
+                "tipojuridico": {
+                    "pfisica": true,
+                    "pjuridica": false,
+                    "pideal": false,
+                    "porganismo": false
+                },
+                "roles": {
+                    "adherente": false,
+                    "proveedor": false,
+                    "empleado": true,
+                },
+                "estado_alta": "activo",
+                "descriptores": "sisplan",
+                "description": attrs.description,
+                "contactinfo": [{
+                    "tipocontacto": "mail",
+                    "subcontenido": "trabajo",
+                    "contactdata": attrs.mail
+                }],
+            });
+        }else{
+            self.set({
+                "tipopersona": "persona",
+                "name": attrs.name,
+                "displayName": attrs.displayName,
+                "nickName": attrs.displayName,
+                "tipojuridico": {
+                    "pfisica": true,
+                    "pjuridica": false,
+                    "pideal": false,
+                    "porganismo": false
+                },
+                "roles": {
+                    "adherente": true,
+                    "proveedor": false,
+                    "empleado": false,
+                },
+                "estado_alta": "activo",
+                "descriptores": "formWeb",
+                "description": attrs.description,
+                "contactinfo": [{
+                    "tipocontacto": "mail",
+                    "subcontenido": "trabajo",
+                    "contactdata": attrs.mail
+                }],
+            });
+        }
+    },
 
-        person.set({
-            "tipopersona": "persona",
-            "name": attrs.name,
-            "displayName": attrs.displayName,
-            "nickName": attrs.displayName,
-            "tipojuridico": {
-                "pfisica": true,
-                "pjuridica": false,
-                "pideal": false,
-                "porganismo": false
-            },
-            "roles": {
-                "adherente": true,
-                "proveedor": false,
-            },
-            "estado_alta": "activo",
-            "descriptores": "formWeb",
-            "description": attrs.description,
-            "contactinfo": [{
-                "tipocontacto": "mail",
-                "subcontenido": "trabajo",
-                "contactdata": attrs.mail
-            }],
-        });
-        person.initBeforeSave();
-        person.save(null, {
+    factoryPerson: function(attrs, cb){
+        var self = this;
+        if (attrs.target){
+            self.buildDefaultsFor(attrs.target, attrs)
+        }else{
+            self.set({
+                "tipopersona": "persona",
+                "name": attrs.name,
+                "displayName": attrs.displayName,
+                "nickName": attrs.displayName,
+                "tipojuridico": {
+                    "pfisica": true,
+                    "pjuridica": false,
+                    "pideal": false,
+                    "porganismo": false
+                },
+                "roles": {
+                    "adherente": true,
+                    "proveedor": false,
+                    "empleado": false,
+                },
+                "estado_alta": "activo",
+                "descriptores": "formWeb",
+                "description": attrs.description,
+                "contactinfo": [{
+                    "tipocontacto": "mail",
+                    "subcontenido": "trabajo",
+                    "contactdata": attrs.mail
+                }],
+            });
+        }
+ 
+        self.initBeforeSave();
+        self.save(null, {
             success: function (model) {
                 console.log('Exito! se insertó una nueva Person');
                 if(cb) cb(model);
@@ -581,6 +644,7 @@ window.Person = Backbone.Model.extend({
         roles:{
             adherente:false,
             proveedor:false,
+            empleado:false,
         },
         estado_alta: "activo",
         descriptores: "",
@@ -615,6 +679,42 @@ window.UserFacet = Backbone.Model.extend({
         termsofuse:      {type: 'Checkbox',options: ['Aceptado'] , title:'Acepto los términos de uso y las políticas de privacidad del MCN'},
    termsofuse:      {type: 'Checkbox',options: ['Aceptado'] , title:'Acepto',editorAttrs:{placeholder : 'acepta los términos de referencia'}},
     
+person: tipojuridico: {pfisicia/pjridica/pideal/porganismo}
+person.roles:{adherente/proveedor/empleado}
+person.taglist: [sisplan]
+
+user.roles:[administrador/usuario/supervisor]
+user.grupo: "tecnica|"
+user.home: 'sisplan:acciones:list'
+user.verificado: {mail/feaprobado/adminuser}
+
+home: dónde arranca
+
+Roles de usuario: (es un array)
+    admin:
+        puede gestionar tablas de configuración / instalación
+
+    supervisor:
+        toma decisiones en su área de trabajo
+
+    usuario:
+        usuario operativo de su área de trabajo
+
+    presugestor:
+        puede gestionar presupuestos
+
+
+modulos: (array)
+    sisplan/asistencias/mica
+
+
+atribuciones (array)
+    chimenea: puede ver de su área para abajo
+    nodochimenea: puede ver todo lo de su nodo
+    superchimenea: puede ver todo los nodos.
+    presuautorizante: autoriza presupuesto.
+
+
 */
         displayName:    {type: 'Text', title: 'Nombre saludo', editorAttrs:{placeholder : 'sera utilizado como saludo'}, validators:['required']},
         name:           {type: 'Text', title: 'Nombre completo', editorAttrs:{placeholder : 'nombre y apellido'}, validators:['required']},
@@ -675,16 +775,23 @@ window.UserFacet = Backbone.Model.extend({
         user = new User(),
         userattrs = {};
 
+        console.log('addNewUser [%s]', self.get('target'));
+
         userattrs.displayName = self.get('displayName');
         userattrs.name = self.get('name');
         userattrs.username = self.get('username');
         userattrs.mail = self.get('mail');
         userattrs.description = self.get('description');
         userattrs.password = self.get('password');
-        userattrs.roles =   self.get('roles'),
-        userattrs.home =  self.get('home'),
-        userattrs.grupo = self.get('grupo'),
+        userattrs.roles =   self.get('roles');
+        userattrs.area =   self.get('area');
+        userattrs.home =  self.get('home');
+        userattrs.grupo = self.get('grupo');
+        userattrs.target = self.get('target');
 
+        if(self.get('target')){
+            self.buildDefaultsFor(self.get('target'), userattrs)
+        }
         user.set(userattrs);
 
         console.log('addNewUser');
@@ -703,6 +810,15 @@ window.UserFacet = Backbone.Model.extend({
 
         });
 
+    },
+
+    buildDefaultsFor: function(target, user){
+        if(target === 'sisplan'){
+            console.log('buildDefaults for SISPLAN');
+            user.home = 'sisplan:acciones:list';
+            user.atributos = ['presugestor', 'nodochimenea'];
+            user.modulos = ['sisplan'];
+        }
     },
 
     loadusers: function(username, cb){
@@ -739,7 +855,7 @@ window.UserFacet = Backbone.Model.extend({
     },
 
     validate: function(attrs, options) {
-      console.log('UserFacet VALIDATE attrs:[%s] options:[%s]',attrs,options);
+      //console.log('UserFacet VALIDATE attrs:[%s] options:[%s]',attrs,options);
       var errors = {},
             strict = false;
 
@@ -748,7 +864,7 @@ window.UserFacet = Backbone.Model.extend({
       }
 
       if(strict){
-            console.log('modo STRICT')
+        //console.log('modo STRICT [%s] [%s]', attrs.username, attrs.mail);
           if (! attrs.username) {
             errors.username = "Usuario: dato requerido";
             //errors.otro = 'otro error no reconocido';
@@ -801,16 +917,17 @@ window.UserFacet = Backbone.Model.extend({
         name:'',
         username:'',
         mail:'',
+        area:'',
         description:'cuéntenos brevemente sobre Usted',
         password:'',
         passwordcopia:'',
         fealta:'',
         usernameconflict:'zNoTesteado',
-        roles: ['adherente'],
+        roles: ['supervisor'],
         home: "solicitudes:list",
         grupo:'adherente',
         termsofuse: false,
-        areatrabajo: '',
+        target: '',
 
         estado_alta:'pendaprobacion',
         verificado: {
@@ -3356,12 +3473,15 @@ window.User = Backbone.Model.extend({
 
     schema: {
         displayName:   {type: 'Text', title: 'Nombre', editorAttrs:{placeholder : 'sera utilizado como saludo'}},
-        mail:          {type: 'Text', title: 'EMail', editorAttrs:{placeholder : 'mail de contacto'}},
+        mail:          {type: 'Text', title: 'Email', editorAttrs:{placeholder : 'mail de contacto'}},
         password:      {type: 'Password', title: 'Clave' },
         estado_alta:   {type: 'Select',options: utils.userStatusOptionList, title:'Estado' },
         home:          {type: 'Select',options: utils.userHomeOptionList, title:'Loc de Inicio' },
         grupo:         {type: 'Select',options: utils.userGroupsOptionList, title:'Grupo' },
-        roles:         { type: 'List', itemType: 'Text', title: 'Roles' }
+        area:          {type: 'Select',options: utils.actionAreasOptionList, title:'Área' },
+        roles:         { type: 'List', itemType: 'Text', title: 'Roles' },
+        atributos:     { type: 'List', itemType: 'Text', title: 'Atributos' },
+        modulos:       { type: 'List', itemType: 'Text', title: 'Módulos' },
     },
 
 
@@ -3371,12 +3491,12 @@ window.User = Backbone.Model.extend({
         username:'',
         password:'',
         mail:'',
+        area:'',
         description:'',
         roles:[],
         fealta:'',
         grupo: '',
         roles: '',
-        areatrabajo: '',
         estado_alta:'pendaprobacion',
         verificado: {
             mail:false,

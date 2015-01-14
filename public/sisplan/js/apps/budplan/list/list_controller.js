@@ -7,35 +7,33 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
 			//var loadingView = new DocManager.Common.Views.Loading();
 			//DocManager.mainRegion.show(loadingView);
 
-			if(!List.Session) List.Session = {};
+			List.Session = {};
 
      	dao.gestionUser.getUser(DocManager, function (user){
-     		List.Session.user = user;
-     		initModuleViews();
-				
-				DocManager.mainRegion.show(List.Session.layout);
+        if(user){
+          List.Session.user = user;
+          initModuleViews();
+          
+          DocManager.mainRegion.show(List.Session.layout);
+          console.log('INICIANDO LIST CONTROLLER[%s]',List.Session.detailedview)
 
-				loadRecordsFromDB(function(){
-					console.log('BudgetPlanner')
-
-				});
-
-        //DocManager.request("budget:query:search","", function(model){
-        //  console.log('query lista CALLBACK - END');
-        //});
-
-      });// currentUser
-
-
+          loadRecordsFromDB(function(status){
+            console.log('BudgetPlanner:[%s]', status);
+          });      
+        }else{
+          console.log('vuelve a edición de ACTION')
+          //DocManager.trigger('actions:list');
+        }
+      });
     }
   };
 
 	//================== LayoutView builder ==================
 	var initModuleViews = function(){
 			initFilterView();
-			buildAnalyseView();
+  		buildAnalyseView();
       buildMultieditView();
-			buildLayoutView();
+  		buildLayoutView();
 	};
 
 	var buildLayoutView = function(){
@@ -45,6 +43,7 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
 
 	var registerLayoutViewEvents = function(layoutview){
 			layoutview.on("show", function(){
+
 				console.log('LAYOUT SHOW [%s]',List.Session.filterview.whoami)
 				layoutview.filterRegion.show(List.Session.filterview);
 				layoutview.analyseRegion.show(List.Session.analyseview);
@@ -52,15 +51,13 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
 				layoutview.detailRegion.show(List.Session.detailedview);
 			});
 
-			layoutview.on("data:reloaded:from:server", function(){
+		  layoutview.on("data:reloaded:from:server", function(){
 				console.log('LAYOUT: NUEVA COLECCION')
 
 				buildDetailedView();
 				layoutview.detailRegion.show(List.Session.detailedview);
-
 				buildSummaryView('nodo');
 				layoutview.summaryRegion.show(List.Session.summaryview);
-
 			});
 			
 
@@ -95,7 +92,6 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
 
 	var buildSummaryView = function(type){
       if(!List.Session.summaryview){
-
         List.Session.summaryview = new List.SummaryPanel({
           collection: List.Session.filtermodel.getSummaryCol(type),
           model: List.Session.filtermodel
@@ -289,11 +285,20 @@ DocManager.module("BudplanApp.List", function(List, DocManager, Backbone, Marion
 
 //================== LOAD DATA from database ==================
 var loadRecordsFromDB = function(cb){
-	List.Session.filtermodel.fetchData(null, null, function(col){
-		console.log('HERE: [%s]', col.length);
+  var query = buildAreaList();
+
+	List.Session.filtermodel.fetchData(query, null, function(col){
 		List.Session.layout.trigger('data:reloaded:from:server');
 		cb('ready');
 	});
+};
+
+var buildAreaList = function(){
+  var query = {};
+  query.areas = _.map(dao.gestionUser.fetchPermitted('AREA', 'sisplan'), function(item){
+    return item.val;
+  })
+  return query;
 };
 
 
