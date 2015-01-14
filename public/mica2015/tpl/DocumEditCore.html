@@ -178,41 +178,241 @@
 								</div><!-- END RESPONSABLES -->
   
                 <div class="step-pane" data-step="3">
-                  <h4>Requerimientos</h4>
-                  <p class="bg-info well-transparent row">A fin de establecer una articulación plurilateral, deberán ser indicados tanto los requerimientos solicitados al Ministerio de Cultura de la Nación, como aquellos que el Municipio u Organismo compromete a su propio cargo.</p>
-              
-                  <div class="form-group">
-                    <label class="control-label">Descripción ejecutiva de la solicitud</label>
+									<h4>ACTIVE SU PERFIL DE COMPRADOR</h4> 
+									<p>En caso de tener productos o servicios culturales para <strong>COMPRAR</strong>, active su perfil de Comprador.</p>
+									<div id="data" class="switch">
+										<input id="buyer" class="cmn-toggle cmn-toggle-round" type="checkbox">
+										<label for="buyer"></label>
+									</div>
+									<!--BEG INFO COMO COMPRADOR-->
+									<div id="infocomprador" class="hidden"><hr>
+										<h5>Actividades sobre las que desea inscribirse como comprador</h5>  
+										<div class="form-group" id="buyactividades">
+											<div class="checkbox" id="buyteatro">
+												<label class="checkbox-custom" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" value="">
+													<span class="checkbox-label">Artes escénicas</span>
+												</label>
+											</div>
+											<div class="checkbox" id="buyaudiovisual">
+												<label class="checkbox-custom" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" value="">
+													<span class="checkbox-label">Audiovisual</span>
+												</label>
+											</div>
+											<div class="checkbox" id="buydiseno">
+												<label class="checkbox-custom" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" value="">
+													<span class="checkbox-label">Diseño</span>
+												</label>
+											</div>
+											<div class="checkbox" id="buyeditorial">
+												<label class="checkbox-custom" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" value="">
+													<span class="checkbox-label">Editorial</span>
+												</label>
+											</div>
+											<div class="checkbox" id="buymusica">
+												<label class="checkbox-custom" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" value="">
+													<span class="checkbox-label">Música</span>
+												</label>
+											</div>
+											<div class="checkbox" id="buyvideojuegos">
+												<label class="checkbox-custom" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" value="">
+													<span class="checkbox-label">Videojuegos y Apps</span>
+												</label>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<div class="row">
+												<div class="form-group">
+													<label class="col-sm-12 control-label">Palabras clave</label>
+													<div class="col-sm-12">
+														<select multiple name="tags" class="form-control" data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter." ></select>
+													</div>
+												</div>
 
-                    <p>Indique en forma resumida el alcance del requerimiento</p>
-                    <textarea class="form-control" name="description" rows="4" placeholder="Descripción ejecutiva de la solicitud. Justificación" value='<%= description %>'><%= description %></textarea>
-                  </div>
+												<div class="form-group col-sm-12">
+													<label class="control-label">Detalle los productos y/o servicios de la empresa/institución</label>
+													<textarea class="form-control" name="lugarfecha" rows="4"></textarea>
+												</div>
+                              
+												<div class="form-group col-sm-12">
+													<p><strong>¿Hace negocios con actores culturales del exterior?</strong></p>
+													<label class="radio-custom radio-inline" data-initialize="radio" id="ext-buy-always">
+														<input class="sr-only" checked="checked" name="ext-buy" type="radio" value="ext-buy-always"> Frecuentemente
+													</label>
+													<label class="radio-custom radio-inline" data-initialize="radio" id="ext-buy-often">
+														<input class="sr-only" name="ext-buy" type="radio" value="ext-buy-often"> Esporádicamente
+													</label>
+													<label class="radio-custom radio-inline" data-initialize="radio" id="ext-buy-never">
+														<input class="sr-only" name="ext-buy" type="radio" value="ext-buy-never"> Nunca
+													</label>
+												</div>
 
-                  <a id="nuevo-req-btn">
-                    <button id="itemFormBtn" type="button" class="btn btn-primary">Pulse aquí para agregar un requerimiento
-                    </button></a>
-                  
-                  <!--NUEVO REQ-->
-                  <div id="nuevo-req-form" class="col-xs-12 col-md-12 sistema-box"></div>
-                  <!--END NUEVO REQ-->
-                  
-                  <!--BEG TABLA DE REQUERIMIENTOS-->
-                  <div id='soldetails-region' class="col-xs-12 col-md-12 sistema-box row spacer"></div>
-                  
-                </div><!-- END REQUERIMIENTOS -->
+												<div class="form-group col-sm-12">
+													<p><strong>¿Hace negocios con actores culturales de otras provincias?</strong></p>
+													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-buy-always">
+														<input class="sr-only" checked="checked" name="prov-buy" type="radio" value="prov-buy-always"> Frecuentemente
+													</label>
+													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-buy-often">
+														<input class="sr-only" name="prov-buy" type="radio" value="prov-buy-often"> Esporádicamente
+													</label>
+													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-buy-never">
+														<input class="sr-only" name="prov-buy" type="radio" value="prov-buy-never"> Nunca
+													</label>
+												</div>
+
+												<div class="form-group col-sm-12">
+													<label class="control-label">Principales mercados con los que hace negocios (Completar nombre, lugar y país)</label>
+													<textarea class="form-control" name="description" rows="4"></textarea>
+												</div>
+
+												<div class="form-group col-sm-12">
+													<label class="control-label">Participa de Ferias / eventos (Completar nombre, lugar y país)</label>
+													<textarea class="form-control" name="description" rows="4"></textarea>
+												</div>
+
+												<div class="form-group col-sm-12">
+													<label class="control-label">Propósito de su participación en este evento</label>
+													<textarea class="form-control" name="description" rows="4"></textarea>
+												</div>
+												<div class="form-group col-sm-12">
+													<label class="control-label">Comentarios adicionales sobre su participación como comprador en el evento</label>
+													<textarea class="form-control" name="comentario" rows="4"></textarea>
+												</div>
+											</div>
+										</div>
+									</div><!--END INFO COMO COMPRADOR-->
+								</div>
                 
                 <div class="step-pane" data-step="4">
-                  <h4>SOLICITUD TÉCNICO ARTÍSTICA</h4>
-                  <div class="bg-danger well-transparent row" id="requisite">
-                    <p>Verifique que los datos que se listan a continuación sean correctos. Al hacer click en <strong>GUARDAR</strong> se iniciará el trámite de Solicitud Técnico-Artística y el mismo será evaluado y procesado por el Ministerio de Cultura de la Nación.</p><p>Los requerimientos podrán ser aprobados o rechazados en su totalidad o en parte. </p><p>En su <a href="/forms/">Panel de Gestión</a> encontrará ésta solicitud y su historial de requerimientos para continuar siendo tratados. Una vez que este formulario haya sido actualizado por personal del Ministerio de Cultura de la Nación, el sistema le enviará un email automáticamente para continuar el trámite a través de esta misma plataforma.</p>
-                  </div>
-                  <div id="print-legal">Este documento fue generado a través del sistema de carga de Solicitudes online del Ministerio de Cultura de la Nación y el mismo podrá ser adjuntado al Expediente generado a partir del inicio formal del trámite. El mismo no tiene valor legal más que a título informativo.
-                  </div>
-                  <hr class="spacer" >
-                  <a href="#" id="submit-solicitud">
-                    <button type="button" class="btn btn-primary js-submit">Enviar solicitud</button>
-                  </a>
+									<h4>ACTIVE SU PERFIL DE VENDEDOR</h4>
+									<p>En caso de tener productos o servicios culturales para <strong>VENDER</strong>, active su perfil de Vendedor.</p>
+									<div id="data" class="switch">
+										<input id="seller" class="cmn-toggle cmn-toggle-round" type="checkbox">
+										<label for="seller"></label>
+									</div>
+									
+									<!--BEG INFO COMO VENDEDOR-->
+									<div id="infovendedor" class="hidden"><hr> 
+										<h5>Actividades sobre las que desea inscribirse como vendedor</h5>  
+										<div class="form-group sellactividades">
+											<!-- Icons -->
+											<div class="checkbox" id="sellteatro">
+												<label class="checkbox-custom" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" value="">
+													<span class="checkbox-label">Artes escénicas</span>
+												</label>
+											</div>
+											<div class="checkbox" id="sellaudiovisual">
+												<label class="checkbox-custom" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" value="">
+													<span class="checkbox-label">Audiovisual</span>
+												</label>
+											</div>
+											<div class="checkbox" id="selldiseno">
+												<label class="checkbox-custom" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" value="">
+													<span class="checkbox-label">Diseño</span>
+												</label>
+											</div>
+											<div class="checkbox" id="selleditorial">
+												<label class="checkbox-custom" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" value="">
+													<span class="checkbox-label">Editorial</span>
+												</label>
+											</div>
+											<div class="checkbox" id="sellmusica">
+												<label class="checkbox-custom" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" value="">
+													<span class="checkbox-label">Música</span>
+												</label>
+											</div>
+											<div class="checkbox" id="sellvideojuegos">
+												<label class="checkbox-custom" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" value="">
+													<span class="checkbox-label">Videojuegos y Apps</span>
+												</label>
+											</div>
+										</div>    
+
+										<div class="form-group">
+											<div class="row">
+
+												<div class="form-group">
+													<label class="col-sm-12 control-label">Palabras clave</label>
+														<div class="col-sm-12">
+															<select multiple name="tags" class="form-control" data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter." ></select>
+														</div>
+												</div>
+
+												<div class="form-group col-sm-12">
+													<label class="control-label">Detalle los productos y/o servicios de la empresa/institución</label>
+													<textarea class="form-control" name="lugarfecha" rows="4"></textarea>
+												</div>
+
+												<div class="form-group col-sm-12">
+													<p><strong>¿Hace negocios con actores culturales del exterior?</strong></p>
+													<label class="radio-custom radio-inline" data-initialize="radio" id="ext-sell-always">
+														<input class="sr-only" checked="checked" name="ext-sell" type="radio" value="ext-sell-always"> Frecuentemente
+													</label>
+													<label class="radio-custom radio-inline" data-initialize="radio" id="ext-sell-often">
+														<input class="sr-only" name="ext-sell" type="radio" value="ext-sell-often"> Esporádicamente
+													</label>
+													<label class="radio-custom radio-inline" data-initialize="radio" id="ext-sell-never">
+														<input class="sr-only" name="ext-sell" type="radio" value="ext-sell-never"> Nunca
+													</label>
+												</div>
+
+												<div class="form-group col-sm-12">
+													<p><strong>¿Hace negocios con actores culturales de otras provincias?</strong></p>
+													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-sell-always">
+														<input class="sr-only" checked="checked" name="prov-sell" type="radio" value="prov-sell-always"> Frecuentemente
+													</label>
+													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-sell-often">
+														<input class="sr-only" name="prov-sell" type="radio" value="prov-sell-often"> Esporádicamente
+													</label>
+													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-sell-never">
+														<input class="sr-only" name="prov-sell" type="radio" value="prov-sell-never"> Nunca
+													</label>
+												</div>
+
+												<div class="form-group col-sm-12">
+													<label class="control-label">Principales mercados con los que hace negocios (Completar nombre, lugar y país)</label>
+													<textarea class="form-control" name="description" rows="4"></textarea>
+												</div>
+
+												<div class="form-group col-sm-12">
+													<label class="control-label">Participa de Ferias / eventos (Completar nombre, lugar y país)</label>
+													<textarea class="form-control" name="description" rows="4"></textarea>
+												</div>
+
+												<div class="form-group col-sm-12">
+													<label class="control-label">Propósito de su participación en este evento</label>
+													<textarea class="form-control" name="description" rows="4"></textarea>
+												</div>
+
+												<div class="form-group col-sm-12">
+													<label class="control-label">Comentarios adicionales sobre su participación como vendedor en el evento</label>
+													<textarea class="form-control" name="comentario" rows="4"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+
+
                 </div><!-- END STEP 4 -->
+								<div class="step-pane" data-step="5">
+									<h4>Confirmación</h4>
+									<div class="bg-danger well-transparent row" id="requisite">
+										Verifique que los datos que se listan a continuación sean correctos.
+									</div>
+									
+								</div><!-- END STEP 5 -->
 
               </div><!--STEP content-->
             </div>

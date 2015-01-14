@@ -1,59 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>MCN::MICA</title>
-    <link rel="shortcut icon" href="/img/favicon.png">
+	<meta charset="utf-8">
+	<title>MCN::MICA</title>
+	<link rel="shortcut icon" href="/img/favicon.png">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Modulo de Mercado de Industrias Culturales Argentinas">
-    <meta name="author" content="ciardi">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Modulo de Mercado de Industrias Culturales Argentinas">
+	<meta name="author" content="ciardi">
 
-    <meta name="geo.position" content="-34.60899163;-58.3702313817" />
-    <meta name="ICBM" content="-34.60899163;-58.3702313817" />
-    <meta name="DC.title" content="Ministerio de Cultura de la Nacion" />
-    <meta name="geo.country" content="AR" />
-    <meta name="geo.region" content="AR-C" />
-    <meta name="geo.placename" content="Buenos Aires, Ciudad Autónoma de Buenos Aires, República Argentina" />
-    <meta name="Language" content="Spanish" />
-    <meta name="Robots" content="all" />
-    <meta name="keywords" content="Ministerio de Cultura de la Nacion, MICA, Mercado de Industrias Culturales Argentinas" />
+	<meta name="geo.position" content="-34.60899163;-58.3702313817" />
+	<meta name="ICBM" content="-34.60899163;-58.3702313817" />
+	<meta name="DC.title" content="Ministerio de Cultura de la Nacion" />
+	<meta name="geo.country" content="AR" />
+	<meta name="geo.region" content="AR-C" />
+	<meta name="geo.placename" content="Buenos Aires, Ciudad Autónoma de Buenos Aires, República Argentina" />
+	<meta name="Language" content="Spanish" />
+	<meta name="Robots" content="all" />
+	<meta name="keywords" content="Ministerio de Cultura de la Nacion, MICA, Mercado de Industrias Culturales Argentinas" />
 
-    <!-- Le styles -->
+<!-- Le styles -->
 	<link href="css/styles.css" rel="stylesheet" media='screen'>
-    <link href="css/backbone-forms-bootstrap.css" rel="stylesheet">
-    <link href="css/fuelux.min.css" rel="stylesheet" >
-    <link href="css/jquery-ui.min.css" rel="stylesheet" >
+	<link href="css/backbone-forms-bootstrap.css" rel="stylesheet">
+	<link href="css/fuelux.min.css" rel="stylesheet" >
+	<link href="css/jquery-ui.min.css" rel="stylesheet" >
 	<link href="lib/croppic/croppic.css" rel="stylesheet">
 	<link href="css/font-awesome.min.css" rel="stylesheet" >
+	<link href="css/bootstrap-tagsinput.css" rel="stylesheet">
     <!---->
-    <script src="/css/andika.js"></script>
-    <script src="/css/arvo.js"></script>
+	<script src="/css/andika.js"></script>
+	<script src="/css/arvo.js"></script>
 </head>
 
 <body>
-    <div id="header-region" class='header'></div>
-    <div id="dialog-region"></div>
+	<div id="header-region" class='header'></div>
+	<div id="dialog-region"></div>
+	<!-- Off Canvas
+	================================================== -->
+	<div id="main-region"></div>
 
-    <!-- Off Canvas
-    ================================================== -->
-    <div id="main-region"></div>
-
-    <div id="footer-region">
-    <section id="share">
-      <div>
-        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.mica.gob.ar" data-text="MICA - Mercado de Industrias Culturales Argentinas" data-hashtags="mica2015">Tweet</a><br>
-        <div
-          class="fb-like"
-          data-share="true"
-          data-width="300"
-          data-show-faces="false">
-        </div>
-
-      </div>
-      <div><img src="http://www.cultura.gob.ar/static/img/logo-presidencia-de-la-nacion-footer.png" alt="Ministerio de Cultura de la Nacion" title="Ministerio de Cultura de la Nacion" width="250"  border="0"></div>
-    </section>
-    <div id="test-region" class="container"></div>
+	<div id="footer-region">
+		<section id="share">
+			<div>
+				<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.mica.gob.ar" data-text="MICA - Mercado de Industrias Culturales Argentinas" data-hashtags="mica2015">Tweet</a><br>
+				<div
+					class="fb-like"
+					data-share="true"
+					data-width="300"
+					data-show-faces="false">
+				</div>
+			</div>
+			<div>
+				<img src="http://www.cultura.gob.ar/static/img/logo-presidencia-de-la-nacion-footer.png" alt="Ministerio de Cultura de la Nacion" title="Ministerio de Cultura de la Nacion" width="250"  border="0">				</div>
+		</section>
+		<div id="test-region" class="container"></div>
 	</div>
 <!-- /container -->
 <!-- Le javascript
@@ -81,6 +81,8 @@
 <!--Manipula imagenes de la portada-->
 <script src="lib/imagesloaded.pkgd.min.js"></script>
 <script src="lib/masonry.pkgd.min.js"></script>
+	<!--Maneja los tagsinput-->
+<script src="lib/bootstrap-tagsinput.min.js"></script>
 <!-- -->
 <script src="/js/utils.js"></script>
 <script src="/js/dao.js"></script>

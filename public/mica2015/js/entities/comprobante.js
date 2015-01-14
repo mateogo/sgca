@@ -378,6 +378,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 		rtel: "",
 		rcelular: "",
 		ridiomas: "",
+		actividades: [{
+			artes: "",
+			audiovisual: "",
+			diseno: "",
+			editorial: "",
+			musica: "",
+			gamapps: ""}],
+			
+		palaclave: "",
+		detalleprod: "",
+		negocioext: "",
+		negociopro: "",
+		mercados: "",
+		ferias: "",
+		proposito: "",
+		comentarios: "",
 			
 		tipomov: "",
 		nsolicitante: "",
@@ -482,6 +498,27 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 			rtel: "",
 			rcelular: "",
 			ridiomas: "",
+			actividades: [{
+				artes: "",
+				audiovisual: "",
+				diseno: "",
+				editorial: "",
+				musica: "",
+				gamapps: ""}],
+			
+			palaclave: "",
+			detalleprod: "",
+			negocioext: "",
+			negociopro: "",
+			mercados: "",
+			ferias: "",
+			proposito: "",
+			comentarios: "",
+			
+		tipomov: "",
+		nsolicitante: "",
+    esolicitante: "",
+    tsolicitante: "",
 
       items:[]
     },

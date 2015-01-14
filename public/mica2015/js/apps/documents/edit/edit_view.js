@@ -65,12 +65,26 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       "click #fevento": "dateselector",
       "click #nuevo-req-btn": "editDetailForm",
       "change #eusuario": "uservalidation",
+			"change #buyer": "enablebuyer",
+			"change #seller": "enableseller",
 
     },
 
     dateselector:function(){
 
-    },
+    }, 
+		
+		enablebuyer:function(){
+			//Habilita Info adicional como comprador
+			var buyer = $('#data.switch input#buyer');
+				$('#infocomprador').toggleClass("hidden", !buyer.is(":checked"));			
+		},		
+		
+		enableseller:function(){	
+			//Habilita Info adicional como vendedor
+			var seller = $('#data.switch input#seller');
+      $('#infovendedor').toggleClass("hidden", !seller.is(":checked"));
+		},
 
     uservalidation: function(e){
       e.preventDefault();
