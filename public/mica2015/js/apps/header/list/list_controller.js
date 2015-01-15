@@ -23,13 +23,13 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
       });
 
     },
-
+//Trabajar lo que es el header
     setActiveHeader: function(headerUrl){
-      //console.log('Set Active Header headerUrl [%s]',headerUrl);
-      var links = DocManager.request("header:entities");
-      var headerToSelect = links.find(function(header){ return header.get("url") === headerUrl; });
-      headerToSelect.select();
-      links.trigger("reset");
+			console.log('Set Active Header headerUrl [%s]',headerUrl);
+//      var links = DocManager.request("header:entities");
+//      var headerToSelect = links.find(function(header){ return header.get("url") === headerUrl; });
+//      headerToSelect.select();
+//      links.trigger("reset");
     }
   };
 });

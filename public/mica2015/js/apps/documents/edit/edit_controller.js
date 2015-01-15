@@ -57,8 +57,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         documLayout.on("show", function(){
           //documLayout.navbarRegion.show(documNavBar);
           documLayout.mainRegion.show(documEditView);
-          documLayout.headerInfoRegion.show(documSidebarView);
-          documLayout.itemsInfoRegion.show(documSidebarItemsView);
+//          documLayout.headerInfoRegion.show(documSidebarView);
+//          documLayout.itemsInfoRegion.show(documSidebarItemsView);
         });
 
         DocManager.mainRegion.show(documLayout);

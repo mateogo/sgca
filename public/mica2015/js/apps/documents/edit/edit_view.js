@@ -9,8 +9,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     regions: {
       //navbarRegion:  '#navbar-region',
       itemEditRegion: '#itemedit-region',
-      headerInfoRegion: '#sidebar1-region',
-      itemsInfoRegion: '#sidebar2-region',
+//      headerInfoRegion: '#sidebar1-region',
+//      itemsInfoRegion: '#sidebar2-region',
       linksRegion:   '#panel-region',
       mainRegion:    '#main-region'
     }
@@ -53,9 +53,17 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
             //defaultDate: self.model.get('items')[0].fevento,
             altField: "#fevento"
       });
-      //this.$("#fevento").datepicker('setDate', '+40');
+			
+			var croppicContainerEyecandyOptions = {
+      	uploadUrl:'lib/croppic/img_save_to_file.php',
+        cropUrl:'lib/croppic/img_crop_to_file.php',
+        imgEyecandy:true,
+        loaderHtml:'<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> '
+			}
+			
+			var objn = this.$('#cropContainerEyecandy')
 
-    //this.$('#fevento').datepicker( "dialog", "10/12/2012" );
+			var cropContainerEyecandy = new Croppic('cropContainerEyecandy', objn, croppicContainerEyecandyOptions);
     },
 
 
@@ -67,12 +75,13 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       "change #eusuario": "uservalidation",
 			"change #buyer": "enablebuyer",
 			"change #seller": "enableseller",
+			"change #paisempre": "stateinput",
 
     },
 
     dateselector:function(){
 
-    }, 
+    },
 		
 		enablebuyer:function(){
 			//Habilita Info adicional como comprador
@@ -84,6 +93,21 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 			//Habilita Info adicional como vendedor
 			var seller = $('#data.switch input#seller');
       $('#infovendedor').toggleClass("hidden", !seller.is(":checked"));
+		},
+		
+		stateinput:function(){	
+//Atrapa el pais elegido
+			var country = $('#paisempre').val();
+//Si no es Argentina convierte el <select> en <input>
+			if (country !='AR'){
+				$('#provempre').replaceWith('<input class="form-control" type="text" name="provempre" id="provempre">');
+			}
+			else{
+//Si se elige otro pais y luego se vuelve a elegir Argentina se arman las opciones de provincias otra vez
+				var argprov = utils.buildSelectOptions("provempre",utils.provinciasOptionList.Argentina, provempre);
+				$('#provempre').replaceWith('<select class="form-control" id="provempre" name="provempre> argprov("provempre")</select>');
+				$('#provempre').html(argprov);
+			}
 		},
 
     uservalidation: function(e){

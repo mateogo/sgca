@@ -22,7 +22,7 @@
 								<div class="step-pane active" data-step="1">
 									<h4>Datos de la Empresa o Institución</h4>
 									<div class="avatar-upload">
-										<div id="cropContainerEyecandy"></div>
+										<div id="cropContainerEyecandy" name='cropContainerEyecandy'></div>
 									</div>
                   <div class="form-group">
 										<div class="row">
@@ -54,7 +54,7 @@
 											<div class="col-sm-4 selectContainer">
 												<label class="control-label">Provincia</label>
 												<select class="form-control" id="provempre" name="provempre">
-														<%= utils.buildSelectOptions('provempre',utils.provinciasOptionList.Argentina, provempre) %>
+														<%= utils.buildSelectOptions("provempre",utils.provinciasOptionList.Argentina, provempre) %>
 												</select>
 											</div>
 										
