@@ -654,7 +654,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     evaluateCosto: function(){
-      console.log('EvaluateCosto CABECERA BEGIN');
+      //console.log('EvaluateCosto CABECERA BEGIN');
       var previouscost = parseInt(this.get('importe'));
       var isactive = parseInt(this.get('isactive')) === 1 ? 1 : 0;
       var isdetallado = parseInt(this.get('isdetallado')) === 1 ? 1 : 0;
@@ -666,7 +666,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var punit = this.evaluateItems();
 
       var importe = (isvalid * isactive * isdetallado * freq * cantidad * punit) + (1-isdetallado) * (isvalid * isactive * montomanual);
-      console.log('CABECERA: isactive:[%s] isdetallado:[%s]  freq:[%s] cant:[%s] montomanual:[%s] punit:[%s] importe:[%s] previouscost:[%s]',isactive, isdetallado, freq, cantidad, montomanual, punit, importe, previouscost)
+      //console.log('CABECERA: isactive:[%s] isdetallado:[%s]  freq:[%s] cant:[%s] montomanual:[%s] punit:[%s] importe:[%s] previouscost:[%s]',isactive, isdetallado, freq, cantidad, montomanual, punit, importe, previouscost)
 
       this.set('punit', punit);
       this.set('importe', importe);
@@ -750,10 +750,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           items=[],
           importe;
       
-      console.log('BudgetFactory: building items:[%s]', self.itemsCol.length);
+      //console.log('BudgetFactory: building items:[%s]', self.itemsCol.length);
 
       if(self.itemsCol){
-        console.log('BudgetFactory: building items:[%s]', self.itemsCol.length);
+        //console.log('BudgetFactory: building items:[%s]', self.itemsCol.length);
         self.itemsCol.each(function(budgetItem){
           importe = budgetItem.evaluateCosto();
           console.log('BudgetFactory: building items:[%s] [%s]', budgetItem.get('sgasto'), importe);
@@ -844,7 +844,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     toggleActivate: function(){
-      this.model.set('isactive', (1 - this.model.get('isactive')));
+      this.set('isactive', (1 - this.get('isactive')));
     },
 
     evaluateCosto: function(){
@@ -857,7 +857,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var punit = parseInt(this.get('punit'));
       var montomanual = parseInt(this.get('montomanual'));
       
-      console.log('DETALLE: isactive:[%s] isdetallado:[%s]  freq:[%s]  montomanual:[%s] punit:[%s] ',isactive, isdetallado, freq, montomanual, punit)
+      //console.log('DETALLE: isactive:[%s] isdetallado:[%s]  freq:[%s]  montomanual:[%s] punit:[%s] ',isactive, isdetallado, freq, montomanual, punit)
       var importe = (isactive * isdetallado * freq * cantidad * punit) + (1-isdetallado) * (isactive * montomanual);
       this.set('importe', importe);
       if(previouscost !== importe){

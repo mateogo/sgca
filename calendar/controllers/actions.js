@@ -8,6 +8,8 @@
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
  *
  */
+var _ = require('underscore');
+
 var dbi ;
 var BSON;
 var config = {};
@@ -206,7 +208,7 @@ exports.fetchById = function(id, cb) {
 
 exports.findById = function(req, res) {
     var id = req.params.id;
-    console.log('findById: Retrieving %s id:[%s]', actionsCol,id);
+    console.log('findById: Retrieving %s id:[%s]', actionsCol,id, req.user);
     dbi.collection(actionsCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             res.send(item);
@@ -287,10 +289,13 @@ var buildUpdateData = function(data){
     return data.newdata;
 };
 
-exports.fetchActionBudgetCol = function(req,res){
-    var query = req.body || {};
-    var resultCol;
+exports.fetchActionBudgetCol = function(req, res){
+    var resultCol,
+        query = buildQuery(req.body);
+
     console.log('fetchActionBudgetCol BEGIN')
+    console.dir(query);
+
     dbi.collection(actionsCol).find(query).sort({cnumber:1}).toArray(function(err, actItems) {
         dbi.collection(budgetsCol).find().sort({owner_id:1}).toArray(function(err, budItems) {
             resultCol = loadActionBudgetCol(actItems, budItems);
@@ -298,6 +303,20 @@ exports.fetchActionBudgetCol = function(req,res){
         });
     });
 };
+var buildQuery = function(qr){
+    var query = {}; 
+    if(!qr) return query;
+    if(qr.areas){
+        query.$or = buildAreaList(qr.areas);
+    }
+    return query;
+};
+var buildAreaList = function(areas){
+    return _.map(areas, function(item){
+        return {area: item};
+
+    });
+}
 
 var loadActionBudgetCol = function(actions, budgets){
     var resultCol = [],

@@ -150,6 +150,15 @@ window.utils = {
             return this.map;
         }
     },
+    retrieveNodesFromAreas: function(areas){
+        var nodes = [],
+            node;
+        _.each(areas, function(area){
+            var node = utils.fetchNode(utils.actionAreasOptionList, area);
+            if(_.indexOf(nodes, node) === -1) nodes.push(node);
+        });
+        return nodes;
+    },
     //========= BUDGET TEMPLATE =========================
     tipoBudgetMovimList: [
         {val:'no_definido',      cgasto:'000.000',  template:'',  label:'Tipo de movimiento'},
@@ -901,8 +910,8 @@ window.utils = {
         {val:'no_definido'     , label:'Grupo principal'},
         {val:'tecnica'         , label:'Técnica'},
         {val:'produccion'      , label:'Producción'},
-        {val:'coordinacion'    , label:'Producción'},
-        {val:'administracion'  , label:'Producción'},
+        {val:'coordinacion'    , label:'Coordinación'},
+        {val:'administracion'  , label:'Administración'},
         {val:'contenidos'       , label:'Contenidos'},
         {val:'direccion'        , label:'Dirección'},
         {val:'adherente'     , label:'Adherente'},
@@ -1988,9 +1997,7 @@ window.utils = {
         _.each(data,function(element, index, list){
             element.selected = (actualvalue == element.val ? 'selected' : '');
             optionStr += template(element);
-            //console.log('element: %s',element);
         });
-        //console.log('option [%s]',optionStr);
         return optionStr;
     },
 

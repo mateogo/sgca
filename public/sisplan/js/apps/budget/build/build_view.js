@@ -145,10 +145,10 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
       "change": "change",
 
       "click .js-isactive": 'isactive',
-      "click .js-trash": 'trashitem',
-      "click .js-clone": 'cloneitem',
-      "click a": "navigate",
-      "click .js-edit": 'editBudget',
+      "click .js-trash":    'trashitem',
+      "click .js-clone":    'cloneitem',
+      "click a":            'navigate',
+      "click .js-edit":     'editBudget',
     },
 
     cloneitem: function(e){
@@ -205,10 +205,8 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
         //this.onFormDataInvalid((err||{}));
     },
 
-
     triggers: {
     },
-
 
     navigate: function(e){
       e.preventDefault();

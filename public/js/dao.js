@@ -11,6 +11,7 @@ window.dao = {
         pdiario: ['pdiario'], 
 				inscripcion: ['inscripcion'],
 
+
         isType: function(comp, type){
             return (this[type].indexOf(comp) !== -1 ? true : false);
         },
@@ -43,6 +44,70 @@ window.dao = {
         },
 
     },
+    validatePermissionTo: function(task, module, user, opt){
+        // el usuario está adscripto al módulo
+        //console.log('validatePermissionTo:[%s] in:[%s] atr:[%s]', task, module, user.get('atributos'));
+        var taskreq,
+            test;
+        var tasks = {
+            'chimenea':{
+                atributos:['chimenea', 'nodochimenea', 'superchimenea'],
+                roles:['supervisor', 'admin']
+            },
+            'nodochimenea':{
+                atributos:['nodochimenea', 'superchimenea'],
+                roles:['supervisor', 'admin']
+            },
+            'superchimenea':{
+                atributos:['superchimenea'],
+                roles:['supervisor', 'admin']
+            },
+            'browse:presupuesto':{
+                roles:['presugestor'],
+            },
+            'edit:presupuesto':{
+                roles:['presugestor'],
+                memberOfArea: function(){
+                    return dao.gestionUser.hasPermissionTo('area', module, opt);
+                }
+            },
+
+
+            'area':{
+                validate: function(){
+                    if(!opt && !opt.area) return false;
+                    if(user.get('area') === opt.area) return true;
+                    if(dao.gestionUser.hasPermissionTo('superchimenea', module)) return true;
+
+                    if(dao.gestionUser.hasPermissionTo('nodochimenea', module)){
+                        var areas = [opt.area, user.get('area')];
+                        return utils.retrieveNodesFromAreas(areas).length === 1 ? true : false;
+                    }
+                    return false;
+                }
+            },
+        };
+        var hasperm = true;
+
+        if(_.indexOf(user.get('modulos'), module)) return false;
+        taskreq = tasks[task];
+        if (!taskreq) return false;
+
+        _.each(taskreq, function(aspect, key){
+            test = false;
+            if(_.isFunction(aspect)){
+                test = aspect();
+            }else{
+                test = _.reduce(aspect, function(test, item){
+                            return test || (_.indexOf(user.get(key), item) !== -1)
+                        }, test);
+            }
+
+            hasperm = hasperm && test;
+        });
+
+        return hasperm;
+    },
 
     gestionUser: {
         getUser: function(app, cb){
@@ -53,6 +118,37 @@ window.dao = {
                 cb(this.user);
             }
         },
+
+        hasPermissionTo: function(task, module, opt){
+            if(!this.user) return false;
+
+            return dao.validatePermissionTo(task, module, this.user, opt)
+
+        },
+        fetchPermitted: function(what, module){
+            var list = [],
+                full_list;
+            if(!this.user) return list;
+
+            if(what === 'AREA'){
+                full_list = utils.actionAreasOptionList
+            } else {
+                full_list = utils.actionNodosOptionList                
+            }
+
+            _.each(full_list, function(item){
+                if(item.val === 'no_definido'){
+                    list.push(item);
+                }else{
+                    if(dao.gestionUser.hasPermissionTo('area',module,{area: item.val})){
+                        list.push(item);
+                    }
+                }
+            });
+            //console.log('FETCH Permitted Areas: [%s][%s]',what, list.length);
+            return list
+        },
+
         fetchUser: function(app, cb){
             //console.log('fetchUser: currentUser')
             var self = this;
@@ -204,10 +300,6 @@ window.dao = {
             });
         }
     },
-//52d7e1bcdff70a4d02993dd8
-//52d93a0575aeda1802a24ae1
-//52d93c1475aeda1802a24ae2
-
 
     currentUser: {
         getUser: function(cb){

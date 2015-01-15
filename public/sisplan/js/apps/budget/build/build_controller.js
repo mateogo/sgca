@@ -9,14 +9,18 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
      
       $.when(fetchingAction).done(function(action){
 
-        console.log('BudgetApp.Build BEGIN', action.get('slug'));
+        console.log('BudgetApp.Build BEGIN [%s]: [%s]', action.get('area'), action.get('slug'));
         Build.Session = {};
         Build.Session.views = {};
         Build.Session.typeList = utils.budgetTemplateList;
 
         dao.gestionUser.getUser(DocManager, function (user){
-          if(user){
+          var opt = {area: action.get('area')};
+          if(user && dao.gestionUser.hasPermissionTo('edit:presupuesto', 'sisplan', opt) ){
+            //&& user.hasPermissionTo('gestion:presupuesto')
             console.log('Dao Get Current user: [%s]', user.get('username'));
+            console.log('Testing User hasAttribute  test gestion:presupuesto [%s]', dao.gestionUser.hasPermissionTo('gestion:presupuesto', 'sisplan', {area:'DNPM'}));
+            console.log('Testing User hasAttribute  test area:[%s]', dao.gestionUser.hasPermissionTo('area', 'sisplan', {area:'DNPM'}));
 
             Build.Session.currentUser = user;
             Build.Session.views.layout = new Build.Layout();
@@ -35,12 +39,10 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
             loadBudgetsFormDB();
 
           }else{
-            Build.Session.currentUser = null;        
+            console.log('vuelve a edición de ACTION')
+            DocManager.trigger('action:edit', action);
           }
         });
-    
-
-
             
       });
     }
@@ -167,8 +169,14 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
   };
 
   var registerBudgetCompositeEvents = function(model, view){
+    // view.listenTo(model, 'budget:cost:changed', function(){
+    //   console.log('ListenTo cb:[%s]:[%s]  this:[%s]',view.whoami, view.cid, this.whoami)
+    //   this.render();
+    // });
 
-    model.on('budget:cost:changed', view.render);
+    view.listenTo(model, 'budget:cost:changed', view.render);
+
+    //model.on('budget:cost:changed', view.render);
     model.on('item:budget:added', view.render);
 
     view.on('edit:budget', function(model){
@@ -193,7 +201,7 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
     });
 
     view.on('cost:changed', function(model){
-      console.log('[%s] /[%s] Register CostChangedEVENT BUBBLE[%s]',view.whoami, model.whoami, arguments.length);
+      console.log('[%s]:[%s] model:[%s] Register CostChangedEVENT BUBBLE[%s]',view.whoami, view.cid, model.whoami, arguments.length);
       //evaluateTotalCost(Build.Session.facetCol);
       model.evaluateCosto();
     });
