@@ -378,6 +378,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 		rtel: "",
 		rcelular: "",
 		ridiomas: "",
+			
 		actividades: [{
 			artes: "",
 			audiovisual: "",
@@ -386,7 +387,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 			musica: "",
 			gamapps: ""}],
 			
-		palaclave: "",
+		palaclave: [],
 		detalleprod: "",
 		negocioext: "",
 		negociopro: "",
@@ -394,29 +395,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 		ferias: "",
 		proposito: "",
 		comentarios: "",
-			
-		tipomov: "",
-		nsolicitante: "",
-    esolicitante: "",
-    tsolicitante: "",
-
-    nusuario:"Juan Gomez",
-    eusuario:"jgomez@elmunicipio.org",
-    tusuario:"",
-    rolusuario:"Secretaria privada",
-
-    ntecnico: "",
-    etecnico: "",
-    ttecnico: "",
-    
-    aasignada: "",
-    rasignado: "",
-    rmail: "",
-    rtelef: "",
-    eavance: "",
-    eaprob: "",
-    ncriti: "",
-    resoluc: "",
 
     items:[]
     },
@@ -506,7 +484,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 				musica: "",
 				gamapps: ""}],
 			
-			palaclave: "",
+			palaclave: [],
 			detalleprod: "",
 			negocioext: "",
 			negociopro: "",
@@ -514,11 +492,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 			ferias: "",
 			proposito: "",
 			comentarios: "",
-			
-		tipomov: "",
-		nsolicitante: "",
-    esolicitante: "",
-    tsolicitante: "",
 
       items:[]
     },

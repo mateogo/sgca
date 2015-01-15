@@ -7,15 +7,11 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     },
     
     regions: {
-      //navbarRegion:  '#navbar-region',
       itemEditRegion: '#itemedit-region',
-//      headerInfoRegion: '#sidebar1-region',
-//      itemsInfoRegion: '#sidebar2-region',
       linksRegion:   '#panel-region',
       mainRegion:    '#main-region'
     }
   });
-
 
   Edit.Search = DocManager.DocsApp.Common.Views.SearchPanel.extend({
     initialize: function(options){
@@ -27,11 +23,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
 
   Edit.Document = DocManager.DocsApp.Common.Views.Form.extend({
-    
-    // tagName:'form',
-    // className: 'form-horizontal',
-
-    getTemplate: function(){
+		
+		getTemplate: function(){
       return utils.templates.DocumEditCore;
     },
 
@@ -40,8 +33,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
-
-
     },
 
     onRender: function(){
@@ -54,8 +45,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
             altField: "#fevento"
       });
 			
-			var croppicContainerEyecandyOptions = {
-      	uploadUrl:'lib/croppic/img_save_to_file.php',
+			var croppicOptions = {
+				uploadUrl:'lib/croppic/img_save_to_file.php',
         cropUrl:'lib/croppic/img_crop_to_file.php',
         imgEyecandy:true,
         loaderHtml:'<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> '
@@ -63,9 +54,9 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 			
 			var objn = this.$('#cropContainerEyecandy')
 
-			var cropContainerEyecandy = new Croppic('cropContainerEyecandy', objn, croppicContainerEyecandyOptions);
-    },
-
+			var cropContainerEyecandy = new Croppic('cropContainerEyecandy', objn, croppicOptions); 
+		
+		},
 
     events: {
       "click .js-personsch": "personsearch",
@@ -96,17 +87,18 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 		},
 		
 		stateinput:function(){	
-//Atrapa el pais elegido
+			//Atrapa el pais elegido
 			var country = $('#paisempre').val();
-//Si no es Argentina convierte el <select> en <input>
+			
+			//Si no es Argentina convierte el <select> en <input>
 			if (country !='AR'){
 				$('#provempre').replaceWith('<input class="form-control" type="text" name="provempre" id="provempre">');
 			}
 			else{
-//Si se elige otro pais y luego se vuelve a elegir Argentina se arman las opciones de provincias otra vez
-				var argprov = utils.buildSelectOptions("provempre",utils.provinciasOptionList.Argentina, provempre);
-				$('#provempre').replaceWith('<select class="form-control" id="provempre" name="provempre> argprov("provempre")</select>');
-				$('#provempre').html(argprov);
+				//Eligio otro pais y vuelve a elegir Argentina se arman las opciones de provincias otra vez
+				var aprov = utils.buildSelectOptions("provempre",utils.provinciasOptionList.Argentina, provempre);
+				$('#provempre').replaceWith('<select class="form-control" id="provempre" name="provempre> aprov("provempre")</select>');
+				$('#provempre').html(aprov);
 			}
 		},
 
