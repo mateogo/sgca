@@ -171,6 +171,7 @@ window.utils = {
         {val:'impresiones',      cgasto:'125.000',  template:'tecnica',   label:'Impresiones'},
         {val:'muestras',         cgasto:'131.000',  template:'tecnica',   label:'Muestras'},
         {val:'derechos',         cgasto:'135.000',  template:'tecnica',   label:'Derechos'},
+        {val:'subsidios',        cgasto:'141.000',  template:'tecnica',   label:'Subsidios'},
 
 
         {val:'evento',           cgasto:'141.000',  template:'tecnica',  label:'Eventos'},
@@ -182,7 +183,6 @@ window.utils = {
         {val:'capacitacion',     cgasto:'141.000',  template:'tecnica',  label:'Capacitación'},
         {val:'alquileres',       cgasto:'141.000',  template:'tecnica',  label:'Alquileres'},
         {val:'servicios',        cgasto:'141.000',  template:'tecnica',  label:'Otros servicios'},
-        {val:'contratos',        cgasto:'141.000',  template:'tecnica',  label:'Contratos'},
         {val:'pasajes',          cgasto:'141.000',  template:'tecnica',  label:'Pasajes'},
         {val:'viaticos',         cgasto:'141.000',  template:'tecnica',  label:'Viáticos'},
         {val:'estadias',         cgasto:'141.000',  template:'tecnica',  label:'Estadías'},
@@ -193,7 +193,7 @@ window.utils = {
         {val:'infraestructura',  cgasto:'141.000',  template:'tecnica',  label:'Infraestructura'},
     ],
 
-    budgetTemplateList:['global', 'artistica', 'tecnica','contratos', 'muestras', 'derechos','logistica','impresiones','difusion'],
+    budgetTemplateList:['global', 'artistica', 'tecnica','contratos', 'muestras', 'derechos','logistica','impresiones','difusion', 'subsidios'],
     // ART
 
     budgetTemplate:{
@@ -253,7 +253,7 @@ window.utils = {
             {val:'no_definido',   label:'Subtipo de Impresiones', ume:'',            cgasto:'125.000',  template:'1', classattr:'info'},
             {val:'banners',       label:'Banners',                ume:'banners',     cgasto:'125.101',  template:'1', classattr:'info'},
             {val:'carteleria',    label:'Cartelería y gráfica',   ume:'cartel',      cgasto:'125.103',  template:'1', classattr:'info'},
-            {val:'folletos',      label:'Folletos y programas',   ume:'folleto',     cgasto:'125.105',  template:'1', classattr:'info'},
+            {val:'folletos',      label:'Gráfica de mano',        ume:'folleto',     cgasto:'125.105',  template:'1', classattr:'info'},
             {val:'publicaciones', label:'Publicaciones',          ume:'publicacion', cgasto:'125.107',  template:'1', classattr:'info'},
             {val:'otros',         label:'Otros',                  ume:'otros',       cgasto:'125.109',  template:'1', classattr:'info'},
         ],
@@ -274,6 +274,12 @@ window.utils = {
             {val:'argentores',  label:'ARGENTORES',          ume:'argentores', cgasto:'135.103',  template:'1', classattr:'info'},
             {val:'cesiones',    label:'Cesión derechos',     ume:'derecho',    cgasto:'135.105',  template:'1', classattr:'info'},
             {val:'otros',       label:'Otros',               ume:'otros',      cgasto:'135.107',  template:'1', classattr:'info'},
+        ],
+        subsidios:[
+            {val:'no_definido', label:'Subtipo de Derechos', ume:'',           cgasto:'141.000',  template:'1', classattr:'info'},
+            {val:'sprivado',    label:'Sector privado',      ume:'subsidios',  cgasto:'141.101',  template:'1', classattr:'info'},
+            {val:'spublico',    label:'Sector público',      ume:'subsidios',  cgasto:'141.103',  template:'1', classattr:'info'},
+            {val:'otros',       label:'Otros',               ume:'otros',      cgasto:'141.107',  template:'1', classattr:'info'},
         ],
     },
     //        {val:'',  label:'',          code:'101.101',  classattr:'info'},
@@ -389,7 +395,7 @@ window.utils = {
         {val: 'inclusion',           label: 'Inclusión'},
         {val: 'participacion',       label: 'Actividades participativas'},
         {val: 'fortalecimiento',     label: 'Fortalecimiento'},
-        {val: 'becasayudasubsidio',  label: 'Becas, ayudas, subsidios'},       
+        {val: 'subsidios',           label: 'Becas, ayudas, subsidios'},       
         {val: 'mejoragestion',       label: 'Mejora en la Gestión'},
         {val: 'concurso',            label: 'Concursos'},
         {val: 'muestra',             label: 'Muestra'},

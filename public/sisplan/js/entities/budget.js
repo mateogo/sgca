@@ -116,6 +116,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         fecomp = utils.dateToStr(fecha);
       }
       self.set({feultmod:fecha.getTime()})
+      console.log('********** Merde: T:[%s] ', self.get('tgasto'));
       self.set('cgasto', utils.fetchListKey(utils.tipoBudgetMovimList, self.get('tgasto'))['cgasto'] );
 
       self.updateInheritData(action);
@@ -484,7 +485,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     defaults: {
       _id: null,
-      roles:['global', 'artistica', 'tecnica','contratos', 'muestras', 'derechos','logistica','impresiones','difusion'],
+      roles:['global', 'artistica', 'tecnica','contratos', 'muestras', 'derechos','logistica','impresiones','difusion', 'subsidios'],
       tgasto:'',
     },
 
