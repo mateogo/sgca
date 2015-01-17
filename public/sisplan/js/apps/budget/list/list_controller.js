@@ -411,14 +411,14 @@ DocManager.module("BudgetApp.List", function(List, DocManager, Backbone, Marione
       utils.budgetListTableHeader[5].flag=1;
       utils.budgetListTableHeader[4].flag=1;
       utils.budgetListTableHeader[3].flag=1;      
-      utils.budgetListTableHeader[2].flag=0;
+      utils.budgetListTableHeader[2].flag=1;
 
     }else {
       utils.budgetListTableHeader[6].flag=1;
       utils.budgetListTableHeader[5].flag=1;
       utils.budgetListTableHeader[4].flag=1;
       utils.budgetListTableHeader[3].flag=1;
-      utils.budgetListTableHeader[2].flag=0;
+      utils.budgetListTableHeader[2].flag=1;
 
     }
   };
