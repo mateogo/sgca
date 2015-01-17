@@ -287,7 +287,8 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
       ptecnico:   'DocumEditPTItems',
       nsolicitud: 'DocumEditPSOSItems',
       nsolheader: 'DocumEditPSOHeader',
-      nsdetails:  'DocumEditPSOSDetails',
+      nsdetails:  'DocumEditPSOSDetails', //este muestra el contenido de agregados/inscriptos
+      insdetails: 'DocumEditINSDetails', //este muestra el contenido de agregados/inscriptos
       nrecepcion: 'DocumEditREItems',
       nentrega:   'DocumEditREItems',
       npedido:    'DocumEditREItems',
@@ -309,6 +310,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
 
     events: {
       "click": "navigate",
+      "click": "delete",
     },
 
     triggers: {
@@ -320,6 +322,12 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
       e.preventDefault();
       this.trigger('item:edit', this.model);
       return false;
+    },    
+		
+		delete: function(e){
+      console.log('del event');
+			e.stopPropagation();
+			this.model.collection.remove(this.model);
     },
 
     onRender: function(){
@@ -350,6 +358,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
       nsolicitud: 'DocumEditPSOSItems',
       nsolheader: 'DocumEditPSOHeader',
       nsdetails:  'DocumEditPSOSDetails',
+      insdetails:  'DocumEditINSDetails',
       nrecepcion: 'DocumEditREItems',
       nentrega:   'DocumEditREItems',
       npedido:    'DocumEditREItems',
@@ -410,6 +419,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
       ptecnico:   'DocumEditPTItems',
       nsolicitud: 'DocumEditPSOItems',
       nsdetails:  'DocumEditPSOSDetailsHeader',
+      insdetails: 'DocumEditINSDetailHeader',
       nrecepcion: 'DocumEditREItems',
       nentrega:   'DocumEditREItems',
       npedido:    'DocumEditREItems',
@@ -417,9 +427,10 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
     },
 
     getTemplate: function(){
+	
       if(this.options){
         if(this.options.itemtype){
-          //console.log('Getting Template:[%s]',this.options.itemtype)
+          console.log('Getting Template:[%s]',this.options.itemtype)
           return utils.templates[this.templates[this.options.itemtype]];
         }
         if(this.options.headertype){

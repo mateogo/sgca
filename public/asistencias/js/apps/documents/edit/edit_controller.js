@@ -15,8 +15,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         if(document.get('tipocomp')==='pdiario'){
           return;
         }
-        // End: Es editable?
-
 
         Edit.Session = {};
         Edit.Session.views = {};

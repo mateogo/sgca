@@ -29,7 +29,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     },
 
     initialize: function(options){
-      console.log('Edit.DOCUMENT BEGINS')
+//      console.log('Edit.DOCUMENT BEGINS')
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
@@ -290,18 +290,15 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         });
   };
 
-  //Edición del SubItem de comprobante SOLICITUD
-  Edit.SolicitudDetail = DocManager.DocsApp.Common.Views.Form.extend({
-    whoami:'SolicitudDetail:edit_view.js',
-    
-    // tagName:'form',
-    // className: 'form-horizontal',
-
-    templates: {
-      nsolicitud: 'DocumEditPSO',
+  //Edición del SubItem del comprobante Inscripcion
+  Edit.InscripcionDetail = DocManager.DocsApp.Common.Views.Form.extend({
+    whoami:'InscripcionDetail:edit_view.js',
+		templates: {
+      inscripcion: 'DocumEditINS',
     },
 
     getTemplate: function(){
+			
       return utils.templates[this.templates[this.options.itemtype]];
     },
 
@@ -375,6 +372,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       nentrega:   'DocumEditRE',
       npedido:    'DocumEditRE',
       pemision:   'DocumEditEM',
+//			inscripcion 'DocumEditINS'
     },
 
     getTemplate: function(){

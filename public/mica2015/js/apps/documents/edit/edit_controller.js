@@ -29,36 +29,12 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         });
         registerDocumEditEvents(documEditView);
         
-        console.log('READY to create itemView: [%s]',Edit.Session.model.get('tipocomp'));
-
-        // ========== Sidebar HEADER ============
-        var documSidebarView = new DocManager.DocsApp.Common.Views.SidebarItem({
-          model: Edit.Session.model,
-          itemtype: 'nsolheader'
-        });
-        registerDocumSidebarView(documSidebarView);
-        Edit.Session.views.sidebarView = documSidebarView;
-
-        // ========== Sidebar ITEMS ============
-        var documSidebarItemsView = new DocManager.DocsApp.Common.Views.SidebarCompositePanel({
-          //childView: DocManager.DocsApp.Common.Views.SidebarCompositePanel,
-          collection: Edit.Session.items,
-          model: Edit.Session.model,
-          itemtype: Edit.Session.model.get('tipocomp'),
-        });
-        registerDocumSidebarItemsView(documSidebarItemsView);
-        Edit.Session.views.sidebarItemsView = documSidebarItemsView;
-
-        //var searchItemsView = new Edit.Search();
-        //registerDocumItemsView(documItemsView);
+//        console.log('READY to create itemView: [%s]',Edit.Session.model.get('tipocomp'));
 
   
         Edit.Session.layout = documLayout;
         documLayout.on("show", function(){
-          //documLayout.navbarRegion.show(documNavBar);
           documLayout.mainRegion.show(documEditView);
-//          documLayout.headerInfoRegion.show(documSidebarView);
-//          documLayout.itemsInfoRegion.show(documSidebarItemsView);
         });
 
         DocManager.mainRegion.show(documLayout);
@@ -105,16 +81,16 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         itemHeader.show();
 
 
-        // itemheader.on("form:submit", function(model){
-        //   Edit.Session.model.insertItemCollection(Edit.Session.items);
-        //   Edit.Session.model.update(function(err,model){
-        //     if(err){
-        //       itemheader.triggerMethod("form:data:invalid", err);
-        //     }else{
-        //       itemheader.close();
-        //     }
-        //   });
-        // });
+         itemheader.on("form:submit", function(model){
+           Edit.Session.model.insertItemCollection(Edit.Session.items);
+           Edit.Session.model.update(function(err,model){
+             if(err){
+               itemheader.triggerMethod("form:data:invalid", err);
+             }else{
+               itemheader.close();
+             }
+           });
+         });
 
         // a laburar
         // para cuando selecciona una person desde el item
@@ -382,7 +358,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
     dao.gestionUser.getUser(DocManager, function (user){
       if(user){
-        console.log('Dao Get Current user: [%s]', user.get('username'));
+//        console.log('Dao Get Current user: [%s]', user.get('username'));
         Edit.Session.currentUser = user;
       }else{
         Edit.Session.currentUser = null;        
@@ -396,36 +372,35 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       console.log('editEvents SOL Details RENDER');
         // a laburar
       //Edit.Session.sitcollection = fetchPTItemsCollection(Edit.Session.model);
-
+			
       var sitview = new DocManager.DocsApp.Common.Views.SidebarCompositePanel({
-        //childView: DocManager.DocsApp.Common.Views.SidebarCompositePanel,
         collection: Edit.Session.items,
         model: Edit.Session.model,
-        itemtype: 'nsdetails',
+        itemtype: 'insdetails',
       });
-
       sitview.listenTo(sitview.collection, 'add', sitview.render);
-      //sitview.listenTo(view, 'render', sitview.render);
       view.$('#soldetails-region').html(sitview.render().el);
-
+		
   };
 
   var editReqDetail = function(view, isNew, itemDetail){
       console.log('editReqDetail: BEGIN isNew:[%s] items so far:[%s]', isNew,Edit.Session.items.length);
       if(isNew){
         itemDetail = new Edit.Session.model.initNewItem();
+
       }
 
-      var subItem = new Edit.SolicitudDetail({
+      var subItem = new Edit.InscripcionDetail({
         model: itemDetail,
         itemtype: Edit.Session.model.get('tipocomp'),
       });
 
       subItem.on('details:form:submit', function(model, cb){
-        console.log('Alta BUBLING [%s][%s]', model.get('description'), model.whoami);
+        console.log('Alta BUBLING [%s][%s]', model.get('nombreyape'), model.whoami);
         //var error = model.validate();
 
         if(isNew){
+//					console.log('esnuevo',model);
           Edit.Session.items.add(model);
         }        
         console.log('AFTER UPDATING EditSessionItems:  [%s]',Edit.Session.items.length)
@@ -436,7 +411,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         cb();
 
       });
-
+			//console.log('render',subItem.render().el)
       view.$('#nuevo-req-form').html(subItem.render().el);
 
   };

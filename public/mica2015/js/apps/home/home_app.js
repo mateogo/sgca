@@ -11,6 +11,7 @@ DocManager.module("HomeApp", function(HomeApp, DocManager, Backbone, Marionette,
 		console.log('API: showHome');
 	  HomeApp.Show.Controller.showHome();
     },
+		
 	};
 
   DocManager.on("home:show", function(){

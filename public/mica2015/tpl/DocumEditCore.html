@@ -143,7 +143,7 @@
 										<div class="row">
 											<div class="col-sm-3">
 												<label class="control-label">DNI</label>
-												<input type="text" class="form-control" id="rdni" name="rdni" placeholder="XXXXXXXX" value='<%= rdni %>' disabled/><!--A completar automáticamente-->
+												<input type="text" class="form-control" id="rdni" name="rdni" placeholder="XXXXXXXX" value='<%= rdni %>' />
 											</div>
 											
 											<div class="col-sm-3">
@@ -172,9 +172,13 @@
 										</div>
 									</div>
 									<hr class="spacer">
-									<a href="#" id="nuevo-req-btn" onclick="return false">
+									<a id="nuevo-req-btn" >
 										<button id="itemFormBtn" type="button" class="btn btn-primary">Agregar otro representante</button>
 									</a>
+									<!--Otro Representante-->
+									<div id="nuevo-req-form" class="col-xs-12 col-md-12 sistema-box"></div>
+                  <!--END Otro Representante-->
+									<div id='soldetails-region' class="col-xs-12 col-md-12 sistema-box row spacer"></div>
 								</div><!-- END RESPONSABLES -->
   
                 <div class="step-pane" data-step="3">

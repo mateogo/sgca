@@ -3,7 +3,6 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 	Show.Controller = {
 		
 		showHome: function(){
-			console.log('showHome');
 			
       var homeLayout = new Show.HomeLayoutView();
 			var home = DocManager.request("home:entity");
