@@ -26,6 +26,7 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
     setActiveHeader: function(headerUrl){
       var links = DocManager.request("header:entities");
       var headerToSelect = links.find(function(header){ return header.get("url") === headerUrl; });
+      console.log('headerToSolect: [%s] [%s]', headerToSelect.get('url'), headerToSelect.get('name') )
       headerToSelect.select();
       links.trigger("reset");
     }

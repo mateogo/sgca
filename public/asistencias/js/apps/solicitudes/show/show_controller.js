@@ -1,8 +1,8 @@
-DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionette, $, _){
+DocManager.module("RequisitionApp.Show", function(Show, DocManager, Backbone, Marionette, $, _){
   Show.Controller = {
 
-    showDocument: function(id){
-      console.log('showDocument [%s]',id);
+    showRequisition: function(id){
+      console.log('showRequisition [%s]',id);
       var documLayout = new Show.Layout();
 
       var fetchingDocument = DocManager.request("document:entity", id);

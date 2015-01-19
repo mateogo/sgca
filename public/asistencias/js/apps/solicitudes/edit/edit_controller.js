@@ -1,71 +1,79 @@
-DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
+DocManager.module("RequisitionApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
 
   Edit.Controller = {
-    editDocument: function(id){
-      console.log('DocsAPP.Edit.Controller.editDocument');
+
+    addRequisition: function(){
+      var requisition = new DocManager.Entities.Comprobante();
+      processRequisition(requisition);
+    },
+
+    editRequisition: function(id){
+      console.log('RequisitionApp.Edit.Controller.editRequisition');
+
+      var fetchingRequisition = DocManager.request("document:entity", id);
+     
+      $.when(fetchingRequisition).done(function(requisition){
+
+        console.log('RequisitionApp.Edit BEGIN', requisition.get('slug'));
+        processRequisition(requisition);
+                
+      });
+    }
+  };
+
+
+  // =============== main PROCESS REQUISITION ==============
+  var processRequisition = function(requisition){
 
       var documLayout = new Edit.Layout();
       //var documNavBar = initNavPanel();
-      var fetchingDocument = DocManager.request("document:entity", id);
-     
-      $.when(fetchingDocument).done(function(document){
 
-        console.log('DocsApp.Edit BEGIN', document.get('slug'));
-    
-        if(document.get('tipocomp')==='pdiario'){
-          return;
-        }
-        // End: Es editable?
+      console.log('processRequisition BEGIN', requisition.get('slug'));
 
+      Edit.Session = {};
+      Edit.Session.views = {};
+      registerRequisitionEntity(requisition);
 
-        Edit.Session = {};
-        Edit.Session.views = {};
-        registerDocumentEntity(document);
-    
-        //(document);
-
-        var documEditView = new Edit.Document({
-          model: Edit.Session.model
-        });
-        registerDocumEditEvents(documEditView);
-        
-        console.log('READY to create itemView: [%s]',Edit.Session.model.get('tipocomp'));
-
-        // ========== Sidebar HEADER ============
-        var documSidebarView = new DocManager.DocsApp.Common.Views.SidebarItem({
-          model: Edit.Session.model,
-          itemtype: 'nsolheader'
-        });
-        registerDocumSidebarView(documSidebarView);
-        Edit.Session.views.sidebarView = documSidebarView;
-
-        // ========== Sidebar ITEMS ============
-        var documSidebarItemsView = new DocManager.DocsApp.Common.Views.SidebarCompositePanel({
-          //childView: DocManager.DocsApp.Common.Views.SidebarCompositePanel,
-          collection: Edit.Session.items,
-          model: Edit.Session.model,
-          itemtype: Edit.Session.model.get('tipocomp'),
-        });
-        registerDocumSidebarItemsView(documSidebarItemsView);
-        Edit.Session.views.sidebarItemsView = documSidebarItemsView;
-
-        //var searchItemsView = new Edit.Search();
-        //registerDocumItemsView(documItemsView);
-
-  
-        Edit.Session.layout = documLayout;
-        documLayout.on("show", function(){
-          //documLayout.navbarRegion.show(documNavBar);
-          documLayout.mainRegion.show(documEditView);
-          documLayout.headerInfoRegion.show(documSidebarView);
-          documLayout.itemsInfoRegion.show(documSidebarItemsView);
-        });
-
-        DocManager.mainRegion.show(documLayout);
-
-            
+      var documEditView = new Edit.Document({
+        model: Edit.Session.model
       });
-    }
+
+      registerDocumEditEvents(documEditView);
+      
+      console.log('READY to create itemView: [%s]',Edit.Session.model.get('tipocomp'));
+
+      // ========== Sidebar HEADER ============
+      var documSidebarView = new DocManager.RequisitionApp.Common.Views.SidebarItem({
+        model: Edit.Session.model,
+        itemtype: 'nsolheader'
+      });
+      registerDocumSidebarView(documSidebarView);
+      Edit.Session.views.sidebarView = documSidebarView;
+
+      // ========== Sidebar ITEMS ============
+      var documSidebarItemsView = new DocManager.RequisitionApp.Common.Views.SidebarCompositePanel({
+        //childView: DocManager.RequisitionApp.Common.Views.SidebarCompositePanel,
+        collection: Edit.Session.items,
+        model: Edit.Session.model,
+        itemtype: Edit.Session.model.get('tipocomp'),
+      });
+      registerDocumSidebarItemsView(documSidebarItemsView);
+      Edit.Session.views.sidebarItemsView = documSidebarItemsView;
+
+      //var searchItemsView = new Edit.Search();
+      //registerDocumItemsView(documItemsView);
+
+
+      Edit.Session.layout = documLayout;
+      documLayout.on("show", function(){
+        //documLayout.navbarRegion.show(documNavBar);
+        documLayout.mainRegion.show(documEditView);
+        documLayout.headerInfoRegion.show(documSidebarView);
+        documLayout.itemsInfoRegion.show(documSidebarItemsView);
+      });
+
+      DocManager.mainRegion.show(documLayout);
+
   };
 
   var registerDocumSidebarItemsView = function(view){
@@ -98,6 +106,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         });
 
         itemheader.on('person:select',function(query, cb){
+          console.log('IAJUUU')
           DocManager.request("person:search", query, function(model){
             cb(model);
           });      
@@ -266,8 +275,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
               itemtype: itemmodel.get('tipoitem')
             }));
     }else if(itemmodel.get('tipoitem')==='nsolicitud'){
-      return ( new DocManager.DocsApp.Common.Views.SidebarCompositePanel({
-              //childView: DocManager.DocsApp.Common.Views.SidebarCompositePanel,
+      return ( new DocManager.RequisitionApp.Common.Views.SidebarCompositePanel({
+              //childView: DocManager.RequisitionApp.Common.Views.SidebarCompositePanel,
               collection: subItemCol,
               model: itemmodel,
               itemtype: 'nsdetails'
@@ -369,7 +378,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     col.add(sitmodel);
   };
 
-  var registerDocumentEntity = function(model) {
+  var registerRequisitionEntity = function(model) {
     Edit.Session.solicitud = model;
 
     Edit.Session.model = model.documSolicitudFacetFactory();
@@ -397,8 +406,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         // a laburar
       //Edit.Session.sitcollection = fetchPTItemsCollection(Edit.Session.model);
 
-      var sitview = new DocManager.DocsApp.Common.Views.SidebarCompositePanel({
-        //childView: DocManager.DocsApp.Common.Views.SidebarCompositePanel,
+      var sitview = new DocManager.RequisitionApp.Common.Views.SidebarCompositePanel({
+        //childView: DocManager.RequisitionApp.Common.Views.SidebarCompositePanel,
         collection: Edit.Session.items,
         model: Edit.Session.model,
         itemtype: 'nsdetails',
@@ -450,7 +459,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     });
 
     view.on('render', function(){
-      console.log('editEvents RENDER: [%s] [%s]')
+      console.log('editEvents RENDER')
       renderSOLDetails(view);
 
     });
@@ -461,7 +470,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
           view.triggerMethod("form:data:invalid", err);
         }else{
           console.log('FINISHED!')
-          //DocManager.trigger("document:edit", model);
+          //DocManager.trigger("requisition:edit", model);
           //volver
           enviarmail(model);
         }
@@ -469,6 +478,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     });
 
     view.on('person:select',function(query, cb){
+      console.log('IAJUUUUUUU!!!! person select')
       DocManager.request("person:search", query, function(model){
         cb(model);
       });      
@@ -498,8 +508,8 @@ var enviarmail = function(model){
     }
     
     //todo:ver donde configurar el servidor de produccion
-    model.set( 'server','https://localhost:3000');
-    var sendMail = new DocManager.DocsApp.Common.Views.SendMail({
+    model.set( 'server','http://sisplan.cultura.gob.ar:3000');
+    var sendMail = new DocManager.RequisitionApp.Common.Views.SendMail({
           model: model,
     });
     
@@ -547,50 +557,50 @@ var enviarmail = function(model){
 
   };
 
-  var fetchPrevNextDocument = function (ename, query, cb){
+  var fetchPrevNextRequisition = function (ename, query, cb){
     var qmodel;
     if(query) qmodel = new DocManager.Entities.Comprobante({cnumber:query});
     else qmodel = Edit.Session.model;
     DocManager.request(ename,qmodel, function(model){
       if(model){
         Edit.Session.layout.close();
-        DocManager.trigger("document:edit", model);
+        DocManager.trigger("requisition:edit", model);
       }
     });
   };
 
   var registerHeadersEvents = function(hview){
 
-      hview.on("childview:document:new", function(childView){
-        DocManager.DocsApp.Edit.createInstance(this);
+      hview.on("childview:requisition:new", function(childView){
+        DocManager.RequisitionApp.Edit.createInstance(this);
       });
 
-      hview.on("childview:document:item:new", function(childView){
-        DocManager.DocsApp.Edit.createItem(Edit.Session.model);
+      hview.on("childview:requisition:item:new", function(childView){
+        DocManager.RequisitionApp.Edit.createItem(Edit.Session.model);
       });
 
-      hview.on("childview:documents:list", function(childView, model){
+      hview.on("childview:requisitions:list", function(childView, model){
         var trigger = model.get("navigationTrigger");
         DocManager.trigger(trigger);
       });
 
-      hview.on('document:search',function(query, cb){
-        console.log('edit_controller: document:search EVENT');
-        DocManager.request("document:search",query, function(model){
+      hview.on('requisition:search',function(query, cb){
+        console.log('edit_controller: requisition:search EVENT');
+        DocManager.request("requisition:search",query, function(model){
           if(model){
             Edit.Session.layout.close();
-            DocManager.trigger("document:edit", model);
+            DocManager.trigger("requisition:edit", model);
           }
         });      
 
       });
 
-      hview.on('document:fetchprev', function(query, cb){
-        fetchPrevNextDocument("document:fetchprev",query,cb);
+      hview.on('requisition:fetchprev', function(query, cb){
+        fetchPrevNextRequisition("requisition:fetchprev",query,cb);
       });
 
-      hview.on('document:fetchnext', function(query, cb){
-        fetchPrevNextDocument("document:fetchnext",query,cb);
+      hview.on('requisition:fetchnext', function(query, cb){
+        fetchPrevNextRequisition("requisition:fetchnext",query,cb);
       });
 
   };
@@ -598,7 +608,7 @@ var enviarmail = function(model){
   // var initNavPanel = function(){
   //     var links = DocManager.request("docum:edit:entities");
 
-  //     var headers = new DocManager.DocsApp.Common.Views.NavPanel({collection: links});
+  //     var headers = new DocManager.RequisitionApp.Common.Views.NavPanel({collection: links});
   //     //var headers = new Edit.NavPanel({collection: links});
   //     registerHeadersEvents(headers);
 
@@ -606,8 +616,8 @@ var enviarmail = function(model){
   // };
 
   var API = {
-    searchDocuments: function(query, cb){
-      Edit.modalSearchEntities('documents', query, function(model){
+    searchRequisitions: function(query, cb){
+      Edit.modalSearchEntities('requisitions', query, function(model){
         cb(model);
       });
     },
@@ -628,8 +638,8 @@ var enviarmail = function(model){
     },
   };
 
-  DocManager.reqres.setHandler("document:search", function(query, cb){
-    API.searchDocuments(query, cb);
+  DocManager.reqres.setHandler("requisition:search", function(query, cb){
+    API.searchRequisitions(query, cb);
   });
 
   DocManager.reqres.setHandler("person:search", function(query, cb){

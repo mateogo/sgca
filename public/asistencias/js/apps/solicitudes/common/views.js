@@ -1,4 +1,4 @@
-DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, Marionette, $, _){
+DocManager.module("RequisitionApp.Common.Views", function(Views, DocManager, Backbone, Marionette, $, _){
 
   Views.SearchItem = Marionette.ItemView.extend({
     templates: {

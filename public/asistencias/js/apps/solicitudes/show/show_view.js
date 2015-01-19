@@ -1,4 +1,4 @@
-DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionette, $, _){
+DocManager.module("RequisitionApp.Show", function(Show, DocManager, Backbone, Marionette, $, _){
   Show.MissingDocument = Marionette.ItemView.extend({
     template: _.template('<div class="alert alert-error">This contact does not exist</div>'),
   });

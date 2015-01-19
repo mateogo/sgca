@@ -816,7 +816,10 @@ atribuciones (array)
         if(target === 'sisplan'){
             console.log('buildDefaults for SISPLAN');
             user.home = 'sisplan:acciones:list';
-            user.atributos = ['presugestor', 'nodochimenea'];
+
+            user.roles = ['supervisor', 'presugestor'];
+            user.atributos = ['nodochimenea'];
+
             user.modulos = ['sisplan'];
         }
     },
@@ -925,13 +928,13 @@ atribuciones (array)
         usernameconflict:'zNoTesteado',
         roles: ['supervisor'],
         home: "solicitudes:list",
-        grupo:'adherente',
+        grupo:'produccion',
         termsofuse: false,
         target: '',
 
-        estado_alta:'pendaprobacion',
+        estado_alta:'activo',
         verificado: {
-            mail:false,
+            mail:true,
             feaprobado: null,
             adminuser: '',
         },

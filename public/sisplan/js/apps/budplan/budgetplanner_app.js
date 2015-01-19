@@ -12,7 +12,7 @@ DocManager.module("BudplanApp", function(BudplanApp, DocManager, Backbone, Mario
     budgetPlanner: function(){
       console.log('API: budgetAnalyse');
       BudplanApp.List.Controller.budgetPlanner();
-      //DocManager.execute("set:active:header", "presupuestos");
+      DocManager.execute("set:active:header", "analyser");
     },
 
   };

@@ -69,11 +69,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           var criteria = utils.fstr(filterCriterion.toLowerCase());
           return function(document){
             //console.log('filterfunction:[%s]vs [%s]/[%s]/[%s]',criteria,document.get("tipocomp"),document.get("cnumber"),document.get("slug"));
-            if(document.get("nickName").toLowerCase().indexOf(criteria) !== -1
+            if( (document.get("nickName").toLowerCase().indexOf(criteria) !== -1
               || utils.fstr(document.get("name").toLowerCase()).indexOf(criteria) !== -1
-              || document.get("displayName").toLowerCase().indexOf(criteria) !== -1){
+              || document.get("displayName").toLowerCase().indexOf(criteria) !== -1) && (document.get('tipojuridico').porganismo && document.get('tipojuridico').porganismo !== 'false') ){
 
-              
               return document;
             }
           }
@@ -139,7 +138,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
   DocManager.reqres.setHandler("person:filtered:entities", function(criteria, cb){
-    return API.getFilteredCol(criteria,cb);
+    return API.getFilteredCol(criteria, cb);
   });
 
 });

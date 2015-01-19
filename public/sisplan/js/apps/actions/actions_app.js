@@ -27,6 +27,7 @@ DocManager.module("ActionsApp", function(ActionsApp, DocManager, Backbone, Mario
     },
     createNewAction: function(){
       console.log('API: createNewAction');
+      DocManager.execute("set:active:header", "nuevaaccion");
       DocManager.request("action:create:new");
     },
     showAction: function(id){

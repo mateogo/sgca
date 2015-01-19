@@ -15,7 +15,7 @@ DocManager.module("BudgetApp", function(BudgetApp, DocManager, Backbone, Marione
     listBudgets: function(criterion){
       console.log('API: listBudgets');
       BudgetApp.List.Controller.listBudgets(criterion);
-      //DocManager.execute("set:active:header", "presupuestos");
+      DocManager.execute("set:active:header", "presupuestos");
     },
 
     buildBudget: function(id){

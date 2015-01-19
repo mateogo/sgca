@@ -25,10 +25,5 @@ DocManager.on("start", function(){
   console.log('DocManager History start: start');
   if(Backbone.history){
     Backbone.history.start();
-
-    if(this.getCurrentRoute() === ""){
-      //DocManager.trigger("actions:list");
-      DocManager.trigger("budget:planner");
-    }
   }
 });

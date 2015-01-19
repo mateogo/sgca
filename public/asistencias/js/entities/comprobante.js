@@ -12,7 +12,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       cnumber: "",
       fecomp: "",
       persona: "",
-      slug: "documento nuevoO",
+      slug: "",
       estado_alta:'media',
       nivel_ejecucion: 'enproceso',
       description: "",
@@ -118,10 +118,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if(!self.get('tipocomp')){
         self.set('tipocomp', 'nsolicitud');
         self.set('fecomp', utils.dateToStr(fealta));
-      }
-
-      if(!self.id){
-        self.set('slug', 'Nueva Solicitud');
       }
 
       data = _.clone(self.attributes);
@@ -685,7 +681,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     // Docum Items[]
     tipoitem: "",
-    organismo: "Encuentro",
+    organismo: "",
     slug: "",
     tipomov: "",
     tipo_evento: "",
@@ -703,10 +699,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     esolicitante: "",
     tsolicitante: "",
 
-    nusuario:"Juan Gomez",
-    eusuario:"jgomez@elmunicipio.org",
+    nusuario:"",
+    eusuario:"",
     tusuario:"",
-    rolusuario:"Secretaria privada",
+    rolusuario:"",
 
     ntecnico: "",
     etecnico: "",
@@ -1549,9 +1545,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           var criteria = filterCriterion.toLowerCase();
           return function(document){
             //console.log('filterfunction:[%s]vs [%s]/[%s]/[%s]',criteria,document.get("tipocomp"),document.get("cnumber"),document.get("slug"));
-            if(document.get("tipocomp").toLowerCase().indexOf(criteria) !== -1
+            if( (document.get("tipocomp").toLowerCase().indexOf(criteria) !== -1
               || document.get("slug").toLowerCase().indexOf(criteria) !== -1
-              || document.get("cnumber").toLowerCase().indexOf(criteria) !== -1){
+              || document.get("cnumber").toLowerCase().indexOf(criteria) !== -1) ){
               
               return document;
             }
