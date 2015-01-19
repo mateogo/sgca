@@ -52,6 +52,7 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
     enterhClicked: function(){
       console.log('evento')
 			$('#loginbox').toggleClass('hide show');
+			$('#ins-but').toggleClass('hide show');
       
     },  
 		
