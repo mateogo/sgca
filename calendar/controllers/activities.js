@@ -316,7 +316,7 @@ var processRequest = function(req, res, cb){
 exports.controller = function(req, res) {
     console.log('activitycontroller');
     processRequest(req,res, function(result,pd, docum, model, user){
-        console.log('End processing: [%s] [%s]',pd.persona, pd.data.header.slug);
+        //console.log('End processing: [%s] [%s]',pd.persona, pd.data.header.slug);
         console.log('================  END PROCESSING ====================');
         res.send({
             process: result,

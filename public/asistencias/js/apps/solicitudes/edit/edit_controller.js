@@ -420,7 +420,7 @@ DocManager.module("RequisitionApp.Edit", function(Edit, DocManager, Backbone, Ma
   };
 
   var editReqDetail = function(view, isNew, itemDetail){
-      console.log('editReqDetail: BEGIN isNew:[%s] items so far:[%s]', isNew,Edit.Session.items.length);
+      console.log('[%s] editReqDetail: BEGIN isNew:[%s] items so far:[%s]',Edit.Session.model.whoami, isNew,Edit.Session.items.length);
       if(isNew){
         itemDetail = new Edit.Session.model.initNewItem();
       }
@@ -470,9 +470,9 @@ DocManager.module("RequisitionApp.Edit", function(Edit, DocManager, Backbone, Ma
           view.triggerMethod("form:data:invalid", err);
         }else{
           console.log('FINISHED!')
-          //DocManager.trigger("requisition:edit", model);
-          //volver
           enviarmail(model);
+          DocManager.trigger("requisition:show", model.id);
+          //volver
         }
       });
     });

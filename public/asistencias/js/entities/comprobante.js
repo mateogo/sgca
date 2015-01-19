@@ -303,6 +303,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var modelFactory = function(attrs, options){
     //utils.inspect(attrs,1,'modelFactory');
     var model;
+
+    if(!options.tipoitem) model = new Entities.DocumMovimSO(attrs);
+
     if(attrs.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnico(attrs);
     if(attrs.tipoitem==='nrecepcion') model = new Entities.DocumMovimRE(attrs);
     if(attrs.tipoitem==='nsolicitud') model = new Entities.DocumMovimSO(attrs);
@@ -634,7 +637,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       delete attrs.estado_alta;
       delete attrs.nivel_ejecucion;
       delete attrs.description;
-      console.dir(attrs);
+      //console.dir(attrs);
 
       items.push(attrs);
 
@@ -644,6 +647,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     initNewItem: function(){
+      console.log('initNewItem:[%s]', this.whoami)
       var sitem = new Entities.DocumMovimSOItem();
 
       sitem.set({
@@ -680,10 +684,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     description: "",
 
     // Docum Items[]
-    tipoitem: "",
+    tipoitem: "nsolicitud",
     organismo: "",
     slug: "",
-    tipomov: "",
+    tipomov: "nsolicitud",
     tipo_evento: "",
     devento: "",
     fevento: "",
@@ -769,6 +773,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     initNewItem: function(){
+      console.log('initNewItem:[%s]', this.whoami)
       return new Entities.DocumMovimSOItem();
     },
 
@@ -778,9 +783,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     defaults: {
-      tipoitem: "",
+      tipoitem: "nsolicitud",
       slug: "",
-      tipomov: "",
+      tipomov: "nsolicitud",
       tipo_evento: "",
       devento: "",
       fevento: "",
@@ -1115,12 +1120,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     //utils.inspect(attrs,1,'modelFactory');
     //console.log('modelSubFactory: [%s]',options.tipoitem)
     var model;
+
+    if(!options.tipoitem) model = new Entities.DocumMovimSOItem(attrs);
+
     if(options.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnicoItem(attrs);
     if(options.tipoitem==='nrecepcion') model = new Entities.DocumMovimREItem(attrs);
     if(options.tipoitem==='nsolicitud') model = new Entities.DocumMovimSOItem(attrs);
     if(options.tipoitem==='nentrega')   model = new Entities.DocumMovimREItem(attrs);
     if(options.tipoitem==='npedido')    model = new Entities.DocumMovimREItem(attrs);
     if(options.tipoitem==='pemision')   model = new Entities.DocumParteEMItem(attrs);
+
     return model;
   };
 
