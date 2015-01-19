@@ -1,4 +1,4 @@
-DocManager.module("DocsApp.Report.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
+DocManager.module("RequisitionApp.Report.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
   Edit.Layout = Marionette.LayoutView.extend({
     className: 'row row-offcanvas row-offcanvas-left',
 
@@ -16,7 +16,7 @@ DocManager.module("DocsApp.Report.Edit", function(Edit, DocManager, Backbone, Ma
   });
 
 
-  Edit.Search = DocManager.DocsApp.Common.Views.SearchPanel.extend({
+  Edit.Search = DocManager.RequisitionApp.Common.Views.SearchPanel.extend({
     initialize: function(options){
       this.optiones = options;
       var self = this;
@@ -25,7 +25,7 @@ DocManager.module("DocsApp.Report.Edit", function(Edit, DocManager, Backbone, Ma
 
 
 
-  Edit.Report = DocManager.DocsApp.Common.Views.Form.extend({
+  Edit.Report = DocManager.RequisitionApp.Common.Views.Form.extend({
     
     tagName:'form',
     className: 'form-horizontal',
@@ -226,7 +226,7 @@ DocManager.module("DocsApp.Report.Edit", function(Edit, DocManager, Backbone, Ma
 
 
   // PARTE TECNICO
-  Edit.ItemHeader = DocManager.DocsApp.Common.Views.Form.extend({
+  Edit.ItemHeader = DocManager.RequisitionApp.Common.Views.Form.extend({
     whoami:'ItemHeader:edit_view.js',
     
     tagName:'form',

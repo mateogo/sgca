@@ -12,7 +12,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       cnumber: "",
       fecomp: "",
       persona: "",
-      slug: "documento nuevoO",
+      slug: "",
       estado_alta:'media',
       nivel_ejecucion: 'enproceso',
       description: "",
@@ -118,10 +118,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if(!self.get('tipocomp')){
         self.set('tipocomp', 'nsolicitud');
         self.set('fecomp', utils.dateToStr(fealta));
-      }
-
-      if(!self.id){
-        self.set('slug', 'Nueva Solicitud');
       }
 
       data = _.clone(self.attributes);
@@ -307,6 +303,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var modelFactory = function(attrs, options){
     //utils.inspect(attrs,1,'modelFactory');
     var model;
+
+    if(!options.tipoitem) model = new Entities.DocumMovimSO(attrs);
+
     if(attrs.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnico(attrs);
     if(attrs.tipoitem==='nrecepcion') model = new Entities.DocumMovimRE(attrs);
     if(attrs.tipoitem==='nsolicitud') model = new Entities.DocumMovimSO(attrs);
@@ -638,7 +637,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       delete attrs.estado_alta;
       delete attrs.nivel_ejecucion;
       delete attrs.description;
-      console.dir(attrs);
+      //console.dir(attrs);
 
       items.push(attrs);
 
@@ -648,6 +647,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     initNewItem: function(){
+      console.log('initNewItem:[%s]', this.whoami)
       var sitem = new Entities.DocumMovimSOItem();
 
       sitem.set({
@@ -684,10 +684,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     description: "",
 
     // Docum Items[]
-    tipoitem: "",
-    organismo: "Encuentro",
+    tipoitem: "nsolicitud",
+    organismo: "",
     slug: "",
-    tipomov: "",
+    tipomov: "nsolicitud",
     tipo_evento: "",
     devento: "",
     fevento: "",
@@ -703,10 +703,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     esolicitante: "",
     tsolicitante: "",
 
-    nusuario:"Juan Gomez",
-    eusuario:"jgomez@elmunicipio.org",
+    nusuario:"",
+    eusuario:"",
     tusuario:"",
-    rolusuario:"Secretaria privada",
+    rolusuario:"",
 
     ntecnico: "",
     etecnico: "",
@@ -773,6 +773,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     initNewItem: function(){
+      console.log('initNewItem:[%s]', this.whoami)
       return new Entities.DocumMovimSOItem();
     },
 
@@ -782,9 +783,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     defaults: {
-      tipoitem: "",
+      tipoitem: "nsolicitud",
       slug: "",
-      tipomov: "",
+      tipomov: "nsolicitud",
       tipo_evento: "",
       devento: "",
       fevento: "",
@@ -1119,12 +1120,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     //utils.inspect(attrs,1,'modelFactory');
     //console.log('modelSubFactory: [%s]',options.tipoitem)
     var model;
+
+    if(!options.tipoitem) model = new Entities.DocumMovimSOItem(attrs);
+
     if(options.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnicoItem(attrs);
     if(options.tipoitem==='nrecepcion') model = new Entities.DocumMovimREItem(attrs);
     if(options.tipoitem==='nsolicitud') model = new Entities.DocumMovimSOItem(attrs);
     if(options.tipoitem==='nentrega')   model = new Entities.DocumMovimREItem(attrs);
     if(options.tipoitem==='npedido')    model = new Entities.DocumMovimREItem(attrs);
     if(options.tipoitem==='pemision')   model = new Entities.DocumParteEMItem(attrs);
+
     return model;
   };
 
@@ -1549,9 +1554,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           var criteria = filterCriterion.toLowerCase();
           return function(document){
             //console.log('filterfunction:[%s]vs [%s]/[%s]/[%s]',criteria,document.get("tipocomp"),document.get("cnumber"),document.get("slug"));
-            if(document.get("tipocomp").toLowerCase().indexOf(criteria) !== -1
+            if( (document.get("tipocomp").toLowerCase().indexOf(criteria) !== -1
               || document.get("slug").toLowerCase().indexOf(criteria) !== -1
-              || document.get("cnumber").toLowerCase().indexOf(criteria) !== -1){
+              || document.get("cnumber").toLowerCase().indexOf(criteria) !== -1) ){
               
               return document;
             }

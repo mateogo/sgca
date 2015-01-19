@@ -17,7 +17,7 @@ DocManager.navigate = function(route,  options){
 };
 
 DocManager.getCurrentRoute = function(){
-  console.log('DoCManager.getCurretnRoute: app.js')
+  console.log('DocManager.getCurretnRoute: app.js')
   return Backbone.history.fragment
 };
 
@@ -27,7 +27,7 @@ DocManager.on("start", function(){
     Backbone.history.start();
 
     if(this.getCurrentRoute() === ""){
-      DocManager.trigger("documents:list");
+      DocManager.trigger("requisition:add");
     }
   }
 });

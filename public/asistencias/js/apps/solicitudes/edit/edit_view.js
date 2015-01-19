@@ -1,4 +1,4 @@
-DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
+DocManager.module("RequisitionApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
   Edit.Layout = Marionette.LayoutView.extend({
     className: 'row',
 
@@ -17,7 +17,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   });
 
 
-  Edit.Search = DocManager.DocsApp.Common.Views.SearchPanel.extend({
+  Edit.Search = DocManager.RequisitionApp.Common.Views.SearchPanel.extend({
     initialize: function(options){
       this.optiones = options;
       var self = this;
@@ -26,7 +26,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
 
 
-  Edit.Document = DocManager.DocsApp.Common.Views.Form.extend({
+  Edit.Document = DocManager.RequisitionApp.Common.Views.Form.extend({
     
     // tagName:'form',
     // className: 'form-horizontal',
@@ -295,7 +295,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   };
 
   //Edición del SubItem de comprobante SOLICITUD
-  Edit.SolicitudDetail = DocManager.DocsApp.Common.Views.Form.extend({
+  Edit.SolicitudDetail = DocManager.RequisitionApp.Common.Views.Form.extend({
     whoami:'SolicitudDetail:edit_view.js',
     
     // tagName:'form',
@@ -366,7 +366,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
 
   // Cabecera del itam
-  Edit.ItemHeader = DocManager.DocsApp.Common.Views.Form.extend({
+  Edit.ItemHeader = DocManager.RequisitionApp.Common.Views.Form.extend({
     whoami:'ItemHeader:edit_view.js',
     
     // tagName:'form',
@@ -461,7 +461,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   });
 
 
-  Edit.PTecnicoListItem = DocManager.DocsApp.Common.Views.Form.extend({
+  Edit.PTecnicoListItem = DocManager.RequisitionApp.Common.Views.Form.extend({
     templates: {
       ptecnico:   'DocumEditPTItem',
       nsolicitud: 'DocumEditSOItem',
