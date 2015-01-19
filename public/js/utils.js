@@ -931,6 +931,7 @@ window.utils = {
         {val:'gestion:comprobantes:list'    , label:'gestion/comprobantes'},
         {val:'sisplan:acciones:list'        , label:'sisplan/acciones'},
         {val:'studio:producciones:list'    , label:'studio/producciones'},
+        {val:'rondas:form'							    , label:'mica2015/rondas'},
     ],
 
     userStatusOptionList:[
@@ -2564,6 +2565,16 @@ window.utils = {
         var mo = date.getMonth()+1;
         var ye = date.getFullYear();
         return da+"/"+mo+"/"+ye;
+    },  
+		
+		dateTimeToStr: function(date) {
+        var da = date.getDate();
+        var mo = date.getMonth()+1;
+        var ye = date.getFullYear();
+        var hh = date.getHours();
+        var mm = date.getMinutes();
+        var ss = date.getSeconds();
+        return da+"/"+mo+"/"+ye+":"+hh+":"+mm+":"+ss;
     },
 
     addOffsetDay: function(numdate, offset){

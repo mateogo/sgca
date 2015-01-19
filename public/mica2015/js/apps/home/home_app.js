@@ -2,6 +2,7 @@ DocManager.module("HomeApp", function(HomeApp, DocManager, Backbone, Marionette,
 	HomeApp.Router = Marionette.AppRouter.extend({
 		appRoutes: {
 			"rondas/": "showHome",
+			"logout/": "showHome",
     }
 	});
 

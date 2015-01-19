@@ -15,7 +15,13 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 			
 			var homeView = new Show.HomeIntroView({
 				model: home
-			});
+			});	
+			
+//			var user = new UserFacet();
+//			var userView = new Show.UserView({
+//				model:user, 
+//				el:'#signupbox'
+//			});
 			
 			var featureHeading = new Show.HomeFeatureView({
 				model: feature
@@ -28,9 +34,8 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 			var galleryView = new Show.HomeGalleryCollection({
 				collection: itemGallery
 			});
-			
+		
 			homeLayout.on("show", function(){
-				
 				homeLayout.mainRegion.show(homeView);
 				homeLayout.featureRegion.show(featureHeading);
 				homeLayout.itemsRegion.show(featureItems);

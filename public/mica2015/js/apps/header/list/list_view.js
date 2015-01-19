@@ -25,7 +25,7 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
   List.Headers = Marionette.CompositeView.extend({
     //template: "#header-template",
     //tagName: "nav",
-    //className: "navbar navbar-inverse navbar-fixed-top",
+    //className: "navbar navbar-inverse navbar-fixed-top", 
 
     childView: List.Header,
     childViewContainer: "ul#taskmenu",
@@ -33,15 +33,47 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
     getTemplate: function(){
       return utils.templates.HeaderView;
     },
+		
+		initialize: function(){
+			//
+			var userlog;
+			dao.gestionUser.getUser(DocManager, function (user){
+//				console.log(user.id);
+				userlog = user.id;
+			})
+			//
+		},
     
     events: {
-      "click a.brand": "brandClicked"
+      "click a.brand": "brandClicked",
+      "click #entrarh": "enterhClicked",
     },
 
-    brandClicked: function(e){
+    enterhClicked: function(){
+      console.log('evento')
+			$('#loginbox').toggleClass('hide show');
+      
+    },  
+		
+		brandClicked: function(e){
       e.preventDefault();
       this.trigger("brand:clicked");
-    }
+    },
+		
+		onRender: function(userlog){
+			if (userlog.model.id != null){
+//				console.log('usuario logueado',userlog.model.id);
+				this.$('#menuhome').hide();
+				this.$('#notification').show();
+			//	this.$('#menuuser').show();
+				
+			}
+			else{
+//				console.log('no esta logueado')
+				this.$('#notification').hide();
+				this.$('#menuuser').hide();
+			}
+		}
   });
 });
 

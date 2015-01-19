@@ -39,6 +39,11 @@ module.exports = function (config, app) {
     app.get('/logout', function(req, res){
       req.logout();
       res.redirect('/');
+    });  
+	
+		app.get('/mica2015/logout', function(req, res){
+      req.logout();
+      res.redirect('/mica2015/');
     });
     
     app.get('/inicio', function(req,res,next){

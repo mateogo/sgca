@@ -13,9 +13,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       fecomp: "",
       persona: "",
       slug: "documento nuevo",
-      estado_alta:'media',
-      nivel_ejecucion: 'enproceso',
-      description: "",
+//      estado_alta:'media',
+//      nivel_ejecucion: 'enproceso',
+//      description: "",
       items:[]
     },
 
@@ -296,9 +296,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       model.set('cnumber',            this.get('cnumber'));
       model.set('persona',            this.get('persona'));
       model.set('slug',               this.get('slug'));
-      model.set('estado_alta:',       this.get('estado_alta'));
-      model.set('nivel_ejecucion',    this.get('nivel_ejecucion'));
-      model.set('description',        this.get('description'));
+//      model.set('estado_alta:',       this.get('estado_alta'));
+//      model.set('nivel_ejecucion',    this.get('nivel_ejecucion'));
+//      model.set('description',        this.get('description'));
 
       delete attrs.fecomp;
       delete attrs.tipocomp;
@@ -348,9 +348,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     fecomp: "",
     persona: "",
     slug: "",
-    estado_alta:'media',
-    nivel_ejecucion: 'enproceso',
-    description: "",
+//    estado_alta:'media',
+//    nivel_ejecucion: 'enproceso',
+//    description: "",
 
     // Docum Items[]
     tipoitem: "",
@@ -639,7 +639,7 @@ Entities.DocumItemCoreFacet = Backbone.Model.extend({
     schema: {
         tipocomp: {type: 'Select',options: utils.tipoComprobanteOptionList, title:'Tipo comprobante' },
         slug:     {type: 'Text', title: 'Asunto'},
-        description:  {type: 'Text', title: 'Descripción'},
+//        description:  {type: 'Text', title: 'Descripción'},
     },
     //idAttribute: "_id",
 
@@ -664,27 +664,27 @@ Entities.DocumItemCoreFacet = Backbone.Model.extend({
       tipocomp: "inscripcion",
       cnumber: "",
       slug: "Acreditacion MICA 2015",
-      description: ""
+//      description: ""
     },
 
    });
 
-  Entities.DocumGropuEditFacet = Backbone.Model.extend({
-    //urlRoot: "/comprobantes",
-    whoami: 'DocumGroupEditFacet:comprobante.js ',
-
-    schema: {
-        estado_alta: {type: 'Select',options: utils.estadodocumOptionList, title:'Prioridad' },
-        nivel_ejecucion: {type: 'Select',options: utils.documexecutionOptionList, title:'Nivel de Ejecución' },
-    },
-    //idAttribute: "_id",
-
-    defaults: {
-      estado_alta: '',
-      nivel_ejecucion: '',
-    },
-
-   });
+//  Entities.DocumGropuEditFacet = Backbone.Model.extend({
+//    //urlRoot: "/comprobantes",
+//    whoami: 'DocumGroupEditFacet:comprobante.js ',
+//
+////    schema: {
+////        estado_alta: {type: 'Select',options: utils.estadodocumOptionList, title:'Prioridad' },
+////        nivel_ejecucion: {type: 'Select',options: utils.documexecutionOptionList, title:'Nivel de Ejecución' },
+////    },
+//    //idAttribute: "_id",
+//
+////    defaults: {
+////      estado_alta: '',
+////      nivel_ejecucion: '',
+////    },
+//
+//   });
 
   var logActivity = function(docum){
     var tipocomp = docum.get('tipocomp');
