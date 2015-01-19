@@ -59,7 +59,6 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 		onRender: function() {
 			// initialize Masonry
 			var $container = this.$el.masonry();
-			console.log($container);
 			// layout Masonry again after all images have loaded
 			$container.imagesLoaded( function() {
 				$container.masonry();

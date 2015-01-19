@@ -106,7 +106,6 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
   DocManager.on("document:edit", function(model){
     var documid = model.id || model.get('documid');
     DocManager.navigate("rondas/comprobantes/" + documid + "/edit");
-		console.log('0');
     API.editDocument(documid);
   });
 

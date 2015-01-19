@@ -29,7 +29,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     },
 
     initialize: function(options){
-      console.log('Edit.DOCUMENT BEGINS')
+//      console.log('Edit.DOCUMENT BEGINS')
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
@@ -67,6 +67,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 			"change #buyer": "enablebuyer",
 			"change #seller": "enableseller",
 			"change #paisempre": "stateinput",
+			"keypress #descempre": "contar",
 
     },
 
@@ -74,13 +75,31 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
     },
 		
+		contar:function(){
+			//Valida la cantidad de caracteres de la descripcion de la empresa	
+			var tval = $('textarea').val(),
+					tlength = tval.length,
+					set = 140,
+					remain = parseInt(set - tlength);
+			$('#limit-chars').text(remain);
+			if (remain <= 0 && e.which !== 0 && e.charCode !== 0) {
+				$('#descempre').val((tval).substring(0, tlength - 1))
+			} 
+		},
+		
 		enablebuyer:function(){
+			//habilita escribir tags para las palabras clave comprador
+			$('#compclave').tagsinput();
+			
 			//Habilita Info adicional como comprador
 			var buyer = $('#data.switch input#buyer');
 				$('#infocomprador').toggleClass("hidden", !buyer.is(":checked"));			
 		},		
 		
 		enableseller:function(){	
+			//habilita escribir tags para las palabras clave vendedor
+			$('#venpclave').tagsinput();
+			
 			//Habilita Info adicional como vendedor
 			var seller = $('#data.switch input#seller');
       $('#infovendedor').toggleClass("hidden", !seller.is(":checked"));
@@ -290,18 +309,15 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
         });
   };
 
-  //Edición del SubItem de comprobante SOLICITUD
-  Edit.SolicitudDetail = DocManager.DocsApp.Common.Views.Form.extend({
-    whoami:'SolicitudDetail:edit_view.js',
-    
-    // tagName:'form',
-    // className: 'form-horizontal',
-
-    templates: {
-      nsolicitud: 'DocumEditPSO',
+  //Edición del SubItem del comprobante Inscripcion
+  Edit.InscripcionDetail = DocManager.DocsApp.Common.Views.Form.extend({
+    whoami:'InscripcionDetail:edit_view.js',
+		templates: {
+      inscripcion: 'DocumEditINS',
     },
 
     getTemplate: function(){
+			
       return utils.templates[this.templates[this.options.itemtype]];
     },
 
@@ -375,6 +391,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       nentrega:   'DocumEditRE',
       npedido:    'DocumEditRE',
       pemision:   'DocumEditEM',
+//			inscripcion 'DocumEditINS'
     },
 
     getTemplate: function(){

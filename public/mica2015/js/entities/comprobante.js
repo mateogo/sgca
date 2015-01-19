@@ -317,18 +317,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     initNewItem: function(){
+//			console.log('inicia nuevoitem');
       var sitem = new Entities.DocumMovimINItem();
 
       sitem.set({
-          requeridopor: 'requirente',
-          acargode: 'organismo',
-          trequerim: '',
-          itemaprob: 'pendiente',
-          itemaprobreq: 'aprobado',
-
-          description: '',
-          lugarfecha: '',
-          comentario: ''
+				nombreyape: "",
+				email: "",
+				cargo: "",
+				dni: "",
+				fenac: "",
+				tel: "",
+				celular: "",
+				idiomas: ""
       });
 
       return sitem;
@@ -354,8 +354,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     // Docum Items[]
     tipoitem: "",
-    organismo: "Encuentro",
-			
 		aliasempre: "",
 		razonempre: "",
 		descempre: "",
@@ -379,22 +377,39 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 		rcelular: "",
 		ridiomas: "",
 			
-		actividades: [{
-			artes: "",
-			audiovisual: "",
-			diseno: "",
-			editorial: "",
-			musica: "",
-			gamapps: ""}],
+		comactiv: [{
+			cartes: "",
+			caudiovisual: "",
+			cdiseno: "",
+			ceditorial: "",
+			cmusica: "",
+			cgamapps: ""}],
 			
-		palaclave: [],
-		detalleprod: "",
-		negocioext: "",
-		negociopro: "",
-		mercados: "",
-		ferias: "",
-		proposito: "",
-		comentarios: "",
+		compclave: [],
+		comdprod: "",
+		comexter: "",
+		comprov: "",
+		commercados: "",
+		comferias: "",
+		compropos: "",
+		comcoment: "", 		
+		
+		venactiv: [{
+			vartes: "",
+			vaudiovisual: "",
+			vdiseno: "",
+			veditorial: "",
+			vmusica: "",
+			vgamapps: ""}],
+			
+		venpclave: [],
+		vendprod: "",
+		venexter: "",
+		venprov: "",
+		venmercados: "",
+		venferias: "",
+		venpropos: "",
+		vencoment: "",
 
     items:[]
     },
@@ -476,53 +491,71 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 			rtel: "",
 			rcelular: "",
 			ridiomas: "",
-			actividades: [{
-				artes: "",
-				audiovisual: "",
-				diseno: "",
-				editorial: "",
-				musica: "",
-				gamapps: ""}],
-			
-			palaclave: [],
-			detalleprod: "",
-			negocioext: "",
-			negociopro: "",
-			mercados: "",
-			ferias: "",
-			proposito: "",
-			comentarios: "",
 
-      items:[]
+			comactiv: [{
+				cartes: "",
+				caudiovisual: "",
+				cdiseno: "",
+				ceditorial: "",
+				cmusica: "",
+				cgamapps: ""}],
+
+			compclave: [],
+			comdprod: "",
+			comexter: "",
+			comprov: "",
+			commercados: "",
+			comferias: "",
+			compropos: "",
+			comcoment: "", 		
+
+			venactiv: [{
+				vartes: "",
+				vaudiovisual: "",
+				vdiseno: "",
+				veditorial: "",
+				vmusica: "",
+				vgamapps: ""}],
+
+			venpclave: [],
+			vendprod: "",
+			venexter: "",
+			venprov: "",
+			venmercados: "",
+			venferias: "",
+			venpropos: "",
+			vencoment: "",
+
+			items:[]
     },
 
   }); 
-	
+//Subitem de Otros Representantes
 	Entities.DocumMovimINItem = Backbone.Model.extend({
     whoami: 'DocumMovimINItem:comprobante.js ',
 
  
     validate: function(attrs, options) {
       var errors = {}
-
+			console.log(attrs)
       if (_.has(attrs,'description') && (!attrs.description )) {
         errors.description = "No puede ser nulo";
-      }
+      }     
+
       if( ! _.isEmpty(errors)){
         return errors;
       }
     },
 
     defaults: {
-      requeridopor: 'requirente',
-      acargode: 'organismo',
-      trequerim: '',
-      itemaprob: '',
-      itemaprobreq: '',
-
-      description: 'complete su pedido',
-      lugarfecha: '',
-      comentario: ''
+			nombreyape: "",
+			email: "",
+			cargo: "",
+			dni: "",
+			fenac: "",
+			tel: "",
+			celular: "",
+			idiomas: ""
     },
   }); 
 	
@@ -539,7 +572,34 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     if(options.tipoitem==='inscripcion') model = new Entities.DocumMovimINItem(attrs);
     return model;
   };
+	
+Entities.DocumItemCoreFacet = Backbone.Model.extend({
+	whoami: 'DocumItemCoreFacet:comprobante.js ',
+	
+	schema: {
+		tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList, title:'Tipo ITEM' },
+		slug:     {type: 'Text', title: 'Descripción corta'},
+	},
+	
+	createNewDocument: function(cb){
+		var self = this;
+		var docum = new Entities.Comprobante(self.attributes);
+		docum.initBeforeCreate(function(docum){
+			docum.save(null, {
+				success: function(model){
+					cb(null,model);
+				}
+			});
+		});
+	},
 
+    defaults: {
+      tipoitem: "",
+      slug: "",
+    },
+
+   });
+//zay
   /*
    * ******* QueryFacet +**********
    */
