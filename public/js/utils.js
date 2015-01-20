@@ -930,8 +930,8 @@ window.utils = {
         {val:'productos:list'               , label:'navegar/productos'},
         {val:'gestion:comprobantes:list'    , label:'gestion/comprobantes'},
         {val:'sisplan:acciones:list'        , label:'sisplan/acciones'},
-        {val:'studio:producciones:list'    , label:'studio/producciones'},
-        {val:'rondas:form'							    , label:'mica2015/rondas'},
+        {val:'studio:producciones:list'     , label:'studio/producciones'},
+        {val:'mica:rondas'				     , label:'mica2015/rondas'},
     ],
 
     userStatusOptionList:[

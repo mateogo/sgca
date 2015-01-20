@@ -13,7 +13,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 			slug: "MERCADO DE INDUSTRIAS CULTURALES ARGENTINAS",
 			items: [{
 				buttontext:'INSCRIBITE A LAS RONDAS DE NEGOCIOS',
-				buttonroute:'#rondas/:id/edit',
+				buttonroute:'document:add',
 			}]
 		},		
 	});

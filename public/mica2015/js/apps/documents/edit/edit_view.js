@@ -55,8 +55,47 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 			var objn = this.$('#cropContainerEyecandy')
 
 			var cropContainerEyecandy = new Croppic('cropContainerEyecandy', objn, croppicOptions); 
+
+
+      self.$('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
+        var step = data.step;
+
+        console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.model.whoami, data.step, data.direction);
+        if(data.direction === 'next'){
+          if(!self.validateStep(step)){
+            evt.preventDefault();
+            self.$('#myWizard').wizard('selectedItem', {step: step});
+          }else{
+            console.log('Validation OK')
+          }
+
+        }
+
+      });
+
 		
 		},
+    validateStep: function(step){
+      var self = this,
+          valid = true,
+          errors = {};
+
+      var check = [['aliasempre'],['rnombre']];
+      if(step>2 || step<1) return valid;
+
+      _.each(check[step-1], function(fld){
+          var attr = {};
+          attr[fld] = self.model.get(fld);
+          var err = self.model.validate(attr);
+          //console.log('validating: [%s] [%s]',fld, err)
+          //console.dir(err)
+          _.extend(errors, err)
+          if(err) valid = false;
+      });
+      self.onFormDataInvalid((errors||{}));
+      return valid;
+
+    },
 
     events: {
       "click .js-personsch": "personsearch",

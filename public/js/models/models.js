@@ -821,6 +821,15 @@ atribuciones (array)
             user.atributos = ['nodochimenea'];
 
             user.modulos = ['sisplan'];
+        }else if(target === 'mica'){
+            console.log('buildDefaults for MICA');
+            user.home = 'mica:rondas';
+
+            user.roles = ['usuario'];
+            user.atributos = [];
+
+            user.modulos = ['mica'];
+
         }
     },
 

@@ -66,6 +66,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 		documInscripcionFacetFactory: function(){
       var self = this,
           data,
+          user = dao.gestionUser.getCurrentUser(),
           fealta = new Date();
 
       if(!self.get('tipocomp')){
@@ -75,6 +76,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       if(!self.id){
         self.set('slug', 'Nueva Solicitud');
+      }
+
+      self.set('rmail',user.get('mail'));
+      if(user.get('es_usuario_de')){
+        self.set('rnombre',user.get('es_usuario_de')[0].slug);
       }
 
       data = _.clone(self.attributes);
@@ -243,6 +249,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
         errors.tipocomp = "No puede ser nulo";
       }
+
+      if (_.has(attrs,'aliasempre') && (!attrs.aliasempre )) {
+        errors.aliasempre = "No puede ser nulo";
+      }
+
+      if (_.has(attrs,'rnombre') && (!attrs.rnombre )) {
+        errors.rnombre = "No puede ser nulo";
+      }
+
+
       if (_.has(attrs,'eusuario') && (!attrs.eusuario )) {
         errors.eusuario = "No puede ser nulo";
       }

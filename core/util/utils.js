@@ -110,7 +110,7 @@ var rutas = {
     'gestion:comprobantes:list'    :'/gestion/#comprobantes',
     'sisplan:acciones:list'        :'/sisplan/#acciones',
     'studio:producciones:list'     :'/studio',
-    'rondas:form'    							 :'/mica2015/#rondas/:id/edit'
+    'mica:rondas'    			   :'/mica2015/#rondas'
 };
 
 

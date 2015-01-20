@@ -4,44 +4,57 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     editDocument: function(id){
       console.log('DocsAPP.Edit.Controller.editDocument');
 
-      var documLayout = new Edit.Layout();
-      //var documNavBar = initNavPanel();
       var fetchingDocument = DocManager.request("document:entity", id);
      
       $.when(fetchingDocument).done(function(document){
 
         console.log('DocsApp.Edit BEGIN', document.get('slug'));
-    
-        if(document.get('tipocomp')==='pdiario'){
-          return;
-        }
-        // End: Es editable?
+        mainProcessView(document);
 
+            
+      });
+    },
 
+    addDocument: function(){
+      console.log('DocsAPP.Edit.Controller.editDocument');
+      var document = new DocManager.Entities.Comprobante();
+      // init
+      mainProcessView(document);
+    }
+
+  };
+
+  var mainProcessView = function(document){
+    dao.gestionUser.getUser(DocManager, function (user){
+      if(user){
         Edit.Session = {};
+
+        Edit.Session.user = user
+
+        var documLayout = new Edit.Layout();
+        Edit.Session.layout = documLayout;
+
         Edit.Session.views = {};
         registerDocumentEntity(document);
-    
-        //(document);
 
         var documEditView = new Edit.Document({
           model: Edit.Session.model
         });
-        registerDocumEditEvents(documEditView);
-        
-//        console.log('READY to create itemView: [%s]',Edit.Session.model.get('tipocomp'));
 
-  
-        Edit.Session.layout = documLayout;
+        registerDocumEditEvents(documEditView);
+
+
         documLayout.on("show", function(){
           documLayout.mainRegion.show(documEditView);
         });
 
         DocManager.mainRegion.show(documLayout);
+      }else{
+        DocManager.trigger('mica:rondas');
+      }
+    });
 
-            
-      });
-    }
+
   };
 
   var registerDocumSidebarItemsView = function(view){

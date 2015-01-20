@@ -119,6 +119,10 @@ window.dao = {
             }
         },
 
+        getCurrentUser: function(){
+            return this.user;
+        },
+
         hasPermissionTo: function(task, module, opt){
             if(!this.user) return false;
 

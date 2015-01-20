@@ -145,7 +145,7 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 		},
 		
 		events: {
-      "click #ins-but": "loginclick",
+      "click .js-ins-but": "loginclick",
       "click #goto-register": "registerclick",
       "click #signinlink": "registerclick",
     },
@@ -170,24 +170,30 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 		},
 		
 		loginclick: function(e){
+			e.preventDefault();
+			var self = this;
 			var userlog;
+
 			dao.gestionUser.getUser(DocManager, function (user){
 				console.log(user.id);
 				userlog = user.id;
-			})
+
+				if (userlog == null) {
+					console.log('no esta logueado');
+
+					$('#loginbox').toggleClass('hide show')
+					self.$('#ins-but').toggleClass('hide show');
+
+				}else {
+					console.log('esta logueado, tiene que seguir a editar[%s]',self.model.get('items')[0].buttonroute);
+					DocManager.trigger(self.model.get('items')[0].buttonroute);
+				}
+
+
+			});
 			
-			if (userlog == null) {
-				console.log('no esta logueado');
-				e.preventDefault();
 
-				$('#loginbox').toggleClass('hide show')
-				this.$('#ins-but').toggleClass('hide show');
-			}
-			else {
-				console.log('esta logueado, tiene que seguir a editar');
-			}			
-		} 
-
+		}
 	});
 	
 	Show.FeaturesItemsLayout = Marionette.LayoutView.extend({
