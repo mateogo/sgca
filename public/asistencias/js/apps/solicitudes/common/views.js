@@ -94,8 +94,12 @@ DocManager.module("RequisitionApp.Common.Views", function(Views, DocManager, Bac
         this.model.set(change);
         //console.log('CHANGE: [%s]: [%s]',target.name, target.value);
         var err = this.model.validate(change);
+        console.dir(err)
+
         this.onFormDataInvalid((err||{}));
     },
+
+
 /*        if(this.model.isValid()){
            console.log('validación ok')
         }else{
@@ -148,7 +152,7 @@ DocManager.module("RequisitionApp.Common.Views", function(Views, DocManager, Bac
     },
 
     onFormDataInvalid: function(errors){
-      //console.log('FORM ON RENDER')
+      //console.log('FORM ON data invalid')
       var $view = this.$el;
 
       var clearFormErrors = function(){
@@ -161,6 +165,7 @@ DocManager.module("RequisitionApp.Common.Views", function(Views, DocManager, Bac
       }
 
       var markErrors = function(value, key){
+        //console.log('markErrors key: [%s]', key)
         var $controlGroup = $view.find("#" + key).closest('.form-group');
         $controlGroup.addClass("has-error");
         $('.help-block', $controlGroup).html(value);
@@ -168,6 +173,7 @@ DocManager.module("RequisitionApp.Common.Views", function(Views, DocManager, Bac
 
       clearFormErrors();
       _.each(errors, markErrors);
+
     }
   });
 

@@ -1,5 +1,9 @@
-utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView','DocumEditSolLayoutView', 'DocumListLayoutView', 'DocumNavbar',
-    'DocumEditMin', 'DocumShowDef','DocumEditCore','DocumEditPT', 'SearchEntitiesForm','DocumEditPTLayout','DocumEditPTItem',
+utils.loadTemplate(['HomeView', 'HeaderView', 
+
+    'DocumEditCore','DocumEditStepOne',
+
+    'AboutView','DocumEditLayoutView','DocumEditSolLayoutView', 'DocumListLayoutView', 'DocumNavbar',
+    'DocumEditMin', 'DocumShowDef','DocumEditPT', 'SearchEntitiesForm','DocumEditPTLayout','DocumEditPTItem',
     'DocumEditRE', 'DocumEditREItem','DocumEditEM','DocumEditEMItem','DocumEditEMHeader', 'DocumShowLayoutView',
     'DocumShowBranding', 'DocumShowHeader', 'DocumShowItemPTHeader', 'DocumShowItemLayoutView','DocumShowItemPTComposite',
     'DocumShowItemPTDetail','DocumShowItemREHeader','DocumShowItemREComposite','DocumShowItemREDetail', 

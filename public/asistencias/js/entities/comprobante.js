@@ -566,9 +566,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'DocumSolicitudFacet:comprobante.js ',
 
     validate: function(attrs, options) {
-      //if(!attrs) return;
+
       var errors = {}
-      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'tipoitem'), attrs.tipoitem);
+      //console.log('validate [%s] [%s] [%s]',attrs, _.has(attrs,'slug'), attrs.slug);
+      //console.dir(attrs)
 
       if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
         errors.tipocomp = "No puede ser nulo";
@@ -576,8 +577,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if (_.has(attrs,'eusuario') && (!attrs.eusuario )) {
         errors.eusuario = "No puede ser nulo";
       }
+      if (_.has(attrs,'nusuario') && (!attrs.nusuario )) {
+        errors.nusuario = "No puede ser nulo";
+      }
+      if (_.has(attrs,'organismo') && (!attrs.organismo )) {
+        errors.organismo = "No puede ser nulo";
+      }
       if (_.has(attrs,'slug') && ! attrs.slug) {
         errors.slug = "No puede ser nulo";
+      }
+
+      if (_.has(attrs,'fevento') && ! attrs.fevento) {
+        errors.fevento = "No puede ser nulo";
       }
 
       if( ! _.isEmpty(errors)){

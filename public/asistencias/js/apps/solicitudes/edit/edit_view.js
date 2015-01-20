@@ -40,8 +40,6 @@ DocManager.module("RequisitionApp.Edit", function(Edit, DocManager, Backbone, Ma
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
-
-
     },
 
     onRender: function(){
@@ -53,11 +51,50 @@ DocManager.module("RequisitionApp.Edit", function(Edit, DocManager, Backbone, Ma
             //defaultDate: self.model.get('items')[0].fevento,
             altField: "#fevento"
       });
+
+      self.$('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
+        var step = data.step;
+
+        console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.model.whoami, data.step, data.direction);
+        if(data.direction === 'next'){
+          if(!self.validateStep(step)){
+            evt.preventDefault();
+            self.$('#myWizard').wizard('selectedItem', {step: step});
+          }else{
+            console.log('Validation OK')
+          }
+
+        }
+
+      });
+
+
       //this.$("#fevento").datepicker('setDate', '+40');
 
     //this.$('#fevento').datepicker( "dialog", "10/12/2012" );
     },
 
+    validateStep: function(step){
+      var self = this,
+          valid = true,
+          errors = {};
+
+      var check = [['slug', 'fevento'],['organismo','nusuario','eusuario']];
+      if(step>2 || step<1) return valid;
+
+      _.each(check[step-1], function(fld){
+          var attr = {};
+          attr[fld] = self.model.get(fld);
+          var err = self.model.validate(attr);
+          //console.log('validating: [%s] [%s]',fld, err)
+          //console.dir(err)
+          _.extend(errors, err)
+          if(err) valid = false;
+      });
+      self.onFormDataInvalid((errors||{}));
+      return valid;
+
+    },
 
     events: {
       "click .js-personsch": "personsearch",
@@ -118,6 +155,9 @@ DocManager.module("RequisitionApp.Edit", function(Edit, DocManager, Backbone, Ma
         self.model.set({organismo:entity.get('nickName')});
         self.model.set({organismoid:entity.id});
         self.render();
+        console.log('Trying to set step 2: ************** [%s]',self.$('#myWizard').wizard('selectedItem') )
+        self.$('#myWizard').wizard('selectedItem', {step: 2});
+        console.log('DONE                  **************')
       });
     },
 
