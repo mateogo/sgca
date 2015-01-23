@@ -1,6 +1,6 @@
 DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
   Edit.Layout = Marionette.LayoutView.extend({
-    className: 'row',
+    //className: 'row',
 
     getTemplate: function(){
       return utils.templates.DocumEditLayoutView;
