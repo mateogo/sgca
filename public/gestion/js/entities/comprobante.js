@@ -61,6 +61,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           });
           documitems.push(parte.attributes);
           self.set({items: documitems});
+      } else if(dao.docum.isType(self.get('tipocomp'), 'inscripcion')){
+          var parte = new Entities.DocumINSCR();
+          parte.set({
+              tipoitem: self.get('tipocomp'),
+              tipomov: self.get('tipocomp'),
+              slug: self.get('slug'),
+          });
+          documitems.push(parte.attributes);
+          self.set({items: documitems});
       } else if(dao.docum.isType(self.get('tipocomp'), 'notas')){
           var parte = new Entities.DocumMovimRE(),
               sitems = [];
@@ -183,6 +192,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           return item;
         }
       },
+      inscripcion:{
+        initNew: function(self, attrs){
+          var item = new Entities.DocumINSCR(attrs);
+          return item;
+        }
+      },
     },
 
     validate: function(attrs, options) {
@@ -283,6 +298,19 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     comparator: "cnumber",
   });
 
+  var modelSubItemFactory = function(attrs, options){
+    //utils.inspect(attrs,1,'modelFactory');
+    //console.log('modelSubFactory: [%s]',options.tipoitem)
+    var model;
+    if(options.tipoitem==='ptecnico')    model = new Entities.DocumParteTecnicoItem(attrs);
+    if(options.tipoitem==='nrecepcion')  model = new Entities.DocumMovimREItem(attrs);
+    if(options.tipoitem==='nsolicitud')  model = new Entities.DocumMovimSOItem(attrs);
+    if(options.tipoitem==='nentrega')    model = new Entities.DocumMovimREItem(attrs);
+    if(options.tipoitem==='npedido')     model = new Entities.DocumMovimREItem(attrs);
+    if(options.tipoitem==='pemision')    model = new Entities.DocumParteEMItem(attrs);
+    if(options.tipoitem==='inscripcion') model = new Entities.DocumINSCRItem(attrs);
+    return model;
+  };
 
 
   var modelFactory = function(attrs, options){
@@ -295,6 +323,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     if(attrs.tipoitem==='npedido')    model = new Entities.DocumMovimRE(attrs);
     if(attrs.tipoitem==='pemision')   model = new Entities.DocumParteEM(attrs);
     if(attrs.tipoitem==='pdiario')    model = new Entities.DocumParteDI(attrs);
+    if(attrs.tipoitem==='inscripcion') model = new Entities.DocumINSCR(attrs);
     return model;
   };
 
@@ -306,6 +335,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
   });
+
+
 
 
   /*
@@ -453,6 +484,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     model: Entities.DocumParteTecnicoItem,
     comparator: "ptitcbco",
   });
+// Fin PARTE TECNICO
+
 
 
   /*
@@ -538,8 +571,90 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     model: Entities.DocumMovimREItem,
     comparator: "product",
   });
-
 // fin Movim Recepcion entrega
+
+
+  /*
+   * ******* Movim INSCRIPCIONES MICA +**********
+   */
+  Entities.DocumINSCR = Backbone.Model.extend({
+    whoami: 'DocumINSCR:comprobante.js ',
+
+    validate: function(attrs, options) {
+      var errors = {}
+
+      if (_.has(attrs,'tipoitem') && (!attrs.tipitem )) {
+        errors.tipocomp = "No puede ser nulo";
+      }
+      if (_.has(attrs,'slug') && ! attrs.slug) {
+        errors.slug = "No puede ser nulo";
+      }
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+
+    insertItemCollection: function(itemCol) {
+        var self = this;
+        self.set({items: itemCol.toJSON()});
+    },
+
+    getItems: function(){
+      var itemCol = new Entities.MovimSOItems(this.get('items'));
+      return itemCol;
+    },
+
+    initNewItem: function(){
+      return new Entities.DocumINSCRItem();
+    },
+
+    productSelected: function(pr){
+    },
+
+    defaults: {
+      tipoitem: "",
+      slug: "",
+      tipomov: "",
+      rmail:"",
+      rname:"",
+      rcargo:"",
+      rdni:"",
+      rfenac:"",
+      rtel:"",
+      rcel:"",
+      ridiomas:"",
+      items:[]
+    },
+
+  });
+
+  Entities.DocumINSCRItem = Backbone.Model.extend({
+    whoami: 'DocumINSCRItem:comprobante.js ',
+ 
+    validate: function(attrs, options) {
+      var errors = {}
+
+      if (_.has(attrs,'description') && (!attrs.description )) {
+        errors.description = "No puede ser nulo";
+      }
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+
+    defaults: {
+
+    },
+  });
+
+  Entities.DocumINSCRItems = Backbone.Collection.extend({
+    whoami: 'Entities.DocumINSCRItems:comprobante.js ',
+    model: Entities.DocumINSCRItem,
+    //comparator: "trequerim",
+  });
+// fin INSCRIPCIONES (MICA)
+
 
   /*
    * ******* Movim Solicitud de municipios +**********
@@ -650,8 +765,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     model: Entities.DocumMovimSOItem,
     comparator: "trequerim",
   });
+// fin Movim Solicitudes Municipios
 
-// fin Movim Recepcion entrega
+
+
   /*
    * ******* Parte de Emisión +**********
    */
@@ -912,24 +1029,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
   });
-
-
-// fin Movim Parte Diario
+  // fin Movim Parte Diario
 
 
 
-  var modelSubItemFactory = function(attrs, options){
-    //utils.inspect(attrs,1,'modelFactory');
-    //console.log('modelSubFactory: [%s]',options.tipoitem)
-    var model;
-    if(options.tipoitem==='ptecnico')   model = new Entities.DocumParteTecnicoItem(attrs);
-    if(options.tipoitem==='nrecepcion') model = new Entities.DocumMovimREItem(attrs);
-    if(options.tipoitem==='nsolicitud') model = new Entities.DocumMovimSOItem(attrs);
-    if(options.tipoitem==='nentrega')   model = new Entities.DocumMovimREItem(attrs);
-    if(options.tipoitem==='npedido')    model = new Entities.DocumMovimREItem(attrs);
-    if(options.tipoitem==='pemision')   model = new Entities.DocumParteEMItem(attrs);
-    return model;
-  };
 
   Entities.DocumSubItemsCollection = Backbone.Collection.extend({
     whoami: 'Entities.DocumSubItemsCollection:comprobante.js ',
@@ -981,9 +1084,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
    });
-
-
   // fin ItemCoreFacet
+
 
   /*
    * ******* QueryFacet +**********
@@ -1072,23 +1174,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
    });
 
 
-  //Entities.configureStorage(Entities.Comprobante);
 
-
-  //Entities.configureStorage(Entities.ComprobanteCollection);
-/*
-  var initializeComprobantes = function(){
-    comprobantes = new Entities.ComprobanteCollection([
-      { id: 1, firstName: "Alice", lastName: "Arten", phoneNumber: "555-0184" },
-      { id: 2, firstName: "Bob", lastName: "Brigham", phoneNumber: "555-0163" },
-      { id: 3, firstName: "Charlie", lastName: "Campbell", phoneNumber: "555-0129" }
-    ]);
-    comprobantes.forEach(function(comprobante){
-      comprobante.save();
-    });
-    return comprobantes.models;
-  };
-*/
 
   var logActivity = function(docum){
     var tipocomp = docum.get('tipocomp');
@@ -1372,7 +1458,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           return function(document){
             var test = true;
             //if((query.tipocomp.trim().indexOf(document.get('tipocomp'))) === -1 ) test = false;
-            console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.tipoitem,document.get("tipoitem"),document.get("cnumber"));
+            if(document.get("tipoitem")==='inscripcion'){
+              console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.tipoitem,document.get("tipoitem"),document.get("cnumber"));
+            }
             if(query.tipoitem && query.tipoitem!=='no_definido') {
               if(query.tipoitem.trim() !== document.get('tipoitem')) test = false;
             }
@@ -1480,6 +1568,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             itemCol.add(smodel);
 
           });
+
+        }else if (dao.docum.isType(item.tipoitem, 'inscripcion')){
+          console.log('armando ITEM ************************[%s]', model.get('cnumber'))
+          var smodel = new Entities.Comprobante(model.attributes);
+          smodel.id = null;
+          smodel.set({
+            fechagestion: model.get('fecomp'),
+            fechagestion_tc: model.get('fecomp_tc'),
+            tipoitem: model.get('tipocomp'),
+            tipomov: model.get('tipocomp'),
+            product: item.rname,
+            productid: model.get('personaid'),
+            pslug: model.get('slug'),
+            tcomputo: '',
+          })
+          itemCol.add(smodel);
+
 
         }else if (dao.docum.isType(item.tipoitem, 'pemision')){
           var sitems = item.items;
@@ -1603,6 +1708,37 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           }
 
         }else if (dao.docum.isType(item.tipoitem, 'pemision')){
+          var sitems = item.items;
+          _.each(sitems, function(sitem){
+            var emisiones = sitem.emisiones;
+            _.each(emisiones, function(emision){
+              var feg = utils.addOffsetDay(item.fedesde_tc,emision.dayweek);
+              var reportItem = new Entities.ReportItem();
+              reportItem.set({
+                fechagestion: feg.date,
+                fechagestion_tc: feg.tc,
+                tipocomp: docum.get('tipocomp'),
+                tipoitem: item.tipoitem,
+                cnumber: docum.get('cnumber'),
+                documid: docum.id,
+                tipomov: item.tipoitem,
+                product: sitem.product,
+                productid: sitem.productid,
+                pslug: sitem.pslug,
+                tcomputo: sitem.durnominal,
+                persona: docum.get('persona'),
+                personaid: docum.get('personaid'),
+                estado_alta: 'alta',
+              });
+
+              if(isValidPE(reportItem, query)){
+                reportCol.add(reportItem);
+              }
+
+            });
+          });
+
+        }else if (dao.docum.isType(item.tipoitem, 'inscripcion')){
           var sitems = item.items;
           _.each(sitems, function(sitem){
             var emisiones = sitem.emisiones;

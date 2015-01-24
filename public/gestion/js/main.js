@@ -7,6 +7,10 @@ utils.loadTemplate(['HomeView', 'HeaderView', 'AboutView','DocumEditLayoutView',
     'DocumRelatedLayout', 'DocumRelatedPRHeader', 'DocumRelatedPR', 'DocumRelatedDOC',
     'DocumShowItemPDHeader', 'DocumShowItemPDComposite',
     'DocumEditSO','DocumEditSOItem','DocumEditSOLayout',
+    
+    'DocumShowItemINSCRHeader','DocumShowItemINSCRComposite','DocumShowItemINSCRDetail',
+
+
     'DocumShowItemSODetail','DocumShowItemSOComposite','DocumShowItemSOHeader',
     'ReportEditLayoutView', 'ReportEditCore', 'ReportNavbar' ], function() {
 

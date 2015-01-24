@@ -1,75 +1,47 @@
 /*
- *  calendar receipts.js
+ *  calendar micaprofiles.js
  *  package: /calendar/controllers
- *  DOC: 'receipts' collection controller
+ *  DOC: 'micaprofiles' collection controller
  *  Use:
- *     Exporta el objeto controller de un receipto via 'exports'
+ *     Exporta el objeto controller de un micaprofile via 'exports'
  *     metodos exportados:
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
  *
  */
+var _ = require('underscore');
+
 var dbi ;
 var BSON;
 var config = {};
-var receiptsCol = 'receipts';
+var micaprofilesCol = 'micaprofiles';
 var serialCol = 'seriales';
+
+var _ = require('underscore');
+
+
 var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
     'ERROR: No se pudo borrar el nodo en la base de datos'
 ];
 
-//ATENCION: para agregar un serial, agregar entrada en tcomp_adapter y en series;
-var series = ['rent101','rsal101','ptec101','nemi101','nped101','gcom101','pdia101','nsol101','inscr101'];
+//ATENCION: para agregar un serial, agregar entrada en tmicaprofile_adapter y en series;
+var series = ['profile101','profile999'];
 
 var seriales = {};
 
-//ATENCION: para agregar un serial, agregar entrada en tcomp_adapter y en series;
-var tcomp_adapter = {
-    nrecepcion:{
-        serie: 'rent101',
-        base: 100000,
-        prefix: 'R'
-        },
-    nsolicitud:{
-        serie: 'nsol101',
-        base: 100000,
-        prefix: 'M'
-        },
-    nentrega: {
-        serie: 'rsal101',
-        base: 100000,
-        prefix:'S'
-        },
-    npedido: {
-        serie: 'nped101',
-        base: 100000,
+//ATENCION: revisar el criterio de seleccion de registro en setNodeCode()
+var tmicaprofile_adapter = {
+    perfil:{
+        serie: 'profile101',
+        base: 1000000,
         prefix: 'P'
         },
-    ptecnico: {
-        serie: 'ptec101',
-        base: 100000,
-        prefix: 'T'
-        },
-    pemision: {
-        serie: 'nemi101',
-        base: 100000,
-        prefix: 'E'
-        },
-    pdiario: {
-        serie: 'pdia101',
-        base: 100000,
-        prefix: 'D'
-        },
-    inscripcion: {
-        serie: 'inscr101',
-        base: 1000000,
-        prefix: 'I'
-        },
     poromision: {
-        serie: 'gcom101',
-        base: 100000,
+        serie: 'profile999',
+        base: 1000000,
         prefix: 'X'
-        }
+    }
+
 };
 
 var loadSeriales = function(){
@@ -79,7 +51,7 @@ var loadSeriales = function(){
 };
 
 var fetchserial = function(serie){
-    //console.log("INIT:fetchserie:receipt.js:[%s]",serie);
+    //console.log("INIT:fetchserie:micaprofile.js:[%s]",serie);
     var collection = dbi.collection(serialCol);
     collection.findOne({'serie':serie}, function(err, item) {
         if(!item){
@@ -102,7 +74,7 @@ var fetchserial = function(serie){
 
 var addSerial = function(serial,data){
     seriales[serial] = data;
-    //console.log('addSerial:receipt.js INIT con exito: [%s] next:[%s]',seriales[serial].serie,seriales[serial].nextnum);
+    //console.log('addSerial:micaprofile.js INIT con exito: [%s] next:[%s]',seriales[serial].serie,seriales[serial].nextnum);
 };
 
 var initSerial = function(serie){
@@ -122,8 +94,8 @@ var updateSerialCollection = function(serial){
 
 
 var setNodeCode = function(node){
-    console.log('setNodeCode:[%s]',node.tipocomp);
-    var adapter = tcomp_adapter[node.tipocomp] || tcomp_adapter['poromision'];
+    //console.log('setNodeCode:[%s]',node.tregistro);
+    var adapter = tmicaprofile_adapter[node.tregistro] || tmicaprofile_adapter['poromision'];
     node.cnumber = nextSerial(adapter);
 
 };
@@ -139,40 +111,41 @@ var nextSerial = function (adapter){
     return adapter.prefix + nxt;
 };
 
-var addNewReceipt = function(req, res, node, cb){
-    console.log("addNewReceipt:receipts.js ");
+var addNewProfile = function(req, res, node, cb){
+    //console.log("addNewProfile:micaprofiles.js ");
 
     setNodeCode(node);
-    insertNewReceipt(req, res, node, cb);
+    insertNewProfile(req, res, node, cb);
 };
 
 
 var fetchOne = function(query, cb) {
-    console.log('findReceipt Retrieving receipt collection for passport');
+    console.log('findProfile Retrieving micaprofile collection for passport');
 
-    dbi.collection(receiptsCol, function(err, collection) {
+    dbi.collection(micaprofilesCol, function(err, collection) {
         collection.findOne(query, function(err, item) {
             cb(err, item);
         });
     });
 };
 
-var insertNewReceipt = function (req, res, receipt, cb){
-    console.log('insertNewReceipt:receipts.js BEGIN [%s]',receipt.slug);
-    //dbi.collection(receiptsCol, function(err, collection) {
+var insertNewProfile = function (req, res, micaprofile, cb){
+    //console.log('insertNewProfile:micaprofiles.js BEGIN [%s]',micaprofile.slug);
+    //dbi.collection(micaprofilesCol, function(err, collection) {
 
-    dbi.collection(receiptsCol).insert(receipt,{w:1}, function(err, result) {
+    dbi.collection(micaprofilesCol).insert(micaprofile,{w:1}, function(err, result) {
             if (err) {
                 if(res){
                     res.send({'error':'An error has occurred'});
                 }else if(cb){
-                    cb({'error':'An error has occurred'})
+                    cb({'error':'An error has occurred:' + err})
                 }
             } else {
                 if(res){
                     console.log('3.1. ADD: se inserto correctamente el nodo %s', JSON.stringify(result[0]));
                     res.send(result[0]);
                 }else if(cb){
+                    console.log('3.1. ADD: se inserto correctamente el nodo [%s]  [%s] ', result[0]['_id'], JSON.stringify(result[0]['_id'].str));
                     cb({'model':result[0]})
                 }
             }
@@ -181,6 +154,7 @@ var insertNewReceipt = function (req, res, receipt, cb){
 };
 
 exports.setDb = function(db) {
+    //console.log('***** Profile setDB*******');
     dbi = db;
     loadSeriales();
     return this;
@@ -203,9 +177,9 @@ exports.findOne = function(req, res) {
     var sort = {cnumber: 1};
     if (query.cnumber['$lt']) sort = {cnumber: -1};
 
-    console.log('findONE:receipt Retrieving receipt collection with query [%s] sort:[%s]',query.cnumber, sort.cnumber);
+    console.log('findONE:micaprofile Retrieving micaprofile collection with query [%s] sort:[%s]',query.cnumber, sort.cnumber);
  
-    dbi.collection(receiptsCol, function(err, collection) {
+    dbi.collection(micaprofilesCol, function(err, collection) {
         collection.find   (query).sort(sort).toArray(function(err, items) {
             res.send(items[0]);
         });
@@ -213,8 +187,8 @@ exports.findOne = function(req, res) {
 };
 
 exports.fetchById = function(id, cb) {
-    console.log('findById: Retrieving %s id:[%s]', receiptsCol,id);
-    dbi.collection(receiptsCol, function(err, collection) {
+    console.log('findById: Retrieving %s id:[%s]', micaprofilesCol,id);
+    dbi.collection(micaprofilesCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             cb(err, item);
         });
@@ -223,8 +197,8 @@ exports.fetchById = function(id, cb) {
 
 exports.findById = function(req, res) {
     var id = req.params.id;
-    console.log('findById: Retrieving %s id:[%s]', receiptsCol,id);
-    dbi.collection(receiptsCol, function(err, collection) {
+    console.log('findById: Retrieving %s id:[%s]', micaprofilesCol,id, req.user);
+    dbi.collection(micaprofilesCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             res.send(item);
         });
@@ -234,9 +208,9 @@ exports.findById = function(req, res) {
 exports.find = function(req, res) {
     var query = req.body; //{};
 
-    console.log('find:receipt Retrieving receipt collection with query');
+    console.log('find:micaprofile Retrieving micaprofile collection with query');
 
-    dbi.collection(receiptsCol, function(err, collection) {
+    dbi.collection(micaprofilesCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
             res.send(items);
         });
@@ -244,39 +218,34 @@ exports.find = function(req, res) {
 };
 
 exports.findAll = function(req, res) {
-    console.log('findAll: Retrieving all instances of [%s] collection', receiptsCol);
-    dbi.collection(receiptsCol, function(err, collection) {
+    console.log('findAll: Retrieving all instances of [%s] collection', micaprofilesCol);
+    dbi.collection(micaprofilesCol, function(err, collection) {
         collection.find().sort({cnumber:1}).toArray(function(err, items) {
             res.send(items);
         });
     });
 };
 
-exports.createNew = function(docum, cb) {
-    console.log('createNew:receipt.js: NEW RECEIPT BEGINS');
-    addNewReceipt(null, null, docum, cb);
-};
-
 exports.add = function(req, res) {
-    console.log('add:receipt.js: NEW RECEIPT BEGINS');
-    var receipt = req.body;
-    addNewReceipt(req, res, receipt);
+    console.log('add:micaprofile.js: NEW RECEIPT BEGINS');
+    var micaprofile = req.body;
+    addNewProfile(req, res, micaprofile);
 };
 
 exports.update = function(req, res) {
     var id = req.params.id;
-    var receipt = req.body;
-    delete receipt._id;
+    var micaprofile = req.body;
+    delete micaprofile._id;
     console.log('Updating node id:[%s] ',id);
-    console.log(JSON.stringify(receipt));
-    dbi.collection(receiptsCol, function(err, collection) {
-        collection.update({'_id':new BSON.ObjectID(id)}, receipt, {safe:true}, function(err, result) {
+    console.log(JSON.stringify(micaprofile));
+    dbi.collection(micaprofilesCol, function(err, collection) {
+        collection.update({'_id':new BSON.ObjectID(id)}, micaprofile, {safe:true}, function(err, result) {
             if (err) {
-                console.log('Error updating %s error: %s',receiptsCol,err);
+                console.log('Error updating %s error: %s',micaprofilesCol,err);
                 res.send({error: MSGS[0] + err});
             } else {
                 console.log('UPDATE: se insertaron exitosamente [%s] nodos',result);
-                res.send(receipt);
+                res.send(micaprofile);
             }
         });
     });
@@ -302,9 +271,25 @@ var buildTargetNodes = function(data){
 var buildUpdateData = function(data){
     if(!data.newdata) return;
     return data.newdata;
+};
+
+var buildQuery = function(qr){
+    var query = {}; 
+    if(!qr) return query;
+    if(qr.areas){
+        query.$or = buildAreaList(qr.areas);
+    }
+    return query;
+};
+var buildAreaList = function(areas){
+    return _.map(areas, function(item){
+        return {area: item};
+
+    });
 }
 
-exports.partialupdate = function(req, res, data, cb) {
+
+exports.partialupdate = function(req, res) {
     if (req){
         data = req.body;
     }
@@ -312,12 +297,12 @@ exports.partialupdate = function(req, res, data, cb) {
     var update = buildUpdateData(data);
 
 
-    console.log('UPDATING partial fields nodes:[%s] data length[%s]', query.$or[0]._id , update.items.length);
+    console.log('UPDATING partial fields nodes:[%s]', query.$or[0]._id );
     //res.send({query:query, update:update});
 
-    dbi.collection(receiptsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
+    dbi.collection(micaprofilesCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
         if (err) {
-            console.log('Error partial updating %s error: %s',receiptsCol,err);
+            console.log('Error partial updating %s error: %s',micaprofilesCol,err);
             if(res){
                 res.send({error: MSGS[0] + err});
             }else if(cb){
@@ -338,7 +323,7 @@ exports.partialupdate = function(req, res, data, cb) {
 exports.delete = function(req, res) {
     var id = req.params.id;
     console.log('Deleting node: [%s] ', id);
-    dbi.collection(receiptsCol, function(err, collection) {
+    dbi.collection(micaprofilesCol, function(err, collection) {
         collection.remove({'_id':new BSON.ObjectID(id)}, function(err, result) {
             if (err) {
                 res.send({error: MSGS[1] + err});
@@ -349,3 +334,8 @@ exports.delete = function(req, res) {
         });
     });
 };
+
+
+
+
+

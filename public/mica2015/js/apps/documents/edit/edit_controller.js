@@ -3,59 +3,299 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   Edit.Controller = {
     editDocument: function(id){
       console.log('DocsAPP.Edit.Controller.editDocument');
+      dao.gestionUser.getUser(DocManager, function (user){
+        if(user){
+          var fetchingDocument = DocManager.request("document:entity", id);
+         
+          $.when(fetchingDocument).done(function(document){
 
-      var fetchingDocument = DocManager.request("document:entity", id);
-     
-      $.when(fetchingDocument).done(function(document){
-
-        console.log('DocsApp.Edit BEGIN', document.get('slug'));
-        mainProcessView(document);
-
-            
+            DocManager.request('mica:fetch:document:profile', document, user, function(profiles){
+              if(profiles.length){
+                mainProcessStart(document, profiles.at(0), user);
+              }else{
+                DocManager.trigger('mica:rondas');
+              }
+            });                
+          });
+ 
+        }else{
+          DocManager.trigger('mica:rondas');
+        }
       });
     },
 
     addDocument: function(){
-      console.log('DocsAPP.Edit.Controller.editDocument');
-      var document = new DocManager.Entities.Comprobante();
-      // init
-      mainProcessView(document);
-    }
+      console.log('add Document START')
+      dao.gestionUser.getUser(DocManager, function (user){
+        if(user){
+          DocManager.request('mica:fetch:active:profile', user, 'mica2015', function(profiles){
+            console.log('Fetch cb: [%s]', profiles.length)
+            if(profiles.length){
+              DocManager.trigger('document:edit', profiles.at(0).get('documid'));
 
+            }else{
+              console.log('DocsAPP.Edit.Controller.editDocument');
+              var document = new DocManager.Entities.Comprobante();
+              var profile = new DocManager.Entities.Micaprofile();
+              // init
+              mainProcessStart(document, profile, user);
+            }
+          });
+
+        }else{
+          DocManager.trigger('mica:rondas');
+        }
+      });
+    }
   };
 
-  var mainProcessView = function(document){
-    dao.gestionUser.getUser(DocManager, function (user){
-      if(user){
-        Edit.Session = {};
+  var mainProcessStart = function(document, profile, user){
+    Edit.Session = {};
 
-        Edit.Session.user = user
+    Edit.Session.user = user;
+    Edit.Session.document = document;
+    Edit.Session.profile = profile;
 
-        var documLayout = new Edit.Layout();
-        Edit.Session.layout = documLayout;
-
-        Edit.Session.views = {};
-        registerDocumentEntity(document);
-
-        var documEditView = new Edit.Document({
-          model: Edit.Session.model
-        });
-
-        registerDocumEditEvents(documEditView);
-
-
-        documLayout.on("show", function(){
-          documLayout.mainRegion.show(documEditView);
-        });
-
-        DocManager.mainRegion.show(documLayout);
+    DocManager.request('user:load:persons', user, 'es_usuario_de', function(person){
+      if(person){
+        Edit.Session.person = person;
+        console.log('Bingo: usuario_de :[%s]', Edit.Session.person.get('displayName'))
       }else{
-        DocManager.trigger('mica:rondas');
+        Edit.Session.person = null;
       }
     });
 
+    DocManager.request('user:load:persons', user, 'es_representante_de', function(person){
+      if(person){
+        Edit.Session.empresa = person;
+      }else{
+        Edit.Session.empresa = null;
+      }
+    });
+
+    moduleRenderViews(document, profile, user);
+
 
   };
+
+  // START RENDERING ======================================
+  var moduleRenderViews = function(document, profile, user){
+    var documLayout = new Edit.Layout();
+    Edit.Session.layout = documLayout;
+    Edit.Session.views = {};
+
+    registerDocumentEntity(profile, user);
+
+    var documEditView = new Edit.Document({
+      model: Edit.Session.model
+    });
+
+    registerDocumEditEvents(documEditView);
+
+
+    documLayout.on("show", function(){
+      documLayout.mainRegion.show(documEditView);
+    });
+
+    DocManager.mainRegion.show(documLayout);
+  };
+
+  var saveManager = function(){
+    console.log('Ready to SAVE ALL');
+    savePersons(Edit.Session.user, Edit.Session.model, function(user){
+      console.log('SaveManager CB from User');
+      saveComprobante(Edit.Session.user, Edit.Session.model, function(document){
+        console.log('SaveDocument CB');
+        saveInscripcion(Edit.Session.user, document, Edit.Session.perfilinscripto, function(inscripcion){
+          console.log('SaveInscripcion CB');
+        });
+      });
+    });
+  };
+
+  var saveInscripcion = function(user, comprobante, perfil, cb){
+    Edit.Session.model.saveInscripcion(user, comprobante, perfil, function(error, perfil){
+      console.log('Docum Saved:');
+      cb(perfil);
+    })
+  };
+
+  var saveComprobante = function(user, model, cb){
+    Edit.Session.document.saveInscripcion(user, model, function(error, document){
+      console.log('Docum Saved:');
+      cb(document);
+    })
+  };
+
+  //@param: model //es el facet que se está editando
+  var savePersons = function(user, model, cb){
+    // conditions: existe un user, pero puede o no tener dado de alta la person
+    // Resuelve: la inserción de la person (update o new) y la actualización de user.
+    console.log('SavePersons User:[%s] Model:[%s]', user.whoami, model.whoami);
+    var person_attrs = {},
+        emp_attrs = {};
+
+    person_attrs.displayName = model.get('rname');
+    person_attrs.dni = model.get('rdni');
+    person_attrs.fenac = model.get('rfenac');
+    person_attrs.description = model.get('rcargo');
+
+
+    emp_attrs.displayName = model.get('edisplayName');
+    emp_attrs.nickName = model.get('edisplayName');
+    emp_attrs.name = model.get('ename');
+    emp_attrs.description = model.get('edescription');
+    emp_attrs.cuit = model.get('ecuit');
+    emp_attrs.fundacion = model.get('efundacion');
+    emp_attrs.empleados = model.get('enumempleados');
+    emp_attrs.ventaanual = model.get('eventas');
+    emp_attrs.contactinfo = [
+      {
+        tipocontacto: 'direccion',
+        subcontenido: 'principal',
+        contactdata: model.get('edomicilio')+', '+model.get('elocalidad')+', '+model.get('eprov')
+      },
+      {
+        tipocontacto: 'mail',
+        subcontenido: 'trabajo',
+        contactdata: model.get('email')
+      }
+    ];
+
+    user.updateRelatedPredicate(person_attrs, 'es_usuario_de', function(per){
+      user.updateRelatedPredicate(emp_attrs, 'es_representante_de', function(per){
+        if(cb) cb(user);
+      })
+    });
+  };
+
+
+
+
+
+  var registerDocumentEntity = function(profile, user) {
+    console.log('profile[%s]', profile.whoami)
+    Edit.Session.perfilinscripto = profile;
+
+    Edit.Session.model = profile.facetFactory(user);
+
+    Edit.Session.representantes = Edit.Session.model.getRepresentantes();
+
+    Edit.Session.representantes.on('add',function(model, collection){
+      Edit.Session.model.updateRepresentantes(collection);
+    });
+
+
+
+  };
+
+
+  var editReqDetail = function(view, isNew, itemDetail){
+      console.log('editReqDetail: BEGIN isNew:[%s] items so far:[%s]', isNew,Edit.Session.representantes.length);
+      if(isNew){
+        itemDetail = new Edit.Session.model.initNewItem();
+
+      }
+
+      var actor = new Edit.NewRepresentante({
+        model: itemDetail,
+      });
+
+      actor.on('details:form:submit', function(model, cb){
+        console.log('Alta BUBLING [%s][%s]', model.get('nombreyape'), model.whoami);
+        //var error = model.validate();
+
+        if(isNew){
+//          console.log('esnuevo',model);
+          Edit.Session.representantes.add(model);
+        }        
+        console.log('AFTER UPDATING EditSessionItems:  [%s]',Edit.Session.representantes.length)
+
+        //Edit.Session.views.sidebarItemsView.render();
+        renderSOLDetails(Edit.Session.views.mainView);
+        view.itemFormBtnShow();
+        cb();
+
+      });
+      //console.log('render',actor.render().el)
+      view.$('#nuevo-req-form').html(actor.render().el);
+
+  };
+
+  var registerDocumEditEvents = function(view) {
+    Edit.Session.views.mainView = view;
+
+    view.on("sitem:edit", function(model){
+      editReqDetail(view, true);
+
+    });
+
+    view.on('render', function(){
+      console.log('editEvents RENDER')
+      renderSOLDetails(view);
+
+    });
+
+    // =========== grabación =============
+    view.on("form:submit", function(model){
+
+      saveManager();
+
+    });
+
+    view.on('person:select',function(query, cb){
+      DocManager.request("person:search", query, function(model){
+        cb(model);
+      });      
+
+    });
+
+    view.on('user:validate',function(view, usermail, cb){
+      var msgs = '';
+      fetchUserByUsername(usermail, function(user){
+        msgs = getUserMessage(user);
+        if(cb) cb(user, msgs);
+      })
+
+    });
+
+  };
+    
+
+
+  var renderSOLDetails = function (view){
+      console.log('editEvents SOL Details RENDER');
+        // a laburar
+      //Edit.Session.sitcollection = fetchPTItemsCollection(Edit.Session.model);
+      
+      var sitview = new DocManager.DocsApp.Common.Views.SidebarCompositePanel({
+        collection: Edit.Session.representantes,
+        model: Edit.Session.model,
+        itemtype: 'insdetails',
+      });
+      console.log('aca vamos');
+      sitview.listenTo(sitview.collection, 'add', sitview.render);
+      console.log('aca vamos2');
+      view.$('#soldetails-region').html(sitview.render().el);
+      console.log('aca vamos3');
+
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////*************************** old stufff **********************
+
+
 
   var registerDocumSidebarItemsView = function(view){
     //view.collection.bind("add", view.modelChanged, view);
@@ -95,7 +335,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
 
          itemheader.on("form:submit", function(model){
-           Edit.Session.model.insertItemCollection(Edit.Session.items);
+           Edit.Session.model.insertItemCollection(Edit.Session.representantes);
            Edit.Session.model.update(function(err,model){
              if(err){
                itemheader.triggerMethod("form:data:invalid", err);
@@ -125,6 +365,9 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   };
 
 
+
+
+
   //MGO: 
   var registerDocumItemsViewOld = function(view){
     view.on('childview:item:edit',function(childView, itemmodel){
@@ -139,7 +382,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
 
         itemheader.on("form:submit", function(model){
-          Edit.Session.model.insertItemCollection(Edit.Session.items);
+          Edit.Session.model.insertItemCollection(Edit.Session.representantes);
           Edit.Session.model.update(function(err,model){
             if(err){
               itemheader.triggerMethod("form:data:invalid", err);
@@ -197,7 +440,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
           if(!siterr){
             itemmodel.insertItemCollection(Edit.Session.sitcollection);
-            Edit.Session.model.insertItemCollection(Edit.Session.items);
+            Edit.Session.model.insertItemCollection(Edit.Session.representantes);
 
             Edit.Session.model.update(function(err,model){
               if(err){
@@ -358,122 +601,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     col.add(sitmodel);
   };
 
-  var registerDocumentEntity = function(model) {
-    Edit.Session.solicitud = model;
 
-    Edit.Session.model = model.documInscripcionFacetFactory();
 
-    Edit.Session.items = Edit.Session.model.getItems();
-
-    Edit.Session.items.on('add',function(model, collection){
-      Edit.Session.model.insertItemCollection(collection);
-    });
-
-    dao.gestionUser.getUser(DocManager, function (user){
-      if(user){
-//        console.log('Dao Get Current user: [%s]', user.get('username'));
-        Edit.Session.currentUser = user;
-      }else{
-        Edit.Session.currentUser = null;        
-      }
-
-    });
-
-  };
-
-  var renderSOLDetails = function (view){
-      console.log('editEvents SOL Details RENDER');
-        // a laburar
-      //Edit.Session.sitcollection = fetchPTItemsCollection(Edit.Session.model);
-			
-      var sitview = new DocManager.DocsApp.Common.Views.SidebarCompositePanel({
-        collection: Edit.Session.items,
-        model: Edit.Session.model,
-        itemtype: 'insdetails',
-      });
-      sitview.listenTo(sitview.collection, 'add', sitview.render);
-      view.$('#soldetails-region').html(sitview.render().el);
-		
-  };
-
-  var editReqDetail = function(view, isNew, itemDetail){
-      console.log('editReqDetail: BEGIN isNew:[%s] items so far:[%s]', isNew,Edit.Session.items.length);
-      if(isNew){
-        itemDetail = new Edit.Session.model.initNewItem();
-
-      }
-
-      var subItem = new Edit.InscripcionDetail({
-        model: itemDetail,
-        itemtype: Edit.Session.model.get('tipocomp'),
-      });
-
-      subItem.on('details:form:submit', function(model, cb){
-        console.log('Alta BUBLING [%s][%s]', model.get('nombreyape'), model.whoami);
-        //var error = model.validate();
-
-        if(isNew){
-//					console.log('esnuevo',model);
-          Edit.Session.items.add(model);
-        }        
-        console.log('AFTER UPDATING EditSessionItems:  [%s]',Edit.Session.items.length)
-
-        //Edit.Session.views.sidebarItemsView.render();
-        renderSOLDetails(Edit.Session.views.mainView);
-        view.itemFormBtnShow();
-        cb();
-
-      });
-			//console.log('render',subItem.render().el)
-      view.$('#nuevo-req-form').html(subItem.render().el);
-
-  };
-
-  var registerDocumEditEvents = function(view) {
-    Edit.Session.views.mainView = view;
-
-    view.on("sitem:edit", function(model){
-      editReqDetail(view, true);
-
-    });
-
-    view.on('render', function(){
-      console.log('editEvents RENDER: [%s] [%s]')
-      renderSOLDetails(view);
-
-    });
-
-    view.on("form:submit", function(model){
-      model.update(Edit.Session.solicitud, function(err,model){
-        if(err){
-          view.triggerMethod("form:data:invalid", err);
-        }else{
-          console.log('FINISHED!')
-          //DocManager.trigger("document:edit", model);
-          //volver
-          enviarmail(model);
-        }
-      });
-    });
-
-    view.on('person:select',function(query, cb){
-      DocManager.request("person:search", query, function(model){
-        cb(model);
-      });      
-
-    });
-
-    view.on('user:validate',function(view, usermail, cb){
-      var msgs = '';
-      fetchUserByUsername(usermail, function(user){
-        msgs = getUserMessage(user);
-        if(cb) cb(user, msgs);
-      })
-
-    });
-
-  };
-    
 var enviarmail = function(model){
     var mailModel = new DocManager.Entities.SendMail({
         from: 'intranet.mcn@gmail.com',

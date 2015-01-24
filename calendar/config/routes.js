@@ -133,6 +133,18 @@ module.exports = function (config, app) {
         //res.redirect();
     });
 
+    // micaprofile -perfil inscriptos MICA- routes
+    var micaprofile = require(rootPath + '/calendar/controllers/micaprofiles');
+    app.post('/actualizar/perfiles', micaprofile.partialupdate);
+    app.get ('/perfiles',            micaprofile.findAll);
+    app.post('/perfiles/fetch',      micaprofile.findOne);
+    app.post('/navegar/perfiles',    micaprofile.find);
+
+    app.get ('/perfiles/:id',        micaprofile.findById);
+    app.post('/perfiles',            micaprofile.add);
+    app.put ('/perfiles/:id',        micaprofile.update);
+    app.delete('/perfiles/:id',      micaprofile.delete);
+
 
      // action (acciones) routes
     var budget = require(rootPath + '/calendar/controllers/budgets');

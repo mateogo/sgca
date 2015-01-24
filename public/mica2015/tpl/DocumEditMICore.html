@@ -7,11 +7,11 @@
 					<div class="fu-example section">
 						<div class="wizard" data-initialize="wizard" id="myWizard">
 							<ul class="steps" style="margin-left: 0">
-                <li data-step="1" class="active"><span class="badge badge-info">1</span>Empresa<span class="chevron"></span></li>
+                <li data-step="1"><span class="badge badge-info">1</span>Empresa<span class="chevron"></span></li>
                 <li data-step="2"><span class="badge">2</span>Representantes<span class="chevron"></span></li>
                 <li data-step="3"><span class="badge">3</span>Comprar<span class="chevron"></span></li>
                 <li data-step="4"><span class="badge">4</span>Vender<span class="chevron"></span></li>
-								<li data-step="5"><span class="badge">5</span>Confirmación<span class="chevron"></span></li>
+								<li data-step="5" class="active" ><span class="badge">5</span>Confirmación<span class="chevron"></span></li>
               </ul>
 							<div class="actions">
 								<button class="btn btn-default btn-prev" disabled="disabled"><span class="glyphicon glyphicon-arrow-left"></span></button>
@@ -28,19 +28,26 @@
 										<div class="row">
 											<div class="col-sm-5 col-xs-9">
 												<label class="control-label">Nombre de la Empresa (alias)</label>
-												<input type="text" class="form-control" id="aliasempre" name="aliasempre" value='<%= aliasempre %>'/>
+												<input type="text" class="form-control" id="edisplayName" name="edisplayName" value='<%= edisplayName %>'/>
                         <span class="help-block"></span>
 											</div>
 											<div class="col-sm-5 col-xs-9">
 												<label class="control-label">Razón social</label>
-												<input type="text" class="form-control" id="razonempre" name="razonempre" value='<%= razonempre %>'/>
+												<input type="text" class="form-control" id="ename" name="ename" value='<%= ename %>'/>
 											</div>
                     </div>
                   </div>
 									<div class="form-group col-sm-10">
 										<div class="row">
 											<label class="control-label">Describa el perfil de la empresa/institución</label>
-											<textarea class="form-control" id="descempre" name="descempre" rows="2" <%= descempre %> placeholder="Escriba su descripción en un máximo de 140 caracteres"></textarea>
+											<textarea class="form-control" id="edescription" name="edescription" rows="2" placeholder="Escriba su descripción en un máximo de 140 caracteres"><%= edescription %> </textarea>
+											<p id="limit-chars"></p>
+										</div>
+									</div>
+									<div class="form-group col-sm-10">
+										<div class="row">
+											<label class="control-label">Explique su principal motivación para participar de este evento</label>
+											<textarea class="form-control" id="slug" name="slug" rows="2" placeholder="Utilice un máximo de 140 caracteres"><%= slug %> </textarea>
 											<p id="limit-chars"></p>
 										</div>
 									</div>
@@ -48,20 +55,20 @@
 										<div class="row">
 											<div class="col-sm-4 selectContainer">
 												<label class="control-label">País</label>
-												<select class="form-control" id="paisempre" name="paisempre">
-													<%= utils.buildSelectOptions('paisempre',utils.paisesOptionList.Paises, paisempre) %>
+												<select class="form-control" id="epais" name="epais">
+													<%= utils.buildSelectOptions('epais',utils.paisesOptionList.Paises, epais) %>
 												</select>
 											</div>
 											<div class="col-sm-4 selectContainer">
 												<label class="control-label">Provincia</label>
-												<select class="form-control" id="provempre" name="provempre">
-														<%= utils.buildSelectOptions("provempre",utils.provinciasOptionList.Argentina, provempre) %>
+												<select class="form-control" id="eprov" name="eprov">
+														<%= utils.buildSelectOptions("eprov",utils.provinciasOptionList.Argentina, eprov) %>
 												</select>
 											</div>
 										
 											<div class="col-sm-4">
 												<label class="control-label">Localidad</label>
-												<input type="text" class="form-control" id="locempre" name="locempre" value="<%= locempre %>" >
+												<input type="text" class="form-control" id="elocalidad" name="elocalidad" value="<%= elocalidad %>" >
 											</div>
 										</div>
 									</div>
@@ -70,11 +77,11 @@
 										<div class="row">
 											<div class="col-sm-4 selectContainer">
 												<label class="control-label">CUIT</label>
-												<input type="text" class="form-control" id="cuitempre" name="cuitempre" value='<%= cuitempre %>'/>
+												<input type="text" class="form-control" id="ecuit" name="ecuit" value='<%= ecuit %>'/>
 											</div>
 											<div class="col-sm-8">
 												<label class="control-label">Domicilio</label>
-												<input type="text" class="form-control" id="domempre" name="domempre" value='<%= domempre %>'/>
+												<input type="text" class="form-control" id="edomicilio" name="edomicilio" value='<%= edomicilio %>'/>
 											</div>
 										</div>
 									</div>
@@ -83,17 +90,17 @@
 
 											<div class="col-sm-2 selectContainer">
 												<label class="control-label">CP</label>
-												<input type="text" class="form-control" id="cpempre"name="cpempre" value='<%= cpempre %>'/>
+												<input type="text" class="form-control" id="ecp"name="ecp" value='<%= ecp %>'/>
 											</div>
 
 											<div class="col-sm-5">
 												<label class="control-label">Email</label>
-												<input type="email" class="form-control" id="mailempre" name="mailempre" value='<%= mailempre %>'>
+												<input type="email" class="form-control" id="email" name="email" value='<%= email %>'>
 											</div>
 
 											<div class="col-sm-5">
 													<label class="control-label">Web</label>
-													<input type="text" class="form-control" id="webempre" name="webempre" value='<%= webempre %>'/>
+													<input type="text" class="form-control" id="eweb" name="eweb" value='<%= eweb %>'/>
 											</div>
 										</div>
 									</div>
@@ -101,17 +108,17 @@
 										<div class="row">
 											<div class="col-sm-4">
 												<label class="control-label">Año de Fundación</label>
-												<input type="text" class="form-control" id="afunempre" name="afunempre" value='<%= afunempre %>'>
+												<input type="text" class="form-control" id="efundacion" name="efundacion" value='<%= efundacion %>'>
 											</div>
 
 											<div class="col-sm-4">
 												<label class="control-label">Nro. de empleados</label>
-												<input type="text" class="form-control" id="nempempre" name="nempempre" value='<%= nempempre %>'/>
+												<input type="text" class="form-control" id="enumempleados" name="enumempleados" value='<%= enumempleados %>'/>
 											</div>
 
 											<div class="col-sm-4">
 												<label class="control-label">Facturación anual</label>
-												<input type="text" class="form-control" id="factaempre" name="factaempre" value='<%= factaempre %>'>
+												<input type="text" class="form-control" id="eventas" name="eventas" value='<%= eventas %>'>
 											</div>
 										</div>
 									</div>
@@ -131,7 +138,7 @@
 										<div class="row">
 											<div class="col-sm-8">
 												<label class="control-label">Nombre y apellido del Responsable</label>
-												<input type="text" class="form-control" id="rnombre" name="rnombre" value='<%= rnombre %>'/>
+												<input type="text" class="form-control" id="rname" name="rname" value='<%= rname %>'/>
 	                       <span class="help-block"></span>
 										</div>
 											<div class="col-sm-4">
@@ -149,7 +156,7 @@
 											
 											<div class="col-sm-3">
 												<label class="control-label">Fecha de nacimiento</label>
-												<input type="text" class="form-control" id="rfecnac" name="rfecnac" value='<%= rfecnac %>'/>
+												<input type="text" class="form-control" id="rfenac" name="rfenac" value='<%= rfenac %>'/>
 											</div>
 											
 											<div class="col-sm-3">
@@ -159,7 +166,7 @@
 
 											<div class="col-sm-3">
 												<label class="control-label">Teléfono móvil</label>
-												<input type="text" class="form-control" id="rcelular" name="rcelular" value='<%= rcelular %>'/>
+												<input type="text" class="form-control" id="rcel" name="rcel" value='<%= rcel %>'/>
 											</div>
 
 										</div>
@@ -168,7 +175,7 @@
 										<div class="row">
 											<div class="col-sm-12">
 												<label class="control-label">Idiomas que domina</label>
-												<input type="text" class="form-control" id="ridiomas" name="ridiomas">
+												<input type="text" class="form-control" id="ridiomas" name="ridiomas" value="<%= ridiomas %>">
 											</div>
 										</div>
 									</div>
@@ -184,48 +191,48 @@
   
                 <div class="step-pane" data-step="3">
 									<h4>ACTIVE SU PERFIL DE COMPRADOR</h4> 
-									<p>En caso de tener productos o servicios culturales para <strong>COMPRAR</strong>, active su perfil de Comprador.</p>
+									<p>Si Usted desea adquirir bienes o servicios culturales active su perfil de <strong>COMPRADOR</strong></p>
 									<div id="data" class="switch">
-										<input id="buyer" class="cmn-toggle cmn-toggle-round" type="checkbox">
+										<input id="buyer" class="cmn-toggle cmn-toggle-round"  name='rolePlaying'  value='comprador' <%= rolePlaying.comprador ? 'checked' : '' %> type="checkbox" >
 										<label for="buyer"></label>
 									</div>
 									<!--BEG INFO COMO COMPRADOR-->
 									<div id="infocomprador" class="hidden"><hr>
 										<h5>Actividades sobre las que desea inscribirse como comprador</h5>  
-										<div class="form-group" id="buyactividades">
+										<div class="form-group" id="cactividades">
 											<div class="checkbox" id="buyteatro">
 												<label class="checkbox-custom" data-initialize="checkbox">
-													<input class="sr-only" type="checkbox" value="">
+													<input type="checkbox" name='cactividades' id='aescenicas' value="aescenicas"  <%= cactividades['aescenicas']  ? 'checked':'' %> >
 													<span class="checkbox-label">Artes escénicas</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buyaudiovisual">
 												<label class="checkbox-custom" data-initialize="checkbox">
-													<input class="sr-only" type="checkbox" value="">
+													<input type="checkbox" name='cactividades' id='audivisual' value="audivisual"  <%= cactividades['audivisual']  ? 'checked':'' %> >
 													<span class="checkbox-label">Audiovisual</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buydiseno">
 												<label class="checkbox-custom" data-initialize="checkbox">
-													<input class="sr-only" type="checkbox" value="">
+													<input type="checkbox" name='cactividades' id='disenio' value="disenio"  <%= cactividades['disenio']  ? 'checked':'' %> >
 													<span class="checkbox-label">Diseño</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buyeditorial">
 												<label class="checkbox-custom" data-initialize="checkbox">
-													<input class="sr-only" type="checkbox" value="">
+													<input type="checkbox" name='cactividades' id='editorial' value="editorial"  <%= cactividades['editorial']  ? 'checked':'' %> >
 													<span class="checkbox-label">Editorial</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buymusica">
 												<label class="checkbox-custom" data-initialize="checkbox">
-													<input class="sr-only" type="checkbox" value="">
+													<input type="checkbox" name='cactividades' id='musica' value="musica"  <%= cactividades['musica']  ? 'checked':'' %> >
 													<span class="checkbox-label">Música</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buyvideojuegos">
 												<label class="checkbox-custom" data-initialize="checkbox">
-													<input class="sr-only" type="checkbox" value="">
+													<input type="checkbox" name='cactividades' id='videojuegos' value="videojuegos"  <%= cactividades['videojuegos']  ? 'checked':'' %> >
 													<span class="checkbox-label">Videojuegos y Apps</span>
 												</label>
 											</div>
@@ -236,58 +243,60 @@
 												<div class="form-group">
 													<label class="col-sm-12 control-label">Palabras clave</label>
 													<div class="col-sm-12">
-														<select multiple id="compclave" name="compclave" class="form-control" data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter." value='<%= compclave %>'></select>
+														<select multiple id="cdescriptores" name="cdescriptores" class="form-control" data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter." value='<%= cdescriptores %>'>
+            						<%= utils.buildMultiSelectOptions('cdescriptores',utils.tagsBuyerMica, cdescriptores) %>
+														</select>
 													</div>
 												</div>
 
 												<div class="form-group col-sm-12">
 													<label class="control-label">Detalle los productos y/o servicios de la empresa/institución</label>
-													<textarea class="form-control" name="lugarfecha" rows="4"></textarea>
+													<textarea class="form-control" id='cproductos' name="cproductos" rows="4"><%= cproductos %></textarea>
 												</div>
                               
 												<div class="form-group col-sm-12">
 													<p><strong>¿Hace negocios con actores culturales del exterior?</strong></p>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="ext-buy-always">
-														<input class="sr-only" checked="checked" name="ext-buy" type="radio" value="ext-buy-always"> Frecuentemente
+													<label class="radio-custom radio-inline" data-initialize="radio" >
+														<input   <%= cexpinternacional==='4'  ? 'checked':'' %> name="cexpinternacional" type="radio" value="4"> Frecuentemente
 													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="ext-buy-often">
-														<input class="sr-only" name="ext-buy" type="radio" value="ext-buy-often"> Esporádicamente
+													<label class="radio-custom radio-inline" data-initialize="radio" >
+														<input   <%= cexpinternacional==='2'  ? 'checked':'' %> name="cexpinternacional" type="radio" value="2"> Esporádicamente
 													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="ext-buy-never">
-														<input class="sr-only" name="ext-buy" type="radio" value="ext-buy-never"> Nunca
+													<label class="radio-custom radio-inline" data-initialize="radio" >
+														<input   <%= cexpinternacional==='1'  ? 'checked':'' %> name="cexpinternacional" type="radio" value="1"> Nunca
 													</label>
 												</div>
 
 												<div class="form-group col-sm-12">
 													<p><strong>¿Hace negocios con actores culturales de otras provincias?</strong></p>
 													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-buy-always">
-														<input class="sr-only" checked="checked" name="prov-buy" type="radio" value="prov-buy-always"> Frecuentemente
+														<input   <%= cexpregional==='4'  ? 'checked':'' %> name="cexpregional" type="radio" value="4"> Frecuentemente
 													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-buy-often">
-														<input class="sr-only" name="prov-buy" type="radio" value="prov-buy-often"> Esporádicamente
+													<label class="radio-custom radio-inline" data-initialize="radio" id="cexpregional-often">
+														<input   <%= cexpregional==='2'  ? 'checked':'' %> name="cexpregional" type="radio" value="2"> Esporádicamente
 													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-buy-never">
-														<input class="sr-only" name="prov-buy" type="radio" value="prov-buy-never"> Nunca
+													<label class="radio-custom radio-inline" data-initialize="radio" id="cexpregional-never">
+														<input   <%= cexpregional==='1'  ? 'checked':'' %> name="cexpregional" type="radio" value="1"> Nunca
 													</label>
 												</div>
 
 												<div class="form-group col-sm-12">
 													<label class="control-label">Principales mercados con los que hace negocios (Completar nombre, lugar y país)</label>
-													<textarea class="form-control" name="description" rows="4"></textarea>
+													<textarea class="form-control" name="cmercados" rows="4"><%= cmercados %></textarea>
 												</div>
 
 												<div class="form-group col-sm-12">
 													<label class="control-label">Participa de Ferias / eventos (Completar nombre, lugar y país)</label>
-													<textarea class="form-control" name="description" rows="4"></textarea>
+													<textarea class="form-control" name="cferias" rows="4"><%= cferias %></textarea>
 												</div>
 
 												<div class="form-group col-sm-12">
 													<label class="control-label">Propósito de su participación en este evento</label>
-													<textarea class="form-control" name="description" rows="4"></textarea>
+													<textarea class="form-control" name="cobjetivo" rows="4"><%= cobjetivo %></textarea>
 												</div>
 												<div class="form-group col-sm-12">
 													<label class="control-label">Comentarios adicionales sobre su participación como comprador en el evento</label>
-													<textarea class="form-control" name="comentario" rows="4"></textarea>
+													<textarea class="form-control" name="ccomentario" rows="4"><%= ccomentario %></textarea>
 												</div>
 											</div>
 										</div>
@@ -298,118 +307,116 @@
 									<h4>ACTIVE SU PERFIL DE VENDEDOR</h4>
 									<p>En caso de tener productos o servicios culturales para <strong>VENDER</strong>, active su perfil de Vendedor.</p>
 									<div id="data" class="switch">
-										<input id="seller" class="cmn-toggle cmn-toggle-round" type="checkbox">
+										<input id="seller" class="cmn-toggle cmn-toggle-round"   name='rolePlaying'   <%= rolePlaying.vendedor ? 'checked' : '' %>  value='vendedor' type="checkbox">
 										<label for="seller"></label>
 									</div>
 									
 									<!--BEG INFO COMO VENDEDOR-->
-									<div id="infovendedor" class="hidden"><hr> 
+									<div id="infovendedor" class="hidden"><hr>
 										<h5>Actividades sobre las que desea inscribirse como vendedor</h5>  
-										<div class="form-group sellactividades">
-											<!-- Icons -->
-											<div class="checkbox" id="sellteatro">
+										<div class="form-group" id="vactividades">
+											<div class="checkbox" id="buyteatro">
 												<label class="checkbox-custom" data-initialize="checkbox">
-													<input class="sr-only" type="checkbox" value="">
+													<input type="checkbox" name='vactividades' id='vaescenicas' value="aescenicas"  <%= vactividades['aescenicas']  ? 'checked':'' %> >
 													<span class="checkbox-label">Artes escénicas</span>
 												</label>
 											</div>
-											<div class="checkbox" id="sellaudiovisual">
+											<div class="checkbox" id="buyaudiovisual">
 												<label class="checkbox-custom" data-initialize="checkbox">
-													<input class="sr-only" type="checkbox" value="">
+													<input type="checkbox" name='vactividades' id='vaudivisual' value="audivisual"  <%= vactividades['audivisual']  ? 'checked':'' %> >
 													<span class="checkbox-label">Audiovisual</span>
 												</label>
 											</div>
-											<div class="checkbox" id="selldiseno">
+											<div class="checkbox" id="buydiseno">
 												<label class="checkbox-custom" data-initialize="checkbox">
-													<input class="sr-only" type="checkbox" value="">
+													<input type="checkbox" name='vactividades' id='vdisenio' value="disenio"  <%= vactividades['disenio']  ? 'checked':'' %> >
 													<span class="checkbox-label">Diseño</span>
 												</label>
 											</div>
-											<div class="checkbox" id="selleditorial">
+											<div class="checkbox" id="buyeditorial">
 												<label class="checkbox-custom" data-initialize="checkbox">
-													<input class="sr-only" type="checkbox" value="">
+													<input type="checkbox" name='vactividades' id='veditorial' value="editorial"  <%= vactividades['editorial']  ? 'checked':'' %> >
 													<span class="checkbox-label">Editorial</span>
 												</label>
 											</div>
-											<div class="checkbox" id="sellmusica">
+											<div class="checkbox" id="buymusica">
 												<label class="checkbox-custom" data-initialize="checkbox">
-													<input class="sr-only" type="checkbox" value="">
+													<input type="checkbox" name='vactividades' id='musica' value="musica"  <%= vactividades['musica']  ? 'checked':'' %> >
 													<span class="checkbox-label">Música</span>
 												</label>
 											</div>
-											<div class="checkbox" id="sellvideojuegos">
+											<div class="checkbox" id="buyvideojuegos">
 												<label class="checkbox-custom" data-initialize="checkbox">
-													<input class="sr-only" type="checkbox" value="">
+													<input type="checkbox" name='vactividades' id='videojuegos' value="videojuegos"  <%= vactividades['videojuegos']  ? 'checked':'' %> >
 													<span class="checkbox-label">Videojuegos y Apps</span>
 												</label>
 											</div>
-										</div>    
-
+										</div>
+										
 										<div class="form-group">
 											<div class="row">
-
 												<div class="form-group">
 													<label class="col-sm-12 control-label">Palabras clave</label>
-														<div class="col-sm-12">
-															<select multiple id="venpclave" name="venpclave"  class="form-control" data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter." value='<%= venpclave %>'></select>
-														</div>
+													<div class="col-sm-12">
+														<select multiple id="vdescriptores" name="vdescriptores" class="form-control" data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter." value='<%= vdescriptores %>'>
+            						<%= utils.buildMultiSelectOptions('vdescriptores',utils.tagsSellerMica, vdescriptores) %>
+
+														</select>
+													</div>
 												</div>
 
 												<div class="form-group col-sm-12">
 													<label class="control-label">Detalle los productos y/o servicios de la empresa/institución</label>
-													<textarea class="form-control" name="lugarfecha" rows="4"></textarea>
+													<textarea class="form-control" id='vproductos' name="vproductos" rows="4"><%= vproductos %></textarea>
 												</div>
-
+                              
 												<div class="form-group col-sm-12">
 													<p><strong>¿Hace negocios con actores culturales del exterior?</strong></p>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="ext-sell-always">
-														<input class="sr-only" checked="checked" name="ext-sell" type="radio" value="ext-sell-always"> Frecuentemente
+													<label class="radio-custom radio-inline" data-initialize="radio" >
+														<input   <%= vexpinternacional==='4'  ? 'checked':'' %> name="vexpinternacional" type="radio" value="4"> Frecuentemente
 													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="ext-sell-often">
-														<input class="sr-only" name="ext-sell" type="radio" value="ext-sell-often"> Esporádicamente
+													<label class="radio-custom radio-inline" data-initialize="radio" >
+														<input   <%= vexpinternacional==='2'  ? 'checked':'' %> name="vexpinternacional" type="radio" value="2"> Esporádicamente
 													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="ext-sell-never">
-														<input class="sr-only" name="ext-sell" type="radio" value="ext-sell-never"> Nunca
+													<label class="radio-custom radio-inline" data-initialize="radio" >
+														<input   <%= vexpinternacional==='1'  ? 'checked':'' %> name="vexpinternacional" type="radio" value="1"> Nunca
 													</label>
 												</div>
 
 												<div class="form-group col-sm-12">
 													<p><strong>¿Hace negocios con actores culturales de otras provincias?</strong></p>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-sell-always">
-														<input class="sr-only" checked="checked" name="prov-sell" type="radio" value="prov-sell-always"> Frecuentemente
+													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-buy-always">
+														<input   <%= vexpregional==='4'  ? 'checked':'' %> name="vexpregional" type="radio" value="4"> Frecuentemente
 													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-sell-often">
-														<input class="sr-only" name="prov-sell" type="radio" value="prov-sell-often"> Esporádicamente
+													<label class="radio-custom radio-inline" data-initialize="radio" id="vexpregional-often">
+														<input   <%= vexpregional==='2'  ? 'checked':'' %> name="vexpregional" type="radio" value="2"> Esporádicamente
 													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-sell-never">
-														<input class="sr-only" name="prov-sell" type="radio" value="prov-sell-never"> Nunca
+													<label class="radio-custom radio-inline" data-initialize="radio" id="vexpregional-never">
+														<input   <%= vexpregional==='1'  ? 'checked':'' %> name="vexpregional" type="radio" value="1"> Nunca
 													</label>
 												</div>
 
 												<div class="form-group col-sm-12">
 													<label class="control-label">Principales mercados con los que hace negocios (Completar nombre, lugar y país)</label>
-													<textarea class="form-control" name="description" rows="4"></textarea>
+													<textarea class="form-control" name="vmercados" rows="4"><%= vmercados %></textarea>
 												</div>
 
 												<div class="form-group col-sm-12">
 													<label class="control-label">Participa de Ferias / eventos (Completar nombre, lugar y país)</label>
-													<textarea class="form-control" name="description" rows="4"></textarea>
+													<textarea class="form-control" name="vferias" rows="4"><%= vferias %></textarea>
 												</div>
 
 												<div class="form-group col-sm-12">
 													<label class="control-label">Propósito de su participación en este evento</label>
-													<textarea class="form-control" name="description" rows="4"></textarea>
+													<textarea class="form-control" name="vobjetivo" rows="4"><%= vobjetivo %></textarea>
 												</div>
-
 												<div class="form-group col-sm-12">
-													<label class="control-label">Comentarios adicionales sobre su participación como vendedor en el evento</label>
-													<textarea class="form-control" name="comentario" rows="4"></textarea>
+													<label class="control-label">Comentarios adicionales sobre su participación como comprador en el evento</label>
+													<textarea class="form-control" name="vcomentario" rows="4"><%= vcomentario %></textarea>
 												</div>
 											</div>
 										</div>
-									</div>
-
-
+									</div><!--END INFO COMO VENDEDOR-->
                 </div><!-- END STEP 4 -->
 								<div class="step-pane" data-step="5">
 									<h4>Confirmación</h4>
@@ -417,28 +424,28 @@
 										Verifique que los datos que se listan a continuación sean correctos.
 									</div>
 									<h4 class="spacer">Datos de la Empresa o Institución</h4>
-										<div><strong>Nombre de la Empresa: </strong><%= aliasempre %></div>
-										<div><strong>CUIT: </strong><%= cuitempre %></div>
-										<div><strong>Domicilio: </strong><%= domempre %></div>
-										<div><strong>CP: </strong><%= cpempre %></div>
-										<div><strong>País: </strong><%= paisempre %></div>
-										<div><strong>Provincia: </strong><%= provempre %></div>
-										<div><strong>Localidad: </strong><%= locempre %></div>
-										<div><strong>Email: </strong><%= mailempre %></div>
-										<div><strong>Web: </strong><%= webempre %></div>
-										<div><strong>Año de Fundación: <%= afunempre %><%= aliasempre %></strong></div>
-										<div><strong>Nro. de empleados: </strong><%= nempempre %></div>
-										<div><strong>Facturación anual: </strong><%= factaempre %></div>
+										<div><strong>Nombre de la Empresa: </strong><%= ename %></div>
+										<div><strong>CUIT: </strong><%= ecuit %></div>
+										<div><strong>Domicilio: </strong><%= edomicilio %></div>
+										<div><strong>CP: </strong><%= ecp %></div>
+										<div><strong>País: </strong><%= epais %></div>
+										<div><strong>Provincia: </strong><%= eprov %></div>
+										<div><strong>Localidad: </strong><%= elocalidad %></div>
+										<div><strong>Email: </strong><%= email %></div>
+										<div><strong>Web: </strong><%= eweb %></div>
+										<div><strong>Año de Fundación:<%= efundacion %></strong></div>
+										<div><strong>Nro. de empleados: </strong><%= enumempleados %></div>
+										<div><strong>Facturación anual: </strong><%= eventas %></div>
 										<hr>
 										<h4 class="spacer">Representante/s que participará/n de las rondas</h4>
-										<div><strong>Nombre y apellido del Responsable:</strong></div>
-										<div><strong>Cargo:</strong> </div>
-										<div><strong>DNI:</strong></div>
-										<div><strong>Fecha de nacimiento:</strong></div>
+										<div><strong>Nombre y apellido del Responsable:</strong><%= rname %></div>
+										<div><strong>Cargo:</strong><%= rcargo %></div>
+										<div><strong>DNI:</strong><%= rdni %></div>
+										<div><strong>Fecha de nacimiento:</strong><%= rfenac %></div>
 										<div><strong>Email del participante: </strong><%= rmail %></div>
-										<div><strong>Teléfono:</strong></div>
-										<div><strong>Teléfono Móvil:</strong></div>
-										<div><strong>Idiomas que domina:</strong></div>
+										<div><strong>Teléfono:</strong><%= rtel %></div>
+										<div><strong>Teléfono Móvil:</strong><%= rcel %></div>
+										<div><strong>Idiomas que domina:</strong><%= ridiomas %></div>
 										<hr>
 										<hr class="spacer" >
                   	<a href="#" id="submit-solicitud">

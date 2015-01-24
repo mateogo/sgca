@@ -159,6 +159,31 @@ window.utils = {
         });
         return nodes;
     },
+
+    //========= ACTIONS =========================
+    tagsBuyerMica: [
+        {val:'no_definido' , label:'Palabras claves'},
+        {val:'compro'      , label:'compro bienes/serv'},
+        {val:'licencio'    , label:'licencio bienes/serv'},
+        {val:'alquilo'     , label:'alquilo'},
+        {val:'comodato'    , label:'busco comodatos'},
+        {val:'riesgo'      , label:'comparto riesgo'},
+        {val:'locales'     , label:'solo en mi localidad'},
+        {val:'regionales'  , label:'solo en mi región'},
+        {val:'exclusividad' , label:'solo bajo exclusividad'},
+    ],
+    tagsSellerMica: [
+        {val:'no_definido' , label:'Palabras claves'},
+        {val:'vendo'       , label:'vendo bienes/serv'},
+        {val:'licencio'    , label:'licencio bienes/serv'},
+        {val:'alquilo'     , label:'alquilo'},
+        {val:'comodato'    , label:'busco comodatos'},
+        {val:'riesgo'      , label:'comparto riesgo'},
+        {val:'locales'     , label:'solo en mi localidad'},
+        {val:'regionales'  , label:'solo en mi región'},
+        {val:'exclusividad' , label:'solo bajo exclusividad'},
+    ],
+
     //========= BUDGET TEMPLATE =========================
     tipoBudgetMovimList: [
         {val:'no_definido',      cgasto:'000.000',  template:'',  label:'Tipo de movimiento'},
@@ -595,6 +620,7 @@ window.utils = {
         {val:'npedido'        , label:'N/Pedido'},
         {val:'pemision'       , label:'P/Emisión'},
         {val:'pdiario'        , label:'P/Diario'},
+        {val:'inscripcion'    , label:'S/Inscripción'},
     ],
 
     paOptionList: [
@@ -806,6 +832,7 @@ window.utils = {
         {val:'entrega'      , label:'Entregas'},
         {val:'noppedido'    , label:'------  P E D I D O S  ------'},
         {val:'nsolicitud'   , label:'Solicitudes de Municipios'},
+        {val:'inscripcion'  , label:'Solicitudes de Inscripción'},
         {val:'reqadherente' , label:'Requerimiento de adherente'},
     ],
  
@@ -815,6 +842,7 @@ window.utils = {
         {val:'rsolicitud'     , label:'Solicitud de Municipios'},
         {val:'tecnica'        , label:'Técnica'},
         {val:'ptecnico'       , label:'Parte Técnico'},
+        {val:'inscripcion'    , label:'Solicitud de Inscripción'},
         {val:'visualizacion'  , label:'Visualización'},
     ],
 
@@ -834,6 +862,7 @@ window.utils = {
         {val:'entrega'      , label:'Entregas'},
         {val:'nopentrada'   , label:'------  P E D I D O S ------'},
         {val:'reqmunicipio' , label:'Requerimiento de municipio'},
+        {val:'inscripcion'  , label:'Requerimiento de inscripcion'},
         {val:'reqadherente' , label:'Requerimiento de adherente'},
         {val:'nopentrada'   , label:'------  PARTE TECNICO ------'},
         {val:'enevaluacion' , label:'En evaluación'},
@@ -902,6 +931,7 @@ window.utils = {
         {val:'nrecepcion'     , label:'N/Recepción'},
         {val:'nentrega'       , label:'N/Entrega'},
         {val:'nsolicitud'     , label:'N/Solicitud'},
+        {val:'inscripcion'    , label:'S/Inscripción'},
         {val:'npedido'        , label:'N/Pedido'},
         {val:'pemision'       , label:'P/Emisión'},
         {val:'pdiario'        , label:'P/Diario'},
@@ -1944,6 +1974,7 @@ window.utils = {
         {val:'nentrega'    , label:'Nota de Entrega: '},
         {val:'nrecepcion'  , label:'Nota de Recepción: '},
         {val:'nsolicitud'  , label:'Nota de Solicitud: '},
+        {val:'inscripcion' , label:'Solicitud de Inscripción: '},
         {val:'npedido'     , label:'Nota de Pedido: '},
         {val:'pemision'    , label:'Parte de Emisión: '},
         {val:'pdiario'     , label:'Parte Diario: '},
@@ -2004,6 +2035,18 @@ window.utils = {
         _.each(data,function(element, index, list){
             element.selected = (actualvalue == element.val ? 'selected' : '');
             optionStr += template(element);
+        });
+        return optionStr;
+    },
+
+    buildMultiSelectOptions: function(varname, data, actualvalue){
+        var template = _.template("<option value='<%= val %>' <%= selected %> ><%= label %></option>");
+        var optionStr = '';
+        _.each(data,function(element, index, list){
+            if(actualvalue.indexOf(element.val) !== -1 ){
+                element.selected = 'selected';
+                optionStr += template(element);
+            }
         });
         return optionStr;
     },
@@ -2561,13 +2604,13 @@ window.utils = {
     },
 
     dateToStr: function(date) {
-        var da = date.getDate();
-        var mo = date.getMonth()+1;
+        var da = ('00' + date.getDate()).substr(-2);
+        var mo = ('00' + (date.getMonth()+1)).substr(-2);
         var ye = date.getFullYear();
         return da+"/"+mo+"/"+ye;
     },  
 		
-		dateTimeToStr: function(date) {
+	dateTimeToStr: function(date) {
         var da = date.getDate();
         var mo = date.getMonth()+1;
         var ye = date.getFullYear();

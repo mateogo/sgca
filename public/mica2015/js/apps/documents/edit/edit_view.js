@@ -1,31 +1,21 @@
 DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
+
   Edit.Layout = Marionette.LayoutView.extend({
     className: 'row',
 
     getTemplate: function(){
-      return utils.templates.DocumEditLayoutView;
+      return utils.templates.DocumEditMILayout;
     },
     
     regions: {
-      itemEditRegion: '#itemedit-region',
-      linksRegion:   '#panel-region',
       mainRegion:    '#main-region'
     }
   });
 
-  Edit.Search = DocManager.DocsApp.Common.Views.SearchPanel.extend({
-    initialize: function(options){
-      this.optiones = options;
-      var self = this;
-    }, 
-  });
-
-
-
   Edit.Document = DocManager.DocsApp.Common.Views.Form.extend({
-		
-		getTemplate: function(){
-      return utils.templates.DocumEditCore;
+    
+    getTemplate: function(){
+      return utils.templates.DocumEditMICore;
     },
 
     initialize: function(options){
@@ -44,22 +34,25 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
             //defaultDate: self.model.get('items')[0].fevento,
             altField: "#fevento"
       });
-			
-			var croppicOptions = {
-				uploadUrl:'lib/croppic/img_save_to_file.php',
+
+      self.$('#cdescriptores').tagsinput();
+      self.$('#vdescriptores').tagsinput();
+
+      self.$('#infocomprador').toggleClass("hidden", !self.model.get('rolePlaying').comprador);
+      self.$('#infovendedor').toggleClass("hidden", !self.model.get('rolePlaying').vendedor);
+
+      
+      var croppicOptions = {
+        uploadUrl:'lib/croppic/img_save_to_file.php',
         cropUrl:'lib/croppic/img_crop_to_file.php',
         imgEyecandy:true,
         loaderHtml:'<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> '
-			}
-			
-			var objn = this.$('#cropContainerEyecandy')
-
-			var cropContainerEyecandy = new Croppic('cropContainerEyecandy', objn, croppicOptions); 
-
+      }
+      var objn = this.$('#cropContainerEyecandy');
+      var cropContainerEyecandy = new Croppic('cropContainerEyecandy', objn, croppicOptions); 
 
       self.$('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
         var step = data.step;
-
         console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.model.whoami, data.step, data.direction);
         if(data.direction === 'next'){
           if(!self.validateStep(step)){
@@ -68,33 +61,19 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
           }else{
             console.log('Validation OK')
           }
-
         }
-
       });
 
-		
-		},
+    
+    },
     validateStep: function(step){
-      var self = this,
-          valid = true,
-          errors = {};
-
-      var check = [['aliasempre'],['rnombre']];
-      if(step>2 || step<1) return valid;
-
-      _.each(check[step-1], function(fld){
-          var attr = {};
-          attr[fld] = self.model.get(fld);
-          var err = self.model.validate(attr);
-          //console.log('validating: [%s] [%s]',fld, err)
-          //console.dir(err)
-          _.extend(errors, err)
-          if(err) valid = false;
-      });
-      self.onFormDataInvalid((errors||{}));
-      return valid;
-
+      var errors = this.model.validateStep(step);
+      this.onFormDataInvalid((errors||{}));
+      if(errors){
+        return false
+      }else{
+        return true;
+      }
     },
 
     events: {
@@ -103,62 +82,60 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       "click #fevento": "dateselector",
       "click #nuevo-req-btn": "editDetailForm",
       "change #eusuario": "uservalidation",
-			"change #buyer": "enablebuyer",
-			"change #seller": "enableseller",
-			"change #paisempre": "stateinput",
-			"keypress #descempre": "contar",
+      "change #buyer": "enablebuyer",
+      "change #seller": "enableseller",
+      "change #epais": "stateinput",
+      "keypress #edescription": "contar",
 
     },
 
     dateselector:function(){
 
     },
-		
-		contar:function(){
-			//Valida la cantidad de caracteres de la descripcion de la empresa	
-			var tval = $('textarea').val(),
-					tlength = tval.length,
-					set = 140,
-					remain = parseInt(set - tlength);
-			$('#limit-chars').text(remain);
-			if (remain <= 0 && e.which !== 0 && e.charCode !== 0) {
-				$('#descempre').val((tval).substring(0, tlength - 1))
-			} 
-		},
-		
-		enablebuyer:function(){
-			//habilita escribir tags para las palabras clave comprador
-			$('#compclave').tagsinput();
-			
-			//Habilita Info adicional como comprador
-			var buyer = $('#data.switch input#buyer');
-				$('#infocomprador').toggleClass("hidden", !buyer.is(":checked"));			
-		},		
-		
-		enableseller:function(){	
-			//habilita escribir tags para las palabras clave vendedor
-			$('#venpclave').tagsinput();
-			
-			//Habilita Info adicional como vendedor
-			var seller = $('#data.switch input#seller');
+    
+    contar:function(){
+      //Valida la cantidad de caracteres de la descripcion de la empresa  
+      var tval = $('textarea').val(),
+          tlength = tval.length,
+          set = 140,
+          remain = parseInt(set - tlength);
+      $('#limit-chars').text(remain);
+      if (remain <= 0 && e.which !== 0 && e.charCode !== 0) {
+        $('#descempre').val((tval).substring(0, tlength - 1))
+      } 
+    },
+    
+    enablebuyer:function(){
+      //habilita escribir tags para las palabras clave comprador
+      
+      //Habilita Info adicional como comprador
+      var buyer = $('#data.switch input#buyer');
+      $('#infocomprador').toggleClass("hidden", !buyer.is(":checked"));     
+    },    
+    
+    enableseller:function(){  
+      //habilita escribir tags para las palabras clave vendedor
+      
+      //Habilita Info adicional como vendedor
+      var seller = $('#data.switch input#seller');
       $('#infovendedor').toggleClass("hidden", !seller.is(":checked"));
-		},
-		
-		stateinput:function(){	
-			//Atrapa el pais elegido
-			var country = $('#paisempre').val();
-			
-			//Si no es Argentina convierte el <select> en <input>
-			if (country !='AR'){
-				$('#provempre').replaceWith('<input class="form-control" type="text" name="provempre" id="provempre">');
-			}
-			else{
-				//Eligio otro pais y vuelve a elegir Argentina se arman las opciones de provincias otra vez
-				var aprov = utils.buildSelectOptions("provempre",utils.provinciasOptionList.Argentina, provempre);
-				$('#provempre').replaceWith('<select class="form-control" id="provempre" name="provempre> aprov("provempre")</select>');
-				$('#provempre').html(aprov);
-			}
-		},
+    },
+    
+    stateinput:function(){  
+      //Atrapa el pais elegido
+      var country = $('#epais').val();
+      
+      //Si no es Argentina convierte el <select> en <input>
+      if (country !='AR'){
+        $('#eprov').replaceWith('<input class="form-control" type="text" name="eprov" id="eprov">');
+      }
+      else{
+        //Eligio otro pais y vuelve a elegir Argentina se arman las opciones de provincias otra vez
+        var aprov = utils.buildSelectOptions("eprov",utils.provinciasOptionList.Argentina, eprov);
+        $('#eprov').replaceWith('<select class="form-control" id="eprov" name="eprov> aprov("eprov")</select>');
+        $('#eprov').html(aprov);
+      }
+    },
 
     uservalidation: function(e){
       e.preventDefault();
@@ -221,6 +198,105 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       });
     },
   });
+
+
+  //Edición del SubItem del comprobante Inscripcion
+  Edit.NewRepresentante = DocManager.DocsApp.Common.Views.Form.extend({
+    whoami:'NewRepresentante:edit_view.js',
+    templates: {
+      representante: 'DocumEditMIRepresentante',
+    },
+
+    getTemplate: function(){
+      return utils.templates[this.templates['representante']];
+    },
+
+    initialize: function(options){
+      console.log('Nuevo Requerimiento [%s]',options.itemtype);
+      var self = this;
+      this.events = _.extend({},this.formevents,this.events);
+      this.delegateEvents();
+      this.options = options;
+    },
+ 
+    events: {
+      "click .js-newSolDetail": "altarequerim",
+      "click .js-productsch": "productsearch",
+      "click .js-personsch": "personsearch",
+    },
+
+    altarequerim: function(){
+      var self = this;
+      console.log('alta requerim BEGINS!!!!');
+      this.trigger('details:form:submit', this.model, function(entity){
+        console.log('alta requerim: Cerrar esta ventana!!!!');
+        self.destroy();
+
+      });
+
+    },
+
+    personsearch: function(){
+      var self = this,
+          query = this.$('#personsch').val();
+
+      this.trigger('person:select', query, function(entity){
+        self.model.set({persona:entity.get('nickName')});
+        self.model.set({personaid:entity.id});
+        self.render();
+      });
+    },
+
+    productsearch: function(){
+      var self = this,
+          query = this.$('#product').val();
+
+      this.trigger('product:select', query, function(entity){
+        console.log('callback: [%s] [%s]',self.whoami,entity.get('slug'));
+        var duracion="";
+        if(entity.get('patechfacet')){
+          duracion = entity.get('patechfacet').durnominal;
+        }
+
+        self.model.set({product:entity.get('productcode'), productid: entity.id,pslug:entity.get('slug'), durnominal: duracion});
+        self.render();
+      });
+    },
+
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Edit.Search = DocManager.DocsApp.Common.Views.SearchPanel.extend({
+    initialize: function(options){
+      this.optiones = options;
+      var self = this;
+    }, 
+  });
+
+
 
 
 
@@ -347,72 +423,6 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
             Edit.Session.items.add(item);
         });
   };
-
-  //Edición del SubItem del comprobante Inscripcion
-  Edit.InscripcionDetail = DocManager.DocsApp.Common.Views.Form.extend({
-    whoami:'InscripcionDetail:edit_view.js',
-		templates: {
-      inscripcion: 'DocumEditINS',
-    },
-
-    getTemplate: function(){
-			
-      return utils.templates[this.templates[this.options.itemtype]];
-    },
-
-    initialize: function(options){
-      console.log('Nuevo Requerimiento [%s]',options.itemtype);
-      var self = this;
-      this.events = _.extend({},this.formevents,this.events);
-      this.delegateEvents();
-      this.options = options;
-    },
- 
-    events: {
-      "click .js-newSolDetail": "altarequerim",
-      "click .js-productsch": "productsearch",
-      "click .js-personsch": "personsearch",
-    },
-
-    altarequerim: function(){
-      var self = this;
-      console.log('alta requerim BEGINS!!!!');
-      this.trigger('details:form:submit', this.model, function(entity){
-        console.log('alta requerim: Cerrar esta ventana!!!!');
-        self.destroy();
-
-      });
-
-    },
-
-    personsearch: function(){
-      var self = this,
-          query = this.$('#personsch').val();
-
-      this.trigger('person:select', query, function(entity){
-        self.model.set({persona:entity.get('nickName')});
-        self.model.set({personaid:entity.id});
-        self.render();
-      });
-    },
-
-    productsearch: function(){
-      var self = this,
-          query = this.$('#product').val();
-
-      this.trigger('product:select', query, function(entity){
-        console.log('callback: [%s] [%s]',self.whoami,entity.get('slug'));
-        var duracion="";
-        if(entity.get('patechfacet')){
-          duracion = entity.get('patechfacet').durnominal;
-        }
-
-        self.model.set({product:entity.get('productcode'), productid: entity.id,pslug:entity.get('slug'), durnominal: duracion});
-        self.render();
-      });
-    },
-
-  });
 
 
 

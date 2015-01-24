@@ -51,68 +51,46 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 			});
 		},
 
-    beforeSave: function(cb){
+    beforeSave: function(){
       var self = this;
       console.log('initBefore SAVE')
       var feultmod = new Date();
       self.set({feultmod:feultmod.getTime()})
-      dao.gestionUser.getUser(DocManager, function (user){
-        if (! self.get('useralta')) self.set({useralta: user.id});
-        self.set({userultmod: user.id});
-        if(cb) cb(self);
-      });
+
 		}, 
 		
-		documInscripcionFacetFactory: function(){
-      var self = this,
-          data,
-          user = dao.gestionUser.getCurrentUser(),
-          fealta = new Date();
-
-      if(!self.get('tipocomp')){
-        self.set('tipocomp', 'inscripcion');
-        self.set('fecomp', utils.dateToStr(fealta));
-      }
-
-      if(!self.id){
-        self.set('slug', 'Nueva Solicitud');
-      }
-
-      self.set('rmail',user.get('mail'));
-      if(user.get('es_usuario_de')){
-        self.set('rnombre',user.get('es_usuario_de')[0].slug);
-      }
-
-      data = _.clone(self.attributes);
-      data = _.extend(data,self.get('items')[0]);
-      return new Entities.DocumInscripcionFacet(data);
+    saveInscripcion: function(user, model, cb){
+      var self = this;
+      console.log('Comprobante SaveInscripcion BEGIN:');
+      setInscripcionData(self, model, user);
+      self.update(cb);
     },
     
     update: function(cb){
-      console.log('update')
+      console.log('docum update')
       var self = this;
-      self.beforeSave(function(docum){
-        var errors ;
-        console.log('ready to SAVE');
-        if(!self.save(null,{
-          success: function(model){
-            //console.log('callback SUCCESS')
-            
-            // log Activity
-            logActivity(model);
-            // log Activity
+      self.beforeSave();
+      var errors ;
 
-            //Change Product State
-            changeProductState(model);
-            //Change Product State
+      console.log('ready to SAVE');
+      if(!self.save(null,{
+        success: function(model){
+          //console.log('callback SUCCESS')
+          
+          // log Activity
+          logActivity(model);
+          // log Activity
 
-            cb(null,model);
+          //Change Product State
+          changeProductState(model);
+          //Change Product State
 
-           }
-          })) {
-					cb(self.validationError,null);
-				}            
-			});
+          cb(null,model);
+
+         }
+        })) {
+				cb(self.validationError,null);
+			}
 		},
 
     itemTypes: {   
@@ -160,6 +138,57 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
   });
+
+  var setInscripcionData = function(docum, inscrip, user){
+    var fealta = new Date(),
+        representante = user['es_usuario_de'],
+        empresa = user['es_representante_de'];
+
+    docum.set({
+      tipocomp: 'inscripcion',
+      fecomp:   utils.dateToStr(fealta),
+      persona:  inscrip.get('ename'),
+      slug:     'Inscripción: ' + inscrip.get('edisplayName'),
+
+      description: inscrip.get('slug'),
+
+      estado_alta:        inscrip.get('estado_alta'),
+      nivel_ejecucion:    inscrip.get('nivel_ejecuciion'),
+      nivel_importancia:  inscrip.get('nivel_importancia'),
+
+      userultmod: user.id,
+      personaid: empresa.id,
+      fecomp_tc: fealta.getTime(),
+      feultmod: fealta.getTime(),
+    });
+
+    if(!docum.get('useralta')){
+      docum.set('useralta', user.id);
+    }
+    docum.set('userultmod', user.id);
+
+    var items = [];
+    var representante = {
+      tipoitem: 'inscripcion',
+      tipomov: 'inscripcion',
+      rmail: inscrip.get('rmail'),
+      rname: inscrip.get('rname'),
+      rcargo: inscrip.get('rcargo'),
+      rdni: inscrip.get('rdni'),
+      rfenac: inscrip.get('rfenac'),
+      rtel: inscrip.get('rtel'),
+      rcel: inscrip.get('rcel'),
+      ridiomas: inscrip.get('ridiomas'),
+    };
+    items.push(representante);
+    docum.set('items', items);
+
+
+  };
+
+
+
+
 
   //Comprobante Collection
   Entities.ComprobanteCollection = Backbone.Collection.extend({

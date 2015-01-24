@@ -9,7 +9,7 @@ window.dao = {
         notas:['nrecepcion','npedido', 'nentrega'],
         pemision: ['pemision'],
         pdiario: ['pdiario'], 
-				inscripcion: ['inscripcion'],
+		inscripcion: ['inscripcion'],
 
 
         isType: function(comp, type){

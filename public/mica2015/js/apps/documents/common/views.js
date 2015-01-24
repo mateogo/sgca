@@ -85,14 +85,38 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
           */      
     },
 
+    buildTags: function(target){
+      console.log('buildtags [%s]', target.selectedOptions)
+      if(target.multiple){
+        var list = [];
+        _.each(target.selectedOptions, function(elem){
+          console.log('Selected: [%s]  [%s]', elem.label, elem.value)
+          list.push(elem.value)
+        })
+        this.model.set(target.name, list);        
+      }
+    },
+
     change: function (event) {
         //utils.hideAlert();
         console.log('FORM CHANGE')
         var target = event.target;
         var change = {};
-        change[target.name] = target.value;
-        this.model.set(change);
-        //console.log('CHANGE: [%s]: [%s]',target.name, target.value);
+
+        if(target.type==='checkbox'){
+          this.model.get(target.name)[target.value] = target.checked;
+          console.log('CHANGE: checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
+        }else{
+          change[target.name] = target.value;
+          this.model.set(change);          
+          console.log('CHANGE: [%s]: [%s] [%s]',target.name, target.value, target['multiple']);
+        }
+        if(target['dataset']){
+          if(target['dataset'].role === 'tagsinput'){
+            this.buildTags(target)
+          }
+        }
+
         var err = this.model.validate(change);
         this.onFormDataInvalid((err||{}));
     },
@@ -288,7 +312,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
       nsolicitud: 'DocumEditPSOSItems',
       nsolheader: 'DocumEditPSOHeader',
       nsdetails:  'DocumEditPSOSDetails', //este muestra el contenido de agregados/inscriptos
-      insdetails: 'DocumEditINSDetails', //este muestra el contenido de agregados/inscriptos
+      insdetails: 'DocumEditMIRepreList', //este muestra el contenido de agregados/inscriptos
       nrecepcion: 'DocumEditREItems',
       nentrega:   'DocumEditREItems',
       npedido:    'DocumEditREItems',
@@ -358,7 +382,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
       nsolicitud: 'DocumEditPSOSItems',
       nsolheader: 'DocumEditPSOHeader',
       nsdetails:  'DocumEditPSOSDetails',
-      insdetails:  'DocumEditINSDetails',
+      insdetails:  'DocumEditMIRepreList',
       nrecepcion: 'DocumEditREItems',
       nentrega:   'DocumEditREItems',
       npedido:    'DocumEditREItems',
@@ -368,6 +392,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
     getTemplate: function(){
       if(this.options){
         if(this.options.itemtype){
+          console.log('Getting Template:[%s]',this.options.itemtype)
           return utils.templates[this.templates[this.options.itemtype]];
         }
         if(this.options.headertype){
@@ -419,7 +444,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
       ptecnico:   'DocumEditPTItems',
       nsolicitud: 'DocumEditPSOItems',
       nsdetails:  'DocumEditPSOSDetailsHeader',
-      insdetails: 'DocumEditINSDetailHeader',
+      insdetails: 'DocumEditMIRepreHeader',
       nrecepcion: 'DocumEditREItems',
       nentrega:   'DocumEditREItems',
       npedido:    'DocumEditREItems',
@@ -457,7 +482,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
     },
 
     onFormSubmit:function(){
-      //console.log('submit form:PTI-LIST');
+      console.log('submit form:PTI-LIST');
       this.trigger("sit:form:submit");
     },
   });

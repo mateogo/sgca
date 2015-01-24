@@ -11,19 +11,19 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
   var API = {
 
     showDocument: function(id){
-      console.log('API: show document')
+      console.log('API: show inscripcion')
       DocsApp.Show.Controller.showDocument(id);
       //DocManager.execute("set:active:header", "comprobantes");
     }, 
 
     addDocument: function(){
-      console.log('API: add document')
+      console.log('API: add inscripcion')
       DocsApp.Edit.Controller.addDocument();
       //DocManager.execute("set:active:header", "comprobantes");  
     },
 
     editDocument: function(id){
-  		console.log('API: edit document', id)
+  		console.log('API: edit inscripcion', id)
   		DocsApp.Edit.Controller.editDocument(id);
   		//DocManager.execute("set:active:header", "comprobantes");	
     },   
@@ -40,10 +40,9 @@ DocManager.module("DocsApp", function(DocsApp, DocManager, Backbone, Marionette,
     API.addDocument();
   });
 	
-  DocManager.on("document:edit", function(model){
-    var documid = model.id;
-    DocManager.navigate("rondas/" + documid + "/edit");
-    API.editDocument(documid);
+  DocManager.on("document:edit", function(id){
+    DocManager.navigate("rondas/" + id + "/edit");
+    API.editDocument(id);
   });
 
   DocManager.addInitializer(function(){
