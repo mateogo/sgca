@@ -18,6 +18,9 @@ var rootPath = path.normalize(__dirname + '/../..');
 var utils = require(rootPath + '/core/util/utils');
 var anyw  = require(rootPath + '/calendar/controllers/anyw');
 
+var bcrypt = require('bcrypt-nodejs');
+var salt = bcrypt.genSaltSync(12);
+
 var dbi ;
 var BSON;
 var config = {};
@@ -39,6 +42,8 @@ var setUserInList = function(id, user){
 
 var addNewUser = function(req, res, node){
     console.log("addNewUser:users.js ");
+		//add encrypted hash to password
+    node.password = bcrypt.hashSync(node.password, salt);
     insertNewUser(req,res,node);
 };
 
@@ -95,6 +100,15 @@ exports.findOne = function(query, cb) {
             cb(err, item);
         });
     });
+};
+
+exports.comparePassword = function(currentUser, candidatePassword, cb) {
+  console.log('candidato',candidatePassword);
+  console.log('pass de la base',currentUser);
+  bcrypt.compare(candidatePassword, currentUser, function(err, isMatch) {
+    if (err) return cb(err);
+    cb(null, isMatch);
+  });
 };
 
 exports.fetchById = function(id, cb) {

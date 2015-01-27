@@ -788,6 +788,9 @@ atribuciones (array)
         userattrs.home =  self.get('home');
         userattrs.grupo = self.get('grupo');
         userattrs.target = self.get('target');
+        userattrs.fealta = self.get('fealta');
+        userattrs.fealta = self.get('fealta');
+        userattrs.apellido = self.get('apellido');
 
         if(self.get('target')){
             self.buildDefaultsFor(self.get('target'), userattrs)

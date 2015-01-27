@@ -29,7 +29,8 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 					fecomp = utils.dateTimeToStr(fealta);
 			
 			self.model.set({
-				fealta:fecomp
+				fealta:fecomp,
+				target:'mica'
 			});
 			
 			self.model.validusername(this.model.get('username'),function(error){
@@ -157,7 +158,7 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 			$('#signupbox').toggleClass('hide show');
 			
 			var user = new UserFacet({
-				home: 'rondas:form',
+				home: 'mica:rondas',
 				estado_alta: 'activo',
 				grupo: 'adherente'
 			});

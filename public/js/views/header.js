@@ -26,6 +26,7 @@ window.HeaderView = Backbone.View.extend({
         unlogged: 'HeaderViewNotLogged',
         visitor:  'HeaderViewVisitor',
         solpub:   'HeaderViewPub',
+        micalog:  'HeaderViewMica',
     },
 
     getTemplate: function(){
@@ -35,7 +36,7 @@ window.HeaderView = Backbone.View.extend({
             menu = 'logged'
             var roles = this.model.get('roles');
             var home = this.model.get('home');
-            if (home === "solicitudes:list"){
+/*            if (home === "solicitudes:list"){
                 menu = 'solpub';  //vista publica de solicitudes con nueva cabecera
             }
             else{
@@ -44,9 +45,22 @@ window.HeaderView = Backbone.View.extend({
                        menu = 'visitor';
                    }
                }
-            }
-            
-        }
+            }*/
+					switch(home) {
+						case "solicitudes:list":
+							menu = 'solpub';  //vista publica de solicitudes con nueva cabecera
+							break;
+    				case "mica:rondas":
+        			menu = 'micalog';  //vista publica de solicitudes con nueva cabecera
+        			break;
+    				default:
+							if(roles){
+								if(_.indexOf(roles,'adherente') != -1){
+									menu = 'visitor';
+								}
+							}
+					} 
+				}
         console.log('[%s] MenuSelected: [%s]',this.whoami, menu);
         //console.log('displayName:[%s] [%s]',menu, this.model.get('displayName'))
         return utils.templates[this.templates[menu] ]; //'HeaderViewLogged'

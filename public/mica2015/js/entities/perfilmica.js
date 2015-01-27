@@ -76,6 +76,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 	Entities.MicaEditFacet = Backbone.Model.extend({
     whoami: 'MicaEdit:perfilmica.js ',
+		
+		initialize: function(){
+			var self = this;
+			var user = dao.gestionUser.getCurrentUser();
+			var namesur = user.get('name') +' '+ user.get('apellido')
+			self.set('rmail',user.get('mail'));
+			self.set('rname',namesur);
+		},
 
     validate: function(attrs, options) {
       var errors = {}
@@ -187,36 +195,36 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 			documid: '',
 			fealta: '',
 			slug: '',
-			description: 'Me interesa el evento para comer churros en la Rambla de Marpla',
+			description: '',
 
 			//empresa
-			edisplayName: 'La Gardenia',
-			ename: 'La Gardenia SA',
-			edescription: 'Mucha salsa cubana',
-			epais: 'argentina',
-			eprov: 'caba',
-			elocalidad: 'chacarita',
-			ecuit: '20-10101010-2',
-			edomicilio: 'Laprida 2323 Piso 3 Dto 114',
-			ecp: '1425',
-			email: 'mmmaaauuu@gmail.com',
-			eweb: 'http://www.lagardenia.com',
-			efundacion: '1999',
-			enumempleados: '2',
-			eventas: '200000',
+			edisplayName: '',
+			ename: '',
+			edescription: '',
+			epais: '',
+			eprov: '',
+			elocalidad: '',
+			ecuit: '',
+			edomicilio: '',
+			ecp: '',
+			email: '',
+			eweb: '',
+			efundacion: '',
+			enumempleados: '',
+			eventas: '',
 
 
 			//responsable
 			userid: '',
 			personid: '',
-			rmail: 'mgomez@gmail.com',
-			rname: 'Mateo GO',
-			rcargo: 'Ticher',
-			rdni: '11444222',
-			rfenac: '15-02-1960',
-			rtel: '5222-2233',
-			rcel: '11 4422 4444',
-			ridiomas: 'Anglé',
+			rmail: '',
+			rname: '',
+			rcargo: '',
+			rdni: '',
+			rfenac: '',
+			rtel: '',
+			rcel: '',
+			ridiomas: '',
 
 			rolePlaying:{
 				comprador: false,
@@ -231,36 +239,36 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 			cactividades: {
 				aescenicas:false,
 				audivisual: false,
-				disenio: true,
+				disenio: false,
 				editorial: false,
 				musica: false,
 				videojuegos: false,
 			},
-			cdescriptores: 'palabra2',
-			cproductos: 'product, muchos',
-			cexpinternacional: '1',
-			cexpregional: '4',
-			cmercados: 'mercados a lo loco',
-			cferias: 'fericas ni que hablar',
-			cobjetivo: 'mis objetivos....',
-			ccomentario: 'los comentarios, mejor no hacerlos',
+			cdescriptores: '',
+			cproductos: '',
+			cexpinternacional: '',
+			cexpregional: '',
+			cmercados: '',
+			cferias: '',
+			cobjetivo: '',
+			ccomentario: '',
 
 			vactividades: {
-				aescenicas:true,
+				aescenicas: false,
 				audivisual: false,
-				disenio: true,
+				disenio: false,
 				editorial: false,
 				musica: false,
-				videojuegos: true,
+				videojuegos: false,
 			},
-			vdescriptores: 'palabra2',
-			vproductos: 'product, muchos',
-			vexpinternacional: '1',
-			vexpregional: '4',
-			vmercados: 'mercados a lo loco',
-			vferias: 'fericas ni que hablar',
-			vobjetivo: 'mis objetivos....ESPELUZNANTES',
-			vcomentario: 'los comentarios, mejor no hacerlos',
+			vdescriptores: '',
+			vproductos: '',
+			vexpinternacional: '',
+			vexpregional: '',
+			vmercados: '',
+			vferias: '',
+			vobjetivo: '',
+			vcomentario: '',
 
 			representantes:[],
 			estado_alta: 'activo',

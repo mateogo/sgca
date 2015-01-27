@@ -34,6 +34,18 @@ module.exports = function (config, app) {
         console.log("/login:routes.js ");
         res.redirect('/');
     });
+	
+		app.post('/mica2015/login',
+        passport.authenticate('local', {failureRedirect:'/mica2015'}), function(req, res){
+            console.log("/mica2015/login [%s] [%s]", req.user.username, utils.anywModule());
+            console.log('AUTHENTICATE OK!!!![%s] [%s]', req, res)
+            res.redirect(utils.userHome(req.user));
+    });
+
+    app.get('/mica2015/login', function(req,res,next){
+        console.log("/mica2015/login:routes.js ");
+        res.redirect('/');
+    });
 
 
     app.get('/logout', function(req, res){

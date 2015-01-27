@@ -20,8 +20,22 @@ window.ProfileView = Backbone.View.extend({
     },
 
     renderall: function(){
-        this.render();
-        this.renderPersons();
+				var self = this;
+        self.render();
+        self.renderPersons();
+				dao.currentUser.getUser(function(user){
+        	if(user.home == "mica:rondas"){
+//					oculta el viejo diseño de perfil
+						self.$("#navbar-default").hide();
+						self.$(".col-md-4").hide();
+						self.$("#panel-well").hide();
+						self.$("#accordion1").hide();
+						self.$("#superv").hide();
+					} else{
+//					oculta el nuevo diseño de perfil
+						self.$(".col-xs-12").hide();
+					}
+        });
         /*
         this.renderContacts();
         this.renderUsers();
@@ -301,7 +315,6 @@ window.ProfileView = Backbone.View.extend({
             form = new Backbone.Form({
                 model: facet,
             });
-
         var modal = new Backbone.BootstrapModal({
             content: form,
             title: 'Alta rápida de notas',

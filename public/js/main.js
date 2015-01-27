@@ -629,7 +629,7 @@ var AppRouter = Backbone.Router.extend({
 });
 
 utils.loadTemplate(['HomeView', 'AboutView', 
-    'HeaderViewNotLogged','HeaderViewLogged','HeaderViewVisitor','HeaderViewPub', 'HeaderCreateSolView',
+    'HeaderViewNotLogged','HeaderViewLogged','HeaderViewVisitor','HeaderViewPub','HeaderViewMica', 'HeaderCreateSolView',
     'ProjectListLayoutView', 'ProjectView','ProjectListItemView', 'ProjectViewLayout', 'PrjHeaderView',
     'RequestListLayoutView', 'RequestView','RequestListItemView', 'RequestViewLayout', 'RequestHeaderView',
     'ResourceView', 'ResourceListItemView', 

@@ -38,7 +38,7 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
 			//
 			var userlog;
 			dao.gestionUser.getUser(DocManager, function (user){
-//				console.log(user.id);
+				console.log(user.id);
 				userlog = user.id;
 			})
 			//
@@ -50,11 +50,11 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
     },
 
     enterhClicked: function(){
-      console.log('evento')
+      console.log('evento');
 			$('#loginbox').toggleClass('hide show');
 			$('#ins-but').toggleClass('hide show');
       
-    },  
+    },
 		
 		brandClicked: function(e){
       e.preventDefault();
@@ -63,16 +63,14 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
 		
 		onRender: function(userlog){
 			if (userlog.model.id != null){
-//				console.log('usuario logueado',userlog.model.id);
-				this.$('#menuhome').hide();
-				this.$('#notification').show();
-			//	this.$('#menuuser').show();
+				console.log('usuario logueado',userlog.model.id);
+				this.$('.js-statusbar').show();
+
 				
 			}
 			else{
-//				console.log('no esta logueado')
-				this.$('#notification').hide();
-				this.$('#menuuser').hide();
+				console.log('no esta logueado')
+				this.$('.js-statusbar').hide();
 			}
 		}
   });
