@@ -71,13 +71,7 @@ var routesBootstrap = function (app, express) {
           //return done(null, false, { message: 'Incorrect username.' });
           return done(null, false);
         }
-/*        if (!user.validPassword(userdao, password)) {
-          //console.log('passport PASSWD ERROR');
-          //return done(null, false, { message: 'Incorrect password.' });
-          return done(null, false);
-        }
-        //console.log('passport USER:[%s] ',userdao.username);
-        return done(null, userdao);*/
+
 				user.comparePassword(userdao.password, password, function(err, isMatch) {
           if (isMatch) {
             console.log('match!!!');

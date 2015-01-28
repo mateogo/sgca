@@ -126,6 +126,31 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       });
     },
 
+    updateProfile: function(data, cb){
+        var self = this;
+        if(!self.id){
+          console.log('NO PUEDO HACER UPDATE: Falta el ID [%s] [%s]',self.id, self.get('name'));
+          return;
+        }
+        self.fetch({
+          success: function(model){
+            model.initBeforeSave();
+            model.set(data);
+            model.save(null, {
+                success: function (model) {
+                    console.log('udate user:SUCCESS: [%s] ',model.get('name'));
+
+                    if(cb) cb(model);
+                },
+                error: function () {
+                    console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',model.get('username'));
+                }
+            });          
+          }
+        });
+    },
+
+
     validate: function(attrs, options) {
       var errors = {}
       if (! attrs.name) {

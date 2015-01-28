@@ -99,17 +99,17 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
 
     change: function (event) {
         //utils.hideAlert();
-        console.log('FORM CHANGE')
+        //console.log('FORM CHANGE')
         var target = event.target;
         var change = {};
 
         if(target.type==='checkbox'){
           this.model.get(target.name)[target.value] = target.checked;
-          console.log('CHANGE: checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
+          //console.log('CHANGE: checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
         }else{
           change[target.name] = target.value;
           this.model.set(change);          
-          console.log('CHANGE: [%s]: [%s] [%s]',target.name, target.value, target['multiple']);
+          //console.log('[%s] CHANGE: [%s]: [%s] [%s]',this.model.whoami, target.name, target.value, target['multiple']);
         }
         if(target['dataset']){
           if(target['dataset'].role === 'tagsinput'){
@@ -120,22 +120,32 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
         var err = this.model.validate(change);
         this.onFormDataInvalid((err||{}));
     },
-/*        if(this.model.isValid()){
-           console.log('validación ok')
-        }else{
-           console.log('validación failed [%s]',this.model.validationError)
-        }
-*/ 
+
     submitClicked: function(e){
       e.preventDefault();
-      //var data = Backbone.Syphon.serialize(this);
-      console.log('FORM SUBMITTED');
-      this.trigger("form:submit", this.model);
+      var err = this.model.validate(this.model.attributes);
+
+      if(err){
+        this.onFormDataInvalid((err||{}));
+      }else{
+        //var data = Backbone.Syphon.serialize(this);
+        console.log('FORM SUBMITTED');
+        this.trigger("form:submit", this.model);        
+      }
+
     },
 
     cancelClicked: function(e){
       e.preventDefault();
       this.close()
+    },
+
+    showAlert: function(title, text, klass){
+      this.$('.alert').removeClass("alert-error alert-warning alert-success alert-info");
+      this.$('.alert').addClass(klass);
+      this.$('.alert').html('<strong>' + title + '</strong> ' + text);
+      this.$('.alert').show();
+
     },
 
     onFormNotifications: function(msgs, tstyle){

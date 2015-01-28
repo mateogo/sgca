@@ -23,8 +23,9 @@ window.ProfileView = Backbone.View.extend({
 				var self = this;
         self.render();
         self.renderPersons();
-				dao.currentUser.getUser(function(user){
-        	if(user.home == "mica:rondas"){
+		dao.currentUser.getUser(function(user){
+            //if(user.home == "mica:rondas"){
+            if(true){
 //					oculta el viejo diseño de perfil
 						self.$("#navbar-default").hide();
 						self.$(".col-md-4").hide();

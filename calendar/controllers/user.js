@@ -79,18 +79,6 @@ exports.setBSON = function(bs) {
 };
 
 
-exports.validPassword = function(currentUser, password) {
-    //console.log('valid password BEGIN');
-    if(!currentUser) return false;
-    if(password === currentUser.password){
-       //console.log('valid password TRUE');
-       return true;
-    }else{
-       //console.log('valid password FALSE');
-       return false;
-    }
- };
-
 exports.findOne = function(query, cb) {
     //console.log('findUser Retrieving user collection for passport');
     console.log("user/findOne [%s] [%s]", query, utils.anywModule());
@@ -186,8 +174,15 @@ exports.update = function(req, res) {
     var id = req.params.id;
     var user = req.body;
     delete user._id;
-    //console.log('Updating node id:[%s] ',id);
+    //console.log('UPDATING node id:[%s] ',id);
     //console.log(JSON.stringify(user));
+
+    if(user.password){
+        if(user.password.length < 15){
+            user.password = bcrypt.hashSync(user.password, salt);
+        }
+    }
+
     dbi.collection(usersCol, function(err, collection) {
         collection.update({'_id':new BSON.ObjectID(id)}, user, {safe:true}, function(err, result) {
             if (err) {

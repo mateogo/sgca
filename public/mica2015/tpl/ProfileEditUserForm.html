@@ -1,0 +1,50 @@
+<div class="col-xs-12">
+    <div class="panel well well-sm margin-top">
+      <div class="panel-heading">
+        <h1>Usuario</h1>
+      </div>
+
+      <div class="panel-body">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
+              <label class="control-label">Saludo</label>
+              <input type="text" class="form-control" id="displayName" name="displayName" value="<%= displayName%>">
+              <span class="help-block"></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <label class="control-label">Correo electrónico (es su clave de usuario)</label>
+              <input type="text" class="form-control" id="username" name="username" value="<%= username%>">
+              <span class="help-block"></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <label class="control-label">Contraseña</label>
+              <input type="password" class="form-control" id="password" name="password" value="<%= password %>" >
+              <span class="help-block"></span>
+            </div>
+          </div>
+        </div>
+
+        <hr class="spacer">
+        <a id="nuevo-req-btn" class="pull-right">
+          <button id="" type="button" class="btn btn-lg btn-success js-submit">Actualizar mi perfil</button>
+        </a>
+        <div class="row status-bar">
+          <div class="col-md-12">
+            <div class="alert alert-success" style="display: none">
+              <b>INFO:</b> El registro se guardó exitosamente
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+</div>
