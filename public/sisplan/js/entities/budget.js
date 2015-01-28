@@ -1056,7 +1056,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   
   Entities.BudgetsFindOne = Backbone.Collection.extend({
     whoami: 'Entities.BudgetsFindOne:accion.js ',
-    url: "/accion/fetch",
+    url: "/budget/fetch",
     model: Entities.Budget,
     comparator: "cnumber",
   });

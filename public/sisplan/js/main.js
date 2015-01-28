@@ -15,7 +15,11 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'BudgetShowLegacy','BudgetShowHeader','BudgetShowBranding',
 
     'BudgetBuildLayout','BudgetBuildArtisticaComposite','BudgetBuildArtisticaItem','BudgetBuildControlPanelView',
-  
+ 
+    'ActivityEditLayout','ActivityEditDetailComposite','ActivityEditItemView','ActivityEditControlPanelView', //'BudgetMainHeader','ActionBudgetItem',
+    'ActivityShowBudgetComposite','ActivityShowBudgetLayout','ActivityShowBudgetItemComposite','ActivityShowBudgetItem',
+
+
     'BplannerListLayout', 'BplannerListFilterView', 'BplannerListAnalyseView',
     'BplannerListSummaryView','BplannerListSummaryItem','BplannerMultieditView',
    

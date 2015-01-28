@@ -36,7 +36,7 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
 
             DocManager.mainRegion.show(Build.Session.views.layout);
 
-            loadBudgetsFormDB();
+            loadBudgetsFromDB();
 
           }else{
             console.log('vuelve a edición de ACTION')
@@ -50,7 +50,7 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
 
 
   //======== MAIN CONTROLLER BUDGET PLANNING 
-  var loadBudgetsFormDB = function(){
+  var loadBudgetsFromDB = function(){
     DocManager.request('action:fetch:budget',Build.Session.action, null,function(budgetCol){
       console.log('BudgetCol REQUEST CB:[%s]',budgetCol.length);
       Build.Session.budgetCol = budgetCol;

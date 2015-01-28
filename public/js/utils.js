@@ -309,6 +309,93 @@ window.utils = {
     },
     //        {val:'',  label:'',          code:'101.101',  classattr:'info'},
 
+    activityTemplateList:['global', 'artistica', 'tecnica','contratos', 'muestras', 'derechos','logistica','impresiones','difusion', 'subsidios'],
+    // ART
+
+    activityTemplate:{
+        global:[
+            {val:'no_definido', label:'Subtipo de Gasto',  ume:'',  cgasto:'100.000',  template:'1', classattr:'info'},
+        ],
+        artistica:[
+            {val:'no_definido',  label:'Subtipo de Artistica',   ume:'',          cgasto:'101.000',  template:'1', classattr:'info'},
+            {val:'locartista',   label:'Contrato de artista',    ume:'contrato',  cgasto:'101.101',  template:'1', classattr:'info'},
+            {val:'artistica',    label:'Contratación artística', ume:'contrato',  cgasto:'101.101',  template:'1', classattr:'info'},
+        ],
+        tecnica:[
+            {val:'no_definido', label:'Subtipo de Técnica',      ume:'',             cgasto:'105.000',  template:'1', classattr:'info'},
+            {val:'tecnica-a',   label:'Asistencia Técnica A',    ume:'asistencia',   cgasto:'105.101',  template:'1', classattr:'info'},
+            {val:'tecnica-b',   label:'Asistencia Técnica B',    ume:'asistencia',   cgasto:'105.103',  template:'1', classattr:'info'},
+            {val:'tecnica-c',   label:'Asistencia Técnica C',    ume:'asistencia',   cgasto:'105.105',  template:'1', classattr:'info'},
+            {val:'tecnica-d',   label:'Asistencia Técnica D',    ume:'asistencia',   cgasto:'105.107',  template:'1', classattr:'info'},
+            {val:'tecnica-e',   label:'Asistencia Técnica E',    ume:'asistencia',   cgasto:'105.109',  template:'1', classattr:'info'},
+            {val:'tecnica-f',   label:'Asistencia Técnica F',    ume:'asistencia',   cgasto:'105.111',  template:'1', classattr:'info'},
+            {val:'escenario',   label:'Escenario y vallados',    ume:'escenario',    cgasto:'105.113',  template:'1', classattr:'info'},
+            {val:'lucese',      label:'Luces escenario',         ume:'lucese',       cgasto:'105.115',  template:'1', classattr:'info'},
+            {val:'videoe',      label:'Video escenario',         ume:'pantallae',    cgasto:'105.117',  template:'1', classattr:'info'},
+            {val:'sonidoe',     label:'Sonido escenario',        ume:'sonidoe',      cgasto:'105.119',  template:'1', classattr:'info'},
+            {val:'energiae',    label:'Energía escenario',       ume:'energiae',     cgasto:'105.121',  template:'1', classattr:'info'},
+            {val:'backline',    label:'Back line',               ume:'backline',     cgasto:'105.123',  template:'1', classattr:'info'},
+        ],
+        contratos:[
+            {val:'no_definido', label:'Subtipo de Contratos',   ume:'',         cgasto:'111.000',  template:'1', classattr:'info'},
+            {val:'locobra',     label:'Locaciones de Obra',     ume:'contrato', cgasto:'111.101',  template:'1', classattr:'info'},
+            {val:'otros',       label:'Otros',                  ume:'otros',    cgasto:'111.103',  template:'1', classattr:'info'},
+        ],
+        logistica:[
+            {val:'no_definido',   label:'Subtipo de Logística',          ume:'',            cgasto:'115.000',  template:'1', classattr:'info'},
+            {val:'pasajes',       label:'Pasajes',                       ume:'pasaje',      cgasto:'115.101',  template:'1', classattr:'info'},
+            {val:'transpcarga',   label:'Transp de Carga',               ume:'trnscarga',   cgasto:'115.103',  template:'1', classattr:'info'},
+            {val:'transpersonas', label:'Transp de Pasajeros',           ume:'trnspjero',   cgasto:'115.105',  template:'1', classattr:'info'},
+            {val:'alojamientos',  label:'Alojamientos',                  ume:'alojamiento', cgasto:'115.107',  template:'1', classattr:'info'},
+            {val:'comidas',       label:'Comidas/ Catering',             ume:'catering',    cgasto:'115.109',  template:'1', classattr:'info'},
+            {val:'seguridad',     label:'Seguridad',                     ume:'seguridad',   cgasto:'115.111',  template:'1', classattr:'info'},
+            {val:'limpieza',      label:'Limpieza',                      ume:'limpieza',    cgasto:'115.113',  template:'1', classattr:'info'},
+            {val:'comunicacion',  label:'Alq equipos comunicación',      ume:'eqcomunic',   cgasto:'115.115',  template:'1', classattr:'info'},
+            {val:'baniosquim',    label:'Alq baños químicos',            ume:'banioquim',   cgasto:'115.117',  template:'1', classattr:'info'},
+            {val:'carpas',        label:'Alq de carpas',                 ume:'carpa',       cgasto:'115.119',  template:'1', classattr:'info'},
+            {val:'seguros',       label:'Seguros acc pers y resp civil', ume:'seguro',      cgasto:'115.121',  template:'1', classattr:'info'},
+            {val:'otros',         label:'Otros',                         ume:'otros',       cgasto:'115.123',  template:'1', classattr:'info'},
+        ],
+        difusion:[
+            {val:'no_definido', label:'Subtipo de Difusión',  ume:'',               cgasto:'121.000',  template:'1', classattr:'info'},
+            {val:'varios',      label:'Merchandising',        ume:'merchandising',  cgasto:'121.101',  template:'1', classattr:'info'},
+            {val:'otros',       label:'Otros',                ume:'otros',          cgasto:'121.103',  template:'1', classattr:'info'},
+        ],
+        impresiones:[
+            {val:'no_definido',   label:'Subtipo de Impresiones', ume:'',            cgasto:'125.000',  template:'1', classattr:'info'},
+            {val:'banners',       label:'Banners',                ume:'banners',     cgasto:'125.101',  template:'1', classattr:'info'},
+            {val:'carteleria',    label:'Cartelería y gráfica',   ume:'cartel',      cgasto:'125.103',  template:'1', classattr:'info'},
+            {val:'folletos',      label:'Gráfica de mano',        ume:'folleto',     cgasto:'125.105',  template:'1', classattr:'info'},
+            {val:'publicaciones', label:'Publicaciones',          ume:'publicacion', cgasto:'125.107',  template:'1', classattr:'info'},
+            {val:'otros',         label:'Otros',                  ume:'otros',       cgasto:'125.109',  template:'1', classattr:'info'},
+        ],
+        muestras:[
+            {val:'no_definido',    label:'Subtipo de Muestras',  ume:'',             cgasto:'131.000',  template:'1', classattr:'info'},
+            {val:'seguros',        label:'Seguros de Obras',     ume:'seguro',       cgasto:'131.101',  template:'1', classattr:'info'},
+            {val:'construcciones', label:'Construcción en seco', ume:'constseco',    cgasto:'131.103',  template:'1', classattr:'info'},
+            {val:'mobiliario',     label:'Mobiliario',           ume:'mobiliario',   cgasto:'131.105',  template:'1', classattr:'info'},
+            {val:'transporte',     label:'Transporte Obra',      ume:'trnsobra',     cgasto:'131.107',  template:'1', classattr:'info'},
+            {val:'marcos',         label:'Marcos',               ume:'marco',        cgasto:'131.109',  template:'1', classattr:'info'},
+            {val:'montaje',        label:'Montaje',              ume:'montaje',      cgasto:'131.111',  template:'1', classattr:'info'},
+            {val:'reproducciones', label:'Reproducciones',       ume:'reproduccion', cgasto:'131.113',  template:'1', classattr:'info'},
+            {val:'otros',          label:'Otros',                ume:'otros',        cgasto:'131.115',  template:'1', classattr:'info'},
+        ],
+        derechos:[
+            {val:'no_definido', label:'Subtipo de Derechos', ume:'',           cgasto:'135.000',  template:'1', classattr:'info'},
+            {val:'sadaic',      label:'SADAIC',              ume:'sadaic',     cgasto:'135.101',  template:'1', classattr:'info'},
+            {val:'argentores',  label:'ARGENTORES',          ume:'argentores', cgasto:'135.103',  template:'1', classattr:'info'},
+            {val:'cesiones',    label:'Cesión derechos',     ume:'derecho',    cgasto:'135.105',  template:'1', classattr:'info'},
+            {val:'otros',       label:'Otros',               ume:'otros',      cgasto:'135.107',  template:'1', classattr:'info'},
+        ],
+        subsidios:[
+            {val:'no_definido', label:'Subtipo de Derechos', ume:'',           cgasto:'141.000',  template:'1', classattr:'info'},
+            {val:'sprivado',    label:'Sector privado',      ume:'subsidios',  cgasto:'141.101',  template:'1', classattr:'info'},
+            {val:'spublico',    label:'Sector público',      ume:'subsidios',  cgasto:'141.103',  template:'1', classattr:'info'},
+            {val:'otros',       label:'Otros',               ume:'otros',      cgasto:'141.107',  template:'1', classattr:'info'},
+        ],
+    },
+    //        {val:'',  label:'',          code:'101.101',  classattr:'info'},
+
     //========= ACTIONS =========================
     umeList: [
         {val:'no_definido'  , label:'Unidad de Medida'},
@@ -2138,7 +2225,7 @@ window.utils = {
         {id:7,  tt:'th', flag:1, tclass:'col7',  tmpl: 'template1', val:'tramita',      label:'Tramita'},
         {id:8 , tt:'th', flag:1, tclass:'col8',  tmpl: 'template1', val:'trim_fiscal',  label:'Trim'},
         {id:9 , tt:'th', flag:0, tclass:'col9',  tmpl: 'template1', val:'cantidad',     label:'Cant'},
-        {id:10, tt:'th', flag:1, tclass:'col10', tmpl: 'template1', val:'ume',          label:'UME'},
+        {id:10, tt:'th', flag:0, tclass:'col10', tmpl: 'template1', val:'ume',          label:'UME'},
         {id:11, tt:'th', flag:1, tclass:'col11', tmpl: 'template7', val:'importe',      label:'Importe'},
         {id:12, tt:'th', flag:1, tclass:'actions', tmpl: 'template9', val:'acciones',  label:'acciones'}
     ],

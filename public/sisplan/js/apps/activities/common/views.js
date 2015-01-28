@@ -1,4 +1,4 @@
-DocManager.module("ActionsApp.Common.Views", function(Views, DocManager, Backbone, Marionette, $, _){
+DocManager.module("ActivitiesApp.Common.Views", function(Views, DocManager, Backbone, Marionette, $, _){
 
   Views.SidebarMenu = Marionette.ItemView.extend({
     //article id="sidebar-region" role="navigation" class="sistema-box" -->
@@ -25,7 +25,6 @@ DocManager.module("ActionsApp.Common.Views", function(Views, DocManager, Backbon
     events: {
       "click .js-newentity": "newentity",
       "click .js-newbudget": "newbudget",
-      "click .js-newactivity": "newactivity",
     },
 
     triggers: {
@@ -38,13 +37,6 @@ DocManager.module("ActionsApp.Common.Views", function(Views, DocManager, Backbon
 
     },
 
-    newactivity: function(e){
-      console.log('activity')
-      e.preventDefault();
-      this.trigger('activity:new');
-      return false;
-    },
- 
     newbudget: function(e){
       e.preventDefault();
       this.trigger('budget:new');

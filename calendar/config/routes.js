@@ -157,13 +157,26 @@ module.exports = function (config, app) {
     app.put ('/perfiles/:id',        micaprofile.update);
     app.delete('/perfiles/:id',      micaprofile.delete);
 
+     // adminrequests (acciones) routes
+    var admrqst = require(rootPath + '/calendar/controllers/adminrequests');
+    app.post('/actualizar/tramitaciones', admrqst.partialupdate);
+    app.get ('/tramitaciones',            admrqst.findAll);
+    app.post('/recuperar/tramitaciones',  admrqst.find);
+    app.post('/admrqst/fetch',        admrqst.findOne);
+    app.post('/navegar/tramitaciones',    admrqst.find);
+    app.get ('/tramitaciones/:id',        admrqst.findById);
+    app.post('/tramitaciones',            admrqst.add);
+    app.put ('/tramitaciones/:id',        admrqst.update);
+    app.delete('/tramitaciones/:id',      admrqst.delete);
+
+
 
      // action (acciones) routes
     var budget = require(rootPath + '/calendar/controllers/budgets');
     app.post('/actualizar/presupuestos', budget.partialupdate);
     app.get ('/presupuestos',            budget.findAll);
     app.post('/recuperar/presupuestos',  budget.find);
-    app.post('/accion/fetch',        budget.findOne);
+    app.post('/budget/fetch',            budget.findOne);
     app.post('/navegar/presupuestos',    budget.find);
     app.get ('/presupuestos/:id',        budget.findById);
     app.post('/presupuestos',            budget.add);
@@ -177,7 +190,7 @@ module.exports = function (config, app) {
     app.post('/actualizar/acciones', action.partialupdate);
     app.get ('/acciones',            action.findAll);
     app.post('/recuperar/acciones',  action.find);
-    app.post('/accion/fetch',        action.findOne);
+    app.post('/action/fetch',        action.findOne);
     app.post('/navegar/acciones',    action.find);
     app.get ('/acciones/:id',        action.findById);
     app.post('/acciones',            action.add);

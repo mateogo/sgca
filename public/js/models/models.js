@@ -703,6 +703,8 @@ Roles de usuario: (es un array)
     presugestor:
         puede gestionar presupuestos
 
+    gestoractividades:
+        puede gestionar actividades
 
 modulos: (array)
     sisplan/asistencias/mica

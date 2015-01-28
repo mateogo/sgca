@@ -72,6 +72,14 @@ window.dao = {
                 }
             },
 
+            'edit:actividad':{
+                roles:['gestoractividades'],
+                memberOfArea: function(){
+                    return dao.gestionUser.hasPermissionTo('area', module, opt);
+                }
+            },
+
+
 
             'area':{
                 validate: function(){

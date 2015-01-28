@@ -347,7 +347,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   
   Entities.ActionsFindOne = Backbone.Collection.extend({
     whoami: 'Entities.ActionsFindOne:action.js ',
-    url: "/accion/fetch",
+    url: "/action/fetch",
     model: Entities.Action,
     comparator: "cnumber",
   });

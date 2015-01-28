@@ -1,0 +1,33 @@
+<table class="table table-condensed table-bordered">
+		<colgroup>
+			<col style='width: 10%;'>
+			<col style='width: 30%;'>
+			<col style='width: 15%;'>
+			<col style='width:  5%;'>
+			<col style='width: 15%;'>
+			<col style='width: 10%;'>
+			<col style='width: 15%;'>
+		</colgroup>
+		<thead>
+			<tr>
+				<th></th>
+				<th>RUBbRO - DESCRIPCIÓN</th>
+				<th>EJECUCIÓN</th>
+				<th>TRA</th>
+				<th><span  class="text-center">CANTIDAD</span></th>
+				<th><span  class="pull-right">PRECIO</span></th>
+				<th><span  class="pull-right">IMPORTE</span></th>
+			</tr> 
+		</thead>
+		<tbody>
+			<tr>
+				<td><button class='btn-link js-edit'  title='editar'><span class='glyphicon glyphicon-edit'></span></button><button type='button' class='btn-link js-newrequest' title='nueva solicitud de tramitación' ><span class='glyphicon glyphicon-plus-sign'></span></button></td>
+				<td><strong><%= utils.fetchLabel(utils.tipoBudgetMovimList, tgasto) %>: </strong> <%= slug %></td>
+				<td><strong><%= fecha_prev %> Trim: <%= trim_fiscal %></strong></td>
+				<td><strong><%= tramita %> </strong></td>
+				<td><strong><%= cantidad %> <%= utils.fetchLabel(utils.umeList, ume) %> <%= (freq != "1" ? " x " + freq + " " + utils.fetchLabel(utils.umeFreqList, umefreq): "") %></strong></td>
+				<td><span class="pull-right"><strong><%= accounting.formatNumber(punit) %></strong></span></td>
+				<td><span class="pull-right"><strong><%= accounting.formatNumber(importe) %></strong></span></td>
+			</tr> 
+		</tbody>
+</table>
