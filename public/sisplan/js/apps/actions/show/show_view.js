@@ -5,7 +5,7 @@ DocManager.module("ActionsApp.Show", function(Show, DocManager, Backbone, Marion
   });
 
   Show.Layout = Marionette.LayoutView.extend({
-    className: 'row row-offcanvas row-offcanvas-left',
+    //className: 'row row-offcanvas row-offcanvas-left',
 
     getTemplate: function(){
       return utils.templates.DocumShowLayoutView;

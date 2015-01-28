@@ -37,7 +37,6 @@ DocManager.module("ActionsApp.Report", function(Report, DocManager, Backbone, Ma
 
   Report.BudgetComposite = Marionette.CompositeView.extend({
     tagName:'div',
-    className:"col-xs-12 col-md-12",
     whoami:'BudgetComposite',
 
     initialize: function(options){
@@ -75,7 +74,7 @@ DocManager.module("ActionsApp.Report", function(Report, DocManager, Backbone, Ma
 
 
   Report.ActionLayout = Marionette.LayoutView.extend({
-    className: 'row well',
+    //className: 'well',
     //
     onShow:function(){
       var self = this;

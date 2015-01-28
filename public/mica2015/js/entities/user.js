@@ -82,21 +82,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           console.log('NO PUEDO HACER UPDATE: Falta el ID [%s] [%s]',self.id, self.get('username'));
           return;
         }
-        self.fetch({
-          success: function(model){
-            model.beforeUpdate();
-            model.set(data);
-            model.save(null, {
-                success: function (model) {
-                    console.log('udate user:SUCCESS: [%s] ',model.get('username'));
-
-                    if(cb) cb(model);
-                },
-                error: function () {
-                    console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',model.get('username'));
-                }
-            });          
-          }
+        model.beforeUpdate();
+        model.set(data);
+        model.save(null, {
+            success: function (model) {
+                console.log('udate user:SUCCESS: [%s] ',model.get('username'));
+                if(cb) cb(model);
+            },
+            error: function () {
+                console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',model.get('username'));
+            }
         });
     },
 

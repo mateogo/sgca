@@ -1,7 +1,7 @@
-		<div class="col-xs-12 col-md-4" >
-			<h4><%= utils.fetchLabel(utils.tipoActionEntityList, tregistro) %>: <%= cnumber %></h4>
-			<p><span class=" pull-right"></span><%= nodo %> / <%= area %></p>
-			<p><span class=" pull-right"></span><%= requirente %></p>
+		<div class="col-xs-6" >
+			<h2><%= utils.fetchLabel(utils.tipoActionEntityList, tregistro) %>: <%= cnumber %></h2>
+			<h4><%= nodo %> / <%= area %></h4>
+			<p><%= requirente %></p>
 			
 			<p><%= lugarfecha%></p>
 			<%if(expediente){ %> <p><strong>Expediente: </strong>  <%= expediente %></p><%} %>
@@ -10,8 +10,8 @@
 			<%if(contraparte){ %> <p><strong>Contraparte: </strong>  <%= contraparte %></p><%} %>
 
 		</div>
-		<div class="col-xs-12 col-md-8" >
-			<h3><span class=" pull-right"></span><%= slug %></h3>
+		<div class="col-xs-6 pull-right"  >
+			<h3><%= slug %></h3>
 			<p><strong>  <%= utils.fetchLabel(utils.tipoActionIniciativeList, taccion) %></strong></p>
 			<p><%= description %></p>
 			<%if(objetivo){ %> <p><strong>Objetivos: </strong>  <%= objetivo %></p><%} %>
