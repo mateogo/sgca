@@ -5,6 +5,7 @@ utils.loadTemplate([
 
     'DocumEditMICore','DocumEditMILayout',
     'DocumEditMIRepresentante','DocumEditMIRepreHeader','DocumEditMIRepreList',
+    'ProfileEditLayout', 'ProfileEditUserForm','ProfileEditPersonForm','ProfileEditRelatedForm',
 
     'HeaderView', 'AboutView','DocumEditSolLayoutView', 'DocumListLayoutView', 'DocumNavbar',
     'DocumEditMin', 'DocumShowDef','DocumEditPT', 'SearchEntitiesForm','DocumEditPTLayout','DocumEditPTItem',

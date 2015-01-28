@@ -1,15 +1,20 @@
 DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionette, $, _){
   Entities.User = Backbone.Model.extend({
 
-    whoami: 'User:models.js ',
+    whoami: 'El User:models.js ',
     urlRoot: "/usuarios",
 
     idAttribute: "_id",
 
     validate: function(attrs, options) {
       var errors = {}
-      if (! attrs.username) {
-        errors.username = "no puede quedar en blanco";
+
+      if (_.has(attrs,'username') && ! attrs.username) {
+        errors.username = "Usuario: No puede ser nulo";
+      }
+
+      if (_.has(attrs,'displayName') && ! attrs.displayName) {
+        errors.displayName = "Saludo: No puede ser nulo";
       }
 
       if( ! _.isEmpty(errors)){
@@ -57,6 +62,30 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           success: function(model){
             model.beforeUpdate();
             model.set(key, data);
+            model.save(null, {
+                success: function (model) {
+                    console.log('udate user:SUCCESS: [%s] ',model.get('username'));
+
+                    if(cb) cb(model);
+                },
+                error: function () {
+                    console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',model.get('username'));
+                }
+            });          
+          }
+        });
+    },
+
+    updateProfile: function(data, cb){
+        var self = this;
+        if(!self.id){
+          console.log('NO PUEDO HACER UPDATE: Falta el ID [%s] [%s]',self.id, self.get('username'));
+          return;
+        }
+        self.fetch({
+          success: function(model){
+            model.beforeUpdate();
+            model.set(data);
             model.save(null, {
                 success: function (model) {
                     console.log('udate user:SUCCESS: [%s] ',model.get('username'));
@@ -200,7 +229,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
                 aperson.fetch({
                     success: function(model){
-                        console.log('SUCCESS: [%s]',model.id);
                         defer.resolve(aperson);
                     }
                 });

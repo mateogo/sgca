@@ -1,0 +1,77 @@
+<div class="col-xs-12">
+    <div class="panel well well-sm margin-top">
+      <div class="panel-heading">
+        <h1>Datos personales</h1>
+      </div>
+
+      <div class="panel-body">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-3">
+              <label class="control-label">Saludo</label>
+              <input type="text" class="form-control" id="displayName" name="displayName" value="<%= displayName %>">
+            </div>
+            <div class="col-sm-3">
+              <label class="control-label">Apodo</label>
+              <input type="text" class="form-control" id="nickName" name="nickName" value="<%= nickName %>">
+            </div>
+            <div class="col-sm-6">
+              <label class="control-label">Nombre completo</label>
+              <input type="text" class="form-control" id="name" name="name" value="<%= name %>">
+            </div>
+            <span class="help-block"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <label class="control-label">Email</label>
+              <input type="text" class="form-control" id="fmail" name="fmail" value="<%= fmail %>">
+            </div>
+            <span class="help-block"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
+              <label class="control-label">Teléfono</label>
+              <input type="text" class="form-control" id="ftelefono" name="ftelefono" value="<%= ftelefono %>">
+            </div>
+
+            <div class="col-sm-6">
+              <label class="control-label">Teléfono móvil</label>
+              <input type="text" class="form-control" id="fcelular" name="fcelular" value="<%= fcelular %>">
+              <span class="help-block"></span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
+              <label class="control-label">Dirección</label>
+              <input type="text" class="form-control" id="fdireccion" name="fdireccion" value="<%= fdireccion %>">
+            </div>
+
+            <div class="col-sm-6">
+              <label class="control-label">Web</label>
+              <input type="text" class="form-control" id="fweb" name="fweb" value="<%= fweb %>">
+              <span class="help-block"></span>
+            </div>
+          </div>
+        </div>
+        <hr class="spacer">
+       <a id="nuevo-req-btn" class="pull-right">
+          <button id="" type="button" class="btn btn-lg btn-success js-submit">Actualizar mis datos personales</button>
+        </a>
+         <div class="row status-bar">
+          <div class="col-md-12">
+            <div class="alert alert-success" style="display: none">
+              <b>INFO:</b> El registro se guardó exitosamente
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+</div>

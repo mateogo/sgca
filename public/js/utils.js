@@ -1048,7 +1048,7 @@ window.utils = {
         {val:'gestion:comprobantes:list'    , label:'gestion/comprobantes'},
         {val:'sisplan:acciones:list'        , label:'sisplan/acciones'},
         {val:'studio:producciones:list'     , label:'studio/producciones'},
-        {val:'mica:rondas'				     , label:'mica2015/rondas'},
+        {val:'mica:rondas'				    , label:'mica2015/rondas'},
     ],
 
     userStatusOptionList:[

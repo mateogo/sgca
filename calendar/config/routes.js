@@ -35,7 +35,7 @@ module.exports = function (config, app) {
         res.redirect('/');
     });
 	
-		app.post('/mica2015/login',
+    app.post('/mica2015/login',
         passport.authenticate('local', {failureRedirect:'/mica2015'}), function(req, res){
             console.log("/mica2015/login [%s] [%s]", req.user.username, utils.anywModule());
             console.log('AUTHENTICATE OK!!!![%s] [%s]', req, res)
@@ -53,7 +53,7 @@ module.exports = function (config, app) {
       res.redirect('/');
     });  
 	
-		app.get('/mica2015/logout', function(req, res){
+	app.get('/mica2015/logout', function(req, res){
       req.logout();
       res.redirect('/mica2015/');
     });
