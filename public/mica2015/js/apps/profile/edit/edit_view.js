@@ -7,9 +7,10 @@ DocManager.module("ProfileApp.Edit", function(Edit, DocManager, Backbone, Marion
     },
     
     regions: {
-      userRegion:    '#user-region',
-      personRegion:  '#person-region',
-      relatedRegion: '#related-region'
+      userRegion:     '#user-region',
+      passwordRegion: '#password-region',
+      personRegion:   '#person-region',
+      relatedRegion:  '#related-region'
     }
   });
 
@@ -19,6 +20,7 @@ DocManager.module("ProfileApp.Edit", function(Edit, DocManager, Backbone, Marion
       user:     'ProfileEditUserForm',
       person:   'ProfileEditPersonForm',
       related:  'ProfileEditRelatedForm',
+      password:  'ProfileEditPasswordForm',
     },
 
     getTemplate: function(){

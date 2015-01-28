@@ -29,6 +29,7 @@ DocManager.module("ProfileApp.Edit", function(Edit, DocManager, Backbone, Marion
     DocManager.mainRegion.show(Edit.Session.layout);
 
     renderUserView(user, Edit.Session.layout);
+    renderPasswordView(user, Edit.Session.layout);
 
     DocManager.request('user:load:persons', user, 'es_usuario_de', function(person){
       if(person){
@@ -207,6 +208,28 @@ console.log('Password:[%s]: [%s]', user.get('password'), user.get('password').le
       list.push(node);
     }
   }
+
+  // ===== Password PROFILE ========================
+  var renderPasswordView = function(user, layout){
+
+    var userForm = new Edit.Profile({
+      model: user,
+      formtemplate: 'password'
+    });
+
+    registerUserPasswordEvents(userForm);
+
+    layout.passwordRegion.show(userForm);
+  };
+
+  var registerUserPasswordEvents = function(view){
+    Edit.Session.views.passwordFormView = view;
+
+    view.on("form:submit", function(model){
+      console.log('TodDo!!!')
+
+    });
+  };
 
 
 });
