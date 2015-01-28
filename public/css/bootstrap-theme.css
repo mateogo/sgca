@@ -698,7 +698,7 @@ article.sistema-box {
 #print-legal {
 	display: none;
 }
-/*@media print {
+@media print {
 	a[href]:after {
 	    content: none !important;
 	}
@@ -731,4 +731,4 @@ article.sistema-box {
 		 margin-top: 1in;  
 		 margin-bottom: 1in;  
 	} 
-}*/
+}
