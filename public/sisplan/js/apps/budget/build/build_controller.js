@@ -110,7 +110,7 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
       if(_.indexOf(budList, model.id) !== -1){
         found = true;
 
-      } else if(model.get('tgasto') === type){
+      } else if(model.get('tgasto') === type && model.get('estado_alta')!== 'baja' ){
         editPlanningView(type, model);
         budList.push(model.id);
         found = true;
