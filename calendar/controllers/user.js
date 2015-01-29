@@ -35,6 +35,12 @@ var userlist = {};
 var getUserFromList = function(id){
     return userlist[id];
 };
+var deleteUserFromList = function(id){
+    if(getUserFromList(id)){
+        delete userlist[id];
+    }
+};
+
 var setUserInList = function(id, user){
     console.log('updating USERLIST [%s] [%s]',user._id, user.username);
     userlist[id] = user;
@@ -91,8 +97,6 @@ exports.findOne = function(query, cb) {
 };
 
 exports.comparePassword = function(currentUser, candidatePassword, cb) {
-  console.log('candidato',candidatePassword);
-  console.log('pass de la base',currentUser);
   bcrypt.compare(candidatePassword, currentUser, function(err, isMatch) {
     if (err) return cb(err);
     cb(null, isMatch);
@@ -197,6 +201,55 @@ exports.update = function(req, res) {
         });
     });
 };
+
+
+exports.partialupdate = function(req, res) {
+    if (req){
+        data = req.body;
+    }
+    var query = buildTargetNodes(data);
+    var update = buildUpdateData(data);
+
+    console.log('UPDATING partial fields nodes:[%s]', query.$or[0]._id);
+    dbi.collection(usersCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
+        if (err) {
+            console.log('Error partial updating %s error: %s',usersCol,err);
+            res.send({error: MSGS[0] + err});
+
+        } else {
+            console.log('UPDATE: partial update success [%s] nodos',result);
+            res.send({result: result});
+        }
+    })
+};
+
+var buildTargetNodes = function(data){
+    var list = [], 
+        query,
+        nodes;
+    if(!data.nodes) return;
+
+    nodes = data.nodes;
+    for (var i = 0; i<nodes.length; i++){
+
+        list.push({_id: new BSON.ObjectID(nodes[i]) });
+        deleteUserFromList(nodes[i]);
+    }
+    if(list.length){
+        query = {$or: list};
+        return query
+    }
+};
+var buildUpdateData = function(data){
+    if(!data.newdata) return;
+
+    if(data.newdata.password){
+        data.newdata.password = bcrypt.hashSync(data.newdata.password, salt);
+    }
+
+    return data.newdata;
+};
+
 
 exports.delete = function(req, res) {
     var id = req.params.id;

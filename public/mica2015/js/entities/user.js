@@ -95,6 +95,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         });
     },
 
+    partialUpdate: function(data){
+      //data: un hash de claves
+      //
+      var self = this,
+          query = {};
+
+      query.nodes = [self.id ];
+      query.newdata = data;
+  
+      var update = new Entities.UserUpdate(query);
+      update.save({
+        success: function() {
+        }
+      });
+    },
+
+
     defaults : {
         _id: null,
         displayName:'',
@@ -113,6 +130,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         },
         conduso:[]
     }
+  });
+
+  Entities.UserUpdate = Backbone.Model.extend({
+    whoami: 'Entities.UserUpdate: user.js ',
+
+    urlRoot: "/actualizar/usuarios",
+
   });
 
 
