@@ -270,7 +270,7 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
   var updateActionModel = function(model, cb){
     model.update(function(err,model){
       if(err){
-        view.triggerMethod("form:data:invalid", err);
+        //view.triggerMethod("form:data:invalid", err);
       }else{
         console.log('UPDATE FINISHED!')
         if(cb) cb(model);

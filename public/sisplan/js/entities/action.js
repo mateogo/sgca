@@ -99,6 +99,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
            }
           })) {
+            console.log('validation error[%s]', self.validationError);
             cb(self.validationError,null);
         }            
       });
