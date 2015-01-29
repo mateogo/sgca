@@ -113,7 +113,7 @@ DocManager.module("ActionsApp.Report", function(Report, DocManager, Backbone, Ma
   });
 
   var loadBudgets = function(entity, layoutview){
-      DocManager.request('action:fetch:budget',entity, null,function(budgetCol){
+      DocManager.request('action:fetch:valid:budget',entity, null,function(budgetCol){
         console.log('BudgetCol REQUEST CB:[%s][%s]',budgetCol.length, budgetCol.whoami);
         if(budgetCol.length){
           var costoTotal = DocManager.request('action:evaluate:cost',budgetCol);
