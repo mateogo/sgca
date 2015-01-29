@@ -6,6 +6,9 @@ DocManager.module("ActionsApp", function(ActionsApp, DocManager, Backbone, Mario
       "acciones/informe": "reportActions",
       "acciones/:id/edit": "editAction",
       "acciones/:id": "showAction",
+
+      "perfil": "showProfile",
+
     }
   });
 
@@ -34,6 +37,11 @@ DocManager.module("ActionsApp", function(ActionsApp, DocManager, Backbone, Mario
       console.log('API: show action')
       ActionsApp.Show.Controller.showAction(id);
       //DocManager.execute("set:active:header", "presupuestos");
+    },
+    showProfile: function(){
+      console.log('API: show PROFILE')
+      DocManager.execute('edit:user:profile');
+      //DocManager.execute("set:active:header", "acciones");
     },
   };
 

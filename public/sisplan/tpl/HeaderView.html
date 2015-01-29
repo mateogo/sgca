@@ -19,24 +19,20 @@
                     <i class="glyphicon glyphicon-user"></i>
                     <span><%= displayName %> <i class="caret"></i></span>
                 </a>
-                <ul class="dropdown-menu">
-                    <!-- User image -->
-                    <li class="user-header bg-mcn-blue">
-                        <img src="/css/img/avatar1.png" class="img-circle" alt="User Image" />
-                        <p>
-                            <%= name %>
-                            <small>Miembro desde Nov. 2014</small>
-                        </p>
-                    </li>
-                    <!-- Menu Footer-->
-                    <li class="user-footer">
-                        <div class="pull-left">
-                            <a href="#perfil" class="btn btn-default btn-flat">Perfil</a>
-                        </div>
-                        <div class="pull-right">
-                            <a href="/logout" class="btn btn-default btn-flat">Salir</a>
-                        </div>
-                    </li>
+                <ul class="dropdown-menu" style="width: auto;">
+
+          <li class="bg-mcn-blue">
+            <a href="#perfil"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+              Mi perfil
+            </a>
+          </li>
+          <li>
+            <a data-method="delete" href="/logout" rel="nofollow"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+              Salir
+            </a>
+        </li>
+
+
                 </ul>
               </li>
               <% } %>
