@@ -56,6 +56,8 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
         return utils.templates.DocumShowItemSODetail;
       }else if(dao.docum.isType(this.options.tpl, 'pemision')){
         return utils.templates.DocumShowItemPEDetail;
+      }else if(dao.docum.isType(this.options.tpl, 'inscripcion')){
+        return utils.templates.DocumShowItemINSCRDetail;
       }
     },
     initialize: function(options){
@@ -96,6 +98,8 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
         return utils.templates.DocumShowItemPEComposite;
       }else if(dao.docum.isType(this.options.tpl, 'pdiario')){
         return utils.templates.DocumShowItemPDComposite;
+      }else if(dao.docum.isType(this.options.tpl, 'inscripcion')){
+        return utils.templates.DocumShowItemINSCRComposite;
       }
     },
 
@@ -129,6 +133,8 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
         return utils.templates.DocumShowItemPEHeader;
       } else if(dao.docum.isType(this.model.get('tipoitem'), 'pdiario')){
         return utils.templates.DocumShowItemPDHeader;
+      } else if(dao.docum.isType(this.model.get('tipoitem'), 'inscripcion')){
+        return utils.templates.DocumShowItemINSCRHeader;
       }
     },
     initialize: function(){

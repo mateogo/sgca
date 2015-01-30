@@ -14,7 +14,7 @@ utils.loadTemplate([
     'DocumShowItemPTDetail','DocumShowItemREHeader','DocumShowItemREComposite','DocumShowItemREDetail', 
     'DocumShowItemPEHeader', 'DocumShowItemPEComposite', 'DocumShowItemPEDetail',
     'DocumRelatedLayout', 'DocumRelatedPRHeader', 'DocumRelatedPR', 'DocumRelatedDOC',
-    'DocumShowItemPDHeader', 'DocumShowItemPDComposite',
+    'DocumShowItemPDHeader', 'DocumShowItemPDComposite', 'DocumShowItemINSCRComposite', 'DocumShowItemINSCRDetail', 'DocumShowItemINSCRHeader',
     'DocumEditSO','DocumEditSOItem','DocumEditSOLayout',
     'DocumEditPSO','DocumEditPSOItems','DocumEditPSOHeader', 'DocumEditPSOSItems','DocumEditPSOSDetailsHeader','DocumEditPSOSDetails',
     'DocumShowItemSODetail','DocumShowItemSOComposite','DocumShowItemSOHeader',

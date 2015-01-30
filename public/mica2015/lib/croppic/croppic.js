@@ -145,7 +145,7 @@
 				
 				that.showLoader();
 				that.imgUploadControl.hide();
-			
+
 				var formData = new FormData(that.form[0]);
 			
 				for (var key in that.options.uploadData) {

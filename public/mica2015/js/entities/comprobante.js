@@ -618,25 +618,38 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     return model;
   };
 	
-Entities.DocumItemCoreFacet = Backbone.Model.extend({
-	whoami: 'DocumItemCoreFacet:comprobante.js ',
+	Entities.DocumSubItemsCollection = Backbone.Collection.extend({
+    whoami: 'Entities.DocumSubItemsCollection:comprobante.js ',
+    initialize: function(options){
+      this.options = options;
+    },
+    comparator: 'product',
+
+    model: function(attrs, options){
+      return modelSubItemFactory(attrs, options);
+    },
 	
-	schema: {
-		tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList, title:'Tipo ITEM' },
-		slug:     {type: 'Text', title: 'Descripción corta'},
-	},
+	});
 	
-	createNewDocument: function(cb){
-		var self = this;
-		var docum = new Entities.Comprobante(self.attributes);
-		docum.initBeforeCreate(function(docum){
-			docum.save(null, {
-				success: function(model){
-					cb(null,model);
-				}
+	Entities.DocumItemCoreFacet = Backbone.Model.extend({
+		whoami: 'DocumItemCoreFacet:comprobante.js ',
+
+		schema: {
+			tipoitem: {type: 'Select',options: utils.tipoDocumItemOptionList, title:'Tipo ITEM' },
+			slug:     {type: 'Text', title: 'Descripción corta'},
+		},
+
+		createNewDocument: function(cb){
+			var self = this;
+			var docum = new Entities.Comprobante(self.attributes);
+			docum.initBeforeCreate(function(docum){
+				docum.save(null, {
+					success: function(model){
+						cb(null,model);
+					}
+				});
 			});
-		});
-	},
+		},
 
     defaults: {
       tipoitem: "",
