@@ -1401,7 +1401,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       };
       var facet = new DocManager.Entities.BudgetAproveFacet(budfacet.attributes);
       
-      DocManager.BudgetApp.Build.modaledit(facet, opt, function(facet){
+      DocManager.BudgetApp.Build.modalbudgetedit(facet, opt, function(facet){
         console.log('Aprove Form Submitted:');
 
         saveBudgetAproval(user, budfacet, action, facet);

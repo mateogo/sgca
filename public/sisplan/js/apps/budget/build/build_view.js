@@ -353,8 +353,44 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
       this.trigger("brand:clicked");
     }
   });
+  
+  Build.modaledit = function(view, model, facet, captionlabel, cb){
+      var self = this,
+          form = new Backbone.Form({
+                model: facet,
+            });
 
-  Build.modaledit = function(facet, opt, cb){
+        form.on('change', function(form, editorContent) {
+            var errors = form.commit();
+            return false;
+        });
+
+        form.on('blur', function(form, editorContent) {
+            return false;
+        });
+
+        var modal = new Backbone.BootstrapModal({
+            content: form,
+            title: captionlabel,
+            okText: 'aceptar',
+
+            cancelText: 'cancelar',
+            enterTriggersOk: false,
+            animate: false
+        });
+
+        modal.on('ok',function(){
+          console.log('MODAL ok FIRED');
+        });
+
+        modal.open(function(){
+            console.log('modal CLOSE');
+            var errors = form.commit();
+            cb(facet);
+        });
+  };    
+
+  Build.modalbudgetedit = function(facet, opt, cb){
         var form = new Backbone.Form({
                 model: facet,
             });

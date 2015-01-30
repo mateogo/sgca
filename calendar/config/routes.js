@@ -13,10 +13,6 @@ module.exports = function (config, app) {
     var http = require("http");
     var passport = require('passport');
 	
-		var formidable = require('formidable'),
-				util = require('util'),
-    		fs   = require('fs-extra');
-
     var ensureAuthenticated = function (req, res, next) {
         console.log('autenticando!!!!');
         if (req.isAuthenticated()) { 
@@ -57,29 +53,6 @@ module.exports = function (config, app) {
             res.redirect(utils.userHome(req.user));
     });
 	
-	app.post('/img', function (req, res){
-		var form = new formidable.IncomingForm();
-		form.parse(req, function(err, fields, files) {
-			res.writeHead(200, {'content-type': 'application/json'});
-			res.end(util.inspect({status:"success", url: 'uploads/'+files.img.name}));
-		});
-		
-		form.on('end', function(fields, files) {
-			/* Temporary location of our uploaded file */
-			var temp_path = this.openedFiles[0].path;
-			/* The file name of the uploaded file */
-			var file_name = this.openedFiles[0].name;
-			/* Location where we want to copy the uploaded file */
-			var new_location = 'uploads/';
-			fs.copy(temp_path, new_location + file_name, function(err) {  
-				if (err) {
-					console.error(err);
-				} else {
-					console.log("success!");
-				}
-			});
-		});
-	});
 
     app.get('/mica2015/login', function(req,res,next){
         console.log("/mica2015/login:routes.js ");
