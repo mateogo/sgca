@@ -694,6 +694,7 @@ window.utils = {
         {val: 'SCEPN'       ,nodo:'SCEPN'   , label:'SCEPN'},
         {val: 'SGC'         ,nodo:'SGC'     , label:'SGC'},
         {val: 'SPSC'        ,nodo:'SPSC'    , label:'SPSC'},
+        {val: 'SSCPC'       ,nodo:'SCEPN'   , label:'Sub Secretaría de Cultura Pública y Creatividad'},
         {val: 'SSPDCPP'     ,nodo:'SPSC'    , label:'SSPDCPP'},
         {val: 'UM'          ,nodo:'UM'      , label:'UM'},
     ],
