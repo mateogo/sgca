@@ -725,8 +725,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     budgetFactory: function(){
       var self = this,
           budget;
+    //console.log('========== HELP ============ [%s][%s]', self.hasRelevantCost(), self.get('_id'));
 
-      if(self.hasRelevantCost()){
+      if(self.hasRelevantCost() || self.get('_id') ){
         self.buildItemsArray();
         budget = new Entities.Budget(self.attributes);
         return budget;

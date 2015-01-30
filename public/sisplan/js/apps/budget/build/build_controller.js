@@ -55,8 +55,9 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
       console.log('BudgetCol REQUEST CB:[%s]',budgetCol.length);
       Build.Session.budgetCol = budgetCol;
       buildTypeList(budgetCol);
+      var budList = [];
       if(Build.Session.typeList.length){
-        createBudgetPlanningView(budgetCol);
+        createBudgetPlanningView(budgetCol, budList);
       }
     });
   }; 
@@ -84,11 +85,11 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
   }; 
 
 */
-  var createBudgetPlanningView = function(budgets){
+  var createBudgetPlanningView = function(budgets, budList){
     // Modo ALTA: Se arma la plantilla completa.
     _.each(Build.Session.typeList, function(type){
       //console.log('CreateBudgetPlanning: [%s] BEGIN', type);
-      buildPlanningView(type, budgets);
+      buildPlanningView(type, budgets, budList);
     });
 
     Build.Session.facetCol.evaluateTotalCost();
@@ -96,20 +97,24 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
 
   };
 
-  var buildPlanningView = function(type, budgets){
-    if(!hasAlreadyBudgetType(type, budgets)){
+  var buildPlanningView = function(type, budgets, budList){
+    if(!hasAlreadyBudgetType(type, budgets, budList)){
       createNewPlanningView(type, budgets);
     }
   };
 
-  var hasAlreadyBudgetType = function(type, budgets){
+  var hasAlreadyBudgetType = function(type, budgets, budList){
     var found = false;
 
     budgets.each(function(model){
-      //console.log('iterando: type:[%s] budget:[%s]', type, model.get('tgasto'))
-      if(model.get('tgasto') === type){
-        editPlanningView(type, model);
+      if(_.indexOf(budList, model.id) !== -1){
         found = true;
+
+      } else if(model.get('tgasto') === type && model.get('estado_alta')!== 'baja' ){
+        editPlanningView(type, model);
+        budList.push(model.id);
+        found = true;
+        //console.log('iterando: type:[%s]vs[%s] budget:[%s] /[%s]', type, model.get('tgasto'),model.id,  budList)
       }
 
     });

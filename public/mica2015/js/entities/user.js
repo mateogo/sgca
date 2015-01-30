@@ -1,7 +1,7 @@
 DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionette, $, _){
   Entities.User = Backbone.Model.extend({
 
-    whoami: 'El User:models.js ',
+    whoami: 'User:models.js ',
     urlRoot: "/usuarios",
 
     idAttribute: "_id",
@@ -26,7 +26,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         this.set({feum:new Date().getTime()});
         this.set({username:this.get('mail')});
     },
-
 
     updateRelatedPredicate: function(per_attrs, predicate, cb){
       var self = this,
@@ -95,6 +94,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         });
     },
 
+    partialUpdate: function(data){
+      //data: un hash de claves
+      //
+      var self = this,
+          query = {};
+
+      query.nodes = [self.id ];
+      query.newdata = data;
+  
+      var update = new Entities.UserUpdate(query);
+      update.save({
+        success: function() {
+        }
+      });
+    },
+
+
     defaults : {
         _id: null,
         displayName:'',
@@ -113,6 +129,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         },
         conduso:[]
     }
+  });
+
+  Entities.UserUpdate = Backbone.Model.extend({
+    whoami: 'Entities.UserUpdate: user.js ',
+
+    urlRoot: "/actualizar/usuarios",
+
   });
 
 
@@ -204,7 +227,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       });
       return defer.promise();
     },
-
 
     fetchPersons: function(user, predicate, cb){
       //predicates = ['es_usuario_de', 'es_miembro_de', 'es_representante_de'],

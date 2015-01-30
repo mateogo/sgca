@@ -99,6 +99,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
            }
           })) {
+            console.log('validation error[%s]', self.validationError);
             cb(self.validationError,null);
         }            
       });
@@ -783,6 +784,26 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
 
     },
+    fetchValidBudget: function(model, opt, cb){
+      var query = {};
+      var defer = $.Deferred();
+
+      query.owner_id = model.id;
+      query.estado_alta = 'activo';
+
+      var budgetCol = new Entities.BudgetNavCollection();
+      budgetCol.fetch({
+          data: query,
+          type: 'post',
+          success: function() {
+            //defer.resolve('true');
+
+            if(cb) cb(budgetCol, defer);
+          }
+      });
+      return defer.promise();
+
+    },
     determinActionCost: function(col){
       var costo = 0;
       if (!col.length) return costo;
@@ -805,6 +826,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   DocManager.reqres.setHandler("action:fetch:budget", function(model, opt, cb){
     return API.fetchBudget(model, opt, cb);
+  });
+
+  DocManager.reqres.setHandler("action:fetch:valid:budget", function(model, opt, cb){
+    return API.fetchValidBudget(model, opt, cb);
   });
 
   DocManager.reqres.setHandler("action:entities", function(){

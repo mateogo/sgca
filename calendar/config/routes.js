@@ -33,6 +33,17 @@ module.exports = function (config, app) {
             console.log('AUTHENTICATE OK!!!![%s] [%s]', req, res)
             res.redirect(utils.userHome(req.user));
     });
+    
+    app.post('/login/:route',
+        passport.authenticate('local', {failureRedirect:'/login'}), function(req, res){
+            console.log('ROUTE AUTHENTICATE OK!!!![%s] [%s] route:[%s]', req, res, req.params.route)
+            var route = req.params.route;
+            if(route){
+                res.redirect(route);
+            }else{
+                res.redirect(utils.userHome(req.user));
+            }
+    });
 
     app.get('/login', function(req,res,next){
         console.log("/login:routes.js ");
@@ -75,16 +86,11 @@ module.exports = function (config, app) {
         res.redirect('/');
     });
 
-
     app.get('/logout', function(req, res){
       req.logout();
       res.redirect('/');
-    });  
-	
-	app.get('/mica2015/logout', function(req, res){
-      req.logout();
-      res.redirect('/mica2015/');
     });
+	
     
     app.get('/inicio', function(req,res,next){
         //console.log("/inicio:routes.js ");
@@ -291,6 +297,7 @@ module.exports = function (config, app) {
 
     // user (usuarios) routes
     var user = require(rootPath + '/calendar/controllers/user');
+    app.post('/actualizar/usuarios', user.partialupdate);
     app.post('/recuperar/usuarios', user.find);
     app.get('/currentuser', user.findCurrentUser);
     app.get('/usuarios/:id', user.findById);

@@ -8,6 +8,8 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'ActionBudgetHeader','ActionBudgetItem',
     'ActionShowLegacy','ActionShowHeader','ActionShowBranding','ActionShowBudgetComposite','ActionShowBudgetItem','ActionShowBudgetInstance',
 
+    'ProfileEditLayout', 'ProfileEditUserForm','ProfileEditPersonForm','ProfileEditRelatedForm','ProfileEditPasswordForm',
+
     'ActionReportLayoutView',
     'ActionReportItemLayout','ActionReportBranding','ActionReportBudgetComposite','ActionReportBudgetItem','ActionReportHeader',
 

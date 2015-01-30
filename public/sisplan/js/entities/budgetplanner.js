@@ -16,10 +16,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       nivel_ejecucion: 'enproceso',
       nivel_importancia: 'alta',
       descriptores: "",
-      nodo:"",
-      area:"",
-      tgasto:"",
-      taccion:"",
+      nodo:"no_definido",
+      area:"no_definido",
+      tgasto:"no_definido",
+      taccion:"no_definido",
       areaopt:true,
       nodoopt:true,
       tgastoopt:true,
@@ -254,9 +254,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     }else if(type === 'lineaaccion'){
       indicator = model.get('parent_action')['lineaaccion']
     }else if(type === 'taccion'){
-      indicator = model.get('parent_action')['taccion']
+      indicator = utils.fetchLabel(utils.tipoActionIniciativeList, model.get('parent_action')['taccion']);
     }else if(type === 'tgasto'){
-      indicator = model.get('tgasto');
+      indicator =  utils.fetchLabel(utils.tipoBudgetMovimList, model.get('tgasto'));
     }else{
       indicator = 'NO-PREVISTO';
     }
@@ -443,11 +443,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var buildOptForD3 = function(model){
     var opt = {};
-    var headerTpl = _.template('Distribución por <%= vista %>');
-    var textTpl = _.template('Distribución porcentual al <%= fecha %>');
+    var headerTpl = _.template('Vista Resumen <%= nodo %>  <%= area %>');
+    var textTpl = _.template('Emisión: <%= fecha %>  Distribución por:  <%= vista %>');
+    console.log('============ [%s] [%s]',  model.get('areaopt') , model.get('area') )
     opt.header = {
-      title: headerTpl({vista: model.get('vista_actual')}),
-      text: textTpl({fecha: utils.dateToStr(new Date())})
+      title: headerTpl({
+              nodo: model.get('nodo') !== 'no_definido' ? ('Nodo: ' + model.get('nodo')) : "",
+              area: model.get('area') !== 'no_definido' ? ('Área: ' + model.get('area')) : "",
+            }),
+      text: textTpl({
+              vista: utils.fetchLabel(utils.budgetPlannerType, model.get('vista_actual')),
+              fecha: utils.dateToStr(new Date()),
+            })
     }
 
     return opt;

@@ -268,19 +268,18 @@ exports.update = function(req, res) {
 };
 
 var buildTargetNodes = function(data){
+    var list = [], 
+        query,
+        nodes;
     if(!data.nodes) return;
-    var list = [];
-    var nodes = data.nodes;
-    for (var i = 0; i<nodes.length; i++){
-        var node = {};
-        var id = nodes[i];
 
-        console.log('buildTargetNodes: [%s] [%s]', id, typeof id);
-        node._id = new BSON.ObjectID(id);
-        list.push(node);
+    nodes = data.nodes;
+    for (var i = 0; i<nodes.length; i++){
+
+        list.push({_id: new BSON.ObjectID(nodes[i]) });
     }
     if(list.length){
-        var query = {$or: list};
+        query = {$or: list};
         return query
     }
 };
@@ -345,24 +344,14 @@ exports.partialupdate = function(req, res) {
 
 
     console.log('UPDATING partial fields nodes:[%s]', query.$or[0]._id );
-    //res.send({query:query, update:update});
-
     dbi.collection(actionsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
         if (err) {
             console.log('Error partial updating %s error: %s',actionsCol,err);
-            if(res){
-                res.send({error: MSGS[0] + err});
-            }else if(cb){
-                cb({error: MSGS[0] + err});
-            }
-
+            res.send({error: MSGS[0] + err});
+ 
         } else {
             console.log('UPDATE: partial update success [%s] nodos',result);
-            if(res){
-                res.send({result: result});
-            }else if(cb){
-                cb({result: result});
-            }
+            res.send({result: result});
         }
     })
 };

@@ -75,13 +75,10 @@ DocManager.module("ProfileApp.Edit", function(Edit, DocManager, Backbone, Marion
     Edit.Session.views.userFormView = view;
 
     view.on("form:submit", function(model){
-        saveUser(model, function(result){
-          if(result){
-            console.log('success');
-            view.showAlert('Exito', 'Datos actualizados', 'alert-success');
-          }
-        });
+        saveUser(model);
+        view.showAlert('Exito', 'Datos actualizados', 'alert-success');
     });
+
   };
   var saveUser = function(user, cb){
     var data = {
@@ -89,14 +86,10 @@ DocManager.module("ProfileApp.Edit", function(Edit, DocManager, Backbone, Marion
       username: user.get('username'),
       mail: user.get('username'),
     };
-console.log('Password:[%s]: [%s]', user.get('password'), user.get('password').length)
-    if(user.get('password').length < 15){
-      data.password = user.get('password');
-    }
-    
-    user.updateProfile(data, function(user){
-      if(cb) cb(true);
-    })
+
+    user.partialUpdate(data);
+    console.log('Partial Udate:[%s][%s]', Edit.Session.user.get('displayName'),Edit.Session.user.get('username'))
+
   };
 
 
@@ -226,9 +219,31 @@ console.log('Password:[%s]: [%s]', user.get('password'), user.get('password').le
     Edit.Session.views.passwordFormView = view;
 
     view.on("form:submit", function(model){
-      console.log('TodDo!!!')
+
+      if(model.get('password') !== model.get('newpassword')){
+        var err = {password: 'Las claves no coinciden, favor ingrese nuevamente la nueva contraseña'}
+        view.onFormDataInvalid((err||{}));
+
+      }else if(model.get('password').length < 6){
+        var err = {password: 'La clave es demasiado corta, favor ingrese al menos seis dígitos alfanuméricos'}
+        view.onFormDataInvalid((err||{}));
+
+      }else{
+        changePassword(model)
+        view.showAlert('Exito', 'Datos actualizados', 'alert-success');
+      }
 
     });
+  };
+
+  var changePassword = function(user){
+    var data = {
+      password: user.get('password')
+    };
+
+    user.partialUpdate(data);
+    console.log('Partial Udate:[%s][%s]', Edit.Session.user.get('displayName'),Edit.Session.user.get('username'))
+
   };
 
 
