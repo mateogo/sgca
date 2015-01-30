@@ -160,6 +160,15 @@ window.utils = {
         return nodes;
     },
 
+    budgetPlannerType: [
+        {val:'no_definido' , label:'no definido'},
+        {val:'nodo'        , label:'Secretaría / Nodo'},
+        {val:'area'        , label:'Área'},
+        {val:'taccion'     , label:'Tipo de Acción'},
+        {val:'lineaaccion' , label:'Línea estratégica'},
+        {val:'tgasto'      , label:'Tipo de Gasto'},
+    ],
+
     //========= ACTIONS =========================
     tagsBuyerMica: [
         {val:'no_definido' , label:'Palabras claves'},
@@ -529,7 +538,7 @@ window.utils = {
         {val: 'infraestructuraedil', label: 'Infraestructura Edilicia'},
         {val: 'infraestructurainfo', label: 'Infraestructura Tecnológica'},
         {val: 'sistemasgestion',     label: 'Sistemas de Gestión'},
-        {val: 'platoformadigital',   label: 'Plataforma Digital'},
+        {val: 'plataformadigital',   label: 'Plataforma Digital'},
         {val: 'educacion',           label: 'Educación'},
         {val: 'infancia',            label: 'Infancia'},
         {val: 'industricacultural',  label: 'Industria Cultural'},
