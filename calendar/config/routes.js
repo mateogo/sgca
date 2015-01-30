@@ -13,10 +13,6 @@ module.exports = function (config, app) {
     var http = require("http");
     var passport = require('passport');
 	
-		var formidable = require('formidable'),
-				util = require('util'),
-    		fs   = require('fs-extra');
-
     var ensureAuthenticated = function (req, res, next) {
         console.log('autenticando!!!!');
         if (req.isAuthenticated()) { 
@@ -80,7 +76,6 @@ module.exports = function (config, app) {
 				});
 			});
 		});
-
     app.get('/mica2015/login', function(req,res,next){
         console.log("/mica2015/login:routes.js ");
         res.redirect('/');

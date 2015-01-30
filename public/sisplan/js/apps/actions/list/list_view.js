@@ -28,6 +28,7 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
       "click button.js-delete": "deleteClicked",
       "click button.js-show": "showClicked",
       "click button.js-edit": "editClicked",
+      "click button.js-budget": "budgetEditClicked",
       "click .js-zoom" : 'viewRelated',
       "change .tselect"  : "checkbox",
     },
@@ -92,6 +93,11 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
       e.preventDefault();
       e.stopPropagation();
       this.trigger("action:edit", this.model);
+    },
+   budgetEditClicked: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.trigger("budget:edit", this.model);
     },
 
     deleteClicked: function(e){
