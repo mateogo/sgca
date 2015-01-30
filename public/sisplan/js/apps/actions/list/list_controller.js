@@ -174,6 +174,10 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
           DocManager.trigger("action:edit", model);
         });
 
+        documentsListView.on("childview:budget:edit", function(childView, model){
+          DocManager.trigger("budget:build", model);
+        });
+
         documentsListView.on("childview:action:delete", function(childView, model){
           model.destroy();
         });

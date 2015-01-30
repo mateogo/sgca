@@ -167,7 +167,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if(list){
         query.nodes = list;
       }else{
-        query.nodes = [self.id];
+        query.nodes = [(self.id||self.get('_id'))];
       }
 
       query.newdata = {};
@@ -184,7 +184,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
 
   
-      //console.log('partial UPDATE: [%s] [%s]', token, facet);
+      // console.log('partial UPDATE: [%s] [%s]', token, facet);
+      // console.dir(facet);
+
       var update = new Entities.BudgetUpdate(query);
       update.save({
         success: function() {
@@ -288,19 +290,35 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     evaluateTotalCost: function(){
       console.log('TOTAL COST BEGINGS')
-      if(!this.costoactual){
-        this.costoactual = 0;
+      var costo_total = 0,
+          costo_detallado = 0,
+          costo = 0;
+
+      if(!this.costototal){
+        this.costototal = 0;
       }
-      var costo_total = 0;
+      if(!this.costodetallado){
+        this.costodetallado = 0;
+      }
 
       this.each(function(budget){
-        costo_total += budget.evaluateCosto();
+        costo = budget.evaluateCosto();
+        console.log('Evaluando Costo: [%s] [%s]', costo, budget.get('tgasto'));
+
+        if(budget.get('tgasto') === 'global'){
+          costo_total += costo;
+        }else{
+          costo_detallado += costo;
+        }
+
       });
-      if (this.costoactual !== costo_total){
-        console.log('COSTO TOTAL ACCION: [%s] >> [%s]', this.costoactual, costo_total);
-        this.trigger('action:cost:changed', costo_total);
+
+      if (this.costototal !== costo_total || this.costodetallado !== costo_detallado ){
+        console.log('COSTO TOTAL ACCION: [%s] >> [%s]', this.costodetallado, costo_detallado);
+        this.trigger('action:cost:changed', costo_total, costo_detallado);
       }
-      this.costoactual = costo_total;
+      this.costototal = costo_total;
+      this.costodetallado = costo_detallado;
       return costo_total;
     },
 
@@ -1277,6 +1295,33 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
 
+  Entities.BudgetAproveFacet = Backbone.Model.extend({
+    //urlRoot: "/comprobantes",
+    whoami: 'BudgetAproveFacet:budget.js ',
+
+    schema: {
+        comentario:   {type: 'Text',      title: 'Comentario/ Observación', editorAttrs:{placeholder:'Comentario u observación'}},
+        importe:      {type: 'Number',    title: 'Monto aprobado',          editorAttrs:{placeholder:'importe en pesos APROBADO'}},
+        trim_fiscal:  {type: 'Number',    title: 'Trimestre ejecución',  editorAttrs:{placeholder:'Indique 1/2/3/4 Trimestre ejecución presupuestaria'}},
+        aprobadopor:  {type: 'Text',      title: 'Aprobado por:',     editorAttrs:{placeholder:'Indique mandante'}},
+        fechaaprob:   {type: 'Text',      title: 'Fecha aprobación',     editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        password:     {type: 'Password',  title: 'Contraseña usuario',  editorAttrs:{placeholder:'Contraseña del usuario'}},
+    },
+
+    defaults: {
+      comentario: "",
+      importe: "",
+      trim_fiscal: "1",
+      fechaaprob: "",
+      aprobadopor: "",
+      password: "",
+    },
+   });
+
+
+
+
+
   var API = {
     getEntities: function(){
       var accions = new Entities.BudgetCollection();
@@ -1348,8 +1393,76 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           }
       });
     },
-  }
 
+    aproveBudget: function(user, budfacet, action, cb){
+      var opt = {
+        aceptar: 'Aprobar',
+        captionlabel: 'Aprobar presupuesto',
+      };
+      var facet = new DocManager.Entities.BudgetAproveFacet(budfacet.attributes);
+      
+      DocManager.BudgetApp.Build.modaledit(facet, opt, function(facet){
+        console.log('Aprove Form Submitted:');
+
+        saveBudgetAproval(user, budfacet, action, facet);
+        if(cb) cb('success')
+
+
+
+      });
+
+    },
+  }
+  var saveBudgetAproval = function(user, budfacet, action, facet, cb){
+    console.log('SaveBudget: [%s] [%s]', budfacet.get('_id'), user.get('displayName'));
+
+    var aproval = {
+        comentario: facet.get('comentario'),
+        importe: facet.get('importe'),
+        trim_fiscal: facet.get('grim_fiscal'),
+        fechaaprob: facet.get('fechaaprob'),
+        aprobadopor: facet.get('aprobadopor'),
+        budgetid: facet.get('_id'),
+        userid: user.id,
+        username: user.get('displayName'),
+    };
+
+    var aprovals = (budfacet.get('aprovals') || []);
+
+    aprovals.push(aproval);
+
+    console.log('Aprovals [%s]',aprovals.length);
+    console.dir(aproval)
+
+    var nivel_ejecucion = 'aprobado';
+    var importe = facet.get('importe');
+
+
+    var budget = budfacet.budgetFactory();
+    console.log('ready for partial update: [%s][%s]', budget.id, budget.get('_id'))
+    
+    var budgetdata = {
+      'nivel_ejecucion': 'aprobum',
+      'importe': facet.get('importe'),
+      'aproval': aproval,
+      'aprovals': aprovals,
+    };
+
+    if(budget){
+      budget.partialUpdate('content', budgetdata);
+    }
+ 
+    var actiondata = {
+      'nivel_ejecucion': 'aprobum',
+      'aprovals': aprovals,
+    };
+    action.partialUpdate('content', actiondata);
+  };
+
+
+  DocManager.reqres.setHandler("budget:for:aproval", function(user, budget, action, cb ){
+    return API.aproveBudget(user, budget, action, cb);
+  });
 
   DocManager.reqres.setHandler("budget:entities", function(){
     return API.getEntities();

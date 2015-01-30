@@ -35,6 +35,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       estado_alta:'activo',
       nivel_ejecucion: 'enpreparacion',
       nivel_importancia: 'media',
+      aprovals:[],
 
     },
 

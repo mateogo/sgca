@@ -57,6 +57,7 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
     events: {
       "click a.js-rubros": "loadfilter",
       "click .js-save": 'saveall',
+      "click .js-aprove": 'aprovebudget',
       "click .js-showaction": 'showaction',
       "click .js-editaction": 'editaction',
     },
@@ -73,6 +74,13 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
       this.trigger('edit:action');
     },
 
+    aprovebudget: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.trigger('aprove:budget', function(){
+        console.log('FINALLY WE ARE BACK IN THE VIEW');
+      });
+    },
     saveall: function(e){
       e.preventDefault();
       e.stopPropagation();
@@ -106,7 +114,7 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
     },
 
     getTemplate: function(){
-      return _.template('<h2><span class="pull-right">Presupuesto total: $<%= accounting.format(costo_total) %></span></h2>');
+      return _.template('<h2><span class="pull-right">Presupuesto total: $<%= accounting.format(costo_total) %></span><br></h2><h2><span class="pull-right">Presupuesto detallado: $<%= accounting.format(costo_detallado) %></span></h2>');
     },
 
     initialize: function(options){
@@ -346,9 +354,8 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
     }
   });
 
-  Build.modaledit = function(view, model, facet, captionlabel, cb){
-        var self = view,
-            form = new Backbone.Form({
+  Build.modaledit = function(facet, opt, cb){
+        var form = new Backbone.Form({
                 model: facet,
             });
 
@@ -363,8 +370,8 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
 
         var modal = new Backbone.BootstrapModal({
             content: form,
-            title: captionlabel,
-            okText: 'aceptar',
+            title: opt.captionlabel || 'Editar',
+            okText: (opt.aceptar || 'aceptar'),
             cancelText: 'cancelar',
             enterTriggersOk: false,
             animate: false

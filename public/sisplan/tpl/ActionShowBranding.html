@@ -13,7 +13,10 @@
 			<h3><%= slug %></h3>
 			<p><strong>  <%= utils.fetchLabel(utils.tipoActionIniciativeList, taccion) %></strong></p>
 			<p><%= requirente %></p>
-			<p><%= nodo %> / <%= area %></p>
+			<p>HOLS<%= nodo %> / <%= area %></p>
+			<% if(aprovals.length){ %>
+				<h3>APROBADO:  <%= aprovals[0].fechaaprob  %></p>
+			<%}%>
 		</div>
 	</div>
 </div>

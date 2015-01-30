@@ -217,7 +217,7 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
       var itembudget = new DocManager.Entities.BudgetItemFacet(item.attributes);
 
       view.model.addItemBudget(itembudget);
-      evaluateTotalCost(Build.Session.facetCol);
+      //evaluateTotalCost(Build.Session.facetCol);
     });
 
     view.on('edit:budget:item', function(itemview, item){
@@ -263,10 +263,12 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
   //======== ACTION ENTITY 
   var registerActionEntity = function(action, facetCol) {
     action.set('costo_total', 0);
+    action.set('costo_detallado', 0);
 
-    action.listenTo(facetCol, 'action:cost:changed', function(cost){
+    action.listenTo(facetCol, 'action:cost:changed', function(totalcost, detailcost){
       console.log('trigger handled: action:cost:changed')
-      action.set('costo_total', cost);
+      action.set('costo_total', totalcost);
+      action.set('costo_detallado', detailcost);
     })
 
     // facetCol.on('action:cost:changed', function(cost){
@@ -330,12 +332,50 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
       DocManager.trigger('action:edit',Build.Session.action)
     });
 
-
     view.on('save:all',function(){
       console.log('Save ALL [%s]',view.whoami);
       Build.Session.facetCol.saveAll(Build.Session.action, Build.Session.currentUser);
     });
+
+    view.on('aprove:budget',function(cb){
+      console.log('Aprove Budget Fired [%s]',view.whoami);
+      budgetForAproval(Build.Session.currentUser, Build.Session.facetCol, Build.Session.action, cb);
+
+    });
+
   };
+  var budgetForAproval = function(user, budgetCol, action, cb){
+    var isValidUser = checkValidUserForAproval(user);
+    var budget = fetchGlobalBudget(budgetCol);
+    console.log('BudgetForAproval BEGIN user: [%s] budget:[%s]', isValidUser, budget);
+    if(isValidUser && budget){
+      DocManager.request('budget:for:aproval', user, budget, action, function(result){
+        console.log('Fiuuuuu WE ARE BACK [%s] ',result)
+        if(cb)cb(result)
+
+      });
+    } 
+
+  };
+
+  var checkValidUserForAproval = function(user){
+    return true;
+  };
+
+  var fetchGlobalBudget = function (budgetCol){
+    var budget;
+    
+    budgetCol.each(function(item){
+      if(item.get('tgasto')=== 'global'){
+        budget = item;
+        return budget;
+      }
+    });
+
+    return budget;
+  };
+
+
 
   var modalBudgetTypeSelect = function(view, model, captionlabel){
     Build.modaledit(view, model, model, captionlabel, function(model){
@@ -413,6 +453,9 @@ var enviarmail = function(model){
         cb(model);
       });
     },
+
+
+
   };
 /*
   DocManager.reqres.setHandler("budget:search", function(query, cb){

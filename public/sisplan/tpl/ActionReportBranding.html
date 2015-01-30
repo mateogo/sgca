@@ -1,6 +1,9 @@
 		<div class="col-xs-6" >
 			<h2><%= utils.fetchLabel(utils.tipoActionEntityList, tregistro) %>: <%= cnumber %></h2>
 			<h4><%= nodo %> / <%= area %></h4>
+			<% if(aprovals.length){ %>
+				<h4>AUTORIZADA:  <%= aprovals[0].fechaaprob  %></h4>
+			<%}%>
 			<p><%= requirente %></p>
 			
 			<p><%= lugarfecha%></p>
