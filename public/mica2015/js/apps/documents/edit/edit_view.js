@@ -27,6 +27,17 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
     onRender: function(){
       var self = this;
+			var country = self.model.get('epais');
+			var prov = self.model.get('eprov');
+      //Si el pais no es Argentina debe convertir el <select> en <input> para mostrar el formulario cuando se recarga luego de enviar la inscripcion
+      if (country !='AR'){
+				console.log('no es ARG')
+        self.$('#eprov').replaceWith('<input class="form-control" type="text" name="eprov" id="eprov">');
+				self.$('#eprov').val(prov);
+      }else{
+        self.$('#eprov').val(prov);
+      }
+			
       this.$("#fevento").datepicker({
             inline: true,
             dateFormat: 'dd/mm/yy',
@@ -43,8 +54,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
       
       var croppicOptions = {
-        uploadUrl:'lib/croppic/img_save_to_file.php',
-        cropUrl:'lib/croppic/img_crop_to_file.php',
+        uploadUrl:'/img',
+        cropUrl:'/cropImg',
         imgEyecandy:true,
         loaderHtml:'<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> '
       }

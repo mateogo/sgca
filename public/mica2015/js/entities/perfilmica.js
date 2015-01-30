@@ -80,9 +80,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 		initialize: function(){
 			var self = this;
 			var user = dao.gestionUser.getCurrentUser();
-			var namesur = user.get('name') +' '+ user.get('apellido')
 			self.set('rmail',user.get('mail'));
-			self.set('rname',namesur);
 		},
 
     validate: function(attrs, options) {
