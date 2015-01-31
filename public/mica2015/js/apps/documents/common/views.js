@@ -102,20 +102,43 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
         //console.log('FORM CHANGE')
         var target = event.target;
         var change = {};
-
-        if(target.type==='checkbox'){
-          this.model.get(target.name)[target.value] = target.checked;
-          //console.log('CHANGE: checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
-        }else{
-          change[target.name] = target.value;
-          this.model.set(change);          
-          //console.log('[%s] CHANGE: [%s]: [%s] [%s]',this.model.whoami, target.name, target.value, target['multiple']);
-        }
-        if(target['dataset']){
-          if(target['dataset'].role === 'tagsinput'){
-            this.buildTags(target)
-          }
-        }
+				switch (target.type){
+						case 'checkbox':
+							this.model.get(target.name)[target.value] = target.checked;
+							console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
+							break;
+						case 'radio':
+							this.model.get(target.name)[target.value] = target.checked;
+							change[target.name] = target.value;
+							this.model.set(change); 
+						 	console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
+							break;
+						
+						case 'select-multiple':
+							this.buildTags(target)
+						 	this.model.set(change);  
+							break;
+						
+						default:
+							change[target.name] = target.value;
+							this.model.set(change);          
+							console.log('CHANGE: [%s]: [%s] [%s]',target.name, target.value, target['multiple']);
+				}
+			
+//        if(target.type==='checkbox'){
+//          this.model.get(target.name)[target.value] = target.checked;
+//          //console.log('CHANGE: checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
+//        }else{
+//          change[target.name] = target.value;
+//          this.model.set(change);          
+//          console.log('[%s] CHANGE: [%s]: [%s] [%s]',this.model.whoami, target.name, target.value, target['multiple']);
+//        }
+//        if(target['dataset']){
+//          if(target['dataset'].role === 'tagsinput'){
+//            this.buildTags(target)
+//						 this.model.set(change);  
+//          }
+//        }
 
         var err = this.model.validate(change);
         this.onFormDataInvalid((err||{}));

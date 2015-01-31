@@ -368,6 +368,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 				rol: 'demandante',
 				actividades: facet.get('cactividades'),
 				descriptores: facet.get('cdescriptores'),
+				productos: facet.get('cproductos'),
 				expeintl: facet.get('cexpinternacional'),
 				experegl: facet.get('cexpregional'),
 				mercados: facet.get('cmercados'),
@@ -376,7 +377,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 				comentario: facet.get('ccomentario')
 			};
 			data.profiles.push(comprador);
-
 		}
 
 		if(true){
@@ -385,6 +385,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 				rol: 'oferente',
 				actividades: facet.get('vactividades'),
 				descriptores: facet.get('vdescriptores'),
+				productos: facet.get('vproductos'),
 				expeintl: facet.get('vexpinternacional'),
 				experegl: facet.get('vexpregional'),
 				mercados: facet.get('vmercados'),
@@ -413,8 +414,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 					crol: 'demandante',
 					cactividades: item.actividades,
 					cdescriptores: item.descriptores,
-					cexpeintl: item.expeintl,
-					cexperegl: item.expergnl,
+					cproductos: item.productos,
+					cexpinternacional: item.expeintl,
+					cexpregional: item.experegl,
 					cmercados: item.mercados,
 					cferias: item.ferias,
 					cobjetivo: item.objetivo,
@@ -426,8 +428,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 					vrol: 'oferente',
 					vactividades: item.actividades,
 					vdescriptores: item.descriptores,
-					vexpeintl: item.expeintl,
-					vexperegl: item.expergnl,
+					vproductos: item.productos,
+					vexpinternacional: item.expeintl,
+					vexpregional: item.experegl,
 					vmercados: item.mercados,
 					vferias: item.ferias,
 					vobjetivo: item.objetivo,
