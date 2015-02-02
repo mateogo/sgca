@@ -30,8 +30,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 			var country = self.model.get('epais');
 			var prov = self.model.get('eprov');
       //Si el pais no es Argentina debe convertir el <select> en <input> para mostrar el formulario cuando se recarga luego de enviar la inscripcion
-      if (country !='AR'){
-				console.log('no es ARG')
+      if (country !== 'AR'){
+				//console.log('no es ARG')
         self.$('#eprov').replaceWith('<input class="form-control" type="text" name="eprov" id="eprov">');
 				self.$('#eprov').val(prov);
       }else{
@@ -132,17 +132,24 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       $('#infovendedor').toggleClass("hidden", !seller.is(":checked"));
     },
     
-    stateinput:function(){  
+    stateinput:function(e){  
+      e.preventDefault();
+      e.stopPropagation();
+
+      this.change(e);
       //Atrapa el pais elegido
-      var country = $('#epais').val();
+      console.log('Stateinput CHANGE[%s]', eprov)
+      var country = this.model.get('epais');
+      var province = this.model.get('eprov');
       
       //Si no es Argentina convierte el <select> en <input>
       if (country !='AR'){
         $('#eprov').replaceWith('<input class="form-control" type="text" name="eprov" id="eprov">');
+
       }
       else{
         //Eligio otro pais y vuelve a elegir Argentina se arman las opciones de provincias otra vez
-        var aprov = utils.buildSelectOptions("eprov",utils.provinciasOptionList.Argentina, eprov);
+        var aprov = utils.buildSelectOptions("eprov",utils.provinciasOptionList.Argentina, province);
         $('#eprov').replaceWith('<select class="form-control" id="eprov" name="eprov> aprov("eprov")</select>');
         $('#eprov').html(aprov);
       }
@@ -223,7 +230,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     },
 
     initialize: function(options){
-      console.log('Nuevo Requerimiento [%s]',options.itemtype);
+      console.log('Nuevo Representante');
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();

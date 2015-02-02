@@ -1774,7 +1774,7 @@ window.utils = {
     ],
     paisesOptionList: [
         {val:'nodefinido'    , label:'PAIS PRODUCTOR'},
-        {val:'Argentina'     , label:'Argentina'},
+        {val:'Argentina'     , label:'ARRRrgentina'},
         {val:'Bolivia'       , label:'Bolivia'},
         {val:'Brasil'        , label:'Brasil'},
         {val:'Chile'         , label:'Chile'},
@@ -1794,6 +1794,7 @@ window.utils = {
 
     provinciasOptionList:{
         Argentina: [
+            {val:'no_definido'  , label:'Seleccione Provincia'},
             {val:'CABA'       , label:'CABA'},
             {val:'BuenosAires', label:'Buenos Aires'},
             {val:'Cordoba'    , label:'Córdoba'},
@@ -1824,9 +1825,9 @@ window.utils = {
         ]
     },   
 	
-		paisesOptionList:{
+	paisesOptionList:{
         Paises: [
-						{val:'AR' , label:'Argentina'},
+						{val:'AR' , label:'Agentina'},
 						{val:'AF' , label:'Afganistán'},
 						{val:'AL' , label:'Albania'},
 						{val:'DE' , label:'Alemania'},

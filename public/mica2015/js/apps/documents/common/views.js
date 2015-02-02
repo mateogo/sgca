@@ -105,13 +105,13 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
 				switch (target.type){
 						case 'checkbox':
 							this.model.get(target.name)[target.value] = target.checked;
-							console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
+							//console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
 							break;
 						case 'radio':
 							this.model.get(target.name)[target.value] = target.checked;
 							change[target.name] = target.value;
 							this.model.set(change); 
-						 	console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
+						 	//console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
 							break;
 						
 						case 'select-multiple':
@@ -121,8 +121,8 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
 						
 						default:
 							change[target.name] = target.value;
-							this.model.set(change);          
-							console.log('CHANGE: [%s]: [%s] [%s]',target.name, target.value, target['multiple']);
+							this.model.set(change);
+							//console.log('CHANGE DEFAULT: [%s]: [%s] [%s]',target.name, target.value, target['multiple']);
 				}
 			
 //        if(target.type==='checkbox'){

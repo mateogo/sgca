@@ -180,8 +180,9 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     Edit.Session.model = profile.facetFactory(user);
 
     Edit.Session.representantes = Edit.Session.model.getRepresentantes();
-
+//ojo ver
     Edit.Session.representantes.on('add',function(model, collection){
+      console.log('COLECCION ADD: agregando nuevo model en la coleccion')
       Edit.Session.model.updateRepresentantes(collection);
     });
 

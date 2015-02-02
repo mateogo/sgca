@@ -199,8 +199,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 			edisplayName: '',
 			ename: '',
 			edescription: '',
-			epais: '',
-			eprov: '',
+			epais: 'AR',
+			eprov: 'CABA',	
 			elocalidad: '',
 			ecuit: '',
 			edomicilio: '',
@@ -285,7 +285,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
  
     validate: function(attrs, options) {
       var errors = {}
-			console.log(attrs)
+			//console.log(attrs)
       if (_.has(attrs,'rname') && (!attrs.rname )) {
         errors.rname = "No puede ser nulo";
       }     
@@ -296,7 +296,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     defaults: {
-
+    	aname: '',
+    	acargo: '',
+    	acel: '',
+    	atel: '',
+    	aidiomas: '',
+    	amail: '',
+    	afenac: '',
+    	adni: '',
     },
   }); 
 	
@@ -358,7 +365,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 			rolePlaying: facet.get('rolePlaying'),
 
 			profiles: [],
-			representantes:[],
+			// TODO: Insertar la colección de representantes
+			representantes: facet.get('representantes'),
 		};
 
 
