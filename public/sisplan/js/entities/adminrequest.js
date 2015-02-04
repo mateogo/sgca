@@ -19,6 +19,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       // datos heredados de Action
       action_id: "",
       action_cnumber: '',
+      action_area: '',
 
       // datos heredados de Budget
       budget_id: "",
@@ -70,8 +71,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         // datos heredados de Budget
         budget_id: budget.id,
         budget_cnumber: budget.get('cnumber'),
-        tgasto: budget.get('tgasto'),
-        cgasto: budget.get('cgasto'),
 
       });
     },

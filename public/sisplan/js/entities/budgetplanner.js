@@ -208,7 +208,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var summaryColFactory = function(query, masterCol){
     var token,
-        costo;
+        costo,
+        globalcost;
     //console.dir(query);
 
     var summaryCol = new Entities.SummaryCol();
@@ -216,6 +217,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     masterCol.each(function(model){
       if(model.get('estado_alta') === 'activo'){
+        globalcost = (model.get('tgasto') === 'global' ? model.get('importe') : 0);
+
         token = {
           slug: fetchIndicator(query.type, model),
           origenpresu: model.get('origenpresu'),
@@ -225,7 +228,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         costo = {
           type: query.type,
           slug: model.get('slug'),
-          importe: model.get('importe'),
+          importe: globalcost,
           trimestre: model.get('trim_fiscal')
         };
         //console.log('ready to insert token: anio:[%s] /[%s] tim:[%s] /[%s]',model.get('anio_fiscal'), token.anio, model.get('trim_fiscal'), costo.trim);

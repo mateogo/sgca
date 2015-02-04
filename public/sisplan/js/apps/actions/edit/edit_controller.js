@@ -226,6 +226,9 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
     });
   };
 
+
+
+
   //======== ACTION ENTITY 
   var registerActionEntity = function(model) {
     Edit.Session.solicitud = model;
