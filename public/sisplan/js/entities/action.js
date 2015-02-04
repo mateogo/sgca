@@ -809,7 +809,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var costo = 0;
       if (!col.length) return costo;
       col.each(function(model){
-        costo += parseInt(model.get('importe'));
+        if(model.get('estado_alta') === 'activo' && model.get('tgasto') === 'global'){
+          costo += parseInt(model.get('importe'));
+        }
       });
       return costo;
     },
