@@ -1871,7 +1871,7 @@ window.Comprobante = Backbone.Model.extend({
         this.set({fealta: fealta.getTime()});
         this.set({fecomp_tc: fealta.getTime()});
 
-        this.set({fecomp: utils.displayDate(fealta)});
+        this.set({fecomp: utils.dateToStr(fealta)});
         this.set({estado_alta: dao.docum.initval(this.get('tipocomp')).estado_alta});
         this.set({nivel_ejecucion: dao.docum.initval(this.get('tipocomp')).nivel_ejecucion});
         //this.set({tipocomp: 'ptecnico'});

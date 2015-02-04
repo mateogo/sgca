@@ -12,7 +12,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       slug: "",
       tregistro:"",
       taccion: "",
-      feaccion: "",
+      feaccion: utils.dateToStr(new Date()),
       lugarfecha:"",
       fechagestion: "",
       tipomov:"",
@@ -43,8 +43,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     
     initBeforeCreate: function(cb){
       var self = this,
-          fealta = new Date(),
-          fecomp = utils.dateToStr(fealta);
+          fecomp = self.get('fecomp') || utils.dateToStr(new Date()),
+          fealta = utils.parseDateStr(fecomp);
 
       self.set({fealta:fealta.getTime(), fecomp: fecomp});
       console.log('InitBeforeCreate!!!!!!!!!!!!!!!!!!!!! [%s][%s]', self.get('taccion'),self.get('slug'));
@@ -183,6 +183,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var itemModel = self.itemTypes[item.get('tipoitem')].initNew(self, item.attributes);
       return itemModel;
     },
+
     mainHeaderFacet: function(){
       return new Entities.ActionHeaderFacet(this.attributes);
     },
@@ -198,6 +199,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         tregistro: {type: 'Select',options: utils.tipoActionEntityList, title:'Tipo de entidad' },
         taccion:   {type: 'Select',options: utils.tipoActionIniciativeList, title:'Tipo de iniciativa' },
         area:   {type: 'Select',options: utils.actionAreasOptionList, title:'Area ' },
+        fecomp:  {type: 'Text', title: 'Fecha solicitud', placeholder:'dd/mm/aaaa fecha solicitud de la acción'},
         slug:      {type: 'Text', title: 'Denominación'},
         description: {type: 'TextArea', title: 'Descripción'},
     },
@@ -228,7 +230,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       cnumber: "",
       tregistro:"",
       taccion: "",
-      feaccion: "",
+      feaccion: utils.dateToStr(new Date()),
       area: "",
       slug: "",
       estado_alta:'activo',
@@ -281,7 +283,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       tregistro:"",
       taccion: "",
       slug: "",
-      feaccion: "",
+      feaccion: utils.dateToStr(new Date()),
       lugarfecha:"",
       description: "",
       lineaaccion: "",
@@ -433,7 +435,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       cnumber: "",
       tregistro:"",
       taccion: "",
-      feaccion: "",
+      feaccion: utils.dateToStr(new Date()),
       slug: "actiono nuevoO",
       estado_alta:'media',
       nivel_ejecucion: 'enproceso',
@@ -519,6 +521,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
              }
             }
 
+            if(query.fedesde.getTime() > action.get('fealta')) test = false;
+            if(query.fehasta.getTime() < action.get('fealta')) test = false;
+
+
+
             if(query.tregistro && query.tregistro !=='no_definido') {
               if(query.tregistro.trim() !== action.get('tregistro')) test = false;
             }
@@ -526,8 +533,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             if(query.ejecucion && query.ejecucion!=='no_definido') {
               if(query.ejecucion.trim() !== action.get('nivel_ejecucion')) test = false;
             }
-            if(query.fedesde.getTime()>action.get('fealta')) test = false;
-            if(query.fehasta.getTime()<action.get('fealta')) test = false;
 
             if(query.slug){
               if(utils.fstr(action.get("slug").toLowerCase()).indexOf(utils.fstr(query.slug)) === -1 && action.get("cnumber").toLowerCase().indexOf(query.slug.toLowerCase()) === -1) test = false;
