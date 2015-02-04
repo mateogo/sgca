@@ -147,7 +147,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
     submitClicked: function(e){
       e.preventDefault();
       var err = this.model.validate(this.model.attributes);
-
+			
       if(err){
         this.onFormDataInvalid((err||{}));
       }else{
@@ -368,6 +368,7 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
     events: {
       "click": "navigate",
       "click": "delete",
+      "click button.js-delete": "deleteClicked",
     },
 
     triggers: {
@@ -375,16 +376,17 @@ DocManager.module("DocsApp.Common.Views", function(Views, DocManager, Backbone, 
     },
 
     navigate: function(e){
-      //console.log('navigate event');
+//      console.log('navigate event');
       e.preventDefault();
       this.trigger('item:edit', this.model);
       return false;
     },    
 		
-		delete: function(e){
-      console.log('del event');
-			e.stopPropagation();
+		deleteClicked: function(e){
+			console.log('delete item');
+			e.preventDefault();
 			this.model.collection.remove(this.model);
+		 	this.trigger('repre:delete', this.model);
     },
 
     onRender: function(){

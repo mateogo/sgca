@@ -61,9 +61,10 @@
 											</div>
 											<div class="col-sm-4 selectContainer">
 												<label class="control-label">Provincia</label>
-												<select class="form-control" id="eprov" name="eprov">
+												<select class="form-control js-provarg" id="eprov" name="eprov">
 														<%= utils.buildSelectOptions("eprov",utils.provinciasOptionList.Argentina, eprov) %>
 												</select>
+												<input type="text" class="form-control js-provext" id="eprov" name="eprov" value="<%= eprov%>" >
 											</div>
 										
 											<div class="col-sm-4">
@@ -465,27 +466,5 @@
       </div><!-- huge row -->
 
     </div><!-- container fluid -->
-  </section>
-
-  <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title custom_align" id="Heading">Eliminar requerimiento</h4>
-        </div>
-        <div class="modal-body">
-          <div class="alert alert-warning">
-            <span class="glyphicon glyphicon-warning-sign"></span> ¿Está seguro que desea eliminar este requerimiento?</div>       
-        </div>
-        <div class="modal-footer ">
-          <button type="button" class="btn btn-success" >
-            <span class="glyphicon glyphicon-ok-sign"></span>Si</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">
-            <span class="glyphicon glyphicon-remove"></span> No</button>
-        </div>
-      </div><!-- /.modal-content --> 
-    </div><!-- /.modal-dialog --> 
-  </div><!-- modal -->
-    
+  </section>    
 </div><!-- end -->

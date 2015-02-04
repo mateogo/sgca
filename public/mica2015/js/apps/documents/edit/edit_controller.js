@@ -114,6 +114,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
   };
 
   var saveInscripcion = function(user, comprobante, perfil, cb){
+		var col = Edit.Session.representantes;
+		Edit.Session.model.updateRepresentantes(col)
     Edit.Session.model.saveInscripcion(user, comprobante, perfil, function(error, perfil){
       console.log('Docum Saved:');
       cb(perfil);
@@ -184,13 +186,12 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     Edit.Session.representantes.on('add',function(model, collection){
       console.log('COLECCION ADD: agregando nuevo model en la coleccion')
       Edit.Session.model.updateRepresentantes(collection);
-    });
-
+    });    
+		
 
 
   };
-
-
+	
   var editReqDetail = function(view, isNew, itemDetail){
       console.log('editReqDetail: BEGIN isNew:[%s] items so far:[%s]', isNew,Edit.Session.representantes.length);
       if(isNew){
@@ -230,7 +231,7 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       editReqDetail(view, true);
 
     });
-
+		
     view.on('render', function(){
       console.log('editEvents RENDER')
       renderSOLDetails(view);
@@ -239,10 +240,10 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 
     // =========== grabación =============
     view.on("form:submit", function(model){
+     saveManager();
 
-      saveManager();
-
-    });
+    });   
+		
 
     view.on('person:select',function(query, cb){
       DocManager.request("person:search", query, function(model){

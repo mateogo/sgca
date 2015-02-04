@@ -31,11 +31,16 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
 			var prov = self.model.get('eprov');
       //Si el pais no es Argentina debe convertir el <select> en <input> para mostrar el formulario cuando se recarga luego de enviar la inscripcion
       if (country !== 'AR'){
-				//console.log('no es ARG')
-        self.$('#eprov').replaceWith('<input class="form-control" type="text" name="eprov" id="eprov">');
-				self.$('#eprov').val(prov);
+				console.log('no es ARG')
+//        self.$('#eprov').replaceWith('<input class="form-control" type="text" name="eprov" id="eprov">');
+//				self.$('#eprov').val(prov);
+				this.$('.js-provarg').hide();
+				this.$('.js-provext').show();
       }else{
-        self.$('#eprov').val(prov);
+//        self.$('#eprov').val(prov);
+				console.log('es ARG')
+				this.$('.js-provarg').show();
+				this.$('.js-provext').hide();
       }
 			
       this.$("#fevento").datepicker({
@@ -144,14 +149,21 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
       
       //Si no es Argentina convierte el <select> en <input>
       if (country !='AR'){
-        $('#eprov').replaceWith('<input class="form-control" type="text" name="eprov" id="eprov">');
-
+//        $('#eprov').replaceWith('<input class="form-control" type="text" name="eprov" id="eprov">');
+					console.log('no es arg stateinput');
+					this.$('.js-provext').show();
+					this.$('.js-provarg').hide();
+//				vacia el contenido de la provincia del exterior para no traer el valor de la prov argentina grabada en el model
+					this.$('.js-provext').val(' ')
       }
       else{
         //Eligio otro pais y vuelve a elegir Argentina se arman las opciones de provincias otra vez
-        var aprov = utils.buildSelectOptions("eprov",utils.provinciasOptionList.Argentina, province);
-        $('#eprov').replaceWith('<select class="form-control" id="eprov" name="eprov> aprov("eprov")</select>');
-        $('#eprov').html(aprov);
+//        var aprov = utils.buildSelectOptions("eprov",utils.provinciasOptionList.Argentina, province);
+//        $('#eprov').replaceWith('<select class="form-control" id="eprov" name="eprov> aprov("eprov")</select>');
+//        $('#eprov').html(aprov);
+				console.log('es arg stateinput')
+					this.$('.js-provarg').show();
+					this.$('.js-provext').hide();
       }
     },
 
