@@ -105,6 +105,18 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
       this.trigger("action:delete", this.model);
     },
 
+    onRender: function(){
+      if(this.model.get('estado_alta') !== 'activo'){
+        this.$el.toggleClass("danger");
+      }
+      if(this.model.get('nivel_importancia') === 'alta'){
+        this.$el.toggleClass("success");
+      }
+      if(this.model.get('nivel_importancia') === 'urgente'){
+        this.$el.toggleClass("warning");
+      }
+    },
+
     remove: function(){
       var self = this;
       this.$el.fadeOut(function(){
