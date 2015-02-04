@@ -806,11 +806,19 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
     determinActionCost: function(col){
-      var costo = 0;
+      var costo = {
+        total: 0,
+        detallado: 0,
+      };
+
       if (!col.length) return costo;
       col.each(function(model){
-        if(model.get('estado_alta') === 'activo' && model.get('tgasto') === 'global'){
-          costo += parseInt(model.get('importe'));
+        if(model.get('estado_alta') === 'activo'){
+          if(model.get('tgasto') === 'global'){
+            costo.total += parseInt(model.get('importe'));
+          }else{
+            costo.detallado += parseInt(model.get('importe'));
+          }
         }
       });
       return costo;

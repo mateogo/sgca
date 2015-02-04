@@ -52,10 +52,10 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
   //======== MAIN CONTROLLER BUDGET PLANNING 
   var loadBudgetsFromDB = function(){
     DocManager.request('action:fetch:budget',Edit.Session.action, null,function(budgetCol){
-      var costoTotal = DocManager.request('action:evaluate:cost',budgetCol);
+      var costo.total = DocManager.request('action:evaluate:cost',budgetCol);
 
       var budgetView = new Edit.ActivityShowBudgets({
-        model: new Backbone.Model({costo_total: costoTotal}),
+        model: new Backbone.Model({costo_total: costo.total, costo_detallado: costo.detallado}),
         collection: budgetCol
       });
       
