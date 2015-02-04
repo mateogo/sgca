@@ -601,6 +601,7 @@ window.utils = {
         {val:'no_definido'      , label:'Forma de Tramitación', classattr:'info'},
         {val:'MCN'              , label:'MCN',              classattr:'info'},
         {val:'unsam'            , label:'UNSAM',            classattr:'info'},
+        {val:'unaj'             , label:'UNAJ',             classattr:'info'},
         {val:'untref'           , label:'UNTREF',           classattr:'info'},
         {val:'minplan'          , label:'Minplan',          classattr:'info'},
         {val:'presidencia'      , label:'Presidencia',      classattr:'info'},
