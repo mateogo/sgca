@@ -68,14 +68,6 @@ window.utils = {
         $('.alert').hide();
     },
 
-    displayDate: function (d) {
-        var di = ('000'+d.getDate());
-        var me = ('000'+(d.getMonth()+1));
-        di = di.substr(di.length-2,2);
-        me = me.substr(me.length-2,2);
-        return di+'/'+me+'/'+d.getFullYear();
-    },
-
     fetchFilteredEntries: function (model, entry,query){
         console.log('fetchfilteredEntries/utils: begins [%s]', model.get(entry).length);
         var filtered = [];
@@ -2702,10 +2694,7 @@ window.utils = {
     },
 
     dateToStr: function(date) {
-        var da = ('00' + date.getDate()).substr(-2);
-        var mo = ('00' + (date.getMonth()+1)).substr(-2);
-        var ye = date.getFullYear();
-        return da+"/"+mo+"/"+ye;
+        return ('00' + date.getDate()).substr(-2) + "/" + ('00' + (date.getMonth()+1)).substr(-2) + "/" + date.getFullYear();
     },  
 		
 	dateTimeToStr: function(date) {

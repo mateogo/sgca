@@ -51,7 +51,7 @@ DocManager.module("ActionsApp", function(ActionsApp, DocManager, Backbone, Mario
   });
 
   DocManager.on("action:new", function(){
-    DocManager.navigate("acciones/nueva");
+    //DocManager.navigate("acciones/nueva");
     API.createNewAction();
   });
 
