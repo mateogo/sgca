@@ -494,6 +494,7 @@ window.utils = {
         {val: 'actividadcentral',    label: 'Actividades centrales'},
         {val: 'campania',            label: 'Campaña'},
         {val: 'congreso',            label: 'Congreso'},
+        {val: 'investigacion',       label: 'Investigación, difusión'},
         {val: 'encuentrointl',       label: 'Encuentro Internacional'},
         {val: 'encuentroregional',   label: 'Encuentro Regional'},
         {val: 'evento',              label: 'Evento'},
