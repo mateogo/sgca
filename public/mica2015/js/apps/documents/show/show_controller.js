@@ -26,13 +26,14 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
 					console.log('cero')
 					if(document !== undefined){
 						var itemCol = new DocManager.Entities.DocumItemsCollection(document.get('items'));
-
+						var repreCol = new DocManager.Entities.RepresentanteCol(perfil.get('representantes'));
+						
 						console.log('uno')
 						documentView = new Show.Document({
 							model: document
 						});
 
-						console.log('dos, datos de la empresa')
+//						console.log('dos, datos de la empresa')
 							documentHeader = new Show.Header({
 								model: empresaperson
 						});
@@ -47,14 +48,19 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
 							collection: itemCol
 						});
 						
-						console.log('cuatro y medio, comprador',perfil)
+//						console.log('cuatro y medio, comprador')
 							perfilViewCompra = new Show.PerfilCompra({
 								model: perfil
 						});			
 						
-						console.log('cuatro y cuarto, vendedor',perfil)
+//						console.log('cuatro y cuarto, vendedor')
 							perfilViewVenta = new Show.PerfilVenta({
 								model: perfil
+						});	
+						
+//						console.log('casi cinco, otros representantes')
+							otrosRepre= new Show.OtrosRepre({
+								collection: repreCol
 						});
 
 						console.log('cinco')
@@ -64,6 +70,7 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
 							documLayout.mainRegion.show(documentItems);
 							documLayout.perfilCompraRegion.show(perfilViewCompra);
 							documLayout.perfilVentaRegion.show(perfilViewVenta);
+							documLayout.otrosRepreRegion.show(otrosRepre);
 						});
 
 						documentView.on("document:edit", function(model){

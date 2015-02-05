@@ -19,6 +19,7 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
       mainRegion:        '#main-region',
 			perfilCompraRegion: '#perfilcompra-region',
 			perfilVentaRegion: '#perfilventa-region',
+			otrosRepreRegion: '#otrosrepre-region',
       footerRegion:      '#footer-region',
     }
   });
@@ -219,6 +220,65 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
       return {};
     }
   });
+	
+	Show.OtrosRepreMain = Marionette.ItemView.extend({
+		
+		getTemplate: function(){
+      return utils.templates.DocumShowOtrosRepre;
+    },
+
+    initialize: function(){
+      console.log('OTROSREPREHADER INIT [%s]',this.model.get('fept'));
+    },
+  });
+	
+	Show.OtrosRepreLayout = Marionette.LayoutView.extend({
+    className: 'row',
+    initialize: function(options){
+    },
+		
+    onShow:function(){   
+			
+			otrosRepre = new Show.OtrosRepreMain({
+        model: this.model
+      });
+
+			this.itemMainRegion.show(otrosRepre);
+    },
+
+    getTemplate: function(){
+      return utils.templates.DocumShowItemLayoutView;
+    },
+
+    childViewOptions: function(model, index) {
+      // do some calculations based on the model
+      console.log('LAYOUT childViewOptions [%s]',model.whoami);
+      return {};
+    },
+
+    
+    regions: {
+      itemHeaderRegion: '#itemheader-region',
+      itemMainRegion:   '#itemsmain-region',
+    }
+  });
+	
+	Show.OtrosRepre = Marionette.CollectionView.extend({
+    tagName: "div",
+
+    childView: Show.OtrosRepreLayout,
+    
+    initialize: function(options){
+      console.log('Cant Representantes [%s]',this.collection.length);
+      this.options = options;
+    },
+
+    childViewOptions: function(model, index) {
+      // do some calculations based on the model
+      console.log('childViewOptions [%s]',model.whoami);
+      return {};
+    }
+  });
 
   Show.Branding = Marionette.ItemView.extend({
    getTemplate: function(){
@@ -263,6 +323,5 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
     },
 
   });
-
 
 });
