@@ -1,0 +1,30 @@
+<div class="col-xs-12 col-sm-12" >
+	<h3>Perfil Comprador</h3>
+	<br>
+	<div class="col-xs-12 col-sm-12" >
+		<h5><strong>Actividades: </strong> 
+			<%= profiles[0].actividades['aescenicas']  ? 'Artes escenicas':'' %>
+			<%= profiles[0].actividades['audivisual']  ? 'Audiovisual':'' %>
+			<%= profiles[0].actividades['disenio']  ? 'Diseño':'' %>
+			<%= profiles[0].actividades['editorial']  ? 'Editorial':'' %>
+			<%= profiles[0].actividades['musica']  ? 'Música':'' %>
+			<%= profiles[0].actividades['videojuegos']  ? 'Videojuegos':'' %>
+		</h5>
+		<h5><strong>Palabras clave: </strong> <%= profiles[0].descriptores %></h5>
+		<h5><strong>Productos/Servicios: </strong> <%= profiles[0].productos %></h5>
+		<h5><strong>Negocios internacionales: </strong> 
+			<%= profiles[0].expeintl==='4'  ? 'Frecuentemente':'' %>
+			<%= profiles[0].expeintl==='2'  ? 'Esporádicamente':'' %>
+			<%= profiles[0].expeintl==='1'  ? 'Nunca':'' %>
+		</h5>
+		<h5><strong>Negocios regionales: </strong> 
+			<%= profiles[0].experegl==='4'  ? 'Frecuentemente':'' %>
+			<%= profiles[0].experegl==='2'  ? 'Esporádicamente':'' %>
+			<%= profiles[0].experegl==='1'  ? 'Nunca':'' %>
+		</h5>		
+		<h5><strong>Principales mercados: </strong> <%= profiles[0].mercados %></h5>
+		<h5><strong>Ferias/Eventos: </strong> <%= profiles[0].ferias %></h5>
+		<h5><strong>Objetivo: </strong> <%= profiles[0].objetivo %></h5>
+		<h5><strong>Comentarios: </strong> <%= profiles[0].comentario %></h5>
+	</div>
+</div>

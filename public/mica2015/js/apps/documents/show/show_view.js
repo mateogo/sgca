@@ -17,6 +17,8 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
       navbarRegion:      '#navbar-region',
       headerRegion:     '#heading-region',
       mainRegion:        '#main-region',
+			perfilCompraRegion: '#perfilcompra-region',
+			perfilVentaRegion: '#perfilventa-region',
       footerRegion:      '#footer-region',
     }
   });
@@ -246,6 +248,20 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
       e.preventDefault();
       this.trigger("document:edit", this.model);
     }
+  }); 
+	
+	Show.PerfilCompra = Marionette.ItemView.extend({
+   getTemplate: function(){
+      return utils.templates.DocumShowPerfilCompra;
+    },
+
+  });	
+	
+	Show.PerfilVenta = Marionette.ItemView.extend({
+   getTemplate: function(){
+      return utils.templates.DocumShowPerfilVenta;
+    },
+
   });
 
 

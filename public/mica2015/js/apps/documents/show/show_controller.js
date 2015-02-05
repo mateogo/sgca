@@ -4,18 +4,24 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
 		showDocument: function(id){
       console.log('showDocument [%s]',id);
       var documLayout = new Show.Layout();
-			var documentHeader;
 			var empresaperson;
+			var perfil;
 			
 			var dataempresa = dao.gestionUser.getUser(DocManager, function (user){	
 				DocManager.request('user:load:persons', user, 'es_representante_de', function(person){
 						empresaperson = person;
-					
 				});
 				
 				var fetchingDocument = DocManager.request("document:entity", id);
 				
-				$.when(fetchingDocument).done(function(document){
+				var fetchingPerfil = DocManager.request('mica:fetch:document:profile', document, user, function(profiles){
+					if(profiles.length){
+						perfil = profiles.models[0];
+					}
+				});  
+				
+				$.when(fetchingDocument).done(function(document){  
+					
 					var documentView;
 					console.log('cero')
 					if(document !== undefined){
@@ -40,12 +46,24 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
 						documentItems = new Show.DocumentItems({
 							collection: itemCol
 						});
+						
+						console.log('cuatro y medio, comprador',perfil)
+							perfilViewCompra = new Show.PerfilCompra({
+								model: perfil
+						});			
+						
+						console.log('cuatro y cuarto, vendedor',perfil)
+							perfilViewVenta = new Show.PerfilVenta({
+								model: perfil
+						});
 
 						console.log('cinco')
 						documLayout.on("show", function(){
 							documLayout.brandingRegion.show(brandingView);
 							documLayout.headerRegion.show(documentHeader);
 							documLayout.mainRegion.show(documentItems);
+							documLayout.perfilCompraRegion.show(perfilViewCompra);
+							documLayout.perfilVentaRegion.show(perfilViewVenta);
 						});
 
 						documentView.on("document:edit", function(model){
