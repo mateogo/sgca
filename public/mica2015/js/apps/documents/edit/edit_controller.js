@@ -148,6 +148,8 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
     emp_attrs.name = model.get('ename');
     emp_attrs.description = model.get('edescription');
     emp_attrs.cuit = model.get('ecuit');
+    emp_attrs.ecp = model.get('ecp');
+    emp_attrs.eweb = model.get('eweb');
     emp_attrs.fundacion = model.get('efundacion');
     emp_attrs.empleados = model.get('enumempleados');
     emp_attrs.ventaanual = model.get('eventas');
