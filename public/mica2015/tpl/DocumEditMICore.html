@@ -445,6 +445,63 @@
 										<div><strong>Teléfono Móvil:</strong><%= rcel %></div>
 										<div><strong>Idiomas que domina:</strong><%= ridiomas %></div>
 										<hr>
+										<div id="infoc" class="hidden">
+											<h4 class="spacer">Perfil Comprador</h4>
+											<div>
+												<strong>Actividades: </strong>
+												<%= cactividades['aescenicas']  ? 'Artes escenicas':'' %>
+												<%= cactividades['audivisual']  ? 'Audiovisual':'' %>
+												<%= cactividades['disenio']  ? 'Diseño':'' %>
+											  <%= cactividades['editorial']  ? 'Editorial':'' %>
+												<%= cactividades['musica']  ? 'Música':'' %>
+												<%= cactividades['videojuegos']  ? 'Videojuegos':'' %>
+											</div>
+											<div><strong>Palabras clave: </strong><%= cdescriptores %></div>
+											<div><strong>Productos/servicios: </strong><%= cproductos %></div>
+											<div><strong>Negocios Internacionales: </strong>
+												<%= cexpinternacional==='4'  ? 'Frecuentemente':'' %>
+												<%= cexpinternacional==='2'  ? 'Esporádicamente':'' %>
+												<%= cexpinternacional==='1'  ? 'Nunca':'' %>
+											</div>
+											<div><strong>Negocios Regionales: </strong>
+												<%= cexpregional==='4'  ? 'Frecuentemente':'' %>
+												<%= cexpregional==='2'  ? 'Esporádicamente':'' %>
+												<%= cexpregional==='1'  ? 'Nunca':'' %>
+											</div>
+											<div><strong>Principales mercados: </strong><%= cmercados %></div>
+											<div><strong>Ferias/Eventos: </strong><%= cferias %></div>
+											<div><strong>Propósito: </strong><%= cobjetivo %></div>
+											<div><strong>Comentarios: </strong><%= ccomentario %></div>
+										</div>
+										<hr>
+										<div id="infov" class="hidden">
+											<h4 class="spacer">Perfil Vendedor</h4>
+											<div>
+												<strong>Actividades: </strong>
+												<%= vactividades['aescenicas']  ? 'Artes escenicas':'' %>
+												<%= vactividades['audivisual']  ? 'Audiovisual':'' %>
+												<%= vactividades['disenio']  ? 'Diseño':'' %>
+											  <%= vactividades['editorial']  ? 'Editorial':'' %>
+												<%= vactividades['musica']  ? 'Música':'' %>
+												<%= vactividades['videojuegos']  ? 'Videojuegos':'' %>
+											</div>
+											<div><strong>Palabras clave: </strong><%= vdescriptores %></div>
+											<div><strong>Productos/servicios: </strong><%= vproductos %></div>
+											<div><strong>Negocios Internacionales: </strong>
+												<%= vexpinternacional==='4'  ? 'Frecuentemente':'' %>
+												<%= vexpinternacional==='2'  ? 'Esporádicamente':'' %>
+												<%= vexpinternacional==='1'  ? 'Nunca':'' %>
+											</div>
+											<div><strong>Negocios Regionales: </strong>
+												<%= vexpregional==='4'  ? 'Frecuentemente':'' %>
+												<%= vexpregional==='2'  ? 'Esporádicamente':'' %>
+												<%= vexpregional==='1'  ? 'Nunca':'' %>
+											</div>
+											<div><strong>Principales mercados: </strong><%= vmercados %></div>
+											<div><strong>Ferias/Eventos: </strong><%= vferias %></div>
+											<div><strong>Propósito: </strong><%= vobjetivo %></div>
+											<div><strong>Comentarios: </strong><%= vcomentario %></div>
+										</div>
 										<hr class="spacer" >
                   	<a href="#" id="submit-solicitud">
                     	<button type="button" class="btn btn-primary js-submit">Enviar inscripcion</button>

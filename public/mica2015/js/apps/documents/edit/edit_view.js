@@ -75,7 +75,14 @@ DocManager.module("DocsApp.Edit", function(Edit, DocManager, Backbone, Marionett
             evt.preventDefault();
             self.$('#myWizard').wizard('selectedItem', {step: step});
           }else{
-            console.log('Validation OK')
+						if (step == 4){
+							//muetra u oculta el resumen de comprador/vendedor de la confirmacion
+							var buyer = $('#data.switch input#buyer');
+							var seller = $('#data.switch input#seller');
+							$('#infoc').toggleClass("hidden", !buyer.is(":checked")); 
+							$('#infov').toggleClass("hidden", !seller.is(":checked")); 
+						}
+            console.log('Validation OK',step)
           }
         }
       });
