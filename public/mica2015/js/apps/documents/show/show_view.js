@@ -13,14 +13,14 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
     },
     
     regions: {
-      brandingRegion:    '#branding-region',
-      navbarRegion:      '#navbar-region',
-      headerRegion:     '#heading-region',
-      mainRegion:        '#main-region',
+      brandingRegion:     '#branding-region',
+      navbarRegion:       '#navbar-region',
+      headerRegion:     	'#heading-region',
+      mainRegion:         '#main-region',
 			perfilCompraRegion: '#perfilcompra-region',
-			perfilVentaRegion: '#perfilventa-region',
-			otrosRepreRegion: '#otrosrepre-region',
-      footerRegion:      '#footer-region',
+			perfilVentaRegion:  '#perfilventa-region',
+			otrosRepreRegion:   '#otrosrepre-region',
+      footerRegion:       '#footer-region',
     }
   });
 
@@ -161,13 +161,12 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
    *
    */
   Show.DocumentItemsLayout = Marionette.LayoutView.extend({
-    className: 'row',
+		className: 'row',
     initialize: function(options){
-    },
+			
+		},
+		
     onShow:function(){
-      console.log('onSHOW!!!!!!!!!!!!!!!!!!')
-      //for (var i in arguments){console.log("[%s]: [%s]",i,arguments[i])}
-
       itemHeader = new Show.DocumentItemHeader({
         model: this.model
       });
@@ -192,7 +191,6 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
       console.log('LAYOUT childViewOptions [%s]',model.whoami);
       return {};
     },
-
     
     regions: {
       itemHeaderRegion: '#itemheader-region',
@@ -202,12 +200,8 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
 
   Show.DocumentItems = Marionette.CollectionView.extend({
     tagName: "div",
-    //className: "list-group",
 
     childView: Show.DocumentItemsLayout,
-        
-    events: {
-    },
     
     initialize: function(options){
       console.log('DocumentItems [%s]',this.collection.length);
@@ -222,13 +216,8 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
   });
 	
 	Show.OtrosRepreMain = Marionette.ItemView.extend({
-		
 		getTemplate: function(){
       return utils.templates.DocumShowOtrosRepre;
-    },
-
-    initialize: function(){
-      console.log('OTROSREPREHADER INIT [%s]',this.model.get('fept'));
     },
   });
 	
@@ -238,33 +227,26 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
     },
 		
     onShow:function(){   
-			
 			otrosRepre = new Show.OtrosRepreMain({
         model: this.model
       });
-
+			
 			this.itemMainRegion.show(otrosRepre);
-    },
+		},
 
     getTemplate: function(){
-      return utils.templates.DocumShowItemLayoutView;
+			return utils.templates.DocumShowItemLayoutView;
     },
 
-    childViewOptions: function(model, index) {
-      // do some calculations based on the model
-      console.log('LAYOUT childViewOptions [%s]',model.whoami);
-      return {};
-    },
-
-    
     regions: {
       itemHeaderRegion: '#itemheader-region',
       itemMainRegion:   '#itemsmain-region',
     }
+		
   });
 	
 	Show.OtrosRepre = Marionette.CollectionView.extend({
-    tagName: "div",
+		tagName: "div",
 
     childView: Show.OtrosRepreLayout,
     
@@ -272,56 +254,31 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
       console.log('Cant Representantes [%s]',this.collection.length);
       this.options = options;
     },
-
-    childViewOptions: function(model, index) {
-      // do some calculations based on the model
-      console.log('childViewOptions [%s]',model.whoami);
-      return {};
-    }
+		
   });
 
   Show.Branding = Marionette.ItemView.extend({
-   getTemplate: function(){
-      return utils.templates.DocumShowBranding;
-    },
- 
-    events: {
-      "click a.js-edit": "editClicked"
-    },
-
-    editClicked: function(e){
-      e.preventDefault();
-      this.trigger("document:edit", this.model);
-    }
-  });
+		getTemplate: function(){
+			return utils.templates.DocumShowBranding;
+		},
+	});
 
   Show.Header = Marionette.ItemView.extend({
-   getTemplate: function(){
-      return utils.templates.DocumShowHeader;
-    },
- 
-    events: {
-      "click a.js-edit": "editClicked"
-    },
-
-    editClicked: function(e){
-      e.preventDefault();
-      this.trigger("document:edit", this.model);
-    }
-  }); 
+		getTemplate: function(){
+			return utils.templates.DocumShowHeader;
+		},
+	}); 
 	
 	Show.PerfilCompra = Marionette.ItemView.extend({
-   getTemplate: function(){
-      return utils.templates.DocumShowPerfilCompra;
-    },
-
-  });	
+		getTemplate: function(){
+			return utils.templates.DocumShowPerfilCompra;
+		},
+	});	
 	
 	Show.PerfilVenta = Marionette.ItemView.extend({
-   getTemplate: function(){
-      return utils.templates.DocumShowPerfilVenta;
-    },
-
-  });
+		getTemplate: function(){
+			return utils.templates.DocumShowPerfilVenta;
+		},
+	});
 
 });
