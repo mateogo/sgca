@@ -60,7 +60,7 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
 						});	
 						
 //						console.log('casi cinco, otros representantes')
-						otrosRepre= new Show.OtrosRepre({
+						otrosRepre= new Show.OtrosReprePanel({
 							collection: repreCol
 						});
 

@@ -215,46 +215,37 @@ DocManager.module("DocsApp.Show", function(Show, DocManager, Backbone, Marionett
     }
   });
 	
-	Show.OtrosRepreMain = Marionette.ItemView.extend({
+	Show.OtrosRepreItems = Marionette.ItemView.extend({
+		tagName: "tr",
+		
 		getTemplate: function(){
-      return utils.templates.DocumShowOtrosRepre;
+      return utils.templates.DocumShowOtrosRepreList;
     },
   });
 	
-	Show.OtrosRepreLayout = Marionette.LayoutView.extend({
-    className: 'row',
-    initialize: function(options){
-    },
-		
-    onShow:function(){   
-			otrosRepre = new Show.OtrosRepreMain({
-        model: this.model
-      });
+	Show.OtrosReprePanel = Marionette.CompositeView.extend({
 			
-			this.itemMainRegion.show(otrosRepre);
+		tagName: "div",
+		className: "content",
+
+		getTemplate: function(){
+			return utils.templates.DocumShowOtrosRepreHeader;
 		},
 
-    getTemplate: function(){
-			return utils.templates.DocumShowItemLayoutView;
-    },
+		childView: Show.OtrosRepreItems,
+		childViewContainer: "tbody",
 
-    regions: {
-      itemHeaderRegion: '#itemheader-region',
-      itemMainRegion:   '#itemsmain-region',
-    }
-		
-  });
-	
-	Show.OtrosRepre = Marionette.CollectionView.extend({
-		tagName: "div",
+		initialize: function(options){
+			var self = this;
+			this.options = options;
+		},
 
-    childView: Show.OtrosRepreLayout,
-    
-    initialize: function(options){
-      console.log('Cant Representantes [%s]',this.collection.length);
-      this.options = options;
-    },
-		
+		childViewOptions: function(model, index) {
+			return {
+				itemtype:this.options.itemtype,
+			}
+		},
+
   });
 
   Show.Branding = Marionette.ItemView.extend({
