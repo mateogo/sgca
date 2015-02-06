@@ -35,6 +35,9 @@ exports.connect = function (config){
 exports.db = dbdriver;
 exports.BSON = BSON;
 exports.dburi = dburi;
+exports.getDb = function(){
+  return dbdriver;
+}
 exports.setConnectCallback = function(cb){
     if(cb) utilcb=cb;
 };

@@ -24,7 +24,7 @@ var mailerTplPth = path.normalize(__dirname + '/mailer/templates'); //ojo
 var calendarApp    = rootPath + '/calendar';
 var bacuaApp    = rootPath + '/bacua';
 var coreApp  = rootPath + '/core';
-var apps = [calendarApp, bacuaApp];
+var apps = [calendarApp];
 
 
 //Mailer options
