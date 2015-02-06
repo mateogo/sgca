@@ -3,15 +3,22 @@
 		<h3>Datos de la empresa</h3>
 		<br>
 		<div class="col-xs-12 col-sm-12" >
-			<h5><strong>Nombre de la empresa: </strong> <%= displayName %></h5>
-				<h5><strong>Perfil: </strong> <%= description %><h5>
+			<div class="col-xs-12 col-sm-4" >
+				<h5><strong>Nombre de la empresa: </strong> <%= displayName %></h5>
 				<h5><strong>Dirección: </strong> <%= contactinfo[0].contactdata %><h5>
 				<h5><strong>Código postal: </strong> <%= ecp %><h5>
+				
+			</div>
+			<div class="col-xs-12 col-sm-4" >
+				<h5><strong>Perfil: </strong> <%= description %><h5>	
 				<h5><strong>CUIT: </strong> <%= cuit %><h5>
-				<h5><strong>Año de fundación: </strong> <%= fundacion %><h5>
-				<h5><strong>Cantidad de empleados: </strong> <%= empleados %><h5>
-				<h5><strong>Facturacion anual: </strong> <%= ventaanual %><h5>
 				<h5><strong>Página web: </strong> <%= eweb %><h5>
+			</div>
+			<div class="col-xs-12 col-sm-4" >
+				<h5><strong>Facturacion anual: </strong> <%= ventaanual %><h5>
+				<h5><strong>Cantidad de empleados: </strong> <%= empleados %><h5>
+				<h5><strong>Año de fundación: </strong> <%= fundacion %><h5>
+			</div>
 		</div>
 	</div>
 </div>
