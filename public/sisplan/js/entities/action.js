@@ -36,6 +36,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       nivel_ejecucion: 'enpreparacion',
       nivel_importancia: 'media',
       aprovals:[],
+      participants: []
 
     },
 
@@ -186,8 +187,43 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     mainHeaderFacet: function(){
       return new Entities.ActionHeaderFacet(this.attributes);
     },
+    addParticipant: function(){
+      return new Entities.ActionParticipant();
+    }
 
   });
+  
+  Entities.ActionParticipant = Backbone.Model.extend({
+    
+    
+    defaults: {
+      vip: false,
+      nickName: '',
+      name:'',
+      tipopersona: 'persona',
+      tipojuridico: {pfisica:false,pjuridica:false,pideal:false,porganismo:false},
+      roles: [],
+      contactinfo: [],
+      notas: ''
+    },
+  
+    schema: {
+      name: {validators: ['required'], type: 'Text'},
+      nickName: {validators: ['required'], type: 'Text'},
+      tipopersona: {type: 'Select', options: ['persona','organismo','grupo','locacion','municipio'],title:''},
+      tipojuridico: {type: 'Radio', options: {pfisica:'Persona Fisica',pjuridica:'Persona juridica'}},
+      roles: {type: 'Checkbox', options:[ 
+                                          {label:'Adherente',val:'adherente'},
+                                          {label:'Proveedor',val:'proveedor'}
+                                         ]
+             },
+      notas: 'TextArea'
+    },
+    
+    labeljuridico: function(){
+      return 'pepe'
+    }
+  })
 
 
   Entities.ActionCoreFacet = Backbone.Model.extend({

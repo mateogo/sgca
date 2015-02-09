@@ -2240,6 +2240,17 @@ window.utils = {
         {id:11, tt:'th', flag:1, tclass:'col11', tmpl: 'template7', val:'importe',      label:'Importe'},
         {id:12, tt:'th', flag:1, tclass:'actions', tmpl: 'template9', val:'acciones',  label:'acciones'}
     ],
+    
+    
+    participantListTableHeader:[
+         {id:0 , tt:'th', flag:1, tclass:'order', tmpl: 'template1', val:'vip',      label:' '},
+         {id:1 , tt:'th', flag:1, tclass:'col1', tmpl: 'template1',  val:'nickName',     label:'Identificador'},
+         {id:2 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1',  val:'tipopersona',     label:'tipo'},
+         {id:3 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1',  val:'name',        label:'denominación'},
+         //{id:4 , tt:'th', flag:1, tclass:'col3', tmpl: 'template1',  val:'labeljuridico',      label:'juridico'},
+         //{id:5 , tt:'th', flag:1, tclass:'col4', tmpl: 'template1',  val:'labelroles',     label:'roles'},
+         {id:4, tt:'th', flag:1, tclass:'actions', tmpl: 'template10', val:'acciones',      label:'acciones'}
+     ],
 
     buildTableHeader: function(data){
         var template1 = _.template("<<%= tt %> data-name='<%= val %>' class='<%= tclass %> js-sortcolumn' ><button name='<%= val %>' type='button' class='btn btn-link btn-xs'><%= label %> <span class='glyphicon glyphicon-sort-by-attributes'></span></button></<%= tt %> >");
@@ -2265,8 +2276,9 @@ window.utils = {
         template7 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><span class='pull-right'><%= value %></span></td>"),
         //template7 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='editar item'><%= value %></button></td>"),
         template5 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit'  title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-zoom' title='entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></td>"),
-        template8 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit'  title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-budget'  title='editar presupuesto'><span class='glyphicon glyphicon-list-alt'></span></button></td>"),
+        template8 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit'  title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-budget'  title='editar presupuesto'><span class='glyphicon glyphicon-list-alt'></span></button> <button class='btn-link js-participants'  title='editar participantes'><span class='glyphicon glyphicon-user'></span></button></td>"),
         template9 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-trash' title='observar'><span class='glyphicon glyphicon-ok'></span></button></td>"),
+        template10 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' > <button class='btn-link js-edit' title='editar'><span class='glyphicon glyphicon-edit'></span></button> <button class='btn-link js-trash' title='eliminar'><span class='glyphicon glyphicon-remove'></span></button></td>"),
         templatea : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit'  title='editar  '><%= value %></button></td>"),
         //template3 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link tlink'   title='editar item'><%= value %></button></td>"),
     },
