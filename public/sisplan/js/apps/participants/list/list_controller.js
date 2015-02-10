@@ -22,17 +22,11 @@ DocManager.module('ParticipantsApp.List',function(List, DocManager, Backbone, Ma
 				if(!List.Session) List.Session = {};
 				List.Session.layout = new List.Layout();
 								
-				var participants = action.get('participants');
-				if(!(participants instanceof Backbone.Collection)){
-				  action.set('participants',new Backbone.Collection(participants));
-				  participants  = action.get('participants');
-				}
-				
+				var participants = action.participants;
 				
 				var table = new List.Participants({
 				  collection: participants
 				})
-				
 		    	      
 		    List.Session.layout.on("show", function(){
 			    var ActionsShow = DocManager.module('ActionsApp.Show');

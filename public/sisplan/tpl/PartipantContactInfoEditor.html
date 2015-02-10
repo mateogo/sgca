@@ -1,0 +1,33 @@
+<div style="margin-bottom:10px">
+  <div class="pull-left" style="margin-right:10px;position:relative">
+      <div class="dropwdown">
+	        <span data-toggle="dropdown" style="cursor:pointer">
+	           <i class="glyphicon glyphicon-envelope"></i>
+	           <span class="caret"></span>
+	        </span>
+	    
+	        <ul class="dropdown-menu" role="menu">
+	          <% _.each(typesContact,function(val,i){ %>
+	              <li><a role="typeItem" data-pos="<%=i%>" tabindex="-1"> <i class="<%=val.icon%>"></i> <%=val.name%></a> </li> 
+	          <% }) %>
+	        </ul>
+      </div>
+  </div>
+  <div class="pull-left"  style="margin-right:10px">
+	   <div><input id="inputData" type="text" class="form-contol" value="<%= contactdata %>"/>  </div>
+	   <div class="dropdown">
+			   <small data-toggle="dropdown" style="cursor:pointer"><%= subcontenido %> <span class="caret"></span></small>
+			   
+			   <ul class="dropdown-menu" role="menu">
+			      <% _.each(subContents,function(val,i){ %>
+			          <li><a role="menuitem" tabindex="-1"><%=val%></a></li> 
+			      <% }) %>
+			   </ul>
+		  </div>
+  </div>
+  <div class="pull-left">
+    <button type="button" class="btn btn-xs btn-primary js-ok">Ok</button>
+    <button type="button" class="btn btn-xs btn-default js-cancel">Cancel</button>
+  </div>
+  <div class="clearfix"></div>
+</div>

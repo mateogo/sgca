@@ -60,8 +60,8 @@ DocManager.module("ParticipantsApp.List", function(List, DocManager, Backbone, M
     
     trashClicked: function(e){
       e.stopPropagation();e.preventDefault();
-      this.trigger('participant:remove',this.model);
-      
+      //this.trigger('participant:remove',this.model);
+      DocManager.trigger('participant:remove',participantsApp.Model.selectedAction,this.model);
     }
     
   });
@@ -74,7 +74,6 @@ DocManager.module("ParticipantsApp.List", function(List, DocManager, Backbone, M
       //console.log(utils.buildTableHeader(utils.documListTableHeader));
       return _.template(utils.buildTableHeader(utils.participantListTableHeader)+'<tbody></tbody>');
     },
-
 
     emptyView: NoParticipantsView,
     childView: List.Participant,
@@ -91,23 +90,27 @@ DocManager.module("ParticipantsApp.List", function(List, DocManager, Backbone, M
       this.trigger("action:sort", target.name);
     },
     
-    
-
     initialize: function(){
       this.listenTo(this.collection, "reset", function(){
+        console.log('LIST_VIEW collection reset');
         this.appendHtml = function(collectionView, childView, index){
           collectionView.$el.append(childView.el);
         }
       });
+      
+      var self = this;
+      this.listenTo(this.collection,'change',function(){
+        self.render();
+      })
     },
 
     onRenderCollection: function(){
       this.appendHtml = function(collectionView, childView, index){
+        console.log('onRenderCollection.appendHtml');
         collectionView.$el.prepend(childView.el);
       }
     }
   });
-  
   
   
 });

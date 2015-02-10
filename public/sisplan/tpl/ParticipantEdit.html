@@ -2,6 +2,8 @@
   <form style="width:800px">
     <div class="row">
       <div class="col-xs-6">
+          <div> <input type="checkbox" id="checkboxVip" /> <label for="checkboxVip">VIP</label>  </div>
+      
           <label>Nombre</label>
           <div data-editors="name,nickName"></div>
 	      
@@ -20,7 +22,9 @@
 	        
       </div>
       <div class="col-xs-6" >
-          Datos de contacto
+          <label>Datos de contacto <button type="button" class="btn btn-xs btn-default js-add">agregar</button></label>
+          <div id="datosContainer" class="well" style="min-height:100px;width:350px">
+          </div>
       </div>
     </div>
     

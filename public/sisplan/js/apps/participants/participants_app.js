@@ -20,6 +20,13 @@ DocManager.module('ParticipantsApp',function(ParticipantsApp,DocManager,Backbono
 		},
 		edit: function(action,participant){
 		  ParticipantsApp.Edit.Controller.edit(action,participant);
+		},
+		remove: function(action,participant){
+		  action.removeParticipant(participant).done(function(){
+		    alert('borrado');
+		  }).fail(function(e){
+		    alert(e);
+		  })
 		}
 	}
 
@@ -36,6 +43,10 @@ DocManager.module('ParticipantsApp',function(ParticipantsApp,DocManager,Backbono
 	DocManager.on('participant:new',function(action){
 	  API.newParticipant(action);
 	});
+	
+	DocManager.on('participant:remove',function(action,participant){
+    API.remove(action,participant);
+  })
 
 	DocManager.addInitializer(function(){
 		new ParticipantsApp.Router({
