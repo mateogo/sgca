@@ -203,6 +203,10 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
       DocManager.trigger('activity:edit', Edit.Session.model);      
     });
 
+    view.on('participant:list',function(view){
+      DocManager.trigger('participant:list', Edit.Session.model);      
+    });
+
     view.on('budget:new',function(view){
       DocManager.trigger('budget:build', Edit.Session.model);
 /*

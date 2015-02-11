@@ -36,10 +36,40 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       nivel_ejecucion: 'enpreparacion',
       nivel_importancia: 'media',
       aprovals:[],
-
+      participants: []
     },
 
     enabled_predicates:['es_relacion_de'],
+    
+    parse: function(data,options){
+      if(!this.participants){
+        this.participants = new Backbone.Collection(data.participants);
+      }
+      
+      // inicializando objetos Participante 
+      if(data && data.participants){
+        for ( var i = 0; i < data.participants.length; i++) {
+          var raw = data.participants[i];
+          if(!(raw instanceof Entities.ActionParticipant)){
+            raw.id = (i+1);
+            data.participants[i] = new Entities.ActionParticipant(raw);
+          }
+        }
+        this.participants.reset(data.participants);
+        
+        delete data.participants;
+      }
+      return data;
+    },
+    
+    sync: function (method, model, options) {
+      if(method == 'update'){
+        if(model.participants){
+          model.set('participants',model.participants.toJSON());
+        }
+      }
+      return Backbone.Model.prototype.sync.apply(this,[method, model, options]);
+    },
     
     initBeforeCreate: function(cb){
       var self = this,
@@ -69,6 +99,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       console.log('initBefore SAVE')
       var feultmod = new Date();
       self.set({feultmod:feultmod.getTime()})
+     
       dao.gestionUser.getUser(DocManager, function (user){
         if (! self.get('useralta')) self.set({useralta: user.id});
         self.set({userultmod: user.id});
@@ -147,8 +178,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
 
-
-
     validate: function(attrs, options) {
       //if(!attrs) return;
       var errors = {}
@@ -187,9 +216,54 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     mainHeaderFacet: function(){
       return new Entities.ActionHeaderFacet(this.attributes);
     },
+    
+    addParticipant: function(){
+      return new Entities.ActionParticipant();
+    },
+    
+    removeParticipant: function(participant){
+      var def = $.Deferred();
+      var parts = this.participants;
+      var item = parts.findWhere({id:participant.id});
+      if(item){
+        parts.remove(item);
+        this.save().done(function(o){
+          def.resolve(o);
+        }).fail(function(e){
+          def.reject(e);
+        })
+      }else{
+        def.reject('Participant not found');
+      }
+      return def.promise();
+    }
 
   });
-
+  
+  Entities.ActionParticipant = Backbone.Model.extend({
+    
+    
+    defaults: {
+      vip: false,
+      nickName: '',
+      name:'',
+      tipopersona: 'persona',
+      tipojuridico: {pfisica:false,pjuridica:false,pideal:false,porganismo:false},
+      roles: [],
+      contactinfo: [],
+      notas: ''
+    },
+  
+    schema: {
+      vip: {type:'Checkbox'},
+      name: {validators: ['required'], type: 'Text'},
+      nickName: {validators: ['required'], type: 'Text'},
+      tipopersona: {type: 'Select', options: ['persona','organismo','grupo','locacion','municipio'],title:''},
+      tipojuridico: {type: 'Radio', options: {pfisica:'Persona Fisica',pjuridica:'Persona juridica',pideal:'Persona Ideal',porganismo:'Organismo o Institución oficial'}},
+      roles: {type: 'Checkbox', options:{adherente:'Adherente',proveedor:'Proveedor',productor:'Productor',empleado:'Empleado',artista:'Artista',invitado:'Invitado'}},
+      notas: 'TextArea'
+    }
+  })
 
   Entities.ActionCoreFacet = Backbone.Model.extend({
     //urlRoot: "/comprobantes",

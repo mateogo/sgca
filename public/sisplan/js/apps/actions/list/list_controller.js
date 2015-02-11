@@ -177,7 +177,11 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
         documentsListView.on("childview:budget:edit", function(childView, model){
           DocManager.trigger("budget:build", model);
         });
-
+        
+        documentsListView.on("childview:participant:list", function(childView, model){
+          DocManager.trigger("participant:list", model);
+        });
+        
         documentsListView.on("childview:action:delete", function(childView, model){
           model.destroy();
         });

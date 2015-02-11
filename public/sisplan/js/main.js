@@ -7,6 +7,7 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'ActionListLayoutView',
     'ActionBudgetHeader','ActionBudgetItem',
     'ActionShowLegacy','ActionShowHeader','ActionShowBranding','ActionShowBudgetComposite','ActionShowBudgetItem','ActionShowBudgetInstance',
+    'ActionNotFound',
 
     'ProfileEditLayout', 'ProfileEditUserForm','ProfileEditPersonForm','ProfileEditRelatedForm','ProfileEditPasswordForm',
 
@@ -36,7 +37,11 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'DocumEditSO','DocumEditSOItem','DocumEditSOLayout',
     'DocumEditPSO','DocumEditPSOItems','DocumEditPSOHeader', 'DocumEditPSOSItems','DocumEditPSOSDetailsHeader','DocumEditPSOSDetails',
     'DocumShowItemSODetail','DocumShowItemSOComposite','DocumShowItemSOHeader',
-    'ReportEditLayoutView', 'ReportEditCore', 'ReportNavbar','MailTemplateDefault' ], function() {
+    'ReportEditLayoutView', 'ReportEditCore', 'ReportNavbar','MailTemplateDefault', 
+    
+    'ParticipantListLayoutView','ParticipantEdit','PartipantContactInfo','PartipantContactInfoEditor'
+    
+    ], function() {
 
     $('[data-toggle=offcanvas]').click(function() {
         $('.row-offcanvas').toggleClass('active');
