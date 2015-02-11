@@ -42,7 +42,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     enabled_predicates:['es_relacion_de'],
     
     parse: function(data,options){
-      console.log('PARSENADO',data,options,this);
+      if(!this.participants){
+        this.participants = new Backbone.Collection(data.participants);
+      }
+      
       // inicializando objetos Participante 
       if(data && data.participants){
         for ( var i = 0; i < data.participants.length; i++) {
@@ -51,9 +54,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             raw.id = (i+1);
             data.participants[i] = new Entities.ActionParticipant(raw);
           }
-        }
-        if(!this.participants){
-          this.participants = new Backbone.Collection(data.participants);
         }
         this.participants.reset(data.participants);
         
@@ -258,20 +258,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       name: {validators: ['required'], type: 'Text'},
       nickName: {validators: ['required'], type: 'Text'},
       tipopersona: {type: 'Select', options: ['persona','organismo','grupo','locacion','municipio'],title:''},
-      tipojuridico: {type: 'Radio', options: {pfisica:'Persona Fisica',pjuridica:'Persona juridica'}},
-      roles: {type: 'Checkbox', options:[ 
-                                          {label:'Adherente',val:'adherente'},
-                                          {label:'Proveedor',val:'proveedor'}
-                                         ]
-             },
+      tipojuridico: {type: 'Radio', options: {pfisica:'Persona Fisica',pjuridica:'Persona juridica',pideal:'Persona Ideal',porganismo:'Organismo o Institución oficial'}},
+      roles: {type: 'Checkbox', options:{adherente:'Adherente',proveedor:'Proveedor',productor:'Productor',empleado:'Empleado',artista:'Artista',invitado:'Invitado'}},
       notas: 'TextArea'
-    },
-    
-    labeljuridico: function(){
-      return 'pepe'
     }
   })
-
 
   Entities.ActionCoreFacet = Backbone.Model.extend({
     //urlRoot: "/comprobantes",

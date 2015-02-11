@@ -4,6 +4,6 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
   
   Edit.Controller.edit = function(action,participant){
     Edit.modaledit(action,participant);
-  }
+  };
   
 });

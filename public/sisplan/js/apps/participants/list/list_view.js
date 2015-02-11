@@ -78,6 +78,21 @@ DocManager.module("ParticipantsApp.List", function(List, DocManager, Backbone, M
     emptyView: NoParticipantsView,
     childView: List.Participant,
     childViewContainer: "tbody",
+    
+    initialize: function(){
+      
+      /*this.listenTo(this.collection, "reset", function(){
+        console.log('LIST_VIEW collection reset');
+        this.appendHtml = function(collectionView, childView, index){
+          collectionView.$el.append(childView.el);
+        }
+      });*/
+      
+      var self = this;
+      this.listenTo(this.collection,'change',function(){
+        self.render();
+      })
+    },
 
     events: {
       'click .js-sortcolumn': 'changeOrder',
@@ -90,25 +105,13 @@ DocManager.module("ParticipantsApp.List", function(List, DocManager, Backbone, M
       this.trigger("action:sort", target.name);
     },
     
-    initialize: function(){
-      this.listenTo(this.collection, "reset", function(){
-        console.log('LIST_VIEW collection reset');
-        this.appendHtml = function(collectionView, childView, index){
-          collectionView.$el.append(childView.el);
-        }
-      });
-      
-      var self = this;
-      this.listenTo(this.collection,'change',function(){
-        self.render();
-      })
-    },
+    
 
     onRenderCollection: function(){
-      this.appendHtml = function(collectionView, childView, index){
+      /*this.appendHtml = function(collectionView, childView, index){
         console.log('onRenderCollection.appendHtml');
         collectionView.$el.prepend(childView.el);
-      }
+      }*/
     }
   });
   

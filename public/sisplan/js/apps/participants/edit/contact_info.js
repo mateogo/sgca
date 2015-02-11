@@ -1,39 +1,79 @@
 DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
   
+  var TypesContact = {
+      
+      getTypeByName: function(name){
+        var type = _.findWhere(TypesContact.data,{name:name});
+        if(!type){
+            type = _.findWhere(TypesContact.data,{name:'informacion'});
+        }
+        return type;
+        
+      },
+      
+      data: [{icon:'envelope',name:'email',label:'email'},
+              {icon:'earphone',name:'telefono',label:'Teléfono'},
+              {icon:'home',name:'direccion',label:'Dirección'},
+              {icon:'globe',name:'web',label:'web'},
+              {icon:'info-sign',name:'informacion',label:'Información'}]
+  };
+  
+  var SubContents = ['principal','trabajo','personal','otro'];
+  
   Edit.ContactInfo = Marionette.ItemView.extend({
     tagName: 'div',
     mode: 'view',
+    
+    initialize: function(opts){
+      if(opts.model){
+        this.editModel = opts.model.toJSON();
+        if(!this.editModel.icon){
+          this.editModel.icon = TypesContact.getTypeByName(this.editModel.tipocontacto).icon;
+        }
+      }
+      
+      if(opts.mode){
+        this.mode = opts.mode;
+      }
+      
+      Marionette.ItemView.prototype.initialize.apply(this,opts);
+    },
     
     getTemplate: function(){
       return (this.mode == 'view')? utils.templates.PartipantContactInfo : utils.templates.PartipantContactInfoEditor;
     },
     
     events: {
-      'click .js-edit': 'addClicked',
+      'click .js-edit': 'editClicked',
       'click .js-ok': 'okClicked',
-      'click .js-cancel': 'cancelClicked',
-      'click [role=typeItem]': 'typeItemCLicked',
+      'click .js-remove': 'removeClicked',
+      'change #inputData': 'dataChanged',
+      'click [role=typeItem]': 'typeItemClicked',
+      'click [role=subContentItem]': 'subContentItemClicked'
     },
     
     render: function(){
-      var obj = this.model.toJSON();
-      obj.typesContact = [{icon:'glyphicon glyphicon-envelope',name:'email'},
-                          {icon:'glyphicon glyphicon-earphone',name:'teléfono'},
-                          {icon:'glyphicon glyphicon-home',name:'dirección'},
-                          {icon:'glyphicon glyphicon-globe',name:'web'},
-                          {icon:'glyphicon glyphicon-info-sign',name:'información'},
-                          ];
-      obj.subContents = ['principal','trabajo','personal','otro'];
+      var obj = _.clone(this.editModel);
+      obj.typesContact = TypesContact.data;
+      obj.subContents = SubContents;
       $(this.el).html(this.getTemplate()(obj));
     },
     
+    getValue: function(){
+      return this.editModel;
+    },
+    
+    commit: function(){
+      this.model.set(this.editModel);
+      return this.model;
+    },
     
     save: function(){
       var contactdata = $(this.el).find('#inputData').val();
-      this.model.set('contactdata',contactdata);
+      this.editModel.contactdata = contactdata;
     },
     
-    addClicked: function(e){
+    editClicked: function(e){
       this.mode = 'editor';
       this.render();
     },
@@ -44,15 +84,28 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
       this.render();
     },
     
-    cancelClicked: function(e){
-      this.mode = 'view';
+    removeClicked: function(e){
+      this.trigger('removed',this);
+    },
+    
+    dataChanged:function(e){
+      this.editModel.contactdata = $(this.el).find('#inputData').val();
+    },
+    
+    typeItemClicked: function(e){
+      var pos = $(e.currentTarget).data('pos');
+      var type = TypesContact.data[pos];
+      this.editModel.tipocontacto = type.name;
+      this.editModel.icon = type.icon;
       this.render();
     },
     
-    typeItemCLicked: function(e){
+    subContentItemClicked: function(e){
       var pos = $(e.currentTarget).data('pos');
-      alert('jeje ');
+      var subcontent = SubContents[pos];
+      this.editModel.subcontenido = subcontent;
+      this.render();
     }
 
-  })  
-})
+  });  
+});
