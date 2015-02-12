@@ -15,6 +15,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       description: '',
       fenecesidad: '',
       trequest: '',
+      tipomov: "solicitud",
+      cudap: '',
 
       // datos heredados de Action
       action_id: "",
@@ -39,16 +41,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       coldh: "0",
       presuprog: "",
       presuinciso: "",
-
-      parent_cnumber: '',
-      parent_slug: '',
-      program_cnumber: '',
-      nodo: "",
-      area: "",
-
-      tipomov: "presupuesto",
-      slug: "",
-
+ 
       nivel_ejecucion: "enevaluacion",
       estado_alta: "activo",
       nivel_importancia: "media",
@@ -115,22 +108,24 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         fecomp = utils.dateToStr(fecha);
       }
       self.set({feultmod:fecha.getTime()})
-      console.log('********** Merde: T:[%s] ', self.get('tgasto'));
-      self.set('cgasto', utils.fetchListKey(utils.tipoAdminrequestMovimList, self.get('tgasto'))['cgasto'] );
+      console.log('********** Merde: T:[%s] ', self.get('trequest'));
+      self.set('cgasto', utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['cgasto'] );
 
       self.updateInheritData(action, budget);
       self.updateCurrentUsertData(user);
     },
     
     
-    update: function(action, budget, user){
+    update: function(action, budget, user, cb){
       console.log('[%s] UPDATE MODEL owner:[%s]',this.whoami, action.get('slug'));
       var self = this,
           errors;
  
       self.beforeSave(action, budget, user);
  
-      //console.log('ready to SAVE');
+      console.log('ready to SAVE');
+      console.dir(self.attributes);
+
       if(!self.save(null,{
         success: function(model){
           //console.log('callback SUCCESS')
@@ -150,6 +145,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
         cb(self.validationError,null);
       }
+
 
     },
 
@@ -243,7 +239,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'Entities.AdminrequestPlanningCollection:admrqst.js ',
     url: "/navegar/tramitaciones",
     model: Entities.AdminrequestPlanningFacet,
-    sortfield: 'tgasto',
+    sortfield: 'trequest',
     sortorder: -1,
 
     comparator: function(left, right) {
@@ -265,9 +261,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       self.each(function (budFacet){
         admrqst = budFacet.admrqstFactory();
         if(admrqst){
-          console.log('BINGO: ready to update[%s] items:[%s]', admrqst.get('tgasto'), admrqst.get('items').length)
+          console.log('BINGO: ready to update[%s] items:[%s]', admrqst.get('trequest'), admrqst.get('items').length)
           admrqst.update(action, function(error, admrqst){
-            console.log('admrqst Saved: [%s]', admrqst.get('tgasto'));
+            console.log('admrqst Saved: [%s]', admrqst.get('trequest'));
           });
 
         }
@@ -305,6 +301,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   });
 
+  var createNewInstance = function(facet, action, budget, user, cb){
+    var attr = {
+      slug: facet.get('slug'),
+      description: facet.get('description'),
+      cudap: facet.get('cudap'),
+      trequest: facet.get('trequest'),
+      cantidad: facet.get('cantidad'),
+      ume: facet.get('ume'),
+      fenecesidad: facet.get('fenecesidad'),
+      importe: facet.get('importe'),
+    };
+    var arequest = new Entities.Adminrequest(attr);
+    arequest.update(action, budget, user, cb);
+
+
+
+  };
 
   Entities.AdminrequestPlanningFacet = Backbone.Model.extend({
     whoami: 'Entities.AdminrequestPlanningFacet:admrqst.js ',
@@ -313,25 +326,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     initialize: function(options){
  
-      if(!parseInt(this.get('montomanual'))){
-        this.set('montomanual', this.get('importe'));
-      }
- 
-      if(this.get('tgasto') === 'global'){
-        this.set('isdetallado', this.get('isdetallado') || '0');
-      }else{
-        this.set('isdetallado', this.get('isdetallado') || '1');
-      }
 
     },
-
-      // datos basicos
-      cnumber: '',
-      slug: '',
-      description: '',
-      fenecesidad: '',
-      trequest: '',
-
 
 
     schema: {
@@ -342,9 +338,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         ume:          {type: 'Select',    title: 'Unidad de medida',      editorAttrs:{placeholder:'unidad de medida'},options: utils.umeList },
         fenecesidad:  {type: 'Text',      title: 'Fecha necesidad',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
         importe:      {type: 'Number',    title: 'Costo de referencia',   editorAttrs:{placeholder:'en unidades'}},
+        cudap:        {type: 'Text',      title: 'CUDAP tramitación',     editorAttrs:{placeholder:'solicitud de trámite o expediente'}},
  
 
     },
+
+    createNewRequest: function(action, budget, user, cb){
+      var self = this;
+      console.log('createNew Request begins.[%s][%s][%s]', action.whoami, budget.whoami, user.whoami);
+      createNewInstance(self, action, budget, user, cb);
+
+    },
+
 
     addItemAdminrequest: function(item){
       this.itemsCol.add(item);
@@ -663,7 +668,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 
-  //Accion Collection
   Entities.AdminrequestCollection = Backbone.Collection.extend({
     whoami: 'Entities.AdminrequestCollection:adminrequest.js ',
     url: "/tramitaciones",

@@ -197,7 +197,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
     },
 
     events: {
-      "click a.js-rubros": "loadfilter",
+      "click a.js-newrequest": "newrequest",
       "click .js-save": 'saveall',
       "click .js-showaction": 'showaction',
       "click .js-editaction": 'editaction',
@@ -227,10 +227,10 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
       this.trigger('cancel:all');
     },
 
-    loadfilter: function(e){
+    newrequest: function(e){
       e.preventDefault();
       e.stopPropagation();
-      this.trigger('load:filter:rubros');
+      this.trigger('create:new:request');
     },
 
   });
@@ -488,9 +488,9 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
     }
   });
 
-  Edit.modaledit = function(view, model, facet, captionlabel, cb){
-        var self = view,
-            form = new Backbone.Form({
+
+  Edit.modaledit = function(facet, opt, cb){
+        var form = new Backbone.Form({
                 model: facet,
             });
 
@@ -505,8 +505,8 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
 
         var modal = new Backbone.BootstrapModal({
             content: form,
-            title: captionlabel,
-            okText: 'aceptar',
+            title: opt.captionlabel || 'Editar',
+            okText: (opt.aceptar || 'aceptar'),
             cancelText: 'cancelar',
             enterTriggersOk: false,
             animate: false

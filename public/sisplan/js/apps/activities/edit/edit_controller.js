@@ -37,6 +37,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
             DocManager.mainRegion.show(Edit.Session.views.layout);
 
             loadBudgetsFromDB();
+            loadRequestsFromDB();
 
           }else{
             console.log('vuelve a edición de ACTION')
@@ -52,6 +53,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
   //======== MAIN CONTROLLER BUDGET PLANNING 
   var loadBudgetsFromDB = function(){
     DocManager.request('action:fetch:budget',Edit.Session.action, null,function(budgetCol){
+      Edit.Session.budgetCol = budgetCol;
       var costo = DocManager.request('action:evaluate:cost', budgetCol);
 
       var budgetView = new Edit.ActivityShowBudgets({
@@ -59,7 +61,23 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
         collection: budgetCol
       });
       
-      Edit.Session.views.layout.mainRegion.show(budgetView);
+      Edit.Session.views.layout.budgetRegion.show(budgetView);
+
+    });
+  }; 
+
+  var loadRequestsFromDB = function(){
+    DocManager.request('action:fetch:adminrequests',Edit.Session.action, null,function(requestsCol){
+      Edit.Session.requestsCol = requestsCol;
+      var costo = DocManager.request('action:evaluate:cost', requestsCol);
+      console.log('requestsCol:[%s]', requestsCol.length);
+
+      // var budgetView = new Edit.ActivityShowBudgets({
+      //   model: new Backbone.Model({costo_total: costo.total, costo_detallado: costo.detallado}),
+      //   collection: requestsCol
+      // });
+      
+      // Edit.Session.views.layout.mainRegion.show(budgetView);
 
     });
   }; 
@@ -326,11 +344,10 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
   var registerControlPanelEvents = function(model, view){
     Edit.Session.views.controlpanelView = view;
 
-    view.on('load:filter:rubros',function(){
-      var typeFacet = new DocManager.Entities.AdminrequestTypeFacet();
-      console.log('Filter Rubros BUBBLE [%s]',view.whoami);
+    view.on('create:new:request',function(){
 
-      modalActivityTypeSelect(view, typeFacet, 'Seleccione Rubros');
+      createNewRequest(view, model, 'Crear nueva solicitud de tramitación');
+
     });
 
     view.on('show:action',function(){
@@ -350,15 +367,22 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
     });
   };
 
-  var modalActivityTypeSelect = function(view, model, captionlabel){
-    Edit.modaledit(view, model, model, captionlabel, function(model){
-      Edit.Session.typeList = model.get('roles');
-      if(Edit.Session.facetCol.length){
-        addActivityTypes(Edit.Session.typeList);
-      }else{
-        createActivityPlanningView(Edit.Session.activityCol);        
-      }
+  var createNewRequest = function(view, model, captionlabel){
+
+    var opt = {
+          aceptar: 'Crear',
+          captionlabel: captionlabel,
+        },
+        facet = new DocManager.Entities.AdminrequestPlanningFacet(model.attributes);
+    
+    Edit.modaledit(facet, opt, function(facet){
+      console.log('New Admrequest BEGINS Submitted:');
+      facet.createNewRequest(Edit.Session.action, Edit.Session.budgetCol.at(0), Edit.Session.currentUser, function(model){
+        console.log('createNewRequest Callback')
+      })
+
     });
+
   };
 
   var addActivityTypes = function(list){

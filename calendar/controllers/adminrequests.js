@@ -27,7 +27,7 @@ var trequest_adapter = {
     tramitacion:{
         serie: 'admrqst101',
         base: 1000000,
-        prefix: 'PRE'
+        prefix: 'ST'
         },
     poromision: {
         serie: 'admrqst999',

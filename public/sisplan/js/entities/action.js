@@ -864,6 +864,25 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
 
     },
+    fetchRequests: function(model, opt, cb){
+      var query = {};
+      var defer = $.Deferred();
+
+      query.action_id = model.id;
+
+      var requestCol = new Entities.AdminrequestNavCollection();
+      requestCol.fetch({
+          data: query,
+          type: 'post',
+          success: function() {
+            //defer.resolve('true');
+
+            if(cb) cb(requestCol, defer);
+          }
+      });
+      return defer.promise();
+
+    },
     fetchValidBudget: function(model, opt, cb){
       var query = {};
       var defer = $.Deferred();
@@ -916,6 +935,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   DocManager.reqres.setHandler("action:fetch:budget", function(model, opt, cb){
     return API.fetchBudget(model, opt, cb);
+  });
+
+  DocManager.reqres.setHandler("action:fetch:adminrequests", function(model, opt, cb){
+    return API.fetchRequests(model, opt, cb);
   });
 
   DocManager.reqres.setHandler("action:fetch:valid:budget", function(model, opt, cb){
