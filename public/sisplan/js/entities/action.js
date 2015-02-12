@@ -248,7 +248,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       name:'',
       tipopersona: 'persona',
       tipojuridico: {pfisica:false,pjuridica:false,pideal:false,porganismo:false},
-      roles: [],
+      roles: {},
       contactinfo: [],
       notas: ''
     },

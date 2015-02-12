@@ -48,6 +48,7 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
       'click .js-ok': 'okClicked',
       'click .js-remove': 'removeClicked',
       'change #inputData': 'dataChanged',
+      'keydown #inputData': 'dataKeydown',
       'click [role=typeItem]': 'typeItemClicked',
       'click [role=subContentItem]': 'subContentItemClicked'
     },
@@ -73,6 +74,12 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
       this.editModel.contactdata = contactdata;
     },
     
+    
+    cancelEdit: function(){
+      this.mode = 'view';
+      this.render();
+    },
+    
     editClicked: function(e){
       this.mode = 'editor';
       this.render();
@@ -90,6 +97,17 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
     
     dataChanged:function(e){
       this.editModel.contactdata = $(this.el).find('#inputData').val();
+    },
+    
+    dataKeydown: function(e){
+      if(e.keyCode == 13){
+        e.preventDefault();e.stopPropagation();
+        this.okClicked();
+        
+      }else if(e.keyCode == 27){
+        e.preventDefault();e.stopPropagation();
+        this.cancelEdit();
+      }
     },
     
     typeItemClicked: function(e){

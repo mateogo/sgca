@@ -39,7 +39,7 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'DocumShowItemSODetail','DocumShowItemSOComposite','DocumShowItemSOHeader',
     'ReportEditLayoutView', 'ReportEditCore', 'ReportNavbar','MailTemplateDefault', 
     
-    'ParticipantListLayoutView','ParticipantEdit','PartipantContactInfo','PartipantContactInfoEditor'
+    'ParticipantListLayoutView','ParticipantEdit','PartipantContactInfo','PartipantContactInfoEditor','ParticipantsShow'
     
     ], function() {
 

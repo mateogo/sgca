@@ -1,5 +1,7 @@
 DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
 
+  var ParticipantsApp = DocManager.module('ParticipantsApp');  
+  
   Edit.Controller = {
     editAction: function(id){
       console.log('ActionsApp.Edit.Controller.editAction');
@@ -21,6 +23,7 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
         Edit.Session.views.mainLayout = new Edit.MainLayout();
         registerMainLayoutEvents(Edit.Session.views.mainLayout);
 
+        
 
 
 
@@ -89,6 +92,7 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
     layout.on('show',function(view){
       console.log('LAYOUT SHOW');
       layout.headerRegion.show(Edit.Session.views.mainheader);
+      layout.participantRegion.show(ParticipantsApp.Show.Controller.initParticipants(Edit.Session.model));
     });
   };
 

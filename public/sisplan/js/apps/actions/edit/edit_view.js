@@ -30,6 +30,7 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
       headerRegion:  '#main-header-region',
       budgetRegion:  '#budget-region',
       contextRegion: '#main-context-region',
+      participantRegion: '#participant-region'
     }
   });
 

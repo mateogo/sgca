@@ -34,7 +34,6 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
       var radios = $(this.el).find('[name='+name+']');
       _.each(data,function(value,key){
           radios.filter('[value='+key+']').prop('checked',data[key]);
-          console.log(radios.filter('[value='+key+']'));
       });
     },
     
