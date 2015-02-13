@@ -1,7 +1,14 @@
-	<div class="panel-heading">
-	  <div class="caption">Participantes</div>
+	<div class="panel-heading" <% if(canCollapse){ %> data-toggle="collapse" data-target="#participantList"  <% } %>>
+	  <div class="caption pull-left">Participantes</div>
+	  <div class="pull-right" >
+	     <% if(canCollapse){ %>
+		     <div  class="panel-heading-button"> 
+		       <i class="glyphicon glyphicon-minus"></i>
+		     </div>
+		   <% } %>
+	  </div>
 	</div>
-	<div class="panel-body">
+	<div class="panel-body collapse in" id="participantList">
 	  
 	    <table class="table table-striped table-condensed">
 	       <tbody>
@@ -14,9 +21,8 @@
 									         <% if(item.vip){ %>
 		                          <i class="vip-star glyphicon glyphicon-star"></i>
 		                       <% } %>
-							             <%=item.name %> - <%=item.nickName %> 
+							             <%=item.displayName %> <small class="text-muted"><%=item.nickName %></small> 
 							           </span> 
-							           <span class="pull-right"> <%=item.pjuridico %> </span>
 							           <span class="clearfix"></span>
 							        </div>
 							        <ul class="contactinfo-list-show text-info">
@@ -25,7 +31,7 @@
 							        
 							                 <li title="<%= info.tipocontacto%>">
 							                     <i class="glyphicon glyphicon-<%=info.icon %>"></i> <%=info.contactdata %>
-							                     <br/> <small class="text-muted"> <%= info.subcontenido%> </small>
+							                     <br/> <small class="text-muted" style="padding-left:15px"> <%= info.subcontenido%> </small>
 							                 </li>
 							                       
 							         <% }) %>
@@ -33,7 +39,9 @@
 							         </ul>
 							        </td>
 							        <td>
-							           <a href="" class="js-edit" data-pos="<%=key%>"><i class="glyphicon glyphicon-edit"></i></a>
+							           <% if(canEdit) { %>
+							               <a href="" class="js-edit" data-pos="<%=key%>"><i class="glyphicon glyphicon-edit"></i></a>
+							           <% } %> 
 							        </td>
 					        </tr>
 				  <% }) %>

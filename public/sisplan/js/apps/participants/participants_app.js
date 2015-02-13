@@ -22,10 +22,13 @@ DocManager.module('ParticipantsApp',function(ParticipantsApp,DocManager,Backbono
       ParticipantsApp.Edit.Controller.edit(action,participant);
 		},
 		remove: function(action,participant){
- 	  action.removeParticipant(participant).done(function(){
-  	    alert('borrado');
-  	  }).fail(function(e){
-		    alert(e);
+		  DocManager.confirm('¿Estás seguro de borrar al participante?').then(function(){
+       	  
+		      action.removeParticipant(participant).done(function(){
+        	    alert('borrado');
+        	  }).fail(function(e){
+      		    alert(e);
+      		  })
 		  })
 		}
   }

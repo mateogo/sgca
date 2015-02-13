@@ -255,14 +255,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   
     schema: {
       vip: {type:'Checkbox'},
-      name: {validators: ['required'], type: 'Text'},
-      nickName: {validators: ['required'], type: 'Text'},
+      name: {validators: ['required'], type: 'Text',title:'Nombre'},
+      lastName: {validators: ['required'], type: 'Text',title:'Apellido'},
+      nickName: {validators: ['required'], type: 'Text',title:'Alias'},
+      displayName : {validators: ['required'], type: 'Text',title:'Nombre visible'},
+      dni : {validators: [], type: 'Text',title:'DNI'},
+      cuit : {validators: [], type: 'Text',title:'CUIT'},
+      birthDate : {validators: [], type: 'Date',title:'Fecha nacimiento'},
       tipopersona: {type: 'Select', options: ['persona','organismo','grupo','locacion','municipio'],title:''},
-      tipojuridico: {type: 'Radio', options: {pfisica:'Persona Fisica',pjuridica:'Persona juridica',pideal:'Persona Ideal',porganismo:'Organismo o Institución oficial'}},
-      roles: {type: 'Checkbox', options:{adherente:'Adherente',proveedor:'Proveedor',productor:'Productor',empleado:'Empleado',artista:'Artista',invitado:'Invitado'}},
+      tipojuridico: {type: 'Select', title:'Tipo Juridico', options: {pfisica:'Persona Fisica',pjuridica:'Persona juridica',pideal:'Persona Ideal',porganismo:'Organismo o Institución oficial'}},
       notas: 'TextArea'
     }
-  })
+  });
 
   Entities.ActionCoreFacet = Backbone.Model.extend({
     //urlRoot: "/comprobantes",
