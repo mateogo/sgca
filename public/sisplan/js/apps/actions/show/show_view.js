@@ -16,6 +16,7 @@ DocManager.module("ActionsApp.Show", function(Show, DocManager, Backbone, Marion
       navbarRegion:     '#navbar-region',
       headerRegion:     '#heading-region',
       budgetRegion:     '#itemheading-region',
+      participantRegion:'#participant-region',
       mainRegion:       '#main-region',
       footerRegion:     '#footer-region',
     }

@@ -67,6 +67,14 @@ window.utils = {
     hideAlert: function() {
         $('.alert').hide();
     },
+    
+    displayDate: function (d) {
+        var di = ('000'+d.getDate());
+        var me = ('000'+(d.getMonth()+1));
+        di = di.substr(di.length-2,2);
+        me = me.substr(me.length-2,2);
+        return di+'/'+me+'/'+d.getFullYear();
+    },
 
     fetchFilteredEntries: function (model, entry,query){
         console.log('fetchfilteredEntries/utils: begins [%s]', model.get(entry).length);
@@ -2239,8 +2247,8 @@ window.utils = {
     participantListTableHeader:[
          {id:0 , tt:'th', flag:1, tclass:'order', tmpl: 'template_vip', val:'vip',      label:' '},
          {id:1 , tt:'th', flag:1, tclass:'col1', tmpl: 'template1',  val:'nickName',     label:'Identificador'},
-         {id:2 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1',  val:'tipopersona',     label:'tipo'},
-         {id:3 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1',  val:'name',        label:'denominación'},
+         {id:2 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1',  val:'displayName',        label:'denominación'},
+         {id:3 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1',  val:'tipopersona',     label:'tipo'},
          //{id:4 , tt:'th', flag:1, tclass:'col3', tmpl: 'template1',  val:'labeljuridico',      label:'juridico'},
          //{id:5 , tt:'th', flag:1, tclass:'col4', tmpl: 'template1',  val:'labelroles',     label:'roles'},
          {id:4, tt:'th', flag:1, tclass:'actions', tmpl: 'template10', val:'acciones',      label:'acciones'}
@@ -2771,3 +2779,16 @@ window.utils = {
         }
     }
 };
+
+(function(){
+  String.prototype.replaceLatinChar = function(){
+   return output = this.replace(/á|é|í|ó|ú|ñ|ä|ë|ï|ö|ü/ig,function (str,offset,s) {
+          var str =str=="á"?"a":str=="é"?"e":str=="í"?"i":str=="ó"?"o":str=="ú"?"u":str=="ñ"?"n":str;
+         str =str=="Á"?"A":str=="É"?"E":str=="Í"?"I":str=="Ó"?"O":str=="Ú"?"U":str=="Ñ"?"N":str;
+         str =str=="Á"?"A":str=="É"?"E":str=="Í"?"I":str=="Ó"?"O":str=="Ú"?"U":str=="Ñ"?"N":str;
+         str =str=="ä"?"a":str=="ë"?"e":str=="ï"?"i":str=="ö"?"o":str=="ü"?"u":str;
+         str =str=="Ä"?"A":str=="Ë"?"E":str=="Ï"?"I":str=="Ö"?"O":str=="Ü"?"U":str;
+          return (str);
+     });
+  };
+})();

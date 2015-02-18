@@ -6,41 +6,25 @@
     <div class="container-fluid">
 	    <div class="row">
 	      <div class="col-xs-6">
+	      
 	          <div class="row">
-	            <div class="col-xs-6"> <input type="checkbox" id="checkboxVip" /> <label for="checkboxVip">VIP</label>  </div>
-	            <div class="col-xs-6" data-editors="tipopersona"> </div>
+	            <div class="col-xs-3"> <input type="checkbox" id="checkboxVip" /> <label for="checkboxVip">VIP</label>  </div>
+	            <div class="col-xs-9" data-fields="tipojuridico"> </div>
 	          </div>
 	          
-	      
-	          <label>Nombre</label>
-	          <div data-editors="name,nickName"></div>
+	          <div class="backform-fix" style="padding-top:10px" data-fields="name,lastName,nickName,displayName,dni,cuit,birthDate"></div>
 		      
 		        
-		         <div style="margin-top:10px;">
-			        <label>Tipo Juridico</label>
-		          <!--div data-editors="tipojuridico"></div-->
-		          <div style="padding-left:10px">
-		              <% _.each(this.schema.tipojuridico.options,function(label,value){ %>
-		                   <input type="radio" name="tipojuridico" id="tjc_<%=value%>" value="<%= value %>"> <label for="tjc_<%=value%>" class="inptCheck"> <%= label%></label>
-		                   <br />
-		              <% }) %>
-		          </div>
-		         </div>
-	          
-	          <div style="margin-top:10px;">
-		          <label>Roles</label>
-		          <!-- div data-editors="roles"></div-->
-		          <div style="padding-left:10px">
-		              <% _.each(this.schema.roles.options,function(label,value){ %>
-		                   <input type="checkbox" name="roles" id="rc_<%=value%>" value="<%= value %>"> <label for="rc_<%=value%>" class="inptCheck"> <%= label%></label>
-		                   <br />
-		              <% }) %>
-		          </div>
-	          </div>
-	          
-	          
-		        
-		        
+		         <!-- div style="padding-top:10px">
+				        <label>Tipo Juridico</label>
+			          <div style="padding-left:10px">
+			              <% _.each(this.schema.tipojuridico.options,function(label,value){ %>
+			                   <input type="radio" name="tipojuridico" id="tjc_<%=value%>" value="<%= value %>"> <label for="tjc_<%=value%>" class="inptCheck"> <%= label%></label>
+			                   <br />
+			              <% }) %>
+			          </div>
+		         </div-->
+
 	      </div>
 	      <div class="col-xs-6" >
 	           <div>

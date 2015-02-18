@@ -5,8 +5,10 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
     
     initialize: function(opts){
       this.form = opts.form;
-      this.model = opts.model;
+      this.model = opts.model; //Entities.ActionParticipants
       this.infos = [];
+      this.autoDisplayNameEnabled = !(this.model.get('displayName'));
+      this.autoNickNameEnabled = !(this.model.get('nickName'));
     },
     
     onDestroy: function(){
@@ -15,7 +17,11 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
     
     events: {
       'click .js-add': 'addClicked',
-      'click #checkboxVip': 'vipChanged',   
+      'click #checkboxVip': 'vipChanged',
+      'keyup [name=name]': 'onNameChanged',
+      'keyup [name=lastName]': 'onNameChanged',
+      'keyup [name=nickName]': 'onNickNameChanged',
+      'keyup [name=displayName]': 'onDisplayNameChanged',
     },
     
     _getCheckValues: function(name){
@@ -34,7 +40,6 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
       var radios = $(this.el).find('[name='+name+']');
       _.each(data,function(value,key){
           radios.filter('[value='+key+']').prop('checked',data[key]);
-          console.log(radios.filter('[value='+key+']'));
       });
     },
     
@@ -42,7 +47,6 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
       var data = this.form.getValue();
       data.vip = $(this.el).find('#checkboxVip').prop('checked');
       data.tipojuridico = this._getCheckValues('tipojuridico');
-      data.roles = this._getCheckValues('roles');
       
       var contactinfo = [];
       _.each(this.infos,function(info){
@@ -56,7 +60,6 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
     setValue: function(model){
       $(this.el).find('#checkboxVip').prop('checked',model.get('vip'));
       this._setCheckValues('tipojuridico', model.get('tipojuridico'));
-      this._setCheckValues('roles', model.get('roles'));
       this.vipChanged();
       
       var self = this;
@@ -69,8 +72,26 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
       var data = this.getValue();
       this.model.set('vip',data.vip);
       this.model.set('tipojuridico',data.tipojuridico);
-      this.model.set('roles',data.roles);
       this.model.set('contactinfo',data.contactinfo);
+      this.model.set('tipopersona','persona');
+    },
+    
+    autoNickName: function(){
+      var $field = this.$el.find('[name=nickName]');
+      var filter = new RegExp('[^A-Z0-9]','gi');
+      var name = this.$el.find('[name=name]').val();
+      var lastName = this.$el.find('[name=lastName]').val();
+      name = name.replaceLatinChar().replace(filter,'');
+      lastName = lastName.replaceLatinChar().replace(filter,'');
+      var value =  name + '.' + lastName;
+      value = $.trim(value).toLowerCase();
+      $field.val(value);
+    },
+    
+    autoDisplayName: function(){
+      var $field = this.$el.find('[name=displayName]');
+      var value = this.$el.find('[name=name]').val() + ' ' + this.$el.find('[name=lastName]').val();
+      $field.val(value);
     },
       
     addContactInfo: function(model){
@@ -102,12 +123,31 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
     },
     
     contactInfoRemoved: function(contactInfo){
-      var pos = this.infos.indexOf(contactInfo);
-      if(pos > -1){
-        this.infos.splice(pos,1);
-        contactInfo.remove();
-      }
+      var infos = this.infos;
+      DocManager.confirm('¿Estás seguro de borrar el dato de contacto?').then(function(){
+        var pos = infos.indexOf(contactInfo);
+        if(pos > -1){
+          infos.splice(pos,1);
+          contactInfo.remove();
+        }
+       });
+    },
+    
+    onNameChanged: function(){
+      if(this.autoNickNameEnabled) this.autoNickName();
+      if(this.autoDisplayNameEnabled) this.autoDisplayName();
+    },
+    
+    onNickNameChanged: function(e){
+      var value = $(e.currentTarget).val();
+      this.autoNickNameEnabled = $.trim(value) === '';
+    },
+    
+    onDisplayNameChanged: function(){
+      var value = $(e.currentTarget).val();
+      this.autoDisplayNameEnabled = $.trim(value) === '';
     }
+    
   });
   
   

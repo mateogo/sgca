@@ -1,4 +1,7 @@
 DocManager.module("ActionsApp.Show", function(Show, DocManager, Backbone, Marionette, $, _){
+  
+  var ParticipantsAppShow = DocManager.module('ParticipantsApp.Show');
+  
   Show.Controller = {
 
     showAction: function(id){
@@ -28,10 +31,14 @@ DocManager.module("ActionsApp.Show", function(Show, DocManager, Backbone, Marion
           brandingView.on('action:edit', function(model){
             DocManager.trigger("action:edit",this.model);
           });
+          
+          
+          var participantView = ParticipantsAppShow.Controller.initParticipants(entity,{disabledEdit: true,collapsable:true});
 
           showLayout.on("show", function(){
             showLayout.brandingRegion.show(brandingView);
             showLayout.headerRegion.show(headerView);
+            showLayout.participantRegion.show(participantView);
           });
 
           DocManager.request('action:fetch:valid:budget',entity, null,function(budgetCol){
