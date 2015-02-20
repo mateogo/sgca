@@ -2249,9 +2249,9 @@ window.utils = {
          {id:1 , tt:'th', flag:1, tclass:'col1', tmpl: 'template1',  val:'nickName',     label:'Identificador'},
          {id:2 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1',  val:'displayName',        label:'denominación'},
          {id:3 , tt:'th', flag:1, tclass:'col2', tmpl: 'template1',  val:'tipopersona',     label:'tipo'},
-         //{id:4 , tt:'th', flag:1, tclass:'col3', tmpl: 'template1',  val:'labeljuridico',      label:'juridico'},
+         {id:4 , tt:'th', flag:1, tclass:'col3', tmpl: 'template1',  val:'tipojuridico',      label:'juridico'},
          //{id:5 , tt:'th', flag:1, tclass:'col4', tmpl: 'template1',  val:'labelroles',     label:'roles'},
-         {id:4, tt:'th', flag:1, tclass:'actions', tmpl: 'template10', val:'acciones',      label:'acciones'}
+         {id:5, tt:'th', flag:1, tclass:'actions', tmpl: 'template10', val:'acciones',      label:'acciones'}
      ],
 
     buildTableHeader: function(data){

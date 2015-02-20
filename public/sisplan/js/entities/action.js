@@ -52,6 +52,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           var raw = data.participants[i];
           if(!(raw instanceof Entities.ActionParticipant)){
             raw.id = (i+1);
+            raw.action = this;
             data.participants[i] = new Entities.ActionParticipant(raw);
           }
         }
@@ -217,8 +218,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return new Entities.ActionHeaderFacet(this.attributes);
     },
     
-    addParticipant: function(){
-      return new Entities.ActionParticipant();
+    createNewParticipant: function(){
+      return new Entities.ActionParticipant({action:this});
     },
     
     removeParticipant: function(participant){
@@ -241,7 +242,20 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
   
   Entities.ActionParticipant = Backbone.Model.extend({
+    whoami: 'ActionParticipant:action.js ',
     
+    constructor: function(params){
+      
+      //mantiene la referencia a la accion pero no en attributes
+      if(params.action){
+        this.action = params.action;
+        delete params.action;
+      }
+      
+      Backbone.Model.apply(this,arguments);
+      
+      console.log('PARTICIPANTE CONTRUIDO',this);
+    },
     
     defaults: {
       vip: false,
@@ -266,6 +280,89 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       tipopersona: {type: 'Select', options: ['persona','organismo','grupo','locacion','municipio'],title:''},
       tipojuridico: {type: 'Select', title:'Tipo Juridico', options: {pfisica:'Persona Fisica',pjuridica:'Persona juridica',pideal:'Persona Ideal',porganismo:'Organismo o Institución oficial'}},
       notas: 'TextArea'
+    },   
+    
+    usePerson: function(person){
+      console.log('usando persona',person);
+      var raw = person;
+      if(raw.toJSON){
+        raw = raw.toJSON();
+      }
+      var keys = _.keys(this.schema);
+      keys.push('contactinfo');
+      keys.push('person_id');
+      raw = _.pick(raw,keys);
+      this.clear({silent:true});
+      this.set(raw);
+      
+      var id = (person._id)? person._id : person.id;
+      this.set('person_id',id);
+    },
+    
+    /**
+     * Persiste el participante en persons
+     * @return promise
+     */
+    //TODO: poner logica en el server
+    _registerPerson: function(){
+      var promise;
+      var self = this;
+      
+      var rawObj = _.clone(this.toJSON());
+      rawObj = _.omit(rawObj,'id','vip');
+      
+      if(typeof (rawObj.person_id) !== 'undefined'){
+        rawObj._id = rawObj.person_id;
+        delete rawObj.person_id;
+      }
+      
+      var person = new Entities.Person(rawObj);
+      promise = person.save().done(function(r){
+        if(r._id){
+          self.set('person_id',r._id);
+        }
+      });
+
+      return promise;
+    },
+    
+    /**
+     * 
+     *  Persiste el participante dentro de action
+     *  
+     */
+    //TODO: poner logica en el server
+    _save: function(){
+      var def = $.Deferred();
+      
+      if(this.isNew()){
+        this.action.participants.push(this);
+      }  
+      
+      this.action.save().done(function(){
+        def.resolve();
+      }).fail(function(e){
+        def.reject(e);
+      });
+      return def.promise();
+    },
+    
+    sync: function(method,model,opts){
+      if(method === 'update' || method === 'create'){
+        var def = $.Deferred();
+        var self = this;
+        
+        // Primero se registra la person
+        // Luego se puede guardar
+        this._registerPerson().done(function(){
+            self._save().then(def.resolve,def.reject);
+        }).fail(def.reject);
+        
+        
+        return def.promise();
+      }else{
+        return Backbone.Model.sync.apply(method,model,opts);
+      }
     }
   });
 

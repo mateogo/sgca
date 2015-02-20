@@ -15,7 +15,7 @@ DocManager.module('ParticipantsApp',function(ParticipantsApp,DocManager,Backbono
 		},
 		newParticipant: function(action){
      if(action){
-       API.edit(action, action.addParticipant());
+       API.edit(action, action.createNewParticipant());
       }
 		},
 		edit: function(action,participant){

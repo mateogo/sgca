@@ -179,7 +179,60 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     comparator: "nickName"
   });
-
+  
+  //TODO: hacer un unitTest de esto
+  var MongoUtils = {
+      toLikeFilter: function(data){
+        var newData = {};
+        for(var key in data){
+          if(key === '$or'){
+            newData.$or = [];
+            _.each(data.$or,function(item){
+              newData.$or.push(MongoUtils.toLikeFilter(item));  
+            });
+          }else{
+            newData[key] = MongoUtils.like(data[key]);
+          }
+        }
+        return newData;
+      },
+      like: function(value){
+        return {"$regex": value ,"$options":"gi"};
+      }
+  };
+  
+  Entities.PersonSearchLike = Backbone.Collection.extend({
+    model:  Entities.Person,
+    url: '/recuperar/personas',
+    
+    sync: function(method,model,opts){
+      if(method === 'read'){
+        
+        var data = {};
+        
+        // preparando filtro like para mongo
+        if(opts.data){
+          data = MongoUtils.toLikeFilter(opts.data);
+        }
+        
+        var p = $.ajax({
+          url: this.url,
+          type: 'post',
+          dataType: 'json',
+          data: data
+        });
+        
+        p.done(function(data){
+          opts.success(data,'success',null);
+        });
+        
+        return p;
+      }else{
+        return Backbone.Collection.sync.apply(this,method,model,opts);
+      }
+    }
+  });
+  
   var filterFactory = function (entities){
     var fd = DocManager.Entities.FilteredCollection({
         collection: entities,
@@ -245,8 +298,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         }
       });
       return defer.promise();
+    },
+    
+    searchLike: function(criteria){
+      var persons = new Entities.PersonSearchLike();
+      
+      var promise = persons.fetch({data: criteria});
+      
+      promise.done(function(res){
+        
+      })
+      
+      persons.bind('change',function(){
+        console.log('JOYASSS! cambio la collection',persons);
+      })
+      
+      return promise;
     }
-
   };
 
   DocManager.reqres.setHandler("person:entities", function(){
@@ -259,6 +327,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   DocManager.reqres.setHandler("person:filtered:entities", function(criteria, cb){
     return API.getFilteredCol(criteria,cb);
+  });
+  
+  DocManager.reqres.setHandler("person:filteredLike:entities", function(criteria){
+    return API.searchLike(criteria);
   });
 
 });
