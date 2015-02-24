@@ -232,7 +232,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           def.resolve(o);
         }).fail(function(e){
           def.reject(e);
-        })
+        });
       }else{
         def.reject('Participant not found');
       }
@@ -243,6 +243,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   
   Entities.ActionParticipant = Backbone.Model.extend({
     whoami: 'ActionParticipant:action.js ',
+    urlRoot: '/acciones/:idAction/participantes',
+    url: function(){
+      return this.urlRoot.replace(':idAction',this.action.id);
+    },
     
     constructor: function(params){
       
@@ -251,10 +255,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         this.action = params.action;
         delete params.action;
       }
+      params = this.fromServer(params);
       
       Backbone.Model.apply(this,arguments);
-      
-      console.log('PARTICIPANTE CONTRUIDO',this);
     },
     
     defaults: {
@@ -274,6 +277,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       lastName: {validators: ['required'], type: 'Text',title:'Apellido'},
       nickName: {validators: ['required'], type: 'Text',title:'Alias'},
       displayName : {validators: ['required'], type: 'Text',title:'Nombre visible'},
+      email : {validators: ['email'], type: 'Text',title:'Email'},
       dni : {validators: [], type: 'Text',title:'DNI'},
       cuit : {validators: [], type: 'Text',title:'CUIT'},
       birthDate : {validators: [], type: 'Date',title:'Fecha nacimiento'},
@@ -282,16 +286,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       notas: 'TextArea'
     },   
     
+    /**
+     * Utiliza los datos de person para el Participante
+     */
     usePerson: function(person){
-      console.log('usando persona',person);
-      var raw = person;
+      var raw = this.fromServer(person);
       if(raw.toJSON){
         raw = raw.toJSON();
       }
-      var keys = _.keys(this.schema);
-      keys.push('contactinfo');
-      keys.push('person_id');
-      raw = _.pick(raw,keys);
+      //var keys = _.keys(this.schema);
+      //keys = _.union(keys,['contactinfo','person_id']);
+      //raw = _.pick(raw,keys);
       this.clear({silent:true});
       this.set(raw);
       
@@ -299,70 +304,122 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       this.set('person_id',id);
     },
     
-    /**
-     * Persiste el participante en persons
-     * @return promise
-     */
-    //TODO: poner logica en el server
-    _registerPerson: function(){
-      var promise;
-      var self = this;
+    fromServer: function(params){
+    //saca de los contactinfo los mail 
+      //copia el mail principal al attributo email
+      if(params.contactinfo){
+        var newInfos = [];
+        //  es la informacion que no se edita
+        // se mantienen fuera de los attributes para no perderlos
+        var hideInfos = []; 
+        var emailPrincipal;
+        _.each(params.contactinfo,function(info){
+          if(info.tipocontacto !== 'mail'){
+            newInfos.push(info);
+          }else if(info.subcontenido === 'principal'){
+            emailPrincipal = info.contactdata;
+          }else{
+            hideInfos.push(info);
+          }
+          //se setea los contactinfo filtrados, sin mails
+          params.contactinfo = newInfos;
+        });
+        this.hideInfos = hideInfos;
       
-      var rawObj = _.clone(this.toJSON());
-      rawObj = _.omit(rawObj,'id','vip');
-      
-      if(typeof (rawObj.person_id) !== 'undefined'){
-        rawObj._id = rawObj.person_id;
-        delete rawObj.person_id;
-      }
-      
-      var person = new Entities.Person(rawObj);
-      promise = person.save().done(function(r){
-        if(r._id){
-          self.set('person_id',r._id);
+        //traspasa el main principal a email, si es que el email no existe
+        if(!params.email && emailPrincipal){
+          params.email = emailPrincipal;
         }
-      });
-
-      return promise;
+      }
+      return params;
     },
+    
+    toServer: function(){
+      var obj = this.toJSON();
+      
+      var contactinfo = obj.contactinfo;
+      
+      for ( var i = 0; i < contactinfo.length && !info; i++) {
+        var item = contactinfo[i];
+        if(item.toJSON){
+          contactinfo[i] = item.toJSON();
+        }
+      }
+      
+      //Copiar email a contactinfo
+      var email = this.get('email');
+      if(email){
+        var info = _.findWhere(contactinfo,{tipocontacto: 'mail',subcontenido: 'principal'});
+        if(info){
+          info.contactdata = email;
+        }else{
+          info = {tipocontacto: 'mail',subcontenido: 'principal',contactdata: email};
+          contactinfo.push(info);
+        }
+      }
+      
+      //si existen informas no manejadas se agregan
+      if(this.hideInfos){
+        contactinfo = _.union(contactinfo,this.hideInfos);
+      }
+      
+      obj.contactinfo = contactinfo;
+      return obj;
+    },
+    
     
     /**
-     * 
-     *  Persiste el participante dentro de action
-     *  
+     * recibe participante guardado de servidor
+     * actualiza los datos en el cliente
      */
-    //TODO: poner logica en el server
-    _save: function(){
-      var def = $.Deferred();
+    _receiveParticipant: function(p){
+      var pos = -1;
       
-      if(this.isNew()){
-        this.action.participants.push(this);
-      }  
+      var collection = this.action.participants;
       
-      this.action.save().done(function(){
-        def.resolve();
-      }).fail(function(e){
-        def.reject(e);
-      });
-      return def.promise();
+      p = this.fromServer(p);
+      
+      for ( var i = 0; i < collection.length && pos === -1; i++) {
+        var item = collection.at(i);
+        if(item.get('person_id') === p.person_id){
+          pos = i;
+        }
+      }
+      
+      if(pos >-1){
+        collection.at(pos).set(p);
+      }else{
+        if(!(p instanceof Entities.ActionParticipant)){
+          p.action = this.action;
+          p = new Entities.ActionParticipant(p);
+        }
+        collection.push(p);
+      }
     },
     
-    sync: function(method,model,opts){
-      if(method === 'update' || method === 'create'){
-        var def = $.Deferred();
+    save: function(){
         var self = this;
-        
-        // Primero se registra la person
-        // Luego se puede guardar
-        this._registerPerson().done(function(){
-            self._save().then(def.resolve,def.reject);
-        }).fail(def.reject);
-        
-        
-        return def.promise();
-      }else{
-        return Backbone.Model.sync.apply(method,model,opts);
-      }
+        var $def = $.Deferred();
+        var obj = this.toServer();
+        var promise = $.ajax({
+                url: this.url(),
+                type: 'post',
+                dataType: 'json',
+                data: obj
+              });     
+        promise.done(function(r){
+          if(r  && r.error){
+            $def.reject(r.error);
+            return;
+          }
+          
+          self._receiveParticipant(r);
+          $def.resolve(r);
+          
+        }).fail(function(e){
+          $def.reject(e);
+        });
+        return $def.promise();
     }
   });
 

@@ -21,7 +21,7 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
     initAutocomplete: function(){
       var $nombreField = this.$el.find('[name=name]');
       
-      this.autoName = new AutoCompletePersonField({el:$nombreField,filterField:['name','displayName','nickName']});
+      this.autoName = new AutoCompletePersonField({el:$nombreField,filterField:['name','displayName','nickName','email']});
       
       var self = this;
       this.listenTo(this.autoName,'person:selected',function(person){
@@ -121,7 +121,8 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
     _setSelectValue: function(name,data){
       var value;
       for(var key in data){
-        if(data[key] === true){
+        var t = data[key];
+        if((typeof(t) === 'string' && t === 'true') || t  === true){
           value = key;
         }
       }
@@ -145,7 +146,9 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
     },
     
     setValue: function(model){
-      $(this.el).find('#checkboxVip').prop('checked',model.get('vip'));
+      var vip = model.get('vip');
+      var isVip =  ((typeof(vip) === 'string' && vip === 'true') || vip === true);
+      $(this.el).find('#checkboxVip').prop('checked',isVip);
       this._setSelectValue('tipojuridico', model.get('tipojuridico'));
       this.vipChanged();
       
@@ -157,6 +160,7 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
     },
     
     commit: function(){
+      this.resetValidations();
       var data = this.getValue();
       this.model.set('vip',data.vip);
       this.model.set('tipojuridico',data.tipojuridico);
@@ -226,6 +230,10 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
        });
     },
     
+    resetValidations: function(){
+      this.$el.find('.has-error').removeClass('has-error');
+    },
+    
     onNameChanged: function(){
       if(this.autoNickNameEnabled) this.autoNickName();
       if(this.autoDisplayNameEnabled) this.autoDisplayName();
@@ -239,6 +247,25 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
     onDisplayNameChanged: function(e){
       var value = $(e.currentTarget).val();
       this.autoDisplayNameEnabled = $.trim(value) === '';
+    },
+    
+    /**
+     * @param {Object} e - {code: String, description:String, field:String} 
+     */
+    onServerError: function(e){
+      if(e.code === 'repeated_field'){
+        var fieldName = e.field;
+        
+        var cssField = '.field-'+fieldName; 
+        
+        var $inpt = this.$el.find('.form-group'+cssField);
+        $inpt.addClass('has-error');
+        $inpt.find('[data-error]').html('Ya existe una persona con este valor');
+        
+      }else{
+        alert('Ops! no se pudo guardar');
+        console.error(e);
+      }
     }
   });
   
@@ -327,10 +354,13 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
     
     modal.on('ok',function(){
       modal.preventClose();
+      var self = this;
+      var oldValue = participant.toJSON();
       
       var errors = form.commit();
       if(errors){
         alert('revisa el formulario');
+        console.log('participante con error',participant,form);
         return;
       }
       formPP.commit();
@@ -343,8 +373,17 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
          $btn.button('reset');
          
       }).fail(function(e){
-         alert('No se pudo guardar ' +e);
-         $btn.button('reset');
+          $btn.button('reset');
+          
+          participant.set(oldValue);
+        
+          if(e && e.code){
+            formPP.onServerError(e);
+              
+          }else{
+            alert('Ops! No se pudo guardar');
+            console.error(e);
+          }
       });     
       
     });

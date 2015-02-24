@@ -303,17 +303,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     searchLike: function(criteria){
       var persons = new Entities.PersonSearchLike();
       
-      var promise = persons.fetch({data: criteria});
-      
-      promise.done(function(res){
-        
-      })
-      
-      persons.bind('change',function(){
-        console.log('JOYASSS! cambio la collection',persons);
-      })
-      
-      return promise;
+      return persons.fetch({data: criteria});
     }
   };
 

@@ -11,6 +11,8 @@
     Ojo: Administrar el cache: ver c´mo
 
  */
+var _ = require('underscore');
+
 var dbi ;
 var BSON;
 var config = {};
@@ -24,6 +26,54 @@ var MSGS = [
 
 //ATENCION: para agregar un serial, agregar entrada en tpr_adapter y en series;
 
+var API = {
+    find: function(query,cb){
+      dbi.collection(personsCol, function(err, collection) {
+        collection.find(query).sort({personname:1}).toArray(cb);
+      });
+    },
+    insert: function(person,cb){
+      console.log('insertNewPerson:persons.js BEGIN [%s]',person.name);
+      //dbi.collection(personsCol, function(err, collection) {
+      
+      _.defaults(person,{estado_alta:'activo',description:''});
+
+      dbi.collection(personsCol).insert(person,{w:1}, function(err, result) {
+            if (err) return cb('An error has occurred');
+            
+            console.log('3.1. ADD: se inserto correctamente el nodo %s', JSON.stringify(result[0]));
+            cb(null,result[0]);
+        });
+    },
+    update: function(person,cb){
+      if(!person){
+        cb('error: null person to insert');
+        return;
+      }
+      
+      if(!person._id){
+          API.insert(person,cb);
+          return;
+      }
+      
+      var id = person._id;
+      delete person._id;
+      console.log('Updating node id:[%s] ',id);
+      console.log(JSON.stringify(person));
+      dbi.collection(personsCol, function(err, collection) {
+          var idObj = new BSON.ObjectID(id);
+          collection.update({'_id':idObj}, { $set:person}, {safe:true}, function(err,r){
+            if(err){
+              cb(err);
+              return;
+            }else{
+              person._id = id;
+              cb(null,person);
+            }
+          });
+      });
+    }
+}
 
 var addNewPerson = function(req, res, node){
     console.log("addNewPerson:persons.js ");
@@ -46,6 +96,8 @@ var insertNewPerson = function (req, res, person){
         });
     //});
 };
+
+exports.api = API;
 
 exports.setDb = function(db) {
     dbi = db;
@@ -100,10 +152,8 @@ exports.find = function(req, res) {
     console.dir(query);
     // res.send(query);
 
-    dbi.collection(personsCol, function(err, collection) {
-        collection.find(query).sort({personname:1}).toArray(function(err, items) {
-            res.send(items);
-        });
+    API.find(query,function(err, items) {
+        res.send(items);
     });
 };
 

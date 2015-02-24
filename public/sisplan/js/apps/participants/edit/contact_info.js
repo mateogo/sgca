@@ -11,8 +11,7 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
         
       },
       
-      data: [{icon:'envelope',name:'mail',label:'email'},
-              {icon:'earphone',name:'telefono',label:'Teléfono'},
+      data: [{icon:'earphone',name:'telefono',label:'Teléfono'},
               {icon:'home',name:'direccion',label:'Dirección'},
               {icon:'globe',name:'web',label:'web'},
               {icon:'info-sign',name:'informacion',label:'Información'}]

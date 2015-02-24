@@ -225,6 +225,9 @@ module.exports = function (config, app) {
     app.post('/acciones',            action.add);
     app.put ('/acciones/:id',        action.update);
     app.delete('/acciones/:id',      action.delete);
+    
+    app.put('/acciones/:id/participantes',action.addParticipant);
+    app.post('/acciones/:id/participantes',action.addParticipant);
 
     // projects routes
     var project = require(rootPath + '/calendar/controllers/projects');

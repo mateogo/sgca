@@ -9,6 +9,13 @@
  *
  */
 var _ = require('underscore');
+var async = require('async');
+
+var path = require('path');
+var rootPath = path.normalize(__dirname + '/../..');
+
+var persons = require(rootPath + '/calendar/controllers/persons.js');
+
 
 var dbi ;
 var BSON;
@@ -54,6 +61,22 @@ var taction_adapter = {
     }
 
 };
+
+var API = {
+    update: function(action,cb){
+      if(!action || !action._id){
+        cb('action _id not found');
+        return;
+      }
+      var id = action._id;
+      delete action._id;
+      console.log('Updating node id:[%s] ',id);
+      console.log(JSON.stringify(action));
+      dbi.collection(actionsCol, function(err, collection) {
+          collection.update({'_id':new BSON.ObjectID(id)}, action, {safe:true},cb);
+      });
+    }
+}
 
 var loadSeriales = function(){
     for(var key in series){
@@ -163,6 +186,142 @@ var insertNewAction = function (req, res, action, cb){
         });
     //});
 };
+
+
+var participantManager = {
+    /**
+     * verifica que no exista otro persons que tenga el mismo value para field
+     * @param {String} field - nombre el campo
+     * @param {string} value - valor
+     * @param {String} idPerson - id de la persona que quiere ese field:valor
+     * @param {fucntion} cb - callback
+     */ 
+    _checkUniqueField: function(field,value,idPerson,cb){
+      var query = {$and:[]};
+      var t = {};
+      t[field] = value;
+      query.$and.push(t);
+      query.$and.push({'_id':{'$ne':new BSON.ObjectID(idPerson)}});
+      
+      persons.api.find(query,function(err,items){
+        if(err) return cb(err);
+        
+        var ok = (items && items.length === 0);
+        
+        if(ok){
+          cb(null);  
+        }else{
+          cb({error:{code:'repeated_field','field':field,description:'Ya existe otra persona con ('+field +':'+value+')'}});
+        }
+      })
+    },
+    
+    _validate: function(participant,action,cb){
+      
+      var idPerson = participant.person_id;
+      
+      async.series([
+                    function(callback){
+                      if(participant.email && participant.email.trim() !== ''){
+                        participantManager._checkUniqueField('email', participant.email, idPerson, callback);
+                      }else{
+                        callback(null);
+                      }
+                    },
+                    function(callback){
+                      participantManager._checkUniqueField('nickName', participant.nickName, idPerson, callback);
+                    }
+                  ],
+                  cb);
+    },
+    
+    _registerPerson: function(participant,cb){
+      var rawObj = _.clone(participant);
+      rawObj = _.omit(rawObj,'id','vip');
+      if(typeof (rawObj.person_id) !== 'undefined'){
+        rawObj._id = rawObj.person_id;
+        delete rawObj.person_id;
+      }
+      
+      persons.api.update(rawObj,function(err,r){
+        if(err) return cb(err);
+        
+        if(r._id){
+          participant.person_id = r._id;
+        }
+        cb(null,r);
+      });
+    },
+    
+    _saveParticipant: function(participant,action,cb){
+      if(!participant || !participant.person_id){
+        return cb('participante no tiene person asociado');
+      }
+      
+      if(!action.participants){
+        action.participants = [];
+      }
+      
+      var pos = _.findIndex(action.participants,{person_id:participant.person_id});
+      if(pos >-1){
+        action.participants[pos] = participant;
+      }else{
+        action.participants.push(participant);
+      }
+      
+      API.update(action,function(err,r){
+        if(err) return cb(err);
+        
+        cb(null,participant);
+      });
+    },
+    
+    
+    /**
+     * Agrega o actualiza un participante para una accion determinada
+     * @param {String} idAction
+     * @param {Entities.ActionParticipant} participant
+     * @param {Function} cb - callback
+     */
+    addParticipant: function(idAction,participant,cb){
+      console.log('MAN idAccion '+idAction);
+      //trae accion
+      
+      var action;
+      async.series([
+            // busca el action
+            function(callback){
+              exports.fetchById(idAction,function(err,actionResult){
+                if(err) return callback(err,null);
+                
+                action = actionResult;
+                callback();
+              })
+            },
+            
+            //valida a un participante, verifica que no se repita email ni nickName
+            function(callback){
+              participantManager._validate(participant,action,callback);
+            },
+            
+            //resgistra al participante en person
+            function(callback){
+              participantManager._registerPerson(participant,callback);
+            },
+            
+            //se guarda el participante en actions
+            function(callback){
+              participantManager._saveParticipant(participant,action,callback);
+            }
+      ],
+      function(err,results){
+          if(err) return cb(err);
+          
+          var saved = results[results.length-1];
+          cb(null,saved);
+      })
+    }
+}
 
 exports.setDb = function(db) {
     //console.log('***** Action setDB*******');
@@ -288,6 +447,7 @@ var buildUpdateData = function(data){
     return data.newdata;
 };
 
+
 exports.fetchActionBudgetCol = function(req, res){
     var resultCol,
         query = buildQuery(req.body);
@@ -370,6 +530,21 @@ exports.delete = function(req, res) {
         });
     });
 };
+
+exports.addParticipant = function(req,res){
+  var idAction  = req.params.id;
+  var participant = req.body;
+  
+  participantManager.addParticipant(idAction,participant,function(err,response){
+    if(err){
+      res.send(err);
+    }else{
+      console.log('idParticipante '+idAction);
+      console.log(JSON.stringify(participant));
+      res.send(response);
+    }
+  });
+}
 
 
 /*
