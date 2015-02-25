@@ -33,7 +33,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
     validate: function(attrs, options) {
-      var errors = {}
+      var errors = {};
       if (! attrs.name) {
         errors.firstName = "no puede quedar en blanco";
       }
@@ -75,7 +75,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
               return document;
             }
-          }
+          };
         }
     });
     return fd;
@@ -142,4 +142,3 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 });
-
