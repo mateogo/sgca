@@ -34,39 +34,6 @@ DocManager.module("ParticipantsApp.List", function(List, DocManager, Backbone, M
     }
   })
   
-  var NoParticipantsView = Marionette.ItemView.extend({
-    template: _.template('<td colspan="7">No hay participantes para mostrar</td>'),
-    tagName: "tr",
-    className: "alert"
-  });
-  
-  List.Participant = Marionette.ItemView.extend({
-    tagName: "tr",
-
-    getTemplate: function(){
-      return _.template(utils.buildRowRenderTemplate(utils.participantListTableHeader,utils.buildTableRowTemplates));
-    },
-    
-    events: {
-      'click button.js-edit': 'editClicked',
-      'click button.js-trash': 'trashClicked',
-    },
-    
-    editClicked: function(e){
-      e.stopPropagation();e.preventDefault();
-      //this.trigger('participant:edit',this.model);
-      DocManager.trigger('participant:edit',participantsApp.Model.selectedAction,this.model);
-    },
-    
-    trashClicked: function(e){
-      e.stopPropagation();e.preventDefault();
-      //this.trigger('participant:remove',this.model);
-      DocManager.trigger('participant:remove',participantsApp.Model.selectedAction,this.model);
-    }
-    
-  });
-  
-  
   Backgrid.VipCell = Backgrid.Cell.extend({
       // Cell default class names are the lower-cased and dasherized
       // form of the the cell class names by convention.
