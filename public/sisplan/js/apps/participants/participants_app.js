@@ -25,7 +25,7 @@ DocManager.module('ParticipantsApp',function(ParticipantsApp,DocManager,Backbono
 		  DocManager.confirm('¿Estás seguro de borrar al participante?').then(function(){
        	  
 		      action.removeParticipant(participant).done(function(){
-        	    alert('borrado');
+        	    Message.success('Borrado');
         	  }).fail(function(e){
       		    alert(e);
       		  })

@@ -26,6 +26,13 @@
 							           <span class="clearfix"></span>
 							        </div>
 							        <ul class="contactinfo-list-show text-info">
+                                    
+                                    <% if(item.email) { %>
+                                            <li>
+                                                <i class="glyphicon glyphicon-envelope"></i> <%=item.email %>
+                                                <br /><small class="text-muted" style="padding-left:15px"> principal </small>
+                                            </li>
+                                    <% } %>
 							        
 							        <% _.each(item.contactinfo,function(info,k2){ %>
 							        

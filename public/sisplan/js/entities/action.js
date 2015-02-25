@@ -278,8 +278,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       nickName: {validators: ['required'], type: 'Text',title:'Alias'},
       displayName : {validators: ['required'], type: 'Text',title:'Nombre visible'},
       email : {validators: ['email'], type: 'Text',title:'Email'},
-      dni : {validators: [], type: 'Text',title:'DNI'},
-      cuit : {validators: [], type: 'Text',title:'CUIT'},
+      dni : {validators: ['dni'], type: 'Text',title:'DNI',help:'Sin puntos'},
+      cuit : {validators: ['cuit'], type: 'Text',title:'CUIT',help:'Sin puntos ni guiones'},
       birthDate : {validators: [], type: 'Date',title:'Fecha nacimiento'},
       tipopersona: {type: 'Select', options: ['persona','organismo','grupo','locacion','municipio'],title:''},
       tipojuridico: {type: 'Select', title:'Tipo Juridico', options: {pfisica:'Persona Fisica',pjuridica:'Persona juridica',pideal:'Persona Ideal',porganismo:'Organismo o Institución oficial'}},
@@ -299,6 +299,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       //raw = _.pick(raw,keys);
       this.clear({silent:true});
       this.set(raw);
+      
+      
+      
       
       var id = (person._id)? person._id : person.id;
       this.set('person_id',id);
@@ -331,6 +334,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           params.email = emailPrincipal;
         }
       }
+      
+      
+      //verica que el vip sea boolean
+      if(params.vip){
+          params.vip = ((typeof(params.vip) === 'string' && params.vip === 'true') || params.vip === true);
+      }
+      
       return params;
     },
     

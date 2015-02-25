@@ -263,7 +263,7 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
         $inpt.find('[data-error]').html('Ya existe una persona con este valor');
         
       }else{
-        alert('Ops! no se pudo guardar');
+        Message.error('Ops! no se pudo guardar');
         console.error(e);
       }
     }
@@ -317,8 +317,15 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
           ul.append($li);
           return $li;
         };
+      },
+      events: {
+          'keydown': 'onKeyDown'
+      },
+      onKeyDown: function(e){
+          if(e.keyCode === 27){
+              e.stopPropagation();
+          }
       }
-    
   });
   
   
@@ -359,9 +366,8 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
       
       var errors = form.commit();
       if(errors){
-        alert('revisa el formulario');
-        console.log('participante con error',participant,form);
-        return;
+          Message.warning('revisa el formulario');
+          return; 
       }
       formPP.commit();
       
@@ -381,7 +387,7 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
             formPP.onServerError(e);
               
           }else{
-            alert('Ops! No se pudo guardar');
+            Message.error('Ops! No se pudo guardar');
             console.error(e);
           }
       });     
