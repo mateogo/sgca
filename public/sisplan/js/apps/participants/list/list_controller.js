@@ -24,9 +24,7 @@ DocManager.module('ParticipantsApp.List',function(List, DocManager, Backbone, Ma
 								
 				var participants = action.participants;
 				
-				var table = new List.Participants({
-				  collection: participants
-				})
+				var table = List.GridCreator(participants);
 		    	      
 		    List.Session.layout.on("show", function(){
 			    var ActionsShow = DocManager.module('ActionsApp.Show');
@@ -41,6 +39,11 @@ DocManager.module('ParticipantsApp.List',function(List, DocManager, Backbone, Ma
 			});
 		}
 	};
+	
+	
+	function initTable(){
+	    //var grid
+	}
 	
 	
 	var listeners = function(view){
