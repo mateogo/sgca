@@ -76,7 +76,7 @@ var API = {
           collection.update({'_id':new BSON.ObjectID(id)}, action, {safe:true},cb);
       });
     }
-}
+};
 
 var loadSeriales = function(){
     for(var key in series){
@@ -213,7 +213,7 @@ var participantManager = {
         }else{
           cb({error:{code:'repeated_field','field':field,description:'Ya existe otra persona con ('+field +':'+value+')'}});
         }
-      })
+      });
     },
     
     _validate: function(participant,action,cb){
@@ -296,7 +296,7 @@ var participantManager = {
                 
                 action = actionResult;
                 callback();
-              })
+              });
             },
             
             //valida a un participante, verifica que no se repita email ni nickName
@@ -319,9 +319,72 @@ var participantManager = {
           
           var saved = results[results.length-1];
           cb(null,saved);
-      })
+      });
     }
-}
+};
+
+
+var locationManager = {
+    _save: function(location,action,cb){
+      
+      if(!action.locations){
+        action.locations = [];
+      }
+      
+      var id = parseInt(location.id);
+      if(!id){
+        id = (action.locations.length > 0) ? parseInt(action.locations[action.locations.length-1].id) + 1 : 1;
+        location.id = id;
+      }
+       
+      var pos = -1;
+      for (var i = 0; i < action.locations.length && pos === -1; i++) {
+        var item = action.locations[i];
+        if(item.id == id){
+          pos = i;
+        }
+      }
+      if(pos >-1){
+        action.locations[pos] = location;
+      }else{
+        action.locations.push(location);
+      }
+      
+      API.update(action,function(err,r){
+        if(err) return cb(err);
+        
+        cb(null,location);
+      });
+    },
+    addLocation: function(idAction,location,cb){
+      console.log('MAN idAccion '+idAction);
+      //trae accion
+      
+      var action;
+      async.series([
+            // busca el action
+            function(callback){
+              exports.fetchById(idAction,function(err,actionResult){
+                if(err) return callback(err,null);
+                
+                action = actionResult;
+                callback();
+              });
+            },
+            
+            //se guarda el location en actions
+            function(callback){
+              locationManager._save(location,action,callback);
+            }
+      ],
+      function(err,results){
+          if(err) return cb(err);
+          
+          var saved = results[results.length-1];
+          cb(null,saved);
+      });
+    }
+};
 
 exports.setDb = function(db) {
     //console.log('***** Action setDB*******');
@@ -539,12 +602,21 @@ exports.addParticipant = function(req,res){
     if(err){
       res.send(err);
     }else{
-      console.log('idParticipante '+idAction);
-      console.log(JSON.stringify(participant));
       res.send(response);
     }
   });
-}
+};
+
+exports.addLocation = function(req,res){
+  var idAction  = req.params.id;
+  var location = req.body;
+  
+  locationManager.addLocation(idAction,location,function(err,response){
+    if(err) return res.send(err);
+    
+    res.send(response);
+  });
+};
 
 
 /*
@@ -572,7 +644,3 @@ exports.importNewAction = function (data, cb){
     addNewAction(null, null, data, cb);
     //});
 };
-
-
-
-

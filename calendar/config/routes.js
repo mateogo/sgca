@@ -228,6 +228,8 @@ module.exports = function (config, app) {
     
     app.put('/acciones/:id/participantes',action.addParticipant);
     app.post('/acciones/:id/participantes',action.addParticipant);
+    
+    app.post('/acciones/:id/locaciones',action.addLocation);
 
     // projects routes
     var project = require(rootPath + '/calendar/controllers/projects');

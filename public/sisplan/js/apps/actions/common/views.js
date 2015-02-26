@@ -26,7 +26,8 @@ DocManager.module("ActionsApp.Common.Views", function(Views, DocManager, Backbon
       "click .js-newentity": "newentity",
       "click .js-newbudget": "newbudget",
       "click .js-newactivity": "newactivity",
-      "click .js-newparticipant": "newparticipant"
+      "click .js-newparticipant": "newparticipant",
+      "click .js-newlocation": "newlocation",
     },
 
     triggers: {
@@ -40,7 +41,7 @@ DocManager.module("ActionsApp.Common.Views", function(Views, DocManager, Backbon
     },
 
     newactivity: function(e){
-      console.log('activity')
+      console.log('activity');
       e.preventDefault();
       this.trigger('activity:new');
       return false;
@@ -50,6 +51,13 @@ DocManager.module("ActionsApp.Common.Views", function(Views, DocManager, Backbon
       console.log('participant');
       e.preventDefault();
       this.trigger('participant:list');
+      return false;
+    },
+    
+    newlocation: function(e){
+      console.log('location');
+      e.preventDefault();
+      this.trigger('location:list');
       return false;
     },
  

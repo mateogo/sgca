@@ -36,7 +36,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       nivel_ejecucion: 'enpreparacion',
       nivel_importancia: 'media',
       aprovals:[],
-      participants: []
+      participants: [],
+      locations: []
     },
 
     enabled_predicates:['es_relacion_de'],
@@ -46,27 +47,39 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         this.participants = new Backbone.Collection(data.participants);
       }
       
-      // inicializando objetos Participante 
-      if(data && data.participants){
-        for ( var i = 0; i < data.participants.length; i++) {
-          var raw = data.participants[i];
-          if(!(raw instanceof Entities.ActionParticipant)){
+      if(!this.locations){
+        this.locations = new Backbone.Collection(data.locations);
+      }
+      
+      // inicializando objetos Participante y Locaciones
+      this._initSubCollection(data, 'participants', Entities.ActionParticipant);
+      this._initSubCollection(data, 'locations', Entities.ActionLocation);
+      
+      return data;
+    },
+    
+    _initSubCollection: function(data,collectionKey,Entity){
+      var collection = data[collectionKey];
+      if(collection){
+        for ( var i = 0; i < collection.length; i++) {
+          var raw = collection[i];
+          if(!(raw instanceof Entity)){
             raw.id = (i+1);
             raw.action = this;
-            data.participants[i] = new Entities.ActionParticipant(raw);
+            collection[i] = new Entity(raw);
           }
         }
-        this.participants.reset(data.participants);
+        this[collectionKey].reset(collection);
         
-        delete data.participants;
+        delete data[collectionKey];
       }
-      return data;
     },
     
     sync: function (method, model, options) {
       if(method == 'update'){
         if(model.participants){
           model.set('participants',model.participants.toJSON());
+          model.set('locations',model.locations.toJSON());
         }
       }
       return Backbone.Model.prototype.sync.apply(this,[method, model, options]);
@@ -237,8 +250,28 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         def.reject('Participant not found');
       }
       return def.promise();
+    },
+    
+    createNewLocation: function(){
+      return new Entities.ActionLocation({action:this});
+    },
+    
+    removeLocation: function(location){
+      var def = $.Deferred();
+      var locs = this.locations;
+      var item = locs.findWhere({id:location.id});
+      if(item){
+          locs.remove(item);
+          this.save().done(function(o){
+             def.resolve(o);
+          }).fail(function(e){
+             def.reject(e);
+          });
+      }else{
+        def.reject('Location not found');
+      }
+      return def.promise();
     }
-
   });
   
   Entities.ActionParticipant = Backbone.Model.extend({
@@ -432,6 +465,108 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         return $def.promise();
     }
   });
+  
+  
+  Entities.ActionLocation = Backbone.Model.extend({
+      whoami: 'ActionLocation:action.js ',
+      urlRoot: '/acciones/:idAction/locaciones',
+      url: function(){
+        return this.urlRoot.replace(':idAction',this.action.id);
+      },
+      
+      constructor: function(params){
+        //mantiene la referencia a la accion pero no en attributes
+        if(params.action){
+          this.action = params.action;
+          delete params.action;
+        }
+        params = this.fromServer(params);
+        
+        Backbone.Model.apply(this,arguments);
+      },
+      
+      defaults: {
+        nickName: '',
+        name:'',
+        tipopersona: 'municipio',
+        tipojuridico: {pfisica:false,pjuridica:false,pideal:false,porganismo:true},
+        roles: {},
+        contactinfo: [],
+        notas: []
+      },
+    
+      schema: {
+        name: {validators: ['required'], type: 'Text',title:'Nombre'},
+        nickName: {validators: ['required'], type: 'Text',title:'Alias'},
+        displayName : {validators: ['required'], type: 'Text',title:'Nombre visible'},
+        direccion: {validators: [], type: 'Text',title:'Dirección'},
+        notas: 'TextArea'
+      },   
+      
+      fromServer: function(params){
+          if(params.id){
+            params.id = parseInt(params.id);
+          }
+          return params;
+      },
+      
+      toServer: function(){
+        var obj = this.toJSON();
+        obj.tipojuridico = {pfisica:false,pjuridica:false,pideal:false,porganismo:true};
+        return obj;
+      },
+      
+      _receiveLocation: function(p){
+        var pos = -1;
+        
+        var collection = this.action.locations;
+        
+        p = this.fromServer(p);
+        
+        for ( var i = 0; i < collection.length && pos === -1; i++) {
+          var item = collection.at(i);
+          if(item.get('id') === p.id){
+            pos = i;
+          }
+        }
+        
+        if(pos >-1){
+          collection.at(pos).set(p);
+        }else{
+          if(!(p instanceof Entities.ActionLocation)){
+            p.action = this.action;
+            p = new Entities.ActionLocation(p);
+          }
+          collection.push(p);
+        }
+      },
+      
+      
+      save: function(){
+        var self = this;
+        var $def = $.Deferred();
+        var obj = this.toServer();
+        var promise = $.ajax({
+                url: this.url(),
+                type: 'post',
+                dataType: 'json',
+                data: obj
+              });     
+        promise.done(function(r){
+            if(r  && r.error){
+              $def.reject(r.error);
+              return;
+            }
+              
+            self._receiveLocation(r);
+            $def.resolve(r);
+              
+        }).fail(function(e){
+             $def.reject(e);
+        });
+        return $def.promise();
+      }
+    });
 
   Entities.ActionCoreFacet = Backbone.Model.extend({
     //urlRoot: "/comprobantes",

@@ -14,7 +14,7 @@ DocManager.module("ActionsApp", function(ActionsApp, DocManager, Backbone, Mario
 
   var API = {
     editAction: function(id){
-      console.log('API: edit accion', id)
+      console.log('API: edit accion', id);
       ActionsApp.Edit.Controller.editAction(id);
       DocManager.execute("set:active:header", "acciones");
     },
@@ -34,12 +34,12 @@ DocManager.module("ActionsApp", function(ActionsApp, DocManager, Backbone, Mario
       DocManager.request("action:create:new");
     },
     showAction: function(id){
-      console.log('API: show action')
+      console.log('API: show action');
       ActionsApp.Show.Controller.showAction(id);
       //DocManager.execute("set:active:header", "presupuestos");
     },
     showProfile: function(){
-      console.log('API: show PROFILE')
+      console.log('API: show PROFILE');
       DocManager.execute('edit:user:profile');
       //DocManager.execute("set:active:header", "acciones");
     },

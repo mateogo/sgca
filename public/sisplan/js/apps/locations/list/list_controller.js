@@ -1,13 +1,9 @@
-DocManager.module('ParticipantsApp.List',function(List, DocManager, Backbone, Marionette, $, _){
+DocManager.module('LocationsApp.List',function(List, DocManager, Backbone, Marionette, $, _){
 
-
-  var participantsApp = DocManager.module('ParticipantsApp');
+  var locationsApp = DocManager.module('LocationsApp');
   
 	List.Controller = {
 		list: function(idAction){
-			console.log('listar participantes de ',idAction);
-
-
 			var fetchingAction = DocManager.request("action:entity", idAction);
 
 			fetchingAction.done(function(action){
@@ -16,16 +12,15 @@ DocManager.module('ParticipantsApp.List',function(List, DocManager, Backbone, Ma
 					return;
 				}
 				
-				participantsApp.Model.selectedAction = action;
-				
+				locationsApp.Model.selectedAction = action;
 				
 				if(!List.Session) List.Session = {};
 				List.Session.layout = new List.Layout();
 								
-				var participants = action.participants;
+				var locations = action.locations;
 				
-				var table = List.GridCreator(participants);
-				var filter = List.FilterCreator(participants);
+				var table = List.GridCreator(locations);
+				var filter = List.FilterCreator(locations);
 		    	      
 		    List.Session.layout.on("show", function(){
 			    var ActionsShow = DocManager.module('ActionsApp.Show');
@@ -37,20 +32,14 @@ DocManager.module('ParticipantsApp.List',function(List, DocManager, Backbone, Ma
 		    });
 		    DocManager.mainRegion.show(List.Session.layout);
 		    listeners(List.Session.layout);
-
 			});
 		}
-	}; 
-	
-	var listeners = function(view){
-	  view.on('participant:new',function(){
-	    DocManager.trigger('participant:new',participantsApp.Model.selectedAction);
-	  });
-	  
-	  view.on('tableRegion:childView:participant:edit',function(participant){
-	    DocManager.trigger('participant:edit',participantsApp.Model.selectedAction,participant);
-	  });
 	};
 	
+	var listeners = function(view){
+    view.on('location:new',function(){
+      DocManager.trigger('location:new',locationsApp.Model.selectedAction);
+    });
+  };
 	
 });

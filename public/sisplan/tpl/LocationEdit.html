@@ -1,0 +1,54 @@
+ 
+  <form class="form-participant">
+    <div id="starMark">
+      <i class="glyphicon glyphicon-star"></i>
+    </div>
+    <div class="container-fluid">
+	    <div class="row">
+	      <div class="col-xs-6">
+	      
+	          <div class="row">
+	            <div class="col-xs-3"> <input type="checkbox" id="checkboxVip" /> <label for="checkboxVip">VIP</label>  </div>
+	            <div class="col-xs-9" data-fields="tipojuridico"> </div>
+	          </div>
+	          
+	          <div class="backform-fix" style="padding-top:10px" data-fields="name,lastName,email,nickName,displayName,dni,cuit,birthDate"></div>
+		      
+		        
+		         <!-- div style="padding-top:10px">
+				        <label>Tipo Juridico</label>
+			          <div style="padding-left:10px">
+			              <% _.each(this.schema.tipojuridico.options,function(label,value){ %>
+			                   <input type="radio" name="tipojuridico" id="tjc_<%=value%>" value="<%= value %>"> <label for="tjc_<%=value%>" class="inptCheck"> <%= label%></label>
+			                   <br />
+			              <% }) %>
+			          </div>
+		         </div-->
+
+	      </div>
+	      <div class="col-xs-6" >
+	           <div>
+			          <label class="pull-left">
+		                Datos de contacto 
+		            </label> 
+		            <span class="pull-right">
+		               <button type="button" class="btn btn-xs btn-default js-add">
+                     <i class="glyphicon glyphicon-plus"></i> agregar
+                   </button>
+		            </span>
+		            <div class="clearfix"></div>
+	           </div>
+	          
+	          
+	          <div id="datosContainer" class="well list-contact-data" style="min-height:250px;"> </div>
+	          
+	          <div style="margin-top:10px;">
+		          <label>Notas</label>
+		          <div data-editors="notas"></div>
+		        </div>
+	          
+	          
+	      </div>
+	    </div>
+    </div>
+ </form>
