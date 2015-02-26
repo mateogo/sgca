@@ -366,7 +366,7 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
       
       var errors = form.commit();
       if(errors){
-          Message.warning('revisa el formulario');
+          Message.warning('Revis&aacute; el formulario');
           return; 
       }
       formPP.commit();

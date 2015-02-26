@@ -14,7 +14,8 @@ DocManager.module("ParticipantsApp.List", function(List, DocManager, Backbone, M
       sidebarRegion: '#sidebar-region',
       linksRegion:   '#panel-region',
       mainRegion:    '#main-region',
-      tableRegion: '#table-region'
+      tableRegion: '#table-region',
+      filterRegion : '#filter-region'    
     },
     
     events: {
@@ -23,16 +24,16 @@ DocManager.module("ParticipantsApp.List", function(List, DocManager, Backbone, M
     
     newClicked: function(e){
       this.trigger('participant:new');
-    },
-    
-    
+    }
   });
 
+  
   List.ActionNotFound = Marionette.ItemView.extend({
     getTemplate: function(){
       return utils.templates.ActionNotFound;
     }
-  })
+  });
+  
   
   Backgrid.VipCell = Backgrid.Cell.extend({
       // Cell default class names are the lower-cased and dasherized
@@ -48,8 +49,9 @@ DocManager.module("ParticipantsApp.List", function(List, DocManager, Backbone, M
           this.$el.css('width','25px');
           return this;
       }
-  })
+  });
   
+    
   Backgrid.ActionCell = Backgrid.Cell.extend({
       // Cell default class names are the lower-cased and dasherized
       // form of the the cell class names by convention.
@@ -81,18 +83,25 @@ DocManager.module("ParticipantsApp.List", function(List, DocManager, Backbone, M
       }
     });
   
+  
   List.GridCreator = function(collection){
-      var table = new Backgrid.Grid({
+      return new Backgrid.Grid({
           className: 'table table-condensed table-bordered table-hover',
           collection: collection,
           columns: [{ name: 'vip',label: 'VIP',cell: 'vip',editable:false},
                     { name: 'displayName',label: 'Nombre',cell: 'string',editable:false},
                     {name: 'nickName',label: 'Alias',cell: 'string',editable:false},
                     {name: 'email',label: 'email',cell: 'string',editable:false},
-                    {name: 'nickName',label: 'Acciones',cell: 'action',editable:false,sortable:false},
+                    {label: 'Acciones',cell: 'action',editable:false,sortable:false},
                    ]
-        })
-      
-     return table;
-  }  
+        });
+  }; 
+  
+  
+  List.FilterCreator = function(collection){
+      return new Backgrid.Extension.ClientSideFilter({
+          collection: collection,
+          fields: ['name','displayName','email']
+        });
+  };
 });

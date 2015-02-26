@@ -25,6 +25,7 @@ DocManager.module('ParticipantsApp.List',function(List, DocManager, Backbone, Ma
 				var participants = action.participants;
 				
 				var table = List.GridCreator(participants);
+				var filter = List.FilterCreator(participants);
 		    	      
 		    List.Session.layout.on("show", function(){
 			    var ActionsShow = DocManager.module('ActionsApp.Show');
@@ -32,6 +33,7 @@ DocManager.module('ParticipantsApp.List',function(List, DocManager, Backbone, Ma
 			    var headerAction =  new DocManager.ActionsApp.Report.Branding({model:action});// ActionsShow.Branding({model:action});
 			    List.Session.layout.navbarRegion.show(headerAction);
 			    List.Session.layout.tableRegion.show(table);
+			    List.Session.layout.filterRegion.show(filter);
 		    });
 		    DocManager.mainRegion.show(List.Session.layout);
 		    listeners(List.Session.layout);
@@ -49,12 +51,12 @@ DocManager.module('ParticipantsApp.List',function(List, DocManager, Backbone, Ma
 	var listeners = function(view){
 	  view.on('participant:new',function(){
 	    DocManager.trigger('participant:new',participantsApp.Model.selectedAction);
-	  })
+	  });
 	  
 	  view.on('tableRegion:childView:participant:edit',function(participant){
 	    DocManager.trigger('participant:edit',participantsApp.Model.selectedAction,participant);
 	  });
-	}
+	};
 	
 	
 });

@@ -4,9 +4,9 @@ DocManager.module('ParticipantsApp',function(ParticipantsApp,DocManager,Backbono
 		appRoutes: {
 			'participantes/:id': 'list',
 		}
-	})
+	});
 	
-	ParticipantsApp.Model = {selectedAction: null} 
+	ParticipantsApp.Model = {selectedAction: null}; 
 
 	var API = {
 		list: function(id){
@@ -28,10 +28,10 @@ DocManager.module('ParticipantsApp',function(ParticipantsApp,DocManager,Backbono
         	    Message.success('Borrado');
         	  }).fail(function(e){
       		    alert(e);
-      		  })
-		  })
+      		  });
+		  });
 		}
-  }
+  };
 
 	DocManager.on('participant:list',function(action){
 		console.log('mostrar lista participantes',action);
