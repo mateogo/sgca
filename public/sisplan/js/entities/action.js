@@ -492,7 +492,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         tipojuridico: {pfisica:false,pjuridica:false,pideal:false,porganismo:true},
         roles: {},
         contactinfo: [],
-        notas: []
+        notas: '',
+        coordinate: []
       },
     
       schema: {
@@ -500,6 +501,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         nickName: {validators: ['required'], type: 'Text',title:'Alias'},
         displayName : {validators: ['required'], type: 'Text',title:'Nombre visible'},
         direccion: {validators: [], type: 'Text',title:'Dirección'},
+        provincia: {validators: [], type: 'Text',title:'Provincia'},
+        departamento: {validators: [], type: 'Text',title:'Departamento'},
+        localidad: {validators: [], type: 'Text',title:'Localidad'},
         notas: 'TextArea'
       },   
       
@@ -507,6 +511,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           if(params.id){
             params.id = parseInt(params.id);
           }
+          
+          //separando direccion de contactinfo
+          if(params.contactinfo){
+            _.each(params.contactinfo,function(info){
+              if(info.tipocontacto === 'direccion'){
+                params.direccion = info.contactdata;
+                if(info.provincia) params.provincia = info.provincia;
+                if(info.departamento) params.departamento = info.departamento;
+                if(info.localidad) params.localidad = info.localidad;
+                if(info.glat && info.glng){
+                  params.coordinate = [info.glat,info.glng];
+                }
+              }
+            });
+          }
+          
+          
           return params;
       },
       
@@ -514,6 +535,19 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         var obj = this.toJSON();
         obj.tipojuridico = {pfisica:false,pjuridica:false,pideal:false,porganismo:true};
         return obj;
+      },
+      
+      usePerson: function(person){
+        console.log('uando persona para lcation',person);
+        var raw = this.fromServer(person);
+        if(raw.toJSON){
+          raw = raw.toJSON();
+        }
+
+        this.clear({silent:true});
+        this.set(raw);
+        var id = (person._id)? person._id : person.id;
+        this.set('person_id',id);
       },
       
       _receiveLocation: function(p){

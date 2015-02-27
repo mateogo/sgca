@@ -1,54 +1,19 @@
  
-  <form class="form-participant">
-    <div id="starMark">
-      <i class="glyphicon glyphicon-star"></i>
-    </div>
+  <form class="form-location">
     <div class="container-fluid">
 	    <div class="row">
-	      <div class="col-xs-6">
+	      <div id="fieldsContainer" class="col-xs-12">
 	      
-	          <div class="row">
-	            <div class="col-xs-3"> <input type="checkbox" id="checkboxVip" /> <label for="checkboxVip">VIP</label>  </div>
-	            <div class="col-xs-9" data-fields="tipojuridico"> </div>
-	          </div>
 	          
-	          <div class="backform-fix" style="padding-top:10px" data-fields="name,lastName,email,nickName,displayName,dni,cuit,birthDate"></div>
-		      
-		        
-		         <!-- div style="padding-top:10px">
-				        <label>Tipo Juridico</label>
-			          <div style="padding-left:10px">
-			              <% _.each(this.schema.tipojuridico.options,function(label,value){ %>
-			                   <input type="radio" name="tipojuridico" id="tjc_<%=value%>" value="<%= value %>"> <label for="tjc_<%=value%>" class="inptCheck"> <%= label%></label>
-			                   <br />
-			              <% }) %>
-			          </div>
-		         </div-->
-
+	          <div class="backform-fix" style="padding-top:10px" data-fields="name,nickName,displayName,direccion,provincia,departamento,localidad,notas"></div>               
 	      </div>
-	      <div class="col-xs-6" >
-	           <div>
-			          <label class="pull-left">
-		                Datos de contacto 
-		            </label> 
-		            <span class="pull-right">
-		               <button type="button" class="btn btn-xs btn-default js-add">
-                     <i class="glyphicon glyphicon-plus"></i> agregar
-                   </button>
-		            </span>
-		            <div class="clearfix"></div>
-	           </div>
-	          
-	          
-	          <div id="datosContainer" class="well list-contact-data" style="min-height:250px;"> </div>
-	          
-	          <div style="margin-top:10px;">
-		          <label>Notas</label>
-		          <div data-editors="notas"></div>
-		        </div>
-	          
-	          
+	      <div id="mapContainer" class="" style="display:none;margin-bottom:10px" >
+                <div id="map" style="width:95%;height:350px"></div>
+                <a class="js-hidemap btn btn-link">cerrar mapa </a>
 	      </div>
 	    </div>
     </div>
+    <% if(this.model.get('coordinate').length === 2) { %>
+       <a class="js-showmap" style="cursor:pointer">Coordenadas: <%= this.model.get('coordinate')%> </a>
+  <% } %>
  </form>

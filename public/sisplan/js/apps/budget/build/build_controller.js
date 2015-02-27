@@ -297,7 +297,8 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
   //======== ACTION PANEL
   var buildActionView = function(action){
     var actionView = new DocManager.ActionsApp.Report.Branding({
-      model: action
+      model: action,
+      tab: 'presupuesto'
     });
     registerActionView(action, actionView);
   };

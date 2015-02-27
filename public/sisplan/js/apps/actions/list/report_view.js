@@ -64,12 +64,54 @@ DocManager.module("ActionsApp.Report", function(Report, DocManager, Backbone, Ma
 
 
   Report.Branding = Marionette.ItemView.extend({
-    className: 'row well',
-   getTemplate: function(){
+    className: 'row well report-branding',
+    getTemplate: function(){
       return utils.templates.ActionReportBranding;
     }, 
-    events: {
+    initialize: function(opts){
+      this.tabSelection = opts.tab;
+      Marionette.ItemView.prototype.initialize.apply(this,opts);
     },
+    onRender: function(){
+      if(this.tabSelection){
+        this.$el.find('li[tab='+this.tabSelection+']').addClass('active');
+      }
+    },
+    
+    events: {
+      "click .js-newbudget": "newbudget",
+      "click .js-newactivity": "newactivity",
+      "click .js-newparticipant": "newparticipant",
+      "click .js-newlocation": "newlocation",
+    },
+
+    newactivity: function(e){
+      e.preventDefault();
+      //this.trigger('activity:new');
+      DocManager.trigger('activity:edit', this.model);
+      return false;
+    },
+
+    newparticipant: function(e){
+      e.preventDefault();
+      //this.trigger('participant:list');
+      DocManager.trigger('participant:list', this.model);
+      return false;
+    },
+    
+    newlocation: function(e){
+      e.preventDefault();
+      //this.trigger('location:list');
+      DocManager.trigger('location:list', this.model);
+      return false;
+    },
+ 
+    newbudget: function(e){
+      e.preventDefault();
+      //this.trigger('budget:new');
+      DocManager.trigger('budget:build', this.model);
+      return false;
+    }
 
   });
 

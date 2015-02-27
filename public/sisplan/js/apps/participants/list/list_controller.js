@@ -30,7 +30,7 @@ DocManager.module('ParticipantsApp.List',function(List, DocManager, Backbone, Ma
 		    List.Session.layout.on("show", function(){
 			    var ActionsShow = DocManager.module('ActionsApp.Show');
 			     
-			    var headerAction =  new DocManager.ActionsApp.Report.Branding({model:action});// ActionsShow.Branding({model:action});
+			    var headerAction =  new DocManager.ActionsApp.Report.Branding({model:action,tab:'participantes'});// ActionsShow.Branding({model:action});
 			    List.Session.layout.navbarRegion.show(headerAction);
 			    List.Session.layout.tableRegion.show(table);
 			    List.Session.layout.filterRegion.show(filter);

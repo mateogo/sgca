@@ -152,22 +152,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
     validate: function(attrs, options) {
-      var errors = {}
-      if (! attrs.name) {
-        errors.firstName = "no puede quedar en blanco";
-      }
-      if (! attrs.nickName) {
-        errors.lastName = "no puede quedar en blanco";
-      }
-      else{
-        if (attrs.displayName.length < 2) {
-          errors.lastName = "demasiado corto";
+        var errors = {};
+        if (! attrs.name) {
+          errors.firstName = "no puede quedar en blanco";
+        }
+        if (! attrs.nickName) {
+          errors.lastName = "no puede quedar en blanco";
+        }
+        else{
+          if (attrs.displayName.length < 2) {
+            errors.lastName = "demasiado corto";
+          }
+        }
+        if( ! _.isEmpty(errors)){
+          return errors;
         }
       }
-      if( ! _.isEmpty(errors)){
-        return errors;
-      }
-    }
   });
 
   //Entities.configureStorage(Entities.Person);

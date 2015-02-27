@@ -326,7 +326,8 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
   //======== ACTION PANEL
   var buildActionView = function(action){
     var actionView = new DocManager.ActionsApp.Report.Branding({
-      model: action
+      model: action,
+      tab: 'actividades'
     });
     registerActionView(action, actionView);
   };

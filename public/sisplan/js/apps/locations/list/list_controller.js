@@ -25,7 +25,7 @@ DocManager.module('LocationsApp.List',function(List, DocManager, Backbone, Mario
 		    List.Session.layout.on("show", function(){
 			    var ActionsShow = DocManager.module('ActionsApp.Show');
 			     
-			    var headerAction =  new DocManager.ActionsApp.Report.Branding({model:action});// ActionsShow.Branding({model:action});
+			    var headerAction =  new DocManager.ActionsApp.Report.Branding({model:action,tab:'locaciones'});// ActionsShow.Branding({model:action});
 			    List.Session.layout.navbarRegion.show(headerAction);
 			    List.Session.layout.tableRegion.show(table);
 			    List.Session.layout.filterRegion.show(filter);
