@@ -41,7 +41,7 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     
     'ParticipantListLayoutView','ParticipantEdit','PartipantContactInfo','PartipantContactInfoEditor','ParticipantsShow',
     
-    'LocationListLayoutView','LocationEdit'
+    'LocationListLayoutView','LocationEdit','LocationEditView'
     
     ], function() {
 

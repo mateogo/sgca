@@ -2,7 +2,7 @@ DocManager.module('LocationsApp',function(LocationsApp,DocManager,Backbonone,Mar
 
 	LocationsApp.Router = Marionette.AppRouter.extend({
 		appRoutes: {
-			'locaciones/:id': 'list',
+			'locaciones/:id': 'list'
 		}
 	});
 	

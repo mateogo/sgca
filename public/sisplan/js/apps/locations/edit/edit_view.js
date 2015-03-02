@@ -1,18 +1,49 @@
 DocManager.module("LocationsApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
   
-  var PersonsApp = DocManager.module('PersonsApp');
+ var PersonsApp = DocManager.module('PersonsApp');
+ var Entities = DocManager.module('Entities');
   
-  var FormPP = Marionette.ItemView.extend({
+ Edit.View = Marionette.ItemView.extend({
+    
+    getTemplate: function(){
+      return utils.templates.LocationEditView;
+    },
+    
+    render: function(){
+      Marionette.ItemView.prototype.render.apply(this);
+    },
     
     initialize: function(opts){
-      this.form = opts.form;  //Backbone.Form
+      this.action = opts.action;
       this.model = opts.model; //Entities.ActionLocation
-      
+    },
+    
+    onRender: function(){
+      this.initForm();
       if(this.model.isNew()){
         this.initAutoComplete();
       }
+      //this.showMap();
       
-      this.$el.find('[name=name]').focus();
+      var self = this;
+      setTimeout(function(){
+        self.$el.find('[name=name]').focus();  
+        self.initMap();
+      },10);
+      
+    },
+    
+    initForm: function(){
+      var isLocation = this.model instanceof Entities.ActionLocation;
+      console.log('render el formulario',this.model,(isLocation)?'si':'no');
+      var form = new Backbone.Form({
+        model: this.model,
+        //template: _.template(this.$el.find('#fieldsContainer').html())
+      });
+      
+      form.render();
+      this.$el.find('#fieldsContainer').html(form.el);
+      this.form = form;
     },
     
     initAutoComplete:function(){
@@ -39,116 +70,146 @@ DocManager.module("LocationsApp.Edit", function(Edit, DocManager, Backbone, Mari
         var value = this.model.get(field);
         fieldsForms[field].editor.setValue(value);
       }
+      
+      var coord = this.model.get('coordinate');
+      this._useCoordUI(coord);
     },
     
-    showMap: function(visible){
-      if(typeof(visible) === 'undefined') visible = true;
-      
-      if(visible){
-        this.$el.find('#fieldsContainer').removeClass('col-xs-12').hide();
-        this.$el.find('#mapContainer').addClass('col-xs-12').show();
+    _getDisplayName: function(){
+      return this.$el.find('[name=displayName]').val();
+    },
+    
+    
+    _useCoordUI: function(coord){
+      if(coord && this.map){
         
-        if(!this.map){
-          var coord = this.model.get('coordinate');
-          
-          var map = L.map('map').setView(coord, 10);
-          
-          L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          }).addTo(map);
-
-          // add a marker in the given location, attach some popup content to it and open the popup
-          L.marker(coord).addTo(map)
-            .bindPopup(this.model.get('displayName'))
-            .openPopup();
+        this.map.panTo(coord);
         
-          this.map = map;
-        }
-        
-        
-      }else{
-        this.$el.find('#fieldsContainer').addClass('col-xs-12').show();
-        this.$el.find('#mapContainer').removeClass('col-xs-12').hide();
+        this.markerLayer.clearLayers();
+        this.marker = L.marker(coord,{draggable:true});
+        this.marker.addTo(this.markerLayer)
+                      .bindPopup(this._getDisplayName())
+                      .openPopup();
+        this.$el.find('#coordContainer').html(coord.join(','));              
+        this.listenTo(this.marker,'dragend',this.onMarkDragEnd.bind(this));
       }
     },
     
+    initMap: function(visible){
+      
+      if(!this.map){
+        var coord = this.model.get('coordinate');
+        var markerLabel = this.model.get('displayName');
+        
+        if(!coord || coord.length !== 2){
+          coord = [-34.6098,-58.4720]; // buenos aires
+          markerLabel = '';
+        }
+        
+        var map = L.map('map').setView(coord, 12);
+        this.map = map;
+        
+        // agregando layer OpenStreet
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        
+        // agregando control de edicion del market
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+        var drawControl = new L.Control.Draw({
+            draw: {polyline: false,polygon:false, circle: false,rectangle:false},
+            edit: {
+                featureGroup: drawnItems,
+                edit: false,
+                remove: false
+            }
+            
+        });
+        map.addControl(drawControl);
+        
+          // agregando layer para mark
+        this.markerLayer = L.layerGroup().addTo(map);
+        
+        //agregando marker
+        if(markerLabel) this._useCoordUI(coord);
+        
+        //agregando listeners
+        this.listenTo(map,'draw:created',this.onMarkCreated.bind(this));
+        
+        
+      }
+    },
+    
+    centerMap: function(){
+      var coord = this.model.get('coordinate');
+      this.map.panTo(coord);
+    },
+    
     events: {
-      'click .js-showmap': 'onShowMapClick',
-      'click .js-hidemap': 'onHideMapClick'
+      'click .js-save': 'onSaveClick',
+      'click .js-cancel': 'onCancelClick',
+      'click .js-centermap': 'centerMap'
     },
     
-    onShowMapClick: function(e){
-      this.showMap();
+    doneEdition: function(){
+      DocManager.trigger('location:list',this.action);
     },
     
-    onHideMapClick: function(e){
-      this.showMap(false);
-    }
-
-  });
-  
-  
-    
-  Edit.modaledit  = function(action,location){
-    
-    var form = new Backbone.Form({
-      model: location,
-      template: utils.templates.LocationEdit
-    });
-    
-    var formPP;
-    
-    function init(){
-      formPP =  new FormPP({
-          el:form.el,
-          form:form,
-          model: location
-      });
-    }
-    
-    setTimeout(function(){ init();},10);
-    
-    var modal = new Backbone.BootstrapModal({
-      content: form,
-      title: 'Edición de Locación',
-      okText: 'guardar',
-      cancelText: 'cancelar',
-      enterTriggersOk: false,
-    });
-    
-    modal.on('ok',function(){
-      modal.preventClose();
+    onSaveClick: function(){
       var self = this;
+      var location = this.model;
       var oldValue = location.toJSON();
       
-      var errors = form.commit();
+      var errors = this.form.commit();
       if(errors){
           Message.warning('Revis&aacute; el formulario');
           return; 
       }
       
-      var $btn = modal.$el.find('.btn.ok').attr('data-loading-text','guardando...');
+      var $btn = this.$el.find('.js-save').attr('data-loading-text','guardando...');
       $btn.button('loading');
       
       location.save().done(function(){
-         modal.close();
          $btn.button('reset');
+         Message.success('Guardado');
+         self.doneEdition();
          
       }).fail(function(e){
           $btn.button('reset');
           
           location.set(oldValue);
         
-          if(e && e.code){
-              
-          }else{
-            Message.error('Ops! No se pudo guardar '+e);
-            console.error(e);
-          }
+          Message.error('Ops! No se pudo guardar '+e);
+          console.error(e);
       });     
-      
-    });
+    },
     
-    modal.open();
-  };  
+    onCancelClick: function(){
+      this.doneEdition();
+    },
+    
+    onMarkCreated: function(e){
+      if(e.layerType === 'marker'){
+        this.marker = e.layer;
+        this.map.addLayer(e.layer);
+        
+        var latlng = e.layer.getLatLng();
+        var coord = [latlng.lat,latlng.lng];
+        this.model.set('coordinate',coord);
+        this._useCoordUI(coord);
+      }
+    },
+    
+    onMarkDragEnd: function(e){
+      var marker = e.target;
+      var pointer = marker.getLatLng();
+      var coord = [pointer.lat,pointer.lng];
+      this._useCoordUI(coord);
+    }
+    
+  });
+  
+  
 });
