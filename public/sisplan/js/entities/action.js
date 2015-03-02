@@ -1,5 +1,7 @@
 DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionette, $, _){
   
+  var App = DocManager.module('App');
+  
   Entities.Action = Backbone.Model.extend({
     urlRoot: "/acciones",
     whoami: 'Entities.Action:action.js ',
@@ -538,7 +540,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       },
       
       usePerson: function(person){
-        console.log('uando persona para lcation',person);
         var raw = this.fromServer(person);
         if(raw.toJSON){
           raw = raw.toJSON();
@@ -548,6 +549,27 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         this.set(raw);
         var id = (person._id)? person._id : person.id;
         this.set('person_id',id);
+      },
+      
+      /**
+       * utiliza informacion resultado de consulta geocode
+       * @param {Object} place - ver estrucutra en https://developers.google.com/maps/documentation/geocoding/?hl=es#JSON
+       */
+      useGeoplace: function(place){
+        this.set('direccion',place.formatted_address);
+        if(place.geometry && place.geometry.location){
+          var pointer = place.geometry.location;
+          var coord = [pointer.lat,pointer.lng];
+          this.set('coordinate',coord);
+        }
+        
+        //extrae provincia, departamento y localidad
+        var obj = App.parseGeoplace(place);
+        this.set(obj);
+        
+        if(!this.get('displayName')){
+          this.set('displayName',place.formatted_address);
+        }
       },
       
       _receiveLocation: function(p){
@@ -1258,6 +1280,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       });
       return costo;
     },
+    
+    
+    geocode: function(addressStr){
+      return $.ajax({
+          type: "GET",
+          url: "/geocode",
+          dataType: "json",
+          data: {address: addressStr}
+      });
+    }
 
   };
 
@@ -1304,6 +1336,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   DocManager.reqres.setHandler("action:fetchnext", function(model, cb){
     return API.fetchNextPrev('fetchnext',model, cb);
+  });
+  
+  DocManager.reqres.setHandler("app:geocode", function(addressString){
+    return API.geocode(addressString);
   });
 
 });

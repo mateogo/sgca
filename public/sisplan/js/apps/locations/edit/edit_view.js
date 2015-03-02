@@ -2,6 +2,7 @@ DocManager.module("LocationsApp.Edit", function(Edit, DocManager, Backbone, Mari
   
  var PersonsApp = DocManager.module('PersonsApp');
  var Entities = DocManager.module('Entities');
+ var App = DocManager.module('App');
   
  Edit.View = Marionette.ItemView.extend({
     
@@ -23,7 +24,8 @@ DocManager.module("LocationsApp.Edit", function(Edit, DocManager, Backbone, Mari
       if(this.model.isNew()){
         this.initAutoComplete();
       }
-      //this.showMap();
+      
+      this.initGeocode();
       
       var self = this;
       setTimeout(function(){
@@ -53,12 +55,28 @@ DocManager.module("LocationsApp.Edit", function(Edit, DocManager, Backbone, Mari
       
       var self = this;
       this.listenTo(this.autoName,'person:selected',function(person){
-        setTimeout(self._userPerson.bind(self),10,person);
+        setTimeout(self._usePerson.bind(self),10,person);
       });
     },
     
-    _userPerson: function(person){
+    initGeocode: function(){
+      var self = this;
+      var $direccionField = this.$el.find('[name=direccion]');
+      
+      this.autoGeocode = new App.View.AutoCompleteGeocodeField({el:$direccionField});
+      
+      this.listenTo(this.autoGeocode,'item:selected',function(geoplace){
+        setTimeout(self._useGeoplace.bind(self),10,geoplace);
+      });
+    },
+    
+    _usePerson: function(person){
       this.model.usePerson(person);
+      this._updateUI();
+    },
+    
+    _useGeoplace: function(geoplace){
+      this.model.useGeoplace(geoplace);
       this._updateUI();
     },
     
