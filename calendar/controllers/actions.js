@@ -10,6 +10,7 @@
  */
 var _ = require('underscore');
 var async = require('async');
+var ObjectID = require('mongodb').ObjectID;
 
 var path = require('path');
 var rootPath = path.normalize(__dirname + '/../..');
@@ -331,10 +332,9 @@ var locationManager = {
         action.locations = [];
       }
       
-      var id = parseInt(location.id);
+      id = location.id;
       if(!id){
-        id = (action.locations.length > 0) ? parseInt(action.locations[action.locations.length-1].id) + 1 : 1;
-        location.id = id;
+        location.id = new BSON.ObjectID();
       }
        
       var pos = -1;

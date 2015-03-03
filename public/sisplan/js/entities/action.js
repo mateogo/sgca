@@ -66,7 +66,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         for ( var i = 0; i < collection.length; i++) {
           var raw = collection[i];
           if(!(raw instanceof Entity)){
-            raw.id = (i+1);
+            if(!raw.id){
+              raw.id = (i+1);  
+            }
             raw.action = this;
             collection[i] = new Entity(raw);
           }
@@ -510,9 +512,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       },   
       
       fromServer: function(params){
-          if(params.id){
-            params.id = parseInt(params.id);
-          }
           
           //separando direccion de contactinfo
           if(params.contactinfo){
@@ -566,10 +565,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         //extrae provincia, departamento y localidad
         var obj = App.parseGeoplace(place);
         this.set(obj);
-        
-        if(!this.get('displayName')){
-          this.set('displayName',place.formatted_address);
-        }
       },
       
       _receiveLocation: function(p){
