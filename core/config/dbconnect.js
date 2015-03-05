@@ -16,18 +16,25 @@ var dburi ;
 var rootPath = path.normalize(__dirname + '/../..');
 var utilcb;
 
-exports.connect = function (config){
+var callbacks = [];
+
+exports.connect = function (config,cb){
     dburi = config.dburi;
     //console.log("dbconnect URI:[%s]",dburi);
     MongoClient.connect(dburi, function (err, db){
         if(err){
             console.log("errors connecting to db!"+err.toString());
+            
         }else{
             //console.log("dbconnect: connect.ok!");
             // Bootstrap models
             dbdriver = db;
             config.connectionListeners(db,BSON);
-            if(utilcb) utilcb(db);
+        }
+        if(cb) cb(err,db);
+        
+        for (var i = 0; i < callbacks.length; i++) {
+          callbacks[i](err,db);
         }
     });
 };
@@ -35,9 +42,13 @@ exports.connect = function (config){
 exports.db = dbdriver;
 exports.BSON = BSON;
 exports.dburi = dburi;
-exports.getDb = function(){
-  return dbdriver;
+exports.getDb = function(cb){
+  if(!cb) return dbdriver;
+  
+  console.log('agrendo db a dbconnect');
+  if(dbdriver){
+    cb(null,dbdriver);
+  }else{
+    callbacks.push(cb);
+  }
 }
-exports.setConnectCallback = function(cb){
-    if(cb) utilcb=cb;
-};
