@@ -1,11 +1,11 @@
 
 var BaseModel = require('./basemodel.js');
 var serializer = require('./serializer.js');
+var async = require('async');
 
 var dbi;
 
 var entityCol = 'artactivities';
-
 var serieKey = 'artactivity101';
 
 serializer.initSeries([
@@ -40,64 +40,52 @@ var ArtActivity = BaseModel.extend({
     locevento: '',
     cevento: '',
     
-    fcreate: '',
-    fupdate: ''
+    fealta: null,
+    feultmod: null
       
   },
   
+  
+  
   validation: function(cb){
-    
     cb(null);
   },
   
-  fetch: function(query,cb){
-    dbi.collection(entityCol,function(err,collection){
-      if(err) cb(err);
-      
-      collection.find(query).toArray(cb);
-    });
-  },
-  
-  find: this.fetch,
-  findAll: this.fetch,
-  findById: function(id,cb){
-    
-    //dbi.collection(entityCol)
-    
-    cb('findById under construcction');
-  },
-  
-  _beforeSave: function(cb){
+  _beforeSave: function(callback){
     var self = this;
-    if(this.get('cnumber') === null){
-      
-      serializer.nextSerie(serieKey,function(err,number){
-        if(err) return cb(err);
-        
-        self.set('cnumber',number);
-        cb();
-      });
-      
-    }else{
-      cb();  
-    }
-  },
-  
-  _insert: function(cb){
-    var raw = this.attributes;
-    
-    BaseModel.dbi.collection(entityCol).insert(raw,{w:1}, function(err, result) {
-      if(err) cb(err);
-      
-      var raw = result[0];
-      cb(null,new ArtActivity(raw));
+    async.series([
+       //setear el número código
+       function(cb){
+         if(self.get('cnumber') === null){
+           
+           serializer.nextSerie(serieKey,function(err,number){
+             if(err) return cb(err);
+             
+             self.set('cnumber',number);
+             cb();
+           });
+           
+         }else{
+           cb();  
+         }
+       },
+       
+       //setear fechas
+       function(cb){
+         if(self.isNew()){
+           self.set('fealta',new Date());
+         }
+         self.set('feultmod',new Date());
+         
+         cb();
+       }
+       
+    ],
+    //done
+    function(err,results){
+      callback(err);
     });
-  },
-  
-  _update: function(cb){
-    cb('update under construction');
-  }  
-  
+  }
 });
 
 

@@ -58,7 +58,7 @@ var Serializer = BaseModel.extend({
         serial.feUltMod = new Date();
   
         self._updateSerialCollection(serial);
-  
+        
         cb(null,adapter.prefix + nxt);
     });
   },
@@ -73,7 +73,6 @@ var Serializer = BaseModel.extend({
   
   _fetchSerial: function(serieKey,cb){
     var serie = serieKey;
-    console.log('fetchSerie '+serie);
     
     var self = this;
     
@@ -107,8 +106,6 @@ var Serializer = BaseModel.extend({
   },
   
   _updateSerialCollection: function(serial){
-    console.log('updateando collection');
-    console.log(serial);
     var collection = BaseModel.dbi.collection(this.entityCol);    
     collection.update( {'_id':serial._id}, serial,{w:1},function(err,result){
       if(err) throw err;

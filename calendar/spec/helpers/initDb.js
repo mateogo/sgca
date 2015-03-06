@@ -2,18 +2,22 @@ var root = '../../../';
 var coreApp  = root + 'core';
 var env = process.env.NODE_APP_MODE || 'development';
 var config = require(coreApp + '/config/config.js')[env];
-var mongodb = require(coreApp + '/config/dbconnect.js');
+var dbConnect = require(coreApp + '/config/dbconnect.js');
+
+var mongo = require('mongodb');
+var BSON = mongo.BSONPure;
+
+var BaseModel = require(root + 'calendar/models/basemodel.js');
 
 
 it('deberia inicializar DB',function(done){
   
-  mongodb.connect(config,function(err,db){
+  dbConnect.connect(config,function(err,db){
     expect(err).toBeNull();
-    
     expect(db).not.toBeNull();
-    
+
     done();
   });
 });
 
-module.exports.getDb = mongodb.getDb;
+module.exports.getDb = dbConnect.getDb;

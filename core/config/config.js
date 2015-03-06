@@ -11,6 +11,7 @@ var fs = require('fs');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var user = require(rootPath + '/calendar/controllers/user');
+var BaseModel = require(rootPath + '/calendar/models/basemodel');
 
 
 
@@ -46,6 +47,8 @@ var instanceDbListeners = function (db,BSON) {
         require(controllers_path+file).setDb(db).setBSON(BSON).setConfig({publicpath:publicPath});
       });
   }
+  console.log('seteando base en config.js');
+  BaseModel.setDb(db).setBSON(BSON);
 };
 
 var routesBootstrap = function (app, express) {
@@ -119,6 +122,8 @@ var routesBootstrap = function (app, express) {
       var routes_path = path.normalize( apps[ix] + '/config/routes.js');
       require(routes_path)(this, app);
   }
+  
+  require(rootPath + '/calendar/controllers/artactivities.js').configRoutes(app);
 };
 
 

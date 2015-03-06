@@ -19,7 +19,7 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
                     '   <span data-notify="icon" class="pull-left"></span>'+
                     '   <span data-notify="message">{2}</span>'+
                     '</div>'      
-      })
+      });
   }  
     
     
@@ -36,8 +36,8 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
       error: function(str){
           notify(str,'danger','glyphicon glyphicon-warning-sign');
       }
-  }  
+  }; 
   
   window.Message = Message;
     
-})
+});

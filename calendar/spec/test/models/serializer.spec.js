@@ -26,8 +26,6 @@ describe('Models',function(){
         expect(number.indexOf('TEST')).toBe(0);
         done();
       });
-      
-      
     });
     
     it('Deberia incrementar el código segun el formato',function(done){

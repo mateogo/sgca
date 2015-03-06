@@ -3,46 +3,56 @@ var rootPath = '../../';
 
 var async = require('async');
 var Backbone = require('backbone');
-var mongo = require('mongodb');
-var BSON = mongo.BSONPure;
 
-var dbconnect = require(rootPath + 'core/config/dbconnect.js');
-
-
-var onReadyCallbacks = [];
-
-dbconnect.getDb(function(err,db){
-  BaseModel.dbi = db;  
-  
-  for (var i = 0; i < onReadyCallbacks.length; i++) {
-    onReadyCallbacks[i](err);
-  }
-});
 
 
 var BaseModel = Backbone.Model.extend({
   idAttribute: "_id",
   
+  findById: function(id,cb){
+    var self = this;
+    BaseModel.dbi.collection(this.entityCol, function(err, collection) {
+      collection.findOne({'_id':new BaseModel.ObjectID(id)}, function(err, item) {
+          if(err) return cb(err);
+         
+          cb(null, new self.constructor(item));
+      });
+    });
+  },
+  
+  fetch: function(query,cb){
+    BaseModel.dbi.collection(this.entityCol,function(err,collection){
+      if(err) return cb(err);
+      
+      collection.find(query).toArray(cb);
+    });
+  },
+  
+  find: this.fetch,
+  findAll: function(cb){
+    this.fetch({},cb);
+  },
+  
   save: function(callback){
     var self = this;
     async.series([this.validation.bind(this),
-                   this._beforeSave.bind(this),
-                   function(cb){
+                  this._beforeSave.bind(this),
+                  function(cb){
                      if(self.isNew()){
-                       self._insert(cb);
+                       self._insert(function(err,reslt){callback(err,reslt);});
                      }else{
-                       self._update(cb);
+                       self._update(callback);
                      }
                    }
                   ],function(err,results){
                       if(err) return callback(err);
-            
+                       
                       callback(null,results[results.length-1]);
                   });
   },
   
-  validation: function(){
-    
+  validation: function(cb){
+    cb();
   },
   
   remove: function(callback){
@@ -55,16 +65,44 @@ var BaseModel = Backbone.Model.extend({
     });
   },
   
+  _beforeSafe: function(cb){
+    cb();
+  },
+  
   _insert: function(cb){
+    var self = this;
+    var raw = this.attributes;
     
-  },
-  update: function(cb){
     
+    BaseModel.dbi.collection(this.entityCol,function(err,collection){
+      if(err) return cb(err);
+      
+      collection.insert(raw,{w:1}, function(err, result) {
+          if(err) return cb(err);
+          
+          var raw = result[0];
+          
+          self.findById(raw._id,cb);
+        });
+    });
+      
   },
+  
+  _update: function(cb){
+    var self = this;
+    var raw = this.attributes;
+    var id =  new BaseModel.ObjectID(id);
+    BaseModel.dbi.collection(this.entityCol).update({'_id':id}, raw, {safe:true}, function(err, result) {
+      if(err) cb(err);
+      
+      var raw = result[0];
+      self.findById(id,cb);
+    });
+  }  
   
 });
 
-BaseModel.ObjectID = BSON.ObjectID;
+
 BaseModel.onReady = function(cb){
   if(!cb) return;
   
@@ -74,4 +112,21 @@ BaseModel.onReady = function(cb){
     onReadyCallbacks.push(cb);
   }
 };
+
+var onReadyCallbacks = [];
+BaseModel.setDb = function(db){
+  BaseModel.dbi = db;
+  
+  for (var i = 0; i < onReadyCallbacks.length; i++) {
+    onReadyCallbacks[i]();
+  }
+  onReadyCallbacks = [];
+  return this;
+};
+
+BaseModel.setBSON = function(BSON){
+  BaseModel.ObjectID = BSON.ObjectID;
+  return this;
+};
+
 module.exports = BaseModel;
