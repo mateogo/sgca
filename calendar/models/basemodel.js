@@ -10,27 +10,7 @@ var BaseModel = Backbone.Model.extend({
   idAttribute: "_id",
   
   findById: function(id,cb){
-    var self = this;
-    BaseModel.dbi.collection(this.entityCol, function(err, collection) {
-      collection.findOne({'_id':new BaseModel.ObjectID(id)}, function(err, item) {
-          if(err) return cb(err);
-         
-          cb(null, new self.constructor(item));
-      });
-    });
-  },
-  
-  fetch: function(query,cb){
-    BaseModel.dbi.collection(this.entityCol,function(err,collection){
-      if(err) return cb(err);
-      
-      collection.find(query).toArray(cb);
-    });
-  },
-  
-  find: this.fetch,
-  findAll: function(cb){
-    this.fetch({},cb);
+    this.constructor.findById(id,cb);
   },
   
   save: function(callback){
@@ -41,7 +21,7 @@ var BaseModel = Backbone.Model.extend({
                      if(self.isNew()){
                        self._insert(function(err,reslt){callback(err,reslt);});
                      }else{
-                       self._update(callback);
+                       self._update(cb);
                      }
                    }
                   ],function(err,results){
@@ -91,15 +71,51 @@ var BaseModel = Backbone.Model.extend({
   _update: function(cb){
     var self = this;
     var raw = this.attributes;
-    var id =  new BaseModel.ObjectID(id);
-    BaseModel.dbi.collection(this.entityCol).update({'_id':id}, raw, {safe:true}, function(err, result) {
-      if(err) cb(err);
+    var _id = raw._id;
+    var id =  new BaseModel.ObjectID(_id);
+    delete raw._id;
+    BaseModel.dbi.collection(this.entityCol).update({'_id':id}, raw, {safe:true}, function(err, count) {
+      if(err) return cb(err);
       
-      var raw = result[0];
-      self.findById(id,cb);
+      if(count === 0){
+        return cb('No se actualizo');
+      }
+      
+      self.findById(_id,cb);
     });
   }  
   
+},{
+   //static methods
+  findById: function(id,cb){
+    var idStr = (typeof(id) === 'object')? id.toString(): id;
+    
+    if(!id || (idStr.length !== 12 && idStr.length !== 24)){
+      return cb('invalid id');
+    }
+    
+    var self = this;
+    BaseModel.dbi.collection(this.entityCol, function(err, collection) {
+      collection.findOne({'_id':new BaseModel.ObjectID(id)}, function(err, item) {
+          if(err) return cb(err);
+          
+          console.log('encontro a ',self.entityCol,id);
+          console.log(item);
+          if(item){
+            item = new self(item);
+          }
+          cb(null, item);
+      });
+    });
+  },
+  find: function(query,cb){
+    var sort = this.defaultSort;
+    BaseModel.dbi.collection(this.entityCol,function(err,collection){
+      if(err) return cb(err);
+      
+      collection.find(query).sort(sort).toArray(cb);
+    });
+  }
 });
 
 

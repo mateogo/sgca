@@ -33,7 +33,7 @@ var ArtActivity = BaseModel.extend({
     fdesde: null,
     fhasta: null,
     leyendafecha: '',
-    fecomp: null,
+    fecomp: '',
     lugar: '',
     airelibre: false,
     provevento: '',
@@ -44,8 +44,6 @@ var ArtActivity = BaseModel.extend({
     feultmod: null
       
   },
-  
-  
   
   validation: function(cb){
     cb(null);
@@ -86,6 +84,9 @@ var ArtActivity = BaseModel.extend({
       callback(err);
     });
   }
+},{
+  entityCol: entityCol,
+  defaultSort: {cnumber:1}
 });
 
 

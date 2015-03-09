@@ -3,14 +3,11 @@ var root = '../';
 
 var ArtActivity = require(root + 'models/artactivity.js').getModel();
 
-
-
 var ctrls = {
     findAll: function(req,res){
       var query = req.body;
       
-      var dao = new ArtActivity();
-      dao.fetch(query,function(err,result){
+      ArtActivity.find(query,function(err,result){
         if(err) return res.status(500).send(err);
         
         res.json(result);
@@ -20,13 +17,13 @@ var ctrls = {
     findById: function(req,res){
       var id = req.params.id;
       
-      var dao = new ArtActivity();
-      dao.findById(id,function(err,result){
+      ArtActivity.findById(id,function(err,result){
         if(err) return res.status(500).send(err);
         
         res.json(result);
       });
     },
+    
     save: function(req,res){
       var raw = req.body;
       

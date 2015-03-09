@@ -16,9 +16,8 @@ describe('Models',function(){
     });
     
     it('Debería retornar registros',function(done){
-      var art = new ArtActivity();
       
-      art.fetch({},function(err,result){
+      ArtActivity.find({},function(err,result){
         expect(err).toBe(null);
         expect(result).toBeDefined();
         expect(result.length).toBeDefined();
@@ -30,7 +29,7 @@ describe('Models',function(){
       var art = new ArtActivity();
       
       art.save(function(err,result){
-        
+        console.log('id guardado',result.id);
         expect(err).toBe(null);
         expect(result).toBeDefined();
         expect(result instanceof ArtActivity).toBeTruthy();
@@ -58,6 +57,23 @@ describe('Models',function(){
       expect(artActivity.get('feultmod').toTimeString()).toBe(timeStr);
     });
     
+    it('Deberia actualizar',function(done){
+      artActivity.set('slug','denominacion del evento');
+      
+      artActivity.save(function(err,r){
+        if(err){
+          expect(err).toBeNull();
+          done();
+          return;
+        }
+        
+        
+        expect(r.get('slug')).toBe('denominacion del evento');
+        
+        done();
+      });
+    });
+    
     it('Debería eliminar el registro',function(done){
         expect(artActivity).not.toBe(null);
         
@@ -67,5 +83,22 @@ describe('Models',function(){
           done();  
         });
     });
+    
+    it('Deberia devolver error para busqueda por id mal formados',function(done){
+      ArtActivity.findById('545645',function(err,res){
+        expect(err).not.toBe(null);
+        expect(res).toBeFalsy();
+        done();
+      });
+    });
+    
+    it('Deberia devolver null para busqueda por id que no existen',function(done){
+      ArtActivity.findById('54febe0aac1e3a9a187ff454',function(err,res){
+        expect(err).toBe(null);
+        expect(res).toBeFalsy();
+        done();
+      });
+    });
+    
   });
 });

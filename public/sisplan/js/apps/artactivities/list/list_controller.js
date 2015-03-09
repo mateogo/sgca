@@ -24,9 +24,7 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       });
       
       DocManager.mainRegion.show(List.Session.layout);
-    },
-    
-    
+    }
   };
 
 
