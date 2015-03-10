@@ -49,11 +49,12 @@ DocManager.module('ArtActivitiesApp', function(ArtActivitiesApp, DocManager, Bac
   DocManager.on('artactivity:new',function(action){
     if(!action) return console.err('Action is not defined');
     API.createAndEdit(action);
+    DocManager.navigate('artactividades/new');
   });
   
   DocManager.on('artActivity:edit',function(model){
     API.edit(model);
-    DocManager.navigate("artactividades/"+model.id+'/edit');
+    DocManager.navigate('artactividades/'+model.id+'/edit');
   });
   
   DocManager.on('artActivity:remove',function(model){

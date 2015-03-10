@@ -206,6 +206,10 @@ DocManager.module("ActionsApp.Edit", function(Edit, DocManager, Backbone, Marion
     view.on('activity:new',function(view){
       DocManager.trigger('activity:edit', Edit.Session.model);      
     });
+    
+    view.on('artactivity:new',function(view){
+      DocManager.trigger('artactivity:new', Edit.Session.model);      
+    });
 
     view.on('participant:list',function(view){
       DocManager.trigger('participant:list', Edit.Session.model);      
