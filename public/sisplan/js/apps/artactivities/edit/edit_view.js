@@ -27,11 +27,14 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
   });
   
   Edit.NavbarView = Marionette.ItemView.extend({
-    tagName: 'div',
+    events: {
+      'click li': 'onClickItem'
+    },
     
-    render: function(){
-      this.$el.html('van los tabs: <span class="text-primary">Datos</span> | Eventos | Recursos | Tareas');
+    onClickItem: function(){
+      Message.info('Disponible proximamente');
     }
+  
   });
   
   Edit.BasicEditor = Marionette.ItemView.extend({
@@ -91,7 +94,7 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
     },
     
     onCancel: function(){
-      this.done();
+      DocManager.navigateBack();
     }
     
   });

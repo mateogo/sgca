@@ -4,8 +4,8 @@ var root = '../';
 var ArtActivity = require(root + 'models/artactivity.js').getModel();
 
 var ctrls = {
-    findAll: function(req,res){
-      var query = req.body;
+    find: function(req,res){
+      var query = req.query;
       
       ArtActivity.find(query,function(err,result){
         if(err) return res.status(500).send(err);
@@ -62,7 +62,7 @@ var ctrls = {
 
 
 module.exports.configRoutes = function(app){
-  app.get('/artactividades',ctrls.findAll);
+  app.get('/artactividades',ctrls.find);
   app.get('/artactividades/:id',ctrls.findById);
   
   app.post('/artactividades',ctrls.save);

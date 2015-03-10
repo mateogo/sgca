@@ -60,7 +60,6 @@ DocManager.module('ArtActivitiesApp', function(ArtActivitiesApp, DocManager, Bac
   DocManager.on('artActivity:remove',function(model){
     API.remove(model);
   });
-  
 
   DocManager.addInitializer(function(){
     new ArtActivitiesApp.Router({

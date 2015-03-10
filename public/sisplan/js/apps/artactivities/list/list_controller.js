@@ -16,6 +16,8 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       var collection = new Entities.ArtActivityCollection();
       collection.fetch({});
       
+      List.Session.collection = collection;
+      
       var table = List.GridCreator(collection);
       var filter = List.FilterCreator(collection);
       
@@ -26,8 +28,20 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       });
       DocManager.mainRegion.show(List.Session.layout);
       $('body').scrollTop(0);
+    },
+    filter: function(filter){
+      if(!List.Session.collection) return;
+      
+      List.Session.layout.setFilter(filter);
+      
+      var query = (filter)? filter.toJSON(): {};
+      List.Session.collection.fetch({data:query});
     }
   };
+  
+  DocManager.on('artactivities:filter',function(filter){
+    List.Controller.filter(filter);
+  });
 
 
 

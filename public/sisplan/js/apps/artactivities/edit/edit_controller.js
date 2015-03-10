@@ -78,9 +78,9 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
   
   function createNavBarView(){
     var layout = Edit.Session.views.layout; 
-    var view = new Edit.NavbarView();
     layout.on('show',function(){
-        layout.navbarRegion.show(view);
+      var view = new Edit.NavbarView({el:layout.$el.find('#navbar-region')});
+      //layout.navbarRegion.show(view);
     });
   }
   
