@@ -36,13 +36,12 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       
     editClicked: function(e){
         e.stopPropagation();e.preventDefault();
-       //DocManager.trigger('location:edit',locationsApp.Model.selectedAction,this.model);
         DocManager.trigger('artActivity:edit',this.model);
     },
       
     trashClicked: function(e){
         e.stopPropagation();e.preventDefault();
-        //DocManager.trigger('location:remove',locationsApp.Model.selectedAction,this.model);
+        DocManager.trigger('artActivity:remove',this.model);
     }
   });
   

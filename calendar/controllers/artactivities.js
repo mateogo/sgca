@@ -27,8 +27,8 @@ var ctrls = {
     save: function(req,res){
       var raw = req.body;
       
-      if(req.param.id){
-        raw._id = req.param.id;
+      if(req.params.id){
+        raw._id = req.params.id;
       }
       
       var obj = new ArtActivity(raw);
@@ -37,7 +37,27 @@ var ctrls = {
         
         res.json(result);
       });
-    } 
+    },
+    
+    remove: function(req,res){
+      
+      
+      if(!req.params.id){
+        return res.status(500).send('invalid params');
+      }
+      
+      var id = req.params.id;
+      
+      ArtActivity.findById(id,function(err,artActivity){
+        if(err) return res.status(500).send(err);
+        artActivity.remove(function(err,r){
+          if(err) return res.status(500).send(err);
+          
+          res.json(r);
+        });
+      });
+    }
+    
 };
 
 
@@ -47,6 +67,8 @@ module.exports.configRoutes = function(app){
   
   app.post('/artactividades',ctrls.save);
   app.put('/artactividades/:id',ctrls.save);
+  
+  app.delete('/artactividades/:id',ctrls.remove);
 };
 
 //dummy para hacerlo compatible con config
