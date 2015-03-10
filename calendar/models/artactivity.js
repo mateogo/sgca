@@ -2,6 +2,7 @@
 var BaseModel = require('./basemodel.js');
 var serializer = require('./serializer.js');
 var async = require('async');
+var _ = require('underscore');
 
 var dbi;
 
@@ -75,6 +76,19 @@ var ArtActivity = BaseModel.extend({
          }
          self.set('feultmod',new Date());
          
+         cb();
+       },
+       
+       //serealizar action
+       
+       function(cb){
+         if(self.isNew()){
+           var action = self.get('action');
+           if(!action) return cb('action must be present for the ArtActivity');
+           var rawAction = _.pick(action,'_id','cnumber','slug');
+           self.set('action',rawAction);
+           self.set('action_id',action._id);
+         }
          cb();
        }
        

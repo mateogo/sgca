@@ -186,6 +186,10 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
           DocManager.trigger("location:list", model);
         });
         
+        documentsListView.on("childview:artactivity:new", function(childView, model){
+          DocManager.trigger("artactivity:new", model);
+        });
+        
         documentsListView.on("childview:action:delete", function(childView, model){
           model.destroy();
         });

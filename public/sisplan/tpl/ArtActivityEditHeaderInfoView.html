@@ -1,2 +1,14 @@
-<h3> Edición de Actividad <%= cnumber%><h3>
+
+
+<% if(!cnumber){ %>
+        <h3>Nueva actividad <small>para acción <%= action.cnumber%> - <%= action.slug%></small></h3>
+<% }else{ %>
+        <h3> Edición de Actividad <%= cnumber%>
+                <% if(typeof(action) !== 'undefined'){ %> 
+                    <small>(Acción: <%= action.cnumber%> - <%= action.slug%>)</small>
+                <% } %>
+        <h3>
+<% } %>
+
+
 

@@ -17,13 +17,15 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       collection.fetch({});
       
       var table = List.GridCreator(collection);
+      var filter = List.FilterCreator(collection);
       
       List.Session.layout.on("show", function(){
         //List.Session.layout.navbarRegion.show(List.Session.navbar);
         List.Session.layout.mainRegion.show(table);
+        List.Session.layout.filterRegion.show(filter);
       });
-      
       DocManager.mainRegion.show(List.Session.layout);
+      $('body').scrollTop(0);
     }
   };
 

@@ -5,7 +5,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         whoami: 'artactivity:backboneModel ',
         idAttribute: "_id",
 
-
         defaults: {
           cnumber: null,
           type_event: '',
@@ -40,7 +39,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           leyendafecha:  {type:'Text',title:'Leyenda-Fecha'},
           lugar: 'Text',
           airelibre: {type:'Checkbox',title:'Aire Libre'},
-          proveevento: {type:'Select',title:'Provincia',options:utils.provinciasOptionList.Argentina},
+          provevento: {type:'Select',title:'Provincia',options:utils.provinciasOptionList.Argentina},
           locevento: {type:'Text',title:'Localidad'},
           cevento: {type:'Text',title:'Código Postal'},
           nivel_ejecucion: {type:'Select',title:'Estado de avance',options:utils.estadoaltaOptionList},

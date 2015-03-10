@@ -1,5 +1,7 @@
-DocManager.module("ArtActivitiesApp", function(ArtActivitiesApp, DocManager, Backbone, Marionette, $, _){
+DocManager.module('ArtActivitiesApp', function(ArtActivitiesApp, DocManager, Backbone, Marionette, $, _){
 
+  var Entities = DocManager.module('Entities');
+  
   ArtActivitiesApp.Router = Marionette.AppRouter.extend({
     appRoutes: {
       "artactividades(/filter/criterion::criterion)": "list",
@@ -14,6 +16,12 @@ DocManager.module("ArtActivitiesApp", function(ArtActivitiesApp, DocManager, Bac
       ArtActivitiesApp.List.Controller.list(criterion);
       DocManager.execute("set:active:header", "artactividades");
     },
+    createAndEdit: function(action){
+      var rawAction = (action.toJSON)? action.toJSON() : action;
+      var artActivy = new Entities.ArtActivity({action:rawAction});
+      ArtActivitiesApp.Edit.Controller.editBasic(artActivy);
+      DocManager.execute("set:active:header", "artactividades");
+    },
     edit: function(model){
       
       ArtActivitiesApp.Edit.Controller.editBasic(model);
@@ -21,9 +29,16 @@ DocManager.module("ArtActivitiesApp", function(ArtActivitiesApp, DocManager, Bac
     }
   };
 
-  DocManager.on("artactivities:list", function(){
+  
+  
+  DocManager.on('artactivities:list', function(){
     API.list();
-    DocManager.navigate("artactividades");
+    DocManager.navigate('artactividades');
+  });
+  
+  DocManager.on('artactivity:new',function(action){
+    if(!action) return console.err('Action is not defined');
+    API.createAndEdit(action);
   });
   
   DocManager.on('artActivity:edit',function(model){

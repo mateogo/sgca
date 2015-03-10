@@ -10,15 +10,16 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
     
     regions: {
       navbarRegion:  '#navbar-region',
+      filterRegion:    '#filter-region',
       mainRegion:    '#main-region'
     }
   });
   
   
-  Backgrid.ActionArtactivityCell = Backgrid.Cell.extend({
+  Backgrid.ActionsArtactivityCell = Backgrid.Cell.extend({
     // Cell default class names are the lower-cased and dasherized
     // form of the the cell class names by convention.
-    className: "action-artactivity-cell",
+    className: "actions-artactivity-cell",
     render: function(){
         if(!this.rendered){
            var btnEdit = $('<button class="btn-link js-edit" title="editar"><span class="glyphicon glyphicon-edit"></span></button>');
@@ -44,17 +45,36 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
         //DocManager.trigger('location:remove',locationsApp.Model.selectedAction,this.model);
     }
   });
+  
 
   List.GridCreator = function(collection){
     return new Backgrid.Grid({
         className: 'table table-condensed table-bordered table-hover',
         collection: collection,
         columns: [{name: 'cnumber',label: 'Actividad',cell: 'string',editable:false},
+                  {name: 'action.cnumber',label: 'Acción',editable:false,
+                    cell: Backgrid.Cell.extend({
+                        render:function(){
+                          //console.log('render',this);
+                          var action = this.model.get('action');
+                          var actionStr = (action)?action.cnumber: ''; 
+                          this.$el.html(actionStr);
+                          return this;
+                        }
+                    })
+                  },
                   {name: 'fealta',label: 'Fecha Alta',cell: 'string',editable:false},
                   {name: 'slug',label: 'Asunto-Descripción',cell: 'string',editable:false},
-                  {name: '',label: 'Acciones',cell: 'actionArtactivity',editable:false}
+                  {name: '',label: 'Acciones',cell: 'actionsArtactivity',editable:false}
                  ]
       });
   }; 
+  
+  List.FilterCreator = function(collection){
+    return new Backgrid.Extension.ClientSideFilter({
+        collection: collection,
+        fields: ['cnumber','slug']
+      });
+  };
 
 });

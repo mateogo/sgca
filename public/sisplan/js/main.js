@@ -44,7 +44,8 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'LocationListLayoutView','LocationEdit','LocationEditView',
     
     
-    'ArtActivityListLayoutView','ArtActivityEditLayoutView','ArtActivityEditHeaderInfoView','ArtActivityEditBasicView'
+    'ArtActivityListLayoutView','ArtActivityEditLayoutView','ArtActivityEditHeaderInfoView',
+    'ArtActivityEditBasicView','ArtActivityEditBasicForm'
     
     ], function() {
 

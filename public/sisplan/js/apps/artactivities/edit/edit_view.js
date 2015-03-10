@@ -44,7 +44,10 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
     },
     onRender: function(){
       console.log(this.model);
-      this.form = new Backbone.Form({model:this.model});
+      this.form = new Backbone.Form({
+        model: this.model,
+        template: utils.templates.ArtActivityEditBasicForm
+      });
       this.form.render();
       this.$el.find('#formContainer').html(this.form.el);
       this.validateSubRubroSelect();

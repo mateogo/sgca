@@ -9,6 +9,7 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
           createLayoutEditor();
           createBasicEditor();
         });
+        $('body').scrollTop(0);
       },
       editEvents: function(artActivity){
         
@@ -86,6 +87,7 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
   function createBasicEditor(){
     var session = getSession();
     var layout = Edit.Session.views.layout; 
+    console.log('Editando artActivity',session.model);
     var editor = new Edit.BasicEditor({model:session.model});
     layout.getRegion('mainRegion').show(editor);
   }

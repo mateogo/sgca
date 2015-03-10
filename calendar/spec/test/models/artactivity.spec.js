@@ -26,7 +26,7 @@ describe('Models',function(){
     });
     
     it('Debería Guardar el registro',function(done){
-      var art = new ArtActivity();
+      var art = new ArtActivity({action:{_id:'3453434sadf',cnumber:'dummy',slug:'demo'}});
       
       art.save(function(err,result){
         console.log('id guardado',result.id);
