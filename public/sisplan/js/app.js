@@ -11,9 +11,13 @@ DocManager.addRegions({
 });
 
 DocManager.navigate = function(route,  options){
-  console.log('DocManager.navigate: app.js')
+  console.log('DocManager.navigate: app.js');
   options || (options = {});
   Backbone.history.navigate(route, options);
+};
+
+DocManager.navigateBack = function(){
+  window.history.back();
 };
 
 DocManager.getCurrentRoute = function(){

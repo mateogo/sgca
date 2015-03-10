@@ -1,5 +1,6 @@
 DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, Marionette, $, _){
   
+  var Entities =  DocManager.module('Entities');
   
   List.Layout = Marionette.LayoutView.extend({
     className: 'row row-offcanvas row-offcanvas-left',
@@ -12,6 +13,32 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       navbarRegion:  '#navbar-region',
       filterRegion:    '#filter-region',
       mainRegion:    '#main-region'
+    },
+    
+    events: {
+      'click .js-filter': 'filterClicked',
+      'click .js-filterclear': 'filterClearClicked',
+    },
+    
+    setFilter: function(filter){
+      this.filter = filter;
+      var container = this.$el.find('#filterTags');
+      container.empty();
+      if(filter){
+        _.each(filter.toJSON(),function(value,key){
+          var $tag = $('<span></span>',{'class':'label label-info',text:value,style:'margin-right:5px'});
+          container.append($tag);
+        });
+        container.append('<a class="btn-link js-filterclear">borrar filtro</a>');
+      }
+    },
+    
+    filterClicked: function(e){
+      List.FilterPopup(this.filter);
+    },
+    
+    filterClearClicked: function(e){
+      DocManager.trigger('artactivities:filter',null);
     }
   });
   
@@ -32,17 +59,17 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
     events: {
         'click button.js-edit': 'editClicked',
         'click button.js-trash': 'trashClicked',
+        'click .js-filter': 'filterClicked'
     },
       
     editClicked: function(e){
         e.stopPropagation();e.preventDefault();
-       //DocManager.trigger('location:edit',locationsApp.Model.selectedAction,this.model);
         DocManager.trigger('artActivity:edit',this.model);
     },
       
     trashClicked: function(e){
         e.stopPropagation();e.preventDefault();
-        //DocManager.trigger('location:remove',locationsApp.Model.selectedAction,this.model);
+        DocManager.trigger('artActivity:remove',this.model);
     }
   });
   
@@ -75,6 +102,29 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
         collection: collection,
         fields: ['cnumber','slug']
       });
+  };
+  
+  
+  List.FilterPopup = function(filter){
+    if(!filter){
+      filter=   new Entities.ArtActivityFilterFacet();
+    }
+    var form = new Backbone.Form({model:filter});
+    
+    var modal = new Backbone.BootstrapModal({
+      content: form,
+      title: 'Filtrar Actividades Artísticas',
+      okText: 'aceptar',
+      cancelText: 'cancelar',
+      enterTriggersOk: false,
+    });
+    
+    modal.on('ok',function(){
+        form.commit();
+        DocManager.trigger('artactivities:filter',filter);
+    });
+    
+    modal.open();
   };
 
 });

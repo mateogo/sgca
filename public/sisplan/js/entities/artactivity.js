@@ -80,5 +80,30 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
         url: "/artactividades"
     });
+    
+    Entities.ArtActivityFilterFacet =  Backbone.Model.extend({
+      schema: {
+        type_event: {type:'Select',options:['','Ciclo','Muestra'],title:'Tipo'},
+        //fdesde: {type:'Date',title:'Fecha desde'},
+        //fhasta:  {type:'Date',title:'Fecha hasta'},
+        //airelibre: {type:'Checkbox',title:'Aire Libre'},
+        provevento: {type:'Select',title:'Provincia',options:utils.provinciasOptionList.Argentina},
+        //nivel_ejecucion: {type:'Select',title:'Estado de avance',options:utils.estadoaltaOptionList},
+        //estado_alta: {type:'Select',title:'Estado de aprobación',options:utils.estadoaltaOptionList},
+        //nivel_critico: {type:'Select',title:'Nivel de criticidad',options:utils.nivelimportanciaOptionList},
+        rubro: {type:'Select',title:'Rubro',options:utils.tematicasOptionList},
+        //subrubro: {type:'Select',title:'Sub Rubro',options:[]}
+      },
+      
+      toJSON: function(){
+        var ret = {};
+        _.each(this.attributes,function(value,key){
+            if(value && value !== 'no_definido' && value !== 'nodefinido'){
+              ret[key] = value;
+            }
+        });
+        return ret;
+      }
+    });
 
 });
