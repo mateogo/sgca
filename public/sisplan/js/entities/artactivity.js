@@ -42,13 +42,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           provevento: {type:'Select',title:'Provincia',options:utils.provinciasOptionList.Argentina},
           locevento: {type:'Text',title:'Localidad'},
           cevento: {type:'Text',title:'Código Postal'},
-          nivel_ejecucion: {type:'Select',title:'Estado de avance',options:utils.estadoaltaOptionList},
-          estado_alta: {type:'Select',title:'Estado de aprobación',options:utils.estadoaltaOptionList},
-          nivel_critico: {type:'Select',title:'Nivel de criticidad',options:utils.nivelimportanciaOptionList},
+          area: {type:'Select',title:'Area',options:utils.actionAreasOptionList},
+          estado_alta: {type:'Select',title:'Estado alta',options:utils.estadoaltaOptionList},
+          nivel_ejecucion: {type:'Select',title:'Nivel ejecución',options:utils.actionEjecucionOptionList},
+          nivel_importancia: {type:'Select',title:'Importancia',options:utils.actionPrioridadOptionList},
           responsable: {type:'Text',title:'Responsable Asignado'},
           res_mail: {type:'Text',title:'Email responsable'},
           res_tel: {type:'Text',title:'Teléfono responsable'},
-          resolucion: {type:'Text',title:'Resolución'},
+          resolucion: {type:'Text',title:'Observaciones'},
           rubro: {type:'Select',title:'Rubro',options:utils.tematicasOptionList},
           subrubro: {type:'Select',title:'Sub Rubro',options:[]},
           genero: {type:'Text',title:'Genero'},
@@ -83,6 +84,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     
     Entities.ArtActivityFilterFacet =  Backbone.Model.extend({
       schema: {
+        area: {type:'Select',title:'Area',options:utils.actionAreasOptionList},
         type_event: {type:'Select',options:['','Ciclo','Muestra'],title:'Tipo'},
         //fdesde: {type:'Date',title:'Fecha desde'},
         //fhasta:  {type:'Date',title:'Fecha hasta'},
