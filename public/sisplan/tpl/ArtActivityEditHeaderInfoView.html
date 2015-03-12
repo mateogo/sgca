@@ -1,14 +1,43 @@
-
-
-<% if(!cnumber){ %>
-        <h3>Nueva actividad <small>para acción <%= action.cnumber%> - <%= action.slug%></small></h3>
-<% }else{ %>
-        <h3> Edición de Actividad <%= cnumber%>
-                <% if(typeof(action) !== 'undefined'){ %> 
-                    <small>(Acción: <%= action.cnumber%> - <%= action.slug%>)</small>
-                <% } %>
-        <h3>
-<% } %>
-
-
-
+<div class="row well" style="padding-bottom:0px;border-bottom:0">
+    <div class="row">
+        <div class="col-xs-6">
+            <% if(!cnumber){ %>
+                    <h2>Nueva actividad</h2>
+                    <h4 class="text-muted">para acción <%= action.cnumber%> - <%= action.slug%></h4>
+            <% }else{ %>
+                    <h2>  
+                        Edición de Actividad <%= cnumber%>
+                        
+                    </h2>
+                    <% if(typeof(action) !== 'undefined'){ %> 
+                        <h4 class="text-muted">(Acción: <%= action.cnumber%> - <%= action.slug%>)</h4>
+                    <% } %>
+            <% } %>
+            
+            <h4> <%=type_event%></h4>
+        </div>
+        <div class="col-xs-6">
+            <h3><%=slug%></h3>
+            <h4><%=area%></h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <h4 class="pull-left"> <span class="label label-info">estado: <%=estado_alta%></span></h4>
+            <h4 class="pull-left"> <span class="label label-default">importancia: <%=nivel_importancia%></span></h4>
+            <div class="clearfix"></div>
+            <p class="text-muted"><%= description%></p>
+        </div>
+    </div>
+    <div class="row hidden-print" style="margin-top:10px">
+        <div class="col-xs-12 align-right">
+            <div id="navbar-region" class="text-muted">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a><i class="glyphicon glyphicon-book"></i> Resumen</a></li>
+                <li role="presentation"><a><i class="glyphicon glyphicon-calendar"></i> Eventos</a></li>
+                <li role="presentation"><a><i class="glyphicon glyphicon-leaf"></i> Recursos</a></li>
+                <li role="presentation"><a><i class="glyphicon glyphicon-th-list"></i> Tareas</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

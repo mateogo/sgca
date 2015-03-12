@@ -8,6 +8,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         defaults: {
           cnumber: null,
           type_event: '',
+          type_content: '',
+          area: '',
           slug: '',
           description: '',
           fevent: '', //debe ser mayor a 40 dias de la fecha de carga
@@ -32,6 +34,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         
         schema: {
           type_event: {type:'Select',options:['Ciclo','Muestra'],title:'Tipo'},
+          type_content: {type:'Select',options:utils.etarioOptionList,title: 'Tipo de audiencia'},
           slug:  { validators: ['required'], title: 'Denominación'},
           description:  {  title: 'Descripción'},
           fdesde: {type:'Date',title:'Fecha desde'},
@@ -86,6 +89,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       schema: {
         area: {type:'Select',title:'Area',options:utils.actionAreasOptionList},
         type_event: {type:'Select',options:['','Ciclo','Muestra'],title:'Tipo'},
+        type_content: {type:'Select',options:utils.etarioOptionList,title: 'Tipo de audiencia'},
         //fdesde: {type:'Date',title:'Fecha desde'},
         //fhasta:  {type:'Date',title:'Fecha hasta'},
         //airelibre: {type:'Checkbox',title:'Aire Libre'},

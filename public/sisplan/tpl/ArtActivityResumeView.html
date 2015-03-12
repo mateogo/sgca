@@ -1,0 +1,61 @@
+
+<div class="row hidden-print">
+    <div class="col-xs-12 text-right">
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default active"><i class="glyphicon glyphicon glyphicon-blackboard"></i> Resumen</button>
+          <button type="button" class="btn btn-default js-basicedit"><i class="glyphicon glyphicon-pencil"></i> Edición</button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3 class="text-info">Cuando</h3>
+        <div class="well" style="overflow-y:auto">
+            <p><label>Desde</label> <%=fdesde%> </p>
+            <p><label>Hasta</label> <%=fhasta%> </p>
+            <p><label>Leyenda Fecha</label> <%=leyendafecha%> </p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h3  class="text-info">Donde</h3>
+        <div class="well">
+            <p><label>Lugar</label> <%=lugar%> </p>
+            <p><label>Provincia</label> <%=provevento%> </p>
+            <p><label>Localidad</label> <%=locevento%> </p>
+            <p><label>C&oacute;digo Postal</label> <%=cevento%> </p>
+            <p><label>Aire libre</label> <%= (airelibre)? 'si':'no' %> </p>
+        </div>
+    </div>
+</div> 
+<div class="row">
+    <div class="col-md-6">
+        <h3  class="text-info">Estado</h3>
+        <div class="well" style="overflow-y:auto">
+            <p><label>Estado alta</label> <%=estado_alta%> </p>
+            <p><label>Nivel ejecucióñ</label> <%=nivel_ejecucion%> </p>
+            <p><label>Importancia</label> <%=nivel_importancia%> </p>
+            <p><label>Observaciones</label> <%=resolucion%> </p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h3 class="text-info">Responsable</h3>
+        <div class="well">
+            <p><label>Responsable</label> <%=responsable%> </p>
+            <p><label>Email</label> <%=res_mail%> </p>
+            <p><label>Tel&eacute;fono</label> <%=res_tel%> </p>
+        </div>
+    </div>
+</div> 
+<div class="row">
+    <div class="col-md-6">
+        <h3  class="text-info">Categorización</h3>
+        <div class="well" style="overflow-y:auto">
+            <p><label>Rubro</label> <%=rubro%> </p>
+            <p><label>Sub Rubro</label> <%=subrubro%> </p>
+            <p><label>Genero</label> <%=genero%> </p>
+            <p><label>Formato</label> <%=formato%> </p>
+            <p><label>Tipo de audiencia</label> <%=type_content%> </p>
+        </div>
+    </div>
+</div>

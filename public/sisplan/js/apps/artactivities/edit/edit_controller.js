@@ -4,6 +4,13 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
   
   Edit.Controller = {
       
+      showResume: function(artActivity){
+        loadModel(artActivity).then(function(){
+          createLayoutEditor();
+          createResumeView();
+        });
+        $('body').scrollTop(0);
+      },
       editBasic: function(artActivity){
         loadModel(artActivity).then(function(){
           createLayoutEditor();
@@ -54,7 +61,7 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
   function createLayoutEditor(){
     var session = getSession();
     
-    session.views.layout = new Edit.Layout();
+    session.views.layout = new Edit.Layout({model:session.model});
     
     createHeaderInfoView();
     createNavBarView();
@@ -84,6 +91,13 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
     });
   }
   
+  function createResumeView(){
+    var session = getSession();
+    var layout = Edit.Session.views.layout; 
+    var view = new Edit.ResumeView({model:session.model});
+    layout.getRegion('mainRegion').show(view);
+  }
+  
   function createBasicEditor(){
     var session = getSession();
     var layout = Edit.Session.views.layout; 
@@ -91,12 +105,6 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
     var editor = new Edit.BasicEditor({model:session.model});
     layout.getRegion('mainRegion').show(editor);
   }
-  
-  
-  
-  
-  
-  
   
   
 });

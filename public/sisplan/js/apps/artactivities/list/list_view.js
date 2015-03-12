@@ -26,7 +26,7 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       container.empty();
       if(filter){
         _.each(filter.toJSON(),function(value,key){
-          var $tag = $('<span></span>',{'class':'label label-info',text:value,style:'margin-right:5px'});
+          var $tag = $('<span></span>',{'class':'label label-info',text:value,style:'margin-right:5px;font-size:0.8em'});
           container.append($tag);
         });
         container.append('<a class="btn-link js-filterclear">borrar filtro</a>');
@@ -73,23 +73,45 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
     }
   });
   
+  var activityCell = Backgrid.Cell.extend({
+    render:function(){
+      var cnumber = this.model.get('cnumber');
+      var link = $('<a></a>',{text:cnumber,'class':'js-open'});
+      this.$el.html(link);
+      return this;
+    },
+    events: {
+      'click .js-open': 'open'
+    },
+    open: function(){
+      DocManager.trigger('artActivity:edit',this.model);
+    }
+  });
+  
+  var actionCell = Backgrid.Cell.extend({
+    render:function(){
+      var action = this.model.get('action');
+      var actionStr = (action)?action.cnumber: '';
+      var link = $('<a></a>',{text:actionStr,'class':'js-openaction'});
+      this.$el.html(link);
+      return this;
+    },
+    events: {
+      'click .js-openaction': 'openAction'
+    },
+    openAction: function(){
+      DocManager.trigger('action:show',this.model.get('action_id'));
+    }
+  });
+  
+  
 
   List.GridCreator = function(collection){
     return new Backgrid.Grid({
         className: 'table table-condensed table-bordered table-hover',
         collection: collection,
-        columns: [{name: 'cnumber',label: 'Actividad',cell: 'string',editable:false},
-                  {name: 'action.cnumber',label: 'Acción',editable:false,
-                    cell: Backgrid.Cell.extend({
-                        render:function(){
-                          //console.log('render',this);
-                          var action = this.model.get('action');
-                          var actionStr = (action)?action.cnumber: ''; 
-                          this.$el.html(actionStr);
-                          return this;
-                        }
-                    })
-                  },
+        columns: [{name: 'cnumber',label: 'Actividad',cell: activityCell,editable:false},
+                  {name: 'action.cnumber',label: 'Acción',editable:false, cell: actionCell},
                   {name: 'fealta',label: 'Fecha Alta',cell: 'string',editable:false},
                   {name: 'slug',label: 'Asunto-Descripción',cell: 'string',editable:false},
                   {name: '',label: 'Acciones',cell: 'actionsArtactivity',editable:false}

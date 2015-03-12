@@ -8,7 +8,16 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
       headerInfoRegion: '#headerinfo-region',
       navbarRegion: '#navbar-region',
       mainRegion: '#main-region'
-    }
+    },
+    events: {
+      'click .js-basicedit':'onClickBaseEdit'
+    },
+    onClickBaseEdit: function(){
+      Edit.Controller.editBasic(this.model);
+    },
+    onClickResumeMode: function(){
+      //Edit.Controller.showResume(this.model);
+    },
   });
   
   Edit.NotFoundView = Marionette.ItemView.extend({
@@ -35,6 +44,12 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
       Message.info('Disponible proximamente');
     }
   
+  });
+  
+  Edit.ResumeView = Marionette.ItemView.extend({
+    getTemplate: function(){
+      return utils.templates.ArtActivityResumeView;
+    }
   });
   
   Edit.BasicEditor = Marionette.ItemView.extend({
@@ -65,7 +80,7 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
     },
     
     done: function(){
-      DocManager.trigger('artactivities:list');
+      Edit.Controller.showResume(this.model);
     },
     
     events: {
@@ -85,7 +100,7 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
       if(!errors){
         var self = this;
         this.model.save().done(function(){
-          Message.success('Guardado!');
+          Message.success('Guardado');
           self.done();
         }).fail(function(e){
           Message.error('Ops! no se pudo guardar');
@@ -94,7 +109,11 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
     },
     
     onCancel: function(){
-      DocManager.navigateBack();
+      if(this.model.isNew()){
+        DocManager.navigateBack();  
+      }else{
+        Edit.Controller.showResume(this.model);
+      }
     }
     
   });

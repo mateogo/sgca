@@ -23,8 +23,7 @@ DocManager.module('ArtActivitiesApp', function(ArtActivitiesApp, DocManager, Bac
       DocManager.execute("set:active:header", "artactividades");
     },
     edit: function(model){
-      
-      ArtActivitiesApp.Edit.Controller.editBasic(model);
+      ArtActivitiesApp.Edit.Controller.showResume(model);
       DocManager.execute("set:active:header", "artactividades");
     },
     remove: function(artActiviy){
