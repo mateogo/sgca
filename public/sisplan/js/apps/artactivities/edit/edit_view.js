@@ -6,11 +6,11 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
     },
     regions: {
       headerInfoRegion: '#headerinfo-region',
-      navbarRegion: '#navbar-region',
       mainRegion: '#main-region'
     },
     events: {
-      'click .js-basicedit':'onClickBaseEdit'
+      'click .js-basicedit':'onClickBaseEdit',
+      
     },
     onClickBaseEdit: function(){
       Edit.Controller.editBasic(this.model);
@@ -30,20 +30,46 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
   
   Edit.HeaderInfo = Marionette.ItemView.extend({
     tagName: 'div',
+    initialize: function(opts){
+      if(opts.tab){
+        this.selectedTab = opts.tab;
+      }
+      Marionette.ItemView.prototype.initialize.apply(this,arguments);
+    },
     getTemplate: function(){
       return utils.templates.ArtActivityEditHeaderInfoView;
-    }
-  });
-  
-  Edit.NavbarView = Marionette.ItemView.extend({
+    },
+    onRender: function(){
+      if(this.selectedTab){
+        this.selectTab(this.selectedTab);
+      }
+    },
     events: {
-      'click li': 'onClickItem'
+      'click .js-openevent': 'openEventClicked',
+      'click .js-openresume': 'openResumeClicked',
+      'click .js-openresource': 'notYet',
+      'click .js-opentask': 'notYet'
     },
     
-    onClickItem: function(){
+    selectTab: function(str){
+      var item = '.js-open'+str;
+      this.$el.find('li.active').removeClass('active');
+      this.$el.find(item).addClass('active');
+    },
+    
+    notYet: function(){
       Message.info('Disponible proximamente');
+    },
+    
+    openResumeClicked: function(e){
+      e.stopPropagation();
+      DocManager.trigger('artActivity:edit',this.model);
+    },
+    
+    openEventClicked: function(e){
+      e.stopPropagation();
+      DocManager.trigger('events:list',this.model);
     }
-  
   });
   
   Edit.ResumeView = Marionette.ItemView.extend({

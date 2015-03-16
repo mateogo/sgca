@@ -11,6 +11,7 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
         });
         $('body').scrollTop(0);
       },
+      
       editBasic: function(artActivity){
         loadModel(artActivity).then(function(){
           createLayoutEditor();
@@ -18,15 +19,11 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
         });
         $('body').scrollTop(0);
       },
-      editEvents: function(artActivity){
-        
-      },
-      
-      editResources: function(artActivity){
-        
-      },
-      editTask: function(){
-        
+      setSectionSelected: function(str){
+        var session = getSession();
+        if(session.views.headerInfo){
+          session.views.headerInfo.selectTab(str);
+        }
       }
   };
   
@@ -64,7 +61,6 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
     session.views.layout = new Edit.Layout({model:session.model});
     
     createHeaderInfoView();
-    createNavBarView();
     
     DocManager.mainRegion.show(Edit.Session.views.layout);
   }
@@ -77,20 +73,12 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
   function createHeaderInfoView(){
     var session = getSession();
     var layout = session.views.layout; 
-    var view = new Edit.HeaderInfo({model:session.model});
+    session.views.headerInfo = new Edit.HeaderInfo({model:session.model});
     layout.on('show',function(){
-        layout.headerInfoRegion.show(view);
+        layout.headerInfoRegion.show(session.views.headerInfo);
     });
   }
-  
-  function createNavBarView(){
-    var layout = Edit.Session.views.layout; 
-    layout.on('show',function(){
-      var view = new Edit.NavbarView({el:layout.$el.find('#navbar-region')});
-      //layout.navbarRegion.show(view);
-    });
-  }
-  
+    
   function createResumeView(){
     var session = getSession();
     var layout = Edit.Session.views.layout; 

@@ -23,6 +23,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           locevento: '',
           cevento: '',
           
+          estado_alta: '',
+          nivel_ejecucion: '',
+          nivel_importancia: '',
+          
+          
           fealta: null,
           feultmod: null,
           
@@ -36,7 +41,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           type_event: {type:'Select',options:['Ciclo','Muestra'],title:'Tipo'},
           type_content: {type:'Select',options:utils.etarioOptionList,title: 'Tipo de audiencia'},
           slug:  { validators: ['required'], title: 'Denominación'},
-          description:  {  title: 'Descripción'},
+          description:  {type:'TextArea',  title: 'Descripción'},
           fdesde: {type:'Date',title:'Fecha desde'},
           fhasta:  {type:'Date',title:'Fecha hasta'},
           leyendafecha:  {type:'Text',title:'Leyenda-Fecha'},
@@ -61,15 +66,24 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },{
       //ArtActivity static methods
       findById: function(id){
+        if(!this.cache) this.cache = {};
+        
         var def = $.Deferred();
-        var model = new Entities.ArtActivity({_id:id});
-        model.fetch().then(function(r){
-            if(r){
-              def.resolve(model);
-            }else{
-              def.reject('not found');
-            }
-        },def.reject);
+        
+        if(id in this.cache){
+          def.resolve(this.cache[id]);
+        }else{
+          var self = this;
+          var model = new Entities.ArtActivity({_id:id});
+          model.fetch().then(function(r){
+              if(r){
+                self.cache[id] = model;
+                def.resolve(model);
+              }else{
+                def.reject('not found');
+              }
+          },def.reject);
+        }
         
         return def.promise();
       }

@@ -15,15 +15,16 @@ window.utils = {
         var deferreds = [];
         self.templates = {};
         $.each(views, function(index, view) {
-            if (window[view]) {
+            var key = view.split('/').pop();
+            if (window[key]) {
                 //$.get restorna un 'deferred'
                 deferreds.push($.get('tpl/' + view + '.html', function(data) {
-                    window[view].prototype.template = _.template(data);
+                    window[key].prototype.template = _.template(data);
                 }));
             } else {
                 //console.log('WARINING: Marionette template. tpl/' + view + '.html' + " not FOUND!!");
                 deferreds.push($.get('tpl/' + view + '.html', function(data) {
-                    self.templates[view] = _.template(data);
+                    self.templates[key] = _.template(data);
                 }));
 
             }

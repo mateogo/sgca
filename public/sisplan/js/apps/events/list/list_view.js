@@ -1,4 +1,4 @@
-DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, Marionette, $, _){
+DocManager.module("EventsApp.List", function(List, DocManager, Backbone, Marionette, $, _){
   
   var Entities =  DocManager.module('Entities');
   
@@ -6,18 +6,24 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
     className: 'row row-offcanvas row-offcanvas-left',
 
     getTemplate: function(){
-      return utils.templates.ArtActivityListLayoutView;
+      return utils.templates.EventListLayoutView;
     },
     
     regions: {
+      headerInfoRegion: '#headerinfo-region',
       navbarRegion:  '#navbar-region',
       filterRegion:    '#filter-region',
       mainRegion:    '#main-region'
     },
     
     events: {
+      'click .js-newevent': 'newEventClicked',
       'click .js-filter': 'filterClicked',
-      'click .js-filterclear': 'filterClearClicked'
+      'click .js-filterclear': 'filterClearClicked',
+    },
+    
+    newEventClicked: function(){
+      DocManager.trigger('event:new',this.model);
     },
     
     setFilter: function(filter){
@@ -40,11 +46,10 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
     filterClearClicked: function(e){
       DocManager.trigger('artactivities:filter',null);
     }
-    
   });
   
   
-  Backgrid.ActionsArtactivityCell = Backgrid.Cell.extend({
+  var actionsCell = Backgrid.Cell.extend({
     // Cell default class names are the lower-cased and dasherized
     // form of the the cell class names by convention.
     className: "actions-artactivity-cell",
@@ -65,16 +70,16 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       
     editClicked: function(e){
         e.stopPropagation();e.preventDefault();
-        DocManager.trigger('artActivity:edit',this.model);
+        DocManager.trigger('event:edit',this.model);
     },
       
     trashClicked: function(e){
         e.stopPropagation();e.preventDefault();
-        DocManager.trigger('artActivity:remove',this.model);
+        DocManager.trigger('event:remove',this.model);
     }
   });
   
-  var activityCell = Backgrid.Cell.extend({
+  var cnumberCell = Backgrid.Cell.extend({
     render:function(){
       var cnumber = this.model.get('cnumber');
       var link = $('<a></a>',{text:cnumber,'class':'js-open'});
@@ -85,37 +90,21 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       'click .js-open': 'open'
     },
     open: function(){
-      DocManager.trigger('artActivity:edit',this.model);
+      DocManager.trigger('event:edit',this.model);
     }
-  });
-  
-  var actionCell = Backgrid.Cell.extend({
-    render:function(){
-      var action = this.model.get('action');
-      var actionStr = (action)?action.cnumber: '';
-      var link = $('<a></a>',{text:actionStr,'class':'js-openaction'});
-      this.$el.html(link);
-      return this;
-    },
-    events: {
-      'click .js-openaction': 'openAction'
-    },
-    openAction: function(){
-      DocManager.trigger('action:show',this.model.get('action_id'));
-    }
-  });
-  
+  });  
   
 
   List.GridCreator = function(collection){
     return new Backgrid.Grid({
         className: 'table table-condensed table-bordered table-hover',
         collection: collection,
-        columns: [{name: 'cnumber',label: 'Actividad',cell: activityCell,editable:false},
-                  {name: 'action.cnumber',label: 'Acción',editable:false, cell: actionCell},
-                  {name: 'fealta',label: 'Fecha Alta',cell: 'string',editable:false},
-                  {name: 'slug',label: 'Asunto-Descripción',cell: 'string',editable:false},
-                  {name: '',label: 'Acciones',cell: 'actionsArtactivity',editable:false}
+        columns: [{name: 'cnumber',label: 'Evento',cell: cnumberCell,editable:false},
+                  {name: 'headline',label: 'Titulo',editable:false, cell: 'string'},
+                  {name: 'fdesde',label: 'Fecha desde',cell: 'string',editable:false},
+                  {name: 'fhasta',label: 'Fecha hasta',cell: 'string',editable:false},
+                  {name: 'estado_alta',label: 'Estado alta',cell: 'string',editable:false},
+                  {name: '',label: 'Acciones',cell: actionsCell,editable:false}
                  ]
       });
   }; 
@@ -136,7 +125,7 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
     
     var modal = new Backbone.BootstrapModal({
       content: form,
-      title: 'Filtrar Actividades Artísticas',
+      title: 'Filtrar Eventos',
       okText: 'aceptar',
       cancelText: 'cancelar',
       enterTriggersOk: false,
@@ -144,7 +133,7 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
     
     modal.on('ok',function(){
         form.commit();
-        DocManager.trigger('artactivities:filter',filter);
+        DocManager.trigger('events:filter',filter);
     });
     
     modal.open();

@@ -1,6 +1,5 @@
 var root = '../../../../';
 var module = require(root + 'calendar/models/artactivity.js');
-var initDb = require('../../helpers/initDb.js');
 
 
 var ArtActivity = module.getModel();
@@ -29,11 +28,10 @@ describe('Models',function(){
       var art = new ArtActivity({action:{_id:'3453434sadf',cnumber:'dummy',slug:'demo'}});
       
       art.save(function(err,result){
-        console.log('id guardado',result.id);
         expect(err).toBe(null);
         expect(result).toBeDefined();
         expect(result instanceof ArtActivity).toBeTruthy();
-        expect(result.id).toBeDefined();
+        expect(result.id).toBeTruthy();
                 
         artActivity = result;
         done();

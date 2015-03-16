@@ -99,8 +99,6 @@ var BaseModel = Backbone.Model.extend({
       collection.findOne({'_id':new BaseModel.ObjectID(id)}, function(err, item) {
           if(err) return cb(err);
           
-          console.log('encontro a ',self.entityCol,id);
-          console.log(item);
           if(item){
             item = new self(item);
           }

@@ -47,7 +47,6 @@ var instanceDbListeners = function (db,BSON) {
         require(controllers_path+file).setDb(db).setBSON(BSON).setConfig({publicpath:publicPath});
       });
   }
-  console.log('seteando base en config.js');
   BaseModel.setDb(db).setBSON(BSON);
 };
 
@@ -124,6 +123,7 @@ var routesBootstrap = function (app, express) {
   }
   
   require(rootPath + '/calendar/controllers/artactivities.js').configRoutes(app);
+  require(rootPath + '/calendar/controllers/events.js').configRoutes(app);
 };
 
 
