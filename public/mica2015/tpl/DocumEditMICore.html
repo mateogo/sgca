@@ -1,4 +1,4 @@
-<div class="fuelux">
+<div class="">
 	<section class="page-view">
 		<div role="main">
 			<div class="row margin-section">  
@@ -181,13 +181,14 @@
 										</div>
 									</div>
 									<hr class="spacer">
+									<!--Otro Representante-->
+									<div id='soldetails-region'></div>
 									<a id="nuevo-req-btn" >
 										<button id="itemFormBtn" type="button" class="btn btn-primary">Agregar otro representante</button>
 									</a>
-									<!--Otro Representante-->
-									<div id="nuevo-req-form" class="col-xs-12 col-md-12 sistema-box"></div>
+									<div id="nuevo-req-form"></div>
                   <!--END Otro Representante-->
-									<div id='soldetails-region' class="col-xs-12 col-md-12 sistema-box row spacer"></div>
+
 								</div><!-- END RESPONSABLES -->
   
                 <div class="step-pane" data-step="3">
@@ -202,38 +203,38 @@
 										<h5>Actividades sobre las que desea inscribirse como comprador</h5>  
 										<div class="form-group" id="cactividades">
 											<div class="checkbox" id="buyteatro">
-												<label class="checkbox-custom" data-initialize="checkbox">
-													<input type="checkbox" name='cactividades' id='aescenicas' value="aescenicas"  <%= cactividades['aescenicas']  ? 'checked':'' %> >
+												<label class="checkbox-custom <%= cactividades['aescenicas']  ? 'checked':'' %>" data-initialize="checkbox" id='aescenicas'>
+													<input class="sr-only" type="checkbox" name='cactividades' id='aescenicas' value="aescenicas"  <%= cactividades['aescenicas']  ? 'checked':'' %> >
 													<span class="checkbox-label">Artes escénicas</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buyaudiovisual">
-												<label class="checkbox-custom" data-initialize="checkbox">
-													<input type="checkbox" name='cactividades' id='audivisual' value="audivisual"  <%= cactividades['audivisual']  ? 'checked':'' %> >
+												<label class="checkbox-custom <%= cactividades['audivisual']  ? 'checked':'' %>" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" name='cactividades' id='audivisual' value="audivisual"  <%= cactividades['audivisual']  ? 'checked':'' %> >
 													<span class="checkbox-label">Audiovisual</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buydiseno">
-												<label class="checkbox-custom" data-initialize="checkbox">
-													<input type="checkbox" name='cactividades' id='disenio' value="disenio"  <%= cactividades['disenio']  ? 'checked':'' %> >
+												<label class="checkbox-custom <%= cactividades['disenio']  ? 'checked':'' %>" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" name='cactividades' id='disenio' value="disenio"  <%= cactividades['disenio']  ? 'checked':'' %> >
 													<span class="checkbox-label">Diseño</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buyeditorial">
-												<label class="checkbox-custom" data-initialize="checkbox">
-													<input type="checkbox" name='cactividades' id='editorial' value="editorial"  <%= cactividades['editorial']  ? 'checked':'' %> >
+												<label class="checkbox-custom <%= cactividades['editorial']  ? 'checked':'' %>" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" name='cactividades' id='editorial' value="editorial"  <%= cactividades['editorial']  ? 'checked':'' %> >
 													<span class="checkbox-label">Editorial</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buymusica">
-												<label class="checkbox-custom" data-initialize="checkbox">
-													<input type="checkbox" name='cactividades' id='musica' value="musica"  <%= cactividades['musica']  ? 'checked':'' %> >
+												<label class="checkbox-custom <%= cactividades['musica']  ? 'checked':'' %>" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" name='cactividades' id='musica' value="musica"  <%= cactividades['musica']  ? 'checked':'' %> >
 													<span class="checkbox-label">Música</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buyvideojuegos">
-												<label class="checkbox-custom" data-initialize="checkbox">
-													<input type="checkbox" name='cactividades' id='videojuegos' value="videojuegos"  <%= cactividades['videojuegos']  ? 'checked':'' %> >
+												<label class="checkbox-custom <%= cactividades['videojuegos']  ? 'checked':'' %>" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" name='cactividades' id='videojuegos' value="videojuegos"  <%= cactividades['videojuegos']  ? 'checked':'' %> >
 													<span class="checkbox-label">Videojuegos y Apps</span>
 												</label>
 											</div>
@@ -254,30 +255,30 @@
 													<textarea class="form-control" id='cproductos' name="cproductos" rows="4"><%= cproductos %></textarea>
 												</div>
                               
-												<div class="form-group col-sm-12">
+												<div class="form-group col-sm-12 radio">
 													<p><strong>¿Hace negocios con actores culturales del exterior?</strong></p>
-													<label class="radio-custom radio-inline" data-initialize="radio" >
-														<input   <%= cexpinternacional==='4'  ? 'checked':'' %> name="cexpinternacional" type="radio" value="4"> Frecuentemente
-													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" >
-														<input   <%= cexpinternacional==='2'  ? 'checked':'' %> name="cexpinternacional" type="radio" value="2"> Esporádicamente
-													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" >
-														<input   <%= cexpinternacional==='1'  ? 'checked':'' %> name="cexpinternacional" type="radio" value="1"> Nunca
-													</label>
-												</div>
+													<label class="radio-custom radio-inline <%= cexpinternacional==='4'  ? 'checked':'' %>" data-initialize="radio" id="cexpinternacional4">
+											      <input class="sr-only" name="cexpinternacional" type="radio" value="4" <%= cexpinternacional==='4'  ? 'checked="checked"':'' %>> Frecuentemente
+											    </label>
+											    <label class="radio-custom radio-inline <%= cexpinternacional==='2'  ? 'checked':'' %>" data-initialize="radio" id="cexpinternacional2">
+											      <input class="sr-only" name="cexpinternacional" type="radio" value="2" <%= cexpinternacional==='2'  ? 'checked="checked"':'' %>> Esporádicamente
+											    </label>
+											    <label class="radio-custom radio-inline <%= cexpinternacional==='1'  ? 'checked':'' %>" data-initialize="radio" id="cexpinternacional1">
+											      <input class="sr-only" name="cexpinternacional" type="radio" value="1" <%= cexpinternacional==='1'  ? 'checked="checked"':'' %>> Nunca
+											    </label>
+											  </div>
 
-												<div class="form-group col-sm-12">
+												<div class="form-group col-sm-12 radio">
 													<p><strong>¿Hace negocios con actores culturales de otras provincias?</strong></p>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-buy-always">
-														<input   <%= cexpregional==='4'  ? 'checked':'' %> name="cexpregional" type="radio" value="4"> Frecuentemente
-													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="cexpregional-often">
-														<input   <%= cexpregional==='2'  ? 'checked':'' %> name="cexpregional" type="radio" value="2"> Esporádicamente
-													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="cexpregional-never">
-														<input   <%= cexpregional==='1'  ? 'checked':'' %> name="cexpregional" type="radio" value="1"> Nunca
-													</label>
+													<label class="radio-custom radio-inline <%= cexpregional==='4'  ? 'checked':'' %>" data-initialize="radio" id="prov-buy-always">
+											      <input class="sr-only" name="cexpregional" type="radio" value="4" <%= cexpregional==='4'  ? 'checked="checked"':'' %>> Frecuentemente
+											    </label>
+											    <label class="radio-custom radio-inline <%= cexpregional==='2'  ? 'checked':'' %>" data-initialize="radio" id="cexpregional-often">
+											      <input class="sr-only" name="cexpregional" type="radio" value="2" <%= cexpregional==='2'  ? 'checked="checked"':'' %>> Esporádicamente
+											    </label>
+											    <label class="radio-custom radio-inline <%= cexpregional==='1'  ? 'checked':'' %>" data-initialize="radio" id="cexpregional-never">
+											      <input class="sr-only" name="cexpregional" type="radio" value="1" <%= cexpregional==='1'  ? 'checked="checked"':'' %>> Nunca
+											    </label>
 												</div>
 
 												<div class="form-group col-sm-12">
@@ -316,38 +317,38 @@
 										<h5>Actividades sobre las que desea inscribirse como vendedor</h5>  
 										<div class="form-group" id="vactividades">
 											<div class="checkbox" id="buyteatro">
-												<label class="checkbox-custom" data-initialize="checkbox">
-													<input type="checkbox" name='vactividades' id='vaescenicas' value="aescenicas"  <%= vactividades['aescenicas']  ? 'checked':'' %> >
+												<label class="checkbox-custom <%= vactividades['aescenicas']  ? 'checked':'' %>" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" name='vactividades' id='vaescenicas' value="aescenicas"  <%= vactividades['aescenicas']  ? 'checked':'' %> >
 													<span class="checkbox-label">Artes escénicas</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buyaudiovisual">
-												<label class="checkbox-custom" data-initialize="checkbox">
-													<input type="checkbox" name='vactividades' id='vaudivisual' value="audivisual"  <%= vactividades['audivisual']  ? 'checked':'' %> >
+												<label class="checkbox-custom <%= vactividades['audivisual']  ? 'checked':'' %>" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" name='vactividades' id='vaudivisual' value="audivisual"  <%= vactividades['audivisual']  ? 'checked':'' %> >
 													<span class="checkbox-label">Audiovisual</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buydiseno">
-												<label class="checkbox-custom" data-initialize="checkbox">
-													<input type="checkbox" name='vactividades' id='vdisenio' value="disenio"  <%= vactividades['disenio']  ? 'checked':'' %> >
+												<label class="checkbox-custom <%= vactividades['disenio']  ? 'checked':'' %>" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" name='vactividades' id='vdisenio' value="disenio"  <%= vactividades['disenio']  ? 'checked':'' %> >
 													<span class="checkbox-label">Diseño</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buyeditorial">
-												<label class="checkbox-custom" data-initialize="checkbox">
-													<input type="checkbox" name='vactividades' id='veditorial' value="editorial"  <%= vactividades['editorial']  ? 'checked':'' %> >
+												<label class="checkbox-custom <%= vactividades['editorial']  ? 'checked':'' %>" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" name='vactividades' id='veditorial' value="editorial"  <%= vactividades['editorial']  ? 'checked':'' %> >
 													<span class="checkbox-label">Editorial</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buymusica">
-												<label class="checkbox-custom" data-initialize="checkbox">
-													<input type="checkbox" name='vactividades' id='musica' value="musica"  <%= vactividades['musica']  ? 'checked':'' %> >
+												<label class="checkbox-custom <%= vactividades['musica']  ? 'checked':'' %>" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" name='vactividades' id='musica' value="musica"  <%= vactividades['musica']  ? 'checked':'' %> >
 													<span class="checkbox-label">Música</span>
 												</label>
 											</div>
 											<div class="checkbox" id="buyvideojuegos">
-												<label class="checkbox-custom" data-initialize="checkbox">
-													<input type="checkbox" name='vactividades' id='videojuegos' value="videojuegos"  <%= vactividades['videojuegos']  ? 'checked':'' %> >
+												<label class="checkbox-custom <%= vactividades['videojuegos']  ? 'checked':'' %>" data-initialize="checkbox">
+													<input class="sr-only" type="checkbox" name='vactividades' id='videojuegos' value="videojuegos"  <%= vactividades['videojuegos']  ? 'checked':'' %> >
 													<span class="checkbox-label">Videojuegos y Apps</span>
 												</label>
 											</div>
@@ -367,32 +368,34 @@
 													<label class="control-label">Detalle los productos y/o servicios de la empresa/institución</label>
 													<textarea class="form-control" id='vproductos' name="vproductos" rows="4"><%= vproductos %></textarea>
 												</div>
-                              
-												<div class="form-group col-sm-12">
-													<p><strong>¿Hace negocios con actores culturales del exterior?</strong></p>
-													<label class="radio-custom radio-inline" data-initialize="radio" >
-														<input   <%= vexpinternacional==='4'  ? 'checked':'' %> name="vexpinternacional" type="radio" value="4"> Frecuentemente
-													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" >
-														<input   <%= vexpinternacional==='2'  ? 'checked':'' %> name="vexpinternacional" type="radio" value="2"> Esporádicamente
-													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" >
-														<input   <%= vexpinternacional==='1'  ? 'checked':'' %> name="vexpinternacional" type="radio" value="1"> Nunca
-													</label>
-												</div>
 
-												<div class="form-group col-sm-12">
+												<div class="form-group col-sm-12 radio">
+													<p><strong>¿Hace negocios con actores culturales del exterior?</strong></p>
+													<label class="radio-custom radio-inline <%= vexpinternacional==='4'  ? 'checked':'' %>" data-initialize="radio" id="vexpinternacional4">
+											      <input class="sr-only" name="vexpinternacional" type="radio" value="4" <%= vexpinternacional==='4'  ? 'checked="checked"':'' %>> Frecuentemente
+											    </label>
+											    <label class="radio-custom radio-inline <%= vexpinternacional==='2'  ? 'checked':'' %>" data-initialize="radio" id="vexpinternacional2">
+											      <input class="sr-only" name="vexpinternacional" type="radio" value="2" <%= vexpinternacional==='2'  ? 'checked="checked"':'' %>> Esporádicamente
+											    </label>
+											    <label class="radio-custom radio-inline <%= vexpinternacional==='1'  ? 'checked':'' %>" data-initialize="radio" id="vexpinternacional1">
+											      <input class="sr-only" name="vexpinternacional" type="radio" value="1" <%= vexpinternacional==='1'  ? 'checked="checked"':'' %>> Nunca
+											    </label>
+											  </div>
+                              
+                        <div class="form-group col-sm-12 radio">
 													<p><strong>¿Hace negocios con actores culturales de otras provincias?</strong></p>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="prov-buy-always">
-														<input   <%= vexpregional==='4'  ? 'checked':'' %> name="vexpregional" type="radio" value="4"> Frecuentemente
-													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="vexpregional-often">
-														<input   <%= vexpregional==='2'  ? 'checked':'' %> name="vexpregional" type="radio" value="2"> Esporádicamente
-													</label>
-													<label class="radio-custom radio-inline" data-initialize="radio" id="vexpregional-never">
-														<input   <%= vexpregional==='1'  ? 'checked':'' %> name="vexpregional" type="radio" value="1"> Nunca
-													</label>
-												</div>
+													<label class="radio-custom radio-inline <%= vexpregional==='4'  ? 'checked':'' %>" data-initialize="radio" id="vexpregional4">
+											      <input class="sr-only" name="vexpregional" type="radio" value="4" <%= vexpregional==='4'  ? 'checked="checked"':'' %>> Frecuentemente
+											    </label>
+											    <label class="radio-custom radio-inline <%= vexpregional==='2'  ? 'checked':'' %>" data-initialize="radio" id="vexpregional2">
+											      <input class="sr-only" name="vexpregional" type="radio" value="2" <%= vexpregional==='2'  ? 'checked="checked"':'' %>> Esporádicamente
+											    </label>
+											    <label class="radio-custom radio-inline <%= vexpregional==='1'  ? 'checked':'' %>" data-initialize="radio" id="vexpregional1">
+											      <input class="sr-only" name="vexpregional" type="radio" value="1" <%= vexpregional==='1'  ? 'checked="checked"':'' %>> Nunca
+											    </label>
+											  </div>
+
+												
 
 												<div class="form-group col-sm-12">
 													<label class="control-label">Principales mercados con los que hace negocios (Completar nombre, lugar y país)</label>
