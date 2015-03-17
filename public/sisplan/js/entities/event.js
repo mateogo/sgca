@@ -53,8 +53,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           content: {type:'RichText',title:'Contenido'},
           artists: {type:'TextArea',title:'Artistas'},
           
+          ftype: {type:'Select',title:'Tipo fecha',options:['Puntual','Fecha desde-hasta','Repetición']},
           fdesde: {type:'DatePicker',title:'Fecha desde'},
-          fhasta: {type:'DatePicker',title:'Fecha hasta'}
+          fhasta: {type:'DatePicker',title:'Fecha hasta'},
+          duration: {type:'Text',validators:[],title:'Duración'},
+          hdesde: {type:'TimePicker',title:'Hora desde'},
+          hhasta: {type:'TimePicker',title:'Hora hasta'}
         },
         
         loadArtActivity: function(){
