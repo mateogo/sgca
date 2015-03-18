@@ -45,3 +45,11 @@ DocManager.confirm = function(txt){
   modal.once('cancel',def.reject);
   return def.promise();
 };
+
+
+DocManager.mergeDateTime = function(date,time){
+  if(date && time){
+    return new Date(date.toString().replace(/(\d\d:){2}\d{2}/,/(\d\d:){2}\d{2}/.exec(time.toString())[0]));
+  }
+  return null;
+};

@@ -47,7 +47,9 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'artactivities/ArtActivityListLayoutView','artactivities/ArtActivityEditLayoutView','artactivities/ArtActivityEditHeaderInfoView',
     'artactivities/ArtActivityResumeView','artactivities/ArtActivityEditBasicView','artactivities/ArtActivityEditBasicForm',
     
-    'events/EventListLayoutView','events/EventEditLayout','events/EventEditForm'
+    'events/EventListLayoutView','events/EventEditLayout','events/EventEditForm',
+    
+    'common/DatePatternForm'
     
     ], function() {
 

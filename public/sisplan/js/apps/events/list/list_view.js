@@ -94,6 +94,17 @@ DocManager.module("EventsApp.List", function(List, DocManager, Backbone, Marione
     }
   });  
   
+  var fechaCell = Backgrid.Cell.extend({
+    render:function(){
+      var field = this.column.get('name');
+      var value = this.model.get(field);
+      var str = '';
+      str = moment(value).format('DD/MM/YYYY H:m');
+      this.$el.html(str);
+      return this;
+    }
+  });  
+  
 
   List.GridCreator = function(collection){
     return new Backgrid.Grid({
@@ -101,8 +112,8 @@ DocManager.module("EventsApp.List", function(List, DocManager, Backbone, Marione
         collection: collection,
         columns: [{name: 'cnumber',label: 'Evento',cell: cnumberCell,editable:false},
                   {name: 'headline',label: 'Titulo',editable:false, cell: 'string'},
-                  {name: 'fdesde',label: 'Fecha desde',cell: 'string',editable:false},
-                  {name: 'fhasta',label: 'Fecha hasta',cell: 'string',editable:false},
+                  {name: 'fdesde',label: 'Fecha desde',cell: fechaCell,editable:false},
+                  {name: 'fhasta',label: 'Fecha hasta',cell: fechaCell,editable:false},
                   {name: 'estado_alta',label: 'Estado alta',cell: 'string',editable:false},
                   {name: '',label: 'Acciones',cell: actionsCell,editable:false}
                  ]
