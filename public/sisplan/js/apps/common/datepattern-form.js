@@ -75,7 +75,7 @@ DocManager.module("Common.views", function(views, DocManager, Backbone, Marionet
     getStartDate: function(){
       var dstart = this.$el.find('[name=dstart]').datepicker('getDate');
       var tstart = this.$el.find('[name=tstart]').timepicker('getTime');
-      var date = DocManager.mergeDateTime(dstart,tstart);
+      var date = utils.mergeDateTime(dstart,tstart);
       return date;
     },
     
@@ -110,6 +110,8 @@ DocManager.module("Common.views", function(views, DocManager, Backbone, Marionet
     getDescription: function(){
       return this.rule.toText();
     },
+    
+    
     
     events: {
       'change [name=freq]': 'onChangeFreq',

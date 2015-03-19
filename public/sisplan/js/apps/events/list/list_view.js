@@ -99,7 +99,7 @@ DocManager.module("EventsApp.List", function(List, DocManager, Backbone, Marione
       var field = this.column.get('name');
       var value = this.model.get(field);
       var str = '';
-      str = moment(value).format('DD/MM/YYYY H:m');
+      str = moment(value).format('D MMMM YYYY - H:mm');
       this.$el.html(str);
       return this;
     }

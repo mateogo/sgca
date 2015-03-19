@@ -2767,6 +2767,13 @@ window.utils = {
             if(mx[4]<0 || mx[4]>60) return null;
             else return new Date(mx[2],mx[1]-1,mx[0],mx[3],mx[4]);
         }
+    },
+    
+    mergeDateTime: function(date,time){
+      if(date && time){
+        return new Date(date.toString().replace(/(\d\d:){2}\d{2}/,/(\d\d:){2}\d{2}/.exec(time.toString())[0]));
+      }
+      return null;
     }
 };
 
