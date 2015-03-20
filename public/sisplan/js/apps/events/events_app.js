@@ -12,7 +12,6 @@ DocManager.module('EventsApp', function(EventsApp, DocManager, Backbone, Marione
 
   var API = {
     list: function(idArtActivity,criterion){
-      console.log('abiendo eventos de actividydad');
       Entities.ArtActivity.findById(idArtActivity).done(function(artActivity){
         EventsApp.List.Controller.list(artActivity,criterion);
         DocManager.execute("set:active:header", "artactividades");  

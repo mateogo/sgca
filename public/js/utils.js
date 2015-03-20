@@ -2770,7 +2770,7 @@ window.utils = {
     },
     
     mergeDateTime: function(date,time){
-      if(date && time){
+      if(date && time && date instanceof Date && time instanceof Date){
         return new Date(date.toString().replace(/(\d\d:){2}\d{2}/,/(\d\d:){2}\d{2}/.exec(time.toString())[0]));
       }
       return null;

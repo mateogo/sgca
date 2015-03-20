@@ -1,16 +1,23 @@
 <div class="form-horizontal" style="margin-top:30px;margin-bottom:10px">
     <div class="form-group">
-        <label class="col-sm-4">Empieza el</label>
+        <label class="col-sm-3">Empieza el</label>
         <div class="col-sm-4">
             <input type="text" name="dstart" class="form-control input-sm" />
         </div>
-        <div class="col-sm-4">
-            <input type="text" name="tstart" class="form-control input-sm" />
+    </div>
+    
+     <div class="form-group">
+        <label class="col-sm-3">Hora</label>
+        <div class="col-sm-2">
+            <input type="text" name="hinicio" class="form-control input-sm time-picker" placeholder="inicio" />
+        </div>
+        <div class="col-sm-2">
+            <input type="text" name="hfin" class="form-control input-sm time-picker"  placeholder="fin" />
         </div>
     </div>
     
     <div class="form-group">
-        <label class="col-sm-4">Se repite cada</label>
+        <label class="col-sm-3">Se repite cada</label>
         <div class="col-sm-8">
             <select name="freq" class="form-control input-sm">
                 <option value="3">Día</option>
@@ -23,14 +30,16 @@
     
     
     <div class="form-group">
-        <label class="col-sm-4">Repetir cada</label>
-         <div class="col-sm-8">
-            <input type="text" name="interval" class="form-control input-sm"  value="1"/>
+        <label class="col-sm-3">Repetir cada</label>
+         <div class="col-sm-3">
+            <input type="text" name="interval" class="form-control input-sm"  value="1" style="display:inline-block;width:50%"/>
+            <span id="lblRepeat"> </span>
          </div>
-        <span> </span>
+         
     </div>
    
     <div id="weekRepeat" class="form-group weekday-checkbox" style="margin-top:5px">
+        <div class="col-sm-3"> </div>
         <div class="col-sm-6">
             <input type="checkbox" id="dayD" name="weekday" value='SU'><label for="dayD">D</label>
             <input type="checkbox" id="dayL" name="weekday" value='MO'><label for="dayL">L</label>
@@ -45,10 +54,10 @@
     
     
     <div class="form-group">
-        <div class="col-sm-4" style="padding-right:10px">
+        <div class="col-sm-3" style="padding-right:10px">
             <label>Finaliza</label>
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-9">
             <input type="radio" name="endType" value="endRepeat" /> 
             Después de 
             <input type="text" name="count" class="form-control input-sm" style="width:40px;display:inline-block" /> repeticiones 
@@ -56,6 +65,22 @@
             
             <input type="radio" name="endType" value="endDate" /> 
             El <input type="text" name="until" class="form-control input-sm" style="width:98px;display:inline-block" /> <br />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-3" style="padding-right:10px">
+            <label>Duración</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" name="duration" class="form-control input-sm" />
+        </div>
+    </div>
+     <div class="form-group">
+        <div class="col-sm-3" style="padding-right:10px">
+            <label>Leyenda</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" name="leyenda" class="form-control input-sm" />
         </div>
     </div>
     

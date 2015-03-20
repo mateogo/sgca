@@ -99,7 +99,7 @@ DocManager.module("EventsApp.List", function(List, DocManager, Backbone, Marione
       var field = this.column.get('name');
       var value = this.model.get(field);
       var str = '';
-      str = moment(value).format('D MMMM YYYY - H:mm');
+      str = moment(value).format('D MMMM YYYY');
       this.$el.html(str);
       return this;
     }
@@ -112,8 +112,8 @@ DocManager.module("EventsApp.List", function(List, DocManager, Backbone, Marione
         collection: collection,
         columns: [{name: 'cnumber',label: 'Evento',cell: cnumberCell,editable:false},
                   {name: 'headline',label: 'Titulo',editable:false, cell: 'string'},
-                  {name: 'fdesde',label: 'Fecha desde',cell: fechaCell,editable:false},
-                  {name: 'fhasta',label: 'Fecha hasta',cell: fechaCell,editable:false},
+                  {name: 'fdesde',label: 'Desde',cell: fechaCell,editable:false},
+                  {name: 'fhasta',label: 'Hasta',cell: fechaCell,editable:false},
                   {name: 'estado_alta',label: 'Estado alta',cell: 'string',editable:false},
                   {name: '',label: 'Acciones',cell: actionsCell,editable:false}
                  ]

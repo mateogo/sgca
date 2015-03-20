@@ -2,7 +2,11 @@ DocManager.module("Common.views", function(views, DocManager, Backbone, Marionet
   
   views.DatePatternForm = Marionette.ItemView.extend({
     
-    initialize: function(){
+    initialize: function(opts){
+      if(opts.model){
+        this.initObj = opts.model;
+      }
+      
       this.rule = new RRule({});
     },
     
@@ -11,12 +15,34 @@ DocManager.module("Common.views", function(views, DocManager, Backbone, Marionet
       
       var optsPicker = {format:'dd/mm/YYYY'};
       this.$el.find('[name=dstart]').datepicker(optsPicker);
-      this.$el.find('[name=tstart]').timepicker({'timeFormat': 'H:i'});
+      this.$el.find('.time-picker').timepicker({'timeFormat': 'H:i'});
       this.$el.find('[name=until]').datepicker(optsPicker);
       this.rendered = true;
-      if(this.initdtstart){
-        this.$el.find('[name=dstart]').datepicker('setDate',this.initdtstart);
-        this.$el.find('[name=tstart]').timepicker('setTime',this.initdtstart);
+      
+      if(this.initObj){
+        var fdesde = this.initObj.get('fdesde');
+        var fhasta = this.initObj.get('fhasta');
+        var hinicio = this.initObj.get('hinicio');
+        var hfin = this.initObj.get('hfin');
+        var leyenda = this.initObj.get('leyendafecha');
+        var duration = this.initObj.get('duration');
+        
+        if(fdesde &&  !(fdesde instanceof Date)) fdesde = new Date(fdesde);
+        if(fhasta &&  !(fhasta instanceof Date)) fhasta = new Date(fhasta);
+        if(hinicio &&  !(hinicio instanceof Date)) hinicio = new Date(hinicio);
+        if(hfin &&  !(hfin instanceof Date)) hfin = new Date(hfin);
+        
+        if(fdesde) this.$el.find('[name=dstart]').datepicker('setDate',fdesde);
+        if(fhasta) this.$el.find('[name=until]').datepicker('setDate',fhasta);
+        if(hinicio) this.$el.find('[name=hinicio]').timepicker('setTime',hinicio);
+        if(hfin){
+          this.$el.find('[name=hfin]').timepicker('setTime',hfin);
+          this.$el.find('[name=endType][value=endDate]').prop('checked',true);
+        }
+        
+        if(leyenda) this.$el.find('[name=leyenda]').val(leyenda);
+        if(duration) this.$el.find('[name=duration]').val(duration);
+        
       }
     },
     getTemplate: function(){
@@ -61,6 +87,7 @@ DocManager.module("Common.views", function(views, DocManager, Backbone, Marionet
     
     validateFreq: function(){
       var freq = parseInt(this.$el.find('[name=freq]').val());
+      var freqLabel = this.$el.find('[name=freq] option:selected').text();
       
       var isWeek = (freq === RRule.WEEKLY);
       if(isWeek){
@@ -69,22 +96,16 @@ DocManager.module("Common.views", function(views, DocManager, Backbone, Marionet
         this.$el.find('#weekRepeat').hide();
       }
       
+      this.$el.find('#lblRepeat').html(freqLabel);
+      
       this.validateRule();
     },
     
     getStartDate: function(){
       var dstart = this.$el.find('[name=dstart]').datepicker('getDate');
-      var tstart = this.$el.find('[name=tstart]').timepicker('getTime');
+      var tstart = this.$el.find('[name=hinicio]').timepicker('getTime');
       var date = utils.mergeDateTime(dstart,tstart);
       return date;
-    },
-    
-    setStartDate: function(date){
-      if(this.rendered){
-        this.$el.find('[name=dtstart]').datepicker('setDate',date);  
-      }else{
-        this.initdtstart = date; 
-      }
     },
    
     getUntilDate: function(){
@@ -105,6 +126,16 @@ DocManager.module("Common.views", function(views, DocManager, Backbone, Marionet
         }
       }
       return dates;
+    },
+    
+    getOtherFields: function(){
+      var obj = {};
+      obj.hinicio =  this.$el.find('[name=hinicio]').timepicker('getTime');
+      obj.hfin = this.$el.find('[name=hfin]').timepicker('getTime');
+      obj.duration = this.$el.find('[name=duration]').val();
+      obj.leyenda = this.$el.find('[name=leyenda]').val();
+      
+      return obj;
     },
     
     getDescription: function(){

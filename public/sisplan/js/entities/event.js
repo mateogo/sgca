@@ -4,6 +4,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         urlRoot: "/eventos",
         whoami: 'event:backboneModel ',
         idAttribute: "_id",
+        
+        initialize: function(opts){
+          Backbone.Model.prototype.initialize.apply(this,arguments);
+          
+          if(opts.artactivity && this.isNew()){
+            var activity = opts.artactivity;  
+            this.set('fdesde',activity.fdesde);
+            this.set('fhasta',activity.fhasta);
+            this.set('leyendafecha',activity.leyendafecha);
+          }
+        },
 
         defaults: {
           artactivity_id: null,
@@ -29,7 +40,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           fdesde: null, //fecha y hora
           fhasta: null, //fecha y hora
           duration: 0,
-          frepeat: '', //patron repeticion, ver rrule.js y iCalendar RFC
+          leyendafecha: '',
           
           content: '',
           artists: '', // descripción de los artistas que participan
@@ -45,7 +56,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           estado_alta: {type:'Select',title:'Estado alta',options:utils.estadoaltaOptionList},
           nivel_ejecucion: {type:'Select',title:'Nivel ejecución',options:utils.actionEjecucionOptionList},
           nivel_importancia: {type:'Select',title:'Importancia',options:utils.actionPrioridadOptionList},
-          obs: {type:'Text',title:'Observaciones'},
+          obs: {type:'TextArea',title:'Observaciones'},
           area: {type:'Select',title:'Area',options:utils.actionAreasOptionList},
           location: {type:'Text',title:'Locación'},
           espacio: {type:'Text',title:'Espacio'},
@@ -57,22 +68,31 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           fdesde: {type:'DatePicker',title:'Fecha desde'},
           fhasta: {type:'DatePicker',title:'Fecha hasta'},
           duration: {type:'Text',validators:[],title:'Duración'},
-          hdesde: {type:'TimePicker',title:'Hora desde'},
-          hhasta: {type:'TimePicker',title:'Hora hasta'}
+          hinicio: {type:'TimePicker',title:'Hora Inicio'},
+          hfin: {type:'TimePicker',title:'Hora Fin'},
+          leyendafecha: {type:'Text',title:'Leyenda Fecha'}
         },
         
         loadArtActivity: function(){
+          var self = this;
           var def = $.Deferred();
           if(this.get('artactivity')){
             def.resolve(this.get('artactivity'));
           }else{
-            var self = this;
             var p = Entities.ArtActivity.findById(this.get('artactivity_id'));
             p.done(function(activity){
               self.set('artactivity',activity);
               def.resolve(activity);
             }).fail(def.reject);
           }
+          
+          def.done(function(activity){
+            if(self.isNew()){
+              self.set('fdesde',activity.get('fdesde'));
+              self.set('fhasta',activity.get('fhasta'));
+              self.set('leyendafecha',activity.get('leyendafecha'));
+            }
+          });
           return def.promise(); 
         }
     },{

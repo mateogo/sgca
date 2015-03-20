@@ -36,17 +36,32 @@
         <div class="well">
             <div data-fields="ftype" style="width:50%"></div><div class="clearfix"></div>
             
-            <div>
-                <div class="pull-left" style="margin-top:5px">
-                    <div class="pull-left" style="width:105px">
+            <div id="singleDate" style="margin-top:5px">
+                <div class="pull-left" style="padding-left:15px;margin-top:5px">
+                    <div class="pull-left">
                         <label>Desde</label>
                     </div>
                     <div class="clearfix"></div>
                     <div class="pull-left">
                         <div data-editors="fdesde"></div>
                     </div>
+                </div>
+                <div class="pull-left" style="margin-top:5px">
                     <div class="pull-left">
-                        <div data-editors="hdesde"></div>
+                        <label>H.Inicio</label>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="pull-left">
+                        <div data-editors="hinicio" style="width:75px"></div>
+                    </div>
+                </div>
+                 <div class="pull-left" style="margin-top:5px">
+                    <div class="pull-left">
+                        <label>H.Fin</label>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="pull-left">
+                        <div data-editors="hfin" style="width:75px"></div>
                     </div>
                 </div>
                 <div class="pull-left" style="margin-left:5px;padding-top:4px">
@@ -58,6 +73,7 @@
                         <div data-editors="duration" style="width:90px"></div>
                     </div>
                 </div>
+               
                 <div id="contFechaHasta" class="pull-left" style="margin-left:5px;padding-top:4px;">
                     <div class="pull-left col-sm-2" >
                         <label>Hasta</label>
@@ -66,29 +82,29 @@
                     <div class="pull-left">
                         <div data-editors="fhasta"></div>
                     </div>
-                    <div class="pull-left">
-                        <div data-editors="hhasta"></div>
-                    </div>
                     <div class="clearfix"></div>
                 </div>
                 <div class="clearfix"></div>
+                <div class="" style="padding-left:15px;padding-top:10px">
+                      <div class="form-group">
+                        <label>Leyenda Fecha</label> <br/>
+                        <div data-editors="leyendafecha" style="width:50%"></div>
+                      </div>
+                </div>
+                <div class="clearfix"></div>
             </div>
+             
             
             <div id="contFechaRep" style="padding-top:20px">
                   <div>
-                    <h4>
-                        Fechas 
-                        <small>
-                            <button class="btn btn-success btn-xs js-makerdates">Generador de fechas</button>
-                        </small>
-                    </h4>
-                    
+                    <button class="btn btn-success btn-xs js-makerdates">Generar nuevas fechas</button>
+                    <button class="btn btn-primary btn-xs js-newdate">Nueva fecha </button>
+                    <button class="pull-right btn btn-link js-cleardates">borrar todas las fechas</button>
                   </div>
+                  <div class="clearfix"></div>
+                       
                     
-                    
-                  <div id="datesContainer">
-                    
-                  </div>
+                  <div id="datesContainer"> </div>
             </div>
         </div>
     </div>
