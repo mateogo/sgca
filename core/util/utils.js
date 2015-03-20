@@ -155,7 +155,7 @@ var parseData = function(dataCol ,options){
 
 
         row = _.map(itemRow, function(item, index){
-            if(!item || item === 'sin_dato')
+            if(item === 'sin_dato')
                 return 'sin_dato';
 
             iType = options[index].itemType;

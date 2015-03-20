@@ -239,6 +239,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     saveFromPlanningFacet: function(){
 
     },
+
+
+
   });
 
 
@@ -981,11 +984,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     exportHeadings: [
         {val:'program_cnumber',   label:'Programa',         itemType: 'Text'},
         {val:'tipomov',           label:'Registro',         itemType: 'Text'},
-        {val:'tgasto:',           label:'TipoDeGasto',      itemType: 'Text'},
+        {val:'tgasto',            label:'TipoDeGasto',      itemType: 'Text'},
+        {val:'freq',              label:'Frecuencia',       itemType: 'Number'},
+        {val:'umefreq',           label:'UME-Freq',         itemType: 'Text'},
         {val:'cantidad',          label:'Cantidad',         itemType: 'Number'},
-        {val:'importe',           label:'Importe',          itemType: 'Number'},
         {val:'ume',               label:'UME',              itemType: 'Text'},
-
+        {val:'punit',             label:'PreUnitario',      itemType: 'Number'},
+        {val:'importe',           label:'Importe',          itemType: 'Number'},
+        {val:'isdetallado',       label:'Detallado?',       itemType: 'Number'},
+ 
         {val:'slug',              label:'Descripcion',      itemType: 'Text'},
         {val:'nodo',              label:'Nodo',             itemType: 'Text'},
         {val:'area',              label:'Area',             itemType: 'Text'},
@@ -1015,8 +1022,41 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       collection.each(function(model){
         registro = [];
+
+        //console.log('EvaluateCosto CABECERA BEGIN');
+        var previouscost = parseInt(model.get('importe'));
+        var isactive = parseInt(model.get('isactive')) === 1 ? 1 : 0;
+        var isdetallado = parseInt(model.get('isdetallado')) === 1 ? 1 : 0;
+        var isvalid = model.get('estado_alta') === 'activo' ? 1 : 0;
+        var freq = parseInt(model.get('freq'));
+        var cantidad = parseInt(model.get('cantidad'));
+        var montomanual = parseInt(model.get('montomanual'));
+
+        var punit = parseInt(model.get('punit'));
+
+        var importe = (isvalid * isactive * isdetallado * freq * cantidad * punit) + (1-isdetallado) * (isvalid * isactive * montomanual);
+        console.log('CABECERA: isactive:[%s] isdetallado:[%s]  freq:[%s] cant:[%s] montomanual:[%s] punit:[%s] importe:[%s] previouscost:[%s]',isactive, isdetallado, freq, cantidad, montomanual, punit, importe, previouscost)
+
+        //model.set('punit', punit);
+        model.set('importe', importe);
+
         _.each(self.exportHeadings, function(token){
-            data = model.get(token.val)|| 'sin_dato';
+            if(token.itemType === 'Number'){
+              data = parseInt(model.get(token.val));
+              if(data == NaN){
+                data = 0;
+              }
+
+
+            }else{
+              data = model.get(token.val);
+
+              if(typeof data == undefined || data == null || data == ""){
+                data = 'sin_dato';
+              }
+
+            }
+
             registro.push(data);
           });
         colItems.push(registro);
