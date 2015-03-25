@@ -2,9 +2,7 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
 
  
   var Entities = DocManager.module('Entities');
-  
-  
-
+   
   List.Controller = {
     list: function(criterion){
 

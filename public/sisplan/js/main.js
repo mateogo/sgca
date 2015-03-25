@@ -50,6 +50,8 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'events/EventListLayoutView','events/EventEditLayout','events/EventEditForm',
     'events/EventDateItemRender','events/EventDateItemEditor',
     
+    'agenda/AgendaLayoutView','agenda/AgendaItemRender',
+    
     'common/DatePatternForm'
     
     ], function() {
