@@ -64,7 +64,7 @@ DocManager.module("ActionsApp.Report", function(Report, DocManager, Backbone, Ma
 
 
   Report.Branding = Marionette.ItemView.extend({
-    className: 'row well report-branding',
+    className: 'well report-branding',
     getTemplate: function(){
       return utils.templates.ActionReportBranding;
     }, 

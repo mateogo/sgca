@@ -46,8 +46,10 @@ var Event = BaseModel.extend({
     espacio: '',
     
     ftype: '', // tipo de fecha (puntual, fecha-hasta,repeticion)
-    fdesde: null, //fecha y hora
-    fhasta: null, //fecha y hora
+    fdesde: null, //fecha 
+    fhasta: null, //fecha
+    hinicio: null,
+    hfin: null,
     duration: 0,
     frepeat: '', //patron repeticion, ver rrule.js y iCalendar RFC
     
@@ -121,7 +123,8 @@ var Event = BaseModel.extend({
   }
 },{
   entityCol: entityCol,
-  defaultSort: {cnumber:1}
+  defaultSort: {cnumber:1},
+  TYPE_REPEAT: 'repeticion'
 });
 
 

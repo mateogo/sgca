@@ -19,13 +19,17 @@ describe('services',function(){
       });
           
       it('Deberia retornar al menos un array vacio',function(done){
-        service.search({},function(err,result){
+        service.search({desde:'2015-03-01',hasta:'2015-03-31'},function(err,result){
           expect(err).toBeFalsy();
           
           expect(result).toBeTruthy();
           
           expect(typeof(result.length)).not.toBe('undefined');
           console.log('Reportes cantidad '+result.length);
+          
+          if(result.length > 0){
+              expect(typeof(result[0].title)).not.toBe('undefined');
+          }
           done();
         });
       });

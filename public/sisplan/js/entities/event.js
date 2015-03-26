@@ -64,7 +64,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           content: {type:'RichText',title:'Contenido'},
           artists: {type:'TextArea',title:'Artistas'},
           
-          ftype: {type:'Select',title:'Tipo fecha',options:['Puntual','Fecha desde-hasta','Repetición']},
+          ftype: {type:'Select',title:'Tipo fecha',options:[{val:'puntual',label:'Puntual'},{val:'desde-hasta',label:'Fecha desde-hasta'},{val:'repeticion',label:'Repetición'}]},
           fdesde: {type:'DatePicker',title:'Fecha desde'},
           fhasta: {type:'DatePicker',title:'Fecha hasta'},
           duration: {type:'Text',validators:[],title:'Duración'},
@@ -118,7 +118,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         }
         
         return def.promise();
-      }
+      },
+      TYPE_REPEAT: 'repeticion',
+      TYPE_FROMTO: 'desde-hasta'
     });
     
     Entities.EventCollection = Backbone.Collection.extend({

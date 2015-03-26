@@ -1,16 +1,16 @@
-<div class="row">
-    <div class="col-xs-2" style="width:140px"> 
-        <img src="" alt="" class="img-thumbnail" style="width:120px;height:120px">
-    </div>
-    <div class="col-xs-10">
-        
-        <h4 class="text-primary"><%= slug %></h4>
-        <h5 class="text-success">
-            <%= formatDate(fdesde) %>  - <%= formatDate(fhasta)%>
-        </h5>
-        <p class="text-muted">
-            <%= description %>
-        </p>
-    </div>
+<div class="media agenda-item">
+  <div class="media-left">
+    <a>
+      <img class="media-object img-thumbnail" src="" style="width:120px;height:120px">
+    </a>
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading text-primary"><%= title %> <small><%=leyendafecha%></small></h4>
+    <h5 class="text-success">
+        <%= getLabelWhen() %>
+    </h5>
+    <p class="text-muted">
+        <%= description %>
+    </p>
+  </div>
 </div>
-<hr/>

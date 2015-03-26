@@ -17,7 +17,8 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
     
     events: {
       'click .js-filter': 'filterClicked',
-      'click .js-filterclear': 'filterClearClicked'
+      'click .js-filterclear': 'filterClearClicked',
+      'click .js-agenda': 'agendaClicked'
     },
     
     setFilter: function(filter){
@@ -39,6 +40,10 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
     
     filterClearClicked: function(e){
       DocManager.trigger('artactivities:filter',null);
+    },
+    
+    agendaClicked: function(e){
+      DocManager.trigger('agenda:list',null);
     }
     
   });

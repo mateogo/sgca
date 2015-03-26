@@ -5,8 +5,7 @@
  * Versión detallada busca en Event (que son de las ArtActivity)
  */
 var root = '../';
-var ArtActivty = require(root + 'models/artactivity.js').getModel();
-var Event = require(root + 'models/event.js').getModel();
+var Agenda = require(root + 'models/agenda.js').getModel();
 
 
 function ArtActivityReport(){
@@ -30,29 +29,10 @@ ArtActivityReport.prototype.search = function(params,callback){
     return callback('Fantan rango de fechas.');
   }
   
-  //desde = new Date(desde);
-  //hasta = new Date(hasta);
+  var modo = this.getParam(params,'modo','resumen');
+  delete params.modo;
   
-  params.fdesde = {'$gte':desde,'$lte':hasta};
-  delete params.desde;
-  delete params.hasta;
- 
-  var mode = this.getParam(params,'mode','summary');
-  delete params.mode;
-  
-  if(mode === 'detail'){
-    this.searchDetail(params,callback);
-  }else{
-    this.searchSummary(params,callback);
-  }
-};
-
-ArtActivityReport.prototype.searchSummary = function(query,callback){
-  ArtActivty.find(query,callback);
-};
-
-ArtActivityReport.prototype.searchDetail = function(query,callback){
-  Event.find(query,callback);
+  Agenda.find(params,modo,callback);
 };
 
 

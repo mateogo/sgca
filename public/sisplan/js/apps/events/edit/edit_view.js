@@ -1,6 +1,7 @@
 DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
   
   var CommonViews = DocManager.module('Common.views');
+  var Entities = DocManager.module('Entities');
   
   Edit.Layout = Marionette.LayoutView.extend({
     className: 'row row-offcanvas row-offcanvas-left',
@@ -48,8 +49,8 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
     
     validateFechaType: function(){
       var type = this.$el.find('[name=ftype]').val();
-      var showFHasta = (type === 'Fecha desde-hasta');
-      var contFechaRep = (type === 'Repetición');
+      var showFHasta = (type === Entities.Event.TYPE_FROMTO);
+      var contFechaRep = (type === Entities.Event.TYPE_REPEAT);
       
       if(showFHasta || contFechaRep){
         this.$el.find('#contFechaHasta').show();
