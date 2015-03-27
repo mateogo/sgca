@@ -75,6 +75,11 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
   Edit.ResumeView = Marionette.ItemView.extend({
     getTemplate: function(){
       return utils.templates.ArtActivityResumeView;
+    },
+    templateHelpers: {
+      formatDate: function(date){
+        return moment(date).format('dddd LL');
+      }
     }
   });
   

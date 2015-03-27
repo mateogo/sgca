@@ -110,8 +110,9 @@ var Event = BaseModel.extend({
            var idActivity = (artactivity.get) ? artactivity.get('_id') : artactivity._id;
            
            self.set('artactivity_id',idActivity);
-           self.unset('artactivity');
+           
          }
+         self.unset('artactivity');
          cb();
        }
        
@@ -124,7 +125,16 @@ var Event = BaseModel.extend({
 },{
   entityCol: entityCol,
   defaultSort: {cnumber:1},
-  TYPE_REPEAT: 'repeticion'
+  TYPE_REPEAT: 'repeticion',
+  
+  /**
+   * actualiza los campos de eventos heredados de ArtActivity
+   */
+  updateByActivity: function(artActivity,cb){
+    if(!artActivity || !artActivty._id) return cb('ArtActivity no definida');
+   
+    //TODO: actualizar rubro, subrubro, tipodeaudiencia en los eventos de la actividad
+  }
 });
 
 

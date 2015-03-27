@@ -23,7 +23,10 @@ var BaseModel = Backbone.Model.extend({
                      }else{
                        self._update(cb);
                      }
-                   }
+                   }/*,
+                   function(cb){
+                     self._afterSave(cb);
+                   }*/
                   ],function(err,results){
                       if(err) return callback(err);
                        
@@ -45,7 +48,11 @@ var BaseModel = Backbone.Model.extend({
     });
   },
   
-  _beforeSafe: function(cb){
+  _beforeSave: function(cb){
+    cb();
+  },
+  
+  _afterSave: function(cb){
     cb();
   },
   
