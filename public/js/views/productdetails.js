@@ -604,6 +604,7 @@ window.ProductView = Backbone.View.extend({
             form = new Backbone.Form({
                 model: facet,
             }).render();
+        console.log('1')
 
         facet.on('change:cetiquetas', function(facet, cetiquetas) {
             //console.log('change etiquetas [%s][%s]',cetiquetas, facet.get('cetiquetas'));

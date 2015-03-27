@@ -1271,10 +1271,8 @@ window.utils = {
         {val:'micro',        label:'micro'},
         {val:'catalogo',     label:'catálogo'},
         {val:'promo',        label:'promo'},
-        {val:'imagen',       label:'imagen'},
-        {val:'video',        label:'video'},
-        {val:'audio',        label:'audio'},
-        {val:'documento',    label:'documento'},
+        {val:'imagen',       label:'branding'},
+        {val:'publicidad',   label:'publicidad'},
      ],
 
     rolinstanciasOptionList: [
@@ -1501,31 +1499,41 @@ window.utils = {
     //pageneros:['animacion', 'biografia', 'curso', 'ficcion', 'docuficcion', 'documental', 'entretenimiento', 'entrevistas', 'telenovela', 'reality', 'recital', 'periodistico', 'noticiero',],
     generoOptionList:[
         {val:'nodefinido',   label:'Género'},
-        {val:'animacion',    label:'Animación'},
-        {val:'biografia',    label:'Biografía'},
-        {val:'crossmedia',   label:'Crossmedia'},
+        {val:'musical',      label:'Musical'},
+        {val:'teatro',       label:'Teatro'},
+        {val:'danza',        label:'Danza'},
         {val:'curso',        label:'Curso'},
         {val:'debate',       label:'Debate'},
-        {val:'deportivo',    label:'Deportivo'},
-        {val:'didactico',    label:'Didáctico'},
-        {val:'docuficcion',  label:'Docuficción'},
-        {val:'documental',   label:'Documental'},
-        {val:'educativo',    label:'Educativo'},
-        {val:'entretenimiento', label:'Entretenimiento'},
         {val:'entrevista',   label:'Entrevista'},
-        {val:'experimental', label:'Experimental'},
-        {val:'ficcion',      label:'Ficción'},
-        {val:'infantil',     label:'Infantil'},
-        {val:'informativo',  label:'Informativo'},
-        {val:'musical',      label:'Musical'},
-        {val:'noticiero',    label:'Noticiero'},
-        {val:'periodistico', label:'Periodístico'},
-        {val:'reality',      label:'Reality'},
-        {val:'telenovela',   label:'Telenovela'},
-        {val:'videoclip',    label:'Videoclip'},
-        {val:'videoregistro',label:'Videoregistro'},
         {val:'crudos',       label:'Crudos'},
     ],
+
+        // {val:'nodefinido',   label:'Género'},
+        // {val:'animacion',    label:'Animación'},
+        // {val:'biografia',    label:'Biografía'},
+        // {val:'crossmedia',   label:'Crossmedia'},
+        // {val:'curso',        label:'Curso'},
+        // {val:'debate',       label:'Debate'},
+        // {val:'deportivo',    label:'Deportivo'},
+        // {val:'didactico',    label:'Didáctico'},
+        // {val:'docuficcion',  label:'Docuficción'},
+        // {val:'documental',   label:'Documental'},
+        // {val:'educativo',    label:'Educativo'},
+        // {val:'entretenimiento', label:'Entretenimiento'},
+        // {val:'entrevista',   label:'Entrevista'},
+        // {val:'experimental', label:'Experimental'},
+        // {val:'ficcion',      label:'Ficción'},
+        // {val:'infantil',     label:'Infantil'},
+        // {val:'informativo',  label:'Informativo'},
+        // {val:'musical',      label:'Musical'},
+        // {val:'noticiero',    label:'Noticiero'},
+        // {val:'periodistico', label:'Periodístico'},
+        // {val:'reality',      label:'Reality'},
+        // {val:'telenovela',   label:'Telenovela'},
+        // {val:'videoclip',    label:'Videoclip'},
+        // {val:'videoregistro',label:'Videoregistro'},
+        // {val:'crudos',       label:'Crudos'},
+
 
     //patematicas: ['artecultura','cienciaTecnologia','cienciasSociales','deporte','educacionTrabajo','historia','infancia','juventud','sociedad','ficcion'],
     tematicasOptionList:[
@@ -1543,6 +1551,17 @@ window.utils = {
         {val:'cienciaTecnologia', label:'Ciencia y Tecnología'},
         {val:'cienciasSociales',  label:'Ciencias Sociales'},
     ],
+
+        // {val:'nodefinido',   label:'Temáticas'},
+        // {val:'festival',     label:'Festivales'},
+        // {val:'fiesta',       label:'Fiesta popular/nacional'},
+        // {val:'concierto',    label:'Concierto'},
+        // {val:'teatro',       label:'Teatro'},
+
+
+
+
+
 /* 
    pasubtematica: {
         artecultura: ['musica', 'plastica', 'fotografia', 'arteDigital', 'video', 'teatro', 'animacion', 'otros' ],
@@ -1557,8 +1576,45 @@ window.utils = {
         ficcion: ['novela', 'thriller', 'drama', 'comedia', 'accion','otros' ],
     },
 */
+
+
+/*
     subtematicasOptionList:{        
-        artecultura:[
+        festival:[
+            {val:'nodefinido',     label:'No definido'},
+            {val:'rock',           label:'Rock'},
+            {val:'folklore',         label:'Folklore'},
+            {val:'experimental',       label:'Experimental'},
+        ],
+        fiesta:[
+            {val:'nodefinido',     label:'No definido'},
+            {val:'fiestanacional',  label:'Fiesta Nacional'},
+            {val:'fiestapopular',  label:'Fiesta Popular'},
+            {val:'fiestaregional',  label:'Fiesta Regional'},
+        ],
+        concierto:[
+            {val:'nodefinido',     label:'No definido'},
+            {val:'rock',        label:'Rock'},
+            {val:'folklore',        label:'Folklore'},
+            {val:'tango',        label:'Tango'},
+            {val:'coral',        label:'Coral'},
+            {val:'orquesta',        label:'Orquesta clásica'},
+            {val:'sinfonica',        label:'Sinfónica'},
+            {val:'camara',        label:'Orquesta de Cámara'},
+            {val:'experimental',        label:'Experimental'},
+        ],
+        teatro:[
+            {val:'nodefinido',     label:'No definido'},
+            {val:'infantil',   label:'Infantil'},
+            {val:'biodrama',       label:'Biodrama'},
+            {val:'religioso',      label:'Religioso'},
+            {val:'otros',     label:'Otros'},
+        ],
+
+    },
+*/
+    subtematicasOptionList:{        
+        festival:[
             {val:'nodefinido',     label:'No definido'},
             {val:'literatura',     label:'Literatura'},
             {val:'musica',         label:'Música'},
@@ -1693,6 +1749,7 @@ window.utils = {
             {val:'arqueologia',  label:'Arqueología'},
         ],
     },
+
 
     //paformatos:['serie', 'serie-programas', 'unitario', 'videoclip', 'promo', 'miniserie', 'micro', 'micro-recital', 'cortometraje', 'largometraje', 'backstage','trailer',  'noticiero', 'periodistico', 'especial', ],
     formatoOptionList:[
