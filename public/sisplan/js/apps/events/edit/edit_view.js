@@ -106,8 +106,10 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
     },
     
     commitDates: function(){
+      
+      
+      // setea fechas en base a fecha de repeticion
       var dates = this.datesCollection.toJSON();
-      console.log('seteando fechas',dates);
       this.model.set('dates',dates);
       if(dates.length > 0){
         var first = dates[0].dfecha;
@@ -117,9 +119,9 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
         if(!(last instanceof Date)) last = new Date(last);
         
         this.$el.find('[name=fdesde]').datepicker('setDate',first);
-        this.$el.find('[name=hdesde]').timepicker('setTime',first);
+        this.$el.find('[name=hinicio]').timepicker('setTime',first);
         this.$el.find('[name=fhasta]').datepicker('setDate',last);
-        this.$el.find('[name=hhasta]').timepicker('setTime',last);
+        this.$el.find('[name=hfin]').timepicker('setTime',last);
       }
     },
     
@@ -193,14 +195,17 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
         return;
       }
       
-      var dateTime = utils.mergeDateTime(this.model.get('fdesde'),this.model.get('hdesde'));
-      if(dateTime){
-        this.model.set('fdesde',dateTime);
-      }
-      dateTime = utils.mergeDateTime(this.model.get('fhasta'),this.model.get('hhasta'));
-      if(dateTime){
-        this.model.set('fhasta',dateTime);
-      }
+      var fdesde = this.model.get('fdesde');
+      var fhasta = this.model.get('fhasta');
+      
+      var hinicio = this.model.get('hinicio');
+      var hfin = this.model.get('hfin');
+      
+      hinicio = utils.mergeDateTime(fdesde,hinicio);
+      hfin = utils.mergeDateTime(fhasta,hfin);
+      
+      this.model.set('hinicio',hinicio);
+      this.model.set('hfin',hfin);
       
       var self = this;
       this.model.save().done(function(){
@@ -278,6 +283,9 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
       var hfin = this.$el.find('[name=hfin]').timepicker('getTime');
       var duration = this.$el.find('[name=duration]').val();
       var leyenda = this.$el.find('[name=leyenda]').val();
+      
+      hinicio = utils.mergeDateTime(date,hinicio);
+      hfin = utils.mergeDateTime(date,hfin);
       
       this.model.set('dfecha',date);
       this.model.set('hinicio',hinicio);
