@@ -50,7 +50,7 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'events/EventListLayoutView','events/EventEditLayout','events/EventEditForm',
     'events/EventDateItemRender','events/EventDateItemEditor',
     
-    'agenda/AgendaLayoutView','agenda/AgendaItemRender',
+    'agenda/AgendaLayoutView','agenda/AgendaItemRender', 'agenda/AgendaFilterView',
     
     'common/DatePatternForm'
     

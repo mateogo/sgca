@@ -72,11 +72,19 @@ DocManager.module("AgendaApp.List", function(List, DocManager, Backbone, Marione
       if(key === 'desde' || key === 'hasta'){
         return this.renderDate(key,value);
       }else{
-        return key + ': '+value;
+        return this.getKeyLabel(key) + ': '+value;
       }
     },
     renderDate: function(key,value){
-      return key + ': ' + moment(value).format('LL');
+      return this.getKeyLabel(key) + ': ' + moment(value).format('LL');
+    },
+    
+    getKeyLabel: function(key){
+      var label = key;
+      if(key in this.model.schema && this.model.schema[key].title){
+        label = this.model.schema[key].title;
+      }
+      return label;
     }
   });
   
@@ -102,5 +110,37 @@ DocManager.module("AgendaApp.List", function(List, DocManager, Backbone, Marione
     
     modal.open();
   };
+  
+  List.FilterView = Marionette.LayoutView.extend({
+    getTemplate: function(){
+      return utils.templates.AgendaFilterView;
+    },
+    onRender: function(){
+      this.form = new Backbone.Form({model:this.model});
+      
+      this.$el.find('#form-region').html(this.form.render().el);
+    },
+    
+    doFilter: function(modo){
+      this.form.commit();
+      this.model.set('modo',modo);
+      
+      var newWin = this.$el.find('#checkNewWin').prop('checked');
+      DocManager.trigger('agenda:list',this.model,newWin);
+    },
+    
+    events: {
+      'click .js-resumido': 'onResumido',
+      'click .js-detallado': 'onDetallado'
+    },
+    
+    onResumido: function(e){
+      this.doFilter('resumido');
+    },
+    
+    onDetallado: function(e){
+      this.doFilter('detallado');
+    }
+  });
 
 });

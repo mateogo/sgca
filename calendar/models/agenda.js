@@ -20,13 +20,12 @@ var Agenda = Backbone.Model.extend({
     
     var $or = [];
     $or.push({fdesde : {'$gte':desde,'$lte':hasta}});
-    $or.push({fdesde : {'$lte':desde}},{fhasta:{'$gte':hasta}});
+    $or.push({$and:[{fdesde : {'$lte':desde}},{fhasta:{'$gte':hasta}}]});
     $or.push({fhasta : {'$gte':desde,'$lte':hasta}});
     
     query.$or = $or;
     delete query.desde;
     delete query.hasta;
-    console.log(JSON.stringify(query));
     
     helper.find(desde,hasta,query,cb);
   }
@@ -72,12 +71,7 @@ var helperEvent = {
         item.title = item.headline;
         item.description = item.subhead;
         
-        if(item.artactivity){
-          item.title = item.artactivity + ' '+item.title;
-          delete item.artactivity;
-        }
-        
-        
+        delete item.artactivity;
         
         if(item.ftype == Event.TYPE_REPEAT){
           for (var j = 0; j < item.dates.length; j++) {
@@ -86,7 +80,6 @@ var helperEvent = {
             var fecha = new Date(day.dfecha.substring(0,10));
             
             if(desde <= fecha && fecha <= hasta){
-            
               var inst = _.clone(item);
               
               inst.fdesde = day.dfecha;

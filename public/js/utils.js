@@ -2774,7 +2774,17 @@ window.utils = {
         return new Date(date.toString().replace(/(\d\d:){2}\d{2}/,/(\d\d:){2}\d{2}/.exec(time.toString())[0]));
       }
       return null;
-    }
+    },
+    
+    parseQueryString: function( queryString ) {
+      var params = {}, queries, temp, i, l;
+      queries = queryString.split("&");
+      for ( i = 0, l = queries.length; i < l; i++ ) {
+          temp = queries[i].split('=');
+          params[temp[0]] = temp[1];
+      }
+      return params;
+  }
 };
 
 (function(){

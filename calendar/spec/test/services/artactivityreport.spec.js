@@ -34,22 +34,5 @@ describe('services',function(){
         });
       });
       
-      /*
-      it('Deberia retornar array de artActivity',function(done){
-        service.search({mode:'detail'},function(err,result){
-          expect(err).toBeFalsy();
-          
-          expect(result).toBeTruthy();
-          
-          expect(typeof(result.length)).not.toBe('undefined');
-          
-          if(result.length > 0){
-            console.log(typeof(result))
-            expect(result[0] instanceof ArtActivty).toBeTruthy();
-          }
-          done();
-        });
-      });*/
-      
   });
 });

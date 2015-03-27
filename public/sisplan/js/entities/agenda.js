@@ -11,11 +11,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         //this.set('modo','detalle');
       },
       
+      setCriterion: function(obj){
+        if(!obj) return;
+        
+        for(var key in obj){
+          if(key in this.schema){
+            this.set(key,obj[key]);
+          }
+        }
+      },
+      
       schema: {
         desde: {validators: ['required'], type: 'DatePicker',title:'Desde'},
         hasta: {validators: ['required'], type: 'DatePicker',title:'Hasta'},
         area: {validators: [], type: 'Select',title:'Área',options:utils.actionAreasOptionList},
-         estado_alta: {validators: [], type: 'Select',title:'Estado',options: _.union('',utils.estadoaltaOptionList) },
+        estado_alta: {validators: [], type: 'Select',title:'Estado',options: _.union('',utils.estadoaltaOptionList) },
         modo: {validators: [], type: 'Select',title:'Modo',options: [{val:'resumen',label:'Resumido'},{val:'detalle',label:'Detallado'}] }
       },
       

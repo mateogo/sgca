@@ -16,13 +16,20 @@ DocManager.navigate = function(route,  options){
   Backbone.history.navigate(route, options);
 };
 
+DocManager.navigateNew = function(route){
+  var url = window.location.origin + window.location.pathname +'#'+ route;
+  window.open(url);
+};
+
 DocManager.navigateBack = function(){
   window.history.back();
 };
 
+
+
 DocManager.getCurrentRoute = function(){
-  console.log('DoCManager.getCurretnRoute: app.js')
-  return Backbone.history.fragment
+  console.log('DoCManager.getCurretnRoute: app.js');
+  return Backbone.history.fragment;
 };
 
 DocManager.on("start", function(){
