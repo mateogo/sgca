@@ -135,11 +135,11 @@ DocManager.module("AgendaApp.List", function(List, DocManager, Backbone, Marione
     },
     
     onResumido: function(e){
-      this.doFilter('resumido');
+      this.doFilter(Entities.AgendaFilter.MODE_RESUME);
     },
     
     onDetallado: function(e){
-      this.doFilter('detallado');
+      this.doFilter(Entities.AgendaFilter.MODE_DETAIL);
     }
   });
 

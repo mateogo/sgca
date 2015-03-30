@@ -41,6 +41,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         }
         return obj;
       }
+    },{
+      MODE_RESUME: 'resumen',
+      MODE_DETAIL: 'detalle'
     });
     
     
