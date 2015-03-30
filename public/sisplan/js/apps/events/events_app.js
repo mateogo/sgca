@@ -5,8 +5,8 @@ DocManager.module('EventsApp', function(EventsApp, DocManager, Backbone, Marione
   EventsApp.Router = Marionette.AppRouter.extend({
     appRoutes: {
       "eventos/:idArtActivity(/filter/criterion::criterion)": "list",
-      "eventos/:id/edit": "edit"
-
+      "eventos/:id/edit": "edit",
+      "eventos/:id/show": "show"
     }
   });
 
@@ -36,6 +36,9 @@ DocManager.module('EventsApp', function(EventsApp, DocManager, Backbone, Marione
               console.error(e);
             });
       });
+    },
+    show: function(event){
+      EventsApp.Show.Controller.resume(event);
     }
   };
 
@@ -59,6 +62,11 @@ DocManager.module('EventsApp', function(EventsApp, DocManager, Backbone, Marione
   
   DocManager.on('event:remove',function(model){
     API.remove(model);
+  });
+  
+  DocManager.on('event:show',function(model){
+    DocManager.navigate('eventos/'+model.id+'/show');
+    API.show(model);
   });
 
   DocManager.addInitializer(function(){

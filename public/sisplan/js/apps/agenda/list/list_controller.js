@@ -60,8 +60,14 @@ DocManager.module("AgendaApp.List", function(List, DocManager, Backbone, Marione
     List.Session.collection.sort();
   });
   
-  DocManager.on('agenda:openItem',function(field){    
-    
+  DocManager.on('agenda:openItem',function(item){
+    var cnumber = item.get('cnumber');
+    console.log(item);
+    if(cnumber.charAt(0) === 'E'){
+      DocManager.trigger('event:show',new Entities.Event(item.toJSON()));
+    }else{
+      DocManager.trigger('artActivity:edit',new Entities.ArtActivity(item.toJSON()));
+    }
   });
 
 });

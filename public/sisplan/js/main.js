@@ -48,7 +48,7 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'artactivities/ArtActivityResumeView','artactivities/ArtActivityEditBasicView','artactivities/ArtActivityEditBasicForm',
     
     'events/EventListLayoutView','events/EventEditLayout','events/EventEditForm',
-    'events/EventDateItemRender','events/EventDateItemEditor',
+    'events/EventDateItemRender','events/EventDateItemEditor','events/EventResumeView',
     
     'agenda/AgendaLayoutView','agenda/AgendaItemRender', 'agenda/AgendaFilterView',
     

@@ -1,6 +1,9 @@
 DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionette, $, _){
     
     Entities.Agenda = Backbone.Model.extend({
+      urlRoot: "/agenda",
+      whoami: 'Entities.Agenda:agenda.js ',
+      idAttribute: "_id",
     });
     
     Entities.AgendaFilter = Backbone.Model.extend({
