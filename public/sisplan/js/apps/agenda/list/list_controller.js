@@ -55,5 +55,13 @@ DocManager.module("AgendaApp.List", function(List, DocManager, Backbone, Marione
     List.Controller.doFilter(filter);
   });
   
+  DocManager.on('agenda:sortBy',function(field){
+    List.Session.collection.comparator = field;
+    List.Session.collection.sort();
+  });
+  
+  DocManager.on('agenda:openItem',function(field){    
+    
+  });
 
 });

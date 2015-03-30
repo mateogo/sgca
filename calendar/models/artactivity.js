@@ -1,8 +1,10 @@
 
-var BaseModel = require('./basemodel.js');
+
 var serializer = require('./serializer.js');
 var async = require('async');
 var _ = require('underscore');
+
+var BaseModel = require('./basemodel.js');
 
 var dbi;
 
@@ -97,6 +99,11 @@ var ArtActivity = BaseModel.extend({
     function(err,results){
       callback(err);
     });
+  },
+  _afterSave: function(cb){
+    //actualiza campos heredados a eventos
+    var Event = requireModel('event');
+    Event.updateByActivity(this,cb);
   }
 },{
   entityCol: entityCol,

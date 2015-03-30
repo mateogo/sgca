@@ -12,6 +12,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var user = require(rootPath + '/calendar/controllers/user');
 var BaseModel = require(rootPath + '/calendar/models/basemodel');
+var requireModel = require(rootPath + '/calendar/models/requireModel');
 
 
 

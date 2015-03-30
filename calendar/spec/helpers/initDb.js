@@ -7,6 +7,8 @@ var dbConnect = require(coreApp + '/config/dbconnect.js');
 var mongo = require('mongodb');
 var BSON = mongo.BSONPure;
 
+
+var requireModel = require(root + 'calendar/models/requireModel.js');
 var BaseModel = require(root + 'calendar/models/basemodel.js');
 
 

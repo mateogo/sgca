@@ -15,11 +15,17 @@ DocManager.module("AgendaApp.List", function(List, DocManager, Backbone, Marione
     },
     
     events: {
-      'click .js-filter': 'filterClicked'
+      'click .js-filter': 'filterClicked',
+      'click .js-sort': 'sortClicked'
     },
     filterClicked: function(e){
       e.stopPropagation();
       DocManager.trigger('agenda:openFilter');
+    },
+    
+    sortClicked: function(e){
+      var by = $(e.currentTarget).attr('sort');
+      DocManager.trigger('agenda:sortBy',by);
     }
     
     
@@ -49,6 +55,13 @@ DocManager.module("AgendaApp.List", function(List, DocManager, Backbone, Marione
           return str;
         }
       };
+    },
+    events: {
+      'click .js-open':'openClicked'
+    },
+    
+    openClicked: function(e){
+      DocManager.trigger('agenda:openItem',this.model);
     }
     
   });
@@ -93,7 +106,7 @@ DocManager.module("AgendaApp.List", function(List, DocManager, Backbone, Marione
     if(!filter){
       filter = new Entities.AgendaFilter();
     }
-    var form = new Backbone.Form({model:filter});
+    var form = new List.FilterForm({model:filter});
     
     var modal = new Backbone.BootstrapModal({
       content: form,
@@ -116,7 +129,7 @@ DocManager.module("AgendaApp.List", function(List, DocManager, Backbone, Marione
       return utils.templates.AgendaFilterView;
     },
     onRender: function(){
-      this.form = new Backbone.Form({model:this.model});
+      this.form = new List.FilterForm({model:this.model});
       
       this.$el.find('#form-region').html(this.form.render().el);
     },
@@ -140,6 +153,24 @@ DocManager.module("AgendaApp.List", function(List, DocManager, Backbone, Marione
     
     onDetallado: function(e){
       this.doFilter(Entities.AgendaFilter.MODE_DETAIL);
+    }
+  });
+  
+  List.FilterForm = Backbone.Form.extend({
+    render: function(){
+      Backbone.Form.prototype.render.apply(this);
+      this.validate();
+      return this;
+    },
+    validate: function(){
+      var rubroSelected = this.$el.find('[name=rubro]').val();
+      var subOptions = utils.subtematicasOptionList[rubroSelected];
+      if(subOptions){
+        this.fields.subrubro.editor.setOptions(subOptions);
+      }
+    },
+    events: {
+      'change [name=rubro]': 'validate'
     }
   });
 

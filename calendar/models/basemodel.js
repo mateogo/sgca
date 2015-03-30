@@ -19,18 +19,18 @@ var BaseModel = Backbone.Model.extend({
                   this._beforeSave.bind(this),
                   function(cb){
                      if(self.isNew()){
-                       self._insert(function(err,reslt){callback(err,reslt);});
+                       self._insert(cb);//function(err,reslt){callback(err,reslt);});
                      }else{
                        self._update(cb);
                      }
-                   }/*,
+                   },
                    function(cb){
                      self._afterSave(cb);
-                   }*/
+                   }
                   ],function(err,results){
                       if(err) return callback(err);
                        
-                      callback(null,results[results.length-1]);
+                      callback(null,results[results.length-2]);
                   });
   },
   

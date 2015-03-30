@@ -1,8 +1,12 @@
 
-var BaseModel = require('./basemodel.js');
+
 var serializer = require('./serializer.js');
 var async = require('async');
 var _ = require('underscore');
+
+
+var BaseModel = require('./basemodel.js');
+
 
 var dbi;
 
@@ -114,6 +118,28 @@ var Event = BaseModel.extend({
          }
          self.unset('artactivity');
          cb();
+       },
+       
+       //tomar campos heredados de ArtActivity
+       function(cb){
+         
+         var ArtActivity = requireModel('artactivity');
+         //console.log('acti model',self);
+         
+         
+         ArtActivity.findById(self.get('artactivity_id'),function(err,artActivity){
+           if(err || !artActivity){
+             console.warn('No se encontro ArtActivity ',artactivity_id);
+             return cb(err);
+           }
+           
+           var fields = _.pick(artActivity.attributes,'rubro','subrubro','type_content');
+           
+           self.set(fields);
+           
+           cb();
+         });
+         
        }
        
     ],
@@ -131,9 +157,25 @@ var Event = BaseModel.extend({
    * actualiza los campos de eventos heredados de ArtActivity
    */
   updateByActivity: function(artActivity,cb){
-    if(!artActivity || !artActivty._id) return cb('ArtActivity no definida');
-   
-    //TODO: actualizar rubro, subrubro, tipodeaudiencia en los eventos de la actividad
+    
+    if(!artActivity || (!artActivity.id && !artActivity.attributes._id)){
+      return cb('ArtActivity no definida');
+    }
+    
+    var idActivity = (artActivity.id)? artActivity.id : artActivity.attributes._id;
+    //Actualiza rubro, subrubro y tipodeaudiencia
+    var raw = _.pick(artActivity.attributes,'rubro','subrubro','type_content');
+    
+    raw = {'$set':raw};
+    BaseModel.dbi.collection(this.entityCol).update({'artactivity_id':idActivity}, raw, {multi:true}, function(err, count) {
+      if(err){
+        console.log(err);
+        return cb(err);
+      }
+      
+      cb();
+    });
+    
   }
 });
 
