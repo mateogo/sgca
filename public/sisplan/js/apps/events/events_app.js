@@ -45,19 +45,20 @@ DocManager.module('EventsApp', function(EventsApp, DocManager, Backbone, Marione
   
   
   DocManager.on('events:list', function(artactivity){
-    API.list(artactivity.id);
     DocManager.navigate('eventos/'+artactivity.id);
+    API.list(artactivity.id);
   });
   
   DocManager.on('event:new',function(artActivity){
     if(!artActivity) return console.err('artActivity is not defined');
-    API.createAndEdit(artActivity);
     DocManager.navigate('eventos/new');
+    API.createAndEdit(artActivity);
+    
   });
   
   DocManager.on('event:edit',function(model){
-    API.edit(model);
     DocManager.navigate('eventos/'+model.id+'/edit');
+    API.edit(model);
   });
   
   DocManager.on('event:remove',function(model){

@@ -102,6 +102,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     Entities.ArtActivityFilterFacet =  Backbone.Model.extend({
       schema: {
         area: {type:'Select',title:'Area',options:utils.actionAreasOptionList},
+        action: {type:'Text',title:'Acción'},
         type_event: {type:'Select',options:['','Ciclo','Muestra'],title:'Tipo'},
         type_content: {type:'Select',options:utils.etarioOptionList,title: 'Tipo de audiencia'},
         //fdesde: {type:'Date',title:'Fecha desde'},

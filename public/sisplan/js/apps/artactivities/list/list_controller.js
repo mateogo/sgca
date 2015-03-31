@@ -11,8 +11,12 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       if(!List.Session) List.Session = {};
       List.Session.layout = new List.Layout();
       
+      var filterFacet = null; 
+      if(criterion){
+        filterFacet = new Entities.ArtActivityFilterFacet(criterion);
+        List.Session.layout.setFilter(filterFacet);
+      }
       var collection = new Entities.ArtActivityCollection();
-      collection.fetch({});
       
       List.Session.collection = collection;
       
@@ -25,6 +29,9 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
         List.Session.layout.filterRegion.show(filter);
       });
       DocManager.mainRegion.show(List.Session.layout);
+      
+      List.Controller.filter(filterFacet);
+      
       $('body').scrollTop(0);
     },
     filter: function(filter){
@@ -34,6 +41,7 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       
       var query = (filter)? filter.toJSON(): {};
       List.Session.collection.fetch({data:query});
+      DocManager.navigate('artactividades/'+$.param(query));
     }
   };
   

@@ -190,6 +190,10 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
           DocManager.trigger("artactivity:new", model);
         });
         
+        documentsListView.on("childview:artactivity:showByAction", function(childView, model){
+          DocManager.trigger("artactivity:showByAction", model);
+        });
+        
         documentsListView.on("childview:action:delete", function(childView, model){
           model.destroy();
         });

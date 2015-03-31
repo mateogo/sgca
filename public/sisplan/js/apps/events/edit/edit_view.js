@@ -16,7 +16,6 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
     }
   });
   
-  
   Edit.Editor = Marionette.ItemView.extend({
     tagName: 'div',
     initialize: function(opts){

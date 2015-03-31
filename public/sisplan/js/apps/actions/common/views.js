@@ -28,7 +28,7 @@ DocManager.module("ActionsApp.Common.Views", function(Views, DocManager, Backbon
       "click .js-newactivity": "newactivity",
       "click .js-newparticipant": "newparticipant",
       "click .js-newlocation": "newlocation",
-      "click .js-newartactivity": "newartactivity",
+      "click .js-newartactivity": "newartactivity"
     },
 
     triggers: {
@@ -36,9 +36,7 @@ DocManager.module("ActionsApp.Common.Views", function(Views, DocManager, Backbon
     },
 
     modelChanged: function(){
-
-      console.log('bind EVENT SIDEBAR ITEM')
-
+      console.log('bind EVENT SIDEBAR ITEM');
     },
 
     newactivity: function(e){

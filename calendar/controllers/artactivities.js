@@ -7,6 +7,12 @@ var ctrls = {
     find: function(req,res){
       var query = req.query;
       
+      if(query.action){
+        var key = 'action.cnumber';
+        query[key] = query.action;
+        delete query.action;
+      }
+      
       ArtActivity.find(query,function(err,result){
         if(err) return res.status(500).send(err);
         

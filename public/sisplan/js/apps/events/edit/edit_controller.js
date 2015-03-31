@@ -11,11 +11,11 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
           
           loadModel(event).done(function(event){
             
-            //var headerInfo = new ArtActivitiesEdit.HeaderInfo({model:artActivity,tab:'event'});
+            var headerInfo = new ArtActivitiesEdit.HeaderInfo({model:event.get('artactivity'),tab:'event'});
             var editor = new Edit.Editor({model:event});
             
             Edit.Session.layout.on("show", function(){
-              //Edit.Session.layout.headerInfoRegion.show(headerInfo);
+              Edit.Session.layout.headerInfoRegion.show(headerInfo);
               Edit.Session.layout.mainRegion.show(editor);
             });
             
@@ -31,7 +31,9 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
       var def = $.Deferred();
       
       if(param instanceof Entities.Event){
-          def.resolve(param);
+          param.loadArtActivity().done(function(){
+            def.resolve(param);  
+          });
       }else{
           Entities.Event.findById(param).then(function(model){
             

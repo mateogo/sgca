@@ -4,7 +4,7 @@ DocManager.module('ArtActivitiesApp', function(ArtActivitiesApp, DocManager, Bac
   
   ArtActivitiesApp.Router = Marionette.AppRouter.extend({
     appRoutes: {
-      "artactividades(/filter/criterion::criterion)": "list",
+      "artactividades(/*criterion)": "list",
       "artactividades/:id/edit": "edit"
 
     }
@@ -13,6 +13,11 @@ DocManager.module('ArtActivitiesApp', function(ArtActivitiesApp, DocManager, Bac
   var API = {
     list: function(criterion){
       console.log('API: list: ArtActivities');
+      
+      if(typeof(criterion) === 'string'){
+        criterion = utils.parseQueryString(criterion);
+      }
+      
       ArtActivitiesApp.List.Controller.list(criterion);
       DocManager.execute("set:active:header", "artactividades");
     },
@@ -58,6 +63,11 @@ DocManager.module('ArtActivitiesApp', function(ArtActivitiesApp, DocManager, Bac
   
   DocManager.on('artActivity:remove',function(model){
     API.remove(model);
+  });
+  
+  DocManager.on('artactivity:showByAction',function(action){
+    DocManager.navigate('artactividades/action='+action.get('cnumber'));
+    API.list({action:action.get('cnumber')});
   });
 
   DocManager.addInitializer(function(){

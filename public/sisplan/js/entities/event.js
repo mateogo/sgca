@@ -13,6 +13,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             this.set('fdesde',activity.fdesde);
             this.set('fhasta',activity.fhasta);
             this.set('leyendafecha',activity.leyendafecha);
+            
+            if(!(opts.artactivity instanceof Entities.ArtActivity)){
+              opts.artactivity = new Entities.ArtActivity(opts.artactivity);
+            }
           }
         },
 
@@ -77,6 +81,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           var self = this;
           var def = $.Deferred();
           if(this.get('artactivity')){
+            var artactivity = this.get('artactivity');
+            if(!(artactivity instanceof Entities.ArtActivity)){
+              artactivity = new Entities.ArtActivity(artactivity);
+              this.set('artactivity',artactivity);
+            }
+            
             def.resolve(this.get('artactivity'));
           }else{
             var p = Entities.ArtActivity.findById(this.get('artactivity_id'));
