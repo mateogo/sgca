@@ -18,6 +18,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           leyendafecha: '',
           fecomp: '',
           locacion: '',
+          local: '',
           airelibre: false,
           provevento: '',
           locevento: '',
@@ -34,7 +35,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           rubro: '',
           subrubro: '',
           genero: '',
-          formato: ''
+          formato: '',
+          tags: ''
         },
         
         schema: {
@@ -45,8 +47,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           fdesde: {type:'DatePicker',title:'Fecha desde'},
           fhasta:  {type:'DatePicker',title:'Fecha hasta'},
           leyendafecha:  {type:'Text',title:'Leyenda-Fecha'},
-          locacion: 'Text',
+          locacion: {type:'Select',title:'Locación',options:utils.actionNodosOptionList},
           airelibre: {type:'Checkbox',title:'Aire Libre'},
+          local: {type:'Select',title:'Local',options:utils.localList},
           provevento: {type:'Select',title:'Provincia',options:utils.provinciasOptionList.Argentina},
           locevento: {type:'Text',title:'Localidad'},
           cevento: {type:'Text',title:'Código Postal'},
@@ -61,7 +64,24 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           rubro: {type:'Select',title:'Rubro',options:utils.tematicasOptionList},
           subrubro: {type:'Select',title:'Sub Rubro',options:[]},
           genero: {type:'Text',title:'Genero'},
-          formato: {type:'Text',title:'Formato'}
+          formato: {type:'Text',title:'Formato'},
+          tags: {type:'Text',title:'Palabras clave'}
+          
+        },
+        
+        getFieldLabel: function(field){
+          if(!(field in this.schema)) return '';
+          
+          if(this.schema[field].type === 'Select'){
+            var value = this.get(field);
+            if(value === 'no_definido' || value === "nodefinido") return '';
+            
+            var options = this.schema[field].options;
+            var selected = _.findWhere(options,{val:value});
+            return (selected)? selected.label : value;
+          }else{
+            return this.get(field);
+          }
         }
     },{
       //ArtActivity static methods
@@ -109,9 +129,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         //fhasta:  {type:'Date',title:'Fecha hasta'},
         //airelibre: {type:'Checkbox',title:'Aire Libre'},
         provevento: {type:'Select',title:'Provincia',options:utils.provinciasOptionList.Argentina},
-        //nivel_ejecucion: {type:'Select',title:'Estado de avance',options:utils.estadoaltaOptionList},
-        //estado_alta: {type:'Select',title:'Estado de aprobación',options:utils.estadoaltaOptionList},
-        //nivel_critico: {type:'Select',title:'Nivel de criticidad',options:utils.nivelimportanciaOptionList},
+        nivel_ejecucion: {type:'Select',title:'Estado de avance',options:_.union([''],utils.actionEjecucionOptionList)},
+        estado_alta: {type:'Select',title:'Estado de aprobación',options:_.union([''],utils.estadoaltaOptionList)},
+        nivel_importancia: {type:'Select',title:'Nivel de criticidad',options:_.union([''],utils.nivelimportanciaOptionList)},
         rubro: {type:'Select',title:'Rubro',options:utils.tematicasOptionList},
         //subrubro: {type:'Select',title:'Sub Rubro',options:[]}
       },

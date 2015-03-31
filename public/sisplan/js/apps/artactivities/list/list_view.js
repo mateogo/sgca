@@ -110,6 +110,14 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
     }
   });
   
+  var fieldLabelCell = Backgrid.Cell.extend({
+    render:function(){
+      var value = this.model.getFieldLabel(this.column.get('name'));
+      this.$el.html(value);
+      return this;
+    }
+  });
+  
   
 
   List.GridCreator = function(collection){
@@ -120,6 +128,9 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
                   {name: 'action.cnumber',label: 'Acción',editable:false, cell: actionCell},
                   {name: 'fealta',label: 'Fecha Alta',cell: 'string',editable:false},
                   {name: 'slug',label: 'Asunto-Descripción',cell: 'string',editable:false},
+                  {name: 'estado_alta',label: 'Estado de alta',cell: fieldLabelCell,editable:false},
+                  {name: 'nivel_ejecucion',label: 'Nivel de ejecución',cell: fieldLabelCell,editable:false},
+                  {name: 'nivel_importancia',label: 'Importancia',cell: fieldLabelCell,editable:false},
                   {name: '',label: 'Acciones',cell: 'actionsArtactivity',editable:false}
                  ]
       });
@@ -128,7 +139,7 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
   List.FilterCreator = function(collection){
     return new Backgrid.Extension.ClientSideFilter({
         collection: collection,
-        fields: ['cnumber','slug']
+        fields: ['cnumber','slug','tags']
       });
   };
   

@@ -76,10 +76,16 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
     getTemplate: function(){
       return utils.templates.ArtActivityResumeView;
     },
-    templateHelpers: {
-      formatDate: function(date){
-        return moment(date).format('dddd LL');
-      }
+    templateHelpers: function(){
+      var self = this;
+      return {
+        formatDate: function(date){
+          return moment(date).format('dddd LL');
+        },
+        getFieldLabel: function(fieldName){
+          return self.model.getFieldLabel(fieldName);
+        }
+      };
     }
   });
   
@@ -100,6 +106,7 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
       this.form.render();
       this.$el.find('#formContainer').html(this.form.el);
       this.validateSubRubroSelect();
+      this.validateLocacion();
     },
     
     validateSubRubroSelect: function(){
@@ -110,6 +117,14 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
       }
     },
     
+    validateLocacion: function(){
+      var locacionSelected = this.$el.find('[name=locacion]').val();
+      var subOptions = _.where(utils.localList,{locacion:locacionSelected});
+      if(subOptions){
+        this.form.fields.local.editor.setOptions(subOptions);
+      }
+    },
+    
     done: function(){
       Edit.Controller.showResume(this.model);
     },
@@ -117,11 +132,16 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
     events: {
       'click .js-save': 'onSave',
       'click .js-cancel': 'onCancel',
-      'change [name=rubro]': 'onChangeRubro' 
+      'change [name=rubro]': 'onChangeRubro',
+      'change [name=locacion]': 'onChangeLocacion' 
     },
     
     onChangeRubro: function(){
       this.validateSubRubroSelect();
+    },
+    
+    onChangeLocacion: function(){
+      this.validateLocacion();
     },
     
     

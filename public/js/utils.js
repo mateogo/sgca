@@ -701,6 +701,14 @@ window.utils = {
         {val: 'SSPDCPP'     ,nodo:'SPSC'    , label:'SSPDCPP'},
         {val: 'UM'          ,nodo:'UM'      , label:'UM'},
     ],
+    
+    
+    localList: [
+        {val:'ccnk-sala1.1',label:'Sala 1.2',piso:'1',area:'Noble',capacidad:'30',locacion:'CCNK'},
+        {val:'ccnk-sala4.2',label:'Sala 4.2',piso:'4',area:'Noble',capacidad:'50',locacion:'CCNK'},
+        {val:'ccnk-salaA',label:'Sala A - Industrial',piso:'4',area:'Industrial',capacidad:'60',locacion:'CCNK'},
+        {val:'mnba-sala1',label:'Sala 1 - Bellas Artes ',locacion:'MNBA'}
+    ],
 
     //========= ACTIONS END =========================
 
