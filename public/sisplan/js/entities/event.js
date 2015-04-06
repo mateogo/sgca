@@ -77,6 +77,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           leyendafecha: {type:'Text',title:'Leyenda Fecha'}
         },
         
+        load: function(){
+          return $.when(this.loadArtActivity(),this.loadAssets());
+        },
+        
         loadArtActivity: function(){
           var self = this;
           var def = $.Deferred();
@@ -104,7 +108,29 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             }
           });
           return def.promise(); 
+        },
+        loadAssets: function(){
+          var def = $.Deferred();
+          if(this.assets){
+            def.resolve(this.assets);
+          }else{
+            var col = new AssetCollection();
+            var p = col.fetch({data:{'es_asset_de.id':this.id}});
+            this.assets = col;
+            p.done(def.resolve).fail(def.reject);
+          }
+          return def;
+        },
+        
+        toJSON: function(){
+          var json = this.attributes;
+          
+          //delete json.assets;
+            
+          return json;
         }
+        
+        
     },{
       //static methods
       findById: function(id){

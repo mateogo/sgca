@@ -41,11 +41,16 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
       
       if(param instanceof Entities.ArtActivity){
           session.model = param;
-          def.resolve(param);
+          param.load().done(function(){
+            def.resolve(param);  
+          });
+          
       }else{
           Entities.ArtActivity.findById(param).then(function(model){
             session.model = model;
-            def.resolve(model);
+            model.load().done(function(){
+              def.resolve(model);  
+            });
           },function(e){
             createNotFound();
             def.reject();

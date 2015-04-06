@@ -1,0 +1,23 @@
+<div class="event-date-item">
+    <% if(typeof(file) !== 'undefined'){ %>
+        <%=file.name%>
+        <%=sizeLabel(file.size)%>
+        
+        
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+            <span class="sr-only">60% Complete</span>
+          </div>
+        </div>
+        
+    <% }else if(name){ %>
+        <i class="glyphicon glyphicon-file"></i>
+        <a href="<%=getUrl()%>" target="_blank"><%=name%></a>
+        <span class="text-muted"><%=sizeLabel(size)%></span>
+        
+    <% }else{ %>
+        <button class="btn btn-sm btn-default"> Subir </button>
+    <% } %>
+    
+    <a class="pull-right js-remove text-danger"><i class="glyphicon glyphicon-remove"></i> borrar</a>
+</div>

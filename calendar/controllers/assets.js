@@ -10,6 +10,9 @@
  *     metodos exportados:
  *          open(); findById; findAll; add(), update(); delete()
  */
+
+var _ = require('underscore');
+
 var dbi ;
 var BSON;
 var config = {};
@@ -64,6 +67,11 @@ exports.renderVideo = function(req, res) {
 exports.find = function(req, res) {
     console.log('assets: find:');
     var query = req.body; //{};
+     
+    if(_.keys(query).length === 0 && req.query){
+      query = req.query;
+    }
+    
     dbi.collection(assetsCol, function(err, collection) {
         //ojo: sort
         collection.find(query).sort({name:1}).toArray(function(err, items) {

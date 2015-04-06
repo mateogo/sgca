@@ -119,7 +119,7 @@ module.exports = function (config, app) {
 
     app.post('/files', function(req,res,next){
         //console.log("/files:routes.js ");
-        utils.moveFile(req, res, rootPath);
+        utils.moveFile2(req, res, next, rootPath);
     });
 
     app.get('/background/img', function(req,res,next){
@@ -280,6 +280,7 @@ module.exports = function (config, app) {
     // asset (activos) routes
     var asset = require(rootPath + '/calendar/controllers/assets');
     app.post('/recuperar/activos', asset.find);
+    app.get('/recuperar/activos', asset.find);
     app.get('/activos/:id', asset.findById);
     app.post('/activos', asset.add);
     app.put('/activos/:id', asset.update);

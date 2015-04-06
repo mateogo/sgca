@@ -82,7 +82,25 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           }else{
             return this.get(field);
           }
+        },
+        
+        
+        load: function(){
+          return $.when(this.loadAssets());
+        },
+        loadAssets: function(){
+          var def = $.Deferred();
+          if(this.assets){
+            def.resolve(this.assets);
+          }else{
+            var col = new AssetCollection();
+            var p = col.fetch({data:{'es_asset_de.id':this.id}});
+            this.assets = col;
+            p.done(def.resolve).fail(def.reject);
+          }
+          return def;
         }
+        
     },{
       //ArtActivity static methods
       findById: function(id){

@@ -52,6 +52,8 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     
     'agenda/AgendaLayoutView','agenda/AgendaItemRender', 'agenda/AgendaFilterView',
     
+    'attachmentview/AttachmentLayoutView','attachmentview/AttachmentItem',
+    
     'common/DatePatternForm'
     
     ], function() {

@@ -33,3 +33,11 @@
     border-bottom: 1px solid #f3f3f3;
 }
 
+#messageDrop{
+    border: 4px dotted #CCC;
+    background-color:rgba(240,240,240,0.5);
+    position:absolute;top:0;bottom:0;left:0;right:0;
+    text-align:center;
+    color: #555;
+    display:none;
+}

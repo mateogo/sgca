@@ -31,13 +31,13 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
       var def = $.Deferred();
       
       if(param instanceof Entities.Event){
-          param.loadArtActivity().done(function(){
+          param.load().done(function(){
             def.resolve(param);  
           });
       }else{
           Entities.Event.findById(param).then(function(model){
             
-            model.loadArtActivity().done(function(artActivity){
+            model.load().done(function(){
               def.resolve(model);  
             }).fail(function(e){
               Message.error('No se puede editar');

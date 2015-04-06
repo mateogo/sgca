@@ -13,6 +13,7 @@ var _ = require('underscore');
 var SpreadsheetWriter = require('pyspreadsheet').SpreadsheetWriter;
 
 var nodemailer = require('nodemailer');
+var formidable = require('formidable');
 
 var anyw = false;
 
@@ -262,7 +263,7 @@ exports.safeAddress = function (name){
 };
 
 
-exports.moveFile = function(req, res, rootPath){
+exports.moveFile = function(req, res, next,rootPath){
     var today = new Date();
     var times = today.getTime();
     var times_str = times.toString()+'_';
@@ -297,6 +298,47 @@ exports.moveFile = function(req, res, rootPath){
             });                
         }
     });
+};
+
+exports.moveFile2 = function(req, res, next, rootPath){
+  var today = new Date();
+  var times = today.getTime();
+  var times_str = times.toString()+'_';
+  
+  var form = new formidable.IncomingForm();
+  
+  form.parse(req, function(err, fields, files) {
+
+    var filename = safeFileName(files.loadfiles.name);
+    
+    var publicPath = rootPath + '/public/';
+    var urlPath = createFolder(publicPath, today) + '/' + times_str + filename;
+    var serverPath = rootPath + '/public/' + urlPath;
+    
+    fs.rename(files.loadfiles.path, serverPath, function(error){
+        if(error){
+            res.send({error: 'Ooops! algo salio mal!'});
+        }else{
+            res.send({
+                name: filename,
+                urlpath: urlPath,
+                fileversion:{
+                    name: filename,
+                    urlpath: urlPath,
+                    mime: files.loadfiles.mime,
+                    type: files.loadfiles.type,
+                    size: files.loadfiles.size,
+                    lastModifiedDate: files.loadfiles.lastModifiedDate,
+                    uploadDate: times
+                }
+            });                
+        }
+        next();
+    });
+  });
+  
+  return;
+  
 };
 
 var saveFileName = function(rootPath, name){

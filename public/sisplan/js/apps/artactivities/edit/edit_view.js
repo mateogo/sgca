@@ -1,4 +1,6 @@
-DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
+DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, Marionette, $, _){
+  
+  var App = DocManager.module('App');
   
   Edit.Layout = Marionette.LayoutView.extend({
     getTemplate: function(){
@@ -103,8 +105,12 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
         model: this.model,
         template: utils.templates.ArtActivityEditBasicForm
       });
-      this.form.render();
-      this.$el.find('#formContainer').html(this.form.el);
+      this.$el.find('#formContainer').html(this.form.render().el);
+      
+      this.attachView = new App.AttachmentView({el:this.$el.find('#attachmentContainer'),model:this.model});
+      this.attachView.render();
+      //this.$el.find('#attachmentContainer').html(this.attachView.render().el);
+      
       this.validateSubRubroSelect();
       this.validateLocacion();
     },
