@@ -13,6 +13,10 @@
     <% }else if(name){ %>
         <i class="glyphicon glyphicon-file"></i>
         <a href="<%=getUrl()%>" target="_blank"><%=name%></a>
+        <% if(slug != name){ %>
+             <%= slug%>
+        <% } %>    
+        
         <span class="text-muted"><%=sizeLabel(size)%></span>
     <% } %>
     
