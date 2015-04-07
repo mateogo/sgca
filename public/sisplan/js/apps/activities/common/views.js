@@ -1,4 +1,4 @@
-DocManager.module("ActivitiesApp.Common.Views", function(Views, DocManager, Backbone, Marionette, $, _){
+DocManager.module("AdminrequestsApp.Common.Views", function(Views, DocManager, Backbone, Marionette, $, _){
 
   Views.SidebarMenu = Marionette.ItemView.extend({
     //article id="sidebar-region" role="navigation" class="sistema-box" -->

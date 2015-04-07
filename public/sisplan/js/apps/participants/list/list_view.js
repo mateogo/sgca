@@ -15,7 +15,7 @@ DocManager.module("ParticipantsApp.List", function(List, DocManager, Backbone, M
       linksRegion:   '#panel-region',
       mainRegion:    '#main-region',
       tableRegion: '#table-region',
-      filterRegion : '#filter-region'    
+      filterRegion : '#filter-region'
     },
     
     events: {

@@ -1,4 +1,4 @@
-DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
+DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
   //http://localhost:3000/sisplan/#costo/accion/5499dc3be64014a608ed4b25/edit
 
 
@@ -9,14 +9,19 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
     },
 
     getTemplate: function(){
-      return utils.templates.ActivityEditLayout;
+      return utils.templates.StramiteEditLayout;
     },
     
     regions: {
       actionRegion:     '#action-region',
       mainRegion:       '#main-region',
-      summaryRegion:    '#summary-region',
+      budgetRegion:     '#budget-region',
+      filterRegion:     '#filter-region',
+      requestRegion:    '#request-region',
       controlRegion:    '#control-region',
+
+
+      summaryRegion:    '#summary-region',
     }
   });
 
@@ -26,7 +31,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
     whoami:'ActivityShowBudgetItem',
 
     getTemplate: function(){
-      return utils.templates.ActivityShowBudgetItem;
+      return utils.templates.StramiteShowBudgetItem;
     },
 
     initialize: function(options){
@@ -54,7 +59,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
     childViewContainer: "tbody",
 
     getTemplate: function(){
-      return utils.templates.ActivityShowBudgetItemComposite;
+      return utils.templates.StramiteShowBudgetItemComposite;
     },
 
     events: {
@@ -95,7 +100,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
     },
 
     getTemplate: function(){
-      return utils.templates.ActivityShowBudgetLayout;
+      return utils.templates.StramiteShowBudgetLayout;
     },
 
     initialize: function(options){
@@ -145,7 +150,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
     },
 
     getTemplate: function(){
-      return utils.templates.ActivityShowBudgetComposite;
+      return utils.templates.StramiteShowBudgetComposite;
     },
 
     childView: Edit.ActivityShowBudgetInstance,
@@ -168,12 +173,8 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
     }
   });
 
-
-
-
-
   // ============ ControlPanel View ===============
-    Edit.ControlPanelView = Marionette.ItemView.extend({
+  Edit.ControlPanelView = Marionette.LayoutView.extend({
     whoami: 'Edit.ControlPanelView :build_views',
 
     tagName: "div",
@@ -184,7 +185,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
     },
 
     templates: {
-      ctrlpanel: 'ActivityEditControlPanelView'
+      ctrlpanel: 'StramiteEditControlPanelView'
     },
 
     getTemplate: function(){
@@ -196,6 +197,10 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
       this.options = options;
     },
 
+    regions: {
+      filterRegion:     '#filter-region',
+    },
+    
     events: {
       "click a.js-newrequest": "newrequest",
       "click .js-save": 'saveall',
@@ -234,6 +239,69 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
     },
 
   });
+
+  Backgrid.ActionAdminrequestCell = Backgrid.Cell.extend({
+      // Cell default class names are the lower-cased and dasherized
+      // form of the the cell class names by convention.
+      className: "action-cell",
+      render: function(){
+          if(!this.rendered){
+             var btnEdit = $('<button class="btn-link js-requestedit" title="editar"><span class="glyphicon glyphicon-edit"></span></button>');
+             var btnRemove = $('<button class="btn-link js-requesttrash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
+             this.$el.append(btnEdit).append(btnRemove);
+             this.rendered = true;
+          }
+         return this;
+      },
+      events: {
+          'click button.js-edit': 'editClicked',
+          'click button.js-trash': 'trashClicked',
+      },
+        
+      editClicked: function(e){
+          e.stopPropagation();e.preventDefault();
+          //this.trigger('participant:edit',this.model);
+          //DocManager.trigger('participant:edit',participantsApp.Model.selectedAction,this.model);
+      },
+        
+      trashClicked: function(e){
+          e.stopPropagation();e.preventDefault();
+          //this.trigger('participant:remove',this.model);
+          //DocManager.trigger('participant:remove',participantsApp.Model.selectedAction,this.model);
+      }
+    });
+  
+  
+  Edit.gridCreator = function(collection){
+      return new Backgrid.Grid({
+          className: 'table table-condensed table-bordered table-hover',
+          collection: collection,
+          columns: [
+                    {name: 'cnumber',label: 'Tramitación',cell: 'string',editable:false},
+                    {name: 'trequest',label: 'Tipo',cell: 'string',editable:false},
+                    {name: 'slug',label: 'Descripción',cell: 'string',editable:false},
+                    {name: 'cantidad',label: 'Cantidad',cell: 'number',editable:false},
+                    {name: 'importe',label: 'Importe',cell: 'number',editable:false},
+                    {name: 'cudap',label: 'CUDAP',cell: 'string',editable:false},
+                    {label: 'Acciones',cell: 'actionAdminrequest',editable:false,sortable:false},
+                   ]
+        });
+  }; 
+  
+  
+  Edit.filterCreator = function(collection){
+      return new Backgrid.Extension.ClientSideFilter({
+          collection: collection,
+          fields: ['slug']
+        });
+  };
+
+
+
+
+
+
+
 
 
   // ============ Summary View ===============
@@ -702,7 +770,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
   };
 
 
-  Edit.MainHeader = DocManager.ActivitiesApp.Common.Views.Form.extend({
+  Edit.MainHeader = DocManager.AdminrequestsApp.Common.Views.Form.extend({
     whoami:'Edit.MainHeader: edit_views.js',
     tagName: 'div',
     className: 'panel',
@@ -841,7 +909,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
 
 
 
-  Edit.Search = DocManager.ActivitiesApp.Common.Views.SearchPanel.extend({
+  Edit.Search = DocManager.AdminrequestsApp.Common.Views.SearchPanel.extend({
     initialize: function(options){
       this.optiones = options;
       var self = this;
@@ -850,7 +918,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
 
 
 
-  Edit.Document = DocManager.ActivitiesApp.Common.Views.Form.extend({
+  Edit.Document = DocManager.AdminrequestsApp.Common.Views.Form.extend({
     
     // tagName:'form',
     // className: 'form-horizontal',
@@ -1074,7 +1142,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
   };
 
   //Edición del SubItem de comprobante SOLICITUD
-  Edit.SolicitudDetail = DocManager.ActivitiesApp.Common.Views.Form.extend({
+  Edit.SolicitudDetail = DocManager.AdminrequestsApp.Common.Views.Form.extend({
     whoami:'SolicitudDetail:edit_view.js',
     
     // tagName:'form',
@@ -1145,7 +1213,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
 
 
   // Cabecera del itam
-  Edit.ItemHeader = DocManager.ActivitiesApp.Common.Views.Form.extend({
+  Edit.ItemHeader = DocManager.AdminrequestsApp.Common.Views.Form.extend({
     whoami:'ItemHeader:edit_view.js',
     
     // tagName:'form',
@@ -1240,7 +1308,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
   });
 
 
-  Edit.PTecnicoListItem = DocManager.ActivitiesApp.Common.Views.Form.extend({
+  Edit.PTecnicoListItem = DocManager.AdminrequestsApp.Common.Views.Form.extend({
     templates: {
       ptecnico:   'DocumEditPTItem',
       nsolicitud: 'DocumEditSOItem',

@@ -13,14 +13,17 @@ DocManager.module('LocationsApp',function(LocationsApp,DocManager,Backbonone,Mar
 			console.log('API: listLocations');
 			LocationsApp.List.Controller.list(id);
 		},
+
 		newLocation: function(action){
              if(action){
                  API.edit(action, action.createNewLocation());
              }
 		},
+		
 		edit: function(action,location){
 		    LocationsApp.Edit.Controller.edit(action,location);
 		},
+		
 		remove: function(action,location){
 		  DocManager.confirm('¿Estás seguro de borrar la locación?').then(function(){
        	  

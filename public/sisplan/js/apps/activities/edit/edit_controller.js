@@ -1,15 +1,15 @@
-DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
+DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
 
 
   Edit.Controller = {
     editActivity: function(id){
-      console.log('ActivitiesApp.Edit.Controller.editActivity');
+      console.log('AdminrequestsApp.Edit.Controller.editActivity');
 
       var fetchingAction = DocManager.request("action:entity", id);
      
       $.when(fetchingAction).done(function(action){
 
-        console.log('ActivitiesApp.Edit BEGIN [%s]: [%s]', action.get('area'), action.get('slug'));
+        console.log('AdminrequestsApp.Edit BEGIN [%s]: [%s]', action.get('area'), action.get('slug'));
         Edit.Session = {};
         Edit.Session.views = {};
         Edit.Session.typeList = utils.budgetTemplateList;
@@ -55,6 +55,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
     DocManager.request('action:fetch:budget',Edit.Session.action, null,function(budgetCol){
       Edit.Session.budgetCol = budgetCol;
       var costo = DocManager.request('action:evaluate:cost', budgetCol);
+      console.log('budgetCol:[%s]', budgetCol.length);
 
       var budgetView = new Edit.ActivityShowBudgets({
         model: new Backbone.Model({costo_total: costo.total, costo_detallado: costo.detallado}),
@@ -67,10 +68,18 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
   }; 
 
   var loadRequestsFromDB = function(){
+    console.log('loadRequestsFromDB BEGIN');
     DocManager.request('action:fetch:adminrequests',Edit.Session.action, null,function(requestsCol){
       Edit.Session.requestsCol = requestsCol;
-      var costo = DocManager.request('action:evaluate:cost', requestsCol);
+      //var costo = DocManager.request('action:evaluate:cost', requestsCol);
       console.log('requestsCol:[%s]', requestsCol.length);
+
+      var reqTable  = Edit.gridCreator(requestsCol);
+      var reqFilter = Edit.filterCreator(requestsCol);
+
+      Edit.Session.views.layout.requestRegion.show(reqTable);
+      //Edit.Session.views.layout.filterRegion.show(reqFilter);
+      Edit.Session.views.controlpanelView.filterRegion.show(reqFilter);
 
       // var budgetView = new Edit.ActivityShowBudgets({
       //   model: new Backbone.Model({costo_total: costo.total, costo_detallado: costo.detallado}),
@@ -369,6 +378,7 @@ DocManager.module("ActivitiesApp.Edit", function(Edit, DocManager, Backbone, Mar
   };
 
   var createNewRequest = function(view, model, captionlabel){
+    console.log('Ready to BEGIN NEW AdminRequest:[%s] caption:[%s]',model.whoami, captionlabel);
 
     var opt = {
           aceptar: 'Crear',
@@ -418,7 +428,7 @@ var enviarmail = function(model){
     
     //todo:ver donde configurar el servidor de produccion
     model.set( 'server','https://localhost:3000');
-    var sendMail = new DocManager.ActivitiesApp .Common.Views.SendMail({
+    var sendMail = new DocManager.AdminrequestsApp .Common.Views.SendMail({
           model: model,
     });
     

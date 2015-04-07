@@ -80,12 +80,12 @@ DocManager.module("ActionsApp.Report", function(Report, DocManager, Backbone, Ma
     
     events: {
       "click .js-newbudget": "newbudget",
-      "click .js-newactivity": "newactivity",
+      "click .js-tramitaciones": "tramitaciones",
       "click .js-newparticipant": "newparticipant",
       "click .js-newlocation": "newlocation",
     },
 
-    newactivity: function(e){
+    tramitaciones: function(e){
       e.preventDefault();
       //this.trigger('activity:new');
       DocManager.trigger('activity:edit', this.model);

@@ -132,7 +132,7 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
         this.$el.find('[name='+name+']').val(value);
       }
     },
-    
+       
     getValue: function(){
       var data = this.form.getValue();
       data.vip = $(this.el).find('#checkboxVip').prop('checked');
@@ -269,6 +269,7 @@ DocManager.module("ParticipantsApp.Edit", function(Edit, DocManager, Backbone, M
         console.error(e);
       }
     }
+
   });
   
   

@@ -2,7 +2,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   
   Entities.Adminrequest = Backbone.Model.extend({
     urlRoot: "/tramitaciones",
-    whoami: 'Entities.Adminrequest:admrqst.js ',
+    whoami: 'Entities.Adminrequest:adminrequest.js ',
 
     idAttribute: "_id",
 
