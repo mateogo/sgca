@@ -52,7 +52,9 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     
     'agenda/AgendaLayoutView','agenda/AgendaItemRender', 'agenda/AgendaFilterView',
     
+    'attachmentview/AttachmentItemEditorView',
     'attachmentview/AttachmentLayoutView','attachmentview/AttachmentItem',
+    
     
     'common/DatePatternForm'
     
