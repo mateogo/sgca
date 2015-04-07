@@ -5,8 +5,8 @@ DocManager.module('ArtActivitiesApp', function(ArtActivitiesApp, DocManager, Bac
   ArtActivitiesApp.Router = Marionette.AppRouter.extend({
     appRoutes: {
       "artactividades(/*criterion)": "list",
-      "artactividades/:id/edit": "edit"
-
+      "artactividades/:id/edit": "edit",
+      "artactividades/:id/assets": "editAssets"
     }
   });
 
@@ -30,6 +30,9 @@ DocManager.module('ArtActivitiesApp', function(ArtActivitiesApp, DocManager, Bac
     edit: function(model){
       ArtActivitiesApp.Edit.Controller.showResume(model);
       DocManager.execute("set:active:header", "artactividades");
+    },
+    editAssets: function(model){
+      ArtActivitiesApp.Edit.Controller.artActivityAssets(model);
     },
     remove: function(artActiviy){
       DocManager.confirm('¿Estás seguro de borrar la actividad?').then(function(){
@@ -68,6 +71,11 @@ DocManager.module('ArtActivitiesApp', function(ArtActivitiesApp, DocManager, Bac
   DocManager.on('artactivity:showByAction',function(action){
     DocManager.navigate('artactividades/action='+action.get('cnumber'));
     API.list({action:action.get('cnumber')});
+  });
+  
+  DocManager.on('artActivity:assets', function(artActivity){
+    API.editAssets(artActivity);
+    DocManager.navigate('artactividades/'+artActivity.id+'/assets');
   });
 
   DocManager.addInitializer(function(){

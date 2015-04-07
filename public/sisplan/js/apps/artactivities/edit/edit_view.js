@@ -49,6 +49,7 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
     events: {
       'click .js-openevent': 'openEventClicked',
       'click .js-openresume': 'openResumeClicked',
+      'click .js-openasset': 'openAssetsClicked',
       'click .js-openresource': 'notYet',
       'click .js-opentask': 'notYet'
     },
@@ -71,6 +72,11 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
     openEventClicked: function(e){
       e.stopPropagation();
       DocManager.trigger('events:list',this.model);
+    },
+    
+    openAssetsClicked: function(e){
+      e.stopPropagation();
+      DocManager.trigger('artActivity:assets',this.model);
     }
   });
   

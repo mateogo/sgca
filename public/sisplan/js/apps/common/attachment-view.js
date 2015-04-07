@@ -47,7 +47,6 @@ DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
       };
     },
     onRender: function(){
-      console.log('render file item',this.model);
       this.upload();
     },
     upload: function(){
