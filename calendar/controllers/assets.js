@@ -72,6 +72,11 @@ exports.find = function(req, res) {
       query = req.query;
     }
     
+    if(_.keys(query).length === 0){
+      res.send([]);
+      return;
+    }
+    
     dbi.collection(assetsCol, function(err, collection) {
         //ojo: sort
         collection.find(query).sort({name:1}).toArray(function(err, items) {
