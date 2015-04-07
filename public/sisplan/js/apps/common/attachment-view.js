@@ -13,9 +13,15 @@ DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
   
   
   var AttachmentItemView = Backbone.Marionette.ItemView.extend({
-    getTemplate: function(){
-      return utils.templates.AttachmentItem;
+    initialize: function(){
+      this.editMode = false;
     },
+    getTemplate: function(){
+      return (this.editMode) 
+                ? utils.templates.AttachmentItemEditorView 
+                : utils.templates.AttachmentItem;
+    },
+    
     templateHelpers: function(){
       var self = this;
       return {
@@ -62,12 +68,7 @@ DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
         self.model.set(asset.attributes);
         self.model.unset('file');
         self.render();
-        
-
-        //self.loadedfiles += 1;
-        //self.uploadedfile = srvresponse;
-        //dao.brandingfacet.setAsset(asset);
-        
+         
         if(parentModel){
           asset.linkChildsToAncestor(asset, parentModel,'es_asset_de',function(){
               console.log('ASSET linked to ancestor');
@@ -76,8 +77,47 @@ DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
       });
     },
     
+    setEditMode: function(yes){
+      this.editMode = (yes !== false);
+      this.render();
+    },
+    
     events: {
-      'click .js-remove':'onRemove'
+      'click .js-edit':'onEdit',
+      'click .js-remove':'onRemove',
+      'click .js-save': 'onSave',
+      'click .js-cancelEdit': 'onCancelEdit'
+    },
+    
+    onEdit: function(e){
+      e.stopPropagation();
+      this.setEditMode();
+    },
+    
+    onSave: function(e){
+      e.stopPropagation();
+      
+      var $btn = this.$el.find('.js-save');
+      $btn.button('loading');
+      this.model.set('slug',this.$el.find('[name=slug]').val());
+      this.model.set('name',this.$el.find('[name=name]').val());
+      
+      
+      var self = this;
+      this.model.save().done(function(){
+        $btn.button('reset');
+        self.setEditMode(false);
+        
+      }).fail(function(){
+        $btn.button('reset');
+        self.setEditMode(false);
+      });
+      
+    },
+    
+    onCancelEdit: function(e){
+      e.stopPropagation();
+      this.setEditMode(false);
     },
     
     onRemove: function(e){
@@ -86,6 +126,25 @@ DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
       DocManager.confirm('¿Está seguro de borrar el archivo?').done(function(){
         self.model.destroy();
       });
+    }
+  });
+  
+  
+  AttachmentItemEditor =  Backbone.Marionette.ItemView.extend({
+    getTemplate: function(){
+      return utils.templates.AttachmentItemEditor;
+    },
+    events: {
+      'click .js-save': 'onSave',
+      'click .js-cancel': 'onCancel'
+    },
+    
+    onSave: function(e){
+      e.stopPropagation();
+    },
+    
+    onCancel: function(e){
+      e.stopPropagation();
     }
   });
   
