@@ -7,6 +7,7 @@
             <li data-step="2" class="complete"><span class="badge">2</span>Quién viaja<span class="chevron"></span></li>
             <li data-step="3" class="complete"><span class="badge">3</span>Donde<span class="chevron"></span></li>
             <li data-step="4" class="complete"><span class="badge">4</span>Aduana<span class="chevron"></span></li>
+            <li data-step="5" class="complete"><span class="badge">5</span>Confirmación<span class="chevron"></span></li>
           </ul>
           <div class="actions">
             <button type="button" class="btn btn-default btn-prev"><span class="glyphicon glyphicon-arrow-left"></span>Ant</button>
@@ -88,10 +89,15 @@
                             </div>
                         </div>
                     </div>
-                     <div class="form-group">
+                    <div class="form-group">
                         <div class="row">
                             <div class="col-sm-5 col-xs-9">
                                 <label class="control-label">Fecha de nacimiento </label>
+                                <input type="text" class="form-control">
+                                <span class="help-block"></span>
+                            </div>
+                            <div class="col-sm-5 col-xs-9">
+                                <label class="control-label">Email</label>
                                 <input type="text" class="form-control">
                                 <span class="help-block"></span>
                             </div>
@@ -104,11 +110,13 @@
                                 <input type="text" class="form-control">
                                 <span class="help-block"></span>
                             </div>
+                            
                             <div class="col-sm-5 col-xs-9">
-                                <label class="control-label">Email</label>
+                                <label class="control-label">Teléfono movil </label>
                                 <input type="text" class="form-control">
                                 <span class="help-block"></span>
                             </div>
+                           
                         </div>
                     </div>
               
@@ -220,6 +228,61 @@
               
             </div>
             
+              <div class="step-pane sample-pane alert" data-step="5">
+                    <h4>Confirmación</h4>
+                    <div class="bg-danger well-transparent row" id="requisite">
+                        Verifique que los datos que se listan a continuación sean correctos.
+                    </div>
+                    
+                    <h4 class="spacer">Detalle del tramite</h4>
+                    <div><strong>Tipo: </strong> paseo </div>
+                    <div><strong>Motivo: </strong> Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</div>
+                    
+                    <hr class="spacer">
+                    <h4 class="spacer">Obras de arte</h4>
+                    <div class="media-left">
+                        <a class="thumbnail" style="width:150px">
+                          <img class="media-object" src="assets/cuadro1.jpg" width="150" >
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">Sed facilisis velit</h4>
+                        Nam vel ligula lectus. Maecenas erat eros, scelerisque et sollicitudin sed, vestibulum pulvinar sapien. Sed quis dui libero. Suspendisse potenti. Curabitur luctus risus ligula, sit amet interdum elit ornare sit amet. Suspendisse massa arcu, viverra id dapibus in, iaculis non justo. Aliquam hendrerit ac justo et tempor. Integer tempus fermentum metus id convallis. Donec dapibus facilisis nibh sed congue. Suspendisse vitae lacus a justo elementum porttitor. Nulla ultricies leo eu tortor dictum venenatis
+                    </div>
+                    
+                    <hr class="spacer">
+                    <h4 class="spacer">Persona que viaja</h4>
+                    <div><strong>Nombre y apellido del Responsable:</strong></div>
+                    <div><strong>DNI:</strong></div>
+                    <div><strong>Fecha de nacimiento:</strong></div>
+                    <div><strong>Email: </strong></div>
+                    <div><strong>Teléfono:</strong></div>
+                    <div><strong>Teléfono Móvil:</strong></div> 
+                    
+                    <hr class="spacer">
+                    <h4 class="spacer">Itinerario</h4>
+                    <div>
+                        <div> Uruguay - Montevideo </div>
+                        <div> Brasil - Curitiba </div>
+                        <div> Paraguay - Asunción </div>
+                    </div>  
+                    
+                    <hr class="spacer">
+                    <h4 class="spacer">Aduana</h4>
+                    <div class="media">
+                        <div><strong><i class="glyphicon glyphicon-arrow-up"></i> Salida: </strong> Gualeguaychu - Junio 2015 </div>
+                        
+                        
+                        <div><strong><i class="glyphicon glyphicon-arrow-down"></i> Entrada: </strong> Posadas - Octubre 2015</div>
+                        
+                        
+                    </div> 
+                      
+                    <hr class="spacer">
+                    <a href="#" id="submit-solicitud">
+                        <button type="button" class="btn btn-primary js-submit">Registrar solicitud de exportación</button>
+                    </a>                        
+                </div>
           </div>
         </div>
     </div>
