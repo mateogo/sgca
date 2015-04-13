@@ -728,7 +728,7 @@ atribuciones (array)
         passwordcopia:  {type: 'Password', title: 'Reingrese clave', validators:[
                             {type:'match', message:'Las claves no coinciden', field:'password'}]},
         //termsofuse:      {type: 'Radio',title: '¿Acepta condicones de uso?',options: [{label:'Acepto',val:'Aceptoval'},{label:'NoAcepto',val:'NoAceptoval'}] },
-        termsofuse:      {type: 'Checkbox',options: [{val:'Aceptado', label:'Aceptadísomo'}] , title:'Acepto'},
+        termsofuse:      {type: 'Checkbox',options: [{val:'Aceptado', label:'Aceptado'}] , title:'Acepto'},
     
 
     },

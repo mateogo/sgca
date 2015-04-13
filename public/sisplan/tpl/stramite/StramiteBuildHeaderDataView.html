@@ -1,0 +1,66 @@
+<div class="row hidden-print">
+    <div class="col-xs-12 text-right">
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default active js-basicview" ><i class="glyphicon glyphicon glyphicon-blackboard"></i> Resumen</button>
+          <button type="button" class="btn btn-default js-basicedit"><i class="glyphicon glyphicon-pencil"></i> Edición</button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h3 class="text-info">Solicitud</h3>
+        <div class="well" style="overflow-y:auto">
+            <p><%= cnumber%>: <%=slug%></p>
+            <p class="text-muted"><%= description%></p>
+            <p><label>Fecha Necesidad: </label> <%= formatDate(fenecesidad)%> </p>
+            <p><label>Código de Gasto:</label> <%= getFieldLabel('cgasto')%>  </p>
+            <p><label>Objeto del gasto:</label> <%= getFieldLabel('presuinciso')%> (valor x omisión) </p>
+            <p><label>Tramita por CUDAP:</label> <%= getFieldLabel('cudap')%>  </p>
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h3  class="text-info">Estado</h3>
+        <div >
+            <table class="table table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th>Rubro</th>
+                        <th><span  class="text-center">Fte Finan</span></th>
+                        <th><span  class="text-center">Freq</span></th>
+                        <th><span  class="text-center">Cantidad</span></th>
+                        <th><span  class="pull-right">IMPORTE</span></th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><%= getFieldLabel('trequest')%></td>
+                        <td><span  class="text-center"><%= getFieldLabel('presuprog')%></span></td>
+                        <td><span  class="text-center"><%= getFieldLabel('freq')%> (<%= getFieldLabel('umefreq')%>)</span></td>
+                        <td><span  class="text-center"><%= getFieldLabel('cantidad')%> (<%= getFieldLabel('ume')%>)</span></td>
+                        <td><span  class="pull-right"><%= accounting.formatNumber(importe) %></span></td>
+                    </tr> 
+                </tbody>
+            </table>
+
+            <table class="table table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th><span  class="text-center">Estado</span></th>
+                        <th><span  class="text-center">Nivel Ejecución</span></th>
+                        <th><span  class="text-center">Prioridad</span></th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span  class="text-center"><%= getFieldLabel('estado_alta')%></span></td>
+                        <td><span  class="text-center"><%= getFieldLabel('nivel_ejecucion')%></span></td>
+                        <td><span  class="text-center"><%= getFieldLabel('nivel_importancia')%></span></td>
+                    </tr> 
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> 
+
+

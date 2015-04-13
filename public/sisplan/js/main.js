@@ -21,8 +21,9 @@ utils.loadTemplate(['HomeView', 'HeaderView',
  
     'stramite/StramiteEditLayout','stramite/StramiteEditControlPanelView','ActivityEditDetailComposite','ActivityEditItemView', //'BudgetMainHeader','ActionBudgetItem',
     'stramite/StramiteShowBudgetComposite','stramite/StramiteShowBudgetLayout','stramite/StramiteShowBudgetItemComposite','stramite/StramiteShowBudgetItem',
-
-
+    'stramite/StramiteBuildMainLayout','stramite/StramiteBuildHeaderView','stramite/StramiteBuildHeaderDataView','stramite/StramiteBuildBasicEditorForm','stramite/StramiteBuildBasicEditorLayout',
+    'stramite/StramiteBuildControlPanel','stramite/StramiteBuildItemHeaderLayout','stramite/StramiteBuildItemHeaderView',
+    'stramite/StramiteBuildItemListLayout',
     'BplannerListLayout', 'BplannerListFilterView', 'BplannerListAnalyseView',
     'BplannerListSummaryView','BplannerListSummaryItem','BplannerMultieditView',
    

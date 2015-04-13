@@ -6,6 +6,42 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     idAttribute: "_id",
 
+    schema: {
+        slug:         {type: 'Text',      title: 'Asunto',                editorAttrs:{placeholder:'identificación del trámite'}},
+        description:  {type: 'TextArea',  title: 'Descripción ejecutiva del pedido'},
+        trequest:     {type: 'Select',    title: 'Tipo de requerimiento', editorAttrs:{placeholder:'Tipo de requerimiento'},options: utils.tipoBudgetMovimList },
+        freq:         {type: 'Number',    title: 'Frecuencia',            editorAttrs:{placeholder:'en unidades'}},
+        umefreq:      {type: 'Select',    title: 'Unidad de frecuencia',  editorAttrs:{placeholder:'unidad de frecuencia'},options: utils.umeFreqList },
+        cantidad:     {type: 'Number',    title: 'Cantidad',              editorAttrs:{placeholder:'en unidades'}},
+        ume:          {type: 'Select',    title: 'Unidad de medida',      editorAttrs:{placeholder:'unidad de medida'},options: utils.umeList },
+        fenecesidad:  {type: 'DatePicker', title: 'Fecha necesidad',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        importe:      {type: 'Number',    title: 'Costo de referencia',   editorAttrs:{placeholder:'en unidades'}},
+        cudap:        {type: 'Text',      title: 'CUDAP tramitación',     editorAttrs:{placeholder:'solicitud de trámite o expediente'}},
+        cgasto:       {type: 'Text',      title: 'Código de Gasto',       editorAttrs:{placeholder:'Cuenta - gasto'}},
+        presuprog:    {type: 'Text',      title: 'Fuente financiera',     editorAttrs:{placeholder:'Programa presupuestario + actividad'}},
+        presuinciso:  {type: 'Text',      title: 'Inciso / actividad',    editorAttrs:{placeholder:'Objeto del gasto - valor por omisión'}},
+        estado_alta:  {type: 'Select',      title: 'Estado de Alta',        editorAttrs:{placeholder:'estado de alta'},    options: utils.estadoAltaStramiteOpLst },
+        nivel_ejecucion: {type: 'Select',   title: 'Nivel de ejecución',    editorAttrs:{placeholder:'nivel de ejecución'},options: utils.nivelEjecucionStramiteOpLst },
+        nivel_importancia: {type: 'Select', title: 'Nivel de importancia',  editorAttrs:{placeholder:'nivel de importancia'},options: utils.nivelimportanciaOptionList },
+
+    },
+
+    getFieldLabel: function(field){
+      if(!(field in this.schema)) return '';
+      
+      if(this.schema[field].type === 'Select'){
+        var value = this.get(field);
+        if(value === 'no_definido' || value === "nodefinido") return '';
+        
+        var options = this.schema[field].options;
+        var selected = _.findWhere(options,{val:value});
+        return (selected)? selected.label : value;
+      }else{
+        return this.get(field);
+      }
+    },
+
+
     defaults: {
       _id: null,
 
@@ -44,11 +80,34 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
  
       nivel_ejecucion: "enevaluacion",
       estado_alta: "activo",
-      nivel_importancia: "media",
+      nivel_importancia: "medio",
       useralta: "",
       fealta: "",
       feultmod: "",
+      
+      itemheader:{
+        objeto: '',
+        justif: '',
+        freq: '',
+        umefreq: 'mes',
+        cantidad: '',
+        fedesde: '',
+        fehasta: '',
+      },
+
       items:[],
+    },
+
+    itemHeaderFactory: function(){
+      var self = this,
+          itemHeader = self.get('itemheader');
+
+      console.log('itemHeaderFactory: [%s]: [%s]',self.get('trequest'), utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['template'])
+  
+      if(utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['template'] === 'contratos') {
+        return new Entities.AdmRqstContratosHeader(itemHeader);
+      }
+
     },
 
     enabled_predicates:['es_relacion_de'],
@@ -99,20 +158,24 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       self.updateCurrentUsertData(user); 
     },
 
-    beforeSave: function(action, budget, user){
-      var self = this;
-      var fecha = new Date();
-      //console.log('initBefore SAVE')
-      if(!self.id || !self.get('feata')){
-        self.set({fealta:fecha.getTime()})
-        fecomp = utils.dateToStr(fecha);
+    beforeSave: function(){
+      var self = this,
+          fecha = new Date(),
+          fecomp;
+
+      if(!self.id || !self.get('fealta')){
+        self.set({
+          fealta: fecha.getTime(),
+          fecomp: utils.dateToStr(fecha)
+        });
       }
-      self.set({feultmod:fecha.getTime()})
-      console.log('********** Merde: T:[%s] ', self.get('trequest'));
+      self.set({feultmod:fecha.getTime()});
+      
+      console.log('BeforeSave: trequest:[%s] cgasto:[%s] ',self.get('trequest'), self.get('cgasto'));
+      console.log('utils: [%s]',utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest')))
+
       self.set('cgasto', utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['cgasto'] );
 
-      self.updateInheritData(action, budget);
-      self.updateCurrentUsertData(user);
     },
     
     
@@ -121,7 +184,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var self = this,
           errors;
  
-      self.beforeSave(action, budget, user);
+      self.beforeSave();
+      self.updateInheritData(action, budget);
+      self.updateCurrentUsertData(user);
  
       console.log('ready to SAVE');
       console.dir(self.attributes);
@@ -145,10 +210,40 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
         cb(self.validationError,null);
       }
-
-
     },
 
+    updateBasicData: function(user, cb){
+      console.log('[%s] UPDATE BASIC DATA:[%s]',this.whoami, this.get('slug'));
+      var self = this,
+          errors;
+ 
+      self.beforeSave();
+      self.updateCurrentUsertData(user);
+
+      if(!self.save(null, {
+        success: function(model){
+          cb(null,model);
+         }
+        })) 
+      {
+        cb(self.validationError,null);
+      }
+    },
+
+    updateItemHeader: function(user, facet, cb){
+      console.log('[%s] UPDATE BASIC DATA:[%s]',this.whoami, this.get('slug'));
+      var self = this,
+          facetattrs = facet.attributes,
+
+          facetData = {
+            itemheader: facetattrs
+          },
+          errors;
+
+
+      self.partialUpdate('content', facetData);
+      self.set('itemheader', facetattrs);
+    },
 
     partialUpdate: function(token, facet, list){
       //facet: es un model o un hash de claves
@@ -233,6 +328,139 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
   });
+
+/** 
+ *  ===============================================
+ *          Adminrequest CONTRATOS
+ *  ===============================================
+*/
+  Entities.AdmRqstContratosHeader = Backbone.Model.extend({
+    whoami: 'Entities.AdmRqstContratosHeader:adminrequest.js ',
+
+    idAttribute: "_id",
+
+    schema: {
+        objeto:   {type: 'TextArea',   title: 'Objeto de la contratación'},
+        justif:   {type: 'TextArea',   title: 'Justificación de la Necesidad'},
+        freq:     {type: 'Number',     title: 'Plazo',            editorAttrs:{placeholder:'en meses'}},
+        umefreq:  {type: 'Select',     title: 'Unidad de tiempo',  editorAttrs:{placeholder:'unidad de tiempo'},options: utils.umeFreqList },
+        cantidad: {type: 'Number',     title: 'Cantidad de contratos',  editorAttrs:{placeholder:'en unidades'}},
+        ume:      {type: 'Select',     title: 'Unidad de medida',  editorAttrs:{placeholder:'unidad de contrato'},options: utils.umeList },
+        fedesde:  {type: 'DatePicker', title: 'Fecha desde',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        fehasta:  {type: 'DatePicker', title: 'Fecha hasta',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        personas: {type: 'List',     temType: 'Text', title: 'Roles' },
+    
+    },
+
+    getFieldLabel: function(field){
+      if(!(field in this.schema)) return '';
+      
+      if(this.schema[field].type === 'Select'){
+        var value = this.get(field);
+        if(value === 'no_definido' || value === "nodefinido") return '';
+        
+        var options = this.schema[field].options;
+        var selected = _.findWhere(options,{val:value});
+        return (selected)? selected.label : value;
+      }else{
+        return this.get(field);
+      }
+    },
+
+
+    defaults: {
+      // datos basicos
+      objeto: '',
+      justif: '',
+      freq: '1',
+      umefreq: 'mes',
+      cantidad: '1',
+      ume: 'contrato',
+      fedesde: '',
+      fehasta: '',
+      personas: ['fulano', 'mengano' ],
+    },
+  });
+
+
+/** 
+ *  ===============================================
+ *          Adminrequest ITEM - CONTRATOS
+ *  ===============================================
+*/
+  Entities.AdmRqstContratosItem = Backbone.Model.extend({
+    whoami: 'Entities.AdmRqstContratosItem:adminrequest.js ',
+
+    idAttribute: "_id",
+
+    schema: {
+        person:   {type: 'Text',       title: 'Beneficiario'},
+        description: {type: 'TextArea',   title: 'Objeto contrato'},
+        justif:   {type: 'TextArea',   title: 'Justificación de la Necesidad'},
+        freq:     {type: 'Number',     title: 'Plazo',            editorAttrs:{placeholder:'en meses'}},
+        umefreq:  {type: 'Select',     title: 'Unidad de tiempo',  editorAttrs:{placeholder:'unidad de tiempo'},options: utils.umeFreqList },
+        cantidad: {type: 'Number',     title: 'Cantidad de contratos',  editorAttrs:{placeholder:'en unidades'}},
+        ume:      {type: 'Select',     title: 'Unidad de medida',  editorAttrs:{placeholder:'unidad de contrato'},options: utils.umeList },
+        punit:    {type: 'Number',     title: 'Costo/ honorario',  editorAttrs:{placeholder:'valor factura unitaria'}},
+
+        fedesde:  {type: 'DatePicker', title: 'Fecha desde',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        fehasta:  {type: 'DatePicker', title: 'Fecha hasta',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        estado_alta:     {type: 'Select',   title: 'Estado de Alta',        editorAttrs:{placeholder:'estado de alta'},    options: utils.estadoAltaStramiteOpLst },
+        nivel_ejecucion: {type: 'Select',   title: 'Nivel de ejecución',    editorAttrs:{placeholder:'nivel de ejecución'},options: utils.nivelEjecucionStramiteOpLst },
+    },
+
+    getFieldLabel: function(field){
+      if(!(field in this.schema)) return '';
+      
+      if(this.schema[field].type === 'Select'){
+        var value = this.get(field);
+        if(value === 'no_definido' || value === "nodefinido") return '';
+        
+        var options = this.schema[field].options;
+        var selected = _.findWhere(options,{val:value});
+        return (selected)? selected.label : value;
+      }else{
+        return this.get(field);
+      }
+    },
+
+
+    defaults: {
+      // datos basicos
+      description: '',
+      justif: '',
+      freq: 1,
+      umefreq: 'mes',
+      cantidad: 1,
+      ume: 'contrato',
+      punit: 0,
+      fedesde: '',
+      fehasta: '',
+      person: '',
+    },
+  });
+
+  Entities.AdmRqstContratosCol = Backbone.Collection.extend({
+    whoami: 'Entities.AdmRqstContratosCol:adminrequest.js ',
+    //url: "/navegar/tramitaciones",
+    model: Entities.AdmRqstContratosItem,
+    sortfield: 'person',
+    sortorder: -1,
+
+    comparator: function(left, right) {
+      var order = this.sortorder;
+      var l = left.get(this.sortfield);
+      var r = right.get(this.sortfield);
+
+      if (l === void 0) return -1 * order;
+      if (r === void 0) return 1 * order;
+
+      return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    },
+
+
+  });
+
 
 
   Entities.AdminrequestPlanningCollection = Backbone.Collection.extend({
@@ -576,7 +804,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           origenpresu:  {type: 'Select',    title: 'Origen presupuesto', editorAttrs:{placeholder:'fuente presupuestaria'},options: utils.admrqstOriginList },
           tramita:      {type: 'Select',    title: 'Tramitación',  editorAttrs:{placeholder:'unidad ejecutora'},options: utils.admrqstTramitaPorList },
           description:  {type: 'TextArea',  title: 'Descripción ejecutiva'},
-          presuprog:    {type: 'Text',      title: 'Programa presupuestrio',  editorAttrs:{placeholder:'fuente de crédito presupuestario'}},
+          presuprog:    {type: 'Text',      title: 'Programa presupuestario',  editorAttrs:{placeholder:'fuente de crédito presupuestario'}},
           presuinciso:  {type: 'Text',      title: 'Inciso / actividad',  editorAttrs:{placeholder:'fuente de crédito presupuestario'}},
 
           isdetallado:  {type: 'Number',    title: 'Presupuesto Detallado? (1/0)',  editorAttrs:{placeholder:'1: Detallado - 0: Costo total informado manualmente'}},

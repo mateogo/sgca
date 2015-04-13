@@ -1,0 +1,43 @@
+<div class="row hidden-print">
+    <div class="col-xs-12 text-right">
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default active js-itemheaderview" ><i class="glyphicon glyphicon glyphicon-blackboard"></i>Vista</button>
+          <button type="button" class="btn btn-default js-itemheaderedit"><i class="glyphicon glyphicon-pencil"></i> Edición</button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-info">Objeto</h3>
+        <div class="well" style="overflow-y:auto">
+            <p><label>Objeto del contrato:</label> <%= getFieldLabel('objeto')%></p>
+            <p><label>Justificación de necesidad:</label> <%= getFieldLabel('justif')%></p>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <h3  class="text-info">Detalle</h3>
+        <div >
+            <table class="table table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th><span  class="text-center">Plazo</span></th>
+                        <th><span  class="text-center">Cant de contratos</span></th>
+                        <th><span  class="text-center">Desde</span></th>
+                        <th><span  class="text-center">Hasta</span></th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span  class="text-center"><%= getFieldLabel('freq')%> (<%= getFieldLabel('umefreq')%>)</span></td>
+                        <td><span  class="text-center"><%= getFieldLabel('cantidad')%> (<%= getFieldLabel('ume')%>)</span></td>
+                        <td><span  class="text-center"><%= formatDate(getFieldLabel('fedesde'))%></span></td>
+                        <td><span  class="text-center"><%= formatDate(getFieldLabel('fehasta'))%></span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div> 
+
+

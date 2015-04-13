@@ -160,6 +160,28 @@ window.utils = {
         });
         return nodes;
     },
+    estadoAltaStramiteOpLst:[
+        {val:'activo',       label:'activo'},
+        {val:'distribucion', label:'activo p/distribución'},
+        {val:'suspendido',   label:'suspendido'},
+        {val:'cerrado',      label:'cerrado'},
+        {val:'baja',         label:'baja'},
+    ],
+
+    nivelEjecucionStramiteOpLst:[
+        {val:'no_definido'   , label:'Nivel de ejecución', classattr:'info'},
+        {val:'enpreparacion' , label:'en preparación',     classattr:'info'},
+        {val:'enevaluacion'  , label:'en evaluacion',      classattr:'info'},
+        {val:'aprobarea'     , label:'aprob Area',         classattr:'info'},
+        {val:'aprobnodo'     , label:'aprob Nodo',         classattr:'warning'},
+        {val:'aprobdga'      , label:'aprob DGA',          classattr:'success'},
+        {val:'aprobum'       , label:'aprob UM',           classattr:'warning'},
+        {val:'enejecucion'   , label:'en ejecución',       classattr:'danger'},
+        {val:'terminada'     , label:'terminada',          classattr:'info'},
+        {val:'suspendido'    , label:'suspendida',         classattr:'danger'},
+        {val:'cerrado'       , label:'cerrado',            classattr:'danger'},
+        {val:'archivo'       , label:'archivado',          classattr:'info'}
+    ],
 
     budgetPlannerType: [
         {val:'no_definido' , label:'no definido'},
@@ -200,7 +222,7 @@ window.utils = {
         {val:'global',           cgasto:'100.000',  template:'tecnica',   label:'Global'},
         {val:'artistica',        cgasto:'101.000',  template:'artistica', label:'Artística'},
         {val:'tecnica',          cgasto:'105.000',  template:'tecnica',   label:'Técnica'},
-        {val:'contratos',        cgasto:'111.000',  template:'tecnica',   label:'Contratos'},
+        {val:'contratos',        cgasto:'111.000',  template:'contratos',   label:'Contratos'},
         {val:'logistica',        cgasto:'115.000',  template:'tecnica',   label:'Logística'},
         {val:'difusion',         cgasto:'121.000',  template:'tecnica',   label:'Difusión'},
         {val:'impresiones',      cgasto:'125.000',  template:'tecnica',   label:'Impresiones'},

@@ -4,14 +4,20 @@ DocManager.module("AdminrequestsApp", function(AdminrequestsApp, DocManager, Bac
     appRoutes: {
       "tramitaciones(/filter/criterion::criterion)": "ListActivities",
       "tramitaciones/informe": "reportActivities",
-      "tramitaciones/:id/edit": "editActivity",
+      "tramitaciones/:id/edit": "editActivities",
       "tramitaciones/:id": "showActivity",
+      "stramite/:id": "editActivity",
     }
   });
 
   var API = {
     editActivity: function(id){
-      console.log('API: edit actividad', id)
+      console.log('API: edit actividad [%s]', id)
+      AdminrequestsApp.Build.Controller.showResume(id);
+      //DocManager.execute("set:active:header", "actividades");
+    },
+    editActivities: function(id){
+      console.log('API: edit actividades Action Id: [%s]', id)
       AdminrequestsApp.Edit.Controller.editActivity(id);
       //DocManager.execute("set:active:header", "actividades");
     },
@@ -62,7 +68,7 @@ DocManager.module("AdminrequestsApp", function(AdminrequestsApp, DocManager, Bac
     // model is parent ACTION
     var entityid = model.id;
     DocManager.navigate("tramitaciones/" + entityid + "/edit");
-    API.editActivity(entityid);
+    API.editActivities(entityid);
   });
 
   DocManager.addInitializer(function(){
