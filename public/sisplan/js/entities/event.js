@@ -10,9 +10,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           
           if(opts.artactivity && this.isNew()){
             var activity = opts.artactivity;  
+            
+            this.set('headline',activity.slug);
             this.set('fdesde',activity.fdesde);
             this.set('fhasta',activity.fhasta);
             this.set('leyendafecha',activity.leyendafecha);
+            this.set('estado_alta',activity.estado_alta);
+            this.set('nivel_ejecucion',activity.nivel_ejecucion);
+            this.set('nivel_importancia',activity.nivel_importancia);
             
             if(!(opts.artactivity instanceof Entities.ArtActivity)){
               opts.artactivity = new Entities.ArtActivity(opts.artactivity);
@@ -36,9 +41,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           nivel_importancia: null,
           obs: '',
           
-          area: '',
-          locacion: '',
-          espacio: '',
+          location: '',
+          local: '',
+          localleyenda: '',
           
           ftype: '', // tipo de fecha (puntual, fecha-hasta,repeticion)
           fdesde: null, //fecha y hora
@@ -61,9 +66,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           nivel_ejecucion: {type:'Select',title:'Nivel ejecución',options:utils.actionEjecucionOptionList},
           nivel_importancia: {type:'Select',title:'Importancia',options:utils.actionPrioridadOptionList},
           obs: {type:'TextArea',title:'Observaciones'},
-          area: {type:'Select',title:'Area',options:utils.actionAreasOptionList},
-          location: {type:'Text',title:'Locación'},
-          espacio: {type:'Text',title:'Espacio'},
+          location: {type:'SelectRequest',title:'Locación',
+                      request:'action:fetch:location',fieldLabel:'name',fieldVal:'nickName'
+                    },
+          local: {type:'Select',title:'Local',options:utils.localList},
+          localleyenda: {title:'Leyenda-Local'},
           
           content: {type:'RichText',title:'Contenido'},
           artists: {type:'TextArea',title:'Artistas'},

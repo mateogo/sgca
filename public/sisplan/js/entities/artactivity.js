@@ -4,6 +4,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         urlRoot: "/artactividades",
         whoami: 'artactivity:backboneModel ',
         idAttribute: "_id",
+        
+        initialize: function(opts){
+          if(opts.action){
+            this.set('slug',opts.action.slug);
+            this.set('fdesde',opts.action.feaccion);
+            this.set('fhasta',opts.action.feaccion);
+          }
+        },
 
         defaults: {
           cnumber: null,
@@ -19,6 +27,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           fecomp: '',
           locacion: '',
           local: '',
+          localleyenda: '',
           airelibre: false,
           provevento: '',
           locevento: '',
@@ -47,9 +56,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           fdesde: {type:'DatePicker',title:'Fecha desde'},
           fhasta:  {type:'DatePicker',title:'Fecha hasta'},
           leyendafecha:  {type:'Text',title:'Leyenda-Fecha'},
-          locacion: {type:'Select',title:'Locación',options:utils.actionNodosOptionList},
+            locacion: {type:'SelectRequest',title:'Locación',request:'action:fetch:location',fieldLabel:'name',fieldVal:'nickName'},
           airelibre: {type:'Checkbox',title:'Aire Libre'},
           local: {type:'Select',title:'Local',options:utils.localList},
+          localleyenda: {title:'Leyenda-Local'},
           provevento: {type:'Select',title:'Provincia',options:utils.provinciasOptionList.Argentina},
           locevento: {type:'Text',title:'Localidad'},
           cevento: {type:'Text',title:'Código Postal'},

@@ -525,6 +525,25 @@ exports.fetchActionBudgetCol = function(req, res){
         });
     });
 };
+
+exports.fetchActionLocations = function(req,res){
+  var query = req.body;
+  console.log('fetchActionLocations',query);
+  if(!query.action_id){
+    res.send([]);
+    return;
+  }
+  query = {_id: new BSON.ObjectID(query.action_id)};
+  dbi.collection(actionsCol).find(query).sort({cnumber:1}).toArray(function(err, actItems) {
+    if(actItems && actItems.length > 0){
+      res.send(actItems[0].locations);  
+    }else{
+      res.send([]);
+    }
+  });
+};
+
+
 var buildQuery = function(qr){
     var query = {}; 
     if(!qr) return query;

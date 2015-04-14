@@ -28,7 +28,8 @@ DocManager.module("ActionsApp.Common.Views", function(Views, DocManager, Backbon
       "click .js-newactivity": "newactivity",
       "click .js-newparticipant": "newparticipant",
       "click .js-newlocation": "newlocation",
-      "click .js-newartactivity": "newartactivity"
+      "click .js-newartactivity": "newartactivity",
+      "click .js-showartactivity": "showartactivity",
     },
 
     triggers: {
@@ -49,6 +50,12 @@ DocManager.module("ActionsApp.Common.Views", function(Views, DocManager, Backbon
     newartactivity: function(e){
       e.preventDefault();
       this.trigger('artactivity:new');
+      return false;
+    },
+    
+    showartactivity: function(e){
+      e.preventDefault();
+      this.trigger('artactivity:showByAction');
       return false;
     },
 

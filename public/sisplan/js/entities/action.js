@@ -1284,6 +1284,32 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           dataType: "json",
           data: {address: addressStr}
       });
+    },
+    
+    fetchLocations: function(query,queryString){
+      var defer = $.Deferred();
+      
+      if(query instanceof Entities.ArtActivity){
+        query = {action_id: query.get('action_id')};
+      }else if(query instanceof Entities.Event){
+        query = {action_id: query.get('artactivity').get('action_id')};
+      }
+      
+      if(query.toJSON){
+        query = query.toJSON();
+      }
+      
+      $.ajax({
+        data: query,
+        type: 'post',
+        url: "/actionlocations/fetch",
+
+        success: function(data){
+          defer.resolve(data);
+        }
+      });
+      
+      return defer.promise();
     }
 
   };
@@ -1335,6 +1361,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   
   DocManager.reqres.setHandler("app:geocode", function(addressString){
     return API.geocode(addressString);
+  });
+  
+  DocManager.reqres.setHandler("action:fetch:location", function(model, opt, cb){
+    return API.fetchLocations(model, opt, cb);
   });
 
 });

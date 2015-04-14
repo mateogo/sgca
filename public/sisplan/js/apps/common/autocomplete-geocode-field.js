@@ -25,7 +25,7 @@
  */
 DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
   
-  App.View = {};
+  if(!App.View) App.View = {};
   
   App.View.AutoCompleteGeocodeField = Marionette.ItemView.extend({
         initialize: function(opts){

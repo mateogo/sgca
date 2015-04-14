@@ -216,6 +216,7 @@ module.exports = function (config, app) {
 
     var action = require(rootPath + '/calendar/controllers/actions');
     app.post('/actionbudget/fetch',  action.fetchActionBudgetCol);
+    app.post('/actionlocations/fetch',  action.fetchActionLocations);
     app.post('/actualizar/acciones', action.partialupdate);
     app.get ('/acciones',            action.findAll);
     app.post('/recuperar/acciones',  action.find);

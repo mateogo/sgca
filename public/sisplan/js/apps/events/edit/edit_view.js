@@ -29,6 +29,8 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
         template: utils.templates.EventEditForm
       });
       
+      this.autoFillLocalLeyenda = !(model.get('localleyenda'));
+      
       Marionette.ItemView.prototype.initialize.apply(this,arguments);
     },
     getTemplate: function(){
@@ -48,6 +50,14 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
       
       this.validateFechaType();
       this.validateDates();
+    },
+    
+    validateLocation: function(){
+      var locacionSelected = this.$el.find('[name=location]').val();
+      var subOptions = _.where(utils.localList,{locacion:locacionSelected});
+      if(subOptions){
+        this.form.fields.local.editor.setOptions(subOptions);
+      }
     },
     
     validateFechaType: function(){
@@ -166,7 +176,10 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
        'click .js-cleardates': 'onClearDates',
        'click .js-save': 'onSave',
        'click .js-cancel': 'onCancel',
-       'click .js-removedate': 'onRemoveDate'
+       'click .js-removedate': 'onRemoveDate',
+       'change [name=location]': 'onChangeLocation',
+       'change [name=local]': 'onChangeLocal',
+       'keyup [name=localleyenda]': 'onKeyUpLocalLeyenda'
     },
     
     onChangeFType: function(e){
@@ -187,6 +200,23 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
         self.datesCollection.reset([]);
         self.model.set('dates',[]);
       });
+    },
+    
+    onChangeLocation: function(e){
+      this.validateLocation();
+    },
+    
+    onChangeLocal: function(e){
+      var value = this.$el.find('[name=local] option:selected').text();
+      var fieldBind = this.$el.find('[name=localleyenda]');
+      if(this.autoFillLocalLeyenda){
+        fieldBind.val(value);
+      }
+    },
+    
+    onKeyUpLocalLeyenda: function(e){
+      var value = $(e.currentTarget).val();
+      this.autoFillLocalLeyenda = value == '';
     },
     
     onSave: function(){

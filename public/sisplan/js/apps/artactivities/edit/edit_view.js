@@ -36,6 +36,9 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
       if(opts.tab){
         this.selectedTab = opts.tab;
       }
+      if(this.model.isNew()){
+        this.disabledSubTabs = true;
+      }
       Marionette.ItemView.prototype.initialize.apply(this,arguments);
     },
     getTemplate: function(){
@@ -44,6 +47,11 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
     onRender: function(){
       if(this.selectedTab){
         this.selectTab(this.selectedTab);
+      }
+      if(this.disabledSubTabs){
+        this.$el.find('#navbar-region li').addClass('disabled');
+      }else{
+        this.$el.find('#navbar-region li').removeClass('disabled');
       }
     },
     events: {
@@ -61,21 +69,29 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
     },
     
     notYet: function(){
+      if(this.disabledSubTabs) return;
+      
       Message.info('Disponible proximamente');
     },
     
     openResumeClicked: function(e){
       e.stopPropagation();
+      if(this.disabledSubTabs) return;
+      
       DocManager.trigger('artActivity:edit',this.model);
     },
     
     openEventClicked: function(e){
       e.stopPropagation();
+      if(this.disabledSubTabs) return;
+      
       DocManager.trigger('events:list',this.model);
     },
     
     openAssetsClicked: function(e){
       e.stopPropagation();
+      if(this.disabledSubTabs) return;
+      
       DocManager.trigger('artActivity:assets',this.model);
     }
   });
@@ -101,10 +117,19 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
     tagName: 'div',
     initialize: function(opts){
       this.originalModel = _.clone(opts.model);
+      this.autoFillLocalLeyenda = !(opts.model.get('localleyenda'));
     },
     getTemplate: function(){
       return utils.templates.ArtActivityEditBasicView;
     },
+    
+    onBeforeDestroy: function(){
+      if(this.autoCompleteLocation){
+        this.autoCompleteLocation.destroy();
+        this.autoCompleteLocation =  null;
+      }
+    },
+    
     onRender: function(){
       console.log(this.model);
       this.form = new Backbone.Form({
@@ -119,6 +144,12 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
       
       this.validateSubRubroSelect();
       this.validateLocacion();
+      this.initAutoComplete();
+    },
+    
+    initAutoComplete: function(){
+      var $input = this.$el.find('[name=locacion]');
+      //this.autoCompleteLocation = new App.View.AutoCompleteActionLocationField({el:$input});
     },
     
     validateSubRubroSelect: function(){
@@ -145,7 +176,9 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
       'click .js-save': 'onSave',
       'click .js-cancel': 'onCancel',
       'change [name=rubro]': 'onChangeRubro',
-      'change [name=locacion]': 'onChangeLocacion' 
+      'change [name=locacion]': 'onChangeLocacion',
+      'change [name=local]': 'onChangeLocal',
+      'keyup [name=localleyenda]': 'onKeyUpLocalLeyenda'
     },
     
     onChangeRubro: function(){
@@ -156,6 +189,18 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
       this.validateLocacion();
     },
     
+    onChangeLocal: function(e){
+      var value = this.$el.find('[name=local] option:selected').text();
+      var fieldBind = this.$el.find('[name=localleyenda]');
+      if(this.autoFillLocalLeyenda){
+        fieldBind.val(value);
+      }
+    },
+    
+    onKeyUpLocalLeyenda: function(e){
+      var value = $(e.currentTarget).val();
+      this.autoFillLocalLeyenda = value == '';
+    },
     
     onSave: function(){
       var errors = this.form.commit();
