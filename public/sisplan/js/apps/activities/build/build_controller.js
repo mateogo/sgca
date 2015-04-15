@@ -107,6 +107,12 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
       createItemHeaderEditor();
 
     });
+    layout.on('request:item:edit', function(item){
+          console.log('item EDIT BUBBLED[%s] ', item.get('description'));
+          createItemEditor(item);
+
+    });
+
     DocManager.mainRegion.show(layout);
   };
 
@@ -205,31 +211,82 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
       createItemHeaderView();      
     });
 
+    view.on('generate:items:editor', function(model, cb){
+      console.log('SAVE & GENERATE ItemHeaderEditor Bubbled [%s]', model.get('objeto'));
+      session.model.updateItemHeader(session.currentUser, model);
+      buildItemList(model);
+      createItemHeaderView();      
+    });
+
     session.views.layout.getRegion('itemheaderRegion').show(view);
   };
 
 
   // *********** ITEM-HEADER: cabecera para controlar/ generar el detalle de la tramitación
   // ***********  Vista - edición
+  var buildItemList = function(facet){
+    getSession().model.itemListGenerateItems(facet);
+    createItemList();
+  };
+
   var createItemList = function(){
     var session = getSession();
     var layout = Build.Session.views.layout;
     var itemlist = session.model.itemListFactory();
+    session.itemscol = itemlist;
     
+    var listLayout = new Build.ItemListLayout({model: itemlist});
+    session.views.itemlist = listLayout;
+
+    registerItemHeaderListEvents(session, listLayout, itemlist);
+  };
+
+  var registerItemHeaderListEvents = function(session, itemlayout, itemlist){
+    console.log('RegisterItemHeader: itemlist:[%s]', itemlist.length)
     var table = Build.itemsGridCreator(itemlist);
     var filter = Build.filterCreator(itemlist);
+    itemlayout.on('tableRegion:request:item:edit', function(item){
+          console.log('item EDIT BUBBLED[%s] ', item.get('persona'));
 
+    });
 
-    var listLayout = new Build.ItemListLayout({model: itemlist});
-    listLayout.getRegion('tableRegion').show(table);
-    listLayout.getRegion('filterRegion').show(filter);
+    table.on('request:item:edit', function(item){
+          console.log('item-table EDIT BUBBLED[%s] ', item.get('persona'));
 
-    session.views.itemlist = listLayout;
-    registerItemHeaderViewEvents(session, listLayout);
+    });
+
+    session.views.layout.getRegion('itemsRegion').show(itemlayout);
+    itemlayout.getRegion('tableRegion').show(table);
+    itemlayout.getRegion('filterRegion').show(filter);
+
   };
-  var registerItemHeaderViewEvents = function(session, view){
-    session.views.layout.getRegion('itemsRegion').show(view);
 
+  // ********** ITEM EDITOR
+  var createItemEditor = function(model){
+    var session = getSession();
+    console.log('0')
+    var editor = new Build.ItemEditor({model: model});
+
+    console.log('1')
+    registerItemEditorEvents(session, editor);
+    console.log('2')
+
+    session.views.layout.getRegion('itemsRegion').show(editor);
+  };
+
+  var registerItemEditorEvents = function(session, editor){
+     console.log('3')
+   editor.on('cancel:item:editor', function(){
+      console.log('CancelItemEditor Bubbled')
+      createItemList();
+    });
+    console.log('4')
+
+    editor.on('save:item:editor', function(itemmodel, cb){
+      console.log('SAVE ItemEditor Bubbled')
+      session.model.updateItemData(session.itemscol, itemmodel);
+      createItemList();
+    });
   };
 
 

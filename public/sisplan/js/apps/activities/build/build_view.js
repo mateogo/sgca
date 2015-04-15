@@ -297,8 +297,19 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     events: {
       'click .js-save': 'onSave',
       'click .js-cancel': 'onCancel',
+      'click .js-itemgenerator': 'onGenerateItems',
     },
     
+    onGenerateItems: function(){
+      var errors = this.form.commit(),
+          self = this;
+
+      if(!errors){
+        self.trigger('generate:items:editor', self.model, function(error){
+          Message.error('Ops! Hay errores en el formulario');
+        });
+      }
+    },
     
     onSave: function(){
       var errors = this.form.commit(),
@@ -356,14 +367,18 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
          return this;
       },
       events: {
-          'click button.js-edit': 'editClicked',
-          'click button.js-trash': 'trashClicked',
+          'click button.js-requestedit': 'editClicked',
+          'click button.js-requesttrash': 'trashClicked',
       },
         
       editClicked: function(e){
           e.stopPropagation();e.preventDefault();
-          //this.trigger('participant:edit',this.model);
-          //DocManager.trigger('participant:edit',participantsApp.Model.selectedAction,this.model);
+          console.log('item EDIT [%s] ', this.model.get('description'));
+
+          //this.model.trigger('request:item:edit');
+          //this.trigger('request:item:edit',this.model);
+
+          Build.Session.views.layout.trigger('request:item:edit',this.model);
       },
         
       trashClicked: function(e){
@@ -379,7 +394,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
           className: 'table table-condensed table-bordered table-hover',
           collection: collection,
           columns: [
-                    {name: 'person',label: 'Tramitación',cell: 'string',editable:false},
+                    {name: 'person',label: 'Beneficiario',cell: 'string',editable:false},
                     {name: 'slug',label: 'Descripción',cell: 'string',editable:false},
                     {name: 'freq',label: 'Cantidad',cell: 'number',editable:false},
                     {name: 'punit',label: 'Importe',cell: 'number',editable:false},
@@ -397,7 +412,62 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
         });
   };
 
-  
+  Build.ItemEditor = Marionette.ItemView.extend({
+    tagName: 'div',
 
+    initialize: function(opts){
+      this.originalModel = _.clone(opts.model);
+    },
+
+    getTemplate: function(){
+      return utils.templates.StramiteBuildItemEdit;
+    },
+
+    onRender: function(){
+      console.log('[%s] [%s]', this.model.get('person'), this.model.whoami);
+      this.form = new Backbone.Form({
+        model: this.model,
+        template: utils.templates.StramiteBuildItemForm
+      });
+      this.form.render();
+      this.$el.find('#formContainer').html(this.form.el);
+      //this.validateSubRubroSelect();
+      //this.validateLocacion();
+    },
+    
+    
+    done: function(){
+      Build.Controller.showResume(this.model);
+    },
+    
+    events: {
+      'click .js-save': 'onSave',
+      'click .js-cancel': 'onCancel',
+    },
+    
+    
+    onSave: function(){
+      var errors = this.form.commit(),
+          self = this;
+      
+      if(!errors){
+        self.trigger('save:item:editor', self.model, function(error){
+          Message.error('Ops! no se pudo guardar');
+        });
+      }
+    },
+    
+    onCancel: function(){
+      // if(this.model.isNew()){
+      //   DocManager.navigateBack();  
+      // }else{
+      //   Build.Controller.showResume(this.model);
+      // }
+      console.log('Cancel CLICKED')
+      this.trigger('cancel:item:editor');
+    }
+    
+  });
+  
   
 });

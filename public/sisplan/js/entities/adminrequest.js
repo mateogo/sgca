@@ -98,6 +98,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       items:[],
     },
 
+    itemListFactory: function(){
+      var self = this,
+          items = self.get('items');
+
+      console.log('itemsFactory: [%s]',items.length);
+
+      if(utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['template'] === 'contratos') {
+        return new Entities.AdmRqstContratosCol(items);
+      }
+
+    },
+
     itemHeaderFactory: function(){
       var self = this,
           itemHeader = self.get('itemheader');
@@ -108,6 +120,48 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         return new Entities.AdmRqstContratosHeader(itemHeader);
       }
 
+    },
+
+    itemListGenerateItems: function(facet){
+      var self = this,
+          items = self.get('items'),
+          renglones,
+          personlist,
+          itemsCol,
+          beneficiario,
+          newitem;
+
+      if(utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['template'] === 'contratos') {
+        itemsCol = new Entities.AdmRqstContratosCol(items);
+        renglones = facet.get('cantidad');
+        personlist = facet.get('personas');
+        for (var i = renglones - 1; i >= 0; i--) {
+          if (i > personlist.length) {
+            beneficiario = 'a definir';
+          } else{
+            beneficiario = personlist[i];
+          };
+          newitem = new Entities.AdmRqstContratosItem({
+            slug: 'Contrato locación de obra',
+            description: facet.get('objeto'),
+            justif: facet.get('justif'),
+            freq: facet.get('freq'),
+            umefreq: facet.get('umefreq'),
+            cantidad: 1,
+            ume: facet.get('ume'),
+            punit: 0,
+            fedesde: facet.get('fedesde'),
+            fehasta: facet.get('fehasta'),
+            person: beneficiario,
+          })
+          itemsCol.add(newitem);
+
+        };
+
+
+      }
+      self.set('items', itemsCol.toJSON());
+      return itemsCol;
     },
 
     enabled_predicates:['es_relacion_de'],
@@ -245,6 +299,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       self.set('itemheader', facetattrs);
     },
 
+    updateItemData: function(col, model){
+      console.log('[%s] UPDATE ITEM DATA:[%s]',model.whoami,  model.get('slug'));
+      var self = this,
+          itemcol = col.toJSON(),
+
+          facetData = {
+            items: itemcol
+          },
+          errors;
+
+
+      self.partialUpdate('content', facetData);
+      self.set('items', itemcol);
+    },
+
     partialUpdate: function(token, facet, list){
       //facet: es un model o un hash de claves
       //token: 'content': toma las keys directamente de facet
@@ -348,7 +417,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         ume:      {type: 'Select',     title: 'Unidad de medida',  editorAttrs:{placeholder:'unidad de contrato'},options: utils.umeList },
         fedesde:  {type: 'DatePicker', title: 'Fecha desde',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
         fehasta:  {type: 'DatePicker', title: 'Fecha hasta',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
-        personas: {type: 'List',     temType: 'Text', title: 'Roles' },
+        personas: {type: 'List',       title: 'Beneficiarios',     temType: 'Text' },
     
     },
 
@@ -395,6 +464,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     schema: {
         person:   {type: 'Text',       title: 'Beneficiario'},
+        slug:   {type: 'Text',       title: 'Asunto'},
         description: {type: 'TextArea',   title: 'Objeto contrato'},
         justif:   {type: 'TextArea',   title: 'Justificación de la Necesidad'},
         freq:     {type: 'Number',     title: 'Plazo',            editorAttrs:{placeholder:'en meses'}},
@@ -426,7 +496,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
     defaults: {
-      // datos basicos
+      slug: '',
       description: '',
       justif: '',
       freq: 1,
