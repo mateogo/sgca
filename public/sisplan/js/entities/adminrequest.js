@@ -110,13 +110,20 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
-    itemHeaderFactory: function(){
+    itemHeaderFactory: function(action){
       var self = this,
           itemHeader = self.get('itemheader');
 
       console.log('itemHeaderFactory: [%s]: [%s]',self.get('trequest'), utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['template'])
   
       if(utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['template'] === 'contratos') {
+        console.log('itemHeaderFactory: ACTION:[%s] [%s] [%s] [%s]', action.whoami, action.get('slug'), action.participants.length, action.participants.at(0).whoami);
+
+        itemHeader.personas = action.participants.map(function (person){
+          console.log('mapping: [%s]', person.whoami)
+          return person.get('nickName');
+        });
+        console.log('itemHeader: [%s]: [%s]', itemHeader.personas.length, itemHeader.personas[0])
         return new Entities.AdmRqstContratosHeader(itemHeader);
       }
 
@@ -403,6 +410,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
  *          Adminrequest CONTRATOS
  *  ===============================================
 */
+  var personToPrint = function(person){
+    return person.nickName;
+  };
+
   Entities.AdmRqstContratosHeader = Backbone.Model.extend({
     whoami: 'Entities.AdmRqstContratosHeader:adminrequest.js ',
 
@@ -417,9 +428,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         ume:      {type: 'Select',     title: 'Unidad de medida',  editorAttrs:{placeholder:'unidad de contrato'},options: utils.umeList },
         fedesde:  {type: 'DatePicker', title: 'Fecha desde',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
         fehasta:  {type: 'DatePicker', title: 'Fecha hasta',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
-        personas: {type: 'List',       title: 'Beneficiarios',     temType: 'Text' },
+        personas: {type: 'List',       title: 'Beneficiarios',    itemType: 'Text'}
     
     },
+    //itemToString: personToPrint,subSchema: {nickName: 'Nombre'} },
 
     getFieldLabel: function(field){
       if(!(field in this.schema)) return '';
@@ -468,9 +480,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         description: {type: 'TextArea',   title: 'Objeto contrato'},
         justif:   {type: 'TextArea',   title: 'Justificación de la Necesidad'},
         freq:     {type: 'Number',     title: 'Plazo',            editorAttrs:{placeholder:'en meses'}},
-        umefreq:  {type: 'Select',     title: 'Unidad de tiempo',  editorAttrs:{placeholder:'unidad de tiempo'},options: utils.umeFreqList },
-        cantidad: {type: 'Number',     title: 'Cantidad de contratos',  editorAttrs:{placeholder:'en unidades'}},
-        ume:      {type: 'Select',     title: 'Unidad de medida',  editorAttrs:{placeholder:'unidad de contrato'},options: utils.umeList },
+        umefreq:  {type: 'Select',     title: 'Unidad',  editorAttrs:{placeholder:'unidad de tiempo'},options: utils.umeFreqList },
+        cantidad: {type: 'Number',     title: 'Contratos',  editorAttrs:{placeholder:'en unidades'}},
+        ume:      {type: 'Select',     title: 'Unidad',  editorAttrs:{placeholder:'unidad de contrato'},options: utils.umeList },
         punit:    {type: 'Number',     title: 'Costo/ honorario',  editorAttrs:{placeholder:'valor factura unitaria'}},
 
         fedesde:  {type: 'DatePicker', title: 'Fecha desde',       editorAttrs:{placeholder:'dd/mm/aaaa'}},

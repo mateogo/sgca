@@ -254,14 +254,15 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
          return this;
       },
       events: {
-          'click button.js-edit': 'editClicked',
-          'click button.js-trash': 'trashClicked',
+          'click button.js-requestedit': 'editClicked',
+          'click button.js-requesttrash': 'trashClicked',
       },
         
       editClicked: function(e){
           e.stopPropagation();e.preventDefault();
+          console.log('********** EDIT CLICKED ************')
+          DocManager.trigger('request:edit',this.model);
           //this.trigger('participant:edit',this.model);
-          //DocManager.trigger('participant:edit',participantsApp.Model.selectedAction,this.model);
       },
         
       trashClicked: function(e){

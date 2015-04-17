@@ -176,13 +176,12 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
 
   };
 
-
   // *********** ITEM-HEADER: cabecera para controlar/ generar el detalle de la tramitación
   // ***********  Vista - edición
   var createItemHeaderView = function(){
     var session = getSession();
     var layout = Build.Session.views.layout;
-    var view = new Build.ItemHeaderView({model:session.model.itemHeaderFactory()});
+    var view = new Build.ItemHeaderView({model:session.model.itemHeaderFactory(session.currentAction)});
     session.views.itemHeader = view;
     registerItemHeaderViewEvents(session, view);
   };
@@ -194,7 +193,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
   var createItemHeaderEditor = function(){
     var session = getSession();
     var layout = Build.Session.views.layout;
-    var view = new Build.ItemHeaderEditor({model:session.model.itemHeaderFactory()});
+    var view = new Build.ItemHeaderEditor({model:session.model.itemHeaderFactory(session.currentAction)});
     session.views.itemHeader = view;
     registerItemHeaderEvents(session, view);
   };
@@ -222,7 +221,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
   };
 
 
-  // *********** ITEM-HEADER: cabecera para controlar/ generar el detalle de la tramitación
+  // *********** ITEM-LIST: Lista detalle
   // ***********  Vista - edición
   var buildItemList = function(facet){
     getSession().model.itemListGenerateItems(facet);
@@ -264,12 +263,9 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
   // ********** ITEM EDITOR
   var createItemEditor = function(model){
     var session = getSession();
-    console.log('0')
     var editor = new Build.ItemEditor({model: model});
 
-    console.log('1')
     registerItemEditorEvents(session, editor);
-    console.log('2')
 
     session.views.layout.getRegion('itemsRegion').show(editor);
   };
@@ -280,7 +276,6 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
       console.log('CancelItemEditor Bubbled')
       createItemList();
     });
-    console.log('4')
 
     editor.on('save:item:editor', function(itemmodel, cb){
       console.log('SAVE ItemEditor Bubbled')

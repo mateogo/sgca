@@ -44,7 +44,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     enabled_predicates:['es_relacion_de'],
     
-    parse: function(data,options){
+    parse: function(data, options){
       if(!this.participants){
         this.participants = new Backbone.Collection(data.participants);
       }
@@ -60,7 +60,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return data;
     },
     
-    _initSubCollection: function(data,collectionKey,Entity){
+    _initSubCollection: function(data, collectionKey, Entity){
       var collection = data[collectionKey];
       if(collection){
         for ( var i = 0; i < collection.length; i++) {

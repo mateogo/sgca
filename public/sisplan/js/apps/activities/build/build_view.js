@@ -14,7 +14,14 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     events: {
       'click .js-basicedit':'onClickBaseBuild',
       'click .js-itemheaderedit':'onClickItemHeaderEdit',
+      'click .js-tramitaciones':'onClickReturnToTramitaciones',
+
       
+    },
+    onClickReturnToTramitaciones: function(){
+      console.log('Click retornar a tramitaciones')
+      DocManager.trigger('activity:edit', Build.Session.currentAction);
+
     },
     onClickBaseBuild: function(){
       console.log('Click basicEdit')
@@ -286,11 +293,18 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
 
     onRender: function(){
       console.log(this.model);
+      Backbone.Form.editors.List.Modal.ModalAdapter = Backbone.BootstrapModal;
+
       this.form = new Backbone.Form({
         model: this.model,
         //template: utils.templates.StramiteBuildBasicEditorForm
       });
       this.form.render();
+
+      this.form.on('add', function(listEditor, itemEditor) {
+          console.log('Add triggered ' + itemEditor.getValue());
+      });
+
       this.$el.find('#formContainer').html(this.form.el);
     },
             
@@ -352,8 +366,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
   });
 
 
-
-  Backgrid.ActionAdminrequestCell = Backgrid.Cell.extend({
+  var buildActionCell = Backgrid.Cell.extend({
       // Cell default class names are the lower-cased and dasherized
       // form of the the cell class names by convention.
       className: "action-cell",
@@ -387,6 +400,35 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
           //DocManager.trigger('participant:remove',participantsApp.Model.selectedAction,this.model);
       }
     });
+
+  var fechaCell = Backgrid.Cell.extend({
+    render:function(){
+      var field = this.column.get('name');
+      var value = this.model.get(field);
+      var str = '';
+      str = moment(value).format('dd LL');
+      //return moment(date).format('dddd LL');
+      this.$el.html(str);
+
+      return this;
+    }
+  });  
+  
+
+  Backgrid.ImporteFormateadoCell = Backgrid.Cell.extend({
+      // Cell default class names are the lower-cased and dasherized
+      // form of the the cell class names by convention.
+      className: "js-importe",
+      render: function(){
+
+          var cell = $('<span  class="pull-right">' + accounting.formatNumber(this.model.get(this.column.get('name'))) +  '</span>');
+        //<%=  %>
+
+          this.$el.html(cell);
+         return this;
+      },
+
+    });
   
   
   Build.itemsGridCreator = function(collection){
@@ -396,11 +438,11 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
           columns: [
                     {name: 'person',label: 'Beneficiario',cell: 'string',editable:false},
                     {name: 'slug',label: 'Descripción',cell: 'string',editable:false},
-                    {name: 'freq',label: 'Cantidad',cell: 'number',editable:false},
-                    {name: 'punit',label: 'Importe',cell: 'number',editable:false},
-                    {name: 'fedesde',label: 'Fe desde',cell: 'string',editable:false},
-                    {name: 'fehasta',label: 'Fe hasta',cell: 'string',editable:false},
-                    {label: 'Acciones',cell: 'actionAdminrequest',editable:false,sortable:false},
+                    {name: 'freq',label: 'Cuotas',cell: 'importeFormateado',editable:false},
+                    {name: 'punit',label: 'Importe',cell: 'importeFormateado',editable:false},
+                    {name: 'fedesde',label: 'Fe desde',cell: fechaCell, editable:false},
+                    {name: 'fehasta',label: 'Fe hasta',cell: fechaCell,editable:false},
+                    {label: 'Acciones',cell: buildActionCell, editable:false,sortable:false},
                    ]
         });
   }; 
