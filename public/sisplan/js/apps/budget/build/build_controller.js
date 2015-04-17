@@ -26,8 +26,9 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
             Build.Session.views.layout = new Build.Layout();
 
             Build.Session.facetCol = new DocManager.Entities.BudgetPlanningCollection();
+            bindActionEntity(action, Build.Session.facetCol);
 
-            registerActionEntity(action, Build.Session.facetCol);
+            registerActionEntity(action);
 
             Build.Session.views.layout.on("show", function(){
               Build.Session.views.layout.actionRegion.show(Build.Session.views.actionView);
@@ -52,8 +53,10 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
   //======== MAIN CONTROLLER BUDGET PLANNING 
   var loadBudgetsFromDB = function(){
     DocManager.request('action:fetch:budget',Build.Session.action, null,function(budgetCol){
-      console.log('BudgetCol REQUEST CB:[%s]',budgetCol.length);
       Build.Session.budgetCol = budgetCol;
+
+      console.log('BudgetCol REQUEST CB:[%s]',budgetCol.length);
+
       buildTypeList(budgetCol);
       var budList = [];
       if(Build.Session.typeList.length){
@@ -87,8 +90,8 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
 */
   var createBudgetPlanningView = function(budgets, budList){
     // Modo ALTA: Se arma la plantilla completa.
+      console.log('CreateBudgetPlanning: [%s] BEGIN', budgets.length);
     _.each(Build.Session.typeList, function(type){
-      //console.log('CreateBudgetPlanning: [%s] BEGIN', type);
       buildPlanningView(type, budgets, budList);
     });
 
@@ -261,7 +264,7 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
 
 
   //======== ACTION ENTITY 
-  var registerActionEntity = function(action, facetCol) {
+  var bindActionEntity = function(action, facetCol) {
     action.set('costo_total', 0);
     action.set('costo_detallado', 0);
 
@@ -270,16 +273,13 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
       action.set('costo_total', totalcost);
       action.set('costo_detallado', detailcost);
     })
+  }
 
-    // facetCol.on('action:cost:changed', function(cost){
-    //   console.log('trigger handled: action:cost:changed')
-    //   action.set('costo_total', cost);
-    // });
+  //======== ACTION ENTITY 
+  var registerActionEntity = function(action) {
 
     Build.Session.action = action;
     buildActionView(action);
-
-    //Build.Session.facetCol.bind('cost:changed', evaluateTotalCost);
 
     var summaryView = new Build.SummaryView({
       model: action
@@ -336,6 +336,16 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
     view.on('save:all',function(){
       console.log('Save ALL [%s]',view.whoami);
       Build.Session.facetCol.saveAll(Build.Session.action, Build.Session.currentUser);
+
+      // Build BudgetPlanning again
+      Build.Session.views.layout.$('#artistica-region').empty();
+      
+      Build.Session.facetCol = new DocManager.Entities.BudgetPlanningCollection();
+      bindActionEntity(Build.Session.action, Build.Session.facetCol);
+
+      loadBudgetsFromDB();
+
+
     });
 
     view.on('aprove:budget',function(cb){
