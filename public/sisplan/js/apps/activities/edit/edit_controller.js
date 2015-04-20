@@ -385,7 +385,8 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     Edit.modaledit(facet, opt, function(facet){
       console.log('New Admrequest BEGINS Submitted:');
       facet.createNewRequest(Edit.Session.action, Edit.Session.budgetCol.at(0), Edit.Session.currentUser, function(model){
-        console.log('createNewRequest Callback')
+        console.log('createNewRequest Callback');
+        DocManager.trigger('activity:edit', Edit.Session.action);
       })
 
     });

@@ -441,11 +441,11 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
           columns: [
                     {name: 'person',label: 'Beneficiario',cell: 'string',editable:false},
                     {name: 'slug',label: 'Descripción',cell: 'string',editable:false},
-                    {name: 'freq',label: 'Cuotas',cell: 'importeFormateado',editable:false},
+                    {name: 'freq',label: 'Cantidad',cell: 'importeFormateado',editable:false},
                     {name: 'punit',label: 'Unitario',cell: 'importeFormateado',editable:false},
                     {name: 'importe',label: importelabel ,cell: 'importeFormateado',editable:false},
                     {name: 'fedesde',label: 'Fe desde',cell: fechaCell, editable:false},
-                    {name: 'fehasta',label: 'Fe hasta',cell: fechaCell,editable:false},
+                    {name: 'fehasta',renderable: false, label: 'Fe hasta',cell: fechaCell,editable:false},
                     {label: 'Acciones',cell: buildActionCell, editable:false,sortable:false},
                    ]
         });

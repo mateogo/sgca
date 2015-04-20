@@ -239,7 +239,7 @@ window.utils = {
         {val:'capacitacion',     cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Capacitación'},
         {val:'alquileres',       cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Alquileres'},
         {val:'servicios',        cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Otros servicios'},
-        {val:'pasajes',          cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Pasajes'},
+        {val:'pasajes',          cgasto:'141.000', presuinciso: '141',  template:'pasajes',  label:'Pasajes'},
         {val:'viaticos',         cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Viáticos'},
         {val:'estadias',         cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Estadías'},
         {val:'catering',         cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Catering'},
@@ -467,6 +467,7 @@ window.utils = {
         {val:'derechos'     , label:'Derechos'},
         {val:'no_definido'  , label:'-------------'},
         {val:'pasaje'       , label:'pasajes'},
+        {val:'tramo'        , label:'tramo'},
         {val:'alojamiento'  , label:'alojamientos'},
         {val:'catering'     , label:'catering'},
         {val:'seguridad'    , label:'seguridad'},
@@ -506,6 +507,9 @@ window.utils = {
         {val:'global'       , label:'global'},
         {val:'dia'          , label:'días'},
         {val:'hora'         , label:'horas'},
+        {val:'tramo'        , label:'tramos'},
+        {val:'item'         , label:'ítems'},
+        {val:'persona'      , label:'personas'},
         {val:'mes'          , label:'meses'},
         {val:'show'         , label:'shows'},
         {val:'funcion'      , label:'funciones'},
@@ -2214,12 +2218,19 @@ window.utils = {
         //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
         return node ? node.presuprog : "";
     },
-    
+
     fetchPresuinciso:function(key){
         var list = utils.tipoBudgetMovimList;
         var node = _.find(list, function(data){return data.val === key;});
         //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
         return node ? node.presuinciso : "";
+    },
+
+    fetchAdminRequestTemplate:function(key){
+        var list = utils.tipoBudgetMovimList;
+        var node = _.find(list, function(data){return data.val === key;});
+        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
+        return node ? node.template : "";
     },
 
     validateInstance: function(pr){

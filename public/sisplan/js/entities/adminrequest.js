@@ -88,7 +88,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         objeto: '',
         justif: '',
         freq: '',
-        umefreq: 'mes',
+        umefreq: '',
         cantidad: '',
         fedesde: '',
         fehasta: '',
@@ -103,8 +103,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       //console.log('itemsFactory: [%s]',items.length);
 
-      if(utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['template'] === 'contratos') {
+      // Polimorphic Request
+      if(utils.fetchAdminRequestTemplate(self.get('trequest')) === 'contratos') {
         return new Entities.AdmRqstContratosCol(items);
+
+      } else if(utils.fetchAdminRequestTemplate(self.get('trequest')) === 'pasajes') {
+        return new Entities.AdmRqstPasajesCol(items);
+
+      } else {
+        return new Entities.AdmRqstComprasCol(items);
+
       }
 
     },
@@ -112,18 +120,39 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     itemHeaderFactory: function(action){
       var self = this,
           itemHeader = self.get('itemheader');
+      
+      itemHeader.presuprog = self.get('presuprog');
+      itemHeader.presuinciso = self.get('presuinciso');
+      itemHeader.objeto = self.get('description');
 
-      //console.log('itemHeaderFactory: [%s]: [%s]',self.get('trequest'), utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['template'])
+        //console.log('itemHeaderFactory: [%s]: [%s]',self.get('trequest'), utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['template'])
+        //console.log('itemHeaderFactory: ACTION:[%s] [%s] [%s] [%s]', action.whoami, action.get('slug'), action.participants.length, action.participants.at(0).whoami);
+        //console.log('itemHeader: [%s]: [%s]', itemHeader.personas.length, itemHeader.personas[0])
   
-      if(utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['template'] === 'contratos') {
+      // Polimorphic Request
+      if(utils.fetchAdminRequestTemplate(self.get('trequest')) === 'contratos') {
+
+        itemHeader.personas = action.participants.map(function (person){
+          return person.get('displayName');
+        });
+        return new Entities.AdmRqstContratosHeader(itemHeader);
+ 
+
+      } else if(utils.fetchAdminRequestTemplate(self.get('trequest')) === 'pasajes') {
         //console.log('itemHeaderFactory: ACTION:[%s] [%s] [%s] [%s]', action.whoami, action.get('slug'), action.participants.length, action.participants.at(0).whoami);
 
         itemHeader.personas = action.participants.map(function (person){
-          //console.log('mapping: [%s]', person.whoami)
-          return person.get('nickName');
+          return person.get('displayName');
         });
-        //console.log('itemHeader: [%s]: [%s]', itemHeader.personas.length, itemHeader.personas[0])
-        return new Entities.AdmRqstContratosHeader(itemHeader);
+        return new Entities.AdmRqstPasajesHeader(itemHeader);
+
+
+      } else {
+        //console.log('itemHeaderFactory: ACTION:[%s] [%s] [%s] [%s]', action.whoami, action.get('slug'), action.participants.length, action.participants.at(0).whoami);
+        itemHeader.personas = action.participants.map(function (person){
+          return person.get('displayName');
+        });
+        return new Entities.AdmRqstComprasHeader(itemHeader);
       }
 
     },
@@ -137,7 +166,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           beneficiario,
           newitem;
 
-      if(utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['template'] === 'contratos') {
+      // Polimorphic Request
+      if(utils.fetchAdminRequestTemplate(self.get('trequest')) === 'contratos') {
         itemsCol = new Entities.AdmRqstContratosCol(items);
         renglones = facet.get('cantidad');
         personlist = facet.get('personas');
@@ -163,6 +193,63 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             presuinciso: facet.get('presuinciso'),
           })
           itemsCol.add(newitem);
+        }
+
+      } else if(utils.fetchAdminRequestTemplate(self.get('trequest')) === 'pasajes') {
+        itemsCol = new Entities.AdmRqstPasajesCol(items);
+        renglones = facet.get('cantidad');
+        personlist = facet.get('personas');
+        for (var i = renglones - 1; i >= 0; i--) {
+          if (i > personlist.length) {
+            beneficiario = 'a definir';
+          } else{
+            beneficiario = personlist[i];
+          };
+          newitem = new Entities.AdmRqstContratosItem({
+            slug: facet.get('objeto'),
+            description: facet.get('objeto'),
+            justif: facet.get('justif'),
+            freq: facet.get('freq'),
+            umefreq: facet.get('umefreq'),
+            cantidad: 1,
+            ume: facet.get('ume'),
+            punit: facet.get('punit'),
+            fedesde: facet.get('fedesde'),
+            fehasta: facet.get('fehasta'),
+            person: beneficiario,
+            presuprog: self.get('presuprog'),
+            presuinciso: self.get('presuinciso'),
+          })
+          itemsCol.add(newitem);
+
+        }
+
+      } else {
+        itemsCol = new Entities.AdmRqstComprasCol(items);
+        renglones = facet.get('freq');
+        personlist = facet.get('personas');
+        for (var i = renglones - 1; i >= 0; i--) {
+          if (i > personlist.length) {
+            beneficiario = 'a definir';
+          } else{
+            beneficiario = personlist[i];
+          };
+          newitem = new Entities.AdmRqstContratosItem({
+            slug: facet.get('objeto'),
+            description: facet.get('objeto'),
+            justif: facet.get('justif'),
+            freq: facet.get('freq'),
+            umefreq: facet.get('umefreq'),
+            cantidad: 1,
+            ume: facet.get('ume'),
+            punit: facet.get('punit'),
+            fedesde: facet.get('fedesde'),
+            fehasta: facet.get('fehasta'),
+            person: beneficiario,
+            presuprog: self.get('presuprog'),
+            presuinciso: self.get('presuinciso'),
+          })
+          itemsCol.add(newitem);
 
         }
 
@@ -176,8 +263,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var self = this,
           items = self.get('items'),
           itemsCol;
-      if(utils.fetchListKey(utils.tipoBudgetMovimList, self.get('trequest'))['template'] === 'contratos') {
+
+      // Polimorphic Request
+      if(utils.fetchAdminRequestTemplate(self.get('trequest')) === 'contratos') {
         itemsCol = new Entities.AdmRqstContratosCol(items);
+
+      } else if(utils.fetchAdminRequestTemplate(self.get('trequest')) === 'pasajes') {
+        itemsCol = new Entities.AdmRqstPasajesCol(items);
+
+      } else {
+        itemsCol = new Entities.AdmRqstComprasCol(items);
+
       }
       return itemsCol;
     },
@@ -426,9 +522,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
  *          Adminrequest CONTRATOS
  *  ===============================================
 */
-  var personToPrint = function(person){
-    return person.nickName;
-  };
 
   Entities.AdmRqstContratosHeader = Backbone.Model.extend({
     whoami: 'Entities.AdmRqstContratosHeader:adminrequest.js ',
@@ -447,10 +540,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         fehasta:  {type: 'DatePicker', title: 'Fecha hasta',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
         presuprog:   {type: 'Text',    title: 'Fuente financiera',     editorAttrs:{placeholder:'Programa presupuestario + actividad'}},
         presuinciso: {type: 'Text',    title: 'Inciso / actividad',    editorAttrs:{placeholder:'Objeto del gasto - valor por omisión'}},
-        personas: {type: 'List',       title: 'Beneficiarios',    itemType: 'Text'}
-    
+        personas: {type: 'List',       title: 'Beneficiarios',    itemType: 'Text'}    
     },
-    //itemToString: personToPrint,subSchema: {nickName: 'Nombre'} },
 
     getFieldLabel: function(field){
       if(!(field in this.schema)) return '';
@@ -467,9 +558,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
     },
 
-
     defaults: {
-      // datos basicos
       objeto: '',
       justif: '',
       freq: '1',
@@ -582,6 +671,316 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   });
 
+
+
+/** 
+ *  ===============================================
+ *          Adminrequest PASAJES
+ *  ===============================================
+*/
+  Entities.AdmRqstPasajesHeader = Backbone.Model.extend({
+    whoami: 'Entities.AdmRqstPasajesHeader:adminrequest.js ',
+
+    idAttribute: "_id",
+
+    schema: {
+        objeto:   {type: 'TextArea',   title: 'Objeto del viaje'},
+        justif:   {type: 'TextArea',   title: 'Justificación de la Necesidad'},
+        freq:     {type: 'Number',     title: 'Tramos',            editorAttrs:{placeholder:'en unidades'}},
+        umefreq:  {type: 'Select',     title: 'Unidad',  editorAttrs:{placeholder:'tramo'},options: utils.umeFreqList },
+        cantidad: {type: 'Number',     title: 'Cantidad de pasajess',  editorAttrs:{placeholder:'en unidades'}},
+        ume:      {type: 'Select',     title: 'Unidad de medida',  editorAttrs:{placeholder:'unidad de pasajes'},options: utils.umeList },
+        punit:    {type: 'Number',     title: 'Importe tramo',  editorAttrs:{placeholder:'importe de cada tramo'}},
+        fedesde:  {type: 'DatePicker', title: 'Fecha Salida',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        fehasta:  {type: 'DatePicker', title: 'Fecha Regreso',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        presuprog:   {type: 'Text',    title: 'Fuente financiera',     editorAttrs:{placeholder:'Programa presupuestario + actividad'}},
+        presuinciso: {type: 'Text',    title: 'Inciso / actividad',    editorAttrs:{placeholder:'Objeto del gasto - valor por omisión'}},
+        personas: {type: 'List',       title: 'Pasajeros',    itemType: 'Text'}
+    },
+
+    getFieldLabel: function(field){
+      if(!(field in this.schema)) return '';
+      
+      if(this.schema[field].type === 'Select'){
+        var value = this.get(field);
+        if(value === 'no_definido' || value === "nodefinido") return '';
+        
+        var options = this.schema[field].options;
+        var selected = _.findWhere(options,{val:value});
+        return (selected)? selected.label : value;
+      }else{
+        return this.get(field);
+      }
+    },
+
+    defaults: {
+      objeto: '',
+      justif: '',
+      freq: '1',
+      umefreq: 'mes',
+      cantidad: '1',
+      ume: 'pasaje',
+      importe: 0,
+      fedesde: '',
+      fehasta: '',
+      presuprog: '',
+      presuinciso: '',
+      personas: [],
+    },
+  });
+/** 
+ *  ===============================================
+ *          Adminrequest ITEM - PASAJES
+ *  ===============================================
+*/
+  Entities.AdmRqstPasajesItem = Backbone.Model.extend({
+    whoami: 'Entities.AdmRqstPasajesItem:adminrequest.js ',
+
+    idAttribute: "_id",
+
+    schema: {
+        person:   {type: 'Text',       title: 'Pasajero'},
+        slug:     {type: 'Text',       title: 'Tramos viaje'},
+        description: {type: 'TextArea',   title: 'Observaciones viaje'},
+        justif:   {type: 'TextArea',   title: 'Justificación de la Necesidad'},
+        freq:     {type: 'Number',     title: 'Tramos',            editorAttrs:{placeholder:'en tramos'}},
+        umefreq:  {type: 'Select',     title: 'Unidad',  editorAttrs:{placeholder:'tramos'},options: utils.umeFreqList },
+        cantidad: {type: 'Number',     title: 'Pasajes',  editorAttrs:{placeholder:'en unidades'}},
+        ume:      {type: 'Select',     title: 'Unidad',  editorAttrs:{placeholder:'unidad de pasajes'},options: utils.umeList },
+        punit:    {type: 'Number',     title: 'Costo tramo',  editorAttrs:{placeholder:'costo pasaje'}},
+
+        fedesde:  {type: 'DatePicker', title: 'Fecha desde',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        fehasta:  {type: 'DatePicker', title: 'Fecha hasta',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        estado_alta:     {type: 'Select',   title: 'Estado de Alta',        editorAttrs:{placeholder:'estado de alta'},    options: utils.estadoAltaStramiteOpLst },
+        nivel_ejecucion: {type: 'Select',   title: 'Nivel de ejecución',    editorAttrs:{placeholder:'nivel de ejecución'},options: utils.nivelEjecucionStramiteOpLst },
+        presuprog:   {type: 'Text',    title: 'Fuente financiera',     editorAttrs:{placeholder:'Programa presupuestario + actividad'}},
+        presuinciso: {type: 'Text',    title: 'Inciso / actividad',    editorAttrs:{placeholder:'Objeto del gasto'}},
+    },
+
+    getFieldLabel: function(field){
+      if(!(field in this.schema)) return '';
+      
+      if(this.schema[field].type === 'Select'){
+        var value = this.get(field);
+        if(value === 'no_definido' || value === "nodefinido") return '';
+        
+        var options = this.schema[field].options;
+        var selected = _.findWhere(options,{val:value});
+        return (selected)? selected.label : value;
+      }else{
+        return this.get(field);
+      }
+    },
+
+    updateCost: function(){
+      //console.log('EvaluateCosto CABECERA BEGIN');
+      var previouscost = parseInt(this.get('importe'));
+      var isactive = parseInt(this.get('isactive')) === 1 ? 1 : 0;
+      var isvalid = this.get('estado_alta') === 'activo' ? 1 : 0;
+      var freq = parseInt(this.get('freq'));
+      var cantidad = parseInt(this.get('cantidad'));
+      var punit = parseInt(this.get('punit'));
+
+      var importe = (isvalid * isactive  * freq * cantidad * punit);
+      this.set('importe', importe);
+    },
+
+    defaults: {
+      slug: '',
+      description: '',
+      justif: '',
+      freq: 1,
+      umefreq: 'tramo',
+      cantidad: 1,
+      ume: 'pasaje',
+      punit: 0,
+      importe: 0,
+      fedesde: '',
+      fehasta: '',
+      person: '',
+      presuprog: '',
+      presuinciso: '',
+      nivel_ejecucion: "enevaluacion",
+      estado_alta: "activo",
+      isactive: "1",
+    },
+  });
+
+  Entities.AdmRqstPasajesCol = Backbone.Collection.extend({
+    whoami: 'Entities.AdmRqstPasajesCol:adminrequest.js ',
+    //url: "/navegar/tramitaciones",
+    model: Entities.AdmRqstPasajesItem,
+    sortfield: 'person',
+    sortorder: -1,
+
+    comparator: function(left, right) {
+      var order = this.sortorder;
+      var l = left.get(this.sortfield);
+      var r = right.get(this.sortfield);
+
+      if (l === void 0) return -1 * order;
+      if (r === void 0) return 1 * order;
+
+      return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    },
+
+  });
+
+/** 
+ *  ===============================================
+ *          Adminrequest COMPRAS
+ *  ===============================================
+*/
+  Entities.AdmRqstComprasHeader = Backbone.Model.extend({
+    whoami: 'Entities.AdmRqstComprasHeader:adminrequest.js ',
+
+    idAttribute: "_id",
+
+    schema: {
+        objeto:   {type: 'TextArea',   title: 'Objeto del viaje'},
+        justif:   {type: 'TextArea',   title: 'Justificación de la Necesidad'},
+        freq:     {type: 'Number',     title: 'Ítems',            editorAttrs:{placeholder:'ítems a comprar'}},
+        umefreq:  {type: 'Select',     title: 'Unidad',  editorAttrs:{placeholder:'tramo'},options: utils.umeFreqList },
+        cantidad: {type: 'Number',     title: 'Cantidad de compras',  editorAttrs:{placeholder:'en unidades'}},
+        ume:      {type: 'Select',     title: 'Unidad de medida',  editorAttrs:{placeholder:'unidad de compras'},options: utils.umeList },
+        punit:    {type: 'Number',     title: 'Importe tramo',  editorAttrs:{placeholder:'importe'}},
+        fedesde:  {type: 'DatePicker', title: 'Fecha lím compra',        editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        fehasta:  {type: 'DatePicker', title: 'Fecha lím entrega',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        presuprog:   {type: 'Text',    title: 'Fuente financiera',     editorAttrs:{placeholder:'Programa presupuestario + actividad'}},
+        presuinciso: {type: 'Text',    title: 'Inciso / actividad',    editorAttrs:{placeholder:'Objeto del gasto - valor por omisión'}},
+        personas: {type: 'List',       title: 'Proveedores sugeridos',    itemType: 'Text'},
+        productos: {type: 'List',      title: 'Productos',    itemType: 'Text'}
+    },
+
+    getFieldLabel: function(field){
+      if(!(field in this.schema)) return '';
+      
+      if(this.schema[field].type === 'Select'){
+        var value = this.get(field);
+        if(value === 'no_definido' || value === "nodefinido") return '';
+        
+        var options = this.schema[field].options;
+        var selected = _.findWhere(options,{val:value});
+        return (selected)? selected.label : value;
+      }else{
+        return this.get(field);
+      }
+    },
+
+    defaults: {
+      objeto: '',
+      justif: '',
+      freq: '1',
+      umefreq: 'item',
+      cantidad: '1',
+      ume: 'unidad',
+      importe: 0,
+      fedesde: '',
+      fehasta: '',
+      presuprog: '',
+      presuinciso: '',
+      personas: [],
+    },
+  });
+/** 
+ *  ===============================================
+ *          Adminrequest ITEM - COMPRAS
+ *  ===============================================
+*/
+  Entities.AdmRqstComprasItem = Backbone.Model.extend({
+    whoami: 'Entities.AdmRqstComprasItem:adminrequest.js ',
+
+    idAttribute: "_id",
+
+    schema: {
+        person:   {type: 'Text',       title: 'Compraro'},
+        slug:     {type: 'Text',       title: 'Tramos viaje'},
+        description: {type: 'TextArea',   title: 'Observaciones viaje'},
+        justif:   {type: 'TextArea',   title: 'Justificación de la Necesidad'},
+        freq:     {type: 'Number',     title: 'Tramos',            editorAttrs:{placeholder:'en tramos'}},
+        umefreq:  {type: 'Select',     title: 'Unidad',  editorAttrs:{placeholder:'tramos'},options: utils.umeFreqList },
+        cantidad: {type: 'Number',     title: 'Compras',  editorAttrs:{placeholder:'en unidades'}},
+        ume:      {type: 'Select',     title: 'Unidad',  editorAttrs:{placeholder:'unidad de compras'},options: utils.umeList },
+        punit:    {type: 'Number',     title: 'Costo tramo',  editorAttrs:{placeholder:'costo compra'}},
+
+        fedesde:  {type: 'DatePicker', title: 'Fecha desde',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        fehasta:  {type: 'DatePicker', title: 'Fecha hasta',       editorAttrs:{placeholder:'dd/mm/aaaa'}},
+        estado_alta:     {type: 'Select',   title: 'Estado de Alta',        editorAttrs:{placeholder:'estado de alta'},    options: utils.estadoAltaStramiteOpLst },
+        nivel_ejecucion: {type: 'Select',   title: 'Nivel de ejecución',    editorAttrs:{placeholder:'nivel de ejecución'},options: utils.nivelEjecucionStramiteOpLst },
+        presuprog:   {type: 'Text',    title: 'Fuente financiera',     editorAttrs:{placeholder:'Programa presupuestario + actividad'}},
+        presuinciso: {type: 'Text',    title: 'Inciso / actividad',    editorAttrs:{placeholder:'Objeto del gasto'}},
+    },
+
+    getFieldLabel: function(field){
+      if(!(field in this.schema)) return '';
+      
+      if(this.schema[field].type === 'Select'){
+        var value = this.get(field);
+        if(value === 'no_definido' || value === "nodefinido") return '';
+        
+        var options = this.schema[field].options;
+        var selected = _.findWhere(options,{val:value});
+        return (selected)? selected.label : value;
+      }else{
+        return this.get(field);
+      }
+    },
+
+    updateCost: function(){
+      //console.log('EvaluateCosto CABECERA BEGIN');
+      var previouscost = parseInt(this.get('importe'));
+      var isactive = parseInt(this.get('isactive')) === 1 ? 1 : 0;
+      var isvalid = this.get('estado_alta') === 'activo' ? 1 : 0;
+      var freq = parseInt(this.get('freq'));
+      var cantidad = parseInt(this.get('cantidad'));
+      var punit = parseInt(this.get('punit'));
+
+      var importe = (isvalid * isactive  * freq * cantidad * punit);
+      this.set('importe', importe);
+    },
+
+    defaults: {
+      slug: '',
+      description: '',
+      justif: '',
+      freq: 1,
+      umefreq: 'item',
+      cantidad: 1,
+      ume: 'unidad',
+      punit: 0,
+      importe: 0,
+      fedesde: '',
+      fehasta: '',
+      person: '',
+      presuprog: '',
+      presuinciso: '',
+      nivel_ejecucion: "enevaluacion",
+      estado_alta: "activo",
+      isactive: "1",
+    },
+  });
+
+  Entities.AdmRqstComprasCol = Backbone.Collection.extend({
+    whoami: 'Entities.AdmRqstComprasCol:adminrequest.js ',
+    //url: "/navegar/tramitaciones",
+    model: Entities.AdmRqstComprasItem,
+    sortfield: 'person',
+    sortorder: -1,
+
+    comparator: function(left, right) {
+      var order = this.sortorder;
+      var l = left.get(this.sortfield);
+      var r = right.get(this.sortfield);
+
+      if (l === void 0) return -1 * order;
+      if (r === void 0) return 1 * order;
+
+      return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    },
+
+  });
+
+// ********************  fin tipos de tramitación **********************
 /** 
  *  ===============================================
  *   helper functions: COSTO TRAMITACION
