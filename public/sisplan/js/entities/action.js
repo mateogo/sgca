@@ -1257,23 +1257,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
 
     },
-    determinActionCost: function(col){
-      var costo = {
-        total: 0,
-        detallado: 0,
-      };
 
-      if (!col.length) return costo;
-      col.each(function(model){
-        if(model.get('estado_alta') === 'activo'){
-          if(model.get('tgasto') === 'global'){
-            costo.total += parseInt(model.get('importe'));
-          }else{
-            costo.detallado += parseInt(model.get('importe'));
-          }
-        }
-      });
-      return costo;
+    determinActionCost: function(col){
+      //console.log('====== determinActionCost======: [%s]', col.whoami);
+      return col.evaluateTotalCost();
+
+    },
+
+    determinActionRequest: function(col){
+      console.log('====== determinActionCost======: [%s]', col.whoami);
+      return col.evaluateActionRequests();
+
     },
     
     
@@ -1318,9 +1312,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     API.loadActionBudgetCol(query, opt, cb);
   });
 
+  DocManager.reqres.setHandler("action:evaluate:cost", function(budgetCol, opt, cb){
+    return API.determinActionCost(budgetCol);
+  });
 
-  DocManager.reqres.setHandler("action:evaluate:cost", function(model, opt, cb){
-    return API.determinActionCost(model, opt, cb);
+  DocManager.reqres.setHandler("action:evaluate:requests", function(requestCol, opt, cb){
+    return API.determinActionRequest(requestCol);
   });
 
   DocManager.reqres.setHandler("action:fetch:budget", function(model, opt, cb){

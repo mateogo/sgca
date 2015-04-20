@@ -189,6 +189,7 @@ module.exports = function (config, app) {
      // adminrequests (acciones) routes
     var admrqst = require(rootPath + '/calendar/controllers/adminrequests');
     app.post('/actualizar/tramitaciones', admrqst.partialupdate);
+    app.get ('/sisplan/tramitacion/:id',          admrqst.findByCnumber);
     app.get ('/tramitaciones',            admrqst.findAll);
     app.post('/recuperar/tramitaciones',  admrqst.find);
     app.post('/admrqst/fetch',        admrqst.findOne);

@@ -210,7 +210,6 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
 
     view.on('cost:changed', function(model){
       console.log('[%s]:[%s] model:[%s] Register CostChangedEVENT BUBBLE[%s]',view.whoami, view.cid, model.whoami, arguments.length);
-      //evaluateTotalCost(Build.Session.facetCol);
       model.evaluateCosto();
     });
 
@@ -220,7 +219,6 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
       var itembudget = new DocManager.Entities.BudgetItemFacet(item.attributes);
 
       view.model.addItemBudget(itembudget);
-      //evaluateTotalCost(Build.Session.facetCol);
     });
 
     view.on('edit:budget:item', function(itemview, item){

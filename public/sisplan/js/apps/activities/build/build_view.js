@@ -14,10 +14,9 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     events: {
       'click .js-basicedit':'onClickBaseBuild',
       'click .js-itemheaderedit':'onClickItemHeaderEdit',
-      'click .js-tramitaciones':'onClickReturnToTramitaciones',
-
-      
+      'click .js-tramitaciones':'onClickReturnToTramitaciones',      
     },
+
     onClickReturnToTramitaciones: function(){
       console.log('Click retornar a tramitaciones')
       DocManager.trigger('activity:edit', Build.Session.currentAction);
@@ -44,7 +43,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     }
   });
 
-  Build.HeaderInfo = Marionette.ItemView.extend({
+  Build.ActionInfo = Marionette.ItemView.extend({
     tagName: 'div',
     initialize: function(opts){
       console.log('HeaerInfo INIT')
@@ -55,7 +54,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
       Marionette.ItemView.prototype.initialize.apply(this,arguments);
     },
     getTemplate: function(){
-      return utils.templates.StramiteBuildHeaderView;
+      return utils.templates.StramiteBuildActionView;
     },
     onRender: function(){
       // if(this.selectedTab){
@@ -93,7 +92,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
   
   Build.ResumeView = Marionette.ItemView.extend({
     getTemplate: function(){
-      return utils.templates.StramiteBuildHeaderDataView;
+      return utils.templates.StramiteBuildBasicDataView;
     },
     templateHelpers: function(){
       var self = this;
@@ -258,7 +257,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     },
 
     getTemplate: function(){
-      return utils.templates.StramiteBuildItemHeaderView;
+      return utils.templates.StramiteBuildItemXeaderView;
     },
     
     templateHelpers: function(){
@@ -288,7 +287,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     },
 
     getTemplate: function(){
-      return utils.templates.StramiteBuildItemHeaderLayout;
+      return utils.templates.StramiteBuildItemXeaderLayout;
     },
 
     onRender: function(){
@@ -380,11 +379,11 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
          return this;
       },
       events: {
-          'click button.js-requestedit': 'editClicked',
-          'click button.js-requesttrash': 'trashClicked',
+          'click button.js-requestedit': 'itemEditClicked',
+          'click button.js-requesttrash': 'itemTrashClicked',
       },
         
-      editClicked: function(e){
+      itemEditClicked: function(e){
           e.stopPropagation();e.preventDefault();
           console.log('item EDIT [%s] ', this.model.get('description'));
 
@@ -394,7 +393,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
           Build.Session.views.layout.trigger('request:item:edit',this.model);
       },
         
-      trashClicked: function(e){
+      itemTrashClicked: function(e){
           e.stopPropagation();e.preventDefault();
           //this.trigger('participant:remove',this.model);
           //DocManager.trigger('participant:remove',participantsApp.Model.selectedAction,this.model);
@@ -429,6 +428,10 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
       },
 
     });
+
+  var importelabel = function(){
+    return 'Costo: ' + accounting.formatNumber(Build.Session.model.getFieldLabel('costodetallado'));
+  }
   
   
   Build.itemsGridCreator = function(collection){
@@ -439,7 +442,8 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
                     {name: 'person',label: 'Beneficiario',cell: 'string',editable:false},
                     {name: 'slug',label: 'Descripción',cell: 'string',editable:false},
                     {name: 'freq',label: 'Cuotas',cell: 'importeFormateado',editable:false},
-                    {name: 'punit',label: 'Importe',cell: 'importeFormateado',editable:false},
+                    {name: 'punit',label: 'Unitario',cell: 'importeFormateado',editable:false},
+                    {name: 'importe',label: importelabel ,cell: 'importeFormateado',editable:false},
                     {name: 'fedesde',label: 'Fe desde',cell: fechaCell, editable:false},
                     {name: 'fehasta',label: 'Fe hasta',cell: fechaCell,editable:false},
                     {label: 'Acciones',cell: buildActionCell, editable:false,sortable:false},

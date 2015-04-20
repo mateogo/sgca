@@ -15,19 +15,19 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
         $('body').scrollTop(0);
       },
       
-      editBasic: function(adminrequest){
-        loadModel(adminrequest).then(function(){
-          createLayoutView();
-          createBasicMedicor();
-        });
-        $('body').scrollTop(0);
-      },
-      setSectionSelected: function(str){
-        var session = getSession();
-        if(session.views.headerInfo){
-          session.views.headerInfo.selectTab(str);
-        }
-      }
+      // editBasic: function(adminrequest){
+      //   loadModel(adminrequest).then(function(){
+      //     createLayoutView();
+      //     createBasicMedicor();
+      //   });
+      //   $('body').scrollTop(0);
+      // },
+      // setSectionSelected: function(str){
+      //   var session = getSession();
+      //   if(session.views.actionInfo){
+      //     session.views.actionInfo.selectTab(str);
+      //   }
+      // }
   };
   
   function getSession(){
@@ -47,7 +47,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
    
     $.when(fetchingAdminRequest).done(function(admrqst){
 
-      console.log('AdminrequestsApp.Build BEGIN [%s]: [%s]', admrqst.get('trequest'), admrqst.get('slug'));
+      console.log('AdminrequestsApp.Build BEGIN [%s]: [%s] area:[%s] presuprog:[%s]', admrqst.get('trequest'), admrqst.get('slug'), admrqst.get('action_area'), utils.fetchPresuprog(admrqst.get('action_area')));
       getSession().model = admrqst;
 
       dao.gestionUser.getUser(DocManager, function (user){
@@ -91,7 +91,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     
     session.views.layout = new Build.Layout({model:session.model});
     
-    createHeaderInfoView();
+    createActionInfoView();
     console.log('ready to Show Main Region')
     registerLayoutEvents(session.views.layout);
   };
@@ -117,12 +117,12 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
   };
 
   // ****** CABECERA con datos no-editables: la Acción y el área solicitante
-  var createHeaderInfoView = function(){
+  var createActionInfoView = function(){
     var session = getSession();
     var layout = session.views.layout; 
-    session.views.headerInfo = new Build.HeaderInfo({model:session.model});
+    session.views.actionInfo = new Build.ActionInfo({model:session.model});
     layout.on('show',function(){
-        layout.headerRegion.show(session.views.headerInfo);
+        layout.headerRegion.show(session.views.actionInfo);
     });
   };
   
@@ -132,8 +132,33 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     var layout = Build.Session.views.layout;
     var view = new Build.ResumeView({model:session.model});
     session.views.resume = view;
+
+    //         this.trigger('adminrequest:cost:changed', costo_total);
+    registerBasicViewEvents(session, view);
+
     layout.getRegion('basicdataRegion').show(view);
   };
+
+  var registerBasicViewEvents = function(session, view){
+    session.model.on('adminrequest:cost:changed', function(cost){
+      session.model.set('costodetallado', cost);
+      session.views.resume.render();
+    });
+
+   // view.listenTo(session.model, '', function(cost){
+    //   console.log('COST CHANGED:[%s]', cost)
+    //   session.model.set('costodetallado', cost);
+    //   session.views.resume.render();
+
+    // });
+ 
+    // editor.on('cancel:basic:editor', function(){
+    //   console.log('CancelBasicEditor Bubbled')
+    //   createResumeView();
+    // });
+
+  };
+
 
   var createBasicEditor = function(){
     var session = getSession();
@@ -233,6 +258,8 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     var layout = Build.Session.views.layout;
     var itemlist = session.model.itemListFactory();
     session.itemscol = itemlist;
+    session.model.evaluateCost();
+
     
     var listLayout = new Build.ItemListLayout({model: itemlist});
     session.views.itemlist = listLayout;
@@ -241,16 +268,16 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
   };
 
   var registerItemHeaderListEvents = function(session, itemlayout, itemlist){
-    console.log('RegisterItemHeader: itemlist:[%s]', itemlist.length)
+    //console.log('RegisterItemHeader: itemlist:[%s]', itemlist.length)
     var table = Build.itemsGridCreator(itemlist);
     var filter = Build.filterCreator(itemlist);
-    itemlayout.on('tableRegion:request:item:edit', function(item){
-          console.log('item EDIT BUBBLED[%s] ', item.get('persona'));
 
+    itemlayout.on('tableRegion:request:item:edit', function(item){
+          //console.log('item EDIT BUBBLED[%s] ', item.get('persona'));
     });
 
     table.on('request:item:edit', function(item){
-          console.log('item-table EDIT BUBBLED[%s] ', item.get('persona'));
+          //console.log('item-table EDIT BUBBLED[%s] ', item.get('persona'));
 
     });
 
@@ -271,7 +298,6 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
   };
 
   var registerItemEditorEvents = function(session, editor){
-     console.log('3')
    editor.on('cancel:item:editor', function(){
       console.log('CancelItemEditor Bubbled')
       createItemList();
@@ -279,7 +305,9 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
 
     editor.on('save:item:editor', function(itemmodel, cb){
       console.log('SAVE ItemEditor Bubbled')
-      session.model.updateItemData(session.itemscol, itemmodel);
+      itemmodel.updateCost();
+      var costo = session.model.evaluateCost();
+      session.model.updateItemData(session.itemscol, itemmodel, costo);
       createItemList();
     });
   };

@@ -26,12 +26,12 @@ var seriales = {};
 var trequest_adapter = {
     tramitacion:{
         serie: 'admrqst101',
-        base: 1000000,
+        base: 10000000,
         prefix: 'ST'
         },
     poromision: {
         serie: 'admrqst999',
-        base: 1000000,
+        base: 10000000,
         prefix: 'X'
     }
 
@@ -183,6 +183,16 @@ exports.fetchById = function(id, cb) {
     dbi.collection(admrqstsCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             cb(err, item);
+        });
+    });
+};
+
+exports.findByCnumber = function(req, res) {
+    var cnumber = req.params.id;
+    console.log('findByCnumber: Retrieving %s id:[%s]', admrqstsCol,cnumber);
+    dbi.collection(admrqstsCol, function(err, collection) {
+        collection.findOne({'cnumber':cnumber}, function(err, item) {
+            res.send(item);
         });
     });
 };

@@ -8,7 +8,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 col-xs-12">
         <h3 class="text-info">Solicitud</h3>
         <div class="well" style="overflow-y:auto">
             <p><%= cnumber%>: <%=slug%></p>
@@ -20,9 +20,8 @@
 
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 col-xs-12">
         <h3  class="text-info">Estado</h3>
-        <div >
             <table class="table table-condensed table-bordered">
                 <thead>
                     <tr>
@@ -30,7 +29,7 @@
                         <th><span  class="text-center">Fte Finan</span></th>
                         <th><span  class="text-center">Freq</span></th>
                         <th><span  class="text-center">Cantidad</span></th>
-                        <th><span  class="pull-right">IMPORTE</span></th>
+                        <th><span  class="pull-right">Costo referencia</span></th>
                     </tr> 
                 </thead>
                 <tbody>
@@ -60,7 +59,8 @@
                     </tr> 
                 </tbody>
             </table>
-        </div>
+        <h3  class="text-info">Costo detallado: <%= accounting.formatNumber(getFieldLabel('costodetallado'))%></h3>
+
     </div>
 </div> 
 
