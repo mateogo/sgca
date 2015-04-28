@@ -218,36 +218,36 @@ window.utils = {
 
     //========= BUDGET TEMPLATE =========================
     tipoBudgetMovimList: [
-        {val:'no_definido',      cgasto:'000.000',  template:'',  label:'Tipo de movimiento'},
-        {val:'global',           cgasto:'100.000',  template:'tecnica',   label:'Global'},
-        {val:'artistica',        cgasto:'101.000',  template:'artistica', label:'Artística'},
-        {val:'tecnica',          cgasto:'105.000',  template:'tecnica',   label:'Técnica'},
-        {val:'contratos',        cgasto:'111.000',  template:'contratos',   label:'Contratos'},
-        {val:'logistica',        cgasto:'115.000',  template:'tecnica',   label:'Logística'},
-        {val:'difusion',         cgasto:'121.000',  template:'tecnica',   label:'Difusión'},
-        {val:'impresiones',      cgasto:'125.000',  template:'tecnica',   label:'Impresiones'},
-        {val:'muestras',         cgasto:'131.000',  template:'tecnica',   label:'Muestras'},
-        {val:'derechos',         cgasto:'135.000',  template:'tecnica',   label:'Derechos'},
-        {val:'subsidios',        cgasto:'141.000',  template:'tecnica',   label:'Subsidios'},
 
+        {val:'no_definido',      cgasto:'000.000', presuinciso: '000',  template:'',  label:'Tipo de movimiento'},
+        {val:'global',           cgasto:'100.000', presuinciso: '100',  template:'tecnica',   label:'Global'},
+        {val:'artistica',        cgasto:'101.000', presuinciso: '101',  template:'artistica', label:'Artística'},
+        {val:'tecnica',          cgasto:'105.000', presuinciso: '105',  template:'tecnica',   label:'Técnica'},
+        {val:'contratos',        cgasto:'347.000', presuinciso: '347',  template:'contratos',   label:'Contratos'},
+        {val:'logistica',        cgasto:'115.000', presuinciso: '115',  template:'tecnica',   label:'Logística'},
+        {val:'difusion',         cgasto:'121.000', presuinciso: '121',  template:'tecnica',   label:'Difusión'},
+        {val:'impresiones',      cgasto:'125.000', presuinciso: '125',  template:'tecnica',   label:'Impresiones'},
+        {val:'muestras',         cgasto:'131.000', presuinciso: '131',  template:'tecnica',   label:'Muestras'},
+        {val:'derechos',         cgasto:'135.000', presuinciso: '135',  template:'tecnica',   label:'Derechos'},
+        {val:'subsidios',        cgasto:'141.000', presuinciso: '141',  template:'tecnica',   label:'Subsidios'},
+        {val:'evento',           cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Eventos'},
+        {val:'tecnologia',       cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Tecnología'},
+        {val:'biendeuso',        cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Bienes de Uso'},
+        {val:'bconsumible',      cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Bienes Consumibles'},
+        {val:'compras',          cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Otras compras'},
+        {val:'publicaciones',    cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Publicaciones'},
+        {val:'capacitacion',     cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Capacitación'},
+        {val:'alquileres',       cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Alquileres'},
+        {val:'servicios',        cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Otros servicios'},
+        {val:'pasajes',          cgasto:'141.000', presuinciso: '141',  template:'pasajes',  label:'Pasajes'},
+        {val:'viaticos',         cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Viáticos'},
+        {val:'estadias',         cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Estadías'},
+        {val:'catering',         cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Catering'},
+        {val:'traslados',        cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Traslados'},
+        {val:'conectividad',     cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Conectividad'},
+        {val:'servbasicos',      cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Servicios Básicos'},
+        {val:'infraestructura',  cgasto:'141.000', presuinciso: '141',  template:'tecnica',  label:'Infraestructura'},
 
-        {val:'evento',           cgasto:'141.000',  template:'tecnica',  label:'Eventos'},
-        {val:'tecnologia',       cgasto:'141.000',  template:'tecnica',  label:'Tecnología'},
-        {val:'biendeuso',        cgasto:'141.000',  template:'tecnica',  label:'Bienes de Uso'},
-        {val:'bconsumible',      cgasto:'141.000',  template:'tecnica',  label:'Bienes Consumibles'},
-        {val:'compras',          cgasto:'141.000',  template:'tecnica',  label:'Otras compras'},
-        {val:'publicaciones',    cgasto:'141.000',  template:'tecnica',  label:'Publicaciones'},
-        {val:'capacitacion',     cgasto:'141.000',  template:'tecnica',  label:'Capacitación'},
-        {val:'alquileres',       cgasto:'141.000',  template:'tecnica',  label:'Alquileres'},
-        {val:'servicios',        cgasto:'141.000',  template:'tecnica',  label:'Otros servicios'},
-        {val:'pasajes',          cgasto:'141.000',  template:'tecnica',  label:'Pasajes'},
-        {val:'viaticos',         cgasto:'141.000',  template:'tecnica',  label:'Viáticos'},
-        {val:'estadias',         cgasto:'141.000',  template:'tecnica',  label:'Estadías'},
-        {val:'catering',         cgasto:'141.000',  template:'tecnica',  label:'Catering'},
-        {val:'traslados',        cgasto:'141.000',  template:'tecnica',  label:'Traslados'},
-        {val:'conectividad',     cgasto:'141.000',  template:'tecnica',  label:'Conectividad'},
-        {val:'servbasicos',      cgasto:'141.000',  template:'tecnica',  label:'Servicios Básicos'},
-        {val:'infraestructura',  cgasto:'141.000',  template:'tecnica',  label:'Infraestructura'},
     ],
 
     budgetTemplateList:['global', 'artistica', 'tecnica','contratos', 'muestras', 'derechos','logistica','impresiones','difusion', 'subsidios'],
@@ -467,6 +467,7 @@ window.utils = {
         {val:'derechos'     , label:'Derechos'},
         {val:'no_definido'  , label:'-------------'},
         {val:'pasaje'       , label:'pasajes'},
+        {val:'tramo'        , label:'tramo'},
         {val:'alojamiento'  , label:'alojamientos'},
         {val:'catering'     , label:'catering'},
         {val:'seguridad'    , label:'seguridad'},
@@ -506,6 +507,9 @@ window.utils = {
         {val:'global'       , label:'global'},
         {val:'dia'          , label:'días'},
         {val:'hora'         , label:'horas'},
+        {val:'tramo'        , label:'tramos'},
+        {val:'item'         , label:'ítems'},
+        {val:'persona'      , label:'personas'},
         {val:'mes'          , label:'meses'},
         {val:'show'         , label:'shows'},
         {val:'funcion'      , label:'funciones'},
@@ -687,41 +691,41 @@ window.utils = {
     ],
 
     actionAreasOptionList:[
-        {val:'no_definido'  ,nodo:'no_definido' , label:'Lista de ÁREAS'},
-        {val: 'DNA'         ,nodo:'SGC'     , label:'DN de Artes'},
-        {val: 'DNIC'        ,nodo:'SGC'     , label:'DN de Industrias Culturales'},
-        {val: 'DNPM'        ,nodo:'SGC'     , label:'DN de Patrimonio y Museos'},
-        {val: 'DNPCCI'      ,nodo:'SGC'     , label:'DN de Políticas Culturales y Cooperación Internacional'},
-        {val: 'CNB'         ,nodo:'SGC'     , label:'Casa Nacional del Bicentenario'},
-        {val: 'CCV21'       ,nodo:'SPSC'    , label:'Centro Cultural Villa 21'},
-        {val: 'CCV31'       ,nodo:'SPSC'    , label:'Centro Cultural Villa 31'},
-        {val: 'DNPOP'       ,nodo:'SPSC'    , label:'DN de Participación y Organización Popular'},
-        {val: 'DNAF'        ,nodo:'SPSC'    , label:'DN de Acción Federal'},
-        {val: 'DNPDCDC'     ,nodo:'SPSC'    , label:'DN de Promoción de los Derechos Culturales y Diversidad Cultural'},
-        {val: 'DNPAL'       ,nodo:'SCEPN'   , label:'DN de Pensamiento Argentino y Latinoamericano'},
-        {val: 'DNPA'        ,nodo:'DNPA'    , label:'DN de Planificación y Articulación'},
-        {val: 'DPD'         ,nodo:'UM'      , label:'DI de Prensa'},
-        {val: 'PNIC'        ,nodo:'UM'      , label:'PN Igualdad Cultural'},
-        {val: 'CASAS'       ,nodo:'UM'      , label:'CASAS'},
-        {val: 'CCNK'        ,nodo:'UM'      , label:'Centro Cultural Nestor Kirchner'},
-        {val: 'ORGANISMOS'  ,nodo:'UM'      , label:'ORGANISMOS'},
-        {val: 'DGA'         ,nodo:'SCCG'    , label:'DG de Administración (DGA)'},
-        {val: 'DJG'         ,nodo:'SCCG'    , label:'DG de Jurídicos (DGJ)'},
-        {val: 'DGTS'        ,nodo:'SCCG'    , label:'DG de Tecnología y Sistemas (DGTS)'},
-        {val: 'MNBA'        ,nodo:'MNBA'    , label:'Museo Nacional de Bellas Artes'},
-        {val: 'BN'          ,nodo:'BN'      , label:'Biblioteca Nacional'},
-        {val: 'FNA'         ,nodo:'FNA'     , label:'Fondo Nacional de las Artes'},
-        {val: 'INCAA'       ,nodo:'INCAA'   , label:'INCAA'},
-        {val: 'INT'         ,nodo:'INT'     , label:'INT'},
-        {val: 'INAMU'       ,nodo:'INAMU'   , label:'INAMU'},
-        {val: 'MUSEOS'      ,nodo:'SGC'     , label:'MUSEOS'},
-        {val: 'SCCG'        ,nodo:'SCCG'    , label:'SCCG'},
-        {val: 'SCEPN'       ,nodo:'SCEPN'   , label:'SCEPN'},
-        {val: 'SGC'         ,nodo:'SGC'     , label:'SGC'},
-        {val: 'SPSC'        ,nodo:'SPSC'    , label:'SPSC'},
-        {val: 'SSCPC'       ,nodo:'SCEPN'   , label:'Sub Secretaría de Cultura Pública y Creatividad'},
-        {val: 'SSPDCPP'     ,nodo:'SPSC'    , label:'SSPDCPP'},
-        {val: 'UM'          ,nodo:'UM'      , label:'UM'},
+        {val:'no_definido'  ,nodo:'no_definido' ,presuprog:'000', label:'Lista de ÁREAS'},
+        {val: 'DNA'         ,nodo:'SGC'   ,presuprog:'411'   , label:'DN de Artes'},
+        {val: 'DNIC'        ,nodo:'SGC'   ,presuprog:'411'   , label:'DN de Industrias Culturales'},
+        {val: 'DNPM'        ,nodo:'SGC'   ,presuprog:'411'   , label:'DN de Patrimonio y Museos'},
+        {val: 'DNPCCI'      ,nodo:'SGC'   ,presuprog:'411'   , label:'DN de Políticas Culturales y Cooperación Internacional'},
+        {val: 'CNB'         ,nodo:'SGC'   ,presuprog:'411'   , label:'Casa Nacional del Bicentenario'},
+        {val: 'CCV21'       ,nodo:'SPSC'  ,presuprog:'411'   , label:'Centro Cultural Villa 21'},
+        {val: 'CCV31'       ,nodo:'SPSC'  ,presuprog:'411'   , label:'Centro Cultural Villa 31'},
+        {val: 'DNPOP'       ,nodo:'SPSC'  ,presuprog:'411'   , label:'DN de Participación y Organización Popular'},
+        {val: 'DNAF'        ,nodo:'SPSC'  ,presuprog:'411'   , label:'DN de Acción Federal'},
+        {val: 'DNPDCDC'     ,nodo:'SPSC'  ,presuprog:'411'   , label:'DN de Promoción de los Derechos Culturales y Diversidad Cultural'},
+        {val: 'DNPAL'       ,nodo:'SCEPN' ,presuprog:'411'   , label:'DN de Pensamiento Argentino y Latinoamericano'},
+        {val: 'DNPA'        ,nodo:'DNPA'  ,presuprog:'411'   , label:'DN de Planificación y Articulación'},
+        {val: 'DPD'         ,nodo:'UM'    ,presuprog:'411'   , label:'DI de Prensa'},
+        {val: 'PNIC'        ,nodo:'UM'    ,presuprog:'411'   , label:'PN Igualdad Cultural'},
+        {val: 'CASAS'       ,nodo:'UM'    ,presuprog:'411'   , label:'CASAS'},
+        {val: 'CCNK'        ,nodo:'UM'    ,presuprog:'411'   , label:'Centro Cultural Nestor Kirchner'},
+        {val: 'ORGANISMOS'  ,nodo:'UM'    ,presuprog:'411'   , label:'ORGANISMOS'},
+        {val: 'DGA'         ,nodo:'SCCG'  ,presuprog:'411'   , label:'DG de Administración (DGA)'},
+        {val: 'DJG'         ,nodo:'SCCG'  ,presuprog:'411'   , label:'DG de Jurídicos (DGJ)'},
+        {val: 'DGTS'        ,nodo:'SCCG'  ,presuprog:'411'   , label:'DG de Tecnología y Sistemas (DGTS)'},
+        {val: 'MNBA'        ,nodo:'MNBA'  ,presuprog:'411'   , label:'Museo Nacional de Bellas Artes'},
+        {val: 'BN'          ,nodo:'BN'    ,presuprog:'411'   , label:'Biblioteca Nacional'},
+        {val: 'FNA'         ,nodo:'FNA'   ,presuprog:'411'   , label:'Fondo Nacional de las Artes'},
+        {val: 'INCAA'       ,nodo:'INCAA' ,presuprog:'411'   , label:'INCAA'},
+        {val: 'INT'         ,nodo:'INT'   ,presuprog:'411'   , label:'INT'},
+        {val: 'INAMU'       ,nodo:'INAMU' ,presuprog:'411'   , label:'INAMU'},
+        {val: 'MUSEOS'      ,nodo:'SGC'   ,presuprog:'411'   , label:'MUSEOS'},
+        {val: 'SCCG'        ,nodo:'SCCG'  ,presuprog:'411'   , label:'SCCG'},
+        {val: 'SCEPN'       ,nodo:'SCEPN' ,presuprog:'411'   , label:'SCEPN'},
+        {val: 'SGC'         ,nodo:'SGC'   ,presuprog:'411'   , label:'SGC'},
+        {val: 'SPSC'        ,nodo:'SPSC'  ,presuprog:'411'   , label:'SPSC'},
+        {val: 'SSCPC'       ,nodo:'SCEPN' ,presuprog:'411'   , label:'Sub Secretaría de Cultura Pública y Creatividad'},
+        {val: 'SSPDCPP'     ,nodo:'SPSC'  ,presuprog:'411'   , label:'SSPDCPP'},
+        {val: 'UM'          ,nodo:'UM'    ,presuprog:'411'   , label:'UM'},
     ],
     
     
@@ -2208,6 +2212,27 @@ window.utils = {
         return node ? node.nodo : "";
     },
 
+    fetchPresuprog:function(key){
+        var list = utils.actionAreasOptionList;
+        var node = _.find(list, function(data){return data.val === key;});
+        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
+        return node ? node.presuprog : "";
+    },
+
+    fetchPresuinciso:function(key){
+        var list = utils.tipoBudgetMovimList;
+        var node = _.find(list, function(data){return data.val === key;});
+        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
+        return node ? node.presuinciso : "";
+    },
+
+    fetchAdminRequestTemplate:function(key){
+        var list = utils.tipoBudgetMovimList;
+        var node = _.find(list, function(data){return data.val === key;});
+        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
+        return node ? node.template : "";
+    },
+
     validateInstance: function(pr){
         // true if tipoproducto es una INSTANCIA 
         var isInstance = false;
@@ -2355,7 +2380,7 @@ window.utils = {
         template7 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><span class='pull-right'><%= value %></span></td>"),
         //template7 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-show' title='editar item'><%= value %></button></td>"),
         template5 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit'  title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-zoom' title='entidades relacionadas' ><span class='glyphicon glyphicon-zoom-in'></span></button></td>"),
-        template8 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit'  title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-budget'  title='editar presupuesto'><span class='glyphicon glyphicon-list-alt'></span></button> <button class='btn-link js-participants'  title='editar participantes'><span class='glyphicon glyphicon-user'></span></button><button class='btn-link js-locations'  title='editar locaciones'><span class='glyphicon glyphicon-screenshot'></span></button><button class='btn-link js-newartactivity' title='Agregar actividad artística'><i class='glyphicon glyphicon-plus-sign'></i></button><button class='btn-link js-showartactivity' title='Ver actividades artísticas'><i class='glyphicon glyphicon-star'></i></button></td>"),
+        template8 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit'  title='editar'><span class='glyphicon glyphicon-edit'></span></button><button class='btn-link js-budget'  title='presupuesto y tramitaciones'><span class='glyphicon glyphicon-list-alt'></span></button> <button class='btn-link js-participants'  title='editar participantes'><span class='glyphicon glyphicon-user'></span></button><button class='btn-link js-locations'  title='editar locaciones'><span class='glyphicon glyphicon-screenshot'></span></button><button class='btn-link js-newartactivity' title='Agregar actividad artística'><i class='glyphicon glyphicon-plus-sign'></i></button><button class='btn-link js-showartactivity' title='Ver actividades artísticas'><i class='glyphicon glyphicon-star'></i></button></td>"),
         template9 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-trash' title='observar'><span class='glyphicon glyphicon-ok'></span></button></td>"),
         template10 : _.template("<td data-name='<%= val %>' class='<%= tclass %>' > <button class='btn-link js-edit' title='editar'><span class='glyphicon glyphicon-edit'></span></button> <button class='btn-link js-trash' title='eliminar'><span class='glyphicon glyphicon-remove'></span></button></td>"),
         templatea : _.template("<td data-name='<%= val %>' class='<%= tclass %>' ><button class='btn-link js-edit'  title='editar  '><%= value %></button></td>"),

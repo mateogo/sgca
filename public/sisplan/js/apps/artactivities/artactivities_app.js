@@ -17,7 +17,7 @@ DocManager.module('ArtActivitiesApp', function(ArtActivitiesApp, DocManager, Bac
       if(typeof(criterion) === 'string'){
         criterion = utils.parseQueryString(criterion);
       }
-      
+      console.log('ArtActivities ROUTER list criterion:[%s]', criterion);
       ArtActivitiesApp.List.Controller.list(criterion);
       DocManager.execute("set:active:header", "artactividades");
     },

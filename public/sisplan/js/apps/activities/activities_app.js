@@ -6,7 +6,7 @@ DocManager.module("AdminrequestsApp", function(AdminrequestsApp, DocManager, Bac
       "tramitaciones/informe": "reportActivities",
       "tramitaciones/:id/edit": "editActivities",
       "tramitaciones/:id": "showActivity",
-      "stramite/:id": "editActivity",
+      "stramite/:id/edit": "editActivity",
     }
   });
 
@@ -62,6 +62,13 @@ DocManager.module("AdminrequestsApp", function(AdminrequestsApp, DocManager, Bac
     console.log('activities_app')
     DocManager.navigate("tramitaciones/informe");
     API.reportActivities();
+  });
+
+  DocManager.on("request:edit", function(model){
+    // model is parent ACTION
+    var entityid = model.id;
+    DocManager.navigate("stramite/" + entityid + "/edit");
+    API.editActivity(entityid);
   });
 
   DocManager.on("activity:edit", function(model){

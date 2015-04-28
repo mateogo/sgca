@@ -54,8 +54,9 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
   var loadBudgetsFromDB = function(){
     DocManager.request('action:fetch:budget',Edit.Session.action, null,function(budgetCol){
       Edit.Session.budgetCol = budgetCol;
-      var costo = DocManager.request('action:evaluate:cost', budgetCol);
+
       console.log('budgetCol:[%s]', budgetCol.length);
+      var costo = DocManager.request('action:evaluate:cost', budgetCol);
 
       var budgetView = new Edit.ActivityShowBudgets({
         model: new Backbone.Model({costo_total: costo.total, costo_detallado: costo.detallado}),
@@ -71,8 +72,10 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     console.log('loadRequestsFromDB BEGIN');
     DocManager.request('action:fetch:adminrequests',Edit.Session.action, null,function(requestsCol){
       Edit.Session.requestsCol = requestsCol;
-      //var costo = DocManager.request('action:evaluate:cost', requestsCol);
-      console.log('requestsCol:[%s]', requestsCol.length);
+
+      console.log('requestsCol:[%s]  requestCosto:', requestsCol.length);
+      var rqstCost = DocManager.request('action:evaluate:requests', requestsCol);
+      console.log('requestsCol:[%s]  requestCosto:[%s][%s]', requestsCol.length, rqstCost.total, rqstCost.detallado);
 
       var reqTable  = Edit.gridCreator(requestsCol);
       var reqFilter = Edit.filterCreator(requestsCol);
@@ -247,17 +250,16 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
 
     view.on('cost:changed', function(model){
       console.log('[%s]:[%s] model:[%s] Register CostChangedEVENT BUBBLE[%s]',view.whoami, view.cid, model.whoami, arguments.length);
-      //evaluateTotalCost(Edit.Session.facetCol);
       model.evaluateCosto();
     });
 
     //ITEMS EVENTS
     view.on('clone:activity:item', function(itemview, item){
-      console.log('[%s] /[%s] CloneActivityITEM ActivityEvent BUBBLE[%s]',itemview.whoami,item.whoami, arguments.length);
-      var itemactivity = new DocManager.Entities.AdminrequestItemFacet(item.attributes);
+      // console.log('[%s] /[%s] CloneActivityITEM ActivityEvent BUBBLE[%s]',itemview.whoami,item.whoami, arguments.length);
+      // var itemactivity = new DocManager.Entities.AdminrequestItemFacet(item.attributes);
 
-      view.model.addItemActivity(itemactivity);
-      evaluateTotalCost(Edit.Session.facetCol);
+      // view.model.addItemActivity(itemactivity);
+      // evaluateTotalCost(Edit.Session.facetCol);
     });
 
     view.on('edit:activity:item', function(itemview, item){
@@ -309,15 +311,9 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
       action.set('costo_total', cost);
     })
 
-    // facetCol.on('action:cost:changed', function(cost){
-    //   console.log('trigger handled: action:cost:changed')
-    //   action.set('costo_total', cost);
-    // });
 
     Edit.Session.action = action;
     buildActionView(action);
-
-    //Edit.Session.facetCol.bind('cost:changed', evaluateTotalCost);
 
     var summaryView = new Edit.SummaryView({
       model: action
@@ -389,7 +385,8 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     Edit.modaledit(facet, opt, function(facet){
       console.log('New Admrequest BEGINS Submitted:');
       facet.createNewRequest(Edit.Session.action, Edit.Session.budgetCol.at(0), Edit.Session.currentUser, function(model){
-        console.log('createNewRequest Callback')
+        console.log('createNewRequest Callback');
+        DocManager.trigger('activity:edit', Edit.Session.action);
       })
 
     });

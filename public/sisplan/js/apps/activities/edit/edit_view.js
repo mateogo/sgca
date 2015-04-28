@@ -35,7 +35,7 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     initialize: function(options){
-      console.log('[%s] INIT [%s]',this.whoami, this.model.get('slug'));
+      //console.log('[%s] INIT [%s]',this.whoami, this.model.get('slug'));
       this.options = options;
     },
  
@@ -67,7 +67,7 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     newActivity: function(e){
-      console.log('NEW activity CLICK [%s]', this.parentView.whoami);
+      //console.log('NEW activity CLICK [%s]', this.parentView.whoami);
       e.preventDefault();
       this.trigger("activity:new", this.model);
     },
@@ -78,7 +78,7 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     
     initialize: function(options){
       this.options = options;
-      console.log('BudgetComposite INIT VIEW, triggering')
+      //console.log('BudgetComposite INIT VIEW, triggering')
     },
 
     childViewOptions: function(model, index) {
@@ -104,7 +104,7 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     initialize: function(options){
-      console.log('[%s] INIT [%s]',this.whoami, this.model.get('slug'));
+      //console.log('[%s] INIT [%s]',this.whoami, this.model.get('slug'));
       this.collection = new DocManager.Entities.BudgetItemsCollection(this.model.get('items'));
       this.options = options;
     },
@@ -123,7 +123,7 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     onShow:function(){
-      console.log('onSHOW!!!!!!!!!!!!!!!!!!')
+      //console.log('onSHOW!!!!!!!!!!!!!!!!!!')
       //for (var i in arguments){console.log("[%s]: [%s]",i,arguments[i])}
 
       var budgetComposite = new Edit.ActivityShowBudgetComposite({
@@ -145,7 +145,7 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     whoami:'ActiviyShowBudget',
 
     initialize: function(options){
-      console.log('[%s]: [%s] options:[%s]',this.whoami, this.collection.length, options);
+      //console.log('[%s]: [%s] options:[%s]',this.whoami, this.collection.length, options);
       this.options = options;
     },
 
@@ -161,7 +161,7 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
 
     childEvents: {
       'register:budget:events': function(view, model){
-        console.log('MAIN PANEL bubled Activity NEW [%s]', arguments.length);
+        //console.log('MAIN PANEL bubled Activity NEW [%s]', arguments.length);
         this.trigger('register:budget:events', view, model);
       },
     },
@@ -254,14 +254,15 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
          return this;
       },
       events: {
-          'click button.js-edit': 'editClicked',
-          'click button.js-trash': 'trashClicked',
+          'click button.js-requestedit': 'editClicked',
+          'click button.js-requesttrash': 'trashClicked',
       },
         
       editClicked: function(e){
           e.stopPropagation();e.preventDefault();
+          //console.log('********** EDIT CLICKED ************')
+          DocManager.trigger('request:edit',this.model);
           //this.trigger('participant:edit',this.model);
-          //DocManager.trigger('participant:edit',participantsApp.Model.selectedAction,this.model);
       },
         
       trashClicked: function(e){
@@ -387,14 +388,12 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     rowchbx: function (e) {
-      console.log('yes1')
       e.preventDefault();
       e.stopPropagation();
 
     },
  
     headchbx: function (e) {
-      console.log('yes2')
       e.preventDefault();
       e.stopPropagation();
 
@@ -404,7 +403,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
         //utils.hideAlert();
         event.preventDefault();
         event.stopPropagation();
-        console.log('input ITEM CHANGE')
         var target = event.target;
  
         this.model.set(target.name, target.value);
@@ -463,22 +461,18 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
 
     childEvents: {
       'changed:activity:item': function(view, item){
-        //console.log('bubled item CHANGED [%s]', arguments.length);
         this.refreshView()
       },
 
       'clone:activity:item': function(view, item){
-        //console.log('bubled EDIT [%s]', arguments.length);
         this.trigger('clone:activity:item', view, item);
       },
 
       'edit:activity:item': function(view, item){
-        //console.log('bubled EDIT [%s]', arguments.length);
         this.trigger('edit:activity:item', view, item);
       },
 
       'trash:activity:item': function(view, item){
-        //console.log('bubled TRASH [%s]', arguments.length);
         this.trigger('trash:activity:item', view, item);
       }
     },
@@ -539,9 +533,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
  
         this.model.set(target.name, target.value);
         this.refreshView();
-        //console.log('CHANGE: [%s]: [%s]',target.name, target.value);
-        //var err = this.model.validate(change);
-        //this.onFormDataInvalid((err||{}));
     },
 
     refreshView: function(){
@@ -652,7 +643,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
       e.preventDefault();
       e.stopPropagation();
       var self = this;
-      console.log('FormSubmit CLICKED');
       self.trigger('form:submit',self.model);
     },
 
@@ -660,7 +650,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
       e.preventDefault();
       e.stopPropagation();
       var self = this;
-      console.log('FormSubmit CLICKED');
       self.trigger('form:cancel',self.model);
     },
 
@@ -678,7 +667,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
   Edit.inlineedit = function(opt, cb){
         // #js-form.hook: lo provee la view
         var formHook = opt.hook || '.js-form-hook';
-        console.log('inlineEdit[%s]',formHook);
 
         var submitform = true,
             form = new Backbone.Form({
@@ -704,11 +692,9 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
         });
         formContainer.on('form:submit', function(theModel){
           var errors = form.commit();
-          console.log('FormClose!!!  [%s]',opt.facet.get('description'));
           formCleanClose();
         });
         formContainer.on('form:cancel', function(theModel){
-          console.log('FormCancel');
           submitform = false;
           formCleanClose();
         });
@@ -724,8 +710,7 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
 
 
   Edit.createInstance = function(opt, cb){
-        console.log('modal ACTION NEW');
-        console.log('opt.facet: [%s]',opt.facet.whoami)
+        //console.log('opt.facet: [%s]',opt.facet.whoami)
 
         var self = opt.view,
             facet = opt.facet,
@@ -735,13 +720,11 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
 
 
         form.on('change', function(form, editorContent) {
-            console.log('change');
             var errors = form.commit();
             return false;
         });
 
         form.on('blur', function(form, editorContent) {
-            console.log('blur');
             //var errors = form.commit();
             return false;
         });
@@ -756,13 +739,11 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
         });
 
         modal.on('ok',function(){
-          console.log('MODAL ok FIRED');
           //modal.preventClose();
 
         });
 
         modal.open(function(){
-            console.log('modal CLOSE');
             var errors = form.commit();
             if(cb)
               cb(facet, true);
@@ -780,7 +761,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     initialize: function(options){
-      console.log('[%s] BEGINS',this.whoami);
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
@@ -845,7 +825,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     edititem: function(e){
-      console.log('ActivityITEM edit')
       e.preventDefault();
       e.stopPropagation();
       this.trigger('edit:activity:item', this.model);
@@ -880,7 +859,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     initialize: function(options){
-      console.log('[%s] BEGINS [%s]',this.whoami, this.collection.length);
       var self = this;
       this.options = options;
     },
@@ -928,7 +906,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     initialize: function(options){
-      console.log('Edit.DOCUMENT BEGINS')
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
@@ -974,7 +951,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
           usermail = self.model.get('eusuario'),
           post;
 
-      console.log('User validation: [%s]', usermail);
       this.trigger('user:validate', self, usermail, function(user, msgs){
         if(user){
           console.log('UserValidation CB [%s]',user.get('username[%s]'),msgs); 
@@ -994,7 +970,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
 
     editDetailForm: function(e){
       e.preventDefault();
-      console.log('Toggle REQ FORM');
       this.trigger('sitem:edit', this.model);
       this.$('#itemFormBtn').prop('disabled', true);
 
@@ -1005,7 +980,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
       var self = this,
           query = this.$('#organismosch').val();
 
-      console.log('organismosearch [%s]',query);
       this.trigger('person:select', query, function(entity){
         self.model.set({organismo:entity.get('nickName')});
         self.model.set({organismoid:entity.id});
@@ -1017,7 +991,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
       var self = this,
           query = this.$('#personsch').val();
 
-      console.log('personsearch [%s]',query);
       this.trigger('person:select', query, function(entity){
         self.model.set({persona:entity.get('nickName')});
         self.model.set({personaid:entity.id});
@@ -1078,7 +1051,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
         });
 
         modal.open(function(){
-            console.log('ME CERRARON [%s]');
         });
   };
 
@@ -1086,7 +1058,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
 
   // ventana modal Edición del horario de Emision
   Edit.pemisHourEdit = function(model, cb){
-        console.log('Modal Parte de Emisión');
         var form = new Backbone.Form({
                 model: model,
             });
@@ -1113,7 +1084,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
 
   // ventana modal
   Edit.createItem = function(model){
-        console.log('Modal ITEM NEW');
         var facet = new DocManager.Entities.DocumItemCoreFacet({
                 tipoitem: model.get('tipocomp'),
                 slug: model.get('slug'),
@@ -1157,7 +1127,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     initialize: function(options){
-      console.log('Nuevo Requerimiento [%s]',options.itemtype);
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
@@ -1172,9 +1141,7 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
 
     altarequerim: function(){
       var self = this;
-      console.log('alta requerim BEGINS!!!!');
       this.trigger('details:form:submit', this.model, function(entity){
-        console.log('alta requerim: Cerrar esta ventana!!!!');
         self.destroy();
 
       });
@@ -1319,7 +1286,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     getTemplate: function(){
-      console.log('getTEMPLATES: [%s]',this.templates[this.options.itemtype]);
       return utils.templates[this.templates[this.options.itemtype]];
     },
 
@@ -1342,7 +1308,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     tcChange: function(key){
-      console.log('tcChange: [%s]',key);
       this.$('#'+key).val(this.model.get(key));
     },
 
@@ -1351,7 +1316,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
           query = this.$('#product').val();
 
       this.trigger('product:select', query, function(entity){
-        console.log('callback: [%s] [%s]',entity.get('patechfacet'),entity.get('patechfacet').durnominal);
         var duracion="";
         if(entity.get('patechfacet')){
           duracion = entity.get('patechfacet').durnominal;
@@ -1389,15 +1353,12 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     childViewOptions: function(model, index) {
-      // do some calculations based on the model
-      console.log('childViewOptions [%s]',model.whoami);
       return {
         itemtype:this.options.itemtype,
       }
     },
 
     onFormSubmit:function(){
-      console.log('submit form:PTI-LIST');
       this.trigger("sit:form:submit");
 
     },
@@ -1435,9 +1396,7 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
 
     dateItem: function(){
       var self = this;
-      console.log('dateItem CLICKED [%s]',self.model.get('dayweek'));
       self.trigger('date:select',self.model,function(entity){
-        console.log('dateItem BACK');
         self.render();
       });
     },
@@ -1447,7 +1406,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
           query = this.$('#product').val();
 
       this.trigger('product:select', query, function(entity){
-        console.log('callback: [%s] [%s]',entity.get('patechfacet'),entity.get('patechfacet').durnominal);
         var duracion="";
         if(entity.get('patechfacet')){
           duracion = entity.get('patechfacet').durnominal;
@@ -1488,7 +1446,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     //tagName: "li",
     //className:"list-group-item",
     initialize: function(options){
-      console.log('PEmisionListItem: COMPOSITE INITIALIZE [%s]',options.itemtype);
       var self = this;
       this.options = options;
       //this.collection = model.get('emisiones');
@@ -1546,14 +1503,11 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     childViewContainer: "tbody",
 
     initialize: function(options){
-      console.log('PEmisionList:INITIALIZE');
       
       this.options = options;
     },
 
     childViewOptions: function(model, index) {
-      // do some calculations based on the model
-      console.log('PEmisionList:childViewOptions [%s] [%s]',model.get('pslug'),index);
       return {
         collection: model.get('emisiones'),
         itemtype:this.options.itemtype,
@@ -1561,7 +1515,6 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
     },
 
     onFormSubmit:function(){
-      console.log('submit form:PTI-LIST');
       this.trigger("sit:form:submit");
     },
   });

@@ -14,7 +14,13 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     events: {
       'click .js-basicedit':'onClickBaseBuild',
       'click .js-itemheaderedit':'onClickItemHeaderEdit',
-      
+      'click .js-tramitaciones':'onClickReturnToTramitaciones',      
+    },
+
+    onClickReturnToTramitaciones: function(){
+      console.log('Click retornar a tramitaciones')
+      DocManager.trigger('activity:edit', Build.Session.currentAction);
+
     },
     onClickBaseBuild: function(){
       console.log('Click basicEdit')
@@ -37,7 +43,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     }
   });
 
-  Build.HeaderInfo = Marionette.ItemView.extend({
+  Build.ActionInfo = Marionette.ItemView.extend({
     tagName: 'div',
     initialize: function(opts){
       console.log('HeaerInfo INIT')
@@ -48,7 +54,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
       Marionette.ItemView.prototype.initialize.apply(this,arguments);
     },
     getTemplate: function(){
-      return utils.templates.StramiteBuildHeaderView;
+      return utils.templates.StramiteBuildActionView;
     },
     onRender: function(){
       // if(this.selectedTab){
@@ -86,7 +92,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
   
   Build.ResumeView = Marionette.ItemView.extend({
     getTemplate: function(){
-      return utils.templates.StramiteBuildHeaderDataView;
+      return utils.templates.StramiteBuildBasicDataView;
     },
     templateHelpers: function(){
       var self = this;
@@ -251,7 +257,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     },
 
     getTemplate: function(){
-      return utils.templates.StramiteBuildItemHeaderView;
+      return utils.templates.StramiteBuildItemXeaderView;
     },
     
     templateHelpers: function(){
@@ -281,24 +287,42 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
     },
 
     getTemplate: function(){
-      return utils.templates.StramiteBuildItemHeaderLayout;
+      return utils.templates.StramiteBuildItemXeaderLayout;
     },
 
     onRender: function(){
       console.log(this.model);
+      Backbone.Form.editors.List.Modal.ModalAdapter = Backbone.BootstrapModal;
+
       this.form = new Backbone.Form({
         model: this.model,
         //template: utils.templates.StramiteBuildBasicEditorForm
       });
       this.form.render();
+
+      this.form.on('add', function(listEditor, itemEditor) {
+          console.log('Add triggered ' + itemEditor.getValue());
+      });
+
       this.$el.find('#formContainer').html(this.form.el);
     },
             
     events: {
       'click .js-save': 'onSave',
       'click .js-cancel': 'onCancel',
+      'click .js-itemgenerator': 'onGenerateItems',
     },
     
+    onGenerateItems: function(){
+      var errors = this.form.commit(),
+          self = this;
+
+      if(!errors){
+        self.trigger('generate:items:editor', self.model, function(error){
+          Message.error('Ops! Hay errores en el formulario');
+        });
+      }
+    },
     
     onSave: function(){
       var errors = this.form.commit(),
@@ -341,8 +365,7 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
   });
 
 
-
-  Backgrid.ActionAdminrequestCell = Backgrid.Cell.extend({
+  var buildActionCell = Backgrid.Cell.extend({
       // Cell default class names are the lower-cased and dasherized
       // form of the the cell class names by convention.
       className: "action-cell",
@@ -356,22 +379,59 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
          return this;
       },
       events: {
-          'click button.js-edit': 'editClicked',
-          'click button.js-trash': 'trashClicked',
+          'click button.js-requestedit': 'itemEditClicked',
+          'click button.js-requesttrash': 'itemTrashClicked',
       },
         
-      editClicked: function(e){
+      itemEditClicked: function(e){
           e.stopPropagation();e.preventDefault();
-          //this.trigger('participant:edit',this.model);
-          //DocManager.trigger('participant:edit',participantsApp.Model.selectedAction,this.model);
+          console.log('item EDIT [%s] ', this.model.get('description'));
+
+          //this.model.trigger('request:item:edit');
+          //this.trigger('request:item:edit',this.model);
+
+          Build.Session.views.layout.trigger('request:item:edit',this.model);
       },
         
-      trashClicked: function(e){
+      itemTrashClicked: function(e){
           e.stopPropagation();e.preventDefault();
           //this.trigger('participant:remove',this.model);
           //DocManager.trigger('participant:remove',participantsApp.Model.selectedAction,this.model);
       }
     });
+
+  var fechaCell = Backgrid.Cell.extend({
+    render:function(){
+      var field = this.column.get('name');
+      var value = this.model.get(field);
+      var str = '';
+      str = moment(value).format('dd LL');
+      //return moment(date).format('dddd LL');
+      this.$el.html(str);
+
+      return this;
+    }
+  });  
+  
+
+  Backgrid.ImporteFormateadoCell = Backgrid.Cell.extend({
+      // Cell default class names are the lower-cased and dasherized
+      // form of the the cell class names by convention.
+      className: "js-importe",
+      render: function(){
+
+          var cell = $('<span  class="pull-right">' + accounting.formatNumber(this.model.get(this.column.get('name'))) +  '</span>');
+        //<%=  %>
+
+          this.$el.html(cell);
+         return this;
+      },
+
+    });
+
+  var importelabel = function(){
+    return 'Costo: ' + accounting.formatNumber(Build.Session.model.getFieldLabel('costodetallado'));
+  }
   
   
   Build.itemsGridCreator = function(collection){
@@ -379,13 +439,14 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
           className: 'table table-condensed table-bordered table-hover',
           collection: collection,
           columns: [
-                    {name: 'person',label: 'Tramitación',cell: 'string',editable:false},
+                    {name: 'person',label: 'Beneficiario',cell: 'string',editable:false},
                     {name: 'slug',label: 'Descripción',cell: 'string',editable:false},
-                    {name: 'freq',label: 'Cantidad',cell: 'number',editable:false},
-                    {name: 'punit',label: 'Importe',cell: 'number',editable:false},
-                    {name: 'fedesde',label: 'Fe desde',cell: 'string',editable:false},
-                    {name: 'fehasta',label: 'Fe hasta',cell: 'string',editable:false},
-                    {label: 'Acciones',cell: 'actionAdminrequest',editable:false,sortable:false},
+                    {name: 'freq',label: 'Cantidad',cell: 'importeFormateado',editable:false},
+                    {name: 'punit',label: 'Unitario',cell: 'importeFormateado',editable:false},
+                    {name: 'importe',label: importelabel ,cell: 'importeFormateado',editable:false},
+                    {name: 'fedesde',label: 'Fe desde',cell: fechaCell, editable:false},
+                    {name: 'fehasta',renderable: false, label: 'Fe hasta',cell: fechaCell,editable:false},
+                    {label: 'Acciones',cell: buildActionCell, editable:false,sortable:false},
                    ]
         });
   }; 
@@ -397,7 +458,62 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
         });
   };
 
-  
+  Build.ItemEditor = Marionette.ItemView.extend({
+    tagName: 'div',
 
+    initialize: function(opts){
+      this.originalModel = _.clone(opts.model);
+    },
+
+    getTemplate: function(){
+      return utils.templates.StramiteBuildItemEdit;
+    },
+
+    onRender: function(){
+      console.log('[%s] [%s]', this.model.get('person'), this.model.whoami);
+      this.form = new Backbone.Form({
+        model: this.model,
+        template: utils.templates.StramiteBuildItemForm
+      });
+      this.form.render();
+      this.$el.find('#formContainer').html(this.form.el);
+      //this.validateSubRubroSelect();
+      //this.validateLocacion();
+    },
+    
+    
+    done: function(){
+      Build.Controller.showResume(this.model);
+    },
+    
+    events: {
+      'click .js-save': 'onSave',
+      'click .js-cancel': 'onCancel',
+    },
+    
+    
+    onSave: function(){
+      var errors = this.form.commit(),
+          self = this;
+      
+      if(!errors){
+        self.trigger('save:item:editor', self.model, function(error){
+          Message.error('Ops! no se pudo guardar');
+        });
+      }
+    },
+    
+    onCancel: function(){
+      // if(this.model.isNew()){
+      //   DocManager.navigateBack();  
+      // }else{
+      //   Build.Controller.showResume(this.model);
+      // }
+      console.log('Cancel CLICKED')
+      this.trigger('cancel:item:editor');
+    }
+    
+  });
+  
   
 });

@@ -7,9 +7,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     idAttribute: "_id",
 
 
-
-
-
     defaults: {
       _id: null,
 
@@ -245,6 +242,116 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 
+  var getItemsCol = function(model){
+
+    if(!model.itemsCol){
+      model.itemsCol = new Entities.BudgetItemsCollection(model.get('items'));
+    }
+
+    return model.itemsCol;
+  };
+
+  var evaluateItemCost =  function(item){
+      var previouscost = parseInt(item.get('importe'));
+      var isactive = parseInt(item.get('isactive')) === 1 ? 1 : 0;
+      var isdetallado = parseInt(item.get('isdetallado')) === 1 ? 1 : 0;
+      var freq = parseInt(item.get('freq'));
+      var cantidad = parseInt(item.get('cantidad'));
+
+      var punit = parseInt(item.get('punit'));
+      var montomanual = parseInt(item.get('montomanual'));
+      
+      //console.log('DETALLE: isactive:[%s] isdetallado:[%s]  freq:[%s]  montomanual:[%s] punit:[%s] ',isactive, isdetallado, freq, montomanual, punit)
+      var importe = (isactive * isdetallado * freq * cantidad * punit) + (1-isdetallado) * (isactive * montomanual);
+      item.set('importe', importe);
+
+      if(previouscost !== importe){
+        console.log(' ITEM: triggering cost:changed');
+        item.trigger('budgetitem:cost:changed');
+      }
+      return importe;
+  };
+
+
+  var evaluateDetailedBudgetCost = function(model){
+    var items = getItemsCol(model);
+    var costodetallado = 0;
+
+    if(items){
+      if(items.length){
+        items.each(function(item){
+          var itemcost = evaluateItemCost(item);
+          costodetallado += itemcost;
+          //console.log('evaluate Items[%s] [%s]', itemcost, costodetallado)
+        })
+      }
+    }
+    return costodetallado;
+  };
+
+
+  var evaluateBudgetCost = function(budget){
+    //console.log('evaluateBudgetCost CABECERA BEGIN');
+    var previouscost = parseInt(budget.get('importe'));
+    var isactive = parseInt(budget.get('isactive')) === 1 ? 1 : 0;
+    var isdetallado = parseInt(budget.get('isdetallado')) === 1 ? 1 : 0;
+    var isvalid = budget.get('estado_alta') === 'activo' ? 1 : 0;
+    var freq = parseInt(budget.get('freq'));
+    var cantidad = parseInt(budget.get('cantidad'));
+    var montomanual = parseInt(budget.get('montomanual'));
+
+    var punit = evaluateDetailedBudgetCost(budget);
+
+    var importe = (isvalid * isactive * isdetallado * freq * cantidad * punit) + (1-isdetallado) * (isvalid * isactive * montomanual);
+    //console.log('CABECERA: isactive:[%s] isdetallado:[%s]  freq:[%s] cant:[%s] montomanual:[%s] punit:[%s] importe:[%s] previouscost:[%s]',isactive, isdetallado, freq, cantidad, montomanual, punit, importe, previouscost)
+
+    budget.set('punit', punit);
+    budget.set('importe', importe);
+
+    if(previouscost !== importe){
+      console.log(' BUDGET: triggering cost:changed');
+      budget.trigger('budget:cost:changed');
+    }
+    return importe;
+  };
+
+  var evaluateActionCost = function(budgetCol){
+      var importe = 0,
+          costo = {
+            total: 0,
+            detallado: 0,
+
+          };
+
+      if(!budgetCol.costototal){
+        budgetCol.costototal = 0;
+      }
+      if(!budgetCol.costodetallado){
+        budgetCol.costodetallado = 0;
+      }
+
+      budgetCol.each(function(budget){
+        importe = evaluateBudgetCost(budget);
+        //console.log('Evaluando Costo: [%s] [%s]', importe, budget.get('tgasto'));
+
+        if(budget.get('tgasto') === 'global'){
+          costo.total += importe;
+        }else{
+          costo.detallado += importe;
+        }
+      });
+
+      if (budgetCol.costototal !== costo.total || budgetCol.costodetallado !== costo.detallado ){
+        //console.log('COSTO TOTAL ACCION: [%s] >> [%s]', budgetCol.costodetallado, costo.detallado);
+        budgetCol.trigger('action:cost:changed', costo.total, costo.detallado);
+      }
+      budgetCol.costototal = costo.total;
+      budgetCol.costodetallado = costo.detallado;
+      return costo;
+  };
+
+
+
   Entities.BudgetPlanningCollection = Backbone.Collection.extend({
     whoami: 'Entities.BudgetPlanningCollection:budget.js ',
     url: "/navegar/presupuestos",
@@ -292,37 +399,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     evaluateTotalCost: function(){
-      console.log('TOTAL COST BEGINGS')
-      var costo_total = 0,
-          costo_detallado = 0,
-          costo = 0;
-
-      if(!this.costototal){
-        this.costototal = 0;
-      }
-      if(!this.costodetallado){
-        this.costodetallado = 0;
-      }
-
-      this.each(function(budget){
-        costo = budget.evaluateCosto();
-        console.log('Evaluando Costo: [%s] [%s]', costo, budget.get('tgasto'));
-
-        if(budget.get('tgasto') === 'global'){
-          costo_total += costo;
-        }else{
-          costo_detallado += costo;
-        }
-
-      });
-
-      if (this.costototal !== costo_total || this.costodetallado !== costo_detallado ){
-        console.log('COSTO TOTAL ACCION: [%s] >> [%s]', this.costodetallado, costo_detallado);
-        this.trigger('action:cost:changed', costo_total, costo_detallado);
-      }
-      this.costototal = costo_total;
-      this.costodetallado = costo_detallado;
-      return costo_total;
+      return evaluateActionCost(this);
     },
 
   });
@@ -659,45 +736,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return clone;
     },
 
-    evaluateItems: function(){
-      var items = this.itemsCol;
-      var costodetallado = 0;
+    getItemsCol: function(){
+      var self = this;
 
-      if(items){
-        if(items.length){
-          items.each(function(item){
-            var itemcost = item.evaluateCosto();
-            costodetallado += itemcost;
-            //console.log('evaluate Items[%s] [%s]', itemcost, costodetallado)
-          })
-        }
+      if(!self.itemsCol){
+        self.itemsCol = new DocManager.Entities.BudgetItemsCollection(self.get('items'));
       }
-      return costodetallado;
+
+      return self.itemsCol
+    },
+
+    evaluateItems: function(){
+      return evaluateDetailedBudgetCost(this);
+
     },
 
     evaluateCosto: function(){
-      //console.log('EvaluateCosto CABECERA BEGIN');
-      var previouscost = parseInt(this.get('importe'));
-      var isactive = parseInt(this.get('isactive')) === 1 ? 1 : 0;
-      var isdetallado = parseInt(this.get('isdetallado')) === 1 ? 1 : 0;
-      var isvalid = this.get('estado_alta') === 'activo' ? 1 : 0;
-      var freq = parseInt(this.get('freq'));
-      var cantidad = parseInt(this.get('cantidad'));
-      var montomanual = parseInt(this.get('montomanual'));
-
-      var punit = this.evaluateItems();
-
-      var importe = (isvalid * isactive * isdetallado * freq * cantidad * punit) + (1-isdetallado) * (isvalid * isactive * montomanual);
-      //console.log('CABECERA: isactive:[%s] isdetallado:[%s]  freq:[%s] cant:[%s] montomanual:[%s] punit:[%s] importe:[%s] previouscost:[%s]',isactive, isdetallado, freq, cantidad, montomanual, punit, importe, previouscost)
-
-      this.set('punit', punit);
-      this.set('importe', importe);
-
-      if(previouscost !== importe){
-        console.log(' BUDGET: triggering cost:changed');
-        this.trigger('budget:cost:changed');
-      }
-      return importe;
+      return evaluateBudgetCost(this);
     },
 
     fetchBudgetItems: function(stype){
@@ -871,23 +926,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     evaluateCosto: function(){
-      var previouscost = parseInt(this.get('importe'));
-      var isactive = parseInt(this.get('isactive')) === 1 ? 1 : 0;
-      var isdetallado = parseInt(this.get('isdetallado')) === 1 ? 1 : 0;
-      var freq = parseInt(this.get('freq'));
-      var cantidad = parseInt(this.get('cantidad'));
-
-      var punit = parseInt(this.get('punit'));
-      var montomanual = parseInt(this.get('montomanual'));
-      
-      //console.log('DETALLE: isactive:[%s] isdetallado:[%s]  freq:[%s]  montomanual:[%s] punit:[%s] ',isactive, isdetallado, freq, montomanual, punit)
-      var importe = (isactive * isdetallado * freq * cantidad * punit) + (1-isdetallado) * (isactive * montomanual);
-      this.set('importe', importe);
-      if(previouscost !== importe){
-        console.log(' ITEM: triggering cost:changed');
-        this.trigger('budgetitem:cost:changed');
-      }
-      return importe;
+      return evaluateItemCost(this);
     },
 
     defaults: {
@@ -950,7 +989,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   //Accion Collection
   Entities.BudgetCollection = Backbone.Collection.extend({
-    whoami: 'Entities.BudgetCollection:accion.js ',
+    whoami: 'Entities.BudgetCollection:budget.js ',
     url: "/presupuestos",
     model: Entities.Budget,
     sortfield: 'cnumber',
@@ -1095,7 +1134,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   };
 
   Entities.BudgetNavCollection = Backbone.Collection.extend({
-    whoami: 'Entities.BudgetNavCollection:accion.js ',
+    whoami: 'Entities.BudgetNavCollection:budget.js ',
     url: "/navegar/presupuestos",
     model: Entities.Budget,
     sortfield: 'cgasto',
@@ -1111,17 +1150,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       return l < r ? (1*order) : l > r ? (-1*order) : 0;
     },
+
+    evaluateTotalCost: function(){
+      return evaluateActionCost(this);
+    },
+
+
   });
   
   Entities.BudgetsFindOne = Backbone.Collection.extend({
-    whoami: 'Entities.BudgetsFindOne:accion.js ',
+    whoami: 'Entities.BudgetsFindOne:budget.js ',
     url: "/budget/fetch",
     model: Entities.Budget,
     comparator: "cnumber",
   });
 
   Entities.BudgetsUpdate = Backbone.Collection.extend({
-    whoami: 'Entities.BudgetsUpdate:accion.js ',
+    whoami: 'Entities.BudgetsUpdate:budget.js ',
     url: "/actualizar/accions",
     model: Entities.Budget,
     comparator: "cnumber",
@@ -1132,7 +1177,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
    * ******* FACETA PARA CREAR UNA NUEVA ACCION +**********
    */
   Entities.BudgetNewFacet = Backbone.Model.extend({
-    whoami: 'BudgetNewFacet:accion.js ',
+    whoami: 'BudgetNewFacet:budget.js ',
 
     validate: function(attrs, options) {
       //if(!attrs) return;
