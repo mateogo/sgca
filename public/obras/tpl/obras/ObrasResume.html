@@ -1,0 +1,61 @@
+<h4>Confirmación</h4>
+<h5 class="alert alert-danger" id="requisite">
+    Verifique que los datos que se listan a continuación sean correctos.
+</h5>
+
+<h4 class="spacer">Descripción de la obra de arte</h4>
+<div><strong>Denominación: </strong> <%=slug%> </div>
+<div><strong>Año de creación: </strong> <%=madeyear%> </div>
+<div><strong>Procedimiento: </strong> <%=procedure%> </div>
+<div><strong>Material: </strong> <%=material%> </div>
+<div><strong>Medidas: </strong> <%=dimensions%> </div>
+<div><strong>Valor: </strong> <%=value%> </div>
+
+<hr class="spacer">
+<h4 class="spacer">Fotos</h4>
+<% _.each(photos,function(photo){ %>
+        <div class="media-left">
+            <a class="thumbnail" style="width:150px">
+              <img class="media-object" src="<%= getUrlAssets(photo)%>" width="150" >
+            </a>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading"><%= photo.name%></h4>
+            <%= photo.slug%>
+        </div>
+<% }) %>
+
+<hr class="spacer">
+<h4 class="spacer">Autor</h4>
+<div><strong>Nombre y Apellido: </strong> <%=autor.get('name')%> <%=autor.get('lastname')%></div>
+<div><strong>Domicilio: </strong> <%=autor.get('address')%> </div>
+<div><strong>Vive: </strong> <%=autor.get('alive')%> </div>
+<div><strong>Fecha de nacimiento: </strong> <%=autor.get('birthday')%> </div>
+<div><strong>Lugar de nacimiento: </strong> <%=autor.get('bornplace')%> </div>
+<div><strong>Fecha de fallecimiento: </strong> <%=autor.get('deathdate')%> </div>
+<div><strong>Radicado en el país desde: </strong> <%=autor.get('studyplace')%> </div>
+<div><strong>Cursó estudios artísticos en: </strong> <%=autor.get('locateddate')%> </div>
+<div><strong>Expuso en: </strong> <%=autor.get('exhibit')%> </div>
+<div><strong>Cursó estudios artísticos en: </strong> <%=autor.get('locateddate')%> </div>
+<div><strong>Obtuvo los siguientes premios: </strong> <%=autor.get('awards')%> </div>
+<div><strong>Obras más representativas: </strong> <%=autor.get('bestobras')%> </div>
+
+<hr class="spacer">
+<% if(parts && parts.length > 0){ %>
+    <h4 class="spacer">Partes</h4>
+    
+    <% _.each(parts,function(part,index){ %>
+        <div class="media">
+          <div class="media-left">
+            <strong><%=(index+1)%>.</strong>
+            <img src="" />
+          </div>
+          <div class="media-body">
+            <h4 class="media-heading"><%= part.slug%></h4>
+            <%= part.description%>
+          </div>
+        </div>  
+    <% }) %>
+    <hr class="spacer">    
+ <% } %>
+  

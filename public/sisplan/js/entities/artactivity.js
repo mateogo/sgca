@@ -138,12 +138,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     });
 
     Entities.ArtActivityCollection = Backbone.Collection.extend({
-
         model: Entities.ArtActivity,
-        
-        initialize: function (model, options) {
-        },
-
         url: "/artactividades"
     });
     

@@ -3,7 +3,7 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
   var CommonViews = DocManager.module('Common.views');
   var Entities = DocManager.module('Entities');
   
-  var App = DocManager.module('App');
+  var AppCommon = DocManager.module('App.Common');
   
   Edit.Layout = Marionette.LayoutView.extend({
     className: 'row row-offcanvas row-offcanvas-left',
@@ -40,7 +40,7 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
       console.log('ON RENDER EDITOR');
       this.$el.html(this.form.render().el);
       
-      this.attachView = new App.AttachmentView({el:this.$el.find('#attachmentContainer'),model:this.model});
+      this.attachView = new AppCommon.AttachmentView({el:this.$el.find('#attachmentContainer'),model:this.model});
       this.attachView.render();
       
       var $el = this.$el;

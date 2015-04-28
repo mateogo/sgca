@@ -126,6 +126,8 @@ var routesBootstrap = function (app, express) {
   require(rootPath + '/calendar/controllers/artactivities.js').configRoutes(app);
   require(rootPath + '/calendar/controllers/events.js').configRoutes(app);
   require(rootPath + '/calendar/controllers/artactivitiesreport.js').configRoutes(app);
+  require(rootPath + '/calendar/controllers/obraarte.js').configRoutes(app);
+  require(rootPath + '/calendar/controllers/obraartelicencia.js').configRoutes(app);
 };
 
 

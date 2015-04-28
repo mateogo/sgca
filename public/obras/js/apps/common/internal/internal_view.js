@@ -23,9 +23,10 @@ DocManager.module("ObrasApp.Common", function(Common, DocManager, Backbone, Mari
       },
       'click .js-solicitudnew': function(){
         DocManager.trigger("solicitud:new");
+      },
+      'click .js-licencias': function(){
+        DocManager.trigger("solicitud:list");
       }
-      
-      
     }
   });
   

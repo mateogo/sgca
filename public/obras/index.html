@@ -28,6 +28,9 @@
 	<link href="css/font-awesome.min.css" rel="stylesheet" >
 	<link href="css/print.css" rel="stylesheet">
     <link href="css/obras.css" rel="stylesheet">
+    
+   
+    
 </head>
 
 <body>
@@ -58,39 +61,63 @@
 <!-- Le javascript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
+
 <script src="lib/jquery.min.js"></script>
 <script src="lib/underscore.js"></script>
 <script src="lib/backbone.js"></script>
-<script src="/lib/backbone.picky.min.js"></script> 
+<script src="lib/backbone-validation.js"></script>
+<script src="lib/backbone.picky.min.js"></script> 
 <script src="lib/backbone.marionette.min.js"></script>
-<script src="/lib/bootstrap.min.js"></script>
-<script src="/lib/backbone-forms.min.js"></script>
-<script src="/lib/backbone.bootstrap-modal.js"></script>
-<script src="/lib/backbone-forms-bootstrap.js"></script>
+
 <!-- -->
-<script src="lib/fuelux.min.js"></script>    
+
 <script src="lib/jquery-ui.min.js"></script>
 <script src="lib/datepicker-es.js"></script>
+
+<script src="lib/bootstrap.min.js"></script>
+<script src="lib/bootstrap-notify.min.js"></script>
+<script src="lib/backbone-forms.min.js"></script>
+<script src="lib/backbone.bootstrap-modal.js"></script>
+<script src="lib/backbone-forms-bootstrap.js"></script>
+
+<script src="lib/fuelux.min.js"></script>    
+
+
 <!-- -->
 <script src="/js/utils.js"></script>
 <script src="/js/dao.js"></script>
 <script src="/js/models/models.js"></script>
+
 	
 <!---->
 <script src="js/apps/config/marionette/regions/dialog.js"></script>
 <script src="js/app.js"></script>
+<script src="js/utilsObras.js"></script>
 <script src="js/entities/header.js"></script>
 <script src="js/entities/user.js"></script>
+<script src="js/entities/obras.js"></script>
+<script src="js/entities/autor.js"></script>
+<script src="js/entities/licencia.js"></script>
+<script src="js/entities/exportador.js"></script>
 
+
+<!---->
+<script src="/js/common/attachment-view.js"></script>
+<script src="/js/common/Message.js"></script>
 
 <!---->
 <script src="js/apps/common/internal/internal_controller.js"></script>
 <script src="js/apps/common/internal/internal_view.js"></script>
+<script src="js/apps/common/wizard_view.js"></script>
 
 <!---->
 <script src="js/apps/header/header_app.js"></script>
 <script src="js/apps/header/list/list_view.js"></script>
 <script src="js/apps/header/list/list_controller.js"></script>
+
+<script src="js/apps/home/home_app.js"></script>
+<script src="js/apps/home/show/show_view.js"></script>
+<script src="js/apps/home/show/show_controller.js"></script>
 
 <!--obras de arte -->
 <script src="js/apps/obras/obras_app.js"></script>
@@ -98,11 +125,17 @@
 <script src="js/apps/obras/edit/edit_controller.js"></script>
 <script src="js/apps/obras/list/list_view.js"></script>
 <script src="js/apps/obras/list/list_controller.js"></script>
+<script src="js/apps/obras/list/autocomplete_field.js"></script>
+
+
+<script src="js/apps/autor/edit/edit_view.js"></script>
 
 <!--solicitud de exportacion  -->
 <script src="js/apps/solicitud/solicitud_app.js"></script>
 <script src="js/apps/solicitud/edit/edit_view.js"></script>
 <script src="js/apps/solicitud/edit/edit_controller.js"></script>
+<script src="js/apps/solicitud/list/list_view.js"></script>
+<script src="js/apps/solicitud/list/list_controller.js"></script>
 
 
 <script src="js/main.js"></script>

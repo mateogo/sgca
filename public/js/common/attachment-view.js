@@ -4,22 +4,47 @@
  * 
  * Ejemplo de uso:
  * 
- * var attachView = new App.AttachmentView({el:this.$el.find('#attachmentContainer'),model:this.model});
+ * var attachView = new App.Common.AttachmentView({el:this.$el.find('#attachmentContainer'),model:this.model});
  * attachView.render();
  * 
  * 
+ * templates customizados
+ * -----------------------
+ * opcion en construccion
+ * templates: {
+ *    list: 'AttachmentLayoutView',
+ *    itemRender: 'AttachmentItem',
+ *    itemEditor: 'AttachmentItemEditorView'
+ * }
+ * 
+ * requierimientos:
+ *  - boostrap.js
+ * 
+ * 
  */
-DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
+DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionette, $, _){
   
   
   var AttachmentItemView = Backbone.Marionette.ItemView.extend({
-    initialize: function(){
+    
+    initialize: function(opts){
+     
+      this.templates = {
+          itemRender: utils.templates.AttachmentItem,
+          itemEditor: utils.templates.AttachmentItemEditorView,
+        };
+        
+        if(opts && opts.templates){
+            if(opts.templates.itemRender) this.templates.itemRender = opts.templates.itemRender;
+            if(opts.templates.itemEditor) this.templates.itemEditor = opts.templates.itemEditor;
+        }
+      
       this.editMode = false;
     },
     getTemplate: function(){
       return (this.editMode) 
-                ? utils.templates.AttachmentItemEditorView 
-                : utils.templates.AttachmentItem;
+                ? this.templates.itemEditor 
+                : this.templates.itemRender;
     },
     
     templateHelpers: function(){
@@ -62,11 +87,13 @@ DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
         
         $(progressbar).css({'width':'100%;'}).hide();
         $(progressbar).parent().hide();
-        Message.success('Subido');
+        
         
         self.model.set(asset.attributes);
         self.model.unset('file');
         self.render();
+        
+        self.triggerMethod('uploaded',self.model);
          
         if(parentModel){
           asset.linkChildsToAncestor(asset, parentModel,'es_asset_de',function(){
@@ -101,11 +128,12 @@ DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
       this.model.set('slug',this.$el.find('[name=slug]').val());
       this.model.set('name',this.$el.find('[name=name]').val());
       
-      
       var self = this;
       this.model.save().done(function(){
         $btn.button('reset');
         self.setEditMode(false);
+        
+        self.triggerMethod('assets:save',self.model);
         
       }).fail(function(){
         $btn.button('reset');
@@ -124,44 +152,53 @@ DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
       var self = this;
       DocManager.confirm('¿Está seguro de borrar el archivo?').done(function(){
         self.model.destroy();
+        self.triggerMethod('assets:removed',self.model);
       });
     }
   });
   
-  
-  AttachmentItemEditor =  Backbone.Marionette.ItemView.extend({
-    getTemplate: function(){
-      return utils.templates.AttachmentItemEditor;
-    },
-    events: {
-      'click .js-save': 'onSave',
-      'click .js-cancel': 'onCancel'
-    },
-    
-    onSave: function(e){
-      e.stopPropagation();
-    },
-    
-    onCancel: function(e){
-      e.stopPropagation();
-    }
-  });
-  
-  App.AttachmentView = Marionette.CompositeView.extend({
+  Common.AttachmentView = Marionette.CompositeView.extend({
      
      childView:  AttachmentItemView,
      childViewContainer: '#list-region',
-     getTemplate: function(){
-       return utils.templates.AttachmentLayoutView;
-     },
+     
+     childViewOptions: function(model,index){
+        return {
+          templates: this.templates
+        }
+     }, 
      
      initialize: function(opts){
        if(opts.model && opts.model.assets){
          this.collection = opts.model.assets;
+       }else if(opts.collection){
+         this.collection = opts.collection;
+         if(!(this.collection instanceof AssetCollection)){
+           this.collection = new AssetCollection(this.collection);
+         }
        }else{
-         this.collection = new Backbone.Collection();  
-       }
+         this.collection = new AssetCollection();  
+       } 
        
+       this.templates = {
+         list: utils.templates.AttachmentLayoutView,
+         itemRender: utils.templates.AttachmentItem,
+         itemEditor: utils.templates.AttachmentItemEditorView,
+       };
+       
+       if(opts && opts.templates){
+           if(opts.templates.list) this.templates.list = opts.templates.list;
+           if(opts.templates.itemRender) this.templates.itemRender = opts.templates.itemRender;
+           if(opts.templates.itemEditor) this.templates.itemEditor = opts.templates.itemEditor;
+       }
+     },
+     
+     getTemplate: function(){
+       return this.templates.list;
+     },
+     
+     getFiles: function(){
+       return this.collection;
      },
      
      addFile: function(file){
@@ -173,6 +210,7 @@ DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
          return;
        }
        this.collection.push({file:file,parentModel:this.model});
+       
      },
      
      events: {
@@ -182,6 +220,12 @@ DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
        'dragleave #messageDrop': 'dragLeaveHandler',
        'drop .rootContainer': 'dropHandler',
        
+     },
+     
+     childEvents: {
+       'assets:save': 'onAssetsChange',
+       'uploaded': 'onAssetsChange',
+       'assets:removed':'onAssetsChange'
      },
      
      onNewAttach: function(e){
@@ -217,6 +261,10 @@ DocManager.module("App", function(App, DocManager, Backbone, Marionette, $, _){
           this.addFile(files[i]);
         }
        
+     },
+     
+     onAssetsChange: function(){
+       this.triggerMethod('change');
      }
      
      

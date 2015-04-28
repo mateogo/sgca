@@ -1,0 +1,21 @@
+<div  class="media" style="margin-bottom:10px">
+  <div class="media-left">
+    <a class="thumbnail" style="width:150px">
+        <% if(typeof(thumbnail) !== 'undefined'){ %>
+            <img class="media-object" src="/<%=thumbnail%>" width="150" >
+        <% } %>
+    </a>
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading"><%=slug%> <small>(<%=cnumber%>)</small></h4> 
+    <strong>Procedimiento:</strong> <%=procedure%> <br/>
+    <strong>Material:</strong>  <%=material%><br/>
+    <strong>Medidas:</strong>  <%=dimensions%> <br/>
+    
+    <strong>Año:</strong>  <%=procedure%> <br/>
+    <span class="text-success">
+        <strong>Valor:</strong>  <%=value%>
+    </span><br/>
+    <strong>Autor:</strong>  <%=autor.get('name')%> <%=autor.get('lastname')%>
+  </div>
+</div>

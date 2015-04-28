@@ -1,6 +1,6 @@
 DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, Marionette, $, _){
   
-  var App = DocManager.module('App');
+  var AppCommon = DocManager.module('App.Common');
   
   Edit.Layout = Marionette.LayoutView.extend({
     getTemplate: function(){
@@ -138,7 +138,7 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
       });
       this.$el.find('#formContainer').html(this.form.render().el);
       
-      this.attachView = new App.AttachmentView({el:this.$el.find('#attachmentContainer'),model:this.model});
+      this.attachView = new AppCommon.AttachmentView({el:this.$el.find('#attachmentContainer'),model:this.model});
       this.attachView.render();
       //this.$el.find('#attachmentContainer').html(this.attachView.render().el);
       
@@ -149,7 +149,6 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
     
     initAutoComplete: function(){
       var $input = this.$el.find('[name=locacion]');
-      //this.autoCompleteLocation = new App.View.AutoCompleteActionLocationField({el:$input});
     },
     
     validateSubRubroSelect: function(){

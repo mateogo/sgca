@@ -4,9 +4,21 @@ utils.loadTemplate([
     
     'common/MenuView','common/InternalLayoutView',
     
-    'obras/ObrasEditor','obras/ObrasList',
+    'home/HomeView',
     
-    'solicitud/SolicitudEditor'
+    'obras/ObrasWizard','obras/ObrasList','obras/ObrasListRow','obras/ObrasEditor',
+    'obras/ObrasDescriptionEditor','obras/ObrasResume', 'obras/ObrasPartEditor','obras/ObrasPartStep',
+    'obras/ObrasGracias','obras/ObrasItemSelection','obras/ObraItem',
+    
+    'autor/AutorEditor',
+    
+    'solicitud/SolicitudList','solicitud/SolicitudListRow',
+    'solicitud/SolicitudWizard','solicitud/SolConfirmStep','solicitud/SolDescriptionEditor',
+    'solicitud/SolExportadoresStep','solicitud/SolExportadorEditor','solicitud/SolObrasStep',
+    'solicitud/SolDocsStep','solicitud/SolGracias',
+    
+    'attachmentview/AttachmentItemEditorView','attachmentview/AttachmentLayoutView','attachmentview/AttachmentItem',
+    'attachmentview/PhotosLayoutView','attachmentview/PhotoItem','attachmentview/PhotoItemEditorView'
     
     ], function() {
 

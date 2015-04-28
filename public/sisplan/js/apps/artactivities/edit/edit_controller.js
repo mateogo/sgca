@@ -1,7 +1,7 @@
 DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
   
   var Entities = DocManager.module('Entities');
-  var App = DocManager.module('App');
+  var AppCommon = DocManager.module('App.Common');
   
   Edit.Controller = {
       
@@ -111,7 +111,7 @@ DocManager.module("ArtActivitiesApp.Edit", function(Edit, DocManager, Backbone, 
   function createAssetsList(){
     var session = getSession();
     var layout = Edit.Session.views.layout; 
-    var list = new App.AttachmentView({model:session.model});
+    var list = new AppCommon.AttachmentView({model:session.model});
     layout.getRegion('mainRegion').show(list);
     Edit.Controller.setSectionSelected('asset');
   }

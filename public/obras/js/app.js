@@ -27,7 +27,21 @@ DocManager.on("start", function(){
     Backbone.history.start();
 
     if(this.getCurrentRoute() === ""){
-			DocManager.trigger("obras:new");
+			DocManager.trigger("obras:home");
     }
   }
 });
+
+/**
+ * @return {promise}
+ */
+DocManager.confirm = function(txt){
+  var def = $.Deferred();
+  
+  var modal = new Backbone.BootstrapModal({ content: '<h4>'+ txt +'</h4>' });
+  
+  modal.open();
+  modal.once('ok',def.resolve);
+  modal.once('cancel',def.reject);
+  return def.promise();
+};

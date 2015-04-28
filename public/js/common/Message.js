@@ -21,11 +21,12 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
                     '</div>'      
       });
   }  
-    
-    
-  Message = {
+   
+  
+    var NotifyImpl = {
       success: function(str){
           notify(str,'success','glyphicon glyphicon-ok');
+          console.log(this);
       },
       info: function(str){
           notify(str,'info','glyphicon glyphicon-info-sign');
@@ -35,6 +36,48 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
       },
       error: function(str){
           notify(str,'danger','glyphicon glyphicon-warning-sign');
+      }
+    }
+    
+   var InlineImpl = {
+      success: function(str){
+        this.notify(str,'success','glyphicon glyphicon-ok');
+      },
+      info: function(str){
+        this.notify(str,'info','glyphicon glyphicon-info-sign');
+      },
+      warning: function(str){
+        this.notify(str,'warning','glyphicon glyphicon-warning-sign');
+      },
+      error: function(str){
+          this.notify(str,'danger','glyphicon glyphicon-warning-sign');
+      },
+      notify: function(str,type,icon){
+        utils.showAlert('','<i class="'+icon+'"></i> ' + str,'alert-'+type);
+        this.autoHide();
+      },
+      autoHide: function(){
+        setTimeout(function(){
+          $('.alert').slideUp();
+        },3000);
+      }
+    }
+    
+  Message = {
+      success: function(str){
+        this.getHandler().success(str);
+      },
+      info: function(str){
+        this.getHandler().info(str);
+      },
+      warning: function(str){
+        this.getHandler().warning(str);
+      },
+      error: function(str){
+        this.getHandler().error(str);
+      },
+      getHandler: function(){
+        return NotifyImpl;
       }
   }; 
   

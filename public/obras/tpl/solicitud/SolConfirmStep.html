@@ -1,0 +1,40 @@
+<h4>Confirmación</h4>
+<div class="alert alert-danger">
+    Verifique que los datos que se listan a continuación sean correctos.
+</div>
+<div><strong>Tipo: </strong> <%=type%> </div>
+<div><strong>Causa: </strong> <%=reason%></div>
+<div><strong>Destino: </strong> <%=destination%></div>
+<div><strong>Aduana: </strong> <%=customs%></div>
+<div><strong>Fecha estimada de salida : </strong> <%=dateout%></div>
+<div><strong>Compromiso de retorno: </strong> <%=durationout%> meses</div>
+<div><strong>Aclaraciones: </strong> <%=obs%></div>
+
+<hr class="spacer">
+<h4 class="spacer">Obras de arte  <%=totalValue%></h4>
+<%_.each(obras,function(obra){ %>
+
+    <div class="media-left">
+        <a class="thumbnail" style="width:150px">
+          <img class="media-object" src="/<%=obra.thumbnail%>" width="150" >
+        </a>
+    </div>
+    <div class="media-body">
+        <h4 class="media-heading"><%=obra.slug%></h4>
+        <%=obra.value%>
+    </div>
+<% })%>
+
+<hr class="spacer">
+<h4 class="spacer">Datos del exportador</h4>
+<% if(exporters.length > 0){ var exp1 = exporters[0]; %>
+    <div><strong>Nombre y apellido del Responsable:</strong> <%=exp1.name%> <%=exp1.lastname%></div>
+    <div><strong>Fecha de nacimiento:</strong> <%=exp1.birthday%></div>
+    <div><strong>Nacionalidad:</strong> <%=exp1.nationality%></div>
+    <div><strong>D.I.:</strong> <%=exp1.di%></div>
+    <div><strong>Domicilio:</strong> <%=exp1.address%></div>
+    <div><strong>Provincia:</strong> <%=exp1.province%></div>
+    <div><strong>Localidad:</strong> <%=exp1.localidad%></div>
+    <div><strong>Teléfono:</strong> <%=exp1.phone%></div>
+    <div><strong>Teléfono Móvil:</strong> <%=exp1.mobile%></div>
+<% } %>

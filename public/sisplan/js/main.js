@@ -21,9 +21,9 @@ utils.loadTemplate(['HomeView', 'HeaderView',
  
     'stramite/StramiteEditLayout','stramite/StramiteEditControlPanelView','ActivityEditDetailComposite','ActivityEditItemView', //'BudgetMainHeader','ActionBudgetItem',
     'stramite/StramiteShowBudgetComposite','stramite/StramiteShowBudgetLayout','stramite/StramiteShowBudgetItemComposite','stramite/StramiteShowBudgetItem',
-    'stramite/StramiteBuildMainLayout','stramite/StramiteBuildHeaderView','stramite/StramiteBuildHeaderDataView','stramite/StramiteBuildBasicEditorForm','stramite/StramiteBuildBasicEditorLayout',
-    'stramite/StramiteBuildControlPanel','stramite/StramiteBuildItemHeaderLayout','stramite/StramiteBuildItemHeaderView',
-    'stramite/StramiteBuildItemListLayout',
+    'stramite/StramiteBuildMainLayout','stramite/StramiteBuildActionView','stramite/StramiteBuildBasicDataView','stramite/StramiteBuildBasicEditorForm','stramite/StramiteBuildBasicEditorLayout',
+    'stramite/StramiteBuildControlPanel','stramite/StramiteBuildItemXeaderLayout','stramite/StramiteBuildItemXeaderView',
+    'stramite/StramiteBuildItemListLayout','stramite/StramiteBuildItemForm','stramite/StramiteBuildItemEdit',
     'BplannerListLayout', 'BplannerListFilterView', 'BplannerListAnalyseView',
     'BplannerListSummaryView','BplannerListSummaryItem','BplannerMultieditView',
    
@@ -53,8 +53,7 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     
     'agenda/AgendaLayoutView','agenda/AgendaItemRender', 'agenda/AgendaFilterView',
     
-    'attachmentview/AttachmentItemEditorView',
-    'attachmentview/AttachmentLayoutView','attachmentview/AttachmentItem',
+    'attachmentview/AttachmentItemEditorView','attachmentview/AttachmentLayoutView','attachmentview/AttachmentItem',
     
     
     'common/DatePatternForm'

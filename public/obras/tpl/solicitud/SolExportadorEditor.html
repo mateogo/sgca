@@ -1,0 +1,106 @@
+         <div>
+            <div class="row">
+                <div class="col-sm-5 col-xs-9 form-group">
+                    <label class="control-label">Nombres </label>
+                    <input type="text" name="name" class="form-control">
+                    <span class="help-block"></span>
+                </div>
+                <div class="col-sm-5 col-xs-9 form-group">
+                    <label class="control-label">Apellidos</label>
+                    <input type="text" name="lastname" class="form-control">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+       
+        <div class="">
+            <div class="row">
+                <div class="col-sm-5 col-xs-9 form-group">
+                    <label class="control-label">Fecha de nacimiento</label>
+                    <input type="text" name="birthday" class="form-control">
+                    <span class="help-block"></span>
+                </div>
+                
+                <div class="col-sm-5 col-xs-9 form-group">
+                    <label class="control-label">Nacionalidad</label>
+                    <input type="text" name="nationality" class="form-control" aria-label="...">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+        <div class="">
+            <div class="row">
+                <div class="col-sm-5 col-xs-9 form-group">
+                    <label class="control-label">Documento</label>
+                    <div class="input-group">
+                          <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">DNI <span class="caret"></span></button>
+                            <ul class="dropdown-menu" role="menu">
+                              <li><a href="#">DNI</a></li>
+                              <li><a href="#">CI</a></li>
+                              <li><a href="#">Pasaporte</a></li>
+                            </ul>
+                          </div><!-- /btn-group -->
+                          <input type="text" name="di" class="form-control" aria-label="...">
+                     </div><!-- /input-group -->
+                     <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-sm-5 col-xs-9 form-group">
+                    <label class="control-label">Foto o escaneo del Documento </label>
+                    <input type="file" class="form-control">
+                    <span class="help-block"></span>
+                </div>
+                
+                <div class="col-sm-5 col-xs-9">
+                    <label class="control-label">Foto o escaneo del reverso del Documento</label>
+                    <input type="file" class="form-control">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+         <div>
+            <div class="row">
+                <div class="col-sm-10 col-xs-9 form-group">
+                    <label class="control-label">Domicilio</label>
+                    <input type="text" name="address" class="form-control" placeholder="calle">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+         <div class="">
+            <div class="row">
+                <div class="col-sm-5 col-xs-9 form-group">
+                    <label class="control-label">Provincia</label>
+                     <select name="province" class="form-control">
+                        <%= utils.buildSelectOptions('province',utils.provinciasOptionList.Argentina, province) %>
+                    </select>
+                    <span class="help-block"></span>
+                </div>
+                <div class="col-sm-5 col-xs-9 form-group">
+                    <label class="control-label">Localidad</label>
+                    <input type="text" name="localidad" class="form-control" value="" />
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+        <div class="">
+            <div class="row">
+                <div class="col-sm-5 col-xs-9 form-group">
+                    <label class="control-label">Teléfono </label>
+                    <input type="text" name="phone" class="form-control">
+                    <span class="help-block"></span>
+                </div>
+                
+                <div class="col-sm-5 col-xs-9 form-group">
+                    <label class="control-label">Teléfono móvil </label>
+                    <input type="text" name="mobile" class="form-control">
+                    <span class="help-block"></span>
+                </div>
+               
+            </div>
+        </div>
+        
