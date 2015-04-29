@@ -31,14 +31,14 @@
         <div class="">
             <div class="row">
                 <div class="col-sm-5 col-xs-9 form-group">
-                    <label class="control-label">Documento</label>
+                    <label class="control-label">Número de documento</label>
                     <div class="input-group">
                           <div class="input-group-btn">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">DNI <span class="caret"></span></button>
-                            <ul class="dropdown-menu" role="menu">
-                              <li><a href="#">DNI</a></li>
-                              <li><a href="#">CI</a></li>
-                              <li><a href="#">Pasaporte</a></li>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span id="typeDocCont">DNI</span> <span class="caret"></span></button>
+                            <ul id="dropDownTypeDoc" class="dropdown-menu" role="menu">
+                              <li><a>DNI</a></li>
+                              <li><a>CI</a></li>
+                              <li><a>Pasaporte</a></li>
                             </ul>
                           </div><!-- /btn-group -->
                           <input type="text" name="di" class="form-control" aria-label="...">
@@ -51,13 +51,13 @@
             <div class="row">
                 <div class="col-sm-5 col-xs-9 form-group">
                     <label class="control-label">Foto o escaneo del Documento </label>
-                    <input type="file" class="form-control">
+                    <div id="photoDoc1Cont"> </div>
                     <span class="help-block"></span>
                 </div>
                 
                 <div class="col-sm-5 col-xs-9">
                     <label class="control-label">Foto o escaneo del reverso del Documento</label>
-                    <input type="file" class="form-control">
+                    <div id="photoDoc2Cont"> </div>
                     <span class="help-block"></span>
                 </div>
             </div>

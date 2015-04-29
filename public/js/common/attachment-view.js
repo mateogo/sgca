@@ -19,6 +19,7 @@
  * 
  * requierimientos:
  *  - boostrap.js
+ *  - /js/models/models.js usa Asset y AssetCollection
  * 
  * 
  */
@@ -151,8 +152,8 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
       e.stopPropagation();
       var self = this;
       DocManager.confirm('¿Está seguro de borrar el archivo?').done(function(){
-        self.model.destroy();
         self.triggerMethod('assets:removed',self.model);
+        self.model.destroy();
       });
     }
   });
@@ -180,6 +181,18 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
          this.collection = new AssetCollection();  
        } 
        
+       if(opts.model instanceof Asset){
+         this.collection.push(opts.model);
+       }else if(opts.model && opts.model.urlpath){
+         this.model = new Asset(opts.model);
+         this.collection.push(this.model);
+       }
+       
+       if(opts.maxCountFiles){
+         var tmp = parseInt(opts.maxCountFiles);
+         if(!isNaN(tmp)) this.maxCountFiles = tmp;
+       }
+       
        this.templates = {
          list: utils.templates.AttachmentLayoutView,
          itemRender: utils.templates.AttachmentItem,
@@ -198,6 +211,9 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
      },
      
      getFiles: function(){
+       this.collection.each(function(file){
+         file.unset('parentModel');
+       });
        return this.collection;
      },
      
@@ -213,6 +229,15 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
        
      },
      
+     allowCount: function(){
+       var allow = true;
+       if(this.maxCountFiles){
+         allow = this.maxCountFiles > this.collection.length;
+       }
+         
+       return allow;
+     },
+     
      events: {
        'click .js-newattachment': 'onNewAttach',
        'change [type=file]': 'onSelectFile',
@@ -225,7 +250,7 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
      childEvents: {
        'assets:save': 'onAssetsChange',
        'uploaded': 'onAssetsChange',
-       'assets:removed':'onAssetsChange'
+       'assets:removed':'onAssetsRemoved'
      },
      
      onNewAttach: function(e){
@@ -234,17 +259,21 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
      },
      
      onSelectFile: function(){
+       if(!this.allowCount()) return;
+       
        var file =  this.$el.find('[type=file]').prop("files")[0];
        this.addFile(file);
      },
      
      dragHandler: function(e){
        e.preventDefault();
+       if(!this.allowCount()) return;
        $(e.currentTarget).parent().css('border','2px solid #CCC');
        this.$el.find('#messageDrop').show();
      },
      
      dragLeaveHandler: function(e){
+       if(!this.allowCount()) return;
        $(e.currentTarget).parent().parent().css('border','1px solid #CCC');
        this.$el.find('#messageDrop').hide();
      },
@@ -253,6 +282,8 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
        var e = event.originalEvent;
        e.stopPropagation();
        e.preventDefault();
+       
+       if(!this.allowCount()) return;
        this.$el.find('#messageDrop').hide();
        
        e.dataTransfer.dropEffect = 'copy';
@@ -265,7 +296,16 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
      
      onAssetsChange: function(){
        this.triggerMethod('change');
+     },
+     
+     onAssetsRemoved: function(){
+      var self = this;
+      setTimeout(function(){
+       self.triggerMethod('change'); 
+      },10)
      }
+     
+     
      
      
   });

@@ -11,7 +11,7 @@
 <div><strong>Aclaraciones: </strong> <%=obs%></div>
 
 <hr class="spacer">
-<h4 class="spacer">Obras de arte  <%=totalValue%></h4>
+<h4 class="spacer">Obras de arte  $<%= accounting.format(totalValue)%></h4>
 <%_.each(obras,function(obra){ %>
 
     <div class="media-left">
@@ -21,7 +21,7 @@
     </div>
     <div class="media-body">
         <h4 class="media-heading"><%=obra.slug%></h4>
-        <%=obra.value%>
+        $<%=accounting.format(obra.value)%>
     </div>
 <% })%>
 
@@ -31,7 +31,7 @@
     <div><strong>Nombre y apellido del Responsable:</strong> <%=exp1.name%> <%=exp1.lastname%></div>
     <div><strong>Fecha de nacimiento:</strong> <%=exp1.birthday%></div>
     <div><strong>Nacionalidad:</strong> <%=exp1.nationality%></div>
-    <div><strong>D.I.:</strong> <%=exp1.di%></div>
+    <div><strong><%=exp1.ditype%>:</strong> <%=exp1.di%></div>
     <div><strong>Domicilio:</strong> <%=exp1.address%></div>
     <div><strong>Provincia:</strong> <%=exp1.province%></div>
     <div><strong>Localidad:</strong> <%=exp1.localidad%></div>

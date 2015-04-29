@@ -12,7 +12,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       this.steps = [DescriptionEditor,ExportadoresStep,ObrasStep,DocsStep,ConfirmStep];
     },
     getTemplate: function(){
-      return utils.templates.SolicitudWizard
+      return utils.templates.SolicitudWizard;
     },
     
     save: function(){
@@ -68,11 +68,55 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     },
     onRender: function(){
       Backbone.Validation.bind(this,{model:this.model});
+      this.initChildren();
     },
-    
     onDestroy: function(){
       Backbone.Validation.unbind(this);
+      this.destroyChildren();
     },
+    
+    initChildren: function(){
+      this.photo1View = new ObrasCommon.AttachmentImageBox({
+        el:this.$el.find('#photoDoc1Cont'),
+        model:this.model,
+        templates: {
+          list: utils.templates.ImageBoxLayoutView,
+          itemRender: utils.templates.ImageBoxItem
+        }
+      });
+      this.photo1View.render();
+      
+      this.photo2View = new ObrasCommon.AttachmentImageBox({
+        el:this.$el.find('#photoDoc2Cont'),
+        model:this.model,
+        templates: {
+          list: utils.templates.ImageBoxLayoutView,
+          itemRender: utils.templates.ImageBoxItem
+        }  
+      });
+      this.photo2View.render();
+    },
+    
+    destroyChildren: function(){
+      var children = ['photo1View','photo2View'];
+      for (var i = 0; i < children.length; i++) {
+        var key = children[i];
+        if(this[key]){
+          this[key].destroy();
+          this[key] = null;
+        }
+      }
+    },
+    
+    getPhotoDoc: function(name){
+      var files = this[name].getFiles();
+      if(files.length > 0 ){
+        return files.at(0);
+      }else{
+        return null;
+      }
+    },
+    
     getData: function(){
       var schema = this.model.validation;
       var data = {};
@@ -80,6 +124,11 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         data[key] = this.$el.find('[name='+key+']').val();
       }
       if(data.province === 'no_definido') data.province = '';
+      data.ditype = this.$el.find('#typeDocCont').html();
+     
+      data.docPhoto1 = this.getPhotoDoc('photo1View');
+      data.docPhoto2 = this.getPhotoDoc('photo2View');
+      
       return data;
     },
     validate: function(){
@@ -89,6 +138,14 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     commit: function(){
       var data = this.getData();
       this.model.set(data);
+    },
+    
+    events:{
+      'click #dropDownTypeDoc li': 'onChangeTypeDoc'
+    },
+    onChangeTypeDoc: function(e){
+      var value = $(e.currentTarget).find('a').html();
+      this.$el.find('#typeDocCont').html(value);
     }
   })
   
@@ -107,7 +164,6 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     childView: ExportadorEditor,
     childViewContainer: '#exporters-container',
     validate: function(){
-      return true;
       var ok = true;
       this.children.each(function(child){
           ok = child.validate() && ok;
@@ -154,12 +210,11 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       this.collection.each(function(obra){
         total += parseFloat(obra.get('value'));
       })
-      this.$el.find('#totalContainer').html('$'+total);
+      this.$el.find('#totalContainer').html('$'+accounting.format(total));
       this.totalValue = total;
     },
     
     validate: function(){
-      return true;
       var ok = this.collection.length > 0;
       if(!ok){
         Message.error('Debe seleccionar al menos una obra');
@@ -249,10 +304,6 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
   var ConfirmStep = Marionette.ItemView.extend({
     getTemplate: function(){
       return utils.templates.SolConfirmStep;
-    },
-    onRender: function(){
-      //var data = JSON.stringify(this.model);
-      //this.$el.html(data);
     },
     validate: function(){
       return true;

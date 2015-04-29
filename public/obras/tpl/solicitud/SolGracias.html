@@ -1,13 +1,13 @@
 <div style="margin-top:85px;margin-bottom:50px">
     <h2 class="alert alert-success">
-        <i class="glyphicon glyphicon-ok"></i> La solicitud de licencia fué registrada 
+        <i class="glyphicon glyphicon-ok"></i> La solicitud fué registrada 
     </h2>
     
     <div class="well">
         <h4> Número de solicitud: <span class="text-info"><%=cnumber%></span> </h4>
         <h4> Tipo:  <span class="text-info"><%=type%></span>  </h4>
         <h4> Destino:  <span class="text-info"><%=destination%></span>  </h4>
-        <h4> Valor total:  <span class="text-info"><%=totalValue%></span>  </h4>
+        <h4> Valor total:  <span class="text-info">$<%=accounting.format(totalValue)%></span>  </h4>
     </div>
     
     <div class="row" style="margin-top:20px;">

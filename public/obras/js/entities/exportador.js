@@ -12,10 +12,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       province: '',
       localidad: '',
       di: '',
+      ditype: 'DNI',
       nationality: '',
       birthday: '',
       phone: '',
-      mobile: ''
+      mobile: '',
+      docPhoto1: null,
+      docPhoto2: null
     },
     
     validation: {

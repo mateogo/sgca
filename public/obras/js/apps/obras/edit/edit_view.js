@@ -189,12 +189,40 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
     getTemplate: function(){
       return utils.templates.ObrasPartEditor
     },
+    onRender: function(){
+      this.photoView = new ObrasCommon.AttachmentImageBox({
+        el:this.$el.find('#photoCont'),
+        model:this.model.get('photo'),
+        width: 140,
+        height: 90,
+        templates: {
+          list: utils.templates.ImageBoxLayoutView,
+          itemRender: utils.templates.ImageBoxItem
+        }  
+      });
+      this.photoView.render();
+    },
+    
+    onDestroy: function(){
+      if(this.photoView){
+        this.photoView.destroy();
+        this.photoView = null;
+      }
+    },
+    
     /** metodos de 'interface' para paso de wizard **/
     validate: function(){
       return true;
     },
     commit: function(){
+      var file = null;
+      var files = this.photoView.getFiles();
+      if(files.length > 0){
+        file = files.at(0);
+      }
+      
       var params = {
+          photo: file,
           slug: this.$el.find('[name=slug]').val(),
           description: this.$el.find('[name=description]').val()
       }
