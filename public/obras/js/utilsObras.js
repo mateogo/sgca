@@ -24,7 +24,12 @@ var utilsObras = {
        {val:'exposicion',       label:'Exposición'},
        {val:'venta',       label:'venta'},
        {val:'otros',       label:'otros'}
-   ]
+   ],
+   
+   typeExportList: [
+         {val:'definitiva',       label:'Definitiva'},
+         {val:'temporaria',       label:'Temporaria'}
+     ]
 }
 
 

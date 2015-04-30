@@ -30,6 +30,86 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     }
   });
   
+  Edit.SolicitudEditorView = Marionette.ItemView.extend({
+    initialize: function(){
+      this.tabs = [DescriptionEditor,ExportadoresStep,ObrasStep,DocsStep];
+    },
+    getTemplate: function(){
+      return utils.templates.SolEditor
+    },
+    
+    onRender: function(){
+      this.selectTab(0);
+    },
+    
+    onDestroy: function(){
+      this.tabs = null;
+      this.currentTab = null;
+    },
+    
+    selectTab: function(index){
+      if(index < 0 || index >= this.tabs.length ) return;
+       if(this.currentTab){
+         if(!this.currentTab.validate()){
+           Message.error('Por favor, Revise el formulario');
+           return;
+         }
+         this.currentTab.commit();
+         this.currentTab.destroy();
+       }
+       var clazz = this.tabs[index];
+       var div = $('<div></div>');
+       this.$el.find('.tab-content').append(div);
+       var tab = new clazz({el:div,model:this.model});
+       tab.render();
+       this.currentTab = tab;
+       this.$el.find('.nav-tabs li.active').removeClass('active');
+       this.$el.find('.nav-tabs li:eq('+index+')').addClass('active');
+    },
+    
+    events:{
+      'click .nav-tabs li': 'onSelectTab',
+      'click .js-save': 'onSave',
+      'click .js-cancel': 'onCancel'
+      
+    },
+    
+    onSelectTab: function(e){
+      var pos = this.$el.find('.nav-tabs li').index(e.currentTarget);
+      this.selectTab(pos);
+      
+    },
+    
+    onSave: function(e){
+      e.stopPropagation();e.preventDefault();
+      
+      if(this.currentTab){
+        if(!this.currentTab.validate()){
+          Message.error('Por favor, Revise el formulario');
+          return;
+        }
+        this.currentTab.commit();
+      }
+      
+      
+      var self = this;
+      var btn = $(e.currentTarget);
+      btn.button('loading');
+      DocManager.request('licencia:save',this.model).done(function(){
+        btn.button('reset');  
+        Message.success('La Solicitud '+self.model.get('cnumber') + '<br/>A sido guardada');
+        self.trigger('licencia:saved',self.model);
+      }).fail(function(e){
+        btn.button('reset');
+        Message.error('No se pudo guardar');
+      })
+    },
+    
+    onCancel: function(){
+      this.trigger('licnecia:editCanceled',this.model);
+    }
+  });
+  
   
   var DescriptionEditor = Marionette.ItemView.extend({
     getTemplate: function(){
@@ -38,7 +118,6 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     onRender: function(){
       Backbone.Validation.bind(this,{model:this.model});
     },
-    
     onDestroy: function(){
       Backbone.Validation.unbind(this);
     },
@@ -51,13 +130,18 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       return data;
     },
     validate: function(){
-      return true;
       this.commit()
       return this.model.isValid(true);
     },
     commit: function(){
       var data = this.getData();
       this.model.set(data);
+    },
+    
+    events: {
+      'change input': 'commit',
+      'change select': 'commit',
+      'change textarea': 'commit'
     }
     
   })
@@ -78,7 +162,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     initChildren: function(){
       this.photo1View = new ObrasCommon.AttachmentImageBox({
         el:this.$el.find('#photoDoc1Cont'),
-        model:this.model,
+        model: this.model.get('docPhoto1'),
         templates: {
           list: utils.templates.ImageBoxLayoutView,
           itemRender: utils.templates.ImageBoxItem
@@ -88,7 +172,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       
       this.photo2View = new ObrasCommon.AttachmentImageBox({
         el:this.$el.find('#photoDoc2Cont'),
-        model:this.model,
+        model: this.model.get('docPhoto2'),
         templates: {
           list: utils.templates.ImageBoxLayoutView,
           itemRender: utils.templates.ImageBoxItem
@@ -175,13 +259,26 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         child.commit();
       })
       this.model.set('exporters',this.collection.toJSON());
+    },
+    
+    events: {
+      'click .js-addexporter': function(){
+        Message.info('Disponible proximamente');
+      }
     }
   });
- 
   
   var ObrasStep = Marionette.CompositeView.extend({
     initialize: function(){
-      this.collection = new Backbone.Collection();
+      var obras = this.model.get('obras');
+      if(obras){
+        this.collection = obras;
+        if(!(this.collection instanceof Backbone.Collection)){
+          this.collection = new Backbone.Collection(obras);  
+        }
+      }else{
+        this.collection = new Backbone.Collection();  
+      }
     },
     getTemplate: function(){
       return utils.templates.SolObrasStep;
@@ -222,7 +319,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       return ok;
     },
     commit: function(){
-      this.model.set('obras',this.collection.toJSON());
+      this.model.set('obras',this.collection);
       this.model.set('totalValue',this.totalValue);
     },
     
@@ -238,7 +335,8 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     },
     
     onClickSelector: function(e){
-      this.openSelector();
+      Message.info('Listado disponible proximamente.<br/>Utilize el buscador para agregar');
+      //this.openSelector();
     }
     
   });
@@ -248,7 +346,11 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       return utils.templates.SolDocsStep;
     },
     onRender: function(){
-      
+      var hasDocs = this.model.get('docs').length > 0;
+      if(hasDocs){
+        this.$el.find('[name=docsenabled]').prop('checked',true);
+        this.initAttacher();
+      }
     },
     onDestroy: function(){
       this.destroyAttacher();
@@ -320,10 +422,10 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     },
     events: {
       'click .js-licencias': function(){
-        DocManager.trigger("solicitud:list");
+        DocManager.trigger("licencia:list");
       },
       'click .js-solicitudnew': function(){
-        DocManager.trigger("solicitud:new");
+        DocManager.trigger("licencia:new");
       }
     }
   });

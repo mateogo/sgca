@@ -6,11 +6,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'Exportador:exportador.js',
     idAttribute: "_id",
     
+    initialize: function(opts){
+      if(opts){
+        if(opts.docPhoto1){
+          this.set('docPhoto1',new Asset(opts.docPhoto1));
+        }
+        if(opts.docPhoto2){
+          this.set('docPhoto2',new Asset(opts.docPhoto2));
+        }
+      }
+    },
+    
     defaults:{
       name: '',
       lastname: '',
       province: '',
       localidad: '',
+      address:'',
       di: '',
       ditype: 'DNI',
       nationality: '',

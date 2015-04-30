@@ -12,16 +12,16 @@
 
 <hr class="spacer">
 <h4 class="spacer">Obras de arte  $<%= accounting.format(totalValue)%></h4>
-<%_.each(obras,function(obra){ %>
+<% obras.each(function(obra){ %>
 
     <div class="media-left">
         <a class="thumbnail" style="width:150px">
-          <img class="media-object" src="/<%=obra.thumbnail%>" width="150" >
+          <img class="media-object" src="/<%=obra.get('thumbnail')%>" width="150" >
         </a>
     </div>
     <div class="media-body">
-        <h4 class="media-heading"><%=obra.slug%></h4>
-        $<%=accounting.format(obra.value)%>
+        <h4 class="media-heading"><%=obra.get('slug')%></h4>
+        $<%=accounting.format(obra.get('value'))%>
     </div>
 <% })%>
 

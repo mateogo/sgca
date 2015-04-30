@@ -10,7 +10,7 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
         DocManager.trigger("obras:new");
       },
       'click .js-newsol': function(){
-        DocManager.trigger("solicitud:new");
+        DocManager.trigger("licencia:new");
       }
     }
   })

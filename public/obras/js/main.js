@@ -15,7 +15,7 @@ utils.loadTemplate([
     'solicitud/SolicitudList','solicitud/SolicitudListRow',
     'solicitud/SolicitudWizard','solicitud/SolConfirmStep','solicitud/SolDescriptionEditor',
     'solicitud/SolExportadoresStep','solicitud/SolExportadorEditor','solicitud/SolObrasStep',
-    'solicitud/SolDocsStep','solicitud/SolGracias',
+    'solicitud/SolDocsStep','solicitud/SolGracias','solicitud/SolEditor',
     
     'attachmentview/AttachmentItemEditorView','attachmentview/AttachmentLayoutView','attachmentview/AttachmentItem',
     'attachmentview/PhotosLayoutView','attachmentview/PhotoItem','attachmentview/PhotoItemEditorView',

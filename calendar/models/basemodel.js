@@ -113,6 +113,23 @@ var BaseModel = Backbone.Model.extend({
       });
     });
   },
+  findByIds: function(ids,cb){
+    if(!ids || ids.length < 1) return cb('',[]);
+   
+    var idsArray = [];
+    for (var i = 0; i < ids.length; i++) {
+      idsArray.push(new BaseModel.ObjectID(ids[i]));
+    }
+    
+    var self = this;
+    BaseModel.dbi.collection(this.entityCol, function(err, collection) {
+      collection.find({'_id':{$in: idsArray}}).toArray(function(err, item) {
+          if(err) return cb(err);
+          
+          cb(null, item);
+      });
+    });
+  },
   find: function(query,cb){
     var sort = this.defaultSort;
     BaseModel.dbi.collection(this.entityCol,function(err,collection){

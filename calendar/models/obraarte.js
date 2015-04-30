@@ -90,8 +90,6 @@ var ObraArte = BaseModel.extend({
   entityCol: entityCol,
   defaultSort: {cnumber:1},
   findById: function(id,cb){
-    console.log('jojo');
-   
     var self = this;
     var obra = null;
     async.series([

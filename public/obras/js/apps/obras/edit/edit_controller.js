@@ -29,9 +29,24 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
           var layout = Common.Controller.showMain(view);
           DocManager.mainRegion.show(layout);
           
-        }).fail(function(e){
+          view.on('obra:saved',function(model){
+            DocManager.trigger('obras:list');
+            view.unbind('obra:saved');
+            view.unbind('obra:editCanceled');
+          });
           
+          view.on('obra:editCancel',function(model){
+            DocManager.confirm('¿Está seguro que desea cancelar la edición?').done(function(){
+              DocManager.trigger('obras:list');
+              view.unbind('obra:saved');
+              view.unbind('obra:editCanceled');  
+            })
+          })
+          
+        }).fail(function(e){
+          Message.error('Problemas al traer la obra');
         })
+        $('body').scrollTop(0);
       },
       
       saveSuccess: function(obra){

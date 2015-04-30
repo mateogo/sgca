@@ -14,6 +14,7 @@ DocManager.module("ObrasApp.List", function(List, DocManager, Backbone, Marionet
         
         var layout = Common.Controller.showMain(view);
         DocManager.mainRegion.show(layout);
+        $('body').scrollTop(0);
       },
       selector: function(callback){
         

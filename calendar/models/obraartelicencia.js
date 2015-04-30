@@ -6,6 +6,7 @@ var _ = require('underscore');
 
 var BaseModel = require('./basemodel.js');
 var Assets = require('./assets.js').getModel();
+var ObraArte = require('./obraarte.js').getModel();
 
 var dbi;
 
@@ -88,7 +89,51 @@ var Licencia = BaseModel.extend({
   }
 },{
   entityCol: entityCol,
-  defaultSort: {cnumber:1}
+  defaultSort: {cnumber:1},
+  findById: function(id,cb){
+    var self = this;
+    var licencia = null;
+    async.series([
+          //traer la licencia
+          function(cb){
+            BaseModel.findById.apply(self,[id,function(err,model){
+              if(err) return cb(err);
+              
+              licencia = model;
+              cb();
+            }]);
+          },
+          
+          //buscando los documentos
+          function(cb){
+            Assets.findByIds(licencia.get('docs_ids'),function(err,result){
+              if(err) return cb(err);
+              
+              if(licencia){
+                licencia.set('docs',result);  
+              }
+              cb();  
+            });
+          },
+          
+          //buscando las obras
+          function(cb){
+            ObraArte.findByIds(licencia.get('obras_ids'),function(err,result){
+              if(err) return cb(err);
+              
+              if(licencia){
+                licencia.set('obras',result);  
+              }
+              cb();  
+            });
+          }
+          
+       ],
+       //done
+       function(err,results){
+         cb(err,licencia);
+       });
+  }
 });
 
 

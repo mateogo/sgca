@@ -16,8 +16,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       customs: '',
       obs: '',
       totalValue: '',
-      exporters: [],
-      obras: []
+      exporters: new Backbone.Collection(),
+      obras: new Backbone.Collection(),
+      docs: new Backbone.Collection()
     },
     
     validation: {
@@ -32,6 +33,19 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     
     parse: function(raw,opts){
       
+      if(raw.exporters){
+        for (var i = 0; i < raw.exporters.length; i++) {
+          raw.exporters[i] = new Entities.Exportador(raw.exporters[i]); 
+        }
+      }
+      
+      if(raw.obras){
+        raw.obras = new Entities.ObrasCollection(raw.obras);
+        /*
+        for (var i = 0; i < raw.obras.length; i++) {
+          raw.obras[i] = new Entities.Obra(raw.obras[i]); 
+        }*/
+      }
       
       return raw;
     },
@@ -46,7 +60,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         copy.unset('docs');
         
         var obras = copy.get('obras');
-        var obras_ids = _.map(obras,function(item){ return item._id});
+        var obras_ids = obras.map(function(item){ return item.id});
         copy.set('obras_ids',obras_ids);
         copy.unset('obras');
         
@@ -65,17 +79,26 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var API = {
     /**
      * load para editar
-     * @param {obra} stringId o Entities.Licencia
+     * @param {licencia} stringId o Entities.Licencia
      * @return promise
      */
     load: function(licencia){
       var def = $.Deferred();
-      if((obra instanceof Entities.Licencia)){
-        def.resolve(licencia);
+      if((licencia instanceof Entities.Licencia)){
+        
+        var obras = licencia.get('obras'); 
+        
+        if(obras  && obras.length > 0){
+          def.resolve(licencia);  
+        }else{
+          licencia.fetch().then(function(){
+            def.resolve(licencia);
+          },def.reject);
+        }
 
       }else{
-         obra = new Entities.Licencia({_id:licencia});
-         p = obra.fetch().then(function(){
+         licencia = new Entities.Licencia({_id:licencia});
+         p = licencia.fetch().then(function(){
            def.resolve(licencia);
          },def.reject);
       }

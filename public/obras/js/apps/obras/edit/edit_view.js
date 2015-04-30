@@ -46,6 +46,9 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
     selectTab: function(index){
       if(index < 0 || index >= this.tabs.length ) return;
        if(this.currentTab){
+         if(!this.currentTab.validate()){
+           return;
+         }
          this.currentTab.commit();
          this.currentTab.destroy();
        }
@@ -61,7 +64,8 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
     
     events:{
       'click .nav-tabs li': 'onSelectTab',
-      'click .js-save': 'onSave'
+      'click .js-save': 'onSave',
+      'click .js-cancel': 'onCancel'
     },
     
     onSelectTab: function(e){
@@ -80,21 +84,31 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
     
     onSave: function(e){
       e.stopPropagation();e.preventDefault();
+      if(this.currentTab){
+        if(!this.currentTab.validate()){
+          return;
+        }
+        this.currentTab.commit();
+        this.currentTab.destroy();
+      }
+      
+      var self = this;
       var btn = $(e.currentTarget);
       btn.button('loading');
       DocManager.request('obra:save',this.model).done(function(){
         btn.button('reset');  
-        Message.success('Guardado');
-        DocManager.trigger('obras:list');
+        Message.success('La obra '+self.model.get('cnumber')+'<br/>A sido guardada');
+        self.trigger('obra:saved',self.model);
       }).fail(function(e){
         btn.button('reset');
         Message.error('No se pudo guardar');
       })
-    }
-   
+    },
     
-      
-  }) 
+    onCancel: function(){
+      this.trigger('obra:editCancel',this.model);
+    }
+  }); 
   
   
   var DescriptionEditor = Marionette.ItemView.extend({
@@ -165,8 +179,6 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       }
     },
     validate: function(){
-      return true;
-      
       var files = this.attachView.getFiles();
       var ok = true;
       
@@ -186,6 +198,9 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
   });
   
   var PartEditor = Marionette.ItemView.extend({
+    initialize: function(opts){
+      this.childIndex = opts.childIndex;
+    },
     getTemplate: function(){
       return utils.templates.ObrasPartEditor
     },
@@ -201,6 +216,7 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
         }  
       });
       this.photoView.render();
+      this.$el.find('#labelIndex').html((this.childIndex+1));
     },
     
     onDestroy: function(){
@@ -238,19 +254,24 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
           this.collection = new Backbone.Collection(this.collection);
         }
       }
+      this.removed = [];
     },
-    childView: PartEditor,
-    childViewContainer: '#stepsContainer',
     getTemplate: function(){
       return utils.templates.ObrasPartStep;
     },
-    
+    childView: PartEditor,
+    childViewContainer: '#stepsContainer',
+    childViewOptions: function(model, index) {
+      return {
+        childIndex: index
+      }
+    },
     onRender: function(){
       if(!this.model.isNew()){
         var hasParts = (this.collection.length > 0);
         if(hasParts){
           this.$el.find('[name=partsenabled]').prop('checked',true);
-          this.partsEnabledChange();
+          this.$el.find('#mainStepContainer').show();
           this.$el.find('[name=partcant]').val(this.collection.length);
         }else{
           this.$el.find('[name=partcant]').val(2);
@@ -259,19 +280,33 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       }else{
         this.$el.find('[name=partcant]').val(2);
       }
+      this.validateCountChildren();
       
     },
     
     validateCountChildren: function(){
       var count = parseInt(this.$el.find('[name=partcant]').val());
+      if(count < 0){
+        this.$el.find('[name=partcant]').val(0);
+        return;
+      }else if(count > 10){
+        this.$el.find('[name=partcant]').val(10);
+        Message.info('Máximo 10 partes');
+        count = 10;
+      }
       var currentCount = this.collection.length;
       if(count === currentCount) return;
       
+      this.commit();
       if(count < currentCount){
-        this.collection.reset(this.collection.toArray().splice(0,currentCount-count));
+        var all = this.collection.toArray();
+        var removed = all.splice(count,currentCount-count);
+        this.collection.reset(all);
+        this.removed = removed.concat(this.removed);
       }else{
         for(var i=currentCount;i<count;i++){
-          this.collection.push(new Entities.ObraPart());
+          var obra = (this.removed.length > 0)? this.removed.shift() : new Entities.ObraPart();
+          this.collection.push(obra);
         }
       }
     },
@@ -303,7 +338,7 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       }
       this.validateCountChildren();
     },
-    onCountPartChange: function(){
+    onCountPartChange: function(e){
       this.validateCountChildren();
     }
     
@@ -348,7 +383,7 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
         DocManager.trigger("obras:new");
       },
       'click .js-solicitudnew': function(){
-        DocManager.trigger("solicitud:new");
+        DocManager.trigger("licencia:new");
       }
     }
   });

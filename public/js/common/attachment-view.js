@@ -296,6 +296,7 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
      
      onAssetsChange: function(){
        this.triggerMethod('change');
+       this.$el.find('[type=file]').val('');
      },
      
      onAssetsRemoved: function(){

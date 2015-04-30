@@ -7,6 +7,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     urlRoot: "/obraarte",
     idAttribute: "_id",
     
+    initialize: function(){
+      
+      var autor = this.get('autor');
+      if(autor){
+        if(autor.toJSON){
+          autor = autor.toJSON();
+        }
+        this.set('autor',new Entities.Autor(autor));
+      }
+    },
+    
     defaults:{
       slug: '',
       madeyear: '',
@@ -28,7 +39,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       value: {required:true,pattern:'number',msg:'Ingrese un importe en pesos argentinos'},
       madeyear: {required:false}
     },
-    
     
     parse: function(raw,opts){
       if(raw.autor){

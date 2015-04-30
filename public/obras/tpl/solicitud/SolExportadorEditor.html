@@ -2,12 +2,12 @@
             <div class="row">
                 <div class="col-sm-5 col-xs-9 form-group">
                     <label class="control-label">Nombres </label>
-                    <input type="text" name="name" class="form-control">
+                    <input type="text" name="name" class="form-control" value="<%=name%>">
                     <span class="help-block"></span>
                 </div>
                 <div class="col-sm-5 col-xs-9 form-group">
                     <label class="control-label">Apellidos</label>
-                    <input type="text" name="lastname" class="form-control">
+                    <input type="text" name="lastname" class="form-control" value="<%=lastname%>">
                     <span class="help-block"></span>
                 </div>
             </div>
@@ -17,13 +17,16 @@
             <div class="row">
                 <div class="col-sm-5 col-xs-9 form-group">
                     <label class="control-label">Fecha de nacimiento</label>
-                    <input type="text" name="birthday" class="form-control">
+                    <input type="text" name="birthday" class="form-control" value="<%=birthday%>">
                     <span class="help-block"></span>
                 </div>
                 
                 <div class="col-sm-5 col-xs-9 form-group">
                     <label class="control-label">Nacionalidad</label>
-                    <input type="text" name="nationality" class="form-control" aria-label="...">
+                    <select name="nationality" class="form-control">
+                        <option value="">Seleccione una nacionalidad</option>
+                        <%= utils.buildSelectOptions('nationality',utils.paisesOptionList.Paises, nationality) %>
+                    </select>
                     <span class="help-block"></span>
                 </div>
             </div>
@@ -34,14 +37,14 @@
                     <label class="control-label">Número de documento</label>
                     <div class="input-group">
                           <div class="input-group-btn">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span id="typeDocCont">DNI</span> <span class="caret"></span></button>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span id="typeDocCont"><%=ditype%></span> <span class="caret"></span></button>
                             <ul id="dropDownTypeDoc" class="dropdown-menu" role="menu">
                               <li><a>DNI</a></li>
                               <li><a>CI</a></li>
                               <li><a>Pasaporte</a></li>
                             </ul>
                           </div><!-- /btn-group -->
-                          <input type="text" name="di" class="form-control" aria-label="...">
+                          <input type="text" name="di" class="form-control" value="<%=di%>">
                      </div><!-- /input-group -->
                      <span class="help-block"></span>
                 </div>
@@ -66,7 +69,7 @@
             <div class="row">
                 <div class="col-sm-10 col-xs-9 form-group">
                     <label class="control-label">Domicilio</label>
-                    <input type="text" name="address" class="form-control" placeholder="calle">
+                    <input type="text" name="address" class="form-control" placeholder="calle" value="<%=address%>">
                     <span class="help-block"></span>
                 </div>
             </div>
@@ -82,7 +85,7 @@
                 </div>
                 <div class="col-sm-5 col-xs-9 form-group">
                     <label class="control-label">Localidad</label>
-                    <input type="text" name="localidad" class="form-control" value="" />
+                    <input type="text" name="localidad" class="form-control" value="<%=localidad%>" />
                     <span class="help-block"></span>
                 </div>
             </div>
@@ -91,13 +94,13 @@
             <div class="row">
                 <div class="col-sm-5 col-xs-9 form-group">
                     <label class="control-label">Teléfono </label>
-                    <input type="text" name="phone" class="form-control">
+                    <input type="text" name="phone" class="form-control" value="<%=phone%>">
                     <span class="help-block"></span>
                 </div>
                 
                 <div class="col-sm-5 col-xs-9 form-group">
                     <label class="control-label">Teléfono móvil </label>
-                    <input type="text" name="mobile" class="form-control">
+                    <input type="text" name="mobile" class="form-control" value="<%=mobile%>">
                     <span class="help-block"></span>
                 </div>
                
