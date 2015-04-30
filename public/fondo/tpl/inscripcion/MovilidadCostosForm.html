@@ -1,0 +1,174 @@
+<div class="row">
+  <div class="col-sm-12">
+    <h3><span class="fa fa-paper-plane"></span> Trayecto</h3><hr>
+  </div>
+</div>
+<!--BEG COMBO A - VIAJE IDA Y VUELTA-->    
+<div class="comboA">
+  <div class="form-group required">
+    <div class="row">
+      <div class="col-sm-6">
+      <label class="control-label" for="fesalida">Fecha de viaje | IDA</label>
+        <div class="input-group date">
+          <input type="text" id="fesalida" class="form-control calendar-container" name="fesalida" value="">
+          <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+      <label class="control-label" for="feregreso">Fecha de viaje | VUELTA</label>
+        <div class="input-group date">
+          <input type="text" id="feregreso" class="form-control calendar-container"  name="feregreso" value="">
+          <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group required">
+    <div class="row">
+      <div class="col-sm-6">
+        <label class="control-label" for="origen">Origen</label>
+        <input type="text" id="origen" class="form-control" name="origen" placeholder="Ciudad, Provincia, País" value="">
+      </div>
+  
+      <div class="col-sm-6">
+        <label class="control-label" for="destino">Destino</label>
+        <input type="text" id="destino" class="form-control" name="destino" placeholder="Ciudad, Provincia, País" value="">
+      </div>
+    </div>
+  </div>
+  <hr>  
+</div><!--END COMBO A-->
+
+<!--BEG COMBO B - VIAJE MULTIPLES DESTINOS-->    
+<div class="comboB">
+  <div class="alert alert-info pax">
+    <h3><span class="fa fa-paper-plane"></span> Trayecto #1</h3><hr>
+    
+    <div class="form-group required">
+      <div class="row">
+        <div class="col-sm-12">
+          <label class="control-label" for="comboBdate1">Fecha de viaje | Trayecto #1</label>
+          <div class="input-group date">
+            <input type="text" class="form-control calendar-container"  id="comboBdate1" name="comboBdate1" value=""><span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-group required">
+      <div class="row">
+        <div class="col-sm-6">
+          <label class="control-label" for="comboBorigen1">Origen</label>
+          <input type="text" class="form-control" id="comboBorigen1" name="comboBorigen1" placeholder="Ciudad, Provincia, País" value="">
+        </div>
+    
+        <div class="col-sm-6">
+          <label class="control-label" for="comboBdestino1">Destino</label>
+          <input type="text" class="form-control" id="comboBdestino1" name="comboBdestino1" placeholder="Ciudad, Provincia, País" value="">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div>
+      <a href="#" class="btn btn-warning">Agregar trayecto</a>
+    </div>
+  </div>
+  <hr>
+</div><!--END COMBO B-->
+
+<!--BEG PASAJEROS-->
+<div>
+  <h3><span class="fa fa-user"></span> Pasajeros</h3>
+  <div class="form-group required">
+    <div class="row">
+      <div class="col-sm-4">
+        <label class="control-label" for="npaxmax">Cantidad de pasajeros</label>
+        <input type="text" class="form-control" id="npaxmax" name="npaxmax" value="">
+      </div>
+      <div class="col-sm-8">
+        <label class="control-label" for="npaxmin">Cantidad mínima de pasajeros para poder ejecutar el proyecto</label>
+        <input type="text" class="form-control" id="npaxmin" name="npaxmin" value="">
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="alert alert-info pax">
+    <h3><span class="fa fa-user"></span> Pasajero #1</h3><hr>  
+    <div class="form-group required">
+      <div class="row">
+        <div class="col-sm-6">
+          <label class="control-label" for="paxnombre">Nombre y apellido</label>
+          <input type="text" id="paxnombre" class="form-control" name="paxnombre" value="">
+        </div>
+        <div class="col-sm-6">
+          <label class="control-label" for="paxfenac">Fecha de nacimiento</label>
+          <input type="text" id="paxfenac" class="form-control" name="paxfenac" value="">
+        </div>
+      </div>
+    </div>
+    <div class="form-group required">
+      <div class="row">
+        <div class="col-sm-6">
+          <label class="control-label" for="paxdocum">Nro Pasaporte/ DNI</label>
+          <input type="text" id="paxdocum" class="form-control" name="paxdocum" value="">
+        </div>
+        <div class="col-sm-6">
+          <label class="control-label" for="paxrol">Rol dentro del grupo</label>
+          <input type="text" id="paxrol" class="form-control" name="paxrol" value="">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--listado de pasajeros-->
+  <div class="form-group">
+    <div>
+      <a href="#" class="btn btn-warning">Agregar pasajero</a>
+    </div>
+  </div>
+  <hr>
+</div><!--END PASAJEROS-->
+
+<!--BEG COMBO C - EVENTOS-->    
+<div class="comboC">
+  <h3><span class="fa fa-bullhorn"></span> Evento</h3>
+  <div class="form-group required">
+    <div class="row">
+      <div class="col-sm-6">
+        <label class="control-label" for="eventoname">Nombre del Evento</label>
+        <input type="text" class="form-control" id="eventoname" name="eventoname" placeholder="Ciudad, Provincia, País" value="">
+      </div>
+  
+      <div class="col-sm-6">
+        <label class="control-label" for="eventoweb">Web del Evento</label>
+        <input type="text" class="form-control" id="eventoweb" name="eventoweb" placeholder="URL del evento: http://www...." value="">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group required">
+    <div class="row">
+      <div class="col-sm-4">
+        <label class="control-label" for="eventoloc">Localidad</label>
+        <input type="text" class="form-control" id="eventoloc" name="eventoloc" value="">
+      </div>
+  
+      <div class="col-sm-4">
+        <label class="control-label" for="eventoprov">Provincia/Estado</label>
+        <input type="text" class="form-control" id="eventoprov" name="eventoprov" value="">
+      </div>
+
+      <div class="col-sm-4">
+        <label class="control-label" for="eventopais">País</label>
+        <input type="text" class="form-control" id="eventopais" name="eventopais" value="">
+      </div>
+    </div>
+  </div>
+<hr>
+</div><!--END COMBO C-->
+
+<label class="sr-only" for="btnWizardNext4">Guardar y Avanzar</label>
+<input type="button" class="btn btn-info pull-right" id="btnWizardNext4" value="Guardar y avanzar">

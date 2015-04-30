@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fondo Argentino de Desarrollo Cultural - Ministerio de Cultura de la Nación</title>
+<link rel="icon" href="http://www.cultura.gob.ar/static/favicon.ico">
+<meta name="description" content="Otorga ayudas e incentivos económicos para fortalecer el sector cultural. Hay de movilidad, sostenibilidad, infraestructura e innovación.">
+<meta name="author" content="Dirección General de Tecnología y Sistemas - Ministerio de Cultura">
+<meta name="geo.position" content="-34.60899163;-58.3702313817" />
+<meta name="ICBM" content="-34.60899163;-58.3702313817" />
+<meta name="DC.title" content="Ministerio de Cultura de la Nacion" />
+<meta name="geo.country" content="AR" />
+<meta name="geo.region" content="AR-C" />
+<meta name="geo.placename" content="Buenos Aires, Ciudad Autónoma de Buenos Aires, República Argentina" />
+<meta name="Language" content="Spanish" />
+<meta name="Robots" content="all" />
+<meta name="keywords" content="ministerio de cultura de la nación, fondo argentino de desarrollo cultural, movilidad, sostenibilidad, infraestructura, innovación" />
+
+<!-- Bootstrap -->
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link href="http://sisplan.cultura.gob.ar:3000/mica2015/css/backbone-forms-bootstrap.css" rel="stylesheet">
+<link href="http://sisplan.cultura.gob.ar:3000/mica2015/css/fuelux.min.css" rel="stylesheet">
+<link href="http://sisplan.cultura.gob.ar:3000/mica2015/css/jquery-ui.min.css" rel="stylesheet" >
+<link href="http://sisplan.cultura.gob.ar:3000/mica2015/css/bootstrap-tagsinput.css" rel="stylesheet">
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="stylesheet" href="css/theme-fondo.css">
+<link rel="stylesheet" href="css/datepicker3.css">
+
+</head>
+<body>
+<a class="sr-only" href="#main-content">Pasar al contenido principal</a>
+<div id="header-region" class="header">
+  <nav id="mcn-header">
+    <div class="container">
+      <div class="col-xs-12 col-sm-4 col-md-4 main-navigation"> <a href="/" id="site-logo" class="navbar-brand"><img src="./img/cultura-argentina-inv.png" class="img-responsive" alt="Logo de Cultura Argentina"></a> </div>
+      <ul class="main-navigation pull-right js-statusbar">
+        <li class="dropdown" data-section="app-notifications"> <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Notificaciones <span class="caret"></span> </a>
+          <div class="dropdown-menu pull-right account-dropdown notifications-list">
+            <ul id="unread-notifications">
+              <li class="empty">Actualmente no tienes nuevas notificaciones</li>
+            </ul>
+          </div>
+        </li>
+        <li class="dropdown pull-right"> <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          <div class="ident"> <img alt="Invitado" src="img/anonimo.jpg"> </div>
+          <span class="caret"></span> </a>
+          <ul class="dropdown-menu pull-right account-dropdown">
+            <li> <a href="#perfil"><span class="fa fa-cog"></span> Mi perfil </a> </li>
+            <li> <a data-method="delete" href="/logout" rel="nofollow"><span class="fa fa-sign-out"></span> Salir </a> </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+<div id="dialog-region"></div>
+<!-- Off Canvas
+================================================== -->
+
+<!--<div class="container-fluid" id="form-aid">
+  <div class="row">
+    <div class="container">
+      <div class="col-xs-12">
+        <div>FONDO ARGENTINO DE DESARROLLO CULTURAL</div>
+      </div> 
+    </div>
+  </div>
+</div>-->
+
+<div id="colorbar"></div>
+<div class="container">
+  <div>
+    <!--<div class="col-xs-12 col-md-3">
+      <ul class="panel context-menu">
+        <li> <a href="/inscripcion.html" class="others"> <span class="fa fa-cog"></span> Mi perfil</a> </li>
+      </ul>
+    </div>-->
+    <!--BEG SISTEMABOX-->
+    <div class="col-xs-12 col-md-12">
+      <div class="panel">
+        <div class="panel-heading">
+          <h1>Formulario de Inscripción</h1>
+          <h2>Fondo Argentino de Desarrollo Cultural - Linea MOVILIDAD</h2>
+        </div>
+        <div class="panel-body fuelux"> 
+          <!--BEG FORM-->
+          <div class="fu-example section">
+            <div class="wizard" data-initialize="wizard" id="myWizard">
+              <ul class="steps" style="margin-left: 0">
+                <li data-step="1" class="active"><span class="badge badge-info">1</span>Registro<span class="chevron"></span></li>
+                <li data-step="2"><span class="badge">2</span>Participaciones<span class="chevron"></span></li>
+                <li data-step="3"><span class="badge">3</span>Modalidad<span class="chevron"></span></li>
+                <li data-step="4"><span class="badge">4</span>Cronograma y presupuesto<span class="chevron"></span></li>
+                <li data-step="5"><span class="badge">5</span>Archivos<span class="chevron"></span></li>
+                <li data-step="6"><span class="badge">6</span>Confirmación<span class="chevron"></span></li>
+              </ul>
+              <div class="actions">
+                <button class="btn btn-default btn-prev" disabled="disabled"><span class="fa fa-arrow-left"></span></button>
+                <button class="btn btn-default btn-next" data-last="FINALIZAR"><span class="fa fa-arrow-right"></span></button>
+              </div>
+
+              <div class="step-content">
+                
+                <!-- BEG RESPONSABLES - REGISTRO GENERAL -->
+                <div class="step-pane" data-step="1">
+                  <h3>Registro general</h3><hr>
+                  <div class="form-group required">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <label for="legal">
+                          <input type="checkbox" id="legal"> 
+                          <span class="checkbox-label control-label">He leído y acepto los <a href="http://www.google.com" target="_blank">terminos y condiciones</a></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-group required">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <label class="control-label" for="rmail">Correo electrónico del Responsable</label>
+                        <input type="text" class="form-control" id="rmail" name="rmail" value="" disabled="">
+                        <!--A completar automáticamente--> 
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group required">
+                    <div> 
+
+                    <!-- LA OPCION data-toggle muestra o esconde campos de personería jurídica en este paso y en el paso 5-->
+                      <div class="radio">
+                        <label class="radio-custom radio-inline" data-initialize="radio" for="radioPersoneria1">
+                        <input class="sr-only" data-toggle=".togglecomunes.togglejuridica" name="radioEx3" id="radioPersoneria1" type="radio" value="pfisica">
+                          Es persona física
+                        </label>
+                      </div>
+                      <div class="radio">
+                        <label class="radio-custom radio-inline" data-initialize="radio" for="radioPersoneria2">
+                          <input class="sr-only" data-toggle=".togglejuridica" id="radioPersoneria2" name="radioEx3" type="radio" value="pjuridica">
+                          Es persona jurídica
+                        </label>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <!--BEG Personería-->
+                  <div class="togglejuridica">
+                    <hr>
+                      <div class="row">
+                        <div class="col-sm-12">
+                            <h3>Datos de la sociedad</h3>
+                        </div>
+                      </div>                           
+                      <div class="form-group required">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <label class="control-label" for="edisplayName">Nombre de la Empresa (alias)</label>
+                            <input type="text" class="form-control" id="edisplayName" name="edisplayName" value="">
+                            <span class="help-block"></span> 
+                          </div>
+                          <div class="col-sm-6">
+                            <label class="control-label" for="ename">Razón social</label>
+                            <input type="text" class="form-control" id="ename" name="ename" value="">
+                            <span class="help-block"></span> 
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <label class="control-label" for="ecuit">CUIT</label>
+                            <input type="text" class="form-control" id="ecuit" name="ecuit" value="">
+                            <span class="help-block"></span> 
+                          </div>
+                          <div class="col-sm-6">
+                          <label class="control-label" for="efechapj">Otorgamiento de la personería jurídica</label>
+                            <div class="input-group date">
+                              <input type="text" class="form-control calendar-container" id="efechapj" name="efechapj"><span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            </div>
+                          </div>
+                          
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <fieldset class="form-group">
+                              <legend class="control-label">Tipo de Sociedad</legend>
+
+                              <label class="radio-custom radio-inline" data-initialize="radio" for="etipsoc1">
+                                <input class="sr-only" name="etipsoc" id="etipsoc1" type="radio" value="fundacion">
+                                Fundación
+                              </label>
+                            
+                              <label class="radio-custom radio-inline" data-initialize="radio" for="etipsoc2">
+                                <input class="sr-only" name="etipsoc" id="etipsoc2" type="radio" value="asociacion">
+                                Asociación
+                              </label>
+
+                              <label class="radio-custom radio-inline" data-initialize="radio" for="etipsoc3">
+                                <input class="sr-only" name="etipsoc" id="etipsoc3" type="radio" value="cooperativa">
+                                Cooperativa
+                              </label>
+
+                              <label class="radio-custom radio-inline" data-initialize="radio" for="etipsoc4">
+                                <input class="sr-only" name="etipsoc" id="etipsoc4" type="radio" value="sa">
+                                S.A.
+                              </label>
+
+                              <label class="radio-custom radio-inline" data-initialize="radio" for="etipsoc5">
+                                <input class="sr-only" name="etipsoc" id="etipsoc5" type="radio" value="srl">
+                                S.R.L.
+                              </label>
+                            </fieldset>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <label class="control-label" for="e-mail">Correo electrónico de la Empresa</label>
+                            <input type="email" class="form-control" id="e-mail" name="e-mail" value="">
+                          </div>
+                        </div>
+                      </div>
+                    <hr>
+                  </div><!--END Personería-->
+
+                  <!--BEG Datos comunes-->
+                  <div class="togglecomunes">
+                    <hr>
+                    <div class="row">
+                      <div class="col-sm-12">
+                          <h3>Datos del aporderado o del Titular</h3>
+                      </div>
+                    </div>                           
+                    <div class="form-group required">
+                      <div class="row">
+                        <div class="col-sm-8">
+                          <label class="control-label" for="rname">Nombre/s del Responsable</label>
+                          <input type="text" class="form-control" id="rname" name="rname" value="">
+                          <span class="help-block"></span> </div>
+                        <div class="col-sm-4">
+                          <label class="control-label" for="rsurname">Apellido/s</label>
+                          <input type="text" class="form-control" id="rsurname" name="rsurname" value="">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group required">
+                      <div class="row">
+                        <div class="col-sm-2">
+                          <label class="control-label" for="rtipodoc">Tipo</label>
+                          <select class="form-control" id="rtipodoc" name="rtipodoc">
+                            <option value="dni">DNI</option>
+                            <option value="pasaporte">Pasaporte</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-4">
+                          <label class="control-label" for="rdni">Número de documento</label>
+                          <input type="text" class="form-control" id="rdni" name="rdni" placeholder="XXXXXXXX" value="">
+                        </div>
+                        <div class="col-sm-3">
+                          <label class="control-label" for="rnac">Nacionalidad</label>
+                          <input type="text" class="form-control" id="rnac" name="rnac" value="">
+                        </div>
+                        <div class="col-sm-3">
+                          <label class="control-label" for="rfenac">Fecha de nacim.</label>
+                          <input type="text" class="form-control" id="rfenac" name="rfenac" value="" placeholder="dd/mm/aaaa">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group required">
+                      <div class="row">
+                        
+                        <div class="col-sm-4">
+                          <label class="control-label" for="rtel">Teléfono</label>
+                          <input type="text" class="form-control" id="rtel" name="rtel" value="" placeholder="+54 (área) número">
+                        </div>
+
+                        <div class="col-sm-4">
+                          <label class="control-label" for="rcel">Teléfono móvil</label>
+                          <input type="text" class="form-control" id="rcel" name="rcel" value="">
+                        </div>
+
+                        <div class="col-sm-4">
+                          <label class="control-label" for="rgenero">Género</label>
+                          <input type="text" class="form-control" id="rgenero" name="rgenero" value="">
+                        </div>
+
+
+                      </div>
+                    </div>
+                    <div class="form-group required">
+                      <div class="row">
+                        <div class="col-sm-8">
+                          <label class="control-label" for="rcalle">Calle</label>
+                          <input type="text" class="form-control" id="rcalle" name="rcalle" value="">
+                        </div>
+                        <div class="col-sm-2">
+                          <label class="control-label" for="rnrocalle">Nro.</label>
+                          <input type="text" class="form-control" id="rnrocalle" name="rnrocalle" value="">
+                        </div>
+                        <div class="col-sm-2">
+                          <label class="control-label" for="rcp">CP.</label>
+                          <input type="text" class="form-control" id="rcp" name="rcp" value="">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group required">
+                      <div class="row">
+                        <div class="col-sm-4 selectContainer">
+                          <label class="control-label" for="rpais">País</label>
+                          <select class="form-control" id="rpais" name="rpais">
+                            <option value="AR" selected="">Argentina</option>
+                            <option value="AF">Afganistán</option>
+                            <option value="AL">Albania</option>
+                            <option value="DE">Alemania</option>
+                            <option value="AD">Andorra</option>
+                            <option value="AO">Angola</option>
+                            <option value="AI">Anguilla</option>
+                            <option value="AQ">Antártida</option>
+                            <option value="AG">Antigua y Barbuda</option>
+                            <option value="AN">Antillas Holandesas</option>
+                            <option value="SA">Arabia Saudí</option>
+                            <option value="DZ">Argelia</option>
+                            <option value="AM">Armenia</option>
+                            <option value="AW">Aruba</option>
+                            <option value="AU">Australia</option>
+                            <option value="AT">Austria</option>
+                            <option value="AZ">Azerbaiyán</option>
+                            <option value="BS">Bahamas</option>
+                            <option value="BH">Bahrein</option>
+                            <option value="BD">Bangladesh</option>
+                            <option value="BB">Barbados</option>
+                            <option value="BE">Bélgica</option>
+                            <option value="BZ">Belice</option>
+                            <option value="BJ">Benin</option>
+                            <option value="BM">Bermudas</option>
+                            <option value="BY">Bielorrusia</option>
+                            <option value="MM">Birmania</option>
+                            <option value="BO">Bolivia</option>
+                            <option value="BA">Bosnia y Herzegovina</option>
+                            <option value="BW">Botswana</option>
+                            <option value="BR">Brasil</option>
+                            <option value="BN">Brunei</option>
+                            <option value="BG">Bulgaria</option>
+                            <option value="BF">Burkina Faso</option>
+                            <option value="BI">Burundi</option>
+                            <option value="BT">Bután</option>
+                            <option value="CV">Cabo Verde</option>
+                            <option value="KH">Camboya</option>
+                            <option value="CM">Camerún</option>
+                            <option value="CA">Canadá</option>
+                            <option value="TD">Chad</option>
+                            <option value="CL">Chile</option>
+                            <option value="CN">China</option>
+                            <option value="CY">Chipre</option>
+                            <option value="VA">Ciudad del Vaticano (Santa Sede)</option>
+                            <option value="CO">Colombia</option>
+                            <option value="KM">Comores</option>
+                            <option value="CG">Congo</option>
+                            <option value="CD">Congo, República Democrática del</option>
+                            <option value="KR">Corea</option>
+                            <option value="KP">Corea del Norte</option>
+                            <option value="CI">Costa de Marfíl</option>
+                            <option value="CR">Costa Rica</option>
+                            <option value="HR">Croacia (Hrvatska)</option>
+                            <option value="CU">Cuba</option>
+                            <option value="DK">Dinamarca</option>
+                            <option value="DJ">Djibouti</option>
+                            <option value="DM">Dominica</option>
+                            <option value="EC">Ecuador</option>
+                            <option value="EG">Egipto</option>
+                            <option value="SV">El Salvador</option>
+                            <option value="AE">Emiratos Árabes Unidos</option>
+                            <option value="ER">Eritrea</option>
+                            <option value="SI">Eslovenia</option>
+                            <option value="ES">España</option>
+                            <option value="US">Estados Unidos</option>
+                            <option value="EE">Estonia</option>
+                            <option value="ET">Etiopía</option>
+                            <option value="FJ">Fiji</option>
+                            <option value="PH">Filipinas</option>
+                            <option value="FI">Finlandia</option>
+                            <option value="FR">Francia</option>
+                            <option value="GA">Gabón</option>
+                            <option value="GM">Gambia</option>
+                            <option value="GE">Georgia</option>
+                            <option value="GH">Ghana</option>
+                            <option value="GI">Gibraltar</option>
+                            <option value="GD">Granada</option>
+                            <option value="GR">Grecia</option>
+                            <option value="GL">Groenlandia</option>
+                            <option value="GP">Guadalupe</option>
+                            <option value="GU">Guam</option>
+                            <option value="GT">Guatemala</option>
+                            <option value="GY">Guayana</option>
+                            <option value="GF">Guayana Francesa</option>
+                            <option value="GN">Guinea</option>
+                            <option value="GQ">Guinea Ecuatorial</option>
+                            <option value="GW">Guinea-Bissau</option>
+                            <option value="HT">Haití</option>
+                            <option value="HN">Honduras</option>
+                            <option value="HU">Hungría</option>
+                            <option value="IN">India</option>
+                            <option value="ID">Indonesia</option>
+                            <option value="IQ">Irak</option>
+                            <option value="IR">Irán</option>
+                            <option value="IE">Irlanda</option>
+                            <option value="BV">Isla Bouvet</option>
+                            <option value="CX">Isla de Christmas</option>
+                            <option value="IS">Islandia</option>
+                            <option value="KY">Islas Caimán</option>
+                            <option value="CK">Islas Cook</option>
+                            <option value="CC">Islas de Cocos o Keeling</option>
+                            <option value="FO">Islas Faroe</option>
+                            <option value="HM">Islas Heard y McDonald</option>
+                            <option value="FK">Islas Malvinas</option>
+                            <option value="MP">Islas Marianas del Norte</option>
+                            <option value="MH">Islas Marshall</option>
+                            <option value="UM">Islas menores de Estados Unidos</option>
+                            <option value="PW">Islas Palau</option>
+                            <option value="SB">Islas Salomón</option>
+                            <option value="SJ">Islas Svalbard y Jan Mayen</option>
+                            <option value="TK">Islas Tokelau</option>
+                            <option value="TC">Islas Turks y Caicos</option>
+                            <option value="VI">Islas Vírgenes (EE.UU.)</option>
+                            <option value="VG">Islas Vírgenes (Reino Unido)</option>
+                            <option value="WF">Islas Wallis y Futuna</option>
+                            <option value="IL">Israel</option>
+                            <option value="IT">Italia</option>
+                            <option value="JM">Jamaica</option>
+                            <option value="JP">Japón</option>
+                            <option value="JO">Jordania</option>
+                            <option value="KZ">Kazajistán</option>
+                            <option value="KE">Kenia</option>
+                            <option value="KG">Kirguizistán</option>
+                            <option value="KI">Kiribati</option>
+                            <option value="KW">Kuwait</option>
+                            <option value="LA">Laos</option>
+                            <option value="LS">Lesotho</option>
+                            <option value="LV">Letonia</option>
+                            <option value="LB">Líbano</option>
+                            <option value="LR">Liberia</option>
+                            <option value="LY">Libia</option>
+                            <option value="LI">Liechtenstein</option>
+                            <option value="LT">Lituania</option>
+                            <option value="LU">Luxemburgo</option>
+                            <option value="MK">Macedonia, Ex-República Yugoslava de</option>
+                            <option value="MG">Madagascar</option>
+                            <option value="MY">Malasia</option>
+                            <option value="MW">Malawi</option>
+                            <option value="MV">Maldivas</option>
+                            <option value="ML">Malí</option>
+                            <option value="MT">Malta</option>
+                            <option value="MA">Marruecos</option>
+                            <option value="MQ">Martinica</option>
+                            <option value="MU">Mauricio</option>
+                            <option value="MR">Mauritania</option>
+                            <option value="YT">Mayotte</option>
+                            <option value="MX">México</option>
+                            <option value="FM">Micronesia</option>
+                            <option value="MD">Moldavia</option>
+                            <option value="MC">Mónaco</option>
+                            <option value="MN">Mongolia</option>
+                            <option value="MS">Montserrat</option>
+                            <option value="MZ">Mozambique</option>
+                            <option value="NA">Namibia</option>
+                            <option value="NR">Nauru</option>
+                            <option value="NP">Nepal</option>
+                            <option value="NI">Nicaragua</option>
+                            <option value="NE">Níger</option>
+                            <option value="NG">Nigeria</option>
+                            <option value="NU">Niue</option>
+                            <option value="NF">Norfolk</option>
+                            <option value="NO">Noruega</option>
+                            <option value="NC">Nueva Caledonia</option>
+                            <option value="NZ">Nueva Zelanda</option>
+                            <option value="OM">Omán</option>
+                            <option value="NL">Países Bajos</option>
+                            <option value="PA">Panamá</option>
+                            <option value="PG">Papúa Nueva Guinea</option>
+                            <option value="PK">Paquistán</option>
+                            <option value="PY">Paraguay</option>
+                            <option value="PE">Perú</option>
+                            <option value="PN">Pitcairn</option>
+                            <option value="PF">Polinesia Francesa</option>
+                            <option value="PL">Polonia</option>
+                            <option value="PT">Portugal</option>
+                            <option value="PR">Puerto Rico</option>
+                            <option value="QA">Qatar</option>
+                            <option value="UK">Reino Unido</option>
+                            <option value="CF">República Centroafricana</option>
+                            <option value="CZ">República Checa</option>
+                            <option value="ZA">República de Sudáfrica</option>
+                            <option value="DO">República Dominicana</option>
+                            <option value="SK">República Eslovaca</option>
+                            <option value="RE">Reunión</option>
+                            <option value="RW">Ruanda</option>
+                            <option value="RO">Rumania</option>
+                            <option value="RU">Rusia</option>
+                            <option value="EH">Sahara Occidental</option>
+                            <option value="KN">Saint Kitts y Nevis</option>
+                            <option value="WS">Samoa</option>
+                            <option value="AS">Samoa Americana</option>
+                            <option value="SM">San Marino</option>
+                            <option value="VC">San Vicente y Granadinas</option>
+                            <option value="SH">Santa Helena</option>
+                            <option value="LC">Santa Lucía</option>
+                            <option value="ST">Santo Tomé y Príncipe</option>
+                            <option value="SN">Senegal</option>
+                            <option value="SC">Seychelles</option>
+                            <option value="SL">Sierra Leona</option>
+                            <option value="SG">Singapur</option>
+                            <option value="SY">Siria</option>
+                            <option value="SO">Somalia</option>
+                            <option value="LK">Sri Lanka</option>
+                            <option value="PM">St. Pierre y Miquelon</option>
+                            <option value="SZ">Suazilandia</option>
+                            <option value="SD">Sudán</option>
+                            <option value="SE">Suecia</option>
+                            <option value="CH">Suiza</option>
+                            <option value="SR">Surinam</option>
+                            <option value="TH">Tailandia</option>
+                            <option value="TW">Taiwán</option>
+                            <option value="TZ">Tanzania</option>
+                            <option value="TJ">Tayikistán</option>
+                            <option value="TF">Territorios franceses del Sur</option>
+                            <option value="TP">Timor Oriental</option>
+                            <option value="TG">Togo</option>
+                            <option value="TO">Tonga</option>
+                            <option value="TT">Trinidad y Tobago</option>
+                            <option value="TN">Túnez</option>
+                            <option value="TM">Turkmenistán</option>
+                            <option value="TR">Turquía</option>
+                            <option value="TV">Tuvalu</option>
+                            <option value="UA">Ucrania</option>
+                            <option value="UG">Uganda</option>
+                            <option value="UY">Uruguay</option>
+                            <option value="UZ">Uzbekistán</option>
+                            <option value="VU">Vanuatu</option>
+                            <option value="VE">Venezuela</option>
+                            <option value="VN">Vietnam</option>
+                            <option value="YE">Yemen</option>
+                            <option value="YU">Yugoslavia</option>
+                            <option value="ZM">Zambia</option>
+                            <option value="ZW">Zimbabue</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-4 selectContainer">
+                          <label class="control-label" for="rprov">Provincia</label>
+                          <select class="form-control js-provarg" id="rprov" name="rprov" style="display: inline-block;">
+                            <option value="no_definido">Seleccione Provincia</option>
+                            <option value="CABA" selected="">CABA</option>
+                            <option value="BuenosAires">Buenos Aires</option>
+                            <option value="Cordoba">Córdoba</option>
+                            <option value="SantaFe">Santa Fe</option>
+                            <option value="Corrientes">Corrientes</option>
+                            <option value="Misiones">Misiones</option>
+                            <option value="EntreRios">Entre Rios</option>
+                            <option value="SantiagoDelEstero">Santiago del Estero</option>
+                            <option value="Formosa">Formosa</option>
+                            <option value="Chaco">Chaco</option>
+                            <option value="Tucuman">Tucumán</option>
+                            <option value="Jujuy">Jujuy</option>
+                            <option value="Salta">Salta</option>
+                            <option value="LaRioja">La Rioja</option>
+                            <option value="Catamarca">Catamarca</option>
+                            <option value="SanJuan">San Juan</option>
+                            <option value="Mendoza">Mendoza</option>
+                            <option value="SanLuis">San luis</option>
+                            <option value="LaPampa">La Pampa</option>
+                            <option value="RioNegro">Rio Negro</option>
+                            <option value="Neuquen">Neuquen</option>
+                            <option value="Chubut">Chubut</option>
+                            <option value="SantaCruz">Santa Cruz</option>
+                            <option value="TierraDelFuego">Tierra del Fuego</option>
+                          </select>
+                          <label class="sr-only" for="otraprov">Ingrese el nombre de su Provincia o Estado</label>
+                          <input type="text" class="form-control js-provext" id="otraprov" name="otraprov" value="" style="display: none;">
+                        </div>
+                        <div class="col-sm-4">
+                          <label class="control-label" for="rlocalidad">Ciudad</label>
+                          <input type="text" class="form-control" id="rlocalidad" name="rlocalidad" value="">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group required">
+                      <div class="row">
+                        
+                        <div class="col-sm-4">
+                          <label class="control-label" for="rcode">Código de seguridad</label>
+                          <input type="text" class="form-control" id="rcode" name="rcode" value="">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <label class="control-label" for="rweb">Página web / blog</label>
+                          <input type="url" class="form-control" id="rweb" name="rweb" value="">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <label class="control-label" for="raudiovideo">Material de audio o video</label>
+                          <input type="url" class="form-control" id="raudiovideo" name="raudiovideo" value="">
+                        </div>
+                      </div>
+                    </div>
+                  </div><!--END Datos comunes-->
+                  <label class="sr-only" for="btnWizardNext1">Guardar y Avanzar</label>
+                  <input type="button" class="btn btn-info pull-right" id="btnWizardNext1" value="Guardar y avanzar">
+                </div><!-- END RESPONSABLES - REGISTRO GENERAL -->
+                
+                <!--BEG PARTICIPACIONES ANTERIORES-->
+                <div class="step-pane" data-step="2">
+                  <h3>Participaciones anteriores</h3><hr>
+
+                  <fieldset class="form-group required">
+                    <legend class="control-label">¿Fue seleccionado por PAEC?</legend>
+
+                    <label class="radio-custom radio-inline" data-initialize="radio" for="ppaecseleccionado-si" >
+                      <input class="sr-only" data-toggle="#ppaecopdiv" name="ppaecseleccionado" id="ppaecseleccionado-si" type="radio" value="si">
+                      SI
+                    </label>
+                  
+                    <label class="radio-custom radio-inline" data-initialize="radio" for="ppaecseleccionado-no">
+                      <input class="sr-only" data-toggle="#nada" name="ppaecseleccionado"  id="ppaecseleccionado-no" type="radio" value="no">
+                      NO
+                    </label>
+
+                    <div id="ppaecopdiv">
+                      <label class="control-label" for="ppaecproyecto">Mencione el nombre del proyecto</label>
+                      <input type="text" class="form-control" id="ppaecproyecto" name="ppaecproyecto" value="">
+                    </div>
+                  </fieldset>
+                  <hr>
+
+                  <fieldset class="form-group required">
+                    <legend class="control-label">¿Participó en algún MICA anteriormente?</legend>
+
+                    <label class="radio-custom radio-inline" data-initialize="radio" for="pmicaparticipo-si">
+                      <input class="sr-only" data-toggle="#pmicaopdiv" name="pmicaparticipo" id="pmicaparticipo-si" type="radio" value="si">
+                      SI
+                    </label>
+                  
+                    <label class="radio-custom radio-inline" data-initialize="radio" for="pmicaparticipo-no">
+                      <input class="sr-only" data-toggle="#nada" name="pmicaparticipo" id="pmicaparticipo-no" type="radio" value="no">
+                      NO
+                    </label>
+
+                    <div id="pmicaopdiv">
+                      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="pmicaparticipo1">
+                        <input class="sr-only" type="checkbox" name="pmicaparticipoop" value="pmica" id="pmicaparticipo1"> <span class="checkbox-label">MICA</span>
+                      </label>
+                      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="pmicaparticipo2">
+                        <input class="sr-only" type="checkbox" name="pmicaparticipoop" value="ppremica" id="pmicaparticipo2"> <span class="checkbox-label">PreMICA</span>
+                      </label>
+                      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="pmicaparticipo3">
+                        <input class="sr-only" type="checkbox" name="pmicaparticipoop" value="pmicsur" id="pmicaparticipo3"> <span class="checkbox-label">MICSUR</span>
+                      </label>
+                      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="pmicaparticipo4">
+                        <input class="sr-only" type="checkbox" name="pmicaparticipoop" value="pmicaproduce" id="pmicaparticipo4"> <span class="checkbox-label">MICA Produce</span>
+                      </label>
+                    </div>
+                  </fieldset>
+                  <hr>
+
+                  <fieldset class="form-group required">
+                    <legend class="control-label">¿Participo en la convocatoria 2014 de los Fondos de Desarrollo Cultural?</legend>
+
+                    <label class="radio-custom radio-inline" data-initialize="radio" for="pfondo2014op-si">
+                      <input class="sr-only" data-toggle="#pfondo2014opdiv" name="pfondo2014op" id="pfondo2014op-si" type="radio" value="si">
+                      SI
+                    </label>
+                  
+                    <label class="radio-custom radio-inline" data-initialize="radio" for="pfondo2014op-no">
+                      <input class="sr-only" data-toggle="#nada" name="pfondo2014op" id="pfondo2014op-no" type="radio" value="no">
+                      NO
+                    </label>
+
+                    <div class="form-group" id="pfondo2014opdiv">
+                      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="pfondo2014-1">
+                        <input class="sr-only" type="checkbox" id="pfondo2014-1" name="pfondo2014" value="movilidad"> 
+                        <span class="checkbox-label">Movilidad</span>
+                      </label>
+                      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="pfondo2014-2">
+                        <input class="sr-only" type="checkbox" id="pfondo2014-2" name="pfondo2014" value="sostenibilidad"> 
+                        <span class="checkbox-label">Sostenibilidad</span>
+                      </label>
+                      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="pfondo2014-3">
+                        <input class="sr-only" type="checkbox" id="pfondo2014-3" name="pfondo2014" value="infraestructura"> 
+                        <span class="checkbox-label">Infraestructura</span>
+                      </label>
+                      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="pfondo2014-4">
+                        <input class="sr-only" type="checkbox" id="pfondo2014-4" name="pfondo2014" value="innovacion"> 
+                        <span class="checkbox-label">Innovación</span>
+                      </label>
+                    </div>
+                  </fieldset>
+                  <hr>
+
+                  <fieldset class="form-group required">
+                    <legend class="control-label">¿La actividad en que participa es su actividad profesional principal?</legend>
+
+                    <label class="radio-custom radio-inline" data-initialize="radio" for="pactpr-si">
+                      <input class="sr-only" data-toggle="#nada" name="pactpr" id="pactpr-si" type="radio" value="si">
+                      SI
+                    </label>
+                  
+                    <label class="radio-custom radio-inline" data-initialize="radio" for="pactpr-no">
+                      <input class="sr-only" data-toggle=".pactprdiv" name="pactpr" id="pactpr-no" type="radio" value="no">
+                      NO
+                    </label>
+
+                    <div class="pactprdiv">
+                      <label class="control-label" for="pactprotranombre">¿Cúal es su actividad profesional principal?</label>
+                      <input type="text" class="form-control" id="pactprotranombre" name="pactotranombre" value="">
+                    </div>
+                  </fieldset>
+                  
+                  <label class="sr-only" for="btnWizardNext2">Guardar y Avanzar</label>
+                  <input type="button" class="btn btn-info pull-right" id="btnWizardNext2" value="Guardar y avanzar">
+                </div><!--END PARTICIPACIONES ANTERIORES-->
+
+                <!--BEG LINEA Y MODALIDAD-->
+                <div class="step-pane" data-step="3">
+                  <h3>Modalidad</h3><hr>
+                  <div class="form-group required">
+                    <label class="control-label">Modalidad para la linea Movilidad</label>
+                    <div class="radio">
+                      <label class="radio-custom" data-initialize="radio" for="modmov1">
+                        <input class="sr-only" data-toggle="#modmovarg" name="modmov" id="modmov1" type="radio" value="arg">
+                        Ayudas a la movilidad dentro del país
+                      </label>
+                    </div>
+                    
+                    <div class="radio">
+                      <label class="radio-custom radio-inline" data-initialize="radio" for="modmov2">
+                        <input class="sr-only" data-toggle="#modmovext" name="modmov" id="modmov2" type="radio" value="ext">
+                        Ayudas a la movilidad al exterior
+                      </label>
+                    </div>
+
+                    <div class="alert bg-info" id="modmovarg">
+                      <label class="control-label">Ayudas a la movilidad dentro del país</label>
+                      <div class="radio" data-initialize="radio">
+                        <label class="radio-custom" for="submodmov1">
+                          <input class="sr-only" name="submodmov" id="submodmov1" type="radio" value="submodmov1">
+                          1. Participación en ferias y mercados
+                        </label>
+                      </div>
+                      <div class="radio" data-initialize="radio">
+                        <label class="radio-custom" for="submodmov2">
+                          <input class="sr-only" name="submodmov" id="submodmov2" type="radio" value="submodmov2">
+                          2. Participación en festivales y encuentros
+                        </label>
+                      </div>
+                      <div class="radio" data-initialize="radio">
+                        <label class="radio-custom" for="submodmov3">
+                          <input class="sr-only" name="submodmov" id="submodmov3" type="radio" value="submodmov3">
+                          3. Ayudas a giras artísticas y culturales
+                        </label>
+                      </div>
+                      <div class="radio" data-initialize="radio">
+                        <label class="radio-custom" for="submodmov4">
+                          <input class="sr-only" name="submodmov" id="submodmov4" type="radio" value="submodmov4">
+                          4. Ayuda para la asistencia al MICA 2015
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="alert bg-info" id="modmovext">
+                      <label class="control-label">Ayudas a la movilidad al exterior</label>
+                      <div class="radio" data-initialize="radio">
+                        <label class="radio-custom" for="submodmov5">
+                          <input class="sr-only" name="submodmov" id="submodmov5" type="radio" value="submodmov5">
+                          1. Participación en ferias y mercados internacionales
+                        </label>
+                      </div>
+                      <div class="radio" data-initialize="radio">
+                        <label class="radio-custom" for="submodmov6">
+                          <input class="sr-only" name="submodmov" id="submodmov6" type="radio" value="submodmov6">
+                          2. Participación en festivales y encuentros internacionales
+                        </label>
+                      </div>
+                      <div class="radio" data-initialize="radio">
+                        <label class="radio-custom" for="submodmov7">
+                          <input class="sr-only" name="submodmov" id="submodmov7" type="radio" value="submodmov7">
+                          3. Ayudas a giras artísticas y culturales
+                        </label>
+                      </div>
+                    </div>
+
+                  </div>
+                  <hr>
+
+                  <div class="form-group required">
+                    <label class="control-label">Disciplinas</label>
+                    <div class="checkbox">
+                      <label class="checkbox-custom" data-initialize="checkbox" for="disciplina1">
+                        <input class="sr-only" type="checkbox" name="disciplina" id="disciplina1" value="disc_musica">
+                        <span class="checkbox-label">Música</span>
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label class="checkbox-custom" data-initialize="checkbox" for="disciplina2">
+                        <input class="sr-only" type="checkbox" name="disciplina" id="disciplina2" value="disc_letras">
+                        <span class="checkbox-label">Letras</span>
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label class="checkbox-custom" data-initialize="checkbox" for="disciplina3">
+                        <input class="sr-only" type="checkbox" name="disciplina" id="disciplina3" value="disc_artesvisuales">
+                        <span class="checkbox-label">Artes visuales</span>
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label class="checkbox-custom" data-initialize="checkbox" for="disciplina4">
+                        <input class="sr-only" type="checkbox" name="disciplina" id="disciplina4" value="disc_artesescenicas">
+                        <span class="checkbox-label">Artes escénicas</span>
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label class="checkbox-custom" data-initialize="checkbox" for="disciplina5">
+                        <input class="sr-only" type="checkbox" name="disciplina" id="disciplina5" value="disc_diseno">
+                        <span class="checkbox-label">Diseño</span>
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label class="checkbox-custom" data-initialize="checkbox" for="disciplina6">
+                        <input class="sr-only" type="checkbox" name="disciplina" id="disciplina6" value="disc_audiovisuales">
+                        <span class="checkbox-label">Audiovisuales</span>
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label class="checkbox-custom" data-initialize="checkbox" for="disciplina7">
+                        <input class="sr-only" type="checkbox" name="disciplina" id="disciplina7" value="disc_videojuegos">
+                        <span class="checkbox-label">Videojuegos</span>
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label class="checkbox-custom" data-initialize="checkbox" for="disciplina8">
+                        <input class="sr-only" type="checkbox" name="disciplina" id="disciplina8" value="disc_culturadigital">
+                        <span class="checkbox-label">Cultura digital</span>
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label class="checkbox-custom" data-initialize="checkbox" for="disciplina9">
+                        <input class="sr-only" type="checkbox" name="disciplina" id="disciplina9" value="disc_gestioncultural">
+                        <span class="checkbox-label">Gestion cultural</span>
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label class="checkbox-custom" data-initialize="checkbox" for="disciplina10">
+                        <input class="sr-only" type="checkbox" name="disciplina" id="disciplina10" value="disc_patrimonio">
+                        <span class="checkbox-label">Patrimonio</span>
+                      </label>
+                    </div>
+                  </div>
+                  <label class="sr-only" for="btnWizardNext3">Guardar y Avanzar</label>
+                  <input type="button" class="btn btn-info pull-right" id="btnWizardNext3" value="Guardar y avanzar">
+                </div><!--END LINEA Y MODALIDAD-->
+
+                <!--BEG CRONOGRAMA Y PRESUPUESTO-->
+                <div class="step-pane" data-step="4">
+                  <h3><span class="fa fa-paper-plane"></span> Trayecto</h3><hr>
+
+                  <!--BEG COMBO A - VIAJE IDA Y VUELTA-->    
+                  <div class="comboA">
+                    <div class="form-group required">
+                      <div class="row">
+                        <div class="col-sm-6">
+                        <label class="control-label" for="comboAdateIda">Fecha de viaje | IDA</label>
+                          <div class="input-group date">
+                            <input type="text" class="form-control calendar-container" id="comboAdateIda" name="comboAdateIda" value="">
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                        <label class="control-label" for="comboAdateVuelta">Fecha de viaje | VUELTA</label>
+                          <div class="input-group date">
+                            <input type="text" class="form-control calendar-container" id="comboAdateVuelta" name="comboAdateVuelta" value="">
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group required">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <label class="control-label" for="comboAorigen">Origen</label>
+                          <input type="text" class="form-control" id="comboAorigen" name="comboAorigen" placeholder="Ciudad, Provincia, País" value="">
+                        </div>
+                    
+                        <div class="col-sm-6">
+                          <label class="control-label" for="comboAdestino">Destino</label>
+                          <input type="text" class="form-control" id="comboAdestino" name="comboAdestino" placeholder="Ciudad, Provincia, País" value="">
+                        </div>
+                      </div>
+                    </div>
+                    <hr>  
+                  </div><!--END COMBO A-->
+
+                  <!--BEG COMBO B - VIAJE MULTIPLES DESTINOS-->    
+                  <div class="comboB">
+                    <div class="alert alert-info pax">
+                      <h3><span class="fa fa-paper-plane"></span> Trayecto #1</h3><hr>
+                      
+                      <div class="form-group required">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <label class="control-label" for="comboBdate1">Fecha de viaje | Trayecto #1</label>
+                            <div class="input-group date">
+                              <input type="text" class="form-control calendar-container"  id="comboBdate1" name="comboBdate1" value=""><span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="form-group required">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <label class="control-label" for="comboBorigen1">Origen</label>
+                            <input type="text" class="form-control" id="comboBorigen1" name="comboBorigen1" placeholder="Ciudad, Provincia, País" value="">
+                          </div>
+                      
+                          <div class="col-sm-6">
+                            <label class="control-label" for="comboBdestino1">Destino</label>
+                            <input type="text" class="form-control" id="comboBdestino1" name="comboBdestino1" placeholder="Ciudad, Provincia, País" value="">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div>
+                        <a href="#" class="btn btn-warning">Agregar trayecto</a>
+                      </div>
+                    </div>
+                    <hr>
+                  </div><!--END COMBO B-->
+
+                  <!--BEG PASAJEROS-->
+                  <div>
+                    <h3><span class="fa fa-user"></span> Pasajeros</h3>
+                    <div class="form-group required">
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <label class="control-label" for="npaxmax">Cantidad de pasajeros</label>
+                          <input type="text" class="form-control" id="npaxmax" name="npaxmax" value="">
+                        </div>
+                        <div class="col-sm-8">
+                          <label class="control-label" for="npaxmin">Cantidad mínima de pasajeros para poder ejecutar el proyecto</label>
+                          <input type="text" class="form-control" id="npaxmin" name="npaxmin" value="">
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="alert alert-info pax">
+                      <h3><span class="fa fa-user"></span> Pasajero #1</h3><hr>  
+                      <div class="form-group required">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <label class="control-label" for="paxnamesurn1">Nombre y apellido</label>
+                            <input type="text" class="form-control" id="paxnamesurn1" name="paxnamesurn1" value="">
+                          </div>
+                          <div class="col-sm-6">
+                            <label class="control-label" for="paxbirth1">Fecha de nacimiento</label>
+                            <input type="text" class="form-control" id="paxbirth1" name="paxbirth1" value="">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <div class="row">
+                          <div class="col-sm-6">
+                            <label class="control-label" for="paxdni1">DNI</label>
+                            <input type="text" class="form-control" id="paxdni1" name="paxdni1" value="">
+                          </div>
+                          <div class="col-sm-6">
+                            <label class="control-label" for="paxrol1">Rol dentro del grupo</label>
+                            <input type="text" class="form-control" id="paxrol1" name="paxrol1" value="">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--listado de pasajeros-->
+                    <div class="form-group">
+                      <div>
+                        <a href="#" class="btn btn-warning">Agregar pasajero</a>
+                      </div>
+                    </div>
+                    <hr>
+                  </div><!--END PASAJEROS-->
+
+                  <!--BEG COMBO C - EVENTOS-->    
+                  <div class="comboC">
+                    <h3><span class="fa fa-bullhorn"></span> Evento</h3>
+                    <div class="form-group required">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <label class="control-label" for="eventname">Nombre del Evento</label>
+                          <input type="text" class="form-control" id="eventname" name="eventname" placeholder="Ciudad, Provincia, País" value="">
+                        </div>
+                    
+                        <div class="col-sm-6">
+                          <label class="control-label" for="eventweb">Web del Evento</label>
+                          <input type="text" class="form-control" id="eventweb" name="eventweb" placeholder="Ciudad, Provincia, País" value="">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group required">
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <label class="control-label" for="eventloc">Localidad</label>
+                          <input type="text" class="form-control" id="eventloc" name="eventloc" value="">
+                        </div>
+                    
+                        <div class="col-sm-4">
+                          <label class="control-label" for="eventprov">Provincia/Estado</label>
+                          <input type="text" class="form-control" id="eventprov" name="eventprov" value="">
+                        </div>
+
+                        <div class="col-sm-4">
+                          <label class="control-label" for="eventpais">País</label>
+                          <input type="text" class="form-control" id="eventpais" name="eventpais" value="">
+                        </div>
+                      </div>
+                    </div>
+                  <hr>
+                  </div><!--END COMBO C-->
+
+                  <label class="sr-only" for="btnWizardNext4">Guardar y Avanzar</label>
+                  <input type="button" class="btn btn-info pull-right" id="btnWizardNext4" value="Guardar y avanzar">
+                </div><!--END CRONOGRAMA Y PRESUPUESTO-->
+
+                <!--BEG FILE UPLOADS-->
+                <div class="step-pane" data-step="5">
+                  <h3>Carga de archivos</h3>
+
+                  <!--La clase togglecomunes muestra el form para todas las personerias-->
+                  <!--La clase togglejuridica muestra el form solo para personeria jurídica-->
+                  
+                  <!--1 BEG CARTA A LA MINISTRA-->
+                  <div class="well togglecomunes">
+                    <div class="panel-heading">
+                      <span class="badge">1</span> <h4>Carta a la Ministra</h4> 
+                      <p>Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel. Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel.</p>
+                    </div>
+                    <div class="panel-body">
+                      <!-- Standar Form -->
+                      <label class="control-label" for="js-upload-files-1">Seleccione el archivo desde su computadora</label>
+                      <form action="#" method="post" enctype="multipart/form-data" id="js-upload-form-1">
+                        <div class="form-inline">
+                          <div class="form-group">
+                            <input type="file" name="files[]" id="js-upload-files-1" multiple>
+                          </div>
+                          <label class="sr-only" for="js-upload-submit-1">Enviar archivo al servidor. Podrá cargar más de 1</label>
+                          <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit-1">Cargar archivo</button>
+                        </div>
+                      </form>
+
+                      <!-- Upload Finished -->
+                      <div class="js-upload-finished">
+                        <h4>Archivos procesados</h4>
+                        <div class="list-group">
+                          <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!--END CARTA A LA MINISTRA-->
+
+                  <hr>
+
+                  <!--2 BEG DNI-->
+                  <div class="well togglecomunes">
+                    <div class="panel-heading">
+                      <span class="badge">2</span> <h4>Escaneo del Documento de Identidad del Representante</h4> 
+                      <p>Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel. Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel.</p>
+                    </div>
+                    <div class="panel-body">
+                      <!-- Standar Form -->
+                      <label class="control-label" for="js-upload-files-2">Seleccione el archivo desde su computadora</label>
+                      <form action="#" method="post" enctype="multipart/form-data" id="js-upload-form-2">
+                        <div class="form-inline">
+                          <div class="form-group">
+                            <input type="file" name="files[]" id="js-upload-files-2" multiple>
+                          </div>
+                          <label class="sr-only" for="js-upload-submit-2">Enviar archivo al servidor. Podrá cargar más de 1</label>
+                          <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit-2">Cargar archivo</button>
+                        </div>
+                      </form>
+
+                      <!-- Upload Finished -->
+                      <div class="js-upload-finished">
+                        <h4>Archivos procesados</h4>
+                        <div class="list-group">
+                          <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!--END DNI-->
+
+                  <hr>
+
+                  <!--3 BEG FORMULARIO ESPECIFICO-->
+                  <div class="well togglecomunes">
+                    <div class="panel-heading">
+                      <span class="badge">3</span> <h4>Formulario específico</h4> 
+                      <p>Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel. Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel.</p>
+                    </div>
+                    <div class="panel-body">
+                      <!-- Standar Form -->
+                      <label class="control-label" for="js-upload-files-3">Seleccione el archivo desde su computadora</label>
+                      <form action="#" method="post" enctype="multipart/form-data" id="js-upload-form-3">
+                        <div class="form-inline">
+                          <div class="form-group">
+                            <input type="file" name="files[]" id="js-upload-files-3" multiple>
+                          </div>
+                          <label class="sr-only" for="js-upload-submit-3">Enviar archivo al servidor. Podrá cargar más de 1</label>
+                          <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit-3">Cargar archivo</button>
+                        </div>
+                      </form>
+
+                      <!-- Upload Finished -->
+                      <div class="js-upload-finished">
+                        <h4>Archivos procesados</h4>
+                        <div class="list-group">
+                          <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!--END FORMULARIO ESPECIFICO-->
+                  
+                  <hr>
+
+                  <!--4 BEG CARTA INVITACION-->
+                  <div class="well togglecomunes">
+                    <div class="panel-heading">
+                      <span class="badge">4</span> <h4>Carta de invitación</h4> 
+                      <p>Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel. Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel.</p>
+                    </div>
+                    <div class="panel-body">
+                      <!-- Standar Form -->
+                      <label class="control-label" for="js-upload-files-4">Seleccione el archivo desde su computadora</label>
+                      <form action="#" method="post" enctype="multipart/form-data" id="js-upload-form-4">
+                        <div class="form-inline">
+                          <div class="form-group">
+                            <input type="file" name="files[]" id="js-upload-files-4" multiple>
+                          </div>
+                          <label class="sr-only" for="js-upload-submit-4">Enviar archivo al servidor. Podrá cargar más de 1</label>
+                          <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit-4">Cargar archivo</button>
+                        </div>
+                      </form>
+
+                      <!-- Upload Finished -->
+                      <div class="js-upload-finished">
+                        <h4>Archivos procesados</h4>
+                        <div class="list-group">
+                          <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!--END CARTA INVITACION-->
+
+                  <hr>
+
+                  <!--5 BEG AFIP-->
+                  <div class="well togglecomunes">
+                    <div class="panel-heading">
+                      <span class="badge">5</span> 
+                      <h4>AFIP</h4>
+                      <h5>Constancia de CUIL o CUIT para Personas físicas</h5> 
+                      <h5>Constancia de AFIP de la Entidad para Personas jurídicas</h5> 
+                      <p>Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel. Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel.</p>
+                    </div>
+                    <div class="panel-body">
+                      <!-- Standar Form -->
+                      <label class="control-label" for="js-upload-files-5">Seleccione el archivo desde su computadora</label>
+                      <form action="#" method="post" enctype="multipart/form-data" id="js-upload-form-5">
+                        <div class="form-inline">
+                          <div class="form-group">
+                            <input type="file" name="files[]" id="js-upload-files-5" multiple>
+                          </div>
+                          <label class="sr-only" for="js-upload-submit-5">Enviar archivo al servidor. Podrá cargar más de 1</label>
+                          <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit-5">Cargar archivo</button>
+                        </div>
+                      </form>
+
+                      <!-- Upload Finished -->
+                      <div class="js-upload-finished">
+                        <h4>Archivos procesados</h4>
+                        <div class="list-group">
+                          <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!--END AFIP-->
+
+                  <hr>
+
+                  <!--6 BEG CV-->
+                  <div class="well togglecomunes">
+                    <div class="panel-heading">
+                      <span class="badge">6</span> 
+                      <h4>CV</h4>
+                      <h5>Currículum Vitae para Personas físicas</h5> 
+                      <h5>Breve reseña de la Entidad para Personas jurídicas</h5>  
+                      <p>Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel. Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel.</p>
+                    </div>
+                    <div class="panel-body">
+                      <!-- Standar Form -->
+                      <label class="control-label" for="js-upload-files-6">Seleccione el archivo desde su computadora</label>
+                      <form action="#" method="post" enctype="multipart/form-data" id="js-upload-form-6">
+                        <div class="form-inline">
+                          <div class="form-group">
+                            <input type="file" name="files[]" id="js-upload-files-6" multiple>
+                          </div>
+                          <label class="sr-only" for="js-upload-submit-6">Enviar archivo al servidor. Podrá cargar más de 1</label>
+                          <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit-6">Cargar archivo</button>
+                        </div>
+                      </form>
+
+                      <!-- Upload Finished -->
+                      <div class="js-upload-finished">
+                        <h4>Archivos procesados</h4>
+                        <div class="list-group">
+                          <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!--END CV-->
+
+                  <hr>
+
+                  <!--7 BEG RES. O ACTA DE OTORGAMIENTO-->
+                  <div class="well togglejuridica">
+                    <div class="panel-heading">
+                      <span class="badge">7</span> <h4>RESOLUCIÓN O ACTA DE OTORGAMIENTO</h4> 
+                      <p>Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel. Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel.</p>
+                    </div>
+                    <div class="panel-body">
+                      <!-- Standar Form -->
+                      <label class="control-label" for="js-upload-files-7">Seleccione el archivo desde su computadora</label>
+                      <form action="#" method="post" enctype="multipart/form-data" id="js-upload-form-7">
+                        <div class="form-inline">
+                          <div class="form-group">
+                            <input type="file" name="files[]" id="js-upload-files-7" multiple>
+                          </div>
+                          <label class="sr-only" for="js-upload-submit-7">Enviar archivo al servidor. Podrá cargar más de 1</label>
+                          <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit-7">Cargar archivo</button>
+                        </div>
+                      </form>
+
+                      <!-- Upload Finished -->
+                      <div class="js-upload-finished">
+                        <h4>Archivos procesados</h4>
+                        <div class="list-group">
+                          <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!--END RES. O ACTA DE OTORGAMIENTO-->
+
+                  <hr>
+
+                  <!--8 BEG ULTIMA ACTA DE DESIGNACION DE AUTORIDADES-->
+                  <div class="well togglejuridica">
+                    <div class="panel-heading">
+                      <span class="badge">8</span> 
+                      <h4>ÚLTIMA ACTA DE DESIGNACIÓN DE AUTORIDADES</h4> 
+                      <p>Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel. Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel.</p>
+                    </div>
+                    <div class="panel-body">
+                      <!-- Standar Form -->
+                      <label class="control-label" for="js-upload-files-8">Seleccione el archivo desde su computadora</label>
+                      <form action="#" method="post" enctype="multipart/form-data" id="js-upload-form-8">
+                        <div class="form-inline">
+                          <div class="form-group">
+                            <input type="file" name="files[]" id="js-upload-files-8" multiple>
+                          </div>
+                          <label class="sr-only" for="js-upload-submit-8">Enviar archivo al servidor. Podrá cargar más de 1</label>
+                          <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit-8">Cargar archivo</button>
+                        </div>
+                      </form>
+
+                      <!-- Upload Finished -->
+                      <div class="js-upload-finished">
+                        <h4>Archivos procesados</h4>
+                        <div class="list-group">
+                          <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!--END ULTIMA ACTA DE DESIGNACION DE AUTORIDADES-->
+
+                  <hr>
+
+                  <!--9 BEG ULTIMO BALANCE DE LA ENTIDAD-->
+                  <div class="well togglejuridica">
+                    <div class="panel-heading">
+                      <span class="badge">9</span> 
+                      <h4>ÚLTIMO BALANCE DE LA ENTIDAD</h4> 
+                      <p>Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel. Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel.</p>
+                    </div>
+                    <div class="panel-body">
+                      <!-- Standar Form -->
+                      <label class="control-label" for="js-upload-files-9">Seleccione el archivo desde su computadora</label>
+                      <form action="#" method="post" enctype="multipart/form-data" id="js-upload-form-9">
+                        <div class="form-inline">
+                          <div class="form-group">
+                            <input type="file" name="files[]" id="js-upload-files-9" multiple>
+                          </div>
+                          <label class="sr-only" for="js-upload-submit-9">Enviar archivo al servidor. Podrá cargar más de 1</label>
+                          <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit-9">Cargar archivo</button>
+                        </div>
+                      </form>
+
+                      <!-- Upload Finished -->
+                      <div class="js-upload-finished">
+                        <h4>Archivos procesados</h4>
+                        <div class="list-group">
+                          <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!--END ULTIMO BALANCE DE LA ENTIDAD-->
+
+                  <hr>
+
+                  <!--10 BEG ESTATUTO DE LA ENTIDAD-->
+                  <div class="well togglejuridica">
+                    <div class="panel-heading">
+                      <span class="badge">10</span> 
+                      <h4>ESTATUTO DE LA ENTIDAD</h4> 
+                      <p>Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel. Proin sit amet fringilla erat. Sed scelerisque fermentum neque, placerat sollicitudin elit facilisis vel.</p>
+                    </div>
+                    <div class="panel-body">
+                      <!-- Standar Form -->
+                      <label class="control-label" for="js-upload-files-10">Seleccione el archivo desde su computadora</label>
+                      <form action="#" method="post" enctype="multipart/form-data" id="js-upload-form-10">
+                        <div class="form-inline">
+                          <div class="form-group">
+                            <input type="file" name="files[]" id="js-upload-files-10" multiple>
+                          </div>
+                          <label class="sr-only" for="js-upload-submit-10">Enviar archivo al servidor. Podrá cargar más de 1</label>
+                          <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit-10">Cargar archivo</button>
+                        </div>
+                      </form>
+
+                      <!-- Upload Finished -->
+                      <div class="js-upload-finished">
+                        <h4>Archivos procesados</h4>
+                        <div class="list-group">
+                          <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!--END ESTATUTO DE LA ENTIDAD-->
+                  <hr>
+                  <label class="sr-only" for="btnWizardNext5">Finalizar postulación</label>
+                  <input type="button" class="btn btn-info pull-right" id="btnWizardNext5" value="Guardar y avanzar">
+                </div><!--END FILE UPLOADS-->
+                  
+                <div class="step-pane" data-step="6">
+                  <h4>Confirmación</h4>
+                  <p>!Felicitaciones!</p>
+                  <p>Hemos registrado su postulación y el sistema enviará de manera automática un email a su cuenta de correo con los datos de la registración en caso que desee volver a editar o verificar sus datos.</p>
+                  <hr>
+                  <hr class="spacer">
+                </div><!-- END STEP 5 --> 
+
+              </div><!--STEP content--> 
+
+            </div>
+          </div>
+          <!--END FORM--> 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer id="footer-region">
+  <section id="share">
+    <div> <img src="http://www.cultura.gob.ar/static/img/logo-presidencia-de-la-nacion-footer.png" alt="Ministerio de Cultura de la Nacion" title="Ministerio de Cultura de la Nacion" width="250"  border="0"> </div>
+  </section>
+</footer>
+<!-- jQuery -->
+<script src="http://sisplan.cultura.gob.ar:3000/mica2015/lib/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://sisplan.cultura.gob.ar:3000/lib/bootstrap.min.js"></script>
+<script src="http://sisplan.cultura.gob.ar:3000/mica2015/lib/fuelux.min.js"></script>
+<script src="lib/bootstrap-datepicker.js"></script>
+<script src="js/custom.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('input[type="radio"]').click(function(){
+            if($(this).attr("value")=="submodmov1"){
+                $(".comboA").show();
+                $(".comboB").hide();
+                $(".comboC").show();
+            }
+            if($(this).attr("value")=="submodmov2"){
+                $(".comboA").show();
+                $(".comboB").hide();
+                $(".comboC").show();
+            }
+            if($(this).attr("value")=="submodmov3"){
+                $(".comboA").hide();
+                $(".comboB").show();
+                $(".comboC").hide();
+            }
+            if($(this).attr("value")=="submodmov4"){
+                $(".comboA").show();
+                $(".comboB").hide();
+                $(".comboC").hide();
+            }
+            if($(this).attr("value")=="submodmov5"){
+                $(".comboA").show();
+                $(".comboB").hide();
+                $(".comboC").show();
+            }
+            if($(this).attr("value")=="submodmov6"){
+                $(".comboA").show();
+                $(".comboB").hide();
+                $(".comboC").show();
+            }
+            if($(this).attr("value")=="submodmov7"){
+                $(".comboA").hide();
+                $(".comboB").show();
+                $(".comboC").hide();
+            }
+        });
+    });
+</script>
+</body>
+</html>

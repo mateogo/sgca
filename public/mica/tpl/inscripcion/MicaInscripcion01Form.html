@@ -1,0 +1,171 @@
+<h3>Datos de la Empresa o Institución</h3>
+
+<div class="avatar-upload">
+  <div id="cropContainerEyecandy"></div>
+</div>
+
+<div class="row">  
+  <div class="col-sm-5 col-xs-9 form-group required">
+    <label class="control-label" for="edisplayName">Nombre de la Empresa/Emprendimiento</label>
+    <label class="control-label en" for="edisplayName">Company Name / Entrepreneurship</label>
+    <input type="text" id="edisplayName" class="form-control" name="edisplayName" value='<%= edisplayName %>'/>
+    <span class="help-block"></span>
+  </div>
+  <div class="col-sm-5 col-xs-9 form-group">
+    <label class="control-label" for="ename">Razón social</label>
+    <label class="control-label en" for="ename">Business name</label>
+    <div class="input-group">
+      <input type="text" id="ename" class="form-control" name="ename" value='<%= ename %>'/>
+      <div class="input-group-addon">
+        <div title="Completar si difiere del nombre del emprendimiento" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="form-group col-sm-12 required">
+  <div class="row">
+    <label class="control-label" for="edescription">Describa el perfil de la Empresa/Emprendimiento</label>
+    <div class="input-group">
+      <textarea id="edescription" class="form-control" rows="6"  maxlength="500" placeholder="Describa brevemente el perfil de su producción (bienes o servicios), a quien está destinada, qué la caracteriza, etc. (Máximo 500 caracteres)" name="edescription" ><%= edescription %></textarea>
+      <div class="input-group-addon">
+        <div title="Describa brevemente el perfil de su producción (bienes o servicios), a quien está destinada, qué la caracteriza, etc. (Máximo 500 caracteres)" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+      <p id="limit-chars"></p>
+    </div>
+    <span class="help-block"></span>
+  </div>
+</div>
+
+<div class="form-group col-sm-12 required">
+  <div class="row">
+    <label class="control-label" for="emotivation">Explique su principal motivación para participar del MICA</label>
+    <div class="input-group">
+      <textarea id="emotivation" class="form-control" rows="6" maxlength="500" placeholder="Describa brevemente por qué quiere participar del Eevento, en qué actividades en particular, etc. (Máximo 500 caracteres)" name="emotivation"><%= emotivation %></textarea>
+      <div class="input-group-addon">
+        <div title="Describa brevemente por qué quiere participar del Eevento, en qué actividades en particular, etc. (Máximo 500 caracteres)" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+      <p id="limit-chars"></p>
+    </div>
+    <span class="help-block"></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="form-group required">
+    <div class="col-sm-4 selectContainer">
+      <label class="control-label" for="epais">País</label>
+      <select  id="epais" class="form-control" name="epais">
+           <%= tdata.buildSelectOptions('paises',tdata.paisesOL, epais) %>
+      </select>
+      <span class="help-block"></span>
+    </div>
+  
+    <div class="col-sm-4 selectContainer">
+      <label class="control-label" for="eprov">Provincia</label>
+      <select id="eprov" class="form-control js-provarg" name="eprov">
+           <%= tdata.buildSelectOptions('provincias',tdata.provinciasOL, eprov) %>
+      </select>
+      <span class="help-block"></span>
+    </div>
+  </div>
+        
+  <div class="col-sm-4">
+    <label class="control-label" for="elocalidad">Localidad</label>
+    <input type="text" id="elocalidad" class="form-control" name="elocalidad" value="<%= elocalidad %>">
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="row">
+    <div class="col-sm-4 selectContainer form-group">
+      <label class="control-label" for="ecuit">CUIT</label>
+      <div class="input-group">
+        <input type="text" id="ecuit" class="form-control" name="ecuit" value="<%= ecuit %>">
+        <div class="input-group-addon">
+          <div title="Ingrese números sin espacios ni guiones" rel="tooltip">
+            <span class="fa fa-question-circle"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 form-group">
+      <label class="control-label" for="edomicilio">Domicilio</label>
+      <div class="input-group">
+        <input type="text" id="edomicilio" class="form-control" name="edomicilio" value="<%= edomicilio %>">
+        <div class="input-group-addon">
+          <div title="Calle, número, piso y departamento" rel="tooltip">
+            <span class="fa fa-question-circle"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-2 selectContainer">
+      <label class="control-label" for="ecp">CP</label>
+      <input type="text" id="ecp" class="form-control" name="ecp" value="<%= ecp %>">
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="row">
+    <div class="col-sm-6 form-group required">
+      <label class="control-label" for="email">Email</label>
+      <input type="email" id="email" class="form-control" name="email" value="<%= email %>">
+      <span class="help-block"></span>
+    </div>
+
+    <div class="col-sm-6">
+      <label class="control-label" for="eweb">Web</label>
+      <input type="text" id="eweb" class="form-control" name="eweb" value="<%= eweb %>">
+      <span class="help-block"></span>
+    </div>
+  </div>
+</div>
+
+<div class="form-group required">
+  <div class="row">
+      <div class="col-sm-3">
+          <label class="control-label" for="efundacion">Año de Fundación</label>
+          <input type="text" id="efundacion" class="form-control" name="efundacion" value="<%= efundacion %>">
+          <span class="help-block"></span>
+      </div>
+
+      <div class="col-sm-4 form-group">
+        <label class="control-label" for="enumempleados">Cantidad de empleados</label>
+        <div class="input-group">
+          <input type="text" id="enumempleados" class="form-control" name="enumempleados" value="<%= enumempleados %>">
+          <div class="input-group-addon">
+            <div title="Ingrese en números la cantidad de empleados estables. Si no tiene empleados ingrese 0" rel="tooltip">
+              <span class="fa fa-question-circle"></span>
+            </div>
+          </div>
+        </div>
+        <span class="help-block"></span>
+      </div>
+
+      <div class="col-sm-5 form-group">
+        <label class="control-label" for="eventas">Facturación anual</label>
+        <div class="input-group">
+          <div class="input-group-addon">AR$</div>
+          <input type="text" id="eventas" class="form-control" name="eventas" value="<%= eventas %>">
+          <div class="input-group-addon">
+            <div title="Aproximado, en el último año en pesos argentinos" rel="tooltip">
+              <span class="fa fa-question-circle"></span>
+            </div>
+          </div>
+        </div>
+        <span class="help-block"></span>
+      </div>
+                              <button type="button" class="btn btn-primary js-submit">Enviar solicitud</button>
+
+  </div>
+</div>

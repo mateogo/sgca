@@ -46,38 +46,38 @@ module.exports = function (config, app) {
         res.redirect('/');
     });
 	
-    app.post('/mica2015/login',
-        passport.authenticate('local', {failureRedirect:'/mica2015'}), function(req, res){
-            console.log("/mica2015/login [%s] [%s]", req.user.username, utils.anywModule());
+    app.post('/mica/login',
+        passport.authenticate('local', {failureRedirect:'/mica'}), function(req, res){
+            console.log("/mica/login [%s] [%s]", req.user.username, utils.anywModule());
             console.log('AUTHENTICATE OK!!!![%s] [%s]', req, res)
             res.redirect(utils.userHome(req.user));
     });
 	
-		app.post('/img', function (req, res){
-			var form = new formidable.IncomingForm();
-			form.parse(req, function(err, fields, files) {
-				res.writeHead(200, {'content-type': 'application/json'});
-				res.end(util.inspect({status:"success", url: 'uploads/'+files.img.name}));
-			});
-			
-			form.on('end', function(fields, files) {
-				/* Temporary location of our uploaded file */
-				var temp_path = this.openedFiles[0].path;
-				/* The file name of the uploaded file */
-				var file_name = this.openedFiles[0].name;
-				/* Location where we want to copy the uploaded file */
-				var new_location = 'img/';
-				fs.copy(temp_path, new_location + file_name, function(err) {  
-					if (err) {
-						console.error(err);
-					} else {
-						console.log("success!");
-					}
-				});
+	app.post('/img', function (req, res){
+		var form = new formidable.IncomingForm();
+		form.parse(req, function(err, fields, files) {
+			res.writeHead(200, {'content-type': 'application/json'});
+			res.end(util.inspect({status:"success", url: 'uploads/'+files.img.name}));
+		});
+		
+		form.on('end', function(fields, files) {
+			/* Temporary location of our uploaded file */
+			var temp_path = this.openedFiles[0].path;
+			/* The file name of the uploaded file */
+			var file_name = this.openedFiles[0].name;
+			/* Location where we want to copy the uploaded file */
+			var new_location = 'img/';
+			fs.copy(temp_path, new_location + file_name, function(err) {  
+				if (err) {
+					console.error(err);
+				} else {
+					console.log("success!");
+				}
 			});
 		});
-    app.get('/mica2015/login', function(req,res,next){
-        console.log("/mica2015/login:routes.js ");
+	});
+    app.get('/mica/login', function(req,res,next){
+        console.log("/mica/login:routes.js ");
         res.redirect('/');
     });
 
@@ -174,17 +174,30 @@ module.exports = function (config, app) {
         //res.redirect();
     });
 
-    // micaprofile -perfil inscriptos MICA- routes
-    var micaprofile = require(rootPath + '/calendar/controllers/micaprofiles');
-    app.post('/actualizar/perfiles', micaprofile.partialupdate);
-    app.get ('/perfiles',            micaprofile.findAll);
-    app.post('/perfiles/fetch',      micaprofile.findOne);
-    app.post('/navegar/perfiles',    micaprofile.find);
+    // micasuscriptions -perfil inscriptos MICA- routes
+    var micasuscriptions = require(rootPath + '/calendar/controllers/micasuscriptions');
+    app.post('/actualizar/micasuscriptions', micasuscriptions.partialupdate);
+    app.get ('/micasuscriptions',            micasuscriptions.findAll);
+    app.post('/micasuscriptions/fetch',      micasuscriptions.findOne);
+    app.post('/navegar/micasuscriptions',    micasuscriptions.find);
 
-    app.get ('/perfiles/:id',        micaprofile.findById);
-    app.post('/perfiles',            micaprofile.add);
-    app.put ('/perfiles/:id',        micaprofile.update);
-    app.delete('/perfiles/:id',      micaprofile.delete);
+    app.get ('/micasuscriptions/:id',        micasuscriptions.findById);
+    app.post('/micasuscriptions',            micasuscriptions.add);
+    app.put ('/micasuscriptions/:id',        micasuscriptions.update);
+    app.delete('/micasuscriptions/:id',      micasuscriptions.delete);
+
+
+    // fondosuscribe -perfil inscriptos FONDO- routes
+    var fondosuscribe = require(rootPath + '/calendar/controllers/fondosuscriptions');
+    app.post('/actualizar/fondosuscriptions', fondosuscribe.partialupdate);
+    app.get ('/fondosuscriptions',            fondosuscribe.findAll);
+    app.post('/fondosuscriptions/fetch',      fondosuscribe.findOne);
+    app.post('/navegar/fondosuscriptions',    fondosuscribe.find);
+
+    app.get ('/fondosuscriptions/:id',        fondosuscribe.findById);
+    app.post('/fondosuscriptions',            fondosuscribe.add);
+    app.put ('/fondosuscriptions/:id',        fondosuscribe.update);
+    app.delete('/fondosuscriptions/:id',      fondosuscribe.delete);
 
      // adminrequests (acciones) routes
     var admrqst = require(rootPath + '/calendar/controllers/adminrequests');

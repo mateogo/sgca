@@ -432,22 +432,37 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
   var importelabel = function(){
     return 'Costo: ' + accounting.formatNumber(Build.Session.model.getFieldLabel('costodetallado'));
   }
-  
+
+  var renderable = function(col, model){
+    console.log('callme!!!!!!!!!!![%s] [%s]', arguments.length, col.whoami);
+    return false;
+
+  };
+  var ColumnOne = Backgrid.Column.extend({
+    name: 'punit',   
+    label: 'Unitario',     
+    cell: 'importeFormateado',
+    editable:false,
+    renderable: false,
+  });
+  var colOne = new ColumnOne();
+
+  var admrqstCols = new Backgrid.Columns([
+        {name: 'person',  label: 'BEneficiario', cell: 'string',editable:false},
+        {name: 'slug',    label: 'Descripción',  cell: 'string',editable:false, renderable: renderable},
+        {name: 'freq',    label: 'Cantidad',     cell: 'importeFormateado',editable:false, renderable: false},
+        //{name: 'punit',   label: 'Unitario',     cell: 'importeFormateado',editable:false},
+        {name: 'importe', label: importelabel ,  cell: 'importeFormateado',editable:false},
+        {name: 'fedesde', label: 'Fe desde',     cell: fechaCell, editable:false},
+        {name: 'fehasta', label: 'Fe hasta',     cell: fechaCell,editable:false},
+        {label: 'Acciones',cell: buildActionCell, editable:false,sortable:false},                 
+  ]);
   
   Build.itemsGridCreator = function(collection){
       return new Backgrid.Grid({
           className: 'table table-condensed table-bordered table-hover',
           collection: collection,
-          columns: [
-                    {name: 'person',label: 'Beneficiario',cell: 'string',editable:false},
-                    {name: 'slug',label: 'Descripción',cell: 'string',editable:false},
-                    {name: 'freq',label: 'Cantidad',cell: 'importeFormateado',editable:false},
-                    {name: 'punit',label: 'Unitario',cell: 'importeFormateado',editable:false},
-                    {name: 'importe',label: importelabel ,cell: 'importeFormateado',editable:false},
-                    {name: 'fedesde',label: 'Fe desde',cell: fechaCell, editable:false},
-                    {name: 'fehasta',renderable: false, label: 'Fe hasta',cell: fechaCell,editable:false},
-                    {label: 'Acciones',cell: buildActionCell, editable:false,sortable:false},
-                   ]
+          columns: admrqstCols,
         });
   }; 
   
@@ -517,3 +532,9 @@ DocManager.module("AdminrequestsApp.Build", function(Build, DocManager, Backbone
   
   
 });
+
+
+
+
+
+
