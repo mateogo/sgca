@@ -1,0 +1,246 @@
+<h3>Registro general</h3><hr>
+<div class="form-group required">
+  <div class="row">
+    <div class="col-sm-12">
+      <label class="control-label" for="usermail">Correo electrónico del usuario (responsable de la carga de datos)</label>
+      <input type="text" class="form-control" id="usermail" name="usermail" value="<%= usermail %>" disabled="">
+      <!--A completar automáticamente--> 
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <h3>Datos del solicitante</h3>
+    <p>Persona u organización solicitante</p>
+  </div>
+</div>
+<div class="form-group required">
+  <div class="row">
+    <div class="col-sm-12">
+      <label class="control-label" for="edisplayName">Denominación del solicitante (nombre / alias /nombre de fantasía)</label>
+      <input type="text" class="form-control" id="edisplayName" name="edisplayName" value="<%= edisplayName %>">
+      <span class="help-block"></span> 
+    </div>
+  </div>
+</div>
+
+<div class="form-group required">
+  <div class="row">
+    <div class="col-sm-4">
+      <label class="control-label" for="ecuit">CUIT</label>
+      <input type="text" class="form-control" id="ecuit" name="ecuit" value="<%= ecuit %>">
+      <span class="help-block"></span> 
+    </div>
+
+    <div class="col-sm-8">
+      <label class="control-label" for="ename">Nombre legal o Razón social</label>
+      <input type="text" class="form-control" id="ename" name="ename" value="<%= ename %>">
+      <span class="help-block"></span> 
+    </div>
+  </div>
+</div>
+<div class="form-group required">
+  <div class="row">
+    <div class="col-sm-12">
+      <label class="control-label" for="e-mail">Correo electrónico oficial (utilizado para las notificaciones)</label>
+      <input type="email" class="form-control" id="email" name="email" value="<%= email %>">
+    </div>
+  </div>
+</div>
+<div class="form-group required">
+  <div class="row">
+    <div class="col-sm-12">
+      <label class="control-label" for="pactprotranombre">Actividad principal</label>
+      <input type="text" class="form-control" id="eactividad" name="eactividad" value="eactividad">
+    </div>
+  </div>
+</div>
+<div class="form-group">
+  <div class="row">
+    <div class="col-sm-12">
+      <label  for="rweb">Página web / blog</label>
+      <input type="url" class="form-control" id="rweb" name="rweb" value="<%= rweb %>">
+    </div>
+  </div>
+</div>
+<div class="form-group">
+  <div class="row">
+    <div class="col-sm-12">
+      <label class="control-label" for="raudiovideo">Material de audio o video</label>
+      <input type="url" class="form-control" id="raudiovideo" name="raudiovideo" value="<%= raudiovideo %>">
+    </div>
+  </div>
+</div>
+
+<div class="form-group required">
+  <div class="row">
+    <div class="col-sm-12 radio">
+        <legend class="control-label">Forma jurídica</legend>
+
+        <label id="pfisica" class="radio-custom radio-inline" for="etipojuridico1">
+          <input type="radio" id="etipojuridico1" <%= etipojuridico == 'pfisica' ? 'checked="checked"' : '' %> name="etipojuridico"  value="pfisica">
+          Persona física
+        </label>
+      
+        <label class="radio-custom radio-inline" for="etipojuridico2">
+          <input type="radio" id="etipojuridico2" data-toggle=".togglejuridica" <%= etipojuridico == 'fundacion' ? 'checked="checked"' : '' %> name="etipojuridico"  value="fundacion">
+          Fundación
+        </label>
+      
+        <label class="radio-custom radio-inline" for="etipojuridico3">
+          <input type="radio" id="etipojuridico3" data-toggle=".togglejuridica" <%= etipojuridico == 'asociacion' ? 'checked="checked"' : '' %> name="etipojuridico" value="asociacion">
+          Asociación
+        </label>
+
+        <label id="cooperativa" class="radio-custom radio-inline" for="etipojuridico4">
+          <input type="radio" id="etipojuridico4" data-toggle=".togglejuridica" <%= etipojuridico == 'cooperativa' ? 'checked="checked"' : '' %> name="etipojuridico"  value="cooperativa">
+          Cooperativa
+        </label>
+
+        <label class="radio-custom radio-inline" for="etipojuridico5">
+          <input type="radio" id="etipojuridico5" data-toggle=".togglejuridica" <%= etipojuridico == 'sa' ? 'checked="checked"' : '' %> name="etipojuridico"  value="sa">
+          S.A.
+        </label>
+
+        <label class="radio-custom radio-inline" for="etipojuridico6">
+          <input type="radio" id="etipojuridico6" data-toggle=".togglejuridica" <%= etipojuridico == 'srl' ? 'checked="checked"' : '' %> name="etipojuridico"  value="srl">
+          S.R.L.
+        </label>
+    </div>
+  </div>
+</div>
+<!--BEG Personería-->
+<div class="togglejuridica">
+<hr>
+<div class="form-group required">
+  <div class="row">
+    <div class="col-sm-6">
+    <label class="control-label" for="efechapj">Otorgamiento de la personería jurídica</label>
+      <div class="input-group date">
+        <input type="text" class="form-control calendar-container" id="efechapj" name="efechapj" value="<%= efechapj %>"><span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+</div><!--END Personería-->
+
+<!--BEG Datos comunes-->
+<div class="row">
+  <div class="col-sm-12">
+    <h3>Datos personales del Titular o Apoderado</h3>
+    <p>Ingresar los datos de la persona física (titular o apoderada) que suscribe la presente solicitud</p>
+  </div>
+</div>
+<div class="togglecomunes">
+  <div class="form-group required">
+    <div class="row">
+      <div class="col-sm-5">
+        <label class="control-label" for="rname">Nombre</label>
+        <input type="text" class="form-control" id="rname" name="rname" value="<%= rname %>">
+        <span class="help-block"></span> </div>
+      <div class="col-sm-5">
+        <label class="control-label" for="rsurname">Apellido</label>
+        <input type="text" class="form-control" id="rsurname" name="rsurname" value="<%= rsurname  %>">
+      </div>
+
+      <div class="col-sm-2">
+        <label class="control-label" for="rgenero">Género</label>
+        <select class="form-control" id="rgenero" name="rgenero" value="<%= rgenero %>">
+          <option value="masculino">M</option>
+          <option value="femenino">F</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="form-group required">
+    <div class="row">
+      <div class="col-sm-2">
+        <label class="control-label" for="rdoctipo">Tipo</label>
+        <select class="form-control" id="rdoctipo" name="rdoctipo" value="<%= rdoctipo %>">
+          <option value="dni">DNI</option>
+          <option value="cuit">CUIT</option>
+          <option value="pasaporte">Pasaporte</option>
+        </select>
+      </div>
+      <div class="col-sm-4">
+        <label class="control-label" for="rdocnum">Número de documento</label>
+        <input type="text" class="form-control" id="rdocnum" name="rdocnum" placeholder="XXXXXXXX" value="<%= rdocnum  %>">
+      </div>
+      <div class="col-sm-3">
+        <label class="control-label" for="rnac">Nacionalidad</label>
+        <input type="text" class="form-control" id="rnac" name="rnac" value="<%= rnac %>">
+      </div>
+      <div class="col-sm-3">
+        <label class="control-label" for="rfenac">Fecha de nacimiento</label>
+        <input type="text" class="form-control" id="rfenac" name="rfenac"  placeholder="dd/mm/aaaa" value="<%= rfenac %>" >
+      </div>
+    </div>
+  </div>
+  <div class="form-group required">
+    <div class="row">
+      
+      <div class="col-sm-4">
+        <label class="control-label" for="rtel">Teléfono</label>
+        <input type="text" class="form-control" id="rtel" name="rtel" placeholder="+54 (área) número" value="<%= rtel %>" >
+      </div>
+
+      <div class="col-sm-4">
+        <label class="control-label" for="rcel">Teléfono móvil</label>
+        <input type="text" class="form-control" id="rcel" name="rcel" value="<%= rcel %>">
+      </div>
+
+
+    </div>
+  </div>
+  <div class="form-group required">
+    <div class="row">
+      <div class="col-sm-8">
+        <label class="control-label" for="rcalle">Calle</label>
+        <input type="text" class="form-control" id="rcalle" name="rcalle" value="<%= rcalle %>">
+      </div>
+      <div class="col-sm-2">
+        <label class="control-label" for="rnrocalle">Nro.</label>
+        <input type="text" class="form-control" id="rcallenro" name="rcallenro" value="<%= rcallenro  %>">
+      </div>
+      <div class="col-sm-2">
+        <label class="control-label" for="rcp">CP.</label>
+        <input type="text" class="form-control" id="rcp" name="rcp" value="<%= rcp %>">
+      </div>
+    </div>
+  </div>
+  <div class="form-group required">
+    <div class="row">
+      <div class="col-sm-4 selectContainer">
+        <label class="control-label" for="rpais">País</label>
+        <select class="form-control" id="rpais" name="rpais" value="<%= rpais %>">
+           <%= tdata.buildSelectOptions('paises',tdata.paisesOL, rpais) %>
+        </select>
+      </div>
+      <div class="col-sm-4 selectContainer">
+        <label class="control-label" for="rprov">Provincia</label>
+        <select class="form-control js-provarg" id="rprov" name="rprov" style="display: inline-block;" value="<%= rprov %>">
+           <%= tdata.buildSelectOptions('provincias',tdata.provinciasOL, rprov) %>
+        </select>
+        <label class="sr-only" for="otraprov">Ingrese el nombre de su Provincia o Estado</label>
+        <input type="text" class="form-control js-provext" id="rprovotra" name="rprovotra" style="display: none;" value="<%= rprovotra %>">
+      </div>
+      <div class="col-sm-4">
+        <label class="control-label" for="rlocalidad">Ciudad</label>
+        <input type="text" class="form-control" id="rlocalidad" name="rlocalidad" value="<%= rlocalidad %>">
+      </div>
+    </div>
+  </div>
+  <div class="form-group required">
+    <div class="row">
+      
+      <div class="col-sm-4">
+        <label class="control-label" for="rcode">Código de seguridad</label>
+        <input type="text" class="form-control" id="rcode" name="rcode" value="<%= rcode %>">
+      </div>
+    </div>
+  </div>
+
+</div><!--END Datos comunes-->
+<label class="sr-only" for="btnWizardNext1">Guardar y Avanzar</label>
+<input type="button" class="btn btn-info pull-right js-step1" id="btnWizardNext1">

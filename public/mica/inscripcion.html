@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MICA - Mercado de Industrias Culturales - Ministerio de Cultura de la Nación</title>
+  <link rel="icon" href="http://www.cultura.gob.ar/static/favicon.ico">
+  <meta name="description" content="Modulo de Mercado de Industrias Culturales Argentinas">
+  <meta name="author" content="Dirección General de Tecnología y Sistemas - Ministerio de Cultura">
+  <meta name="geo.position" content="-34.60899163;-58.3702313817" />
+  <meta name="ICBM" content="-34.60899163;-58.3702313817" />
+  <meta name="DC.title" content="Ministerio de Cultura de la Nacion" />
+  <meta name="geo.country" content="AR" />
+  <meta name="geo.region" content="AR-C" />
+  <meta name="geo.placename" content="Buenos Aires, Ciudad Autónoma de Buenos Aires, República Argentina" />
+  <meta name="Language" content="Spanish" />
+  <meta name="Robots" content="all" />
+  <meta name="keywords" content="ministerio de cultura de la nación, fondo argentino de desarrollo cultural, movilidad, sostenibilidad, infraestructura, innovación" />
+
+
+  <link href="css/styles.css" rel="stylesheet" media="screen">
+  <link rel="stylesheet" href="http://www.fuelcdn.com/fuelux/3.4.0/css/fuelux.min.css">
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="http://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css" rel="stylesheet">
+  <link href="http://www.croppic.net/assets/css/croppic.css" rel="stylesheet">
+    
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+  </head>
+<body>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1546555475630839',
+      xfbml      : true,
+      version    : 'v2.2'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<a class="sr-only" href="#main-content">Pasar al contenido principal</a>
+  <div id="header-region" class="header">
+    <nav id="mcn-header">
+      <div class="container">
+        <div class="col-xs-12 col-sm-4 col-md-4 main-navigation"> <a href="/" id="site-logo" class="navbar-brand"><img src="./img/cultura-argentina-inv.png" class="img-responsive" alt="Logo de Cultura Argentina"></a> </div>
+        <ul class="main-navigation pull-right js-statusbar">
+          <li class="dropdown" data-section="app-notifications"> <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Notificaciones <span class="caret"></span> </a>
+            <div class="dropdown-menu pull-right account-dropdown notifications-list">
+              <ul id="unread-notifications">
+                <li class="empty">Actualmente no tienes nuevas notificaciones</li>
+              </ul>
+            </div>
+          </li>
+          <li class="dropdown pull-right"> <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            <div class="ident"> <img alt="Invitado" src="img/anonimo.jpg"> </div>
+            <span class="caret"></span> </a>
+            <ul class="dropdown-menu pull-right account-dropdown">
+              <li> <a href="#perfil"><span class="fa fa-cog"></span> Mi perfil </a> </li>
+              <li> <a data-method="delete" href="/logout" rel="nofollow"><span class="fa fa-sign-out"></span> Salir </a> </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div id="dialog-region"></div>
+
+
+  <div id="colorbar"></div>
+  <div class="container">
+    <div>
+      <!--BEG SISTEMABOX-->
+      <div class="col-xs-12">
+        <div class="panel">
+          <div class="panel-heading">
+            <h1>Formulario de Inscripción</h1>
+            <h2>Rondas de Negocios - MICA 2015</h2>
+          </div>
+
+          <div class="panel-body fuelux">
+            <!--BEG FORM-->     
+            <div class="fu-example section">
+              <div class="wizard" data-initialize="wizard" id="myWizard">
+                <ul class="steps" style="margin-left: 0">
+                  <li data-step="1" class="active"><span class="badge badge-info">1</span>Empresa<span class="chevron"></span></li>
+                  <li data-step="2"><span class="badge">2</span>Representantes<span class="chevron"></span></li>
+                  <li data-step="3"><span class="badge">3</span>Vender<span class="chevron"></span></li>
+                  <li data-step="4"><span class="badge">4</span>Comprar<span class="chevron"></span></li>
+                  <li data-step="5"><span class="badge">5</span>Confirmación<span class="chevron"></span></li>
+                </ul>
+                <div class="actions">
+                  <button class="btn btn-default btn-prev" disabled="disabled"><span class="glyphicon glyphicon-arrow-left"></span></button>
+                  <button class="btn btn-default btn-next" data-last="FINALIZAR"><span class="glyphicon glyphicon-arrow-right"></span></button>
+                </div>
+              
+                <div class="step-content">
+
+                  <div class="step-pane active" data-step="1">
+                      <h3>Datos de la Empresa o Institución</h3>
+                        <!--<div class="avatar-upload fa fa-3x fa-picture-o text-center" id="avatar-upload">
+                        </div>-->
+
+                        <div class="avatar-upload">
+                          <div id="cropContainerEyecandy"></div>
+                        </div>
+
+                        <div class="row">  
+                          <div class="col-sm-5 col-xs-9 form-group required">
+                            <label class="control-label" for="edisplayName">Nombre de la Empresa/Emprendimiento</label>
+                            <label class="control-label en" for="edisplayName">Company Name / Entrepreneurship</label>
+                            <input type="text" class="form-control" name="edisplayName" id="edisplayName" value="" />
+                            <span class="help-block"></span>
+                          </div>
+
+                          <div class="col-sm-5 col-xs-9 form-group">
+                            <label class="control-label" for="ename">Razón social</label>
+                            <label class="control-label en" for="ename">Business name</label>
+                            <div class="input-group">
+                              <input type="text" class="form-control" name="ename" id="ename" value="" />
+                              <div class="input-group-addon">
+                                <div title="Completar si difiere del nombre del emprendimiento" rel="tooltip">
+                                  <span class="fa fa-question-circle"></span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="form-group col-sm-12 required">
+                          <div class="row">
+                            <label class="control-label" for="edescription">Describa el perfil de la Empresa/Emprendimiento</label>
+                            <div class="input-group">
+                              <textarea class="form-control" name="edescription" rows="6" id="edescription" maxlength="500" placeholder="Describa brevemente el perfil de su producción (bienes o servicios), a quien está destinada, qué la caracteriza, etc. (Máximo 500 caracteres)"></textarea>
+                              <div class="input-group-addon">
+                                <div title="Describa brevemente el perfil de su producción (bienes o servicios), a quien está destinada, qué la caracteriza, etc. (Máximo 500 caracteres)" rel="tooltip">
+                                  <span class="fa fa-question-circle"></span>
+                                </div>
+                              </div>
+                              <p id="limit-chars"></p>
+                            </div>
+                            <span class="help-block"></span>
+                          </div>
+                        </div>
+
+                        <div class="form-group col-sm-12 required">
+                          <div class="row">
+                            <label class="control-label" for="slug">Explique su principal motivación para participar del MICA</label>
+                            <div class="input-group">
+                              <textarea class="form-control" name="slug" rows="6" id="slug" maxlength="500" placeholder="Describa brevemente por qué quiere participar del Eevento, en qué actividades en particular, etc. (Máximo 500 caracteres)"></textarea>
+                              <div class="input-group-addon">
+                                <div title="Describa brevemente por qué quiere participar del Eevento, en qué actividades en particular, etc. (Máximo 500 caracteres)" rel="tooltip">
+                                  <span class="fa fa-question-circle"></span>
+                                </div>
+                              </div>
+                              <p id="limit-chars"></p>
+                            </div>
+                            <span class="help-block"></span>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="form-group required">
+                            <div class="col-sm-4 selectContainer">
+                              <label class="control-label" for="epais">País</label>
+                              <select class="form-control" name="epais" id="epais">
+                                <option value="AF">Afganistán</option> 
+                                <option value="AL">Albania</option> 
+                                <option value="DE">Alemania</option> 
+                                <option value="AD">Andorra</option> 
+                                <option value="AO">Angola</option> 
+                                <option value="AI">Anguilla</option> 
+                                <option value="AQ">Antártida</option> 
+                                <option value="AG">Antigua y Barbuda</option> 
+                                <option value="AN">Antillas Holandesas</option> 
+                                <option value="SA">Arabia Saudí</option> 
+                                <option value="DZ">Argelia</option> 
+                                <option value="AR" selected>Argentina</option> 
+                                <option value="AM">Armenia</option> 
+                                <option value="AW">Aruba</option> 
+                                <option value="AU">Australia</option> 
+                                <option value="AT">Austria</option>  
+                                <option value="AZ">Azerbaiyán</option>  
+                                <option value="BS">Bahamas</option>  
+                                <option value="BH">Bahrein</option>  
+                                <option value="BD">Bangladesh</option>  
+                                <option value="BB">Barbados</option>  
+                                <option value="BE">Bélgica</option>  
+                                <option value="BZ">Belice</option>  
+                                <option value="BJ">Benin</option>  
+                                <option value="BM">Bermudas</option>  
+                                <option value="BY">Bielorrusia</option>  
+                                <option value="MM">Birmania</option>  
+                                <option value="BO">Bolivia</option>  
+                                <option value="BA">Bosnia y Herzegovina</option>  
+                                <option value="BW">Botswana</option>  
+                                <option value="BR">Brasil</option>  
+                                <option value="BN">Brunei</option>  
+                                <option value="BG">Bulgaria</option>  
+                                <option value="BF">Burkina Faso</option>  
+                                <option value="BI">Burundi</option>  
+                                <option value="BT">Bután</option>  
+                                <option value="CV">Cabo Verde</option>  
+                                <option value="KH">Camboya</option>  
+                                <option value="CM">Camerún</option>  
+                                <option value="CA">Canadá</option>  
+                                <option value="TD">Chad</option>  
+                                <option value="CL">Chile</option>  
+                                <option value="CN">China</option>  
+                                <option value="CY">Chipre</option>  
+                                <option value="VA">Ciudad del Vaticano (Santa Sede)</option>  
+                                <option value="CO">Colombia</option>  
+                                <option value="KM">Comores</option>  
+                                <option value="CG">Congo</option>  
+                                <option value="CD">Congo, República Democrática del</option>  
+                                <option value="KR">Corea</option>  
+                                <option value="KP">Corea del Norte</option>  
+                                <option value="CI">Costa de Marfíl</option>  
+                                <option value="CR">Costa Rica</option>  
+                                <option value="HR">Croacia (Hrvatska)</option>  
+                                <option value="CU">Cuba</option>  
+                                <option value="DK">Dinamarca</option>  
+                                <option value="DJ">Djibouti</option>  
+                                <option value="DM">Dominica</option>  
+                                <option value="EC">Ecuador</option>  
+                                <option value="EG">Egipto</option>  
+                                <option value="SV">El Salvador</option>  
+                                <option value="AE">Emiratos Árabes Unidos</option>  
+                                <option value="ER">Eritrea</option>  
+                                <option value="SI">Eslovenia</option>  
+                                <option value="ES">España</option>  
+                                <option value="US">Estados Unidos</option>  
+                                <option value="EE">Estonia</option>  
+                                <option value="ET">Etiopía</option>  
+                                <option value="FJ">Fiji</option>  
+                                <option value="PH">Filipinas</option>  
+                                <option value="FI">Finlandia</option>  
+                                <option value="FR">Francia</option>  
+                                <option value="GA">Gabón</option>  
+                                <option value="GM">Gambia</option>  
+                                <option value="GE">Georgia</option>  
+                                <option value="GH">Ghana</option>  
+                                <option value="GI">Gibraltar</option>  
+                                <option value="GD">Granada</option>  
+                                <option value="GR">Grecia</option>  
+                                <option value="GL">Groenlandia</option>  
+                                <option value="GP">Guadalupe</option>  
+                                <option value="GU">Guam</option>  
+                                <option value="GT">Guatemala</option>  
+                                <option value="GY">Guayana</option>  
+                                <option value="GF">Guayana Francesa</option>  
+                                <option value="GN">Guinea</option>  
+                                <option value="GQ">Guinea Ecuatorial</option>  
+                                <option value="GW">Guinea-Bissau</option>  
+                                <option value="HT">Haití</option>  
+                                <option value="HN">Honduras</option>  
+                                <option value="HU">Hungría</option>  
+                                <option value="IN">India</option>  
+                                <option value="ID">Indonesia</option>  
+                                <option value="IQ">Irak</option>  
+                                <option value="IR">Irán</option>  
+                                <option value="IE">Irlanda</option>  
+                                <option value="BV">Isla Bouvet</option>  
+                                <option value="CX">Isla de Christmas</option>  
+                                <option value="IS">Islandia</option>  
+                                <option value="KY">Islas Caimán</option>  
+                                <option value="CK">Islas Cook</option>  
+                                <option value="CC">Islas de Cocos o Keeling</option>  
+                                <option value="FO">Islas Faroe</option>  
+                                <option value="HM">Islas Heard y McDonald</option>  
+                                <option value="FK">Islas Malvinas</option>  
+                                <option value="MP">Islas Marianas del Norte</option>  
+                                <option value="MH">Islas Marshall</option>  
+                                <option value="UM">Islas menores de Estados Unidos</option>  
+                                <option value="PW">Islas Palau</option>  
+                                <option value="SB">Islas Salomón</option>  
+                                <option value="SJ">Islas Svalbard y Jan Mayen</option>  
+                                <option value="TK">Islas Tokelau</option>  
+                                <option value="TC">Islas Turks y Caicos</option>  
+                                <option value="VI">Islas Vírgenes (EE.UU.)</option>  
+                                <option value="VG">Islas Vírgenes (Reino Unido)</option>  
+                                <option value="WF">Islas Wallis y Futuna</option>  
+                                <option value="IL">Israel</option>  
+                                <option value="IT">Italia</option>  
+                                <option value="JM">Jamaica</option>  
+                                <option value="JP">Japón</option>  
+                                <option value="JO">Jordania</option>  
+                                <option value="KZ">Kazajistán</option>  
+                                <option value="KE">Kenia</option>  
+                                <option value="KG">Kirguizistán</option>  
+                                <option value="KI">Kiribati</option>  
+                                <option value="KW">Kuwait</option>  
+                                <option value="LA">Laos</option>  
+                                <option value="LS">Lesotho</option>  
+                                <option value="LV">Letonia</option>  
+                                <option value="LB">Líbano</option>  
+                                <option value="LR">Liberia</option>  
+                                <option value="LY">Libia</option>  
+                                <option value="LI">Liechtenstein</option>  
+                                <option value="LT">Lituania</option>  
+                                <option value="LU">Luxemburgo</option>  
+                                <option value="MK">Macedonia, Ex-República Yugoslava de</option>  
+                                <option value="MG">Madagascar</option>  
+                                <option value="MY">Malasia</option>  
+                                <option value="MW">Malawi</option>  
+                                <option value="MV">Maldivas</option>  
+                                <option value="ML">Malí</option>  
+                                <option value="MT">Malta</option>  
+                                <option value="MA">Marruecos</option>  
+                                <option value="MQ">Martinica</option>  
+                                <option value="MU">Mauricio</option>  
+                                <option value="MR">Mauritania</option>  
+                                <option value="YT">Mayotte</option>  
+                                <option value="MX">México</option>  
+                                <option value="FM">Micronesia</option>  
+                                <option value="MD">Moldavia</option>  
+                                <option value="MC">Mónaco</option>  
+                                <option value="MN">Mongolia</option>  
+                                <option value="MS">Montserrat</option>  
+                                <option value="MZ">Mozambique</option>  
+                                <option value="NA">Namibia</option>  
+                                <option value="NR">Nauru</option>  
+                                <option value="NP">Nepal</option>  
+                                <option value="NI">Nicaragua</option>  
+                                <option value="NE">Níger</option>  
+                                <option value="NG">Nigeria</option>  
+                                <option value="NU">Niue</option>  
+                                <option value="NF">Norfolk</option>  
+                                <option value="NO">Noruega</option>  
+                                <option value="NC">Nueva Caledonia</option>  
+                                <option value="NZ">Nueva Zelanda</option>  
+                                <option value="OM">Omán</option>  
+                                <option value="NL">Países Bajos</option>  
+                                <option value="PA">Panamá</option>  
+                                <option value="PG">Papúa Nueva Guinea</option>  
+                                <option value="PK">Paquistán</option>  
+                                <option value="PY">Paraguay</option>  
+                                <option value="PE">Perú</option>  
+                                <option value="PN">Pitcairn</option>  
+                                <option value="PF">Polinesia Francesa</option>  
+                                <option value="PL">Polonia</option>  
+                                <option value="PT">Portugal</option>  
+                                <option value="PR">Puerto Rico</option>  
+                                <option value="QA">Qatar</option>  
+                                <option value="UK">Reino Unido</option>  
+                                <option value="CF">República Centroafricana</option>  
+                                <option value="CZ">República Checa</option>  
+                                <option value="ZA">República de Sudáfrica</option>  
+                                <option value="DO">República Dominicana</option>  
+                                <option value="SK">República Eslovaca</option>  
+                                <option value="RE">Reunión</option>  
+                                <option value="RW">Ruanda</option>  
+                                <option value="RO">Rumania</option>  
+                                <option value="RU">Rusia</option>  
+                                <option value="EH">Sahara Occidental</option>  
+                                <option value="KN">Saint Kitts y Nevis</option>  
+                                <option value="WS">Samoa</option>  
+                                <option value="AS">Samoa Americana</option>  
+                                <option value="SM">San Marino</option>  
+                                <option value="VC">San Vicente y Granadinas</option>  
+                                <option value="SH">Santa Helena</option>  
+                                <option value="LC">Santa Lucía</option>  
+                                <option value="ST">Santo Tomé y Príncipe</option>  
+                                <option value="SN">Senegal</option>  
+                                <option value="SC">Seychelles</option>  
+                                <option value="SL">Sierra Leona</option>  
+                                <option value="SG">Singapur</option>  
+                                <option value="SY">Siria</option>  
+                                <option value="SO">Somalia</option>  
+                                <option value="LK">Sri Lanka</option>  
+                                <option value="PM">St. Pierre y Miquelon</option>  
+                                <option value="SZ">Suazilandia</option>  
+                                <option value="SD">Sudán</option>  
+                                <option value="SE">Suecia</option>  
+                                <option value="CH">Suiza</option>  
+                                <option value="SR">Surinam</option>  
+                                <option value="TH">Tailandia</option>  
+                                <option value="TW">Taiwán</option>  
+                                <option value="TZ">Tanzania</option>  
+                                <option value="TJ">Tayikistán</option>  
+                                <option value="TF">Territorios franceses del Sur</option>  
+                                <option value="TP">Timor Oriental</option>  
+                                <option value="TG">Togo</option>  
+                                <option value="TO">Tonga</option>  
+                                <option value="TT">Trinidad y Tobago</option>  
+                                <option value="TN">Túnez</option>  
+                                <option value="TM">Turkmenistán</option>  
+                                <option value="TR">Turquía</option>  
+                                <option value="TV">Tuvalu</option>  
+                                <option value="UA">Ucrania</option>  
+                                <option value="UG">Uganda</option>  
+                                <option value="UY">Uruguay</option>  
+                                <option value="UZ">Uzbekistán</option>  
+                                <option value="VU">Vanuatu</option>  
+                                <option value="VE">Venezuela</option>  
+                                <option value="VN">Vietnam</option>  
+                                <option value="YE">Yemen</option>  
+                                <option value="YU">Yugoslavia</option>  
+                                <option value="ZM">Zambia</option>  
+                                <option value="ZW">Zimbabue</option> 
+                              </select>
+                              <span class="help-block"></span>
+                            </div>
+                          
+                            <div class="col-sm-4 selectContainer">
+                              <label class="control-label" for="eprov">Provincia</label>
+                              <select class="form-control js-provarg" id="eprov" name="eprov">
+                                  <option value="">Seleccione una provincia</option>
+                                  <option value="caba">Ciudad Autónoma de Buenos Aires</option>
+                                  <option value="buenosaires">Buenos Aires</option>
+                                  <option value="catamarca">Catamarca</option>
+                                  <option value="chaco">Chaco</option>
+                                  <option value="chubut">Chubut</option>
+                                  <option value="cordoba">Córdoba</option>
+                                  <option value="corrientes">Corrientes</option>
+                                  <option value="entrerios">Entre Ríos</option>
+                                  <option value="formosa">Formosa</option>
+                                  <option value="jujuy">Jujuy</option>
+                                  <option value="lapampa">La Pampa</option>
+                                  <option value="larioja">La Rioja</option>
+                                  <option value="mendoza">Mendoza</option>
+                                  <option value="misiones">Misiones</option>
+                                  <option value="neuquen">Neuquén</option>
+                                  <option value="rionegro">Río Negro</option>
+                                  <option value="salta">Salta</option>
+                                  <option value="sanjuan">San Juan</option>
+                                  <option value="sanluis">San Luis</option>
+                                  <option value="santacruz">Santa Cruz</option>
+                                  <option value="santafe">Santa Fe</option>
+                                  <option value="santiagodelestero">Santiago del Estero</option>
+                                  <option value="tierradelfuego">Tierra del Fuego</option>
+                                  <option value="tucuman">Tucumán</option>
+                              </select>
+                              <span class="help-block"></span>
+                            </div>
+                          </div>
+                                
+                          <div class="col-sm-4">
+                            <label class="control-label" for="elocalidad">Localidad</label>
+                            <input type="text" class="form-control" name="elocalidad" id="elocalidad" value="">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <div class="row">
+                            <div class="col-sm-4 selectContainer form-group">
+                              <label class="control-label" for="ecuit">CUIT</label>
+                              <div class="input-group">
+                                <input type="text" class="form-control" name="ecuit" id="ecuit" value="">
+                                <div class="input-group-addon">
+                                  <div title="Ingrese números sin espacios ni guiones" rel="tooltip">
+                                    <span class="fa fa-question-circle"></span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-6 form-group">
+                              <label class="control-label" for="edomicilio">Domicilio</label>
+                              <div class="input-group">
+                                <input type="text" class="form-control" name="edomicilio" id="edomicilio" value="">
+                                <div class="input-group-addon">
+                                  <div title="Calle, número, piso y departamento" rel="tooltip">
+                                    <span class="fa fa-question-circle"></span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-2 selectContainer">
+                              <label class="control-label" for="ecp">CP</label>
+                              <input type="text" class="form-control" name="ecp" id="ecp" value="">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div class="row">
+                            <div class="col-sm-6 form-group required">
+                              <label class="control-label" for="email">Email</label>
+                              <input type="email" class="form-control" id="email" name="email" value="">
+                              <span class="help-block"></span>
+                            </div>
+                
+                            <div class="col-sm-6">
+                              <label class="control-label" for="eweb">Web</label>
+                              <input type="text" class="form-control" name="eweb" id="eweb" value="">
+                              <span class="help-block"></span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group required">
+                          <div class="row">
+                              <div class="col-sm-3">
+                                  <label class="control-label" for="efundacion">Año de Fundación</label>
+                                  <input type="text" class="form-control" id="efundacion" name="efundacion">
+                                  <span class="help-block"></span>
+                              </div>
+                  
+                              <div class="col-sm-4 form-group">
+                                <label class="control-label" for="enumempleados">Cantidad de empleados</label>
+                                <div class="input-group">
+                                  <input type="text" class="form-control" name="enumempleados" id="enumempleados" value="">
+                                  <div class="input-group-addon">
+                                    <div title="Ingrese en números la cantidad de empleados estables. Si no tiene empleados ingrese 0" rel="tooltip">
+                                      <span class="fa fa-question-circle"></span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <span class="help-block"></span>
+                              </div>
+
+                              <div class="col-sm-5 form-group">
+                                <label class="control-label" for="eventas">Facturación anual</label>
+                                <div class="input-group">
+                                  <div class="input-group-addon">AR$</div>
+                                  <input type="text" class="form-control" id="eventas" name="eventas" value="">
+                                  <div class="input-group-addon">
+                                    <div title="Aproximado, en el último año en pesos argentinos" rel="tooltip">
+                                      <span class="fa fa-question-circle"></span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <span class="help-block"></span>
+                              </div>
+                          </div>
+                        </div>
+                  </div><!-- END STEP 1 -->
+                      
+                  <div class="step-pane" data-step="2">
+                    <h3>Representante que participará de la ronda</h3>
+                    <div class="form-group required">
+                      <div class="row">
+
+                          <div class="col-sm-12">
+                              <label class="control-label" for="rmail">Email del Representante</label>
+                              <input type="text" class="form-control" id="rmail" name="rmail" placeholder="Email" disabled>
+                              <!--A completar automáticamente-->
+                          </div>
+
+                        </div>
+                    </div>
+
+                    <div>
+                      <div class="row">
+                        <div class="form-group required col-sm-8">
+                            <label class="control-label" for="rname">Nombre y apellido del Representante</label>
+                            <input type="text" class="form-control" name="rname" id="rname" value="">
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label class="control-label" for="rcargo">Cargo/Función</label>
+                            <input type="text" class="form-control" name="rcargo" id="rcargo" value="">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="row">
+                        <div class="col-sm-3 form-group required">
+                            <label class="control-label" for="rdni">DNI</label>
+                            <input type="text" class="form-control" id="rdni" name="rdni" placeholder="XXXXXXXX" value="">
+                            <!--A completar automáticamente-->
+                        </div>
+            
+                        <div class="col-sm-3">
+                            <label class="control-label" for="rfenac">Fecha de nacimiento</label>
+                            <input type="text" class="form-control" name="rfenac" id="rfenac" value="">
+                        </div>
+
+                        <div class="col-sm-3">
+                            <label class="control-label" for="rtel">Teléfono</label>
+                            <input type="text" class="form-control" name="rtel" id="rtel" value="">
+                        </div>
+
+                        <div class="col-sm-3">
+                            <label class="control-label" for="rcel">Teléfono móvil</label>
+                            <input type="text" class="form-control" name="rcel" id="rcel" placeholder="+54 (área) nro." value="">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <label class="control-label">Idiomas que domina</label>
+                          <input type="text" class="form-control" id="ridiomas" name="ridiomas" value="">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--REPRESENTANTE ADICIONAL-->
+                    <div id="soldetails-region">
+                      <div class="content">
+                        <h3>Otros Representantes</h3>
+                        <div class="table-responsive">
+                          <table id="example" class="table table-striped">
+                            <thead>
+                              <tr>
+                                <th>Nombre y Apellido</th>
+                                <th>Cargo</th>
+                                <th>Email</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody></tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    <a href="#" id="crear-nuevo-representante" onclick="return false">
+                      <button type="button" class="btn btn-warning">Agregar otro representante</button>
+                    </a>
+
+                    <div style="display:none" id="repadicional">
+                      <hr class="spacer">
+                      <div class="alert alert-info pax">
+                        <div class="heading"><span class="fa fa-user"></span> Representante adicional que participará de la ronda #1</div>
+                        <hr> 
+                        <div class="form-group required">
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <label class="control-label" for="aname">Nombre y apellido del Representante</label>
+                              <input type="text" class="form-control" name="aname" id="aname" value="">
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div class="row">
+                            <div class="col-sm-4 form-group required">
+                              <label class="control-label" for="amail">Email</label>
+                              <input type="text" class="form-control" name="amail" id="amail" placeholder="Email" value="">
+                              <!--A completar automáticamente-->
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label class="control-label" for="acargo">Cargo/Función</label>
+                                <input type="text" class="form-control" name="acargo" id="acargo" value="">
+                                <!--A completar automáticamente-->
+                            </div>
+
+                            <div class="col-sm-4 form-group required">
+                                <label class="control-label" for="adni">DNI</label>
+                                <input type="text" class="form-control" name="adni" id="adni" placeholder="XXXXXXXX" value="">
+                                <!--A completar automáticamente-->
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="row">
+                            <div class="col-sm-4">
+                                <label class="control-label" for="afnac">Fecha de nacimiento</label>
+                                <input type="text" class="form-control" name="afnac" id="afnac" value="">
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label class="control-label" for="atel">Teléfono</label>
+                                <input type="text" class="form-control" name="atel" id="atel" value="">
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label class="control-label" for="acel">Teléfono móvil</label>
+                                <input type="text" class="form-control" name="acel" id="acel" value="">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <label class="control-label">Idiomas que domina</label>
+                              <input type="text" class="form-control" id="aidiomas" name="aidiomas" value="">
+                            </div>
+                          </div>
+                        </div>
+                        <hr>
+                        <button type="button" class="btn btn-success js-newSolDetail">Confirmar representante</button>
+                      </div>
+                    </div>
+                  </div><!-- END STEP 2 -->
+                  
+                  <div class="step-pane" data-step="3">
+                    <h3>Active su perfil de Vendedor</h3>
+                    <p>En caso de tener productos o servicios culturales para <strong>VENDER</strong>, active su perfil de Vendedor.</p>  
+
+                    <div id="data" class="switch">
+                      <input id="seller" class="cmn-toggle cmn-toggle-round" name="rolePlaying" value="vendedor" type="checkbox">
+                      <label for="seller"></label>
+                    </div>
+
+                    <!--BEG INFO COMO VENDEDOR-->
+                    <div id="infovendedor" class="hidden row">
+                      <div class="col-xs-12">
+                        <hr> 
+                        
+                        <div class="form-group required" id="vactividades">
+                          <div class="control-label heading">Sector principal en que desea inscribirse como Vendedor</div>  
+
+                          <div class="radio" data-initialize="radio" id="buyteatro">
+                            <label class="radio-custom" for="vaescenicas">
+                              <input class="sr-only" type="radio" data-toggle="#toggle-vaescenicas" name="vactividades" id="vaescenicas" value="aescenicas">
+                              Artes escénicas
+                            </label>
+                          </div>
+
+                          <div class="radio" data-initialize="radio" id="buyaudiovisual">
+                            <label class="radio-custom" for="vaudivisual">
+                              <input class="sr-only" type="radio" data-toggle="#toggle-vaudiovisual" name="vactividades" id="vaudivisual" value="audivisual">
+                              Audiovisual
+                            </label>
+                          </div>
+                          
+                          <div class="radio" data-initialize="radio" id="buydiseno">
+                            <label class="radio-custom" for="vdisenio">
+                              <input class="sr-only" type="radio" data-toggle="#toggle-vdisenio" name="vactividades" id="vdisenio" value="disenio">
+                              Diseño
+                            </label>
+                          </div>
+
+                          <div class="radio" data-initialize="radio" id="buyeditorial">
+                            <label class="radio-custom" for="veditorial">
+                              <input class="sr-only" type="radio" data-toggle="#toggle-veditorial" name="vactividades" id="veditorial" value="editorial">
+                              Editorial
+                            </label>
+                          </div>
+
+                          <div class="radio" data-initialize="radio" id="buymusica">
+                            <label class="radio-custom" for="musica">
+                              <input class="sr-only" type="radio" data-toggle="#toggle-vmusica" name="vactividades" id="musica" value="musica">
+                              Música
+                            </label>
+                          </div>
+
+                          <div class="radio" data-initialize="radio" id="buyvideojuegos">
+                            <label class="radio-custom" for="videojuegos">
+                              <input class="sr-only" type="radio" data-toggle="#toggle-vvideojuegos" name="vactividades" id="videojuegos" value="videojuegos">
+                              Videojuegos y Apps
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="form-group required" id="toggle-vaescenicas">
+                          <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v1subsector1">
+                            <input class="sr-only" type="checkbox" name="v1subsector" id="v1subsector1" value="option1"> <span class="checkbox-label">Teatro</span>
+                          </label>
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v1subsector2">
+                            <input class="sr-only" type="checkbox" name="v1subsector" id="v1subsector2" value="option2"> <span class="checkbox-label">Mimo</span>
+                          </label>
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v1subsector3">
+                            <input class="sr-only" type="checkbox" name="v1subsector" id="v1subsector3" value="option3"> <span class="checkbox-label">...</span>
+                          </label>
+                        </div>
+
+                        <div class="form-group required" id="toggle-vaudiovisual">
+                          <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v2subsector1">
+                            <input class="sr-only" type="checkbox" name="v2subsector" id="v2subsector1" value="option1"> <span class="checkbox-label">Cine</span>
+                          </label>
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v2subsector2">
+                            <input class="sr-only" type="checkbox" name="v2subsector" id="v2subsector2" value="option2"> <span class="checkbox-label">Publicidad</span>
+                          </label>
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v2subsector3">
+                            <input class="sr-only" type="checkbox" name="v2subsector" id="v2subsector3" value="option3"> <span class="checkbox-label">...</span>
+                          </label>
+                        </div>
+
+                        <div class="form-group required" id="toggle-vdisenio">
+                          <div class="control-label heading" class="control-label">Sub-sector específico donde desarrolla su actividad</div>
+
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v3subsector1">
+                            <input class="sr-only" type="checkbox" name="v3subsector" id="v3subsector1" value="option1"> <span class="checkbox-label">Gráfico</span>
+                          </label>
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v3subsector2">
+                            <input class="sr-only" type="checkbox" name="v3subsector" id="v3subsector2" value="option2"> <span class="checkbox-label">Indumentaria</span>
+                          </label>
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v3subsector3">
+                            <input class="sr-only" type="checkbox" name="v3subsector" id="v3subsector3" value="option3"> <span class="checkbox-label">...</span>
+                          </label>
+                        </div>
+
+                        <div class="form-group required" id="toggle-veditorial">
+                          <div class="control-label heading" class="control-label">Sub-sector específico donde desarrolla su actividad</div>
+
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v4subsector1">
+                            <input class="sr-only" type="checkbox" name="v4subsector" id="v4subsector1" value="option1"> <span class="checkbox-label">Libros de texto</span>
+                          </label>
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v4subsector2">
+                            <input class="sr-only" type="checkbox" name="v4subsector" id="v4subsector2" value="option2"> <span class="checkbox-label">Cuentos</span>
+                          </label>
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v4subsector3">
+                            <input class="sr-only" type="checkbox" name="v4subsector" id="v4subsector3" value="option3"> <span class="checkbox-label">...</span>
+                          </label>
+                        </div>
+
+                        <div class="form-group required" id="toggle-vmusica">
+                          <div class="control-label heading" class="control-label">Sub-sector específico donde desarrolla su actividad</div>
+
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v5subsector1">
+                            <input class="sr-only" type="checkbox" name="v5subsector" id="v5subsector1" value="option1"> <span class="checkbox-label">Tango</span>
+                          </label>
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v5subsector2">
+                            <input class="sr-only" type="checkbox" name="v5subsector" id="v5subsector2" value="option2"> <span class="checkbox-label">Folcklore</span>
+                          </label>
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v5subsector3">
+                            <input class="sr-only" type="checkbox" name="v5subsector" id="v5subsector3" value="option3"> <span class="checkbox-label">...</span>
+                          </label>
+                        </div>
+
+                        <div class="form-group required" id="toggle-vvideojuegos">
+                          <div class="control-label heading" class="control-label">Sub-sector específico donde desarrolla su actividad</div>
+
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v6subsector1">
+                            <input class="sr-only" type="checkbox" name="v6subsector" id="v6subsector1" value="option1"> <span class="checkbox-label">Web Apps</span>
+                          </label>
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v6subsector2">
+                            <input class="sr-only" type="checkbox" name="v6subsector" id="v6subsector2" value="option2"> <span class="checkbox-label">Aplicaciones móviles</span>
+                          </label>
+                          <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v6subsector3">
+                            <input class="sr-only" type="checkbox" name="v6subsector" id="v6subsector3" value="option3"> <span class="checkbox-label">...</span>
+                          </label>
+                        </div>
+                        
+                        <div class="form-group">
+                          <div class="row">
+                          
+                            <div class="form-group">
+                              <label class="col-sm-12 control-label" for="tags">Palabras clave que identifiquen su proyecto</label>
+                              <div class="col-sm-12">
+                                <select multiple name="tags" id="tags" class="form-control" data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter." ></select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!--BEG OTROS SECTORES-->
+                        <div class="form-group">
+                          <div class="row">
+                            <div class="form-group">
+                              <label class="col-sm-12 control-label">¿Hay algún otro sector en el que desearía ofrecer su producción?</label>
+                              <div class="col-sm-12">
+
+                                <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="vactbaescenicas">
+                                  <input class="sr-only" type="checkbox" id="vactbaescenicas" name="vactb" value="aescenicas"> 
+                                  <span class="checkbox-label">Artes escénicas</span>
+                                </label>
+
+                                <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="vactbaudiovisual">
+                                  <input class="sr-only" type="checkbox" id="vactbaudiovisual" name="vactb" value="audiovisual"> 
+                                  <span class="checkbox-label">Audiovisual</span>
+                                </label>
+
+                                <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="vactbdisenio">
+                                  <input class="sr-only" type="checkbox" id="vactbdisenio" name="vactb" value="disenio"> 
+                                  <span class="checkbox-label">Diseño</span>
+                                </label>
+
+                                <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="vactbeditorial">
+                                  <input class="sr-only" type="checkbox" id="vactbeditorial" name="vactb" value="editorial"> 
+                                  <span class="checkbox-label">Editorial</span>
+                                </label>
+
+                                <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="vactbmusica">
+                                  <input class="sr-only" type="checkbox" id="vactbmusica" name="vactb" value="musica"> 
+                                  <span class="checkbox-label">Música</span>
+                                </label>
+
+                                <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="vactbvideojuegos">
+                                  <input class="sr-only" type="checkbox" id="vactbvideojuegos" name="vactb" value="videojuegos"> 
+                                  <span class="checkbox-label">Videojuegos y Apps</span>
+                                </label>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div><!--END OTROS SECTORES-->
+
+                        <div class="row">
+                          <div class="form-group col-sm-12 radio">
+                            <div class="form-group">
+                              <p><strong>¿Realiza o realizó negocios en el exterior?</strong></p>
+                              <label class="radio-custom radio-inline" data-initialize="radio" for="vexpinternacional4">
+                                <input class="sr-only" name="vexpinternacional" id="vexpinternacional4" type="radio" value="4"> Frecuentemente
+                              </label>
+                              <label class="radio-custom radio-inline" data-initialize="radio" for="vexpinternacional2">
+                                <input class="sr-only" name="vexpinternacional" id="vexpinternacional2" type="radio" value="2"> Esporádicamente
+                              </label>
+                              <label class="radio-custom radio-inline" data-initialize="radio" for="vexpinternacional1">
+                                <input class="sr-only" name="vexpinternacional" id="vexpinternacional1" type="radio" value="1"> Nunca
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="form-group col-sm-12">
+                            <label class="control-label" for="vcomentario">Comentarios adicionales sobre su participación como Vendedor en el evento</label>
+                            <textarea class="form-control" name="vcomentario" rows="6" id="vcomentario" maxlength="500" placeholder="Máximo 500 caracteres"></textarea>
+                            <span class="help-block"></span>
+                          </div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <h3>Línea de Productos/Proyecto/Servicio</h3>
+                            <p>Detalle los productos/proyectos/servicios que quiere ofrecer el el MICA. Podrá cargar hasta 10 items</p> 
+                            <div class="col-xs-12">
+                              <!--BEG CARGA DE PRODUCTOS-->
+                              <div class="alert alert-info pax row">
+                                <h3><span class="fa fa-star"></span> Producto/Proyecto/Servicio #1</h3>
+                                <hr>  
+
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <label class="control-label" for="vprod-desc-1">Describa su producto, proyecto o servicio</label>
+                                    <div class="input-group">
+                                      <textarea class="form-control" name="vprod-desc-1" rows="6" id="vprod-desc-1" maxlength="500" placeholder="Máximo 500 caracteres"></textarea>
+                                      <div class="input-group-addon">
+                                        <div title="<strong>Describa</strong> brevemente el perfil de su producción (bienes o servicios), a quien está destinada, qué la caracteriza, etc. (Máximo 500 caracteres)" rel="tooltip">
+                                          <span class="fa fa-question-circle"></span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <span class="help-block"></span>
+                                  </div>
+                                </div>
+
+                                <!--BEG LINKS DE AUDIO-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="vurlaudio">
+                                      <label class="control-label" for="vurlaudio">Links de audio</label>
+                                      <div class="vaudiocontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="ventry input-group col-xs-12">
+                                            <input class="form-control vaudio" name="vurlaudio[]" id="vurlaudio" type="text" placeholder="Ingrese un link de audio" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE AUDIO-->
+
+                                <!--BEG LINKS DE VIDEO-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="vurlvideo">
+                                      <label class="control-label" for="vurlvideo">Links de video</label>
+                                      <div class="vvideocontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="ventry input-group col-xs-12">
+                                            <input class="form-control vvideo" name="vurlvideo[]" id="vurlvideo" type="text" placeholder="Ingrese un link de youtube o vimeo" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add2" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE VIDEO-->
+
+                                <!--BEG LINKS DE IMAGENES-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="vurlimg">
+                                      <label class="control-label" for="vurlimg">Links de img</label>
+                                      <div class="vimgcontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="ventry input-group col-xs-12">
+                                            <input class="form-control vimg" name="vurlimg[]" id="vurlimg" type="text" placeholder="Ingrese un link de flickr" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add3" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE IMAGENES-->
+
+
+                                <!--BEG LINKS DE WEB-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="vurlweb">
+                                      <label class="control-label" for="vurlweb">Links de web</label>
+                                      <div class="vwebcontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="ventry input-group col-xs-12">
+                                            <input class="form-control vweb" name="vurlweb[]" id="vurlweb" type="text" placeholder="Ingrese un link de su sitio web" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add4" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE WEB-->
+
+
+                                <!--BEG LINKS DE OTHER-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="vurlother">
+                                      <label class="control-label" for="vurlother">Links de other</label>
+                                      <div class="vothercontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="ventry input-group col-xs-12">
+                                            <input class="form-control vother" name="vurlother[]" id="vurlother" type="text" placeholder="Ingrese otro link de interés" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add5" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE OTHER-->
+                              </div><!--END CARGA DE PRODUCTOS-->
+
+                              <div class="row">
+                                <a href="#" id="crear-nuevo-representante" onclick="return false">
+                                  <button type="button" class="btn btn-warning">Agregar otro producto, proyecto o servicio</button>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div><!-- END STEP 3 -->
+
+                  <div class="step-pane" data-step="4">
+
+                    <h3>Active su perfil de Comprador</h3>
+                    <p class="alert alert-danger pull-right" role="alert" style="width:100%">
+                      Su perfil de comprador se encuentra sujero a revisión.
+                    </p>
+                        
+                    <p>En caso de tener productos o servicios culturales para <strong>COMPRAR</strong>, active su perfil de Comprador.</p>  
+
+                    <div id="data" class="switch">
+                      <input id="buyer" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                      <label for="buyer"></label>
+                    </div>
+
+                    <!--BEG INFO COMO COMPRADOR-->
+
+                    <div id="infocomprador" class="hidden"><hr>
+                    
+                      <div class="form-group required" id="cactividades">
+                            <div class="control-label heading">Sector principal en que desea inscribirse como Comprador</div>  
+
+                            <div class="radio" data-initialize="radio" id="buyteatro">
+                              <label class="radio-custom" for="caescenicas">
+                                <input class="sr-only" type="radio" data-toggle="#toggle-aescenicas" name="cactividades" id="caescenicas" value="aescenicas">
+                                Artes escénicas
+                              </label>
+                            </div>
+
+                            <div class="radio" data-initialize="radio" id="buyaudiovisual">
+                              <label class="radio-custom" for="caudivisual">
+                                <input class="sr-only" type="radio" data-toggle="#toggle-audiovisual" name="cactividades" id="caudivisual" value="audivisual">
+                                Audiovisual
+                              </label>
+                            </div>
+                            
+                            <div class="radio" data-initialize="radio" id="buydiseno">
+                              <label class="radio-custom" for="cdisenio">
+                                <input class="sr-only" type="radio" data-toggle="#toggle-disenio" name="cactividades" id="cdisenio" value="disenio">
+                                Diseño
+                              </label>
+                            </div>
+
+                            <div class="radio" data-initialize="radio" id="buyeditorial">
+                              <label class="radio-custom" for="ceditorial">
+                                <input class="sr-only" type="radio" data-toggle="#toggle-editorial" name="cactividades" id="ceditorial" value="editorial">
+                                Editorial
+                              </label>
+                            </div>
+
+                            <div class="radio" data-initialize="radio" id="buymusica">
+                              <label class="radio-custom" for="cmusica">
+                                <input class="sr-only" type="radio" data-toggle="#toggle-musica" name="cactividades" id="cmusica" value="musica">
+                                Música
+                              </label>
+                            </div>
+
+                            <div class="radio" data-initialize="radio" id="buyvideojuegos">
+                              <label class="radio-custom" for="cvideojuegos">
+                                <input class="sr-only" type="radio" data-toggle="#toggle-videojuegos" name="cactividades" id="cvideojuegos" value="videojuegos">
+                                Videojuegos y Apps
+                              </label>
+                            </div>
+                      </div>
+
+                      <div class="form-group required" id="toggle-aescenicas">
+                        <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector1">
+                          <input class="sr-only" type="checkbox" name="c1subsector" id="c1subsector1" value="option1"> <span class="checkbox-label">Teatro</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector2">
+                          <input class="sr-only" type="checkbox" name="c1subsector" id="c1subsector2" value="option2"> <span class="checkbox-label">Mimo</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector3">
+                          <input class="sr-only" type="checkbox" name="c1subsector" id="c1subsector3" value="option3"> <span class="checkbox-label">...</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group required" id="toggle-audiovisual">
+                        <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector1">
+                          <input class="sr-only" type="checkbox" name="c2subsector" id="c2subsector1" value="option1"> <span class="checkbox-label">Cine</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector2">
+                          <input class="sr-only" type="checkbox" name="c2subsector" id="c2subsector2" value="option2"> <span class="checkbox-label">Publicidad</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector3">
+                          <input class="sr-only" type="checkbox" name="c2subsector" id="c2subsector3" value="option3"> <span class="checkbox-label">...</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group required" id="toggle-disenio">
+                        <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c3subsector1">
+                          <input class="sr-only" type="checkbox" name="c3subsector" id="c3subsector1" value="option1"> <span class="checkbox-label">Gráfico</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c3subsector2">
+                          <input class="sr-only" type="checkbox" name="c3subsector" id="c3subsector2" value="option2"> <span class="checkbox-label">Indumentaria</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c3subsector3">
+                          <input class="sr-only" type="checkbox" name="c3subsector" id="c3subsector3" value="option3"> <span class="checkbox-label">...</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group required" id="toggle-editorial">
+                        <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c4subsector1">
+                          <input class="sr-only" type="checkbox" name="c4subsector" id="c4subsector1" value="option1"> <span class="checkbox-label">Libros de texto</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c4subsector2">
+                          <input class="sr-only" type="checkbox" name="c4subsector" id="c4subsector2" value="option2"> <span class="checkbox-label">Cuentos</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c4subsector3">
+                          <input class="sr-only" type="checkbox" name="c4subsector" id="c4subsector3" value="option3"> <span class="checkbox-label">...</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group required" id="toggle-musica">
+                        <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector1">
+                          <input class="sr-only" type="checkbox" name="c5subsector" id="c5subsector1" value="option1"> <span class="checkbox-label">Tango</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector2">
+                          <input class="sr-only" type="checkbox" name="c5subsector" id="c5subsector2" value="option2"> <span class="checkbox-label">Folcklore</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector3">
+                          <input class="sr-only" type="checkbox" name="c5subsector" id="c5subsector3" value="option3"> <span class="checkbox-label">...</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group required" id="toggle-videojuegos">
+                        <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector1">
+                          <input class="sr-only" type="checkbox" name="c6subsector" id="c6subsector1" value="option1"> <span class="checkbox-label">Web Apps</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector2">
+                          <input class="sr-only" type="checkbox" name="c6subsector" id="c6subsector2" value="option2"> <span class="checkbox-label">Aplicaciones móviles</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector3">
+                          <input class="sr-only" type="checkbox" name="c6subsector" id="c6subsector3" value="option3"> <span class="checkbox-label">...</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="row">
+                            <div class="form-group">
+                              <label class="col-sm-12 control-label" for="cdescriptores">Palabras clave que describan su actividad</label>
+                              <div class="col-sm-12">
+                                <select multiple id="cdescriptores" name="cdescriptores" class="form-control" data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter." ></select>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+
+                      <!--BEG OTROS SECTORES-->
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="form-group">
+                            <label class="col-sm-12 control-label">¿Hay algún otro sector en el que le interesaría inscribirse como comprador?</label>
+                            <div class="col-sm-12">
+
+                              <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="cactbaescenicas">
+                                <input class="sr-only" type="checkbox" id="cactbaescenicas" name="cactb" value="aescenicas"> 
+                                <span class="checkbox-label">Artes escénicas</span>
+                              </label>
+
+                              <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="cactbaudiovisual">
+                                <input class="sr-only" type="checkbox" id="cactbaudiovisual" name="cactb" value="audiovisual"> 
+                                <span class="checkbox-label">Audiovisual</span>
+                              </label>
+
+                              <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="cactbdisenio">
+                                <input class="sr-only" type="checkbox" id="cactbdisenio" name="cactb" value="disenio"> 
+                                <span class="checkbox-label">Diseño</span>
+                              </label>
+
+                              <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="cactbeditorial">
+                                <input class="sr-only" type="checkbox" id="cactbeditorial" name="cactb" value="editorial"> 
+                                <span class="checkbox-label">Editorial</span>
+                              </label>
+
+                              <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="cactbmusica">
+                                <input class="sr-only" type="checkbox" id="cactbmusica" name="cactb" value="musica"> 
+                                <span class="checkbox-label">Música</span>
+                              </label>
+
+                              <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="cactbvideojuegos">
+                                <input class="sr-only" type="checkbox" id="cactbvideojuegos" name="cactb" value="videojuegos"> 
+                                <span class="checkbox-label">Videojuegos y Apps</span>
+                              </label>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div><!--END OTROS SECTORES-->
+
+                      <div class="row">
+                        <div class="form-group col-sm-12">
+                          <label class="control-label" for="ccomentario">Comente el propósito de su participación en el evento, si está buscando productos, proyectos o servicios en particular, y cualquier otra información que desee comunicar.</label>
+                          <textarea class="form-control" name="ccomentario" rows="6" id="ccomentario" maxlength="500" placeholder="Máximo 500 caracteres"></textarea>
+                          <span class="help-block"></span>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="row">
+                            <div class="form-group">
+                              <label class="col-sm-12 control-label" for="cbusqueda">Palabras clave que describan su búsqueda como comprador en el MICA</label>
+                              <div class="col-sm-12">
+                                <select multiple id="cbusqueda" name="cbusqueda" class="form-control" data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter." ></select>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+
+                      <div class="row">
+                          <div class="col-sm-12">
+                            <h3>Línea de Productos/Proyecto/Servicio</h3>
+                            <p>Detalle los principales productos/proyectos/servicios se su empredimiento/empresa</p> 
+                            <div class="col-xs-12">
+                              <!--BEG CARGA DE PRODUCTOS-->
+                              <div class="alert alert-info pax row">
+                                <h3><span class="fa fa-star"></span> Producto/Proyecto/Servicio #1</h3>
+                                <hr>  
+
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <label class="control-label" for="cprod-desc-1">Describa su producto, proyecto o servicio</label>
+                                    <textarea class="form-control" name="cprod-desc-1" rows="6" id="cprod-desc-1" maxlength="500" placeholder="Máximo 500 caracteres"></textarea>
+                                    <span class="help-block"></span>
+                                  </div>
+                                </div>
+
+                                <!--BEG LINKS DE AUDIO-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="curlaudio">
+                                      <label class="control-label" for="curlaudio">Links de audio</label>
+                                      <div class="caudiocontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="centry input-group col-xs-12">
+                                            <input class="form-control caudio" name="curlaudio[]" id="curlaudio" type="text" placeholder="Ingrese un link de audio" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE AUDIO-->
+
+                                <!--BEG LINKS DE VIDEO-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="curlvideo">
+                                      <label class="control-label" for="curlvideo">Links de video</label>
+                                      <div class="cvideocontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="centry input-group col-xs-12">
+                                            <input class="form-control cvideo" name="curlvideo[]" id="curlvideo" type="text" placeholder="Ingrese un link de youtube o vimeo" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add2" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE VIDEO-->
+
+                                <!--BEG LINKS DE IMAGENES-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="curlimg">
+                                      <label class="control-label" for="curlimg">Links de img</label>
+                                      <div class="cimgcontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="centry input-group col-xs-12">
+                                            <input class="form-control cimg" name="curlimg[]" id="curlimg" type="text" placeholder="Ingrese un link de flickr" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add3" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE IMAGENES-->
+
+
+                                <!--BEG LINKS DE WEB-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="curlweb">
+                                      <label class="control-label" for="curlweb">Links de web</label>
+                                      <div class="cwebcontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="centry input-group col-xs-12">
+                                            <input class="form-control cweb" name="curlweb[]" id="curlweb" type="text" placeholder="Ingrese un link de su sitio web" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add4" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE WEB-->
+
+
+                                <!--BEG LINKS DE OTHER-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="curlother">
+                                      <label class="control-label" for="curlother">Links de other</label>
+                                      <div class="cothercontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="centry input-group col-xs-12">
+                                            <input class="form-control cother" name="curlother[]" id="curlother" type="text" placeholder="Ingrese otro link de interés" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add5" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE OTHER-->
+                              </div><!--END CARGA DE PRODUCTOS-->
+
+                              <div class="row">
+                                <a href="#" id="crear-nuevo-representante" onclick="return false">
+                                  <button type="button" class="btn btn-warning">Agregar otro producto, proyecto o servicio</button>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                     
+                    </div><!--END INFO COMO COMPRADOR-->
+                  </div><!-- END STEP 4 -->
+                  
+                  <div class="step-pane" data-step="5">
+                    <h3>Confirmación</h3>
+                    <p>!Felicitaciones!</p>
+                    <p>Hemos registrado su inscripción y el sistema enviará de manera automática un email a su cuenta de correo con los datos de la misma en caso que desee volver a editar o verificar sus datos.</p>
+                    <hr>
+                    <hr class="spacer">
+                  </div>
+
+
+                  <!--<div class="step-pane" data-step="5">
+                      <h4>Confirmación</h4>
+                      <div class="bg-danger well-transparent row" id="requisite">
+                        Verifique que los datos que se listan a continuación sean correctos.
+                      </div>
+                      <h4 class="spacer">Datos de la Empresa o Institución</h4>
+                      <div><strong>Nombre de la Empresa:</strong> </div>
+                      <div><strong>CUIT:</strong></div>
+                      <div><strong>Domicilio:</strong></div>
+                      <div><strong>CP:</strong></div>
+                      <div><strong>País:</strong></div>
+                      <div><strong>Provincia:</strong></div>
+                      <div><strong>Localidad:</strong></div>
+                      <div><strong>Email:</strong></div>
+                      <div><strong>Web:</strong></div>
+                      <div><strong>Año de Fundación:</strong></div>
+                      <div><strong>Nro. de empleados:</strong></div>
+                      <div><strong>Facturación anual:</strong></div>
+                      <hr>
+                      
+                      <h4 class="spacer">Representante/s que participará/n de las rondas</h4>
+                      <div><strong>Nombre y apellido del Responsable:</strong></div>
+                      <div><strong>Cargo:</strong> </div>
+                      <div><strong>DNI:</strong></div>
+                      <div><strong>Fecha de nacimiento:</strong></div>
+                      <div><strong>Email del participante:</strong></div>
+                      <div><strong>Teléfono:</strong></div>
+                      <div><strong>Teléfono Móvil:</strong></div>
+                      <div><strong>Idiomas que domina:</strong></div>
+                      <hr>
+
+                  <!--N. Tecnica-->
+                      <!--<div class="alert alert-warning pull-right" role="alert">En caso de existir...</div>
+                      <h4 class="spacer">Otros representantes</h4>
+                      <div><strong>Nombre y apellido:</strong></div>
+                      <div><strong>Cargo:</strong> </div>
+                      <div><strong>DNI:</strong></div>
+                      <div><strong>Fecha de nacimiento:</strong></div>
+                      <div><strong>Email del participante:</strong></div>
+                      <div><strong>Teléfono:</strong></div>
+                      <div><strong>Teléfono Móvil:</strong></div>
+                      <div><strong>Idiomas que domina:</strong></div>
+
+                      <hr>
+                  <!--N. Tecnica-->
+                      <!--<div class="alert alert-warning pull-right" role="alert">En caso de existir...</div>
+                      <h4 class="spacer">Su perfil como Comprador</h4>
+                      <div><strong>Actividades sobre las que desea inscribirse como comprador: </strong>Artes visuales, Música</div>
+                      <div><strong>Describa el perfil de la empresa/institución:</strong></div>
+                      <div><strong>Palabras clave:</strong></div>
+                      <div><strong>Detalle los productos y/o servicios de la empresa/institución:</strong> </div>
+                      <div><strong>¿Hace negocios con actores culturales del exterior?:</strong> </div>
+                      <div><strong>¿Hace negocios con actores culturales de otras provincias?:</strong> </div>
+                      <div><strong>Principales mercados con los que hace negocios:</strong> </div>
+                      <div><strong>Participa de Ferias / eventos:</strong> </div>
+                      <div><strong>Propósito de su participación en este evento:</strong> </div>
+                      <div><strong>Comentarios adicionales sobre su participación como comprador en el evento:</strong> </div>
+
+                      <hr>
+                  <!--N. Tecnica-->
+                      <!--<div class="alert alert-warning pull-right" role="alert">En caso de existir...</div>
+                      <h4 class="spacer">Su perfil como Vendedor</h4>
+                      <div><strong>Actividades sobre las que desea inscribirse como comprador: </strong>Artes visuales, Música</div>
+                      <div><strong>Describa el perfil de la empresa/institución:</strong></div>
+                      <div><strong>Palabras clave:</strong></div>
+                      <div><strong>Detalle los productos y/o servicios de la empresa/institución:</strong> </div>
+                      <div><strong>¿Hace negocios con actores culturales del exterior?:</strong> </div>
+                      <div><strong>¿Hace negocios con actores culturales de otras provincias?:</strong> </div>
+                      <div><strong>Principales mercados con los que hace negocios:</strong> </div>
+                      <div><strong>Participa de Ferias / eventos:</strong> </div>
+                      <div><strong>Propósito de su participación en este evento:</strong> </div>
+                      <div><strong>Comentarios adicionales sobre su participación como comprador en el evento:</strong> </div>   
+                      
+                  <!--<hr class="spacer" />
+                  <a href="#" id="crear-nuevo-req" onclick="return false">
+                    <button type="button" class="btn btn-primary">FINALIZAR</button>
+                  </a>
+                  </div>--><!-- END STEP 4 -->
+
+                </div>
+              </div>
+            </div><!--END FORM-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="share">
+    <div>
+      <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.mica.gob.ar" data-text="MICA - Mercado de Industrias Culturales Argentinas" data-hashtags="mica2015">Tweet</a><br>
+      <div
+        class="fb-like"
+        data-share="true"
+        data-width="300"
+        data-show-faces="false">
+      </div>
+
+    </div>
+    <div><img src="http://www.cultura.gob.ar/static/img/logo-presidencia-de-la-nacion-footer.png" alt="Ministerio de Cultura de la Nacion" title="Ministerio de Cultura de la Nacion" width="250"  border="0"></div>
+  </section>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> 
+<script src="lib/bootstrap.min.js"></script>
+<script src="http://www.fuelcdn.com/fuelux/3.4.0/js/fuelux.min.js"></script>
+<script src="http://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+<script src="lib/croppic/croppic.js"></script>
+<script type="text/javascript">
+$(function () {
+    
+    //AYUDA ONLINE
+    $(function () {
+      $('[data-toggle="popover"]').popover()
+    })
+
+    //HABILITAR INFO ADICIONAL COMO COMPRADOR O VENDEDOR
+    var buyer = $('#data.switch input#buyer');
+    buyer.on('change', function () {
+      $('#infocomprador').toggleClass("hidden", !buyer.is(":checked"));
+    });
+
+    var seller = $('#data.switch input#seller');
+    seller.on('change', function () {
+      $('#infovendedor').toggleClass("hidden", !seller.is(":checked"));
+    });
+
+      //AGREGAR CAMPOS ADICIONALES PARA VENDEDOR
+      $(document).on('click', '.btn-add', function(e) {e.preventDefault();
+          var controlForm = $('.vaudiocontrols div:first'),
+              currentEntry = $(this).parents('.ventry:first'),
+              newEntry = $(currentEntry.clone()).appendTo(controlForm);
+          newEntry.find('input.vaudio').val('');
+          controlForm.find('.ventry:not(:last) .btn-add')
+              .removeClass('btn-add').addClass('btn-remove')
+              .removeClass('btn-warning').addClass('btn-danger')
+              .html('<span class="glyphicon glyphicon-minus"></span>');
+      }).on('click', '.btn-remove', function(e){
+      $(this).parents('.ventry:first').remove();
+      e.preventDefault();
+      return false;
+      });
+
+      $(document).on('click', '.btn-add2', function(e) {e.preventDefault();
+          var controlForm = $('.vvideocontrols div:first'),
+              currentEntry = $(this).parents('.ventry:first'),
+              newEntry = $(currentEntry.clone()).appendTo(controlForm);
+          newEntry.find('input.vvideo').val('');
+          controlForm.find('.ventry:not(:last) .btn-add2')
+              .removeClass('btn-add2').addClass('btn-remove')
+              .removeClass('btn-warning').addClass('btn-danger')
+              .html('<span class="glyphicon glyphicon-minus"></span>');
+      }).on('click', '.btn-remove', function(e) {
+      $(this).parents('.ventry:first').remove();
+      e.preventDefault();
+      return false;
+      });
+
+      $(document).on('click', '.btn-add3', function(e) {e.preventDefault();
+          var controlForm = $('.vimgcontrols div:first'),
+              currentEntry = $(this).parents('.ventry:first'),
+              newEntry = $(currentEntry.clone()).appendTo(controlForm);
+          newEntry.find('input.vimg').val('');
+          controlForm.find('.ventry:not(:last) .btn-add3')
+              .removeClass('btn-add3').addClass('btn-remove')
+              .removeClass('btn-warning').addClass('btn-danger')
+              .html('<span class="glyphicon glyphicon-minus"></span>');
+      }).on('click', '.btn-remove', function(e) {
+      $(this).parents('.ventry:first').remove();
+      e.preventDefault();
+      return false;
+      });
+
+      $(document).on('click', '.btn-add4', function(e) {e.preventDefault();
+          var controlForm = $('.vwebcontrols div:first'),
+              currentEntry = $(this).parents('.ventry:first'),
+              newEntry = $(currentEntry.clone()).appendTo(controlForm);
+          newEntry.find('input.vweb').val('');
+          controlForm.find('.ventry:not(:last) .btn-add4')
+              .removeClass('btn-add4').addClass('btn-remove')
+              .removeClass('btn-warning').addClass('btn-danger')
+              .html('<span class="glyphicon glyphicon-minus"></span>');
+      }).on('click', '.btn-remove', function(e) {
+      $(this).parents('.ventry:first').remove();
+      e.preventDefault();
+      return false;
+      });
+
+      $(document).on('click', '.btn-add5', function(e) {e.preventDefault();
+          var controlForm = $('.vothercontrols div:first'),
+              currentEntry = $(this).parents('.ventry:first'),
+              newEntry = $(currentEntry.clone()).appendTo(controlForm);
+          newEntry.find('input.vother').val('');
+          controlForm.find('.ventry:not(:last) .btn-add5')
+              .removeClass('btn-add5').addClass('btn-remove')
+              .removeClass('btn-warning').addClass('btn-danger')
+              .html('<span class="glyphicon glyphicon-minus"></span>');
+      }).on('click', '.btn-remove', function(e) {
+      $(this).parents('.ventry:first').remove();
+      e.preventDefault();
+      return false;
+      });
+
+
+      //AGREGAR CAMPOS ADICIONALES PARA COMPRADOR
+      $(document).on('click', '.btn-add', function(e) {e.preventDefault();
+          var controlForm = $('.caudiocontrols div:first'),
+              currentEntry = $(this).parents('.centry:first'),
+              newEntry = $(currentEntry.clone()).appendTo(controlForm);
+          newEntry.find('input.caudio').val('');
+          controlForm.find('.centry:not(:last) .btn-add')
+              .removeClass('btn-add').addClass('btn-remove')
+              .removeClass('btn-warning').addClass('btn-danger')
+              .html('<span class="glyphicon glyphicon-minus"></span>');
+      }).on('click', '.btn-remove', function(e){
+      $(this).parents('.centry:first').remove();
+      e.preventDefault();
+      return false;
+      });
+
+      $(document).on('click', '.btn-add2', function(e) {e.preventDefault();
+          var controlForm = $('.cvideocontrols div:first'),
+              currentEntry = $(this).parents('.centry:first'),
+              newEntry = $(currentEntry.clone()).appendTo(controlForm);
+          newEntry.find('input.cvideo').val('');
+          controlForm.find('.centry:not(:last) .btn-add2')
+              .removeClass('btn-add2').addClass('btn-remove')
+              .removeClass('btn-warning').addClass('btn-danger')
+              .html('<span class="glyphicon glyphicon-minus"></span>');
+      }).on('click', '.btn-remove', function(e) {
+      $(this).parents('.centry:first').remove();
+      e.preventDefault();
+      return false;
+      });
+
+      $(document).on('click', '.btn-add3', function(e) {e.preventDefault();
+          var controlForm = $('.cimgcontrols div:first'),
+              currentEntry = $(this).parents('.centry:first'),
+              newEntry = $(currentEntry.clone()).appendTo(controlForm);
+          newEntry.find('input.cimg').val('');
+          controlForm.find('.centry:not(:last) .btn-add3')
+              .removeClass('btn-add3').addClass('btn-remove')
+              .removeClass('btn-warning').addClass('btn-danger')
+              .html('<span class="glyphicon glyphicon-minus"></span>');
+      }).on('click', '.btn-remove', function(e) {
+      $(this).parents('.centry:first').remove();
+      e.preventDefault();
+      return false;
+      });
+
+      $(document).on('click', '.btn-add4', function(e) {e.preventDefault();
+          var controlForm = $('.cwebcontrols div:first'),
+              currentEntry = $(this).parents('.centry:first'),
+              newEntry = $(currentEntry.clone()).appendTo(controlForm);
+          newEntry.find('input.cweb').val('');
+          controlForm.find('.centry:not(:last) .btn-add4')
+              .removeClass('btn-add4').addClass('btn-remove')
+              .removeClass('btn-warning').addClass('btn-danger')
+              .html('<span class="glyphicon glyphicon-minus"></span>');
+      }).on('click', '.btn-remove', function(e) {
+      $(this).parents('.centry:first').remove();
+      e.preventDefault();
+      return false;
+      });
+
+      $(document).on('click', '.btn-add5', function(e) {e.preventDefault();
+          var controlForm = $('.cothercontrols div:first'),
+              currentEntry = $(this).parents('.centry:first'),
+              newEntry = $(currentEntry.clone()).appendTo(controlForm);
+          newEntry.find('input.cother').val('');
+          controlForm.find('.centry:not(:last) .btn-add5')
+              .removeClass('btn-add5').addClass('btn-remove')
+              .removeClass('btn-warning').addClass('btn-danger')
+              .html('<span class="glyphicon glyphicon-minus"></span>');
+      }).on('click', '.btn-remove', function(e) {
+      $(this).parents('.centry:first').remove();
+      e.preventDefault();
+      return false;
+      });
+
+
+});
+</script>
+
+<script>
+  $( function()
+{
+    var targets = $( '[rel~=tooltip]' ),
+        target  = false,
+        tooltip = false,
+        title   = false;
+ 
+    targets.bind( 'mouseenter', function()
+    {
+        target  = $( this );
+        tip     = target.attr( 'title' );
+        tooltip = $( '<div id="tooltip"></div>' );
+ 
+        if( !tip || tip == '' )
+            return false;
+ 
+        target.removeAttr( 'title' );
+        tooltip.css( 'opacity', 0 )
+               .html( tip )
+               .appendTo( 'body' );
+ 
+        var init_tooltip = function()
+        {
+            if( $( window ).width() < tooltip.outerWidth() * 1.5 )
+                tooltip.css( 'max-width', $( window ).width() / 2 );
+            else
+                tooltip.css( 'max-width', 340 );
+ 
+            var pos_left = target.offset().left + ( target.outerWidth() / 2 ) - ( tooltip.outerWidth() / 2 ),
+                pos_top  = target.offset().top - tooltip.outerHeight() - 20;
+ 
+            if( pos_left < 0 )
+            {
+                pos_left = target.offset().left + target.outerWidth() / 2 - 20;
+                tooltip.addClass( 'left' );
+            }
+            else
+                tooltip.removeClass( 'left' );
+ 
+            if( pos_left + tooltip.outerWidth() > $( window ).width() )
+            {
+                pos_left = target.offset().left - tooltip.outerWidth() + target.outerWidth() / 2 + 20;
+                tooltip.addClass( 'right' );
+            }
+            else
+                tooltip.removeClass( 'right' );
+ 
+            if( pos_top < 0 )
+            {
+                var pos_top  = target.offset().top + target.outerHeight();
+                tooltip.addClass( 'top' );
+            }
+            else
+                tooltip.removeClass( 'top' );
+ 
+            tooltip.css( { left: pos_left, top: pos_top } )
+                   .animate( { top: '+=10', opacity: 1 }, 50 );
+        };
+ 
+        init_tooltip();
+        $( window ).resize( init_tooltip );
+ 
+        var remove_tooltip = function()
+        {
+            tooltip.animate( { top: '-=10', opacity: 0 }, 50, function()
+            {
+                $( this ).remove();
+            });
+ 
+            target.attr( 'title', tip );
+        };
+ 
+        target.bind( 'mouseleave', remove_tooltip );
+        tooltip.bind( 'click', remove_tooltip );
+    });
+});
+</script>
+
+<script>
+    var croppicContainerEyecandyOptions = {
+        uploadUrl:'lib/croppic/img_save_to_file.php',
+        cropUrl:'lib/croppic/img_crop_to_file.php',
+        imgEyecandy:true,
+        loaderHtml:'<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> '
+    }
+    var cropContainerEyecandy = new Croppic('cropContainerEyecandy', croppicContainerEyecandyOptions);
+</script>
+
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+  </body>
+</html>

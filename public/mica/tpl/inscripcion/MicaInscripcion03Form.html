@@ -1,0 +1,180 @@
+<div id="vendedor-form" class="row">
+  <div class="col-xs-12">
+    <hr>     
+    <div id="vactividades" class="form-group required">
+      <div class="control-label heading">Sector principal en que desea inscribirse como Vendedor</div>  
+
+      <div id="sellerteatro" class="radio" data-initialize="radio">
+        <label class="radio-custom <%= vactividades === 'aescenicas' ? 'checked' : '' %> " for="vaescenicas">
+          <input type="radio" id="vaescenicas" class="sr-only" data-toggle="#toggle-vaescenicas" <%= vactividades === 'aescenicas' ? 'checked="checked"' : '' %>  name="vactividades" value="aescenicas">
+          Artes escénicas
+        </label>
+      </div>
+
+      <div id="selleraudiovisual" class="radio" data-initialize="radio" >
+        <label class="radio-custom <%= vactividades === 'audivisual' ? 'checked' : '' %>" for="vaudivisual">
+          <input type="radio" id="vaudivisual" class="sr-only" data-toggle="#toggle-vaudiovisual" <%= vactividades === 'audivisual' ? 'checked="checked"' : '' %>  name="vactividades" value="audivisual">
+          Audiovisual
+        </label>
+      </div>
+      
+      <div id="sellerdiseno" class="radio" data-initialize="radio">
+        <label class="radio-custom <%= vactividades === 'disenio' ? 'checked' : '' %> " for="vdisenio">
+          <input type="radio" id="vdisenio" class="sr-only" data-toggle="#toggle-vdisenio" <%= vactividades === 'disenio' ? 'checked="checked"' : '' %> name="vactividades" value="disenio">
+          Diseño
+        </label>
+      </div>
+
+      <div id="sellereditorial" class="radio" data-initialize="radio">
+        <label class="radio-custom <%= vactividades === 'editorial' ? 'checked' : '' %> " for="veditorial">
+          <input type="radio" id="veditorial" class="sr-only" data-toggle="#toggle-veditorial" <%= vactividades === 'editorial' ? 'checked="checked"' : '' %> name="vactividades" value="editorial">
+          Editorial
+        </label>
+      </div>
+
+      <div id="sellermusica" class="radio" data-initialize="radio">
+        <label class="radio-custom <%= vactividades === 'musica' ? 'checked' : '' %> " for="vmusica">
+          <input type="radio" id="vmusica" class="sr-only" data-toggle="#toggle-vmusica" <%= vactividades === 'musica' ? 'checked="checked"' : '' %> name="vactividades" value="musica">
+          Música
+        </label>
+      </div>
+
+      <div id="sellervideojuegos" class="radio" data-initialize="radio">
+        <label class="radio-custom <%= vactividades === 'videojuegos' ? 'checked' : '' %> " for="vvideojuegos">
+          <input type="radio" id="vvideojuegos" class="sr-only" data-toggle="#toggle-vvideojuegos" <%= vactividades === 'videojuegos' ? 'checked="checked"' : '' %> name="vactividades" value="videojuegos">
+          Videojuegos y Apps
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group required" id="toggle-vaescenicas">
+      <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v1subsector1">
+        <input type="checkbox" id="v1subsector1" class="sr-only" <%= sub_aescenicas.teatro ? 'checked="checked"' : '' %> name="sub_aescenicas" value="teatro"> <span class="checkbox-label">Teatro</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v1subsector2">
+        <input type="checkbox" id="v1subsector2" class="sr-only" <%= sub_aescenicas.mimo ? 'checked="checked"' : '' %> name="sub_aescenicas" value="mimo"> <span class="checkbox-label">Mimo</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v1subsector3">
+        <input type="checkbox" id="v1subsector3" class="sr-only" <%= sub_aescenicas.otros ? 'checked="checked"' : '' %> name="sub_aescenicas" value="otros"> <span class="checkbox-label">...</span>
+      </label>
+    </div>
+
+    <div class="form-group required" id="toggle-vaudiovisual">
+      <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v2subsector1">
+        <input type="checkbox" id="v2subsector1" class="sr-only" <%= sub_audiovisual.cine ? 'checked="checked"' : '' %> name="sub_audiovisual" value="cine"> <span class="checkbox-label">Cine</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v2subsector2">
+        <input type="checkbox" id="v2subsector2" class="sr-only" <%= sub_audiovisual.publicidad ? 'checked="checked"' : '' %> name="sub_audiovisual" value="publicidad"> <span class="checkbox-label">Publicidad</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v2subsector3">
+        <input type="checkbox" id="v2subsector3" class="sr-only" <%= sub_audiovisual.otros ? 'checked="checked"' : '' %> name="sub_audiovisual" value="otros"> <span class="checkbox-label">...</span>
+      </label>
+    </div>
+
+    <div class="form-group required" id="toggle-vdisenio">
+      <div class="control-label heading" class="control-label">Sub-sector específico donde desarrolla su actividad</div>
+
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v3subsector1">
+        <input type="checkbox" id="v3subsector1" class="sr-only" <%= sub_disenio.grafica ? 'checked="checked"' : '' %> name="sub_disenio" value="grafica"> <span class="checkbox-label">Gráfico</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v3subsector2">
+        <input type="checkbox" id="v3subsector2" class="sr-only" <%= sub_disenio.indumentaria ? 'checked="checked"' : '' %> name="sub_disenio" value="indumentaria"> <span class="checkbox-label">Indumentaria</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v3subsector3">
+        <input type="checkbox" id="v3subsector3" class="sr-only" <%= sub_disenio.otros ? 'checked="checked"' : '' %> name="sub_disenio" value="otros"> <span class="checkbox-label">Otros</span>
+      </label>
+    </div>
+
+    <div class="form-group required" id="toggle-veditorial">
+      <div class="control-label heading" class="control-label">Sub-sector específico donde desarrolla su actividad</div>
+
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v4subsector1">
+        <input type="checkbox" id="v4subsector1" class="sr-only" <%= sub_editorial.ficcion ? 'checked="checked"' : '' %> name="sub_editorial" value="ficcion"> <span class="checkbox-label">Ficción</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v4subsector2">
+        <input type="checkbox" id="v4subsector2" class="sr-only" <%= sub_editorial.ensayo ? 'checked="checked"' : '' %> name="sub_editorial" value="ensayo"> <span class="checkbox-label">Ensayos</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v4subsector3">
+        <input type="checkbox" id="v4subsector3" class="sr-only" <%= sub_editorial.cuento ? 'checked="checked"' : '' %> name="sub_editorial" value="cuento"> <span class="checkbox-label">Cuentos</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v4subsector4">
+        <input type="checkbox" id="v4subsector4" class="sr-only" <%= sub_editorial.poesia ? 'checked="checked"' : '' %> name="sub_editorial" value="poesia"> <span class="checkbox-label">Poesía</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v4subsector5">
+        <input type="checkbox" id="v4subsector5" class="sr-only" <%= sub_editorial.otros ? 'checked="checked"' : '' %> name="sub_editorial" value="otros"> <span class="checkbox-label">...</span>
+      </label>
+    </div>
+
+    <div class="form-group required" id="toggle-vmusica">
+      <div class="control-label heading" class="control-label">Sub-sector específico donde desarrolla su actividad</div>
+
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v5subsector1">
+        <input type="checkbox" id="v5subsector1" class="sr-only" <%= sub_musica.tango ? 'checked="checked"' : '' %> name="sub_musica" value="tango"> <span class="checkbox-label">Tango</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v5subsector2">
+        <input type="checkbox" id="v5subsector2" class="sr-only" <%= sub_musica.folklore ? 'checked="checked"' : '' %> name="sub_musica" value="folklore"> <span class="checkbox-label">Folcklore</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v5subsector3">
+        <input type="checkbox" id="v5subsector3" class="sr-only" <%= sub_musica.otros ? 'checked="checked"' : '' %> name="sub_musica" value="otros"> <span class="checkbox-label">...</span>
+      </label>
+    </div>
+
+    <div class="form-group required" id="toggle-vvideojuegos">
+      <div class="control-label heading" class="control-label">Sub-sector específico donde desarrolla su actividad</div>
+
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v6subsector1">
+        <input type="checkbox" id="v6subsector1" class="sr-only" <%= sub_videojuegos.escritorio ? 'checked="checked"' : '' %> name="sub_videojuegos" value="escritorio"> <span class="checkbox-label">Web Apps</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v6subsector2">
+        <input type="checkbox" id="v6subsector2" class="sr-only" <%= sub_videojuegos.moviles ? 'checked="checked"' : '' %> name="sub_videojuegos" value="moviles"> <span class="checkbox-label">Aplicaciones móviles</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="v6subsector3">
+        <input type="checkbox" id="v6subsector3" class="sr-only" <%= sub_videojuegos.otros ? 'checked="checked"' : '' %> name="sub_videojuegos" value="otros"> <span class="checkbox-label">...</span>
+      </label>
+    </div>
+    
+    <div class="form-group">
+      <div class="row">
+      
+        <div class="form-group">
+          <label class="col-sm-12 control-label" for="tags">Palabras clave que identifiquen su proyecto</label>
+          <div class="col-sm-12">
+            <select id="tags" class="form-control" multiple data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter."  name="tags">
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-12 radio">
+        <div class="form-group">
+          <p><strong>¿Realiza o realizó negocios en el exterior?</strong></p>
+          <label class="radio-custom radio-inline" data-initialize="radio" for="vexpinternacional4">
+            <input type="radio" id="vexpinternacional4" class="sr-only" <%= vexperienciaintl === '4' ? 'checked="checked"' : '' %>  name="vexperienciaintl" value="4"> Frecuentemente
+          </label>
+          <label class="radio-custom radio-inline" data-initialize="radio" for="vexpinternacional2">
+            <input type="radio" id="vexpinternacional2" class="sr-only" <%= vexperienciaintl === '2' ? 'checked="checked"' : '' %>  name="vexperienciaintl" value="2"> Esporádicamente
+          </label>
+          <label class="radio-custom radio-inline" data-initialize="radio" for="vexpinternacional1">
+            <input type="radio" id="vexpinternacional1" class="sr-only" <%= vexperienciaintl === '1' ? 'checked="checked"' : '' %>  name="vexperienciaintl" value="1"> Nunca
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <label class="control-label" for="vcomentario">Comentarios adicionales sobre su participación como Vendedor en el evento</label>
+        <textarea id="vcomentario" class="form-control" rows="6" maxlength="500" placeholder="Máximo 500 caracteres" name="vcomentario"><%= vcomentario %></textarea>
+        <span class="help-block"></span>
+      </div>
+    </div>
+    <hr>
+
+  </div>
+</div>

@@ -1,0 +1,93 @@
+<div class="row">
+  <div class="col-sm-12">
+    <h3>Participaciones anteriores</h3><hr>
+  </div>
+</div>
+
+<div class="form-group required">
+  <legend class="control-label">¿Fue seleccionado por PAEC?</legend>
+
+  <label class="radio-custom radio-inline" data-initialize="radio" for="en_paec-si" >
+    <input type="radio" id="en_paec-si" class="sr-only" data-toggle="#paec-detail" name="en_paec" value="si">
+    SI
+  </label>
+
+  <label class="radio-custom radio-inline" data-initialize="radio" for="en_paec-no">
+    <input type="radio" id="en_paec-no" class="sr-only" data-toggle="#nada" name="en_paec"  value="no">
+    NO
+  </label>
+
+  <div id="paec-detail">
+    <label class="control-label" for="en_paec_detalle">Mencione el nombre del proyecto</label>
+    <input type="text" class="form-control" id="en_paec_detalle" name="en_paec_detalle" value="">
+  </div>
+</div>
+<hr>
+
+<div class="form-group required">
+  <legend class="control-label">¿Participó en algún MICA anteriormente?</legend>
+
+  <label class="radio-custom radio-inline" data-initialize="radio" for="en_mica-si">
+    <input type="radio" id="en_mica-si" class="sr-only" data-toggle="#mica-detail" name="en_mica" value="si">
+    SI
+  </label>
+
+  <label class="radio-custom radio-inline" data-initialize="radio" for="en_mica-no">
+    <input type="radio" id="en_mica-no" class="sr-only" data-toggle="#nada" name="en_mica" value="no">
+    NO
+  </label>
+
+  <div id="mica-detail">
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="en_mica1">
+      <input type="checkbox" id="en_mica1" class="sr-only" name="en_mica_detalle" value="mica"> <span class="checkbox-label">MICA</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="en_mica2">
+      <input type="checkbox" id="en_mica2" class="sr-only" name="en_mica_detalle" value="premica"> <span class="checkbox-label">PreMICA</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="en_mica3">
+      <input type="checkbox" id="en_mica3" class="sr-only" name="en_mica_detalle" value="micsur"> <span class="checkbox-label">MICSUR</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="en_mica4">
+      <input type="checkbox" id="en_mica4" class="sr-only" name="en_mica_detalle" value="micaproduce"> <span class="checkbox-label">MICA Produce</span>
+    </label>
+  </div>
+</div>
+<hr>
+
+<div class="form-group required">
+  <legend class="control-label">¿Participo en la convocatoria 2014 de los Fondos de Desarrollo Cultural?</legend>
+
+  <label class="radio-custom radio-inline" data-initialize="radio" for="en_fondo-si">
+    <input type="radio" id="en_fondo-si" class="sr-only" data-toggle="#fondo-detail" name="en_fondo" value="si">
+    SI
+  </label>
+
+  <label class="radio-custom radio-inline" data-initialize="radio" for="en_fondo-no">
+    <input type="radio" id="en_fondo-no" class="sr-only" data-toggle="#nada" name="en_fondo" value="no">
+    NO
+  </label>
+
+  <div class="form-group" id="fondo-detail">
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="en_fondo_detalle-1">
+      <input type="checkbox" id="en_fondo_detalle-1" class="sr-only" name="en_fondo_detalle" value="movilidad"> 
+      <span class="checkbox-label">Movilidad</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="en_fondo_detalle-2">
+      <input type="checkbox" id="en_fondo_detalle-2" class="sr-only" name="en_fondo_detalle" value="sostenibilidad"> 
+      <span class="checkbox-label">Sostenibilidad</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="en_fondo_detalle-3">
+      <input type="checkbox" id="en_fondo_detalle-3" class="sr-only" name="en_fondo_detalle" value="infraestructura"> 
+      <span class="checkbox-label">Infraestructura</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="en_fondo_detalle-4">
+      <input type="checkbox" id="en_fondo_detalle-4" class="sr-only" name="en_fondo_detalle" value="innovacion"> 
+      <span class="checkbox-label">Innovación</span>
+    </label>
+  </div>
+</div>
+<hr>
+
+
+<label class="sr-only" for="btnWizardNext2">Guardar y Avanzar</label>
+<input type="button" class="btn btn-info pull-right" id="btnWizardNext2" value="Guardar y avanzar">

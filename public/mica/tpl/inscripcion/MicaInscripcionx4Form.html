@@ -1,0 +1,355 @@
+                    <h3>Active su perfil de Comprador</h3>
+                    <p class="alert alert-danger pull-right" role="alert" style="width:100%">
+                      Su perfil de comprador se encuentra sujero a revisión.
+                    </p>
+                        
+                    <p>En caso de tener productos o servicios culturales para <strong>COMPRAR</strong>, active su perfil de Comprador.</p>  
+
+                    <div id="data" class="switch">
+                      <input id="buyer" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                      <label for="buyer"></label>
+                    </div>
+
+                    <!--BEG INFO COMO COMPRADOR-->
+
+                    <div id="infocomprador" class="hidden"><hr>
+                    
+                      <div class="form-group required" id="cactividades">
+                            <div class="control-label heading">Sector principal en que desea inscribirse como Comprador</div>  
+
+                            <div class="radio" data-initialize="radio" id="buyteatro">
+                              <label class="radio-custom" for="caescenicas">
+                                <input class="sr-only" type="radio" data-toggle="#toggle-aescenicas" name="cactividades" id="caescenicas" value="aescenicas">
+                                Artes escénicas
+                              </label>
+                            </div>
+
+                            <div class="radio" data-initialize="radio" id="buyaudiovisual">
+                              <label class="radio-custom" for="caudivisual">
+                                <input class="sr-only" type="radio" data-toggle="#toggle-audiovisual" name="cactividades" id="caudivisual" value="audivisual">
+                                Audiovisual
+                              </label>
+                            </div>
+                            
+                            <div class="radio" data-initialize="radio" id="buydiseno">
+                              <label class="radio-custom" for="cdisenio">
+                                <input class="sr-only" type="radio" data-toggle="#toggle-disenio" name="cactividades" id="cdisenio" value="disenio">
+                                Diseño
+                              </label>
+                            </div>
+
+                            <div class="radio" data-initialize="radio" id="buyeditorial">
+                              <label class="radio-custom" for="ceditorial">
+                                <input class="sr-only" type="radio" data-toggle="#toggle-editorial" name="cactividades" id="ceditorial" value="editorial">
+                                Editorial
+                              </label>
+                            </div>
+
+                            <div class="radio" data-initialize="radio" id="buymusica">
+                              <label class="radio-custom" for="cmusica">
+                                <input class="sr-only" type="radio" data-toggle="#toggle-musica" name="cactividades" id="cmusica" value="musica">
+                                Música
+                              </label>
+                            </div>
+
+                            <div class="radio" data-initialize="radio" id="buyvideojuegos">
+                              <label class="radio-custom" for="cvideojuegos">
+                                <input class="sr-only" type="radio" data-toggle="#toggle-videojuegos" name="cactividades" id="cvideojuegos" value="videojuegos">
+                                Videojuegos y Apps
+                              </label>
+                            </div>
+                      </div>
+
+                      <div class="form-group required" id="toggle-aescenicas">
+                        <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector1">
+                          <input class="sr-only" type="checkbox" name="c1subsector" id="c1subsector1" value="option1"> <span class="checkbox-label">Teatro</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector2">
+                          <input class="sr-only" type="checkbox" name="c1subsector" id="c1subsector2" value="option2"> <span class="checkbox-label">Mimo</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector3">
+                          <input class="sr-only" type="checkbox" name="c1subsector" id="c1subsector3" value="option3"> <span class="checkbox-label">...</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group required" id="toggle-audiovisual">
+                        <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector1">
+                          <input class="sr-only" type="checkbox" name="c2subsector" id="c2subsector1" value="option1"> <span class="checkbox-label">Cine</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector2">
+                          <input class="sr-only" type="checkbox" name="c2subsector" id="c2subsector2" value="option2"> <span class="checkbox-label">Publicidad</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector3">
+                          <input class="sr-only" type="checkbox" name="c2subsector" id="c2subsector3" value="option3"> <span class="checkbox-label">...</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group required" id="toggle-disenio">
+                        <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c3subsector1">
+                          <input class="sr-only" type="checkbox" name="c3subsector" id="c3subsector1" value="option1"> <span class="checkbox-label">Gráfico</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c3subsector2">
+                          <input class="sr-only" type="checkbox" name="c3subsector" id="c3subsector2" value="option2"> <span class="checkbox-label">Indumentaria</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c3subsector3">
+                          <input class="sr-only" type="checkbox" name="c3subsector" id="c3subsector3" value="option3"> <span class="checkbox-label">...</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group required" id="toggle-editorial">
+                        <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c4subsector1">
+                          <input class="sr-only" type="checkbox" name="c4subsector" id="c4subsector1" value="option1"> <span class="checkbox-label">Libros de texto</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c4subsector2">
+                          <input class="sr-only" type="checkbox" name="c4subsector" id="c4subsector2" value="option2"> <span class="checkbox-label">Cuentos</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c4subsector3">
+                          <input class="sr-only" type="checkbox" name="c4subsector" id="c4subsector3" value="option3"> <span class="checkbox-label">...</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group required" id="toggle-musica">
+                        <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector1">
+                          <input class="sr-only" type="checkbox" name="c5subsector" id="c5subsector1" value="option1"> <span class="checkbox-label">Tango</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector2">
+                          <input class="sr-only" type="checkbox" name="c5subsector" id="c5subsector2" value="option2"> <span class="checkbox-label">Folcklore</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector3">
+                          <input class="sr-only" type="checkbox" name="c5subsector" id="c5subsector3" value="option3"> <span class="checkbox-label">...</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group required" id="toggle-videojuegos">
+                        <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector1">
+                          <input class="sr-only" type="checkbox" name="c6subsector" id="c6subsector1" value="option1"> <span class="checkbox-label">Web Apps</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector2">
+                          <input class="sr-only" type="checkbox" name="c6subsector" id="c6subsector2" value="option2"> <span class="checkbox-label">Aplicaciones móviles</span>
+                        </label>
+                        <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector3">
+                          <input class="sr-only" type="checkbox" name="c6subsector" id="c6subsector3" value="option3"> <span class="checkbox-label">...</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="row">
+                            <div class="form-group">
+                              <label class="col-sm-12 control-label" for="cdescriptores">Palabras clave que describan su actividad</label>
+                              <div class="col-sm-12">
+                                <select multiple id="cdescriptores" name="cdescriptores" class="form-control" data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter." ></select>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+
+                      <!--BEG OTROS SECTORES-->
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="form-group">
+                            <label class="col-sm-12 control-label">¿Hay algún otro sector en el que le interesaría inscribirse como comprador?</label>
+                            <div class="col-sm-12">
+
+                              <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="cactbaescenicas">
+                                <input class="sr-only" type="checkbox" id="cactbaescenicas" name="cactb" value="aescenicas"> 
+                                <span class="checkbox-label">Artes escénicas</span>
+                              </label>
+
+                              <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="cactbaudiovisual">
+                                <input class="sr-only" type="checkbox" id="cactbaudiovisual" name="cactb" value="audiovisual"> 
+                                <span class="checkbox-label">Audiovisual</span>
+                              </label>
+
+                              <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="cactbdisenio">
+                                <input class="sr-only" type="checkbox" id="cactbdisenio" name="cactb" value="disenio"> 
+                                <span class="checkbox-label">Diseño</span>
+                              </label>
+
+                              <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="cactbeditorial">
+                                <input class="sr-only" type="checkbox" id="cactbeditorial" name="cactb" value="editorial"> 
+                                <span class="checkbox-label">Editorial</span>
+                              </label>
+
+                              <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="cactbmusica">
+                                <input class="sr-only" type="checkbox" id="cactbmusica" name="cactb" value="musica"> 
+                                <span class="checkbox-label">Música</span>
+                              </label>
+
+                              <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="cactbvideojuegos">
+                                <input class="sr-only" type="checkbox" id="cactbvideojuegos" name="cactb" value="videojuegos"> 
+                                <span class="checkbox-label">Videojuegos y Apps</span>
+                              </label>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div><!--END OTROS SECTORES-->
+
+                      <div class="row">
+                        <div class="form-group col-sm-12">
+                          <label class="control-label" for="ccomentario">Comente el propósito de su participación en el evento, si está buscando productos, proyectos o servicios en particular, y cualquier otra información que desee comunicar.</label>
+                          <textarea class="form-control" name="ccomentario" rows="6" id="ccomentario" maxlength="500" placeholder="Máximo 500 caracteres"></textarea>
+                          <span class="help-block"></span>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                          <div class="row">
+                            <div class="form-group">
+                              <label class="col-sm-12 control-label" for="cbusqueda">Palabras clave que describan su búsqueda como comprador en el MICA</label>
+                              <div class="col-sm-12">
+                                <select multiple id="cbusqueda" name="cbusqueda" class="form-control" data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter." ></select>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+
+                      <div class="row">
+                          <div class="col-sm-12">
+                            <h3>Línea de Productos/Proyecto/Servicio</h3>
+                            <p>Detalle los principales productos/proyectos/servicios se su empredimiento/empresa</p> 
+                            <div class="col-xs-12">
+                              <!--BEG CARGA DE PRODUCTOS-->
+                              <div class="alert alert-info pax row">
+                                <h3><span class="fa fa-star"></span> Producto/Proyecto/Servicio #1</h3>
+                                <hr>  
+
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <label class="control-label" for="cprod-desc-1">Describa su producto, proyecto o servicio</label>
+                                    <textarea class="form-control" name="cprod-desc-1" rows="6" id="cprod-desc-1" maxlength="500" placeholder="Máximo 500 caracteres"></textarea>
+                                    <span class="help-block"></span>
+                                  </div>
+                                </div>
+
+                                <!--BEG LINKS DE AUDIO-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="curlaudio">
+                                      <label class="control-label" for="curlaudio">Links de audio</label>
+                                      <div class="caudiocontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="centry input-group col-xs-12">
+                                            <input class="form-control caudio" name="curlaudio[]" id="curlaudio" type="text" placeholder="Ingrese un link de audio" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE AUDIO-->
+
+                                <!--BEG LINKS DE VIDEO-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="curlvideo">
+                                      <label class="control-label" for="curlvideo">Links de video</label>
+                                      <div class="cvideocontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="centry input-group col-xs-12">
+                                            <input class="form-control cvideo" name="curlvideo[]" id="curlvideo" type="text" placeholder="Ingrese un link de youtube o vimeo" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add2" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE VIDEO-->
+
+                                <!--BEG LINKS DE IMAGENES-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="curlimg">
+                                      <label class="control-label" for="curlimg">Links de img</label>
+                                      <div class="cimgcontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="centry input-group col-xs-12">
+                                            <input class="form-control cimg" name="curlimg[]" id="curlimg" type="text" placeholder="Ingrese un link de flickr" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add3" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE IMAGENES-->
+
+
+                                <!--BEG LINKS DE WEB-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="curlweb">
+                                      <label class="control-label" for="curlweb">Links de web</label>
+                                      <div class="cwebcontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="centry input-group col-xs-12">
+                                            <input class="form-control cweb" name="curlweb[]" id="curlweb" type="text" placeholder="Ingrese un link de su sitio web" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add4" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE WEB-->
+
+
+                                <!--BEG LINKS DE OTHER-->
+                                <div class="form-group col-sm-12">
+                                  <div class="row">
+                                    <div class="control-group" id="curlother">
+                                      <label class="control-label" for="curlother">Links de other</label>
+                                      <div class="cothercontrols"> 
+                                        <div autocomplete="off">
+                                          <div class="centry input-group col-xs-12">
+                                            <input class="form-control cother" name="curlother[]" id="curlother" type="text" placeholder="Ingrese otro link de interés" />
+                                            <span class="input-group-btn">
+                                              <button class="btn btn-warning btn-add5" type="button">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                              </button>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--END LINKS DE OTHER-->
+                              </div><!--END CARGA DE PRODUCTOS-->
+
+                              <div class="row">
+                                <a href="#" id="crear-nuevo-representante" onclick="return false">
+                                  <button type="button" class="btn btn-warning">Agregar otro producto, proyecto o servicio</button>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                     
+                    </div><!--END INFO COMO COMPRADOR-->

@@ -1,0 +1,141 @@
+<div class="row">
+  <div class="col-sm-12">
+    <h3>Portfolio de Productos o Servicios</h3>
+    <p>Detalle los productos/proyectos/servicios que quiere ofrecer el el MICA. Podrá cargar hasta 10 items</p> 
+    <div class="col-xs-12">
+      <!--BEG CARGA DE PRODUCTOS-->
+      <div class="alert alert-info pax row">
+        <h3><span class="fa fa-star"></span> Producto/Proyecto/Servicio #1</h3>
+        <hr>  
+
+        <div class="form-group col-sm-12">
+          <div class="row">
+            <label class="control-label" for="cprod-desc-1">Describa su producto, proyecto o servicio</label>
+            <div class="input-group">
+              <textarea id="cprod-desc-1" class="form-control" rows="6" maxlength="500" placeholder="Máximo 500 caracteres" name="denominacion"></textarea>
+              <div class="input-group-addon">
+                <div title="<strong>Describa</strong> brevemente el perfil de su producción (bienes o servicios), a quien está destinada, qué la caracteriza, etc. (Máximo 500 caracteres)" rel="tooltip">
+                  <span class="fa fa-question-circle"></span>
+                </div>
+              </div>
+            </div>
+            <span class="help-block"></span>
+          </div>
+        </div>
+
+        <!--BEG LINKS DE AUDIO-->
+        <div class="form-group col-sm-12">
+          <div class="row">
+            <div class="control-group" id="curlaudio">
+              <label class="control-label" for="curlaudio">Links de audio</label>
+              <div class="caudiocontrols"> 
+                <div autocomplete="off">
+                  <div class="centry input-group col-xs-12">
+                    <input type="text" id="curlaudio" class="form-control vaudio" placeholder="Ingrese un link de audio" name="urlaudio"  >
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-warning js-btn-add1" >
+                          <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!--END LINKS DE AUDIO-->
+
+        <!--BEG LINKS DE VIDEO-->
+        <div class="form-group col-sm-12">
+          <div class="row">
+            <div class="control-group" id="curlvideo">
+              <label class="control-label" for="curlvideo">Links de video</label>
+              <div class="cvideocontrols"> 
+                <div autocomplete="off">
+                  <div class="centry input-group col-xs-12">
+                    <input type="text" id="curlvideo" class="form-control vvideo" placeholder="Ingrese un link de youtube o vimeo" name="urlvideo" >
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-warning btn-add2" >
+                          <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!--END LINKS DE VIDEO-->
+
+        <!--BEG LINKS DE IMAGENES-->
+        <div class="form-group col-sm-12">
+          <div class="row">
+            <div class="control-group" id="curlimg">
+              <label class="control-label" for="curlimg">Links de img</label>
+              <div class="cimgcontrols"> 
+                <div autocomplete="off">
+                  <div class="centry input-group col-xs-12">
+                    <input type="text"  id="curlimg" class="form-control vimg" placeholder="Ingrese un link de flickr" name="urlimg" >
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-warning btn-add3" >
+                          <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!--END LINKS DE IMAGENES-->
+
+
+        <!--BEG LINKS DE WEB-->
+        <div class="form-group col-sm-12">
+          <div class="row">
+            <div class="control-group" id="curlweb">
+              <label class="control-label" for="curlweb">Links de web</label>
+              <div class="cwebcontrols"> 
+                <div autocomplete="off">
+                  <div class="centry input-group col-xs-12">
+                    <input type="text" id="curlweb" class="form-control vweb" placeholder="Ingrese un link de su sitio web" name="urlweb">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-warning btn-add4" >
+                          <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!--END LINKS DE WEB-->
+
+
+        <!--BEG LINKS DE OTHER-->
+        <div class="form-group col-sm-12">
+          <div class="row">
+            <div class="control-group" id="curlother">
+              <label class="control-label" for="curlother">Links de other</label>
+              <div class="cothercontrols"> 
+                <div autocomplete="off">
+                  <div class="centry input-group col-xs-12">
+                    <input type="text" id="curlother" class="form-control vother"  placeholder="Ingrese otro link de interés" name="urlotro">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-warning btn-add5" >
+                          <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!--END LINKS DE OTHER-->
+      </div><!--END CARGA DE PRODUCTOS-->
+
+      <div class="row">
+        <a href="#" id="crear-nuevo-representante" onclick="return false">
+          <button type="button" class="btn btn-warning">Agregar otro producto, proyecto o servicio</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

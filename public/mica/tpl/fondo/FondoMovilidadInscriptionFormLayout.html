@@ -1,0 +1,79 @@
+<a class="sr-only" href="#main-content">Pasar al contenido principal</a>
+<div id="dialog-region"></div>
+
+<div id="colorbar"></div>
+<div class="container">
+  <div>
+    <div class="col-xs-12 col-md-12">
+      <div class="panel">
+        <div class="panel-heading">
+          <h1>Formulario de Inscripción</h1>
+          <h2>Fondo Argentino de Desarrollo Cultural - Linea MOVILIDAD</h2>
+        </div>
+        <div class="panel-body fuelux"> 
+          <!--BEG FORM-->
+          <div class="fu-example section">
+            <div class="wizard" data-initialize="wizard" id="myWizard">
+              <ul class="steps" style="margin-left: 0">
+                <li data-step="1" class="active"><span class="badge badge-info">1</span>Registro<span class="chevron"></span></li>
+                <li data-step="2"><span class="badge">2</span>Participaciones<span class="chevron"></span></li>
+                <li data-step="3"><span class="badge">3</span>Modalidad<span class="chevron"></span></li>
+                <li data-step="4"><span class="badge">4</span>Cronograma y presupuesto<span class="chevron"></span></li>
+                <li data-step="5"><span class="badge">5</span>Archivos<span class="chevron"></span></li>
+                <li data-step="6"><span class="badge">6</span>Confirmación<span class="chevron"></span></li>
+              </ul>
+              <div class="actions">
+                <button class="btn btn-default btn-prev" disabled="disabled"><span class="fa fa-arrow-left"></span></button>
+                <button class="btn btn-default btn-next" data-last="FINALIZAR"><span class="fa fa-arrow-right"></span></button>
+              </div>
+
+              <div class="step-content">
+                
+                <!-- BEG RESPONSABLES - REGISTRO GENERAL -->
+                <div id='stepone-region' class="step-pane" data-step="1"></div>
+                <!-- END RESPONSABLES - REGISTRO GENERAL -->
+
+                <!--BEG PARTICIPACIONES ANTERIORES-->
+                <div id='steptwo-region' class="step-pane" data-step="2">ALGO</div>
+                <!--END PARTICIPACIONES ANTERIORES-->
+                
+                <!--BEG LINEA Y MODALIDAD-->
+                <div id='stepthree-region' class="step-pane" data-step="3"></div>
+                <!--END LINEA Y MODALIDAD-->
+
+                <!--BEG CRONOGRAMA Y PRESUPUESTO-->
+                <div id='stepfour-region' class="step-pane" data-step="4"></div>
+                <!--END CRONOGRAMA Y PRESUPUESTO-->
+
+                <!--BEG FILE UPLOADS-->
+                <div id='stepfive-region' class="step-pane" data-step="5">
+                </div><!--END FILE UPLOADS-->
+                  
+                <div class="step-pane" data-step="6">
+                  <h4>Confirmación</h4>
+                  <p>!Felicitaciones!</p>
+                  <p>Hemos registrado su postulación y el sistema enviará de manera automática un email a su cuenta de correo con los datos de la registración en caso que desee volver a editar o verificar sus datos.</p>
+                  <hr>
+                  <div class="form-group required">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <label for="legal">
+                          <input type="checkbox" id="legal" name="legal" value=<%= legal %> > 
+                          <span class="checkbox-label control-label">He leído y acepto los <a href="http://www.cultura.gob.ar" target="_blank">terminos y condiciones</a></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr class="spacer">
+                </div><!-- END STEP 5 --> 
+
+              </div><!--STEP content--> 
+
+            </div>
+          </div>
+          <!--END FORM--> 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
