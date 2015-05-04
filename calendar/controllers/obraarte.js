@@ -43,7 +43,8 @@ var ctrls = {
     
     save: function(req,res){
       //TODO: seguridad,
-      //solo se puede guardar los propios
+      // solo se puede guardar los propios y mientras no esten activos en una licencia
+      // si la obra es nueva, autosetear el owner al usuario logueado.
       
       var raw = req.body;
       

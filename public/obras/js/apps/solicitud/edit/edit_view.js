@@ -335,7 +335,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     },
     
     onClickSelector: function(e){
-      Message.info('Listado disponible proximamente.<br/>Utilize el buscador para agregar');
+      Message.info('Listado disponible proximamente.<br/>Utilice el buscador para agregar');
       //this.openSelector();
     }
     
