@@ -26,8 +26,13 @@
 <% })%>
 
 <hr class="spacer">
-<h4 class="spacer">Datos del exportador</h4>
-<% if(exporters.length > 0){ var exp1 = exporters[0]; %>
+<% _.each(exporters,function(exp1,index){ %>
+    <h4 class="spacer">
+        Datos del exportador
+        <% if(index > 0){ %>
+            2
+        <% } %>
+    </h4>
     <div><strong>Nombre y apellido del Responsable:</strong> <%=exp1.name%> <%=exp1.lastname%></div>
     <div><strong>Fecha de nacimiento:</strong> <%=exp1.birthday%></div>
     <div><strong>Nacionalidad:</strong> <%=exp1.nationality%></div>
@@ -37,4 +42,5 @@
     <div><strong>Localidad:</strong> <%=exp1.localidad%></div>
     <div><strong>Teléfono:</strong> <%=exp1.phone%></div>
     <div><strong>Teléfono Móvil:</strong> <%=exp1.mobile%></div>
-<% } %>
+    <br />
+<%  }) %>

@@ -233,7 +233,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     }
   })
   
-  var ExportadoresStep = Marionette.CompositeView.extend({
+  var ExportadoresStep = Marionette.ItemView.extend({
     initialize: function(opts){
       this.collection = new Backbone.Collection();
       if(opts.model && opts.model.get('exporters') && opts.model.get('exporters').length > 0 ){
@@ -245,26 +245,98 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     getTemplate: function(){
       return utils.templates.SolExportadoresStep;
     },
-    childView: ExportadorEditor,
-    childViewContainer: '#exporters-container',
+    
+    onRender: function(){
+      this.validateMenu();
+      this.setTab(0);
+    },
+    
+    validateMenu: function(){
+      var $list =  this.$el.find('#tabList');
+      var $li = this.$el.find('#linkExport2');
+      if(this.collection.length > 1){
+        $li.removeClass('js-addexporter').find('a').html('Exportador 2');
+        var $liRemove  = $('<li></li>',{'class':'js-removeexporter btn-link'});
+        $liRemove.html('<a class="text-danger">- borrar exportador 2</a>');
+        $list.append($liRemove);
+      }else{
+        $li.addClass('js-addexporter').find('a').html('+ agregar un segundo exportador');
+        this.$el.find('#tabList li:nth-child(3)').remove();
+      }
+    },
+    
+    setTab: function(index){
+      if(index >=0 && index < this.collection.length && this.currentIndex != index){
+        var exporter = this.collection.at(index);
+        if(this.child){
+          if(! this.validate()) return;
+          this.child.commit();
+          this.child.remove();
+        }
+        var cont = $('<div></div>');
+        this.$el.find('#exporters-container').append(cont);
+        this.child = new ExportadorEditor({el:cont,model:exporter});
+        this.child.render();
+        this.$el.find('#tabList li.active').removeClass('active');
+        this.$el.find('#tabList li:nth-child('+(index+1)+')').addClass('active');
+        this.currentIndex = index;
+      }
+    },
+    
+    addExportador: function(){
+      var exp = (this.exporterRemoved)? this.exporterRemoved : new Entities.Exportador();
+      this.collection.push(exp);
+      this.validateMenu();
+      this.setTab(1);
+    },
+    
+    removeExportador: function(){
+      if(this.collection.length > 1){
+        this.exporterRemoved = this.collection.pop();
+        this.validateMenu();
+        this.setTab(0);
+      }
+    },
+    
+    
+    /** metodos para "interface" de step de wizard o editor **/
     validate: function(){
-      var ok = true;
-      this.children.each(function(child){
-          ok = child.validate() && ok;
-      })
+      var ok = this.child.validate();
+      var $tabLink = this.$el.find('#tabList li:nth-child('+(this.currentIndex+1)+') a');
+      $tabLink.find('i').remove();
+      this.$el.find('#msgAlert').hide();
+      if(!ok){
+        $tabLink.append(' <i class="glyphicon glyphicon-alert"></i>');
+        this.$el.find('#msgAlert').show();
+      }
       return ok;
     },
     commit: function(){
-      this.children.each(function(child){
-        child.commit();
-      })
+      this.child.commit();
       this.model.set('exporters',this.collection.toJSON());
     },
     
     events: {
-      'click .js-addexporter': function(){
-        Message.info('Disponible proximamente');
-      }
+      'click .js-addexporter': 'onAddExporter',
+      'click .js-removeexporter': 'onRemoveExporter',
+      'click .js-tabSelect': 'onTabSelect'
+    },
+    
+    onAddExporter: function(){
+      this.addExportador();
+    },
+    
+    onRemoveExporter: function(){
+      var self = this;
+      DocManager.confirm('¿Quiere borrar al segundo exportador?',{okText:'si',cancelText:'no'}).done(function(){
+        self.removeExportador();  
+      })
+      
+    },
+    
+    onTabSelect: function(e){
+      var index = this.$el.find('#tabList li').index($(e.currentTarget));
+      this.setTab(index);
     }
   });
   
