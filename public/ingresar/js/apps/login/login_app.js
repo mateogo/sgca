@@ -18,7 +18,7 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 	
 		loginMica: function(){
 			console.log('API: Login MICA');
-			this.loginUser('sisplan', 'mica')
+			this.loginUser('mica', 'mica')
 		},
 
 		loginSisplan: function(){

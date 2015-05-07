@@ -109,12 +109,19 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
     events: {
       'click .js-openevent': 'openEventClicked',
-      'click .js-daleche': 'submitForm',
+      'click .js-provisorio': 'submitForm',
+      'click .js-definitivo': 'submitFormDefinitivo',
     },
 
     submitForm: function(){
         console.log('IAJJUUUU 3');
         this.trigger('submit:form', this.model);
+
+    },
+
+    submitFormDefinitivo: function(){
+        console.log('Submit Definitivo');
+        this.trigger('submit:form:definitivo', this.model);
 
     },
     
@@ -420,6 +427,21 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       self.$('.checkbox-custom').checkbox();
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
 
+      //self.$('.togglejuridica').addClass('hidden');
+      _.each(['aescenicas', 'audivisual', 'disenio', 'editorial', 'musica', 'videojuegos'], function(item){
+          if(item === self.model.get('vactividades')){
+
+          }else{
+            var selector = '#toggle-v' + item;
+            console.log('toggling: [%s]', selector);
+
+            self.$(selector).addClass('hidden');
+
+          }
+
+      });
+
+
       $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
         var step = data.step;
         if(step == 2){
@@ -433,84 +455,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
             }
           }
         }
-
-
-        //AGREGAR CAMPOS ADICIONALES PARA VENDEDOR
-        $(document).on('click', '.btn-add', function(e) {e.preventDefault();
-            var controlForm = $('.vaudiocontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vaudio').val('');
-            controlForm.find('.ventry:not(:last) .btn-add')
-                .removeClass('btn-add').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e){
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-        $(document).on('click', '.btn-add2', function(e) {e.preventDefault();
-            var controlForm = $('.vvideocontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vvideo').val('');
-            controlForm.find('.ventry:not(:last) .btn-add2')
-                .removeClass('btn-add2').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e) {
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-        $(document).on('click', '.btn-add3', function(e) {e.preventDefault();
-            var controlForm = $('.vimgcontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vimg').val('');
-            controlForm.find('.ventry:not(:last) .btn-add3')
-                .removeClass('btn-add3').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e) {
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-        $(document).on('click', '.btn-add4', function(e) {e.preventDefault();
-            var controlForm = $('.vwebcontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vweb').val('');
-            controlForm.find('.ventry:not(:last) .btn-add4')
-                .removeClass('btn-add4').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e) {
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-        $(document).on('click', '.btn-add5', function(e) {e.preventDefault();
-            var controlForm = $('.vothercontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vother').val('');
-            controlForm.find('.ventry:not(:last) .btn-add5')
-                .removeClass('btn-add5').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e) {
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
       });    
     },
     events: {
@@ -626,6 +570,20 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       self.$('.radio-custom').radio();
       self.$('.checkbox-custom').checkbox();
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
+      //self.$('.togglejuridica').addClass('hidden');
+
+      _.each(['aescenicas', 'audivisual', 'disenio', 'editorial', 'musica', 'videojuegos'], function(item){
+          if(item === self.model.get('cactividades')){
+
+          }else{
+            var selector = '#toggle-c' + item;
+            console.log('toggling: [%s]', selector);
+
+            self.$(selector).addClass('hidden');
+
+          }
+
+      });
 
       $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
         var step = data.step;
@@ -775,3 +733,84 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
     
 });
+
+/*
+
+        //AGREGAR CAMPOS ADICIONALES PARA VENDEDOR
+        $(document).on('click', '.btn-add', function(e) {e.preventDefault();
+            var controlForm = $('.vaudiocontrols div:first'),
+                currentEntry = $(this).parents('.ventry:first'),
+                newEntry = $(currentEntry.clone()).appendTo(controlForm);
+            newEntry.find('input.vaudio').val('');
+            controlForm.find('.ventry:not(:last) .btn-add')
+                .removeClass('btn-add').addClass('btn-remove')
+                .removeClass('btn-warning').addClass('btn-danger')
+                .html('<span class="glyphicon glyphicon-minus"></span>');
+        }).on('click', '.btn-remove', function(e){
+        $(this).parents('.ventry:first').remove();
+        e.preventDefault();
+        return false;
+        });
+
+        $(document).on('click', '.btn-add2', function(e) {e.preventDefault();
+            var controlForm = $('.vvideocontrols div:first'),
+                currentEntry = $(this).parents('.ventry:first'),
+                newEntry = $(currentEntry.clone()).appendTo(controlForm);
+            newEntry.find('input.vvideo').val('');
+            controlForm.find('.ventry:not(:last) .btn-add2')
+                .removeClass('btn-add2').addClass('btn-remove')
+                .removeClass('btn-warning').addClass('btn-danger')
+                .html('<span class="glyphicon glyphicon-minus"></span>');
+        }).on('click', '.btn-remove', function(e) {
+        $(this).parents('.ventry:first').remove();
+        e.preventDefault();
+        return false;
+        });
+
+        $(document).on('click', '.btn-add3', function(e) {e.preventDefault();
+            var controlForm = $('.vimgcontrols div:first'),
+                currentEntry = $(this).parents('.ventry:first'),
+                newEntry = $(currentEntry.clone()).appendTo(controlForm);
+            newEntry.find('input.vimg').val('');
+            controlForm.find('.ventry:not(:last) .btn-add3')
+                .removeClass('btn-add3').addClass('btn-remove')
+                .removeClass('btn-warning').addClass('btn-danger')
+                .html('<span class="glyphicon glyphicon-minus"></span>');
+        }).on('click', '.btn-remove', function(e) {
+        $(this).parents('.ventry:first').remove();
+        e.preventDefault();
+        return false;
+        });
+
+        $(document).on('click', '.btn-add4', function(e) {e.preventDefault();
+            var controlForm = $('.vwebcontrols div:first'),
+                currentEntry = $(this).parents('.ventry:first'),
+                newEntry = $(currentEntry.clone()).appendTo(controlForm);
+            newEntry.find('input.vweb').val('');
+            controlForm.find('.ventry:not(:last) .btn-add4')
+                .removeClass('btn-add4').addClass('btn-remove')
+                .removeClass('btn-warning').addClass('btn-danger')
+                .html('<span class="glyphicon glyphicon-minus"></span>');
+        }).on('click', '.btn-remove', function(e) {
+        $(this).parents('.ventry:first').remove();
+        e.preventDefault();
+        return false;
+        });
+
+        $(document).on('click', '.btn-add5', function(e) {e.preventDefault();
+            var controlForm = $('.vothercontrols div:first'),
+                currentEntry = $(this).parents('.ventry:first'),
+                newEntry = $(currentEntry.clone()).appendTo(controlForm);
+            newEntry.find('input.vother').val('');
+            controlForm.find('.ventry:not(:last) .btn-add5')
+                .removeClass('btn-add5').addClass('btn-remove')
+                .removeClass('btn-warning').addClass('btn-danger')
+                .html('<span class="glyphicon glyphicon-minus"></span>');
+        }).on('click', '.btn-remove', function(e) {
+        $(this).parents('.ventry:first').remove();
+        e.preventDefault();
+        return false;
+        });
+
+
+*/
