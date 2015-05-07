@@ -95,8 +95,8 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
       mailModel.set('to',user.get('username'));
       
       //todo:ver donde configurar el servidor de produccion
-      //mailModel.set( 'server','http://sisplan.cultura.gob.ar:3000');
-      mailModel.set( 'server','http://localhost:3000');
+      mailModel.set( 'server','http://sisplan.cultura.gob.ar:3000');
+      //mailModel.set( 'server','http://localhost:3000');
       if(targetUser){
         if(targetUser === 'mica'){
           console.log('generando mail para MICA')

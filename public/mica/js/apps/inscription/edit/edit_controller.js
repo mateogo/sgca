@@ -171,8 +171,8 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       mailModel.set('to',getSession().currentUser.get('username'));
       
       //todo:ver donde configurar el servidor de produccion
-      //mailModel.set( 'server','http://sisplan.cultura.gob.ar:3000');
-      mailModel.set( 'server','http://localhost:3000');
+      mailModel.set( 'server','http://sisplan.cultura.gob.ar:3000');
+      //mailModel.set( 'server','http://localhost:3000');
 
       mailModel.set(data)
       mailModel.setTemplate(template);      
