@@ -1,0 +1,92 @@
+  <div class="panel panel-secondary">
+    <div class="panel-heading">
+      <a class="logo navbar-brand" href="http://www.cultura.gob.ar/">
+        <img src="http://www.cultura.gob.ar/static/img/logo-cultura-nacion.png" class="img-responsive text-center">
+      </a>
+      <div class="panel-title">Registrate</div>
+      <div style="float:right; font-size: 85%; position: relative; top:-10px">
+        <a id="signinlink" href="#" >Entrar</a>
+      </div>
+    </div>  
+    <div class="panel-body" >
+      <form id="signupform" class="form-horizontal" role="form">
+        <div id="signupalert" style="display:none" class="alert alert-danger">
+            <p>Error:</p>
+            <span></span>
+        </div>          
+        <div class="form-group">
+            <label for="displayName" class="col-md-3 control-label">Nombre saludo</label>
+            <div class="col-md-9">
+                <input id='displayName' type="text" class="form-control" name="displayName" placeholder="Será usado como saludo">
+                <span class="help-block"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="name" class="col-md-3 control-label">Nombre completo</label>
+            <div class="col-md-9">
+                <input id='name' type="text" class="form-control" name="name" placeholder="Ingresá tu nombre completo">
+                <span class="help-block"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="username" class="col-md-3 control-label">Correo electrónico</label>
+            <div class="col-md-9">
+                <input id='username' type="text" class="form-control" name="username" placeholder="Será tu identificación como usuario">
+                <span class="help-block"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="mail" class="col-md-3 control-label">Reingrese su correo</label>
+            <div class="col-md-9">
+                <input id='mail' type="text" class="form-control" name="mail" placeholder="Será tu correo de contacto">
+                <span class="help-block"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="description" class="col-md-3 control-label">Comentario</label>
+            <div class="col-md-9">
+                <input id='description' type="text" class="form-control" name="description" placeholder="Cuéntanos brevemente sobre ti">
+                <span class="help-block"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="area" class="col-md-3 control-label">Área</label>
+            <div class="col-md-9">
+                <select id='area' type="text" class="form-control" name="area" placeholder="Dirección de la que depende su área" value="area" >
+                </select>
+                <span class="help-block"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password" class="col-md-3 control-label">Contraseña</label>
+            <div class="col-md-9">
+                <input id='password' type="password" class="form-control" name="password" placeholder="Tu contraseña debe tener al menos 6 caracteres">
+                <span class="help-block"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="passwordcopia" class="col-md-3 control-label">Reingrese Contraseña</label>
+            <div class="col-md-9">
+                <input id='passwordcopia' type="password" class="form-control" name="passwordcopia" placeholder="Tu contraseña debe tener al menos 6 caracteres">
+                <span class="help-block"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="termsofuse" class="control-label col-md-3">Acepta</label>
+            <div class="col-md-9">
+                <label class="checkbox-inline">
+                    <input id='termsofuse' type="checkbox" name='termsofuse' value='1' >Acepto condiciones de uso
+                </label>
+                <span class="help-block"></span>
+            </div>
+        </div>            
+        <div class="form-group">
+            <!-- Button -->                                        
+            <div class="col-md-offset-3 col-md-9">
+                <button id="btn-signup" type="button" class="btn btn-info js-insertuser"><i class="icon-hand-right"></i> Registrate</button>
+            </div>
+        </div>
+        
+      </form>
+    </div>
+  </div>
