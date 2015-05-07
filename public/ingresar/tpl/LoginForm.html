@@ -1,0 +1,61 @@
+<div class="panel panel-secondary" >
+  <div class="panel-heading">
+  	<a class="logo navbar-brand" href="http://www.cultura.gob.ar/"> <img src="http://www.cultura.gob.ar/static/img/logo-cultura-nacion.png" class="img-responsive text-center"></a>
+      <div class="panel-title">Entrar</div>
+      <div style="float:right; font-size: 80%; position: relative; top:-10px">
+        <a href="#">Recuperar contraseña</a>
+      </div>
+  </div>
+
+  <div style="padding-top:30px" class="panel-body" >
+    <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+    
+    <form id="loginform" class="form-horizontal" role="form" action="/login<%= target ? '/'+target: '' %>" method="post">
+
+    <div class="form-group">
+    <div class="col-sm-12">
+      <div class="input-group" style="margin-bottom: 10px">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="usuario o email">
+      </div>
+    </div>
+    </div>
+
+    <div class="form-group">
+    <div class="col-sm-12">
+      <div class="input-group" style="margin-bottom: 10px" >
+        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+        <input id="login-password" type="password" class="form-control" name="password" 
+          placeholder="contraseña">
+      </div>
+    </div>
+    </div>
+
+    <div class="form-group">
+    <div class="col-sm-12">
+      <div class="input-group">
+        <div class="checkbox">
+          <label>
+            <input id="login-remember" type="checkbox" name="remember" value="1"> Recordar datos
+          </label>
+        </div>
+      </div>
+    </div>
+    </div>
+     <div class="form-group" style="margin-top:10px" >
+      <div class="col-sm-12 controls">
+        <button  id="btn-login" class="btn btn-primary js-login-submit">Entrar</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-12 control">
+        <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >¿Aún no tenés cuenta? 
+          <button id="registeruser" class="btn btn-link" role="button">Registrate</a>
+        </div>
+      </div>
+    </div>
+
+    </form>
+  </div>
+</div>

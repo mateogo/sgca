@@ -24,14 +24,14 @@ module.exports = function (config, app) {
     };
 
     app.post('/login',
-        passport.authenticate('local', {failureRedirect:'/login'}), function(req, res){
+        passport.authenticate('local', {failureRedirect:'/ingresar'}), function(req, res){
             console.log("/login [%s] [%s]", req.user.username, utils.anywModule());
             console.log('AUTHENTICATE OK!!!![%s] [%s]', req, res)
             res.redirect(utils.userHome(req.user));
     });
     
     app.post('/login/:route',
-        passport.authenticate('local', {failureRedirect:'/login'}), function(req, res){
+        passport.authenticate('local', {failureRedirect:'/ingresar' }), function(req, res){
             console.log('ROUTE AUTHENTICATE OK!!!![%s] [%s] route:[%s]', req, res, req.params.route)
             var route = req.params.route;
             if(route){
