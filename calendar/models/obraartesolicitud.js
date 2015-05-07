@@ -40,8 +40,8 @@ var Solicitud = BaseModel.extend({
     value: 0,
     madeyear: '',
     
-    estado_alta: 'draft',
-    nivel_ejecucion: '',
+    estado_alta: 'abierto',
+    nivel_ejecucion: 'pendiente',
     
     fealta: null,
     feultmod: null

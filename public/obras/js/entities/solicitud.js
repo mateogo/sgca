@@ -16,6 +16,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       customs: '',
       obs: '',
       totalValue: '',
+      email: '',
       exporters: new Backbone.Collection(),
       obras: new Backbone.Collection(),
       docs: new Backbone.Collection()
@@ -35,6 +36,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
                     {min:1,msg:'Ingrese de 1 a 12 meses'}
                     ], 
       customs: {required: false,msg:'Es necesario'}, // aduana
+      email: {required:true,pattern:'email'},
       obs: {required: false}
     },
     

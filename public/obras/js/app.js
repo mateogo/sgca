@@ -56,20 +56,21 @@ _.extend(Backbone.Validation.callbacks, {
           $group = $el.closest('.form-group');
       
       $group.removeClass('has-error');
-      $group.find('.help-block').html('').addClass('hidden');
+      $group.find('.help-block').html('');
   },
   invalid: function (view, attr, error, selector) {
       var $el = view.$el.find('[name=' + attr + ']'), 
           $group = $el.closest('.form-group');
       
       $group.addClass('has-error');
-      $group.find('.help-block').html(error).removeClass('hidden');
+      $group.find('.help-block').html(error);
   }
 });
 
 _.extend(Backbone.Validation.messages, {
   required: 'Es necesario',
-  number: 'Deber ser un número'
+  number: 'Deber ser un número',
+  email: 'Debe ser un email valido'
 });
 
 _.extend(Backbone.Validation.validators, {});

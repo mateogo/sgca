@@ -117,6 +117,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     },
     onRender: function(){
       Backbone.Validation.bind(this,{model:this.model});
+      this.validateTypeForm();
     },
     onDestroy: function(){
       Backbone.Validation.unbind(this);
@@ -129,6 +130,17 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       }
       return data;
     },
+    
+    validateTypeForm: function(){
+      var type = this.$el.find('[name=type]').val();
+      if(type === 'temporaria'){
+        this.$el.find('#durationoutCont').show();
+      }else{
+        this.$el.find('#durationoutCont').hide();
+      }
+    },
+    
+    
     validate: function(){
       this.commit();
       var valid = this.model.isValid(true); 
@@ -142,7 +154,12 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     events: {
       'change input': 'commit',
       'change select': 'commit',
-      'change textarea': 'commit'
+      'change textarea': 'commit',
+      'change [name=type]': 'onChangeType'
+    },
+    
+    onChangeType: function(){
+      this.validateTypeForm();
     }
     
   })

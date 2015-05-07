@@ -24,6 +24,7 @@
 
 DocManager.module("ObrasApp.List", function(List, DocManager, Backbone, Marionette, $, _){
   
+  var Entities = DocManager.module('Entities');
   
   List.AutoCompleteObrasField = Marionette.ItemView.extend({
         initialize: function(opts){
@@ -61,6 +62,7 @@ DocManager.module("ObrasApp.List", function(List, DocManager, Backbone, Marionet
             },
             select: function(event,ui){
               var selected = ui.item;
+              selected = new Entities.Obra(selected);
               self.trigger('obra:selected',selected);
               setTimeout(function(){
                 self.$el.val('');  

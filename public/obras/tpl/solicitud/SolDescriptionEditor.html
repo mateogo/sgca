@@ -30,14 +30,14 @@
             </div>
         </div>
     </div>
-    <div class="form-group">
+    <div>
         <div class="row">
             <div class="col-sm-5 col-xs-6 form-group">
                 <label class="control-label">Fecha estimada de salida </label>
                 <input type="text" name="dateout" class="form-control" value="<%=dateout%>">
                 <span class="help-block"></span>
             </div>
-             <div class="col-sm-3 col-xs-9 form-group">
+             <div class="col-sm-3 col-xs-9 form-group" id="durationoutCont">
                 <label class="control-label">Compromiso de Retorno</label>
                 <div class="input-group">
                     <input type="text" name="durationout" class="form-control" value="<%=durationout%>">
@@ -47,7 +47,16 @@
             </div>
         </div>
     </div>
-    <div class="form-group">
+    <div>
+        <div class="row">
+            <div class="col-sm-5 col-xs-6 form-group">
+                <label class="control-label">Email de contacto</label>
+                <input type="text" name="email" class="form-control" value="<%=email%>">
+                <span class="help-block">email de contacto para esta solicitud</span>
+            </div>
+        </div>
+    </div>
+    <div>
         <div class="row">
             <div class="col-sm-10 col-xs-9 form-group">
                 <label class="control-label">Acalaraciones u Otros datos de interes </label>
