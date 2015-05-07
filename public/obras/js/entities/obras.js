@@ -32,10 +32,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
     
     validation: {
-      slug: {required: true,msg:'Es necesario'},
-      procedure: {required:true,msg:'Es necesario'},
-      dimensions: {required:true,msg:'Es necesario'},
-      material: {required:true,msg:'Es necesario'},
+      slug: {required: true},
+      procedure: {required:true},
+      dimensions: {required:true},
+      material: {required:true},
       value: {required:true,pattern:'number',msg:'Ingrese un importe en pesos argentinos'},
       madeyear: {required:false}
     },

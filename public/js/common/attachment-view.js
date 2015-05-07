@@ -151,7 +151,7 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
     onRemove: function(e){
       e.stopPropagation();
       var self = this;
-      DocManager.confirm('¿Está seguro de borrar el archivo?').done(function(){
+      DocManager.confirm('¿Quiere borrar el archivo?').done(function(){
         self.triggerMethod('assets:removed',self.model);
         self.model.destroy();
       });

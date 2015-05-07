@@ -19,9 +19,9 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       var self = this;
       var $btn = this.$el.find('.js-submit');
       $btn.button('loading');
-      DocManager.request('licencia:save',this.model).done(function(response){
+      DocManager.request('solicitud:save',this.model).done(function(response){
         $btn.button('reset');
-        self.trigger('licencia:saved',self.model);
+        self.trigger('solicitud:saved',self.model);
       }).fail(function(e){
         $btn.button('reset');
         Message.error('No se pudo registrar');
@@ -95,10 +95,10 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       var self = this;
       var btn = $(e.currentTarget);
       btn.button('loading');
-      DocManager.request('licencia:save',this.model).done(function(){
+      DocManager.request('solicitud:save',this.model).done(function(){
         btn.button('reset');  
         Message.success('La Solicitud '+self.model.get('cnumber') + '<br/>A sido guardada');
-        self.trigger('licencia:saved',self.model);
+        self.trigger('solicitud:saved',self.model);
       }).fail(function(e){
         btn.button('reset');
         Message.error('No se pudo guardar');
@@ -130,8 +130,9 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       return data;
     },
     validate: function(){
-      this.commit()
-      return this.model.isValid(true);
+      this.commit();
+      var valid = this.model.isValid(true); 
+      return valid;
     },
     commit: function(){
       var data = this.getData();
@@ -493,11 +494,11 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       return utils.templates.SolGracias
     },
     events: {
-      'click .js-licencias': function(){
-        DocManager.trigger("licencia:list");
+      'click .js-solicitudes': function(){
+        DocManager.trigger("solicitud:list");
       },
       'click .js-solicitudnew': function(){
-        DocManager.trigger("licencia:new");
+        DocManager.trigger("solicitud:new");
       }
     }
   });

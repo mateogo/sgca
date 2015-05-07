@@ -3,12 +3,12 @@
         <div class="col-sm-5 col-xs-9 form-group">
             <label class="control-label">Denominación</label>
             <input type="text" id="slug" name="slug" class="form-control" value="<%=slug%>">
-            <span class="help-block"></span>
+            <span class="help-block">título de la obra</span>
         </div>
         <div class="col-sm-5 col-xs-9 form-group">
             <label class="control-label">Año de creación </label>
             <input type="number" name="madeyear" class="form-control" value="<%=madeyear%>">
-            <span class="help-block"></span>
+            <span class="help-block">año de creación o producción</span>
         </div>
     </div>
 </div>
@@ -19,12 +19,12 @@
             <select name="procedure" class="form-control">
                 <%= utils.buildSelectOptions('procedure',utils.proceduresObrasList, procedure) %>
             </select>
-            <span class="help-block"></span>
+            <span class="help-block">técnica empleada en la ejecución</span>
         </div>
         <div class="col-sm-5 col-xs-9 form-group">
             <label class="control-label">Material</label>
             <input type="text" name="material" class="form-control"  value="<%=material%>">
-            <span class="help-block"></span>
+            <span class="help-block">materiales empleados</span>
         </div>
     </div>
 </div>
@@ -33,7 +33,7 @@
         <div class="col-sm-5 col-xs-9 form-group">
             <label class="control-label">Medidas</label>
             <input type="text" name="dimensions" class="form-control"  value="<%=dimensions%>" />
-            <span class="help-block"></span>
+            <span class="help-block">expresadas en centímitros lineales</span>
         </div>
         <div class="col-sm-5 col-xs-9 form-group">
             <label class="control-label">Valor</label>
@@ -41,7 +41,7 @@
                 <span class="input-group-addon">$</span>
                 <input type="text" name="value" class="form-control"   value="<%=value%>">
             </div>
-            <span class="help-block">en pesos argentinos</span>
+            <span class="help-block">importe expresados en pesos</span>
         </div>
     </div>
 </div>

@@ -2,9 +2,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   
   //https://github.com/thedersen/backbone.validation
   
-  Entities.Licencia = Backbone.Model.extend({
-    whoami: 'Licencia:licencia.js',
-    urlRoot: "/obraartelicencia",
+  Entities.Solicitud = Backbone.Model.extend({
+    whoami: 'Solicitud:solicitud.js',
+    urlRoot: "/obraartesolicitud",
     idAttribute: "_id",
     
     defaults:{
@@ -22,11 +22,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
     
     validation: {
-      type: {required: true,msg:'Es necesario'}, //tipo de tramite, definitiva o temporaria
-      reason: {required: true,msg:'Es necesario'},
-      destination: {required: true,msg:'Es necesario'},
-      dateout: {required: true,msg:'Es necesario'},
-      durationout: {required: false,msg:'Es necesario'}, // compromiso de retorno, en meses
+      type: {required: true}, //tipo de tramite, definitiva o temporaria
+      reason: {required: true},
+      destination: {required: true},
+      dateout: {required: true},
+      durationout: [{required: function(value,attr,computedState){
+                      // compromiso de retorno, en meses
+                      return computedState.type === 'temporaria';
+                    }},
+                    {pattern:'number',msg:'Ingrese de 1 a 12 meses'},
+                    {max:12,msg:'Ingrese de 1 a 12 meses'},
+                    {min:1,msg:'Ingrese de 1 a 12 meses'}
+                    ], 
       customs: {required: false,msg:'Es necesario'}, // aduana
       obs: {required: false}
     },
@@ -71,35 +78,35 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
   
   
-  Entities.LicenciasCollection = Backbone.Collection.extend({
-    model: Entities.Licencia,
-    url: "/obraartelicencia"
+  Entities.SolicitudCollection = Backbone.Collection.extend({
+    model: Entities.Solicitud,
+    url: "/obraartesolicitud"
   })
   
   var API = {
     /**
      * load para editar
-     * @param {licencia} stringId o Entities.Licencia
+     * @param {solicitud} stringId o Entities.Solicitud
      * @return promise
      */
-    load: function(licencia){
+    load: function(solicitud){
       var def = $.Deferred();
-      if((licencia instanceof Entities.Licencia)){
+      if((solicitud instanceof Entities.Solicitud)){
         
-        var obras = licencia.get('obras'); 
+        var obras = solicitud.get('obras'); 
         
         if(obras  && obras.length > 0){
-          def.resolve(licencia);  
+          def.resolve(solicitud);  
         }else{
-          licencia.fetch().then(function(){
-            def.resolve(licencia);
+          solicitud.fetch().then(function(){
+            def.resolve(solicitud);
           },def.reject);
         }
 
       }else{
-         licencia = new Entities.Licencia({_id:licencia});
-         p = licencia.fetch().then(function(){
-           def.resolve(licencia);
+        solicitud = new Entities.Solicitud({_id:solicitud});
+         p = solicitud.fetch().then(function(){
+           def.resolve(solicitud);
          },def.reject);
       }
       return def.promise();
@@ -118,11 +125,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     }
   }
   
-  DocManager.reqres.setHandler("licencia:load", function(model){
+  DocManager.reqres.setHandler("solicitud:load", function(model){
     return API.load(model);
   });
   
-  DocManager.reqres.setHandler("licencia:save", function(model){
+  DocManager.reqres.setHandler("solicitud:save", function(model){
     return API.save(model);
   });
     

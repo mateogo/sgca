@@ -11,7 +11,7 @@ DocManager.module("SolicitudApp.List", function(List, DocManager, Backbone, Mari
     },
     
     onClickEdit: function(){
-      DocManager.trigger('licencia:edit',this.model);
+      DocManager.trigger('solicitud:edit',this.model);
     }
   });
   

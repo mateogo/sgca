@@ -48,3 +48,28 @@ DocManager.confirm = function(txt,opts){
   modal.once('cancel',def.reject);
   return def.promise();
 };
+
+
+_.extend(Backbone.Validation.callbacks, {
+  valid: function (view, attr, selector) {
+      var $el = view.$('[name=' + attr + ']'), 
+          $group = $el.closest('.form-group');
+      
+      $group.removeClass('has-error');
+      $group.find('.help-block').html('').addClass('hidden');
+  },
+  invalid: function (view, attr, error, selector) {
+      var $el = view.$el.find('[name=' + attr + ']'), 
+          $group = $el.closest('.form-group');
+      
+      $group.addClass('has-error');
+      $group.find('.help-block').html(error).removeClass('hidden');
+  }
+});
+
+_.extend(Backbone.Validation.messages, {
+  required: 'Es necesario',
+  number: 'Deber ser un número'
+});
+
+_.extend(Backbone.Validation.validators, {});

@@ -1,7 +1,7 @@
 
 var root = '../';
 
-var Licencia = require(root + 'models/obraartelicencia.js').getModel();
+var Solicitud = require(root + 'models/obraartesolicitud.js').getModel();
 
 var ctrls = {
     find: function(req,res){
@@ -12,7 +12,7 @@ var ctrls = {
       
       var query = req.query;
       
-      Licencia.find(query,function(err,result){
+      Solicitud.find(query,function(err,result){
         if(err) return res.status(500).send(err);
         
         res.json(result);
@@ -22,7 +22,7 @@ var ctrls = {
     findById: function(req,res){
       var id = req.params.id;
       
-      Licencia.findById(id,function(err,result){
+      Solicitud.findById(id,function(err,result){
         if(err) return res.status(500).send(err);
         
         res.json(result);
@@ -39,7 +39,7 @@ var ctrls = {
         raw._id = req.params.id;
       }
       
-      var obj = new Licencia(raw);
+      var obj = new Solicitud(raw);
       obj.save(function(err,result){
         if(err) return res.status(500).send(err);
         
@@ -57,9 +57,9 @@ var ctrls = {
       
       var id = req.params.id;
       
-      Licencia.findById(id,function(err,object){
+      Solicitud.findById(id,function(err,object){
         if(err) return res.status(500).send(err);
-        Licencia.remove(function(err,r){
+        Solicitud.remove(function(err,r){
           if(err) return res.status(500).send(err);
           
           res.json(r);
@@ -71,13 +71,13 @@ var ctrls = {
 
 
 module.exports.configRoutes = function(app){
-  app.get('/obraartelicencia',ctrls.find);
-  app.get('/obraartelicencia/:id',ctrls.findById);
+  app.get('/obraartesolicitud',ctrls.find);
+  app.get('/obraartesolicitud/:id',ctrls.findById);
   
-  app.post('/obraartelicencia',ctrls.save);
-  app.put('/obraartelicencia/:id',ctrls.save);
+  app.post('/obraartesolicitud',ctrls.save);
+  app.put('/obraartesolicitud/:id',ctrls.save);
   
-  app.delete('/obraartelicencia/:id',ctrls.remove);
+  app.delete('/obraartesolicitud/:id',ctrls.remove);
 };
 
 //dummy para hacerlo compatible con config

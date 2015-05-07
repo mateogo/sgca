@@ -7,7 +7,7 @@ DocManager.module("SolicitudApp.List", function(List, DocManager, Backbone, Mari
   List.Controller = {
       list: function(){
        
-        var collection = new Entities.LicenciasCollection();
+        var collection = new Entities.SolicitudCollection();
         collection.fetch();
         
         var view = new List.SolicitudListView({collection:collection});

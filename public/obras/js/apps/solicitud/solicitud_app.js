@@ -2,9 +2,9 @@ DocManager.module("SolicitudApp", function(SolicitudApp, DocManager, Backbone, M
   
   SolicitudApp.Router = Marionette.AppRouter.extend({
 		appRoutes: {
-			'licencia/alta': 'newItem',
-			'licencia': 'list',
-			'licencia/:id/edit': 'edit'
+			'solicitud/alta': 'newItem',
+			'solicitud': 'list',
+			'solicitud/:id/edit': 'edit'
     }
 	});
 
@@ -23,18 +23,18 @@ DocManager.module("SolicitudApp", function(SolicitudApp, DocManager, Backbone, M
 	};
 
   
-  DocManager.on("licencia:new", function(){
-    DocManager.navigate("licencia/alta");
+  DocManager.on("solicitud:new", function(){
+    DocManager.navigate("solicitud/alta");
     API.newItem(); 
   });
   
-  DocManager.on("licencia:edit", function(licencia){
-    DocManager.navigate('licencia/'+licencia.id+'/edit');
-    API.edit(licencia); 
+  DocManager.on("solicitud:edit", function(solicitud){
+    DocManager.navigate('solicitud/'+solicitud.id+'/edit');
+    API.edit(solicitud); 
   });
   
-  DocManager.on("licencia:list", function(){
-    DocManager.navigate("licencia");
+  DocManager.on("solicitud:list", function(){
+    DocManager.navigate("solicitud");
     API.list(); 
   });
 
