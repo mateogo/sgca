@@ -269,7 +269,10 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       if(!this.model.isNew()){
         var hasParts = (this.collection.length > 0);
         if(hasParts){
-          this.$el.find('[name=partsenabled]').prop('checked',true);
+          var $checkbox = this.$el.find('[name=partsenabled]');
+          if(!$checkbox.prop('checked')){
+            $checkbox.prop('checked',true);
+          }
           this.$el.find('#mainStepContainer').show();
           this.$el.find('[name=partcant]').val(this.collection.length);
         }else{
@@ -279,7 +282,11 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       }else{
         this.$el.find('[name=partcant]').val(2);
       }
-      this.validateCountChildren();
+      var self = this;
+      setTimeout(function(){
+        self.validateCountChildren();  
+      },10)
+      
       
     },
     
@@ -305,7 +312,7 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       }else{
         for(var i=currentCount;i<count;i++){
           var obra = (this.removed.length > 0)? this.removed.shift() : new Entities.ObraPart();
-          this.collection.push(obra);
+          this.collection.add(obra);
         }
       }
     },
