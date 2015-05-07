@@ -434,7 +434,6 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       this.$el.find('#docsContainer').append(container);
       this.attachView = new AppCommon.AttachmentView({
             el:container,
-            model:this.model,
             collection: this.model.get('docs')
       });
       this.attachView.render();
