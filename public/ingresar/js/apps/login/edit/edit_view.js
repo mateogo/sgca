@@ -74,8 +74,9 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
   //*************************************************************
   Edit.SignUpForm = Marionette.ItemView.extend({
     whoami: 'SignUpForm: edit_view.js',    
+
     getTemplate: function(){
-      return utils.templates.SignUpForm;
+        return utils.templates.SignUpForm;
     },
 
     templateHelpers: function(){
@@ -107,7 +108,7 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
 
       this.form = new Backbone.Form({
         model: this.model,
-        template: utils.templates.SignUpFormFields
+        template: (this.model.isEmployee() ? utils.templates.SignUpFormEmployeeFields : utils.templates.SignUpFormFields)
       });
 
       this.form.on('username:blur', function(form, editorContent) {

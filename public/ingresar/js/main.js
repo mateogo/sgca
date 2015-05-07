@@ -1,6 +1,6 @@
 utils.loadTemplate([
 
-    'LoginDefaultLayout','LoginForm','SignUpForm','SignUpFormFields',
+    'LoginDefaultLayout','LoginForm','SignUpForm','SignUpFormFields','SignUpFormEmployeeFields',
     'MailAltaUsuarioMica',
     
     ], function() {

@@ -83,9 +83,14 @@ module.exports = function (config, app) {
 
     app.get('/logout', function(req, res){
       req.logout();
-      res.redirect('/');
+      res.redirect('/ingresar');
     });
-	
+
+    app.get('/logout/:route', function(req, res){
+      req.logout();
+      res.redirect(req.params.route);
+    });
+    
     
     app.get('/inicio', function(req,res,next){
         //console.log("/inicio:routes.js ");

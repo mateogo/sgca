@@ -1,7 +1,7 @@
 DocManager.module("HomeApp", function(HomeApp, DocManager, Backbone, Marionette, $, _){
 	HomeApp.Router = Marionette.AppRouter.extend({
 		appRoutes: {
-			"fondo": "showHome",
+			"bienvenido": "showHome",
     }
 	});
 
@@ -10,12 +10,11 @@ DocManager.module("HomeApp", function(HomeApp, DocManager, Backbone, Marionette,
 			console.log('API: showHome');
 	  	HomeApp.Show.Controller.showHome();
     },
-		
 	};
 
   DocManager.on("home:show", function(){
   	console.log('home:show BEGINS')
-    DocManager.navigate("fondo");
+    DocManager.navigate("bienvenido");
     API.showHome(); 
   });
 
