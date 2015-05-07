@@ -25,7 +25,7 @@ var transporter = nodemailer.createTransport({
        }
 });
 
-var subjecttpl = _.template("[MCN] <%= subject %>");
+var subjecttpl = _.template("<%= subject %>");
 var bodytpl = _.template(
             "<br>"+
             "<div><%= body %></div>"+

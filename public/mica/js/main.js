@@ -6,6 +6,8 @@ utils.loadTemplate([
         // Menu principal
         'HeaderView',
 
+        // MailSender
+        'MailTemplateDefault','MailFormSubmitNotification',
         // Formulario inscripción
         'inscripcion/MicaInscriptionFormLayout','inscripcion/MicaInscripcion01Form',
         'inscripcion/MicaInscripcion02Layout','inscripcion/MicaInscripcion02Form',

@@ -120,20 +120,71 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     wizardlayout.getRegion('stepthreeRegion').show(stepThree);
     wizardlayout.getRegion('stepfourRegion').show(stepFour);
 
+
   };
 
   var registerBasicViewEvents = function(session, wizardlayout){
     wizardlayout.on("submit:form", function(model){
-      console.log('********SUBMIT CLICKED BEGINS********[%s]', model.whoami)
+      console.log('********SUBMIT PROVISORIO BEGINS********[%s]', model.whoami)
 
       getSession().model.update(session.currentUser, session.representantes, function(error, model){
+
+        enviarmail(utils.templates.MailFormSubmitNotification, {
+          toName: getSession().currentUser.get('displayName'),
+          cnumber: model.get('cnumber'),
+          fecomp: model.get('fecomp'),
+          nodeId: model.id,
+          slug: model.get('solicitante').emotivation,
+
+        });
+
         DocManager.trigger('micarequest:edit', model)
 
       });
 
 
     });
+
+    wizardlayout.on("submit:form:definitivo", function(model){
+      console.log('********SUBMIT DEFINITIVO BEGINS********[%s]', model.whoami, model.get('solicitante').emotivation)
+
+      enviarmail(utils.templates.MailFormSubmitNotification, {
+        toName: getSession().currentUser.get('displayName'),
+        cnumber: model.get('cnumber'),
+        fecomp: model.get('fecomp'),
+        nodeId: model.id,
+        slug: model.get('solicitante').emotivation,
+
+      });
+
+
+    });
+
   };
+
+  var enviarmail = function(template, data){
+      var mailModel = new DocManager.Entities.SendMail({
+          from: 'intranet.mcn@gmail.com',
+          subject:'[MICA] Inscripción en Mica 2015',
+      });
+
+      mailModel.set('to',getSession().currentUser.get('username'));
+      
+      //todo:ver donde configurar el servidor de produccion
+      //mailModel.set( 'server','http://sisplan.cultura.gob.ar:3000');
+      mailModel.set( 'server','http://localhost:3000');
+
+      mailModel.set(data)
+      mailModel.setTemplate(template);      
+      mailModel.buildMailContent();
+      //console.log(sendMail.getData());
+
+      console.dir(mailModel.attributes);
+
+      mailModel.sendmail();
+  };
+    
+
 
   var registerStepTwoEvents = function(session, layout){
     session.views.stepTwo = layout;

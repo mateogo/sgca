@@ -315,6 +315,7 @@ atribuciones (array)
 
     validusername: function(username, cb) {
         var self = this;
+
         console.log('!!!UserValidation checking for:[%s]', username);
         self.loadusers(username, function(userCol){
             if(userCol){
@@ -390,23 +391,50 @@ atribuciones (array)
 
     defaults : {
         _id: null,
-        displayName:'MateoGO',
-        name:'MateoGOO',
-        username:'mm1@gmail.com',
-        mail:'mm1@gmail.com',
-        area:'DNA',
-        description: 'sisplan', //'cuéntenos brevemente sobre Usted',
+        displayName:'Mateogo',
+        name:'Mateogo',
+        username:'mgomezortega@gmail.com',
+        mail:'mgomezortega@gmail.com',
+        area:'DGTS',
+        description: 'DGTS', //'cuéntenos brevemente sobre Usted',
+        password:'',
+        passwordcopia:'',
+        fealta:'15/05/2015',
+        usernameconflict:'zNoTesteado',
+        roles: [],
+        home: "",
+        grupo:'adherente',
+        termsofuse: false,
+        target: '',
+
+        estado_alta:'pendaprobacion',
+        verificado: {
+            mail:true,
+            feaprobado: null,
+            adminuser: '',
+        },
+        conduso:[]
+    },
+/*
+    defaults : {
+        _id: null,
+        displayName:'',
+        name:'',
+        username:'',
+        mail:'',
+        area:'',
+        description: '', //'cuéntenos brevemente sobre Usted',
         password:'',
         passwordcopia:'',
         fealta:'',
         usernameconflict:'zNoTesteado',
-        roles: ['supervisor'],
-        home: "solicitudes:list",
-        grupo:'produccion',
+        roles: [],
+        home: "",
+        grupo:'adherente',
         termsofuse: false,
         target: '',
 
-        estado_alta:'activo',
+        estado_alta:'pendaprobacion',
         verificado: {
             mail:true,
             feaprobado: null,
@@ -414,6 +442,8 @@ atribuciones (array)
         },
         conduso:[]
     }
+
+*/
 });
 
 

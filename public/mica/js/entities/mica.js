@@ -85,12 +85,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         pjuridica: false, // true
         etipojuridico: 'pfisica', //  [pfisica, funcacion, asociacion, cooperativa, sa, srl]
 
-        edisplayName: 'LA UNO DISPLAY NAME',
-        ename: 'LA UNO S.A.',
-        emotivation: 'Motivación alguna',
-        edescription: 'Descripción algo',
+        edisplayName: '',
+        ename: '',
+        emotivation: '',
+        edescription: '',
         epais: 'AR',
-        eprov: 'CABA',  
+        eprov: '',  
         elocalidad: '',
         ecuit: '',
         edomicilio: '',
@@ -110,8 +110,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       // Responsable empresa o titular
       responsable:{
         rmail: '',
-        rname: 'Mateo Gomez',
-        rapellido: 'Ortega',
+        rname: '',
+        rapellido: '',
         rcargo: '',
 
         //
@@ -169,6 +169,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           vendedor: false
         },
 
+        vactividades: '',
+
+/*
         vactividades: {
           aescenicas: false,
           audivisual: false,
@@ -178,7 +181,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           videojuegos: false,
         },
 
-        sub_aescenicas: {
+*/        sub_aescenicas: {
           teatro: false,
           mimo: false,
           otro: false,
@@ -228,6 +231,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           comprador: false
         },
 
+        cactividades: '',
+
+/*
         cactividades: {
           aescenicas: false,
           audivisual: false,
@@ -237,37 +243,65 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           videojuegos: false,
         },
 
+*/        
         sub_aescenicas: {
-          teatro: false,
-          mimo: false,
-          otro: false,
+          diseniador: false,
+          direccion: false,
+          dramaturgia: false,
+          coreografia: false,
+          programadorfestivales: false,
+          programadorsalas: false,
+          camaras: false,
+          proveedores: false,
         },
         sub_audiovisual: {
-          cine: false,
-          publicidad: false,
-          otro: false,
+          pservicios: false,
+          pcontenidos: false,
+          servicios: false,
+          vjs: false,
+          profesional: false,
+          programador: false,
+          distribuidor: false,
+          exhibtelevision: false,
+          exhibcine: false,
+          exhibmultiplataforma: false,
+          camaras: false,
+          editores: false,
         },
         sub_editorial: {
-          ficcion: false,
-          ensayo: false,
-          cuento: false,
-          poesia: false,
-          otros: false,
+          editor: false,
+          libreria: false,
+          distribuidora: false,
+          ilustrador: false,
+          revistacultural: false,
+          elecronico: false,
         },
         sub_musica: {
-          tango: false,
-          folklore: false,
-          otros: false,
+          representante: false,
+          produccion: false,
+          festival: false,
+          salas: false,
+          sello: false,
+          servicios: false,
+          camaras: false,
         },
         sub_disenio: {
           grafico: false,
           indumentaria: false,
-          otros: false,
+          industrial: false,
+          joyeria: false,
+          multimedia: false,
         },
         sub_videojuegos: {
-          escritorio: false,
-          moviles: false,
-          otros: false,
+          programacion: false,
+          arte: false,
+          disenio: false,
+          guion: false,
+          produccion: false,
+          musica: false,
+          testeo: false,
+          comunicacion: false,
+          comunidades: false,
         },
         cexperienciaintl: 1,
         ccomentario: '',
