@@ -129,14 +129,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
       getSession().model.update(session.currentUser, session.representantes, function(error, model){
 
-        enviarmail(utils.templates.MailFormSubmitNotification, {
-          toName: getSession().currentUser.get('displayName'),
-          cnumber: model.get('cnumber'),
-          fecomp: model.get('fecomp'),
-          nodeId: model.id,
-          slug: model.get('solicitante').emotivation,
-
-        });
 
         DocManager.trigger('micarequest:edit', model)
 

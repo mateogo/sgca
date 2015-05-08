@@ -3,15 +3,12 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
   Edit.Controller = {};
   
   Edit.Controller.login = function(path, targetUser){
-  	console.log('EditController BEGIN [%s] : [%s]', path, targetUser);
 	  dao.gestionUser.getUser(DocManager, function (user){
-	  	console.log('user: [%s] [%s]', user.whoami, user.id)
 
 	    if(false){ //user.id
 	    	console.log('LOGIN: usuario detectado, redireccionando a [%s]',path)
 	
 	    }else{
-    		console.log('LOGIN FORM BEGINS')
 	      var layout = createLayout();
 	      loginForm(layout, path, targetUser)
 	    }
@@ -28,7 +25,6 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
   };
 
   loginForm = function(layout, path, targetUser, username){
-  	console.log('LOGIN FORM INIT [%s]', username)
 
   	var userFacet = new DocManager.Entities.UserFacet();
     if(username){
@@ -43,12 +39,10 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
     layout.getRegion('loginRegion').show(loginForm);
 
     loginForm.on('register:user:form', function(){
-    	console.log('REGISTER USER BUBBLED on LoginForm');
     	signUpForm(layout, path, targetUser);
     })
 
     loginForm.on('login:user', function(){
-    	console.log('REGISTER USER BUBBLED on LoginForm');
     })
 
   };
@@ -56,22 +50,18 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
   var signUpForm = function(layout, path, targetUser){
   	var userFacet = new DocManager.Entities.UserFacet();
 
-    userFacet.set('target', path || '');
-    userFacet.set('targetUser',targetUser || '');
+    userFacet.setTarget(path, targetUser);
  
   	var registerForm = new Edit.SignUpForm({model: userFacet});
     layout.getRegion('loginRegion').show(registerForm);
 
     registerForm.on('login:user:form', function(){
-    	console.log('LOGIN USER BUBBLED on LoginForm');
     	loginForm(layout, path, targetUser);
     });
 
     registerForm.on('create:new:user', function(model){
-      console.log('CREATE NEW USER BUBBLED on LoginForm [%s]', model.whoami);
 
       model.addNewUser(function(user){
-        console.log('and... we are back!....[%s] [%s]', user.id, user.get('username'));
         
         enviarmail(targetUser, user);
         
@@ -79,13 +69,20 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
 
           loginForm(layout, path, targetUser, user.get('username'));
 
-        });        
+        });
       });
 
     });
   };
+  var isEmployee = function(targetUser){
+    if(targetUser){
+      if(targetUser === 'sisplan') return true;
+    }
+
+    return false;
+  };
   
- var enviarmail = function(targetUser, user){
+  var enviarmail = function(targetUser, user){
       var data;
       var mailModel = new DocManager.Entities.SendMail({
           from: 'intranet.mcn@gmail.com',
@@ -99,7 +96,6 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
       //mailModel.set( 'server','http://localhost:3000');
       if(targetUser){
         if(targetUser === 'mica'){
-          console.log('generando mail para MICA')
 
           data = {
             username: user.get('username'),
@@ -116,8 +112,6 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
 
           mailModel.buildMailContent();
           //console.log(sendMail.getData());
-
-          console.dir(mailModel.attributes);
 
           mailModel.sendmail();
 

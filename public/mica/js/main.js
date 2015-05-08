@@ -8,6 +8,9 @@ utils.loadTemplate([
 
         // MailSender
         'MailTemplateDefault','MailFormSubmitNotification',
+        // terminos y condiciones
+        'inscripcion/MicaTerminosYCondiciones',
+
         // Formulario inscripción
         'inscripcion/MicaInscriptionFormLayout','inscripcion/MicaInscripcion01Form',
         'inscripcion/MicaInscripcion02Layout','inscripcion/MicaInscripcion02Form',

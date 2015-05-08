@@ -386,7 +386,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       evento:'mica',
       edicionevento:'2015',
       rubro:'general',
-      legal: 'pendiente',
       cnumber:'',
       documid: '',
       fealta: fealta.getTime(),

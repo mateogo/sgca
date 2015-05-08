@@ -30,7 +30,7 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 			
 			self.model.set({
 				fealta:fecomp,
-				target:'fondo'
+				target:'mica'
 			});
 			
 			self.model.validusername(this.model.get('username'),function(error){
@@ -158,7 +158,7 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 			$('#signupbox').toggleClass('hide show');
 			
 			var user = new UserFacet({
-				home: 'fondo:rondas',
+				home: 'mica:rondas',
 				estado_alta: 'activo',
 				grupo: 'adherente'
 			});

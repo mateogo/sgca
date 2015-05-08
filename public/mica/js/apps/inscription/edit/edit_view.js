@@ -111,6 +111,27 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       'click .js-openevent': 'openEventClicked',
       'click .js-provisorio': 'submitForm',
       'click .js-definitivo': 'submitFormDefinitivo',
+      'click  .js-termsofuse': 'termsOfUse',
+      'change #legal': 'change',
+    },
+    change: function(e){
+      console.log('change!!!!!')
+      if(this.$('#legal').prop('checked')){
+          this.model.set('legal','aceptado');
+        }else{
+          this.model.set('legal','pendiente');
+        }
+
+    },
+    termsOfUse: function(e){
+      var self = this;
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('TermosOfUse');
+      DocManager.confirm(utils.templates.MicaTerminosYCondiciones(),{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
+        console.log('ACEPTADO');
+          self.$('#legal').prop('checked', true);
+      });
     },
 
     submitForm: function(){

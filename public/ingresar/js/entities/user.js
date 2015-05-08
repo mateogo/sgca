@@ -32,7 +32,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           person = self[predicate],
           data;
       //console.log('userUpdateRelatedPredicate: [%s] [%s]:[%s]', predicate, person.whoami, person.get('displayName'));
-      console.dir(per_attrs)
 
       if(!person){
         person = new Entities.Person();
@@ -42,10 +41,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       person.set(per_attrs);
 
       person.update(function(person){
-        console.log('personUddateCB: [%s]', person.get('displayName'));
         data = buildPredicateData(person, self, predicate);
         self.update(predicate, data, function(user){
-          console.log('userUpdate CB: [%s]', user.get('username'));
           if(cb) cb(person);
         });
       });
@@ -227,15 +224,25 @@ atribuciones (array)
     initialize: function () {
 
     },
-
     
+    setTarget: function(path, target){
+      this.set({
+        target: path || '',
+        targetUser: target || ''
+      });
+    },
+
+    isEmployee: function(){
+      return isEmployee(this.get('targetUser'));
+    },
+
     addNewUser: function(cb){
         var self = this,
         pf = new DocManager.Entities.Person(),
         user = new Entities.User(),
         userattrs = {};
 
-        console.log('addNewUser [%s] [%s]', self.get('target'), self.get('targetUser'));
+        //console.log('addNewUser [%s] [%s]', self.get('target'), self.get('targetUser'));
 
         userattrs.displayName = self.get('displayName');
         userattrs.name = self.get('name');
@@ -257,13 +264,11 @@ atribuciones (array)
         }
         user.set(userattrs);
 
-        console.log('addNewUser');
 
         pf.factoryPerson(self.get('targetUser'), userattrs, function(person){
             if(person){
                 person.insertuser(user, function(user){
                     if(user){
-                        console.log('Usuario insertado')
                         if(cb) cb(user);
                     }
 
@@ -277,7 +282,6 @@ atribuciones (array)
 
     buildDefaultsFor: function(target, user){
         if(target === 'sisplan'){
-            console.log('buildDefaults for SISPLAN');
             user.home = 'sisplan:acciones:list';
 
             user.roles = ['supervisor', 'presugestor'];
@@ -286,7 +290,6 @@ atribuciones (array)
             user.modulos = ['sisplan'];
             user.estado_alta = 'activo';
         }else if(target === 'mica'){
-            console.log('buildDefaults for MICA');
             user.grupo = 'adherente';
             user.home = 'mica:rondas';
 
@@ -316,10 +319,9 @@ atribuciones (array)
     validusername: function(username, cb) {
         var self = this;
 
-        console.log('!!!UserValidation checking for:[%s]', username);
+        //console.log('!!!UserValidation checking for:[%s]', username);
         self.loadusers(username, function(userCol){
             if(userCol){
-                console.log('User exists [%s] [%s]',userCol.length, username);
                 if(userCol.length){
                     self.set('usernameconflict',self.get('username'));
                 }else {
@@ -384,22 +386,21 @@ atribuciones (array)
       }
       
       if( ! _.isEmpty(errors)){
-        console.dir(errors)
         return errors;
       }
     },
 
     defaults : {
         _id: null,
-        displayName:'Mateogo',
-        name:'Mateogo',
-        username:'mgomezortega@gmail.com',
-        mail:'mgomezortega@gmail.com',
-        area:'DGTS',
-        description: 'DGTS', //'cuéntenos brevemente sobre Usted',
+        displayName:'',
+        name:'',
+        username:'',
+        mail:'',
+        area:'',
+        description: '', //'cuéntenos brevemente sobre Usted',
         password:'',
         passwordcopia:'',
-        fealta:'15/05/2015',
+        fealta:'',
         usernameconflict:'zNoTesteado',
         roles: [],
         home: "",
@@ -452,6 +453,14 @@ atribuciones (array)
 
 
   // Utility Function
+  var isEmployee = function(targetUser){
+    if(targetUser){
+      if(targetUser === 'sisplan') return true;
+    }
+
+    return false;
+  };
+
   var buildPredicateData = function (ancestor, child, predicate) {
     var ancestordata = {
             id: ancestor.id,
@@ -545,9 +554,6 @@ atribuciones (array)
 
       var list = [],
           aperson;
-      
-      console.log('[%s]: loadPersons BEGINS',user.whoami);
-
 
       if(user.get(predicate)){
         list = _.map(user.get(predicate),function(item){
