@@ -160,7 +160,9 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
               list: utils.templates.PhotosLayoutView,
               itemRender: utils.templates.PhotoItem,
               itemEditor: utils.templates.PhotoItemEditorView
-            }
+            },
+            minImageWidth: 2100,
+            minImageHeight: 1500
             
       });
       this.attachView.render();
@@ -212,7 +214,9 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
         templates: {
           list: utils.templates.ImageBoxLayoutView,
           itemRender: utils.templates.ImageBoxItem
-        }  
+        },
+        minImageWidth: 2100,
+        minImageHeight: 1500  
       });
       this.photoView.render();
       this.$el.find('#labelIndex').html((this.childIndex+1));

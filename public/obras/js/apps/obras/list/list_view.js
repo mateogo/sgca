@@ -40,18 +40,39 @@ DocManager.module("ObrasApp.List", function(List, DocManager, Backbone, Marionet
     getTemplate: function(){
       return utils.templates.ObrasItemSelection
     },
-    
-    events: {
-      'click .js-edit': 'onClickEdit'
+    onRender: function(){
+      this.$el.css('display','inline-block').css('margin','5px');
     },
     
-    onClickEdit: function(){
+    
+    events: {
+      'click .js-select': 'onClick'
+    },
+    
+    onClick: function(e){
+      var $el = this.$el.find('.box-obra-selection');
+      if($el.hasClass('selected')){
+        $el.removeClass('selected');
+        this.model.selected = false;
+      }else{
+        $el.addClass('selected');
+        this.model.selected = true;
+      }
     }
   });
   
   List.ObrasListSelector = Marionette.CollectionView.extend({
     tagName: 'div',
-    childView: ObrasItemSelection
+    childView: ObrasItemSelection,
+    getSelected: function(){
+      var selected = [];
+      this.collection.each(function(item){
+        if(item.selected){
+          selected.push(item);
+        }
+      })
+      return selected;
+    }
   });
   
   
@@ -69,7 +90,7 @@ DocManager.module("ObrasApp.List", function(List, DocManager, Backbone, Marionet
     });
     
     modal.on('ok',function(){
-      callback([]);
+      callback(list.getSelected());
     });
     
     modal.open();

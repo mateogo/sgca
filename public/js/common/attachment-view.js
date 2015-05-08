@@ -1,4 +1,3 @@
-
 /**
  * Vista para adjuntar assets (archivos) a un modelo, como Actividad, evento, etc... 
  * 
@@ -193,6 +192,16 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
          if(!isNaN(tmp)) this.maxCountFiles = tmp;
        }
        
+       if(opts.minImageWidth){
+         var tmp = parseInt(opts.minImageWidth);
+         if(!isNaN(tmp)) this.minImageWidth = tmp;
+       }
+       
+       if(opts.minImageHeight){
+         var tmp = parseInt(opts.minImageHeight);
+         if(!isNaN(tmp)) this.minImageHeight = tmp;
+       }
+       
        this.templates = {
          list: utils.templates.AttachmentLayoutView,
          itemRender: utils.templates.AttachmentItem,
@@ -217,18 +226,7 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
        return this.collection;
      },
      
-     addFile: function(file){
-       if(!file) return;
-       var maxSize = 50 * 1024 * 1024;
-         
-       if(file.size > maxSize){
-         Message.warning('Tamaño máximo permitido ' +Math.round(maxSize/1024/1024) + ' MB');
-         return;
-       }
-       this.collection.push({file:file,parentModel:this.model});
-       
-     },
-     
+     /** valida cantidad maxima de adjuntos **/
      allowCount: function(){
        var allow = true;
        if(this.maxCountFiles){
@@ -238,13 +236,86 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
        return allow;
      },
      
+     allowDimension: function(file){
+       var self = this;
+       
+       var $def = $.Deferred();
+       
+       if(this.minImageWidth || this.minImageHeight){
+         var fObj = new Image();
+         fObj.src = URL.createObjectURL(file);
+         
+         fObj.onload = function(){
+           var width = this.width;
+           var height = this.height;
+           if(width < height){
+             height = this.width;
+             width = this.height;
+           }
+           
+           if(self.minImageWidth && self.minImageHeight 
+               && (self.minImageWidth > this.width || self.minImageHeight > this.height)){
+             $def.reject('La imagen debe tener al menos '+self.minImageWidth + ' x '+ self.minImageHeight + ' px');
+           }else if(self.minImageWidth && self.minImageWidth > this.width){
+             $def.reject('La imagen debe ser al menos de '+self.minImageWidth + ' px de ancho');
+             
+           }else if(self.minImageHeight && self.minImageHeight > this.height){
+             $def.reject('La imagen debe ser al menos de '+self.minImageWidth + ' px de alto');
+           }else{
+             $def.resolve();
+           }
+         }  
+       }else{
+         $def.resolve();
+       }
+       
+       return $def.promise();
+     },
+     
+     validationNewFile: function(file){
+       var error = '';
+       var $def = $.Deferred();
+       
+       if(!file){
+         $def.reject();
+         return $def.promise();
+       }
+       
+       if(!this.allowCount()){
+         error = 'Cantidad máxima de archivos ' + this.maxCountFiles;
+       }
+       
+       var maxSize = 50 * 1024 * 1024;         
+       if(file.size > maxSize){
+         error = 'Tamaño máximo permitido ' +Math.round(maxSize/1024/1024) + ' MB';
+       }
+       
+       if(error){
+         $def.reject(error);
+         return $def.promise();
+       }else{
+         this.allowDimension(file).then($def.resolve,$def.reject);  
+       }
+       
+       return $def.promise();
+     },
+     
+     addFile: function(file){
+       var self = this;
+       var p = this.validationNewFile(file);
+       p.done(function(){
+         self.collection.push({file:file,parentModel:self.model});
+       }).fail(function(msg){
+         Message.error(msg);
+       });
+     },
+     
      events: {
        'click .js-newattachment': 'onNewAttach',
        'change [type=file]': 'onSelectFile',
        'dragover .rootContainer': 'dragHandler',
        'dragleave #messageDrop': 'dragLeaveHandler',
-       'drop .rootContainer': 'dropHandler',
-       
+       'drop .rootContainer': 'dropHandler'
      },
      
      childEvents: {
@@ -259,8 +330,6 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
      },
      
      onSelectFile: function(){
-       if(!this.allowCount()) return;
-       
        var file =  this.$el.find('[type=file]').prop("files")[0];
        this.addFile(file);
      },
@@ -305,13 +374,5 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
        self.triggerMethod('change'); 
       },10)
      }
-     
-     
-     
-     
   });
-  
- 
-  
-  
 });
