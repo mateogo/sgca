@@ -69,7 +69,7 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
 
           loginForm(layout, path, targetUser, user.get('username'));
 
-        });        
+        });
       });
 
     });

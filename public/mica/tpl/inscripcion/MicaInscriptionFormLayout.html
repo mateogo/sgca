@@ -54,9 +54,9 @@
                   <div class="form-group required">
                     <div class="row">
                       <div class="col-sm-12">
-                        <label for="legal">
-                          <input type="checkbox" id="legal" name="legal" value=<%= legal %> > 
-                          <span class="checkbox-label control-label">He leído y acepto los <a href="http://www.cultura.gob.ar" target="_blank">terminos y condiciones</a></span>
+                        <label id='legal1' for="legal">
+                          <input type="checkbox" id="legal" name="legal"  <%= legal === 'aceptado' ? 'checked="checked"' : '' %>   value='aceptado' > 
+                          <span class="checkbox-label control-label">He leído y acepto los <a href="http://www.cultura.gob.ar" class='js-termsofuse' target="_blank">terminos y condiciones</a></span>
                         </label>
                          <div id="print-legal">Al confirmar esta solicitud, le será enviado un correo electrónico para toda referencia futura.</div>
                         <hr class="spacer" />
