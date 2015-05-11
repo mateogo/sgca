@@ -2,15 +2,16 @@
 var root = '../';
 
 var Solicitud = require(root + 'models/obraartesolicitud.js').getModel();
+var passport = require('passport');
+
 
 var ctrls = {
     find: function(req,res){
-      //TODO: seguridad, 
-      // si no hay login no retornar nada
-      // si es usuario comun, solo retornar los suyos
-      // si es usuario revisor o aprobador o aduana retornar, todos
-      
       var query = req.query;
+      
+      //si es usuario comun, solo retornar los suyos
+      query.owner_id = req.user._id.toString();
+      //TODO: si es usuario revisor o aprobador o aduana retornar, todos
       
       Solicitud.find(query,function(err,result){
         if(err) return res.status(500).send(err);
@@ -30,8 +31,7 @@ var ctrls = {
     },
     
     save: function(req,res){
-      //TODO: seguridad,
-      //solo se puede guardar los propios
+      var user = req.user;
       
       var raw = req.body;
       
@@ -39,17 +39,34 @@ var ctrls = {
         raw._id = req.params.id;
       }
       
-      var obj = new Solicitud(raw);
-      obj.save(function(err,result){
-        if(err) return res.status(500).send(err);
+      Solicitud.findById(raw._id,function(err,result){
+        if(result && result.get('owner_id')){
+          var owner_id = result.get('owner_id');
+          if(owner_id.toString() != user._id.toString()){
+            res.send(500,'Solo el creador puede modificar la solicitud');
+            return;
+          }
+        }
         
-        res.json(result);
+        var obj = new Solicitud(raw);
+        
+        var user_id = user._id.toString();
+        if(obj.isNew()){
+          obj.set('owner_id',user_id);
+        }else if(!obj.get('owner_id')){
+          obj.set('owner_id',user_id);
+        }
+        
+        obj.save(function(err,result){
+          if(err) return res.status(500).send(err);
+          
+          res.json(result);
+        });
       });
     },
     
     remove: function(req,res){
-      //TODO: seguridad,
-      //solo se puede borrar los propios
+      var user = req.user;
       
       if(!req.params.id){
         return res.status(500).send('invalid params');
@@ -59,6 +76,12 @@ var ctrls = {
       
       Solicitud.findById(id,function(err,object){
         if(err) return res.status(500).send(err);
+        
+        if(object && object.get('owner_id') != user._id){
+          res.status(500).send('Solo el creador puede borrar la solicitud');
+          return;
+        }
+        
         Solicitud.remove(function(err,r){
           if(err) return res.status(500).send(err);
           
@@ -69,15 +92,22 @@ var ctrls = {
     
 };
 
+var ensureAuthenticated = function (req, res, next) {
+  if (req.isAuthenticated()) { 
+      return next(); 
+  }
+  res.send(401);
+};
+
 
 module.exports.configRoutes = function(app){
-  app.get('/obraartesolicitud',ctrls.find);
-  app.get('/obraartesolicitud/:id',ctrls.findById);
+  app.get('/obraartesolicitud',ensureAuthenticated,ctrls.find);
+  app.get('/obraartesolicitud/:id',ensureAuthenticated,ctrls.findById);
   
-  app.post('/obraartesolicitud',ctrls.save);
-  app.put('/obraartesolicitud/:id',ctrls.save);
+  app.post('/obraartesolicitud',ensureAuthenticated,ctrls.save);
+  app.put('/obraartesolicitud/:id',ensureAuthenticated,ctrls.save);
   
-  app.delete('/obraartesolicitud/:id',ctrls.remove);
+  app.delete('/obraartesolicitud/:id',ensureAuthenticated,ctrls.remove);
 };
 
 //dummy para hacerlo compatible con config

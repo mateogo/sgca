@@ -117,6 +117,24 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
 
         }else if(targetUser === 'sisplan'){
 
+        }else if(targetUser === 'obras'){
+          
+          data = {
+              username: user.get('username'),
+              toName: user.get('displayName'),
+              cnumber: '',
+              fecomp: '',
+              nodeId: '',
+              slug: 'Alta de Usuario para Obras',
+
+            };
+
+            mailModel.set(data)
+            mailModel.setTemplate(utils.templates.MailAltaUsuarioObras);        
+
+            mailModel.buildMailContent(); 
+
+            mailModel.sendmail();
         }
       }else{
 

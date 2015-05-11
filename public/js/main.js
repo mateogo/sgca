@@ -82,7 +82,7 @@ var AppRouter = Backbone.Router.extend({
     loginhome: function(){
         var self = this;
         console.log('******* LoginHome');
-        window.location = '/index-login.html';
+        window.location = '/index-login.html';  
     },
 
 

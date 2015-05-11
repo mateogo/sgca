@@ -28,7 +28,6 @@ var Assets = BaseModel.extend({
   defaultSort: {cnumber:1},
   findByIds: function(ids,cb){
     if(!ids || ids.length < 1) return cb('',[]);
-    console.log('jojo');
    
     var idsArray = [];
     for (var i = 0; i < ids.length; i++) {

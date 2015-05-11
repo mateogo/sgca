@@ -25,11 +25,29 @@ DocManager.on("start", function(){
   console.log('DocManager History start: start');
   if(Backbone.history){
     Backbone.history.start();
+    var self = this;
+    
+    dao.gestionUser.getUser(DocManager, function (user){
+      console.log('llego el usuario logueado',user);
+      if(!user.id){
+        window.location =  '/ingresar/#obras';
+        return;
+      }
+      
+      
+      if(self.getCurrentRoute() === ""){
+        DocManager.trigger("obras:home");
+      }  
+    });
 
-    if(this.getCurrentRoute() === ""){
-			DocManager.trigger("obras:home");
-    }
+    
   }
+});
+
+$(document).ajaxError(function( event, jqxhr, settings, thrownError ) {
+  if(jqxhr.status === 401){
+    window.location =  '/ingresar/#obras';
+  } 
 });
 
 /**

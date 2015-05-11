@@ -280,11 +280,11 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
           this.$el.find('#mainStepContainer').show();
           this.$el.find('[name=partcant]').val(this.collection.length);
         }else{
-          this.$el.find('[name=partcant]').val(2);
+          this.$el.find('[name=partcant]').val(0);
         }
           
       }else{
-        this.$el.find('[name=partcant]').val(2);
+        this.$el.find('[name=partcant]').val(0);
       }
       var self = this;
       setTimeout(function(){
@@ -342,6 +342,9 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
     partsEnabledChange: function(e){
       var enabled = this.$el.find('[name=partsenabled]').prop('checked');
       if(enabled){
+        if(this.$el.find('[name=partcant]').val() === '0'){
+          this.$el.find('[name=partcant]').val(2);
+        }
         this.$el.find('#mainStepContainer').show();
       }else{
         this.$el.find('#mainStepContainer').hide();

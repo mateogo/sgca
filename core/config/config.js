@@ -77,6 +77,8 @@ var routesBootstrap = function (app, express) {
 
 				user.comparePassword(userdao.password, password, function(err, isMatch) {
           if (isMatch) {
+            var pp = app;
+            var xx = express;
             console.log('match!!!');
             return done(null, userdao);
           } else {

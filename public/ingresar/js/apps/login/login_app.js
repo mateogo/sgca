@@ -5,6 +5,7 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 			'mica': 'loginMica',
 			'sisplan': 'loginSisplan',
 			'usuario(/*path)': 'loginUser',
+			'obras':'loginObras'
 		}
 	});
 	
@@ -25,6 +26,10 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 			console.log('API: Login SISPLAN');
 			this.loginUser('sisplan', 'sisplan')
 		},
+		
+		loginObras: function(){
+		  this.loginUser('obras', 'obras');
+		}
 
 	};
 

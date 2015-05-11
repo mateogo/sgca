@@ -315,6 +315,12 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     removeExportador: function(){
       if(this.collection.length > 1){
         this.exporterRemoved = this.collection.pop();
+        if(this.child){
+          this.child.remove();
+          this.child = null;
+          this.currentIndex = -1;
+          this.$el.find('#msgAlert').hide();
+        }
         this.validateMenu();
         this.setTab(0);
       }
@@ -422,6 +428,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       var self = this;
       DocManager.request('obra:selector',function(obras){
         self.collection.add(obras);
+        self.validateTotal();
         Message.clear();
       })
     },
