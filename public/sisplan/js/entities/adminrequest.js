@@ -7,8 +7,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     idAttribute: "_id",
 
     schema: {
-        slug:         {type: 'Text',      title: 'Asunto',                editorAttrs:{placeholder:'identificación del trámite'}},
-        description:  {type: 'TextArea',  title: 'Descripción ejecutiva del pedido'},
+        slug:         {type: 'Text',      title: 'ASunto',                editorAttrs:{placeholder:'identificación del trámite'}},
+        description:  {type: 'TextArea',  title: 'Descripción ejddecutiva del pedido'},
         trequest:     {type: 'Select',    title: 'Tipo de requerimiento', editorAttrs:{placeholder:'Tipo de requerimiento'},options: utils.tipoBudgetMovimList },
         freq:         {type: 'Number',    title: 'Frecuencia',            editorAttrs:{placeholder:'en unidades'}},
         umefreq:      {type: 'Select',    title: 'Unidad de frecuencia',  editorAttrs:{placeholder:'unidad de frecuencia'},options: utils.umeFreqList },
@@ -1269,7 +1269,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
     schema: {
-        slug:         {type: 'Text',      title: 'Asunto',                editorAttrs:{placeholder:'identificación del trámite'}},
+        slug:         {type: 'Text',      title: 'Asssssunto',                editorAttrs:{placeholder:'identificación del trámite'}},
         description:  {type: 'TextArea',  title: 'Descripción ejecutiva del pedido'},
         trequest:     {type: 'Select',    title: 'Tipo de requerimiento', editorAttrs:{placeholder:'Tipo de requerimiento'},options: utils.tipoBudgetMovimList },
         cantidad:     {type: 'Number',    title: 'Cantidad',              editorAttrs:{placeholder:'en unidades'}},
