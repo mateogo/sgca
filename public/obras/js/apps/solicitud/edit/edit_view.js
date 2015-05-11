@@ -106,7 +106,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     },
     
     onCancel: function(){
-      this.trigger('licnecia:editCanceled',this.model);
+      this.trigger('solicitud:editCanceled',this.model);
     }
   });
   
@@ -184,7 +184,9 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         templates: {
           list: utils.templates.ImageBoxLayoutView,
           itemRender: utils.templates.ImageBoxItem
-        }
+        },
+        minImageWidth: 900,
+        minImageHeight: 600  
       });
       this.photo1View.render();
       
@@ -194,7 +196,9 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         templates: {
           list: utils.templates.ImageBoxLayoutView,
           itemRender: utils.templates.ImageBoxItem
-        }  
+        },
+        minImageWidth: 900,
+        minImageHeight: 600  
       });
       this.photo2View.render();
     },
@@ -382,6 +386,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       this.autoComplete.on('obra:selected',function(obra){
         self.collection.push(obra);
         self.validateTotal();
+        Message.clear();
       });
       this.validateTotal();
     },
@@ -404,7 +409,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     validate: function(){
       var ok = this.collection.length > 0;
       if(!ok){
-        Message.error('Debe seleccionar al menos una obra');
+        Message.error('Debe seleccionar al menos una obra',this.$el.find('.alert'));
       }
       return ok;
     },
@@ -414,9 +419,10 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     },
     
     openSelector: function(){
+      var self = this;
       DocManager.request('obra:selector',function(obras){
-        Message.success('selecciono obras');
-        console.log('obras seleccionaas',obras);
+        self.collection.add(obras);
+        Message.clear();
       })
     },
     
@@ -425,10 +431,8 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     },
     
     onClickSelector: function(e){
-      Message.info('Listado disponible proximamente.<br/>Utilice el buscador para agregar');
-      //this.openSelector();
+      this.openSelector();
     }
-    
   });
   
   var DocsStep = Marionette.ItemView.extend({

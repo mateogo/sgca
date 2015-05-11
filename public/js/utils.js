@@ -59,14 +59,15 @@ window.utils = {
     },
 
     showAlert: function(title, text, klass) {
-        $('.alert').removeClass("alert-error alert-warning alert-success alert-info");
-        $('.alert').addClass(klass);
-        $('.alert').html('<strong>' + title + '</strong> ' + text);
-        $('.alert').show();
+        var $alert = $('.alert').first();
+        $alert.first().removeClass("alert-error alert-warning alert-success alert-info");
+        $alert.first().addClass(klass);
+        $alert.html('<strong>' + title + '</strong> ' + text);
+        $alert.show();
     },
 
     hideAlert: function() {
-        $('.alert').hide();
+        $('.alert').first().hide();
     },
     
     displayDate: function (d) {

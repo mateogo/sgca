@@ -43,7 +43,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
             view.unbind('solicitud:editCanceled');
           });
           
-          view.on('licnecia:editCanceled',function(model){
+          view.on('solicitud:editCanceled',function(model){
             DocManager.confirm('¿Está seguro que desea cancelar la edición?').done(function(){
               DocManager.trigger('solicitud:list');
               view.unbind('solicitud:saved');

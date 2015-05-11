@@ -2,6 +2,7 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
     
   //Doc: http://bootstrap-growl.remabledesigns.com/  
     
+  
   function notify(str,type,icon){
       $.notify({
           message: str,
@@ -12,11 +13,11 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
               from: 'top',
               align: 'center'
           },
-          delay: 3000,
+          delay: 5000,
           offset: 10,
           z_index: 1041,
-          template: '<div data-notify="container" class="col-xs-10 col-sm-2 alert alert-sgc alert-{0} text-center" role="alert"> '+
-                    '   <span data-notify="icon" class="pull-left"></span>'+
+          template: '<div data-notify="container" class="col-xs-10 col-sm-4 alert alert-sgc alert-{0} text-center" role="alert"> '+
+                    '   <span data-notify="icon" class=""></span>'+
                     '   <span data-notify="message">{2}</span>'+
                     '</div>'      
       });
@@ -36,6 +37,9 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
       },
       error: function(str){
           notify(str,'danger','glyphicon glyphicon-warning-sign');
+      },
+      clear: function(){
+        $.notifyClose();
       }
     }
     
@@ -53,30 +57,50 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
           this.notify(str,'danger','glyphicon glyphicon-warning-sign');
       },
       notify: function(str,type,icon){
-        utils.showAlert('','<i class="'+icon+'"></i> ' + str,'alert-'+type);
+        var $alert = (InlineImpl.el) ? $(InlineImpl.el) : $('.alert').first();
+        $alert.first().removeClass("alert-error alert-warning alert-success alert-info");
+        $alert.first().addClass('alert-'+type);
+        $alert.html('<i class="'+icon+'"></i> ' + str);
+        $alert.show();
         this.autoHide();
       },
+      hide: function(){
+        var $alert = (InlineImpl.el) ? $(InlineImpl.el) : $('.alert').first();
+        $alert.slideUp();
+      },
       autoHide: function(){
+        var self = this;
         setTimeout(function(){
-          $('.alert').slideUp();
-        },3000);
+          self.hide();
+        },5000);
+      },
+      clear: function(){
+        this.hide();
       }
     }
     
   Message = {
-      success: function(str){
-        this.getHandler().success(str);
+      success: function(str,cont){
+        this.getHandler(cont).success(str);
       },
-      info: function(str){
-        this.getHandler().info(str);
+      info: function(str,cont){
+        this.getHandler(cont).info(str);
       },
-      warning: function(str){
-        this.getHandler().warning(str);
+      warning: function(str,cont){
+        this.getHandler(cont).warning(str);
       },
-      error: function(str){
-        this.getHandler().error(str);
+      error: function(str,cont){
+        this.getHandler(cont).error(str);
       },
-      getHandler: function(){
+      clear: function(){
+        InlineImpl.clear();
+        NotifyImpl.clear();
+      },
+      getHandler: function(cont){
+        if(cont){
+          InlineImpl.el = cont;
+          return InlineImpl;
+        }
         return NotifyImpl;
       }
   }; 
