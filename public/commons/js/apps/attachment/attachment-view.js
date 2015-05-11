@@ -19,7 +19,7 @@
  * 
  * requierimientos:
  *  - boostrap.js
- *  - /js/models/models.js usa Asset y AssetCollection
+ *  - /js/models/models.js usa Asset y DocManager.Entities.AssetCollection
  * 
  * 
  */
@@ -42,7 +42,6 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
       
       this.editMode = false;
     },
-
     getTemplate: function(){
       return (this.editMode) 
                 ? this.templates.itemEditor 
@@ -84,7 +83,7 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
       
       var progressbar = this.$el.find('.progress-bar');
       var self = this;
-      dao.uploadFile(file,progressbar,function(srvresponse, asset){
+      uploadFile(file, progressbar, function(srvresponse, asset){
         var filelink = '<a href="'+srvresponse.urlpath+'" >'+srvresponse.name+'</a>';
         
         $(progressbar).css({'width':'100%;'}).hide();
@@ -175,17 +174,17 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
          this.collection = opts.model.assets;
        }else if(opts.collection){
          this.collection = opts.collection;
-         if(!(this.collection instanceof AssetCollection)){
-           this.collection = new AssetCollection(this.collection);
+         if(!(this.collection instanceof DocManager.Entities.AssetCollection)){
+           this.collection = new DocManager.Entities.AssetCollection(this.collection);
          }
        }else{
-         this.collection = new AssetCollection();  
+         this.collection = new DocManager.Entities.AssetCollection();  
        } 
        
-       if(opts.model instanceof Asset){
+       if(opts.model instanceof DocManager.Entities.Asset){
          this.collection.push(opts.model);
        }else if(opts.model && opts.model.urlpath){
-         this.model = new Asset(opts.model);
+         this.model = new DocManager.Entities.Asset(opts.model);
          this.collection.push(this.model);
        }
        
@@ -219,6 +218,8 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
      },
      
      addFile: function(file){
+      //console.log('addFile parentModel:[%s]', this.model.whoami);
+      //console.dir(file);
        if(!file) return;
        var maxSize = 50 * 1024 * 1024;
          
@@ -304,11 +305,104 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
       var self = this;
       setTimeout(function(){
        self.triggerMethod('change'); 
-      },10)
+      },100)
      }
      
   });
   
 
+  Common.AttachmentImageBox = Common.AttachmentView.extend({
+    maxCountFiles: 1,
+    
+    initialize: function(opts){
+      var self = this;
+      this.listenTo(this,'change',function(){
+        self.validateSize();
+        self.validateButtonAdd();
+      });
+      
+      if(opts.width){
+        this.width = opts.width;
+      }
+      
+      if(opts.height){
+        this.height = opts.height;
+      }
+      
+      Common.AttachmentView.prototype.initialize.apply(this,[opts]);
+    },
+
+    onRender: function(){
+      this.validateSize();
+      this.validateButtonAdd();
+    },
+
+    validateSize: function(){
+      var $listBox = this.$el.find('#list-region');
+      var $img = this.$el.find('.thumbnail');
+      if(this.width){
+        $listBox.css('width',this.width).css('min-width',this.width);
+        $img.css('width',this.width)
+        $img.find('img').css('width',this.width);
+      }
+      
+      if(this.height){
+        $listBox.css('height',this.height);
+        $img.css('height',this.height);
+      }
+    },
+
+    validateButtonAdd: function(){
+      var listContainer = this.$el.find('#list-region');
+      var has = this.collection.length > 0;
+      if(has){
+        this.$el.find('.js-newattachment').hide();
+        listContainer.css('display','inline-block');
+      }else{
+        this.$el.find('.js-newattachment').show();
+        listContainer.css('display','table-cell');
+      }
+    }
+
+  }); 
+
+
+  var uploadFile = function(uploadingfile, progressbar, cb){
+        var formData = new FormData();
+        var folder = 'files';
+        //console.log(' uploadFiles BEGINS folder:[%s]', folder);
+        
+        if(!uploadingfile) return false;
+
+        formData.append('loadfiles', uploadingfile);
+        formData.append('folder',folder);
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('POST', '/files');
+
+        xhr.onload = function() {
+            var srvresponse = JSON.parse(xhr.responseText);
+            var asset = new DocManager.Entities.Asset();
+            asset.saveAssetData(srvresponse, function(asset){
+                //console.log('asset CREATED!: [%s]',srvresponse.name);
+                cb(srvresponse, asset);
+            });
+        };
+
+        xhr.upload.onprogress = function(event) {
+            if (event.lengthComputable) {
+                var complete = (event.loaded / event.total * 100 | 0);
+                $(progressbar).css({'width':complete+'%'});
+            }
+        };
+
+        xhr.send(formData);    
+    };
+
+ 
+
+
+  
   
 });

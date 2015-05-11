@@ -11,6 +11,10 @@ utils.loadTemplate([
         // terminos y condiciones
         'inscripcion/MicaTerminosYCondiciones',
 
+        // Avatar
+        'attachmentview/PhotosLayoutView','attachmentview/PhotoItem','attachmentview/PhotoItemEditorView',
+        'attachmentview/ImageBoxLayoutView','attachmentview/ImageBoxItem',
+
         // Formulario inscripción
         'inscripcion/MicaInscriptionFormLayout','inscripcion/MicaInscripcion01Form',
         'inscripcion/MicaInscripcion02Layout','inscripcion/MicaInscripcion02Form',

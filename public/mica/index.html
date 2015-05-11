@@ -26,7 +26,7 @@
 
 	<link href="/mica2015/css/jquery-ui.min.css" rel="stylesheet" >
 	<link href="/mica2015/css/bootstrap-tagsinput.css" rel="stylesheet">
-	<link href="/mica2015/css/croppic.css" rel="stylesheet">
+	<link href="lib/croppic/croppic.css" rel="stylesheet">
 
 	<link href="css/fuelux.min.css" rel="stylesheet">
   <link href="/sisplan/lib/backgrid/backgrid.min.css" rel="stylesheet" >
@@ -35,8 +35,17 @@
 	<link rel="stylesheet" href="css/theme-fondo.css">
 	<link rel="stylesheet" href="css/datepicker3.css">
 
+	<style type="text/css">
 
-
+		#messageDrop{
+		    border: 4px dotted #CCC;
+		    background-color:rgba(240,240,240,0.5);
+		    position:absolute;top:0;bottom:0;left:0;right:0;
+		    text-align:center;
+		    color: #555;
+		    display:none;
+		}
+	</style>
 </head>
 
 <body>
@@ -44,6 +53,7 @@
 	<div id="dialog-region"></div>
 	<!-- Off Canvas
 	================================================== -->
+
 	<div id="main-region"></div>
 
 <footer id="footer-region">
@@ -115,6 +125,7 @@
 <script src="js/entities/mica.js"></script>
 
 <!--   splash entities  -->
+<script src="/commons/js/entities/assets.js"></script>
 <script src="js/entities/features.js"></script>
 <script src="js/entities/home.js"></script>
 
@@ -127,6 +138,9 @@
 <script src="js/apps/home/home_app.js"></script>
 <script src="js/apps/home/show/show_view.js"></script>
 <script src="js/apps/home/show/show_controller.js"></script>
+
+<!--upload-->
+<script src="/commons/js/apps/attachment/attachment-view.js"></script>
 
 <!--inscrpcion-->
 <script src="js/apps/inscription/common/views.js"></script>

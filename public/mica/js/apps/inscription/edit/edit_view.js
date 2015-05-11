@@ -1,4 +1,6 @@
 DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
+
+  var AppCommon = DocManager.module('App.Common');
   
   Edit.Layout = Marionette.LayoutView.extend({
 
@@ -200,12 +202,30 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
       // ayuda popover
       self.$('[data-toggle="popover"]').popover()
+      self.toggleStateInput();
 
 //////////////
       helpPopUp(self);
 ///////////
 
+      
+/*      var croppicOptions = {
+        uploadUrl:'/img',
+        cropUrl:'/cropImg',
+        imgEyecandy:true,
+        loaderHtml:'<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> '
+      };
+      console.log('YES, [%s]',self.$('#cropContainerEyecandy'))
+      var objn = self.$('#cropContainerEyecandy');
+      var cropContainerEyecandy = new Croppic('cropContainerEyecandy',objn , croppicOptions);
+*/
+      var $div = self.$el.find('.js-avatar').append($('<div></div>'));
 
+      self.avatarEditor = new Edit.AvatarEditor({
+        model: self.model,
+        el: $div,
+      })
+      self.avatarEditor.render();
 
 
       $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
@@ -236,7 +256,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
 
     events: {
-
+      'change #epais':'stateinput',
     },
 
     stateinput:function(e){ 
@@ -244,19 +264,16 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       e.stopPropagation();
 
       this.change(e);
-      //Atrapa el pais elegido
-      console.log('Stateinput CHANGE[%s]', eprov)
-      var country = this.model.get('epais');
-      var province = this.model.get('eprov');
-      
-      //Si no es Argentina convierte el <select> en <input>
-      if (country !='AR'){
+      this.toggleStateInput(e);
+    },
+
+    toggleStateInput: function(e){
+      if (this.model.get('epais') !='AR'){
 //        $('#eprov').replaceWith('<input class="form-control" type="text" name="eprov" id="eprov">');
           console.log('no es arg stateinput');
           this.$('.js-provext').show();
           this.$('.js-provarg').hide();
-//        vacia el contenido de la provincia del exterior para no traer el valor de la prov argentina grabada en el model
-          this.$('.js-provext').val(' ')
+          if(e) this.$('.js-provext').val('')
       }
       else{
         //Eligio otro pais y vuelve a elegir Argentina se arman las opciones de provincias otra vez
@@ -447,9 +464,11 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       self.$('.radio-custom').radio();
       self.$('.checkbox-custom').checkbox();
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
+      initTagsInput(self, 'vdescriptores');
+
 
       //self.$('.togglejuridica').addClass('hidden');
-      _.each(['aescenicas', 'audivisual', 'disenio', 'editorial', 'musica', 'videojuegos'], function(item){
+      _.each(['aescenicas', 'audiovisual', 'disenio', 'editorial', 'musica', 'videojuegos'], function(item){
           if(item === self.model.get('vactividades')){
 
           }else{
@@ -516,6 +535,18 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
 
   });
+  var initTagsInput = function(view, elem){
+    view.$('#'+elem).tagsinput();
+    var items = view.model.get(elem);
+    if(items){
+      _.each(items, function(item){
+
+          view.$('#'+elem).tagsinput('add',item);
+
+      });
+    }
+
+  }
 
   //*************************************************************
   //           FORM STEP-CUATRO: COMPRADOR
@@ -593,7 +624,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
       //self.$('.togglejuridica').addClass('hidden');
 
-      _.each(['aescenicas', 'audivisual', 'disenio', 'editorial', 'musica', 'videojuegos'], function(item){
+      _.each(['aescenicas', 'audiovisual', 'disenio', 'editorial', 'musica', 'videojuegos'], function(item){
           if(item === self.model.get('cactividades')){
 
           }else{
@@ -679,7 +710,80 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
   });
 
+  //*************************************************************
+  //       AJUNTO IMAGEN DE LA EMPRESA EN STEP-ONE
+  //*************************************************************
+  Edit.AvatarEditor = Marionette.ItemView.extend({
+    tagName: 'div',
+    template: false,
+    initialize: function(opts){
+      console.log('AVATAR Editor RENDER model:[%s]',this.model.whoami);
 
+    },
+    onRender: function(){
+
+/*
+      this.attachView = new AppCommon.AttachmentView({
+            el:this.$el,
+            model:this.model,
+            collection: this.model.get('photos'),
+            templates: {
+              list: utils.templates.PhotosLayoutView,
+              itemRender: utils.templates.PhotoItem,
+              itemEditor: utils.templates.PhotoItemEditorView
+            }
+            
+      });
+*/      
+      
+      this.attachView = new AppCommon.AttachmentImageBox({
+            el:this.$el,
+            model: this.model.get('eavatar'),
+            templates: {
+              list: utils.templates.ImageBoxLayoutView,
+              itemRender: utils.templates.ImageBoxItem,
+            }
+            
+      });
+
+      this.attachView.render();
+      
+      var self = this;
+      this.listenTo(this.attachView,'change',function(){
+        self.$el.find('#empty-region').removeClass('alert alert-danger');
+        self.commit();
+      });
+    },
+    onDestroy: function(){
+      if(this.attachView){
+        this.attachView.destroy();
+        this.attachView = null;
+      }
+    },
+    validate: function(){
+      var files = this.attachView.getFiles();
+      var ok = true;
+      
+      if(files.length < 2){
+        ok = false;
+        this.$el.find('#empty-region').addClass('alert alert-danger');
+      }else{
+        this.$el.find('#empty-region').removeClass('alert alert-danger');
+      }
+      
+      return ok;
+    },
+    commit: function(){
+      var files = this.attachView.getFiles();
+      if(files){
+        if(files.length){
+          this.model.set('eavatar',files.at(0).toJSON());
+          console.log('Commit: files [%s]', files.toJSON());
+        }
+      }
+    },
+
+  });
 
 
 //=======================

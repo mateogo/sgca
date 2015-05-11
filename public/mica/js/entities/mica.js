@@ -90,7 +90,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         emotivation: '',
         edescription: '',
         epais: 'AR',
-        eprov: '',  
+        eprov: '',
         elocalidad: '',
         ecuit: '',
         edomicilio: '',
@@ -100,6 +100,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         efundacion: '',
         enumempleados: '',
         eventas: '',
+        eavatar: '',
 
 
         // solo para personas juridicas
@@ -174,7 +175,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 /*
         vactividades: {
           aescenicas: false,
-          audivisual: false,
+          audiovisual: false,
           disenio: false,
           editorial: false,
           musica: false,
@@ -214,6 +215,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           otros: false,
         },
         vexperienciaintl: 1,
+        vdescriptores: [],
         vcomentario: '',
         vproducto: {
           denominacion:'',
@@ -236,7 +238,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 /*
         cactividades: {
           aescenicas: false,
-          audivisual: false,
+          audiovisual: false,
           disenio: false,
           editorial: false,
           musica: false,

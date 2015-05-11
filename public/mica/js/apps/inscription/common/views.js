@@ -19,7 +19,7 @@ DocManager.module("MicaRequestApp.Common.Views", function(Views, DocManager, Bac
                     });
           */      
     },
-
+/*
     buildTags: function(target){
       console.log('buildtags [%s]', target.selectedOptions)
       if(target.multiple){
@@ -31,13 +31,14 @@ DocManager.module("MicaRequestApp.Common.Views", function(Views, DocManager, Bac
         this.model.set(target.name, list);        
       }
     },
-
+*/
     change: function (event) {
-        //utils.hideAlert();
-        console.log('FORM CHANGE')
-        var target = event.target;
-        var change = {};
-				switch (target.type){
+        var target = event.target,
+            change = {};
+        
+        if(!target.name) return;
+				
+        switch (target.type){
 						case 'checkbox':
               console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
 							this.model.get(target.name)[target.value] = target.checked;
@@ -64,9 +65,9 @@ DocManager.module("MicaRequestApp.Common.Views", function(Views, DocManager, Bac
 							break;
 						
 						case 'select-multiple':
-							this.buildTags(target)
-						 	this.model.set(change);  
-							break;
+              console.log('CHANGE MULTIPLE: name:[%s] id[%s] value:[%s] tags:[%s]', target.name, target.id, target.value, this.$('#'+target.id).tagsinput('items'));
+              this.model.set(target.name, this.$('#'+target.id).tagsinput('items'));  
+						  break;
 						
 						default:
 							change[target.name] = target.value;

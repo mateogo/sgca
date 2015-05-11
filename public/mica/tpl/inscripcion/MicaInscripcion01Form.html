@@ -1,8 +1,5 @@
 <h3>Datos de la Empresa o Institución</h3>
 
-<div class="avatar-upload">
-  <div id="cropContainerEyecandy"></div>
-</div>
 
 <div class="row">  
   <div class="col-sm-5 col-xs-9 form-group required">
@@ -72,6 +69,8 @@
       <select id="eprov" class="form-control js-provarg" name="eprov">
            <%= tdata.buildSelectOptions('provincias',tdata.provinciasOL, eprov) %>
       </select>
+      <label class="sr-only" for="otraprov">Ingrese el nombre de su Provincia o Estado</label>
+      <input type="text" id="otraprov" class="form-control js-provext" name="eprov" value="<%= eprov %>" style="display: none;">
       <span class="help-block"></span>
     </div>
   </div>
@@ -167,3 +166,9 @@
       </div>
   </div>
 </div>
+
+<div class="row">
+  <div class="col-sm-12"><h4>Agregue (opcional) una imagen-avatar de su empresa o institución</h4></div>
+  <div class="col-sm-12  js-avatar" style="border: 1px solid rgb(204, 204, 204);margin-bottom: 20px;" ></div>
+</div>
+

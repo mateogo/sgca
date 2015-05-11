@@ -12,8 +12,8 @@
       </div>
 
       <div id="selleraudiovisual" class="radio" data-initialize="radio" >
-        <label class="radio-custom <%= vactividades === 'audivisual' ? 'checked' : '' %>" for="vaudivisual">
-          <input type="radio" id="vaudivisual" class="sr-only" data-toggle="#toggle-vaudiovisual" <%= vactividades === 'audivisual' ? 'checked="checked"' : '' %>  name="vactividades" value="audivisual">
+        <label class="radio-custom <%= vactividades === 'audiovisual' ? 'checked' : '' %>" for="vaudiovisual">
+          <input type="radio" id="vaudiovisual" class="sr-only" data-toggle="#toggle-vaudiovisual" <%= vactividades === 'audiovisual' ? 'checked="checked"' : '' %>  name="vactividades" value="audiovisual">
           Audiovisual
         </label>
       </div>
@@ -222,9 +222,9 @@
       <div class="row">
       
         <div class="form-group">
-          <label class="col-sm-12 control-label" for="tags">Palabras clave que identifiquen su proyecto</label>
+          <label class="col-sm-12 control-label" for="vdescriptores">Palabras clave que identifiquen su proyecto</label>
           <div class="col-sm-12">
-            <select id="tags" class="form-control" multiple data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter."  name="tags">
+            <select id="vdescriptores" class="form-control" multiple data-role="tagsinput" placeholder="Ingrese descriptores"  name="vdescriptores">
             </select>
           </div>
         </div>

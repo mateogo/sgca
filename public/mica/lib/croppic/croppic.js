@@ -6,11 +6,11 @@
 
 (function (window, document) {
 
-	Croppic = function (id, options) {
+	Croppic = function (id, obj, options) {
 
 		var that = this;
 		that.id = id;
-		that.obj = $('#' + id);
+		that.obj = obj;
 		that.outputDiv = that.obj;
 
 		// DEFAULT OPTIONS
@@ -145,7 +145,7 @@
 				
 				that.showLoader();
 				that.imgUploadControl.hide();
-			
+
 				var formData = new FormData(that.form[0]);
 			
 				for (var key in that.options.uploadData) {

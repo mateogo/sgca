@@ -10,6 +10,7 @@
 module.exports = function (config, app) {
     var rootPath = config.root;
     var utils = require(rootPath + '/core/util/utils');
+    var formidable = require('formidable');
     var http = require("http");
     var passport = require('passport');
 	
@@ -57,7 +58,7 @@ module.exports = function (config, app) {
 		var form = new formidable.IncomingForm();
 		form.parse(req, function(err, fields, files) {
 			res.writeHead(200, {'content-type': 'application/json'});
-			res.end(util.inspect({status:"success", url: 'uploads/'+files.img.name}));
+			res.end(JSON.stringify({status:"success", url: 'uploads/'+files.img.name}));
 		});
 		
 		form.on('end', function(fields, files) {

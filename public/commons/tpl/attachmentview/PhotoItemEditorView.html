@@ -1,0 +1,18 @@
+<div class="event-date-item" style="margin-bottom:10px">
+    <div class="media">
+      <div class="media-left">
+        <a class="thumbnail" style="width:150px">
+          <img class="media-object" src="<%=getUrl()%>" width="150">
+        </a>
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading"><input type="text" class="form-control" name="name" value="<%=name%>" placeholder="nombre"></h4>
+        <textarea type="text" class="form-control" name="slug" placeholder="descripción"><%=slug%></textarea>
+        
+        <div class="text-right" style="padding:10px">
+            <button class="btn btn-sm btn-primary js-save" data-loading-text="Guardando...">Aceptar</button>
+            <button class="btn-link js-cancelEdit">cancelar</button>
+          </div>
+      </div>
+    </div>
+</div>
