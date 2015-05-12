@@ -12,7 +12,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
 
     onRender: function(){
-      console.log('STEP MAIN LAYOUT RENDER ******************************')
+      //console.log('STEP MAIN LAYOUT RENDER ******************************')
     },
 
     getTemplate: function(){
@@ -29,11 +29,11 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
 
     onFormSubmit: function(){
-      console.log('Click basicEdit')
+      //console.log('Click basicEdit')
     },
 
     onClickBaseEdit: function(){
-      console.log('Click basicEdit')
+      //console.log('Click basicEdit')
       this.trigger('edit:basic:data');
     },
 
@@ -60,7 +60,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       id: 'formWizardLayout'
     },
     initialize: function(opts){
-      console.log('[%s] INIT *********', this.whoami);
       if(opts.tab){
         this.selectedTab = opts.tab;
       }
@@ -72,7 +71,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
     onRender: function(){
 
-      console.log('************  wizardLayout RENDER **************')
       // var self = this;
       // console.log('rendering')
       // $('#myWizard').wizard();
@@ -83,7 +81,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
     onShow: function(){
 
-      console.log('************  wizardLayout SHOW **************')
       // var self = this;
       // console.log('rendering')
       // $('#myWizard').wizard();
@@ -117,7 +114,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       'change #legal': 'change',
     },
     change: function(e){
-      console.log('change!!!!!')
       if(this.$('#legal').prop('checked')){
           this.model.set('legal','aceptado');
         }else{
@@ -129,21 +125,17 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       var self = this;
       e.preventDefault();
       e.stopPropagation();
-      console.log('TermosOfUse');
       DocManager.confirm(utils.templates.MicaTerminosYCondiciones(),{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
-        console.log('ACEPTADO');
           self.$('#legal').prop('checked', true);
       });
     },
 
     submitForm: function(){
-        console.log('IAJJUUUU 3');
         this.trigger('submit:form', this.model);
 
     },
 
     submitFormDefinitivo: function(){
-        console.log('Submit Definitivo');
         this.trigger('submit:form:definitivo', this.model);
 
     },
@@ -174,18 +166,15 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       var self = this;
       return {
         formatDate: function(date){
-          console.log('templateHelpers!!!!!!!! oops!')
           return moment(date).format('dddd LL');
         },
         getFieldLabel: function(fieldName){
-          console.log('templateHelpers!!!!!!!! oops!')
           return self.model.getFieldLabel(fieldName);
         }
       };
     },
 
     initialize: function(options){
-//      console.log('Edit.DOCUMENT BEGINS')
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
@@ -193,7 +182,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
     onRender: function(){
       var self = this;
-      console.log('rendering')
       $('#myWizard').wizard();
 
       // INIT radio tipo juridico
@@ -231,13 +219,13 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
         var step = data.step;
         if(step == 1){
-          console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
+          //console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
           if(data.direction === 'next'){
             if(!self.validateStep(step)){
               evt.preventDefault();
               $('#myWizard').wizard('selectedItem', {step: step});
             }else{
-              console.log('Validation OK',step)
+              //console.log('Validation OK',step)
             }
           }
         } 
@@ -270,7 +258,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     toggleStateInput: function(e){
       if (this.model.get('epais') !='AR'){
 //        $('#eprov').replaceWith('<input class="form-control" type="text" name="eprov" id="eprov">');
-          console.log('no es arg stateinput');
           this.$('.js-provext').show();
           this.$('.js-provarg').hide();
           if(e) this.$('.js-provext').val('')
@@ -280,7 +267,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 //        var aprov = utils.buildSelectOptions("eprov",utils.provinciasOptionList.Argentina, province);
 //        $('#eprov').replaceWith('<select class="form-control" id="eprov" name="eprov> aprov("eprov")</select>');
 //        $('#eprov').html(aprov);
-        console.log('es arg stateinput')
           this.$('.js-provarg').show();
           this.$('.js-provext').hide();
       }
@@ -296,12 +282,11 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
           usermail = self.model.get('eusuario'),
           post;
 
-      console.log('User validation: [%s]', usermail);
       this.trigger('user:validate', self, usermail, function(user, msgs){
         if(user){
-          console.log('UserValidation CB [%s]',user.get('username[%s]'),msgs); 
+          //console.log('UserValidation CB [%s]',user.get('username[%s]'),msgs); 
         }else{
-          console.log('UserValidation CB el usuario NO EXISTE [%s]',msgs);
+          //console.log('UserValidation CB el usuario NO EXISTE [%s]',msgs);
         }
         post = msgs ? {'eusuario': msgs} : {};
         self.onFormNotifications(post);
@@ -328,7 +313,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
 
     onRender: function(){
-      console.log('STEP TWO LAYOUT RENDER ******************************')
       var self = this;
       self.$('.radio-custom').radio();
       self.$('.checkbox-custom').checkbox();
@@ -370,13 +354,13 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
         var step = data.step;
         if(step == 2){
-          console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
+          //console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
           if(data.direction === 'next'){
             if(!self.validateStep(step)){
               evt.preventDefault();
               $('#myWizard').wizard('selectedItem', {step: step});
             }else{
-              console.log('Validation OK',step)
+              //console.log('Validation OK',step)
             }
           }
         }
@@ -426,14 +410,11 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     openSeller: function(ev){
       var self = this,
           $seller = self.$('#data.switch input#seller');
-      console.log('OpenSeller')
       self.$('#infovendedor').toggleClass("hidden", !$seller.is(":checked"));
 
       if($seller.is(":checked")){
-        console.log('VENDEDOR: TRUE')
         self.model.set('rolePlaying',{vendedor: true});
       }else{
-        console.log('VENDEDOR: FALSE')
         self.model.set('rolePlaying',{vendedor: false});        
       }
     },
@@ -473,7 +454,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
           }else{
             var selector = '#toggle-v' + item;
-            console.log('toggling: [%s]', selector);
 
             self.$(selector).addClass('hidden');
 
@@ -485,13 +465,13 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
         var step = data.step;
         if(step == 2){
-          console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
+          //console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
           if(data.direction === 'next'){
             if(!self.validateStep(step)){
               evt.preventDefault();
               $('#myWizard').wizard('selectedItem', {step: step});
             }else{
-              console.log('Validation OK',step)
+              //console.log('Validation OK',step)
             }
           }
         }
@@ -503,7 +483,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
 
     removeAudio: function(e){
-      console.log('remove Audio link');
       $(e.target).parents('.ventry:first').remove();
       e.preventDefault();
       return false;
@@ -515,7 +494,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
           currentEntry = $(e.target).parents('.ventry:first'),
           newEntry = $(currentEntry.clone()).appendTo(controlForm);
       
-      console.log('Links Audio');
       e.preventDefault();
       newEntry.find('input.vaudio').val('');
       controlForm.find('.ventry:not(:last) .js-btn-add1')
@@ -582,14 +560,11 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     openBuyer: function(ev){
       var self = this,
           $seller = self.$('#data.switch input#buyer');
-      console.log('OpenBuyer')
       self.$('#infocomprador').toggleClass("hidden", !$seller.is(":checked"));
 
       if($seller.is(":checked")){
-        console.log('VENDEDOR: TRUE')
         self.model.set('rolePlaying',{comprador: true});
       }else{
-        console.log('VENDEDOR: FALSE')
         self.model.set('rolePlaying',{comprador: false});        
       }
 
@@ -629,7 +604,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
           }else{
             var selector = '#toggle-c' + item;
-            console.log('toggling: [%s]', selector);
 
             self.$(selector).addClass('hidden');
 
@@ -640,13 +614,13 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
         var step = data.step;
         if(step == 2){
-          console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
+          //console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
           if(data.direction === 'next'){
             if(!self.validateStep(step)){
               evt.preventDefault();
               $('#myWizard').wizard('selectedItem', {step: step});
             }else{
-              console.log('Validation OK',step)
+              //console.log('Validation OK',step)
             }
           }
         }
@@ -686,7 +660,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
 
     initialize: function(options){
-      console.log('Nuevo Representante');
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
@@ -701,9 +674,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
     newRepresentante: function(){
       var self = this;
-      console.log('new Representante');
       this.trigger('add:new:representante', this.model, function(entity){
-        console.log('alta requerim: Cerrar esta ventana!!!!');
         self.destroy();
       });
 
@@ -717,7 +688,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     tagName: 'div',
     template: false,
     initialize: function(opts){
-      console.log('AVATAR Editor RENDER model:[%s]',this.model.whoami);
+      //console.log('AVATAR Editor RENDER model:[%s]',this.model.whoami);
 
     },
     onRender: function(){
@@ -784,6 +755,231 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
 
   });
+
+
+  Edit.ReferenceItemLayoutView = Marionette.LayoutView.extend({
+    whoami: 'Edit.ReferenceItemLayoutView:edit_view.js',
+    //tagName: "div",
+    //className: "list-group",
+
+    //childView: Views.SidebarItem,
+    //childViewContainer: "article",
+    
+    initialize: function(opts){
+      console.log('[%s] INIT ',this.whoami);
+      this.options = opts;
+    },
+ 
+    getTemplate: function(){
+      return utils.templates.ReferenciasLayout;
+    },
+
+    onRender: function(){
+      console.log('[%s] RENER ',this.whoami)
+    },
+
+    regions: {
+      editRegion: '#refitem-view-region',
+      viewRegion: '#refitem-edit-region',
+    },
+
+    events: {
+    },
+
+  });
+
+  Edit.ReferenceListView = Marionette.CollectionView.extend({
+    whoami: 'Edit.ReferenceListView:edit_view.js',
+    //tagName: "div",
+    //className: "list-group",
+
+    //childView: Views.SidebarItem,
+    //childViewContainer: "article",
+    
+    initialize: function(opts){
+      console.log('[%s] INIT ',this.whoami);
+      this.options = opts;
+    },
+ 
+    events: {
+    },
+
+
+    childViewOptions: function(model, index) {
+      //console.log('childViewOptions [%s] [%s] [%s]',model.whoami, model.get('slug'), this.options.itemtype);
+      // return {
+      //   model: model,
+      //   collection: model.getItems(),
+      //   itemtype:this.options.itemtype,
+      // }
+    },
+    
+  });
+
+  Edit.ReferenceFormView = Marionette.LayoutView.extend({
+    whoami: 'Edit.ReferenceFormView:edit_view.js',
+    //tagName: "div",
+    //className: "list-group",
+
+    //childView: Views.SidebarItem,
+    //childViewContainer: "article",
+    
+    initialize: function(opts){
+      console.log('[%s] INIT model:[%s]',this.whoami, this.model.whoami);
+      this.options = opts;
+    },
+ 
+    getTemplate: function(){
+      return utils.templates.ReferenciasFormLayout;
+    },
+
+    onRender: function(){
+      console.log('[%s] RENDER ',this.whoami)
+      var itemEditor = new Backbone.Form({
+        model: this.model,
+        template: utils.templates.ReferenciasItemEditor,
+      });
+
+      itemEditor.on('change', function(form, editor){
+        var error = form.commit();
+
+      });
+
+      this.getRegion('editRegion').show(itemEditor);
+    },
+
+/*
+    onRender: function(){
+      console.log('onRender:[%s]', this.model.whoami);
+      this.form = new Backbone.Form({
+        model: this.model,
+        template: this.templates['form'],
+      });
+      this.form.render();
+      this.$el.find('#formContainer').html(this.form.el);
+    },
+
+*/
+    regions: {
+      editRegion: '#reference-item-editor',
+    },
+
+    events: {
+    },
+
+  });
+
+
+
+
+
+  Edit.ReferenceEditor = Marionette.LayoutView.extend({
+    whoami: 'Edit.ReferenceEditor:edit_view.js',
+
+    tagName: "div",
+    attributes: {
+      id: 'referenciasLayout'
+    },
+
+    initialize: function(opts){
+      //console.log('[%s] INIT model:[%s]',this.whoami, this.model.whoami);
+      this.options = opts;
+
+      this.listView = this.initListView();
+      this.formView = this.initFormView();
+
+    },
+
+    getTemplate: function(){
+      return utils.templates.ReferenciasLayout;
+    },
+
+    initListView: function(){
+      var listView = new Edit.ReferenceListView({
+        collection: this.collection
+      })
+      return listView;
+
+    },
+
+    initFormView: function(){
+      var listView = new Edit.ReferenceFormView({
+        model: this.model
+      })
+      return listView;
+
+    },
+
+    onRender: function(){
+      console.log('[%s] RENER ',this.whoami)
+      this.getRegion('formRegion').show(this.formView);
+    },
+
+    regions: {
+      listRegion: '#references-list-region',
+      formRegion: '#references-form-region',
+    },
+
+    events: {
+    },
+
+
+  });
+
+
+
+  //*************************************************************
+  //       PORFOLIO EDITOR VIEW
+  //*************************************************************
+  Edit.PorfolioEditor = DocManager.MicaRequestApp.Common.Views.Form.extend({
+    tagName: 'div',
+    template: false,
+    initialize: function(opts){
+      console.log('Porfolio Editor RENDER model:[%s]',this.model.whoami);
+      this.events = _.extend({},this.formevents,this.events);
+      this.delegateEvents();
+      this.options = opts;
+    },
+
+    onRender: function(){
+      this.createReferenceView();
+
+    },
+   
+    getTemplate: function(){
+      return utils.templates.PorfolioForm;
+    },
+
+    createReferenceView: function(){
+      var self = this,
+          references = new DocManager.Entities.PorfolioReferenceCol(self.model.get('referencias'));
+
+      var referenceEditor = new Edit.ReferenceEditor({
+        model: new DocManager.Entities.PorfolioReference(),
+        collection: references,
+        el: this.$('#referencesContainer'),
+
+      });
+      referenceEditor.render();
+
+
+    },
+    
+    // regions: {
+    //   formRegion: '#form-region',
+    // },
+
+    events: {
+    },
+
+    commit: function(){
+      console.log('PorfolioEditorVIEW COMMIT')
+    },
+
+
+  });
+
+
 
 
 //=======================

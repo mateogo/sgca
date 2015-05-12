@@ -284,7 +284,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     initialize: function(attrs, opts){
       var self = this;
       //model, collection, tablecols
-      console.log('arguments: [%s]', arguments.length)
+      console.log('CRUD MANAGER INIT arguments: [%s]', arguments.length)
 
       this.options = opts;
       self.filterFactory(self.collection,self.get('filtercols'));
@@ -347,12 +347,20 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
     createForm: function(){
       var self = this;
-      console.log('createForm: [%s] [%s]',  self.options.modelToEdit.whoami, self.collection.length)
-      self.form = new Backbone.Form({
-          model: self.options.modelToEdit,
-          template: self.options.formTpl,
-          collection: self.collection,
-      });
+      if(self.options.EditorView){
+        console.log('CRUD MANAGER: Create EditorForm: [%s] [%s]',  self.options.modelToEdit.whoami, self.collection.length)
+        self.form = new self.options.EditorView({
+            model: self.options.modelToEdit,
+        });
+
+      }else{
+        console.log('CRUD MANAGER: Create BackboneForm: [%s] [%s]',  self.options.modelToEdit.whoami, self.collection.length)
+        self.form = new Backbone.Form({
+            model: self.options.modelToEdit,
+            template: self.options.formTpl,
+            collection: self.collection,
+        });
+      }
 
     },
     createTable: function(){

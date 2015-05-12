@@ -161,6 +161,23 @@ window.utils = {
         });
         return nodes;
     },
+
+    linkTypeOpLst:[
+        {val:'no_definido', label:'Seleccione opción'},
+        {val:'web',         label:'Sitio Web propio'},
+        {val:'facebook',    label:'Facebook'},
+        {val:'twitter',     label:'Twitter'},
+        {val:'youtube',     label:'Youtube'},
+        {val:'linkedin',    label:'Linkedin'},
+        {val:'galeria',     label:'Galería de Imágenes'},
+        {val:'audios',      label:'Audio'},
+        {val:'videos',      label:'Video'},
+        {val:'documento',   label:'Documento'},
+        {val:'prensa',      label:'Nota de Prensa'},
+        {val:'otros',       label:'Otros'},
+    ],
+
+
     estadoAltaStramiteOpLst:[
         {val:'activo',       label:'activo'},
         {val:'distribucion', label:'activo p/distribución'},

@@ -672,7 +672,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     
     schema: {
         denominacion: {type: 'TextArea',  title: 'Describa su producto, proyecto o servicio'},
-        referencias:  {type: 'TextArea',  title: 'Indique referencias externas (enlaces a sitio web, notas periodísticas, audios, videos, u otros)'},
+        //referencias:  {type: 'TextArea',  title: 'Indique referencias externas (enlaces a sitio web, notas periodísticas, audios, videos, u otros)'},
     },
 
  
@@ -690,7 +690,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     defaults: {
       denominacion: 'Ingrese nuevo antecedente: proyecto/ producto/ servicio',
-      referencias: '',
+      referencias: [],
       porfolios:[],
     },
   }); 
@@ -702,6 +702,45 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 
+  //*************************************************************
+  //            PORFOLIO LINKS
+  //*************************************************************
+  Entities.PorfolioReference = Backbone.Model.extend({
+    // links externos, a modo de referencias, asociados al porfolio
+
+    whoami: 'PorfolioReference: MICA.js ',
+    
+    schema: {
+      tlink:     {type: 'Select',   title: 'Tipo de enlace',   editorAttrs:{placeholder:'Tipo de referencia externa'},options: utils.linkTypeOpLst },
+      slug:      {type: 'Text',     title: 'Descripción',      editorAttrs:{placeholder:'Descripción/ comentario del enlace propuesto'}},
+      targeturl: {type: 'Text',     title: 'Url',      editorAttrs:{placeholder:'URL'}, dataType:'url', validators:['required', 'url']},
+    },
+
+ 
+    validate: function(attrs, options) {
+      var errors = {}
+      //console.log(attrs)
+      if (_.has(attrs,'slug') && (!attrs.slug )) {
+        errors.rname = "No puede ser nulo";
+      }     
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+
+    defaults: {
+      tlink: 'no_definido',
+      utargeturl: '',
+      slug: '',
+    },
+  }); 
+  
+  Entities.PorfolioReferenceCol = Backbone.Collection.extend({
+    whoami: 'PorfolioReferenceCol: mica.js',
+    model: Entities.PorfolioReference,
+    comparator: "tlink",
+  });
 
 
 
@@ -827,9 +866,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         data: query,
         type: 'post',
         success: function(data){
-          console.log('BINGOOOOOO: [%s]', data.length);
           if(data.length){
-            console.log('data?????[%s] [%s]', data.whoami, data.at(0).get('slug'))
+            //console.log('INSCRIPCIÓN existente: [%s] [%s]', data.whoami, data.at(0).get('slug'))
             defer.resolve(data.at(0));
           }else{
             defer.resolve(new Entities.MicaRegistration());

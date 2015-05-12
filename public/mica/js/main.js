@@ -15,6 +15,11 @@ utils.loadTemplate([
         'attachmentview/PhotosLayoutView','attachmentview/PhotoItem','attachmentview/PhotoItemEditorView',
         'attachmentview/ImageBoxLayoutView','attachmentview/ImageBoxItem',
 
+
+        // Referencias Editor
+        'inscripcion/ReferenciasLayout','inscripcion/ReferenciasFormLayout','inscripcion/ReferenciasItemEditor',
+
+
         // Formulario inscripción
         'inscripcion/MicaInscriptionFormLayout','inscripcion/MicaInscripcion01Form',
         'inscripcion/MicaInscripcion02Layout','inscripcion/MicaInscripcion02Form',

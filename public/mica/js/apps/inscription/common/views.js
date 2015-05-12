@@ -65,7 +65,7 @@ DocManager.module("MicaRequestApp.Common.Views", function(Views, DocManager, Bac
 							break;
 						
 						case 'select-multiple':
-              console.log('CHANGE MULTIPLE: name:[%s] id[%s] value:[%s] tags:[%s]', target.name, target.id, target.value, this.$('#'+target.id).tagsinput('items'));
+              //console.log('CHANGE MULTIPLE: name:[%s] id[%s] value:[%s] tags:[%s]', target.name, target.id, target.value, this.$('#'+target.id).tagsinput('items'));
               this.model.set(target.name, this.$('#'+target.id).tagsinput('items'));  
 						  break;
 						

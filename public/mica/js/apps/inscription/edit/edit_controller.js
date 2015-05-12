@@ -33,9 +33,8 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     var defer = $.Deferred(),
         fetchingMicaRequest;
 
-    console.log('MicaRequestApp.Edit.Controller.loadModel');
     dao.gestionUser.getUser(DocManager, function (user){
-      console.log('Dao Get Current user: [%s]', user.get('username'));
+      //console.log('Dao Get Current user: [%s]', user.get('username'));
       getSession().currentUser = user;
 
       if(id){
@@ -45,7 +44,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       }
      
       $.when(fetchingMicaRequest).done(function(micarqst){
-        console.log('MicaRequestApp.Edit BEGIN [%s] [%s]', micarqst.whoami, micarqst.id);
+        //console.log('MicaRequestApp.Edit BEGIN [%s] [%s]', micarqst.whoami, micarqst.id);
 
         micarqst.initDataForEdit()
 
@@ -62,7 +61,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
   var initDataForEdit = function(user, model){
     if(user){
-      console.log('usermail: [%s]', user.get('mail'))
       model.get('responsable').rmail = user.get('mail');
       model.stepTwo.set('rmail', user.get('mail'))
     }
@@ -80,7 +78,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     
     session.views.layout = new Edit.Layout({model:session.model});
     
-    console.log('ready to Show Main Region')
     registerLayoutEvents(session.views.layout);
   };
 
@@ -181,7 +178,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
   var registerStepTwoEvents = function(session, layout){
     session.views.stepTwo = layout;
     var responsable = session.model['stepTwo'];
-    console.log('RESPONSABLES: [%s] [%s]', responsable.get('rmail'), session.model.representantes.length);
+    //console.log('RESPONSABLES: [%s] [%s]', responsable.get('rmail'), session.model.representantes.length);
 
 
     var stepTwoForm = new Edit.StepTwoForm({model: responsable});
@@ -205,7 +202,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
   var registerStepThreeEvents = function(session, layout){
     session.views.stepThree = layout;
     var stepThreeForm = new Edit.StepThreeForm({model: session.model['stepThree']});
-    console.dir(session.model['stepThree'].attributes);
 
     var porfolioCol = new Entities.PorfolioCol();
     var porfolio = new Entities.Porfolio();
@@ -214,7 +210,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
 
     layout.on("show", function(){
-      console.log('**************Layout.on show')
       layout.formRegion.show(stepThreeForm);
 
       DocManager.trigger('vporfolio:edit',porfolio);
@@ -233,7 +228,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
 
     layout.on("show", function(){
-      console.log('**************Layout.on show')
       layout.formRegion.show(stepFourForm);
 
       DocManager.trigger('porfolio:edit',porfolio);
@@ -388,6 +382,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
 
     initPorfolioVendedorView: function(porfolio){
+      console.log('INIT-PORFOLIO-VENDEDOR')
       var session = getSession();
       var crudManager = new Edit.CrudManager(
           {
@@ -406,9 +401,11 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
             collection: session.vporfolios,
             editModel: Entities.Porfolio,
             modelToEdit: porfolio,
+            EditorView: Edit.PorfolioEditor,
           }
       );
       session.views.stepThree.vporfolioRegion.show(crudManager.getLayout());
+
 
     },
 
