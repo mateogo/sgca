@@ -1,7 +1,7 @@
 <div class="">
     <div class="row">
         <div class="col-sm-5 col-xs-9 form-group">
-            <label class="control-label">Denominación</label>
+            <label class="control-label">T&iacute;tulo/Descripci&oacute;n</label>
             <input type="text" id="slug" name="slug" class="form-control" value="<%=slug%>">
             <span class="help-block">título de la obra</span>
         </div>
@@ -22,7 +22,7 @@
             <span class="help-block">técnica empleada en la ejecución</span>
         </div>
         <div class="col-sm-5 col-xs-9 form-group">
-            <label class="control-label">Material</label>
+            <label class="control-label">Materiales</label>
             <input type="text" name="material" class="form-control"  value="<%=material%>">
             <span class="help-block">materiales empleados</span>
         </div>
@@ -42,6 +42,15 @@
                 <input type="text" name="value" class="form-control"   value="<%=value%>">
             </div>
             <span class="help-block">importe expresados en pesos</span>
+        </div>
+    </div>
+</div>
+<div class="">
+    <div class="row">
+        <div class="col-sm-10 col-xs-9 form-group">
+            <label class="control-label">Observaciones/Comentarios adicionales</label>
+            <textarea name="obs" class="form-control" ><%=obs%></textarea>
+            <span class="help-block">   </span>
         </div>
     </div>
 </div>

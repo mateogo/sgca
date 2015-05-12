@@ -254,16 +254,20 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
              width = this.height;
            }
            
-           if(self.minImageWidth && self.minImageHeight 
-               && (self.minImageWidth > this.width || self.minImageHeight > this.height)){
-             $def.reject('La imagen debe tener al menos '+self.minImageWidth + ' x '+ self.minImageHeight + ' px');
+           if(self.minImageWidth && self.minImageHeight){
+              if(self.minImageWidth > width || self.minImageHeight > height){
+                 $def.reject('La imagen debe tener al menos '+self.minImageWidth + ' x '+ self.minImageHeight + ' px');
+              }else{
+                $def.resolve();
+              }
+  
            }else if(self.minImageWidth && self.minImageWidth > this.width){
-             $def.reject('La imagen debe ser al menos de '+self.minImageWidth + ' px de ancho');
+              $def.reject('La imagen debe ser al menos de '+self.minImageWidth + ' px de ancho');
              
            }else if(self.minImageHeight && self.minImageHeight > this.height){
-             $def.reject('La imagen debe ser al menos de '+self.minImageWidth + ' px de alto');
+              $def.reject('La imagen debe ser al menos de '+self.minImageWidth + ' px de alto');
            }else{
-             $def.resolve();
+              $def.resolve();
            }
          }  
        }else{

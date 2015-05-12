@@ -8,7 +8,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     idAttribute: "_id",
     
     defaults:{
-      lastname: ''
+      lastname: '',
+      background: ''
     },
     
     validation: {
@@ -17,13 +18,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       address: {required:false},
       alive: {required:false},
       birthday: {required:false},
-      bornplace: {require:false},
-      deathdate: {require:false},
-      locateddate: {require:false}, //fecha de radicacion
-      studyplace: {require:false},
-      exhibit: {require:false},
-      awards: {require:false},
-      bestobras: {require:false}
+      bornplace: {required:false},
+      deathdate: {required:false},
+      background: {required:false} // Antecedentes Artisticos
     }
   });
   

@@ -19,12 +19,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
     
     defaults:{
-      slug: '',
+      slug: 'Sin título',
       madeyear: '',
       procedure: '',
       dimensions: '',
       material: '',
       value: '',
+      obs: '',
       thumbnail: '',
       photos_ids: [],
       photos: [],
@@ -37,7 +38,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       dimensions: {required:true},
       material: {required:true},
       value: {required:true,pattern:'number',msg:'Ingrese un importe en pesos argentinos'},
-      madeyear: {required:false}
+      madeyear: {required:false},
+      obs: {required:false}
     },
     
     parse: function(raw,opts){

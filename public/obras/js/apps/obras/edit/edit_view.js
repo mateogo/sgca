@@ -7,7 +7,7 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
   
   Edit.ObrasWizardView =  ObrasCommon.WizardView.extend({
     initialize: function(){
-      this.steps = [DescriptionEditor,PhotoEditor,AutorAppEdit.AutorEditorView,PartsEditor,ConfirmStep];
+      this.steps = [PhotoEditor,DescriptionEditor,AutorAppEdit.AutorEditorView,PartsEditor,ConfirmStep];
     },
     getTemplate: function(){
       return utils.templates.ObrasWizard
@@ -27,7 +27,7 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
   
   Edit.ObrasEditorView = Marionette.ItemView.extend({
     initialize: function(){
-      this.tabs = [DescriptionEditor,PhotoEditor,AutorAppEdit.AutorEditorView,PartsEditor];
+      this.tabs = [PhotoEditor,DescriptionEditor,AutorAppEdit.AutorEditorView,PartsEditor];
       this.listenTo(this.model,'change',this.onChangeModel.bind(this));
     },
     getTemplate: function(){
@@ -131,15 +131,12 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
     },
     
     commit: function(){
-      var p = {
-          slug: this.$el.find('[name=slug]').val(),
-          procedure: this.$el.find('[name=procedure]').val(),
-          material: this.$el.find('[name=material]').val(),
-          dimensions: this.$el.find('[name=dimensions]').val(),
-          value: this.$el.find('[name=value]').val(),
-          madeyear: this.$el.find('[name=madeyear]').val()
-       }
-       this.model.set(p);
+      var schema = this.model.validation;
+      var data = {};
+      for(var key in schema){
+        data[key] = this.$el.find('[name='+key+']').val();
+      }
+      this.model.set(data);
     },
     
     events:{
@@ -183,7 +180,7 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       var files = this.attachView.getFiles();
       var ok = true;
       
-      if(files.length < 2){
+      if(files.length < 1){
         ok = false;
         this.$el.find('#empty-region').addClass('alert alert-danger');
       }else{

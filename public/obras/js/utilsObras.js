@@ -12,18 +12,18 @@ var utilsObras = {
        {val:'arte textil',         label:'arte textil'},
        {val:'artes del fuego',         label:'artes del fuego'},
        {val:'collage',         label:'collage'},
-       {val:'objetos',         label:'objetos'},
-       {val:'instalaciones',         label:'instalaciones'},
-       {val:'fotografías',         label:'fotografías'},
+       {val:'objeto',         label:'objeto'},
+       {val:'instalacion',         label:'instalacion'},
+       {val:'fotografía',         label:'fotografía'},
        {val:'arte electrónico',         label:'arte electrónico'},
        {val:'video arte',         label:'video arte'},
-       {val:'otros',         label:'otros'}
+       {val:'otro',         label:'otro'}
    ],
    
    reasonsExportList: [
        {val:'exposicion',       label:'Exposición'},
-       {val:'venta',       label:'venta'},
-       {val:'otros',       label:'otros'}
+       {val:'venta',       label:'Venta'},
+       {val:'otros',       label:'Otros'}
    ],
    
    typeExportList: [

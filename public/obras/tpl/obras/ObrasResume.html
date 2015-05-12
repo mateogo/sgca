@@ -10,6 +10,7 @@
 <div><strong>Material: </strong> <%=material%> </div>
 <div><strong>Medidas: </strong> <%=dimensions%> </div>
 <div><strong>Valor: </strong> $<%=accounting.format(value)%> </div>
+<div><strong>Observaciones: </strong> <%=obs%> </div>
 
 <hr class="spacer">
 <h4 class="spacer">Fotos</h4>
@@ -33,12 +34,7 @@
 <div><strong>Fecha de nacimiento: </strong> <%=autor.get('birthday')%> </div>
 <div><strong>Lugar de nacimiento: </strong> <%=autor.get('bornplace')%> </div>
 <div><strong>Fecha de fallecimiento: </strong> <%=autor.get('deathdate')%> </div>
-<div><strong>Radicado en el país desde: </strong> <%=autor.get('studyplace')%> </div>
-<div><strong>Cursó estudios artísticos en: </strong> <%=autor.get('locateddate')%> </div>
-<div><strong>Expuso en: </strong> <%=autor.get('exhibit')%> </div>
-<div><strong>Cursó estudios artísticos en: </strong> <%=autor.get('locateddate')%> </div>
-<div><strong>Obtuvo los siguientes premios: </strong> <%=autor.get('awards')%> </div>
-<div><strong>Obras más representativas: </strong> <%=autor.get('bestobras')%> </div>
+<div><strong>Antecedentes art&iacute;sticos: </strong> <%=autor.get('background')%> </div>
 
 <hr class="spacer">
 <% if(parts && parts.length > 0){ %>
