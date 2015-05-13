@@ -24,9 +24,10 @@ var dbaseProd = 'mongodb://localhost/sgcadb';      //port = 27017  ojo: {auto_re
 //Installed applications
 var mailerTplPth = path.normalize(__dirname + '/mailer/templates'); //ojo
 var calendarApp    = rootPath + '/calendar';
+var sisplanApp    = rootPath + '/sisplan';
 var bacuaApp    = rootPath + '/bacua';
 var coreApp  = rootPath + '/core';
-var apps = [calendarApp];
+var apps = [calendarApp, sisplanApp];
 
 
 //Mailer options
