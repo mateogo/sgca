@@ -45,6 +45,7 @@ var instanceDbListeners = function (db,BSON) {
   for(var ix = 0; ix<apps.length; ix++){
       var controllers_path = path.normalize( apps[ix] + '/controllers/');
       fs.readdirSync(controllers_path).forEach(function (file) {
+        if (!file.match(/\.js$/)) { return; }
         require(controllers_path+file).setDb(db).setBSON(BSON).setConfig({publicpath:publicPath});
       });
   }
