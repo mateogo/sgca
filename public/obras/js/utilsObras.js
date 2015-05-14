@@ -29,7 +29,13 @@ var utilsObras = {
    typeExportList: [
          {val:'definitiva',       label:'Definitiva'},
          {val:'temporaria',       label:'Temporaria'}
-     ]
+     ],
+     
+   countMonthOutList: [
+        {val:3,       label:'3 meses'},
+        {val:6,       label:'6 meses'},
+        {val:12,       label:'12 meses'}
+   ] 
 }
 
 

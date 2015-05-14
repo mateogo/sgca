@@ -26,7 +26,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       type: {required: true}, //tipo de tramite, definitiva o temporaria
       reason: {required: true},
       destination: {required: true},
-      dateout: {required: true},
+      dateout: {required: false},
       durationout: [{required: function(value,attr,computedState){
                       // compromiso de retorno, en meses
                       return computedState.type === 'temporaria';

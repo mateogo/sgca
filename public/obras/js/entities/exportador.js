@@ -23,27 +23,30 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       province: '',
       localidad: '',
       address:'',
+      cpostal: '',
       di: '',
       ditype: 'DNI',
       nationality: '',
       birthday: '',
-      phone: '',
-      mobile: '',
+      phone1: '',
+      phone2: '',
       docPhoto1: null,
       docPhoto2: null
     },
     
     validation: {
-      name: {required: true,msg:'Es necesario'},
-      lastname: {required:true,msg:'Es necesario'},
-      address: {required:true,msg:'Es necesario'},
-      province: {required:true,msg:'Es necesario'},
-      localidad: {required:true,msg:'Es necesario'},
-      di: {required:true,msg:'Es necesario'},
-      nationality: {required:true,msg:'Es necesario'},
-      birthday: {required:true,msg:'Es necesario'},
-      phone: {required:false},
-      mobile: {required:false},
+      name: {required: true},
+      lastname: {required:true},
+      address: {required:true},
+      province: {required:true},
+      localidad: {required:true},
+      cpostal:{required:true},
+      di: {required:true},
+      nationality: {required:true},
+      birthday: {required:true},
+      phone1: {required:true},
+      phone2: {required:false},
+      mobile: {required:false}
     }
   });
     

@@ -1,7 +1,7 @@
      <div>
         <div class="row">
             <div class="col-sm-5 col-xs-6 form-group">
-                <label class="control-label">Tipo de tramite </label>
+                <label class="control-label">Tipo de licencia</label>
                 <select name="type" class="form-control">
                     <%= utils.buildSelectOptions('type',utils.typeExportList, type) %>
                 </select>
@@ -19,12 +19,15 @@
     <div class="">
         <div class="row">
             <div class="col-sm-5 col-xs-6 form-group">
-                <label class="control-label">Destino </label>
-                <input type="text" name="destination" class="form-control" value="<%=destination%>">
+                <label class="control-label">Pa&iacute;s de destino</label>
+                <select name="destination" class="form-control">
+                    <option value="">Seleccione una país</option>
+                    <%= utils.buildSelectOptions('destination',utils.paisesOptionList.Paises, destination) %>
+                </select>
                 <span class="help-block"></span>
             </div>
             <div class="col-sm-5 col-xs-6 form-group">
-                <label class="control-label">Aduana </label>
+                <label class="control-label">Lugar de salida</label>
                 <input type="text" name="customs" class="form-control" value="<%=customs%>">
                 <span class="help-block">complete si conoce la salida</span>
             </div>
@@ -39,11 +42,10 @@
             </div>
              <div class="col-sm-3 col-xs-9 form-group" id="durationoutCont">
                 <label class="control-label">Compromiso de Retorno</label>
-                <div class="input-group">
-                    <input type="text" name="durationout" class="form-control" value="<%=durationout%>">
-                    <span class="input-group-addon">meses</span>
-                </div>
-                <span class="help-block">de 1 a 12 meses</span>
+                <select name="durationout" class="form-control">
+                    <%= utils.buildSelectOptions('durationout',utils.countMonthOutList, durationout) %>
+                </select>
+                <span class="help-block"></span>
             </div>
         </div>
     </div>
@@ -60,7 +62,7 @@
         <div class="row">
             <div class="col-sm-10 col-xs-9 form-group">
                 <label class="control-label">Acalaraciones u Otros datos de interes </label>
-                <textarea name="obs" class="form-control"><%=obs%></textarea>
+                <textarea name="obs" class="form-control" rows="3"><%=obs%></textarea>
                 <span class="help-block"></span>
             </div>
         </div>

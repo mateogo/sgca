@@ -5,9 +5,11 @@
 <div><strong>Tipo: </strong> <%=type%> </div>
 <div><strong>Causa: </strong> <%=reason%></div>
 <div><strong>Destino: </strong> <%=destination%></div>
-<div><strong>Aduana: </strong> <%=customs%></div>
+<div><strong>Lugar de salida: </strong> <%=customs%></div>
 <div><strong>Fecha estimada de salida : </strong> <%=dateout%></div>
-<div><strong>Compromiso de retorno: </strong> <%=durationout%> meses</div>
+<% if(type === 'temporaria'){ %>
+    <div><strong>Compromiso de retorno: </strong> <%=durationout%> meses</div>
+<% } %>    
 <div><strong>Aclaraciones: </strong> <%=obs%></div>
 
 <hr class="spacer">
@@ -38,9 +40,10 @@
     <div><strong>Nacionalidad:</strong> <%=exp1.nationality%></div>
     <div><strong><%=exp1.ditype%>:</strong> <%=exp1.di%></div>
     <div><strong>Domicilio:</strong> <%=exp1.address%></div>
+    <div><strong>Código postal:</strong> <%=exp1.cpostal%></div>
     <div><strong>Provincia:</strong> <%=exp1.province%></div>
     <div><strong>Localidad:</strong> <%=exp1.localidad%></div>
-    <div><strong>Teléfono:</strong> <%=exp1.phone%></div>
-    <div><strong>Teléfono Móvil:</strong> <%=exp1.mobile%></div>
+    <div><strong>Teléfono:</strong> <%=exp1.phone1%></div>
+    <div><strong>Teléfono Móvil:</strong> <%=exp1.phone2%></div>
     <br />
 <%  }) %>
