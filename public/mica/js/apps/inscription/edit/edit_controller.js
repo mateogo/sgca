@@ -123,7 +123,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
   var registerBasicViewEvents = function(session, wizardlayout){
     wizardlayout.on("submit:form", function(model){
-      console.log('********SUBMIT PROVISORIO BEGINS********[%s]', model.whoami)
+      console.log('******** provisorio SUBMIT PROVISORIO BEGINS********[%s]', model.whoami)
       
       getSession().model.update(session.currentUser, session.representantes, session.vporfolios, session.cporfolios, function(error, model){
 
@@ -133,7 +133,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     });
 
     wizardlayout.on("submit:form:definitivo", function(model){
-      console.log('********SUBMIT DEFINITIVO BEGINS********[%s]', model.whoami, model.get('solicitante').emotivation)
+      console.log('******** definitivo SUBMIT DEFINITIVO BEGINS********[%s]', model.whoami, model.get('solicitante').emotivation)
 
       getSession().model.update(session.currentUser, session.representantes, session.vporfolios, session.cporfolios, function(error, model){
         enviarmail(utils.templates.MailFormSubmitNotification, {
@@ -365,10 +365,26 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       );
       session.views.stepThree.vporfolioRegion.show(crudManager.getLayout());
 
+    },
 
+    saveStep: function(step){
+      var session = getSession();
+
+      session.model.update(session.currentUser, session.representantes, session.vporfolios, session.cporfolios, function(error, model){
+
+        console.log('Grabación provisoria del paso: [%s]',step, getSession().model.id);
+
+      });
     },
 
   };
+
+      
+
+
+  DocManager.on("wizard:next:step", function(step){
+    API.saveStep(step);
+  });
 
 
   DocManager.on("vporfolio:edit", function(model){

@@ -416,7 +416,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           valid = true,
           errors = {};
 
-      var check = [['edisplayName']];
+      var check = [['edisplayName'],['edescription'],['emotivation'],['eprov'],['eventas']];
       //if(step>2 || step<1) return null;
 
       _.each(check, function(fld){
@@ -440,7 +440,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if (_.has(attrs,'edisplayName') && (!attrs.edisplayName )) {
         errors.edisplayName = "No puede ser nulo";
       }
+      if (_.has(attrs,'edescription') && (!attrs.edescription )) {
+        errors.edescription = "No puede ser nulo";
+      }
+      if (_.has(attrs,'emotivation') && (!attrs.emotivation )) {
+        errors.emotivation = "No puede ser nulo";
+      }
+      if (_.has(attrs,'eprov')) {
+        console.log('validateing PROVINCIA: [%s]', eprov)
 
+      }
+
+      if (_.has(attrs,'eprov') && (!attrs.eprov )) {
+        errors.eprov = "No puede ser nulo";
+      }
+      if (_.has(attrs,'eventas') && (!attrs.eventas )) {
+        errors.eventas = "No puede ser nulo";
+      }
 
       if( ! _.isEmpty(errors)){
         return errors;
@@ -473,14 +489,43 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     validateStep: function(step){
+      console.log('VALIDANDO STEP 2')
       var self = this,
           valid = true,
           errors = {};
 
+      var check = [['rname'],['rdocnum']];
+      //if(step>2 || step<1) return null;
+
+      _.each(check, function(fld){
+          var attr = {};
+          attr[fld] = self.get(fld);
+          var err = self.validate(attr);
+          console.log('validating: [%s] [%s]',fld, err)
+          _.extend(errors, err)
+          if(err) valid = false;
+      });
+      if(!valid){
+         return errors;
+      }else{
+         return null;
+      }
 
     },
 
     validate: function(attrs, options) {
+      var errors = {}
+
+      if (_.has(attrs,'rname') && (!attrs.rname )) {
+        errors.rname = "No puede ser nulo";
+      }
+      if (_.has(attrs,'rdocnum') && (!attrs.rdocnum )) {
+        errors.rdocnum = "No puede ser nulo";
+      }
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
 
     },
 
@@ -515,10 +560,39 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           valid = true,
           errors = {};
 
+      var check = [['vactividades']];
+      //if(step>2 || step<1) return null;
+
+      _.each(check, function(fld){
+          var attr = {};
+          attr[fld] = self.get(fld);
+          var err = self.validate(attr);
+          console.log('validating: [%s] [%s]',fld, err)
+          _.extend(errors, err)
+          if(err) valid = false;
+      });
+      if(!valid){
+         return errors;
+      }else{
+         return null;
+      }
 
     },
 
     validate: function(attrs, options) {
+      var errors = {}
+
+      if (_.has(attrs,'vactividades')){
+        if(this.get('rolePlaying').vendedor){
+          if (!attrs.vactividades ) {
+            errors.vactividades = "No puede ser nulo";
+          }
+        }
+      }
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
 
     },
 
@@ -552,10 +626,40 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           valid = true,
           errors = {};
 
+      var check = [['edisplayName']];
+      //if(step>2 || step<1) return null;
+
+      _.each(check, function(fld){
+          var attr = {};
+          attr[fld] = self.get(fld);
+          var err = self.validate(attr);
+          console.log('validating: [%s] [%s]',fld, err)
+          _.extend(errors, err)
+          if(err) valid = false;
+      });
+      if(!valid){
+         return errors;
+      }else{
+         return null;
+      }
 
     },
 
     validate: function(attrs, options) {
+      var errors = {}
+
+      if (_.has(attrs,'cactividades')){
+        if(this.get('rolePlaying').comprador){
+          if (!attrs.cactividades ) {
+            errors.cactividades = "No puede ser nulo";
+          }
+        }
+      }
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+
 
     },
 

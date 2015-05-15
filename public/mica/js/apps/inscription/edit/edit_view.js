@@ -108,11 +108,12 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
     events: {
       'click .js-openevent': 'openEventClicked',
-      'click .js-provisorio': 'submitForm',
+      'click .js-provisorio': 'submitFormProvisorio',
       'click .js-definitivo': 'submitFormDefinitivo',
       'click  .js-termsofuse': 'termsOfUse',
       'change #legal': 'change',
     },
+
     change: function(e){
       if(this.$('#legal').prop('checked')){
           this.model.set('legal','aceptado');
@@ -130,13 +131,16 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       });
     },
 
-    submitForm: function(){
-        this.trigger('submit:form', this.model);
+    submitFormProvisorio: function(){
+      //console.log('submit provisorio')
+      //console.log('submit');
+      //DocManager.trigger('wizard:next:step', 'cinco');
 
     },
 
     submitFormDefinitivo: function(){
-        this.trigger('submit:form:definitivo', this.model);
+      console.log('submit definitivo')
+      this.trigger('submit:form:definitivo', this.model);
 
     },
     
@@ -215,6 +219,8 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
 
       $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
+        evt.stopPropagation();
+        console.log('wizard NEXT: step: [%s]', step);
         var step = data.step;
         if(step == 1){
           //console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
@@ -223,6 +229,8 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
               evt.preventDefault();
               $('#myWizard').wizard('selectedItem', {step: step});
             }else{
+
+              DocManager.trigger('wizard:next:step', step);
               //console.log('Validation OK',step)
             }
           }
@@ -350,7 +358,9 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
 
       $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
+        evt.stopPropagation();
         var step = data.step;
+        console.log('wizard NEXT: step: [%s]', step);
         if(step == 2){
           //console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
           if(data.direction === 'next'){
@@ -358,7 +368,8 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
               evt.preventDefault();
               $('#myWizard').wizard('selectedItem', {step: step});
             }else{
-              //console.log('Validation OK',step)
+
+              DocManager.trigger('wizard:next:step', step);
             }
           }
         }
@@ -477,15 +488,18 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
  
       $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
+        evt.stopPropagation();
         var step = data.step;
-        if(step == 2){
+        console.log('wizard NEXT: step: [%s]', step);
+        if(step == 3){
           //console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
           if(data.direction === 'next'){
             if(!self.validateStep(step)){
               evt.preventDefault();
               $('#myWizard').wizard('selectedItem', {step: step});
             }else{
-              //console.log('Validation OK',step)
+
+              DocManager.trigger('wizard:next:step', step);
             }
           }
         }
@@ -641,15 +655,19 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       });
 
       $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
+        evt.stopPropagation();
         var step = data.step;
-        if(step == 2){
+        console.log('wizard NEXT: step: [%s]', step);
+        if(step == 4){
           //console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
           if(data.direction === 'next'){
             if(!self.validateStep(step)){
               evt.preventDefault();
               $('#myWizard').wizard('selectedItem', {step: step});
             }else{
-              //console.log('Validation OK',step)
+
+              DocManager.trigger('wizard:next:step', step);
+
             }
           }
         }
