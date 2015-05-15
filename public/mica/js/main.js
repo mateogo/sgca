@@ -18,6 +18,7 @@ utils.loadTemplate([
 
         // Referencias Editor
         'inscripcion/ReferenciasLayout','inscripcion/ReferenciasFormLayout','inscripcion/ReferenciasItemEditor',
+        'inscripcion/ReferenciasItemView','inscripcion/ReferenciasItemList',
 
 
         // Formulario inscripción

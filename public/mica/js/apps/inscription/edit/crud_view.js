@@ -88,7 +88,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
 
   });
-
+/*
   Edit.CrudEditor = Marionette.ItemView.extend({
     tagName: 'div',
 
@@ -147,7 +147,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     
   });
 
-    
+*/    
   Backgrid.RepresentanteActionCell = Backgrid.Cell.extend({
       // Cell default class names are the lower-cased and dasherized
       // form of the the cell class names by convention.
@@ -181,7 +181,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       }
   });
   
-  Backgrid.PorfolioActionCell = Backgrid.Cell.extend({
+  Backgrid.CporfolioActionCell = Backgrid.Cell.extend({
       // Cell default class names are the lower-cased and dasherized
       // form of the the cell class names by convention.
       className: "action-cell",
@@ -204,7 +204,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
         this.trigger('edit:item:action');
         console.log('Click ITEM [%s]:[%s]', this.model.whoami, this.model.get('denominacion'));
         this.model.trigger('edit:me');
-        DocManager.trigger('porfolio:edit',this.model);
+        DocManager.trigger('cporfolio:edit',this.model);
 
       },
         
@@ -284,7 +284,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     initialize: function(attrs, opts){
       var self = this;
       //model, collection, tablecols
-      console.log('CRUD MANAGER INIT arguments: [%s]', arguments.length)
+      console.log('CRUD MANAGER INIT arguments: [%s]  Editor View[%s]', arguments.length, opts.EditorView)
 
       this.options = opts;
       self.filterFactory(self.collection,self.get('filtercols'));

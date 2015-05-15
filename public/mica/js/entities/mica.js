@@ -30,13 +30,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
-    update: function(user, representantes, cb){
+    update: function(user, representantes, vporfolios, cporfolios, cb){
       var self = this;
       initModelForUpdate(user, self);
       _updateFacetStepOne(user, self);
       _updateFacetStepTwo(user, representantes, self);
-      _updateFacetStepThree(user, self);
-      _updateFacetStepFour(user, self);
+      _updateFacetStepThree(user, vporfolios, self);
+      _updateFacetStepFour(user, cporfolios, self);
 
       // ********** SAVE TO SERVER ***********
       if(!self.save(null,{
@@ -112,56 +112,20 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       responsable:{
         rmail: '',
         rname: '',
-        rapellido: '',
         rcargo: '',
 
         //
-        rname: '',
-        rsurname: '',
-        rgenero: '',
-
-        rdoctipo: '',
         rdocnum: '',
-        rnac: '',
         rfenac: '',
 
         rtel: '',
         rcel: '',
 
-        rcalle: '',
-        rcallenro: '',
-        rcp: '',
-        rpais: '',
-        rprov: '',
-        rprovotra: '',
-        rlocalidad: '',
-        rcode: '',
 
         ridiomas: '',
-        rweb: '',
-        raudiovideo: '',
         representantes: [],
       },
       
-      participaciones:{
-        en_paec: 'no',
-        en_paec_detalle: '',
-        en_mica: 'no',
-        en_mica_detalle: {
-          mica: false,
-          premica: false,
-          micsur: false,
-          micaproduce: false,
-        },
-      en_mica: 'no',
-      en_mica_detalle: {
-          movilidad: false,
-          sostenibilidad: false,
-          infraestructura: false,
-          innovacion: false,
-        },
-      },
-
       isComprador: '',
       isVendedor: '',
 
@@ -182,50 +146,75 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           videojuegos: false,
         },
 
-*/        sub_aescenicas: {
-          teatro: false,
-          mimo: false,
-          otro: false,
+*/      
+        sub_aescenicas: {
+          diseniador: false,
+          direccion: false,
+          dramaturgia: false,
+          coreografia: false,
+          programadorfestivales: false,
+          programadorsalas: false,
+          camaras: false,
+          proveedores: false,
         },
         sub_audiovisual: {
-          cine: false,
-          publicidad: false,
-          otro: false,
+          pservicios: false,
+          pcontenidos: false,
+          servicios: false,
+          vjs: false,
+          profesional: false,
+          programador: false,
+          distribuidor: false,
+          exhibtelevision: false,
+          exhibcine: false,
+          exhibmultiplataforma: false,
+          camaras: false,
+          editores: false,
         },
         sub_editorial: {
-          ficcion: false,
-          ensayo: false,
-          cuento: false,
-          poesia: false,
-          otros: false,
+          editor: false,
+          libreria: false,
+          distribuidora: false,
+          ilustrador: false,
+          revistacultural: false,
+          elecronico: false,
         },
         sub_musica: {
-          tango: false,
-          folklore: false,
-          otros: false,
+          representante: false,
+          produccion: false,
+          festival: false,
+          salas: false,
+          sello: false,
+          servicios: false,
+          camaras: false,
         },
         sub_disenio: {
           grafico: false,
           indumentaria: false,
-          otros: false,
+          industrial: false,
+          joyeria: false,
+          multimedia: false,
         },
         sub_videojuegos: {
-          escritorio: false,
-          moviles: false,
-          otros: false,
+          programacion: false,
+          arte: false,
+          disenio: false,
+          guion: false,
+          produccion: false,
+          musica: false,
+          testeo: false,
+          comunicacion: false,
+          comunidades: false,
         },
+
         vexperienciaintl: 1,
         vdescriptores: [],
         vcomentario: '',
-        vproducto: {
+        vporfolio: {
           denominacion:'',
-          urlaudio: '',
-          urlvideo: '',
-          urlimg: '',
-          urlweb: '',
-          urlotro: '',
+          referencias: [],
         },
-        vproductos: [],
+        vporfolios: [],
       },
 
       comprador: {
@@ -309,11 +298,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         ccomentario: '',
         cporfolio: {
           denominacion:'',
-          urlaudio: '',
-          urlvideo: '',
-          urlimg: '',
-          urlweb: '',
-          urlotro: '',
+          referencias: [],
         },
         cporfolios: [],
       },
@@ -392,7 +377,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       documid: '',
       fealta: fealta.getTime(),
       fecomp: fecomp,
-      slug: 'Inscripcion MICA 2015' + model.get('edisplayName'),
+      slug: 'Inscripcion MICA 2015' + model.get('solicitante').edisplayName,
       description: '',
       estado_alta:'activo',
       nivel_ejecucion: 'enproceso',
@@ -625,7 +610,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     schema: {
         aname:    {type: 'Text',  title: 'Nombre'},
-        acargo:   {type: 'Text',  title: 'Cargo'},
+        acargo:   {type: 'Text',  title: 'CARGO'},
         amail:    {type: 'Text',  title: 'E-mail'},
         acel:     {type: 'Text',  title: 'Tel celular'},
         atel:     {type: 'Text',  title: 'Tel línea'},
@@ -671,7 +656,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'Porfolio: MICA.js ',
     
     schema: {
-        denominacion: {type: 'TextArea',  title: 'Describa su producto, proyecto o servicio'},
+        denominacion: {type: 'TextArea',  title: 'Describa su producto, proyecto o servicio', editorAttrs:{placeholder:'Síntesis ejecutiva del producto/servicio a destacar'}},
         //referencias:  {type: 'TextArea',  title: 'Indique referencias externas (enlaces a sitio web, notas periodísticas, audios, videos, u otros)'},
     },
 
@@ -689,9 +674,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     defaults: {
-      denominacion: 'Ingrese nuevo antecedente: proyecto/ producto/ servicio',
+      denominacion: '',
       referencias: [],
-      porfolios:[],
     },
   }); 
   
@@ -711,9 +695,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'PorfolioReference: MICA.js ',
     
     schema: {
-      tlink:     {type: 'Select',   title: 'Tipo de enlace',   editorAttrs:{placeholder:'Tipo de referencia externa'},options: utils.linkTypeOpLst },
+      tlink:     {type: 'Select',   title: 'Tipo de enlace externo',   editorAttrs:{placeholder:'Tipo de referencia externa'},options: utils.linkTypeOpLst },
       slug:      {type: 'Text',     title: 'Descripción',      editorAttrs:{placeholder:'Descripción/ comentario del enlace propuesto'}},
-      targeturl: {type: 'Text',     title: 'Url',      editorAttrs:{placeholder:'URL'}, dataType:'url', validators:['required', 'url']},
+      targeturl: {type: 'Text',     title: 'Enlace (URL)',      editorAttrs:{placeholder:'URL'}, dataType:'url', validators:['required', 'url']},
     },
 
  
@@ -731,9 +715,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     defaults: {
       tlink: 'no_definido',
-      utargeturl: '',
+      targeturl: '',
       slug: '',
     },
+
+
+    // defaults: {
+    //   tlink: 'web',
+    //   targeturl: 'http://www.algo.com',
+    //   slug: 'Mil gracias',
+    // },
+
+
   }); 
   
   Entities.PorfolioReferenceCol = Backbone.Collection.extend({
@@ -796,34 +789,33 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   _facetFactoryStepThree = function(model){
     //var data = _.extend({}, model.get('rolePlaying'), model.get('vendedor'));
+    model.vporfolios = model.get('vendedor').vporfolios;
     return new Entities.MicaStepThreeFacet(model.get('vendedor'));
   };
-  _updateFacetStepThree = function(user, model){
+  _updateFacetStepThree = function(user, porfolios, model){
     //var rolePlaying = model.get('rolePlaying');
-    var vendedor = model.get('vendedor');
+    var vendedor;
     vendedor = model.stepThree.attributes;
+    vendedor.vporfolios = porfolios.toJSON();
     model.set('vendedor', vendedor);
   };
 
   _facetFactoryStepFour = function(model){
-    var data = _.extend({}, model.get('rolePlaying'), model.get('comprador'));
-    return new Entities.MicaStepFourFacet(data);
+    //var data = _.extend({}, model.get('rolePlaying'), model.get('comprador'));
+    model.cporfolios = model.get('comprador').cporfolios;
+    return new Entities.MicaStepFourFacet(model.get('comprador'));
   };
-  _updateFacetStepFour = function(user, model){
+  _updateFacetStepFour = function(user, porfolios, model){
     //var rolePlaying = model.get('rolePlaying');
-    var comprador = model.get('comprador');
+    var comprador;
     comprador = model.stepFour.attributes;
+    comprador.cporfolios = porfolios.toJSON();
     model.set('comprador', comprador);
   };
 
   _facetFactoryStepFive = function(model){
     var data = _.extend({}, model.get('pasajero'), model.get('evento'), model.get('tramo'), model.get('viaje'));
     return new Entities.MicaStepFiveFacet(data);
-  };
-
-  _facetFactoryPorfolio = function(model){
-    var data = _.extend({}, model.get('porfolios'), model.get('porfolio'));
-    return new Entities.Porfolio(data);
   };
 
 
@@ -907,3 +899,4 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
  
 });
+

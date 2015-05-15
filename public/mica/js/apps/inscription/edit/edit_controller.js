@@ -102,10 +102,11 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     var stepFour = new Edit.StepFourLayout({model: session.model['stepFour']});
     registerStepFourEvents(session, stepFour);
 
-
     session.views.wizardlayout = wizardlayout;
     session.views.stepOne   = stepOne;
+    session.views.stepTwo   = stepTwo;
     session.views.stepThree = stepThree;
+    session.views.stepFour = stepFour;
 
 
     //         this.trigger('adminrequest:cost:changed', costo_total);
@@ -123,29 +124,29 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
   var registerBasicViewEvents = function(session, wizardlayout){
     wizardlayout.on("submit:form", function(model){
       console.log('********SUBMIT PROVISORIO BEGINS********[%s]', model.whoami)
-
-      getSession().model.update(session.currentUser, session.representantes, function(error, model){
-
+      
+      getSession().model.update(session.currentUser, session.representantes, session.vporfolios, session.cporfolios, function(error, model){
 
         DocManager.trigger('micarequest:edit', model)
 
       });
-
-
     });
 
     wizardlayout.on("submit:form:definitivo", function(model){
       console.log('********SUBMIT DEFINITIVO BEGINS********[%s]', model.whoami, model.get('solicitante').emotivation)
 
-      enviarmail(utils.templates.MailFormSubmitNotification, {
-        toName: getSession().currentUser.get('displayName'),
-        cnumber: model.get('cnumber'),
-        fecomp: model.get('fecomp'),
-        nodeId: model.id,
-        slug: model.get('solicitante').emotivation,
+      getSession().model.update(session.currentUser, session.representantes, session.vporfolios, session.cporfolios, function(error, model){
+        enviarmail(utils.templates.MailFormSubmitNotification, {
+          toName: getSession().currentUser.get('displayName'),
+          cnumber: model.get('cnumber'),
+          fecomp: model.get('fecomp'),
+          nodeId: model.id,
+          slug: model.get('solicitante').emotivation,
+        });
+
+        DocManager.trigger('micarequest:edit', model)
 
       });
-
 
     });
 
@@ -203,7 +204,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     session.views.stepThree = layout;
     var stepThreeForm = new Edit.StepThreeForm({model: session.model['stepThree']});
 
-    var porfolioCol = new Entities.PorfolioCol();
+    var porfolioCol = new Entities.PorfolioCol(session.model.vporfolios);
     var porfolio = new Entities.Porfolio();
 
     session.vporfolios = porfolioCol;
@@ -211,7 +212,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
     layout.on("show", function(){
       layout.formRegion.show(stepThreeForm);
-
       DocManager.trigger('vporfolio:edit',porfolio);
     });
   };
@@ -221,62 +221,21 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     session.views.stepFour = layout;
     var stepFourForm = new Edit.StepFourForm({model: session.model['stepFour']});
 
-    var porfolioCol = new Entities.PorfolioCol();
+    var porfolioCol = new Entities.PorfolioCol(session.model.cporfolios);
     var porfolio = new Entities.Porfolio();
 
-    session.porfolios = porfolioCol;
+    session.cporfolios = porfolioCol;
 
 
     layout.on("show", function(){
       layout.formRegion.show(stepFourForm);
-
-      DocManager.trigger('porfolio:edit',porfolio);
+      DocManager.trigger('cporfolio:edit',porfolio);
     });
-
-  
-
-   //  console.log('Porfolio:[%s]', utils.templates.PorfolioForm);
-
-
-   //  //console.log('onRender:[%s]', this.model.whoami);
-   //  //this.form.render();
-   //  //this.$el.find('#formContainer').html(this.form.el);
-   //  //this.formRegion.show(this.form.el);
-
-
-   //  crudLayout.on('save:crud:editor', function(){
-   //    console.log('save:crud:editor BUBBLED')
-   //    crudForm.commit()
-
-
-   //    var pf = new Entities.Porfolio(model.attributes)
-   //    pf.on('edit:me', function(){
-   //      var crudForm = new Backbone.Form({
-   //        model: pf,
-   //        template: utils.templates.PorfolioForm
-   //      });
-   //      crudLayout.form = crudForm;
-   //      crudLayout.formRegion.show(crudForm);
-   //      console.log('Edit:me items:[%s]', porfolioCol.length);
-
-   //    });
-   //    porfolioCol.add(pf);
- 
-   //  });
-
-   //  table.on('edit:item:action', function(){
-   //    console.log('EDIT:ITEM:ACTION ON LAYOUT')
-   //  });
-
-
-   // crudLayout.on('edit:item:action', function(){
-   //    console.log('EDIT:ITEM:ACTION ON LAYOUT')
-   //  });
 
   };
 
-
-  var registerSaveEvent = function(layout, form, modelCol, model ){
+/*
+  var registerPorfolioEvent = function(layout, form, modelCol, model ){
     console.log('registerSaveEvent Called: form:[%s] model:[%s]', form.cid, model.cid)
     layout.on('save:crud:editor', function(){
       form.commit();
@@ -307,12 +266,12 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
     //registerPorfolioModel(layout, model);
 
-    registerSaveEvent(layout, crudForm, modelCol, model);
+    registerPorfolioEvent(layout, crudForm, modelCol, model);
 
     layout.formRegion.show(crudForm);
   };
 
-
+*/
 
 
   var createGridController = function(layout, col){
@@ -357,32 +316,32 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
     },
  
-    initCrudView: function(porfolio){
+    initPorfolioCompradorView: function(porfolio){
       var session = getSession();
       var crudManager = new Edit.CrudManager(
           {
             gridcols:[
               {name:'denominacion', label:'Descripción del producto/proyecto/servicio', cell:'string', editable:false},
-              {label: 'Acciones', cell: 'porfolioAction', editable:false, sortable:false},
+              {label: 'Acciones', cell: 'cporfolioAction', editable:false, sortable:false},
             ],
             filtercols:['denominacion'],
-            editEventName: 'porfolio:edit',
+            editEventName: 'cporfolio:edit',
 
           },
           {
             test: 'TestOK',
             layoutTpl: utils.templates.PorfolioLayout,
             formTpl: utils.templates.PorfolioForm,
-            collection: session.porfolios,
+            collection: session.cporfolios,
             editModel: Entities.Porfolio,
             modelToEdit: porfolio,
+            EditorView: Edit.PorfolioEditor,
           }
       );
       session.views.stepFour.porfolioRegion.show(crudManager.getLayout());
     },
 
     initPorfolioVendedorView: function(porfolio){
-      console.log('INIT-PORFOLIO-VENDEDOR')
       var session = getSession();
       var crudManager = new Edit.CrudManager(
           {
@@ -418,9 +377,9 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
   });
 
 
-  DocManager.on("porfolio:edit", function(model){
+  DocManager.on("cporfolio:edit", function(model){
     console.log('PORFOLIOS')
-    API.initCrudView(model);
+    API.initPorfolioCompradorView(model);
   });
 
 

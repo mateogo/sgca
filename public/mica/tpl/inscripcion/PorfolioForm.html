@@ -1,29 +1,21 @@
-<div class="row">
-  <div class="col-sm-12 col-xm-12">
-    <h3>Portfolio de Productos o Servicios</h3>
-    <p>Detalle los productos/proyectos/servicios que quiere contratar / comprar el el MICA. Podrá cargar hasta 10 items</p> 
-    <div class="col-xs-12">
-      <!--BEG CARGA DE PRODUCTOS-->
-      <div class="alert alert-info row">
-        <h3><span class="fa fa-star"></span> Producto/Proyecto/Servicio</h3>
-        <hr>
-        <div class="form-group">
-            <label class="control-label" for="denominacion">Describa un Producto, Proyecto o Servicio</label>
-            <div class="input-group">
-              <textarea id="denominacion" class="form-control" rows="6"  maxlength="500" placeholder="Describa brevemente un producto, proyecto o servicio desarrollado recientementeque considere relevante." name="denominacion" ><%= denominacion %></textarea>
-              <div class="input-group-addon">
-                <div title="Describa brevemente un producto, proyecto o servicio desarrollado recientementeque considere relevante." rel="tooltip">
-                  <span class="fa fa-question-circle"></span>
-                </div>
-              </div>
-              <p id="limit-chars"></p>
+<div class="row alert alert-info">
+  <div class='col-sm-12'>
+    <h3><span class="fa fa-star"></span> Portfolio</h3>
+    <p>Describa los productos o servicios más relevantes desarrollados por su empresa u organización. Puede ingresar hasta diez casos.</p> 
+    <hr>
+    <div class="form-group">
+        <label class="control-label" for="denominacion">Describa un Producto, Proyecto o Servicio</label>
+        <div class="input-group">
+          <textarea id="denominacion" class="form-control" rows="6"  maxlength="500" placeholder="Describa brevemente un producto, proyecto o servicio desarrollado recientementeque considere relevante." name="denominacion" ><%= denominacion %></textarea>
+          <div class="input-group-addon">
+            <div title="Describa brevemente un producto, proyecto o servicio desarrollado recientementeque considere relevante." rel="tooltip"><span class="fa fa-question-circle"></span>
             </div>
-            <span class="help-block"></span>
+          </div>
         </div>
-        <div id="referencesContainer" >ACÁ EMPIEZA LA MOVIDA</div>
-
-      </div>
+        <span class="help-block"></span>
     </div>
-
+  </div>
+  <div class='col-sm-12'>
+    <div id="referencesContainer"></div>
   </div>
 </div>
