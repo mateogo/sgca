@@ -49,20 +49,23 @@
                  <div class="step-pane" data-step="5">
                   <h4>Confirmación</h4>
                   <p>!Felicitaciones!</p>
-                  <p>Hemos registrado su postulación y el sistema enviará de manera automática un email a su cuenta de correo con los datos de la registración en caso que desee volver a editar o verificar sus datos.</p>
-                  <hr>
+                  <p>¡Has llegado al último paso!</p>
                   <div class="form-group required">
                     <div class="row">
                       <div class="col-sm-12">
+                         <div id="print-legal">Al confirmar esta solicitud, le será enviado un correo electrónico para toda referencia futura.</div>
+                        <hr class="spacer" />
+                        <p>Utiliza 'Guardar borrador' si aún no has terminado de perfeccionar la carga de la información requerida. La información cargada hasta este momento no se publica y no es visible para terceros.</p>
+                        <button type="button" class="btn btn-primary js-provisorio">Guardar borrador</button>
+                        <hr class="spacer" />
+
+                        <p>Al 'guardar y publicar' la información cargada en este formulario pasará a ser visible por el equipo de producción de MICA y por otros participantes de las rondas. La información cargada siempre está a tu disposición para ser revisada y/o ampliada, cuando vuelvas a ingresar al sistema serás automáticamente redireccionado a tu espacio de trabajo. En algunos minutos recibirás un mail con la confirmación exitosa del alta de tu inscripción.</p>
                         <label id='legal1' for="legal">
                           <input type="checkbox" id="legal" name="legal"  <%= legal === 'aceptado' ? 'checked="checked"' : '' %>   value='aceptado' > 
                           <span class="checkbox-label control-label">He leído y acepto los <a href="http://www.cultura.gob.ar" class='js-termsofuse' target="_blank">terminos y condiciones</a></span>
                         </label>
-                         <div id="print-legal">Al confirmar esta solicitud, le será enviado un correo electrónico para toda referencia futura.</div>
-                        <hr class="spacer" />
-                        <button type="button" class="btn btn-primary js-provisorio">Guardar provisorio</button>
-                        <hr class="spacer" />
-                        <button  type="button" class="btn btn-primary js-definitivo">Guardar definitivo</button>
+                        <hr>
+                        <button  type="button" class="btn btn-primary js-definitivo">Guardar y publicar</button>
                      </div>
                     </div>
                   </div>

@@ -217,6 +217,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         vporfolios: [],
       },
 
+
       comprador: {
         rolePlaying:{
           comprador: false
@@ -224,17 +225,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
         cactividades: '',
 
-/*
-        cactividades: {
-          aescenicas: false,
-          audiovisual: false,
-          disenio: false,
-          editorial: false,
-          musica: false,
-          videojuegos: false,
-        },
-
-*/        
         sub_aescenicas: {
           diseniador: false,
           direccion: false,
@@ -560,7 +550,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           valid = true,
           errors = {};
 
-      var check = [['vactividades']];
+      var check = [['vactividades'],['vcomentario']];
       //if(step>2 || step<1) return null;
 
       _.each(check, function(fld){
@@ -588,6 +578,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             errors.vactividades = "No puede ser nulo";
           }
         }
+      }
+
+      if (_.has(attrs,'vcomentario') && (!attrs.vcomentario )) {
+        errors.vcomentario = "No puede ser nulo";
       }
 
       if( ! _.isEmpty(errors)){
@@ -626,7 +620,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           valid = true,
           errors = {};
 
-      var check = [['edisplayName']];
+      var check = [['cactividades'],['ccomentario']];
       //if(step>2 || step<1) return null;
 
       _.each(check, function(fld){
@@ -654,6 +648,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             errors.cactividades = "No puede ser nulo";
           }
         }
+      }
+
+      if (_.has(attrs,'ccomentario') && (!attrs.ccomentario )) {
+        errors.ccomentario = "No puede ser nulo";
       }
 
       if( ! _.isEmpty(errors)){
@@ -716,10 +714,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         aname:    {type: 'Text',  title: 'Nombre'},
         acargo:   {type: 'Text',  title: 'CARGO'},
         amail:    {type: 'Text',  title: 'E-mail'},
-        acel:     {type: 'Text',  title: 'Tel celular'},
-        atel:     {type: 'Text',  title: 'Tel línea'},
+        acel:     {type: 'Text',  title: 'Tel celular', editorAttrs:{placeholder:'+pais area numero'}},
+        atel:     {type: 'Text',  title: 'Tel línea',  editorAttrs:{placeholder:'+pais area numero'}},
         aidiomas: {type: 'Text',  title: 'Conocimiento de idiomas'},
-        afenac:   {type: 'Text',  title: 'Fecha Nacimiento'},
+        afenac:   {type: 'Text',  title: 'Fecha Nacimiento', editorAttrs:{placeholder:'dd/mm/aaaa'}},
         adni:     {type: 'Text',  title: 'DNI o Pasaporte'},
     },
  
@@ -760,6 +758,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'Porfolio: MICA.js ',
     
     schema: {
+        slug: {type: 'Text',  title: 'Denominación del producto o servicio', editorAttrs:{placeholder:'Título o denominación para este elemento del porfolio'}},
         denominacion: {type: 'TextArea',  title: 'Describa su producto, proyecto o servicio', editorAttrs:{placeholder:'Síntesis ejecutiva del producto/servicio a destacar'}},
         //referencias:  {type: 'TextArea',  title: 'Indique referencias externas (enlaces a sitio web, notas periodísticas, audios, videos, u otros)'},
     },
@@ -778,6 +777,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     defaults: {
+      slug: '',
       denominacion: '',
       referencias: [],
     },
@@ -801,7 +801,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     schema: {
       tlink:     {type: 'Select',   title: 'Tipo de enlace externo',   editorAttrs:{placeholder:'Tipo de referencia externa'},options: utils.linkTypeOpLst },
       slug:      {type: 'Text',     title: 'Descripción',      editorAttrs:{placeholder:'Descripción/ comentario del enlace propuesto'}},
-      targeturl: {type: 'Text',     title: 'Enlace (URL)',      editorAttrs:{placeholder:'URL'}, dataType:'url', validators:['required', 'url']},
+      targeturl: {type: 'Text',     title: 'Enlace (URL)',      editorAttrs:{placeholder:'http://www.dominio.com.pais'}, dataType:'url', validators:['required', 'url']},
     },
 
  

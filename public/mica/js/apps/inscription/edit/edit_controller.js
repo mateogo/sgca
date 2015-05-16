@@ -144,7 +144,8 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
           slug: model.get('solicitante').emotivation,
         });
 
-        DocManager.trigger('micarequest:edit', model)
+        window.open('http://mica.cultura.gob.ar','_self');
+        //DocManager.trigger('micarequest:edit', model)
 
       });
 
@@ -272,7 +273,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
   };
 
 */
-
+/*
 
   var createGridController = function(layout, col){
     var table = Edit.gridFactory(col,[
@@ -286,7 +287,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     layout.tableRegion.show(table);
   };
 
-
+*/
   var API = {
 
     initRepresentanteView: function(representante){
@@ -309,6 +310,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
             collection: session.representantes,
             editModel: Entities.Representante,
             modelToEdit: representante,
+            editorOpts: {},
           }
       );
       session.views.stepTwo.representanteRegion.show(crudManager.getLayout());
@@ -321,10 +323,10 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       var crudManager = new Edit.CrudManager(
           {
             gridcols:[
-              {name:'denominacion', label:'Descripción del producto/proyecto/servicio', cell:'string', editable:false},
+              {name:'slug', label:'Denominación del producto/proyecto/servicio', cell:'string', editable:false},
               {label: 'Acciones', cell: 'cporfolioAction', editable:false, sortable:false},
             ],
-            filtercols:['denominacion'],
+            filtercols:['slug'],
             editEventName: 'cporfolio:edit',
 
           },
@@ -335,7 +337,8 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
             collection: session.cporfolios,
             editModel: Entities.Porfolio,
             modelToEdit: porfolio,
-            EditorView: Edit.PorfolioEditor,
+            EditorView: Edit.PorfolioEditorView,
+            editorOpts: {parentModel: session.model['stepFour']},
           }
       );
       session.views.stepFour.porfolioRegion.show(crudManager.getLayout());
@@ -346,10 +349,10 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       var crudManager = new Edit.CrudManager(
           {
             gridcols:[
-              {name:'denominacion', label:'Descripción del producto/proyecto/servicio', cell:'string', editable:false},
+              {name:'slug', label:'Denominación del producto/proyecto/servicio', cell:'string', editable:false},
               {label: 'Acciones', cell: 'vporfolioAction', editable:false, sortable:false},
             ],
-            filtercols:['denominacion'],
+            filtercols:['slug'],
             editEventName: 'vporfolio:edit',
 
           },
@@ -360,7 +363,8 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
             collection: session.vporfolios,
             editModel: Entities.Porfolio,
             modelToEdit: porfolio,
-            EditorView: Edit.PorfolioEditor,
+            EditorView: Edit.PorfolioEditorView,
+            editorOpts: {parentModel: session.model['stepThree']},
           }
       );
       session.views.stepThree.vporfolioRegion.show(crudManager.getLayout());

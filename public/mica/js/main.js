@@ -8,8 +8,18 @@ utils.loadTemplate([
 
         // MailSender
         'MailTemplateDefault','MailFormSubmitNotification',
+
         // terminos y condiciones
         'inscripcion/MicaTerminosYCondiciones',
+
+        // instructivos
+        'inscripcion/MicaInstructivoArtesEscenicas',
+        'inscripcion/MicaInstructivoMusica',
+        'inscripcion/MicaInstructivoDisenio',
+        'inscripcion/MicaInstructivoVideojuego',
+        'inscripcion/MicaInstructivoAudiovisual',
+        'inscripcion/MicaInstructivoEditorial',
+        'inscripcion/MicaInstructivoDefault',
 
         // Avatar
         'attachmentview/PhotosLayoutView','attachmentview/PhotoItem','attachmentview/PhotoItemEditorView',
@@ -27,7 +37,7 @@ utils.loadTemplate([
         'inscripcion/MicaInscripcion03Layout','inscripcion/MicaInscripcion03Form',
         'inscripcion/MicaInscripcion04Layout','inscripcion/MicaInscripcion04Form',
         'inscripcion/RepresentanteForm',
-        'inscripcion/PorfolioLayout','inscripcion/PorfolioForm',
+        'inscripcion/PorfolioLayout','inscripcion/PorfolioEditorLayout','inscripcion/PorfolioEditor',
         'inscripcion/RepresentanteLayout','inscripcion/RepresentanteForm',
         //'inscripcion/FileUploadingForm','inscripcion/FondoMovilidadInscriptionFormLayout','inscripcion/MovilidadCostosForm',
         //'inscripcion/MovilidadDatosGeneralesForm','inscripcion/ParticipacionesAnterioresForm','inscripcion/RegistroEntidadForm',

@@ -1068,7 +1068,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
   //       PORFOLIO EDITOR VIEW
   //*************************************************************
   Edit.PorfolioEditor = DocManager.MicaRequestApp.Common.Views.Form.extend({
-    tagName: 'div',
     template: false,
     initialize: function(opts){
       console.log('Porfolio Editor RENDER model:[%s]',this.model.whoami);
@@ -1078,14 +1077,52 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
 
     onRender: function(){
-      console.log('porfolioRENDER')
-      this.createReferenceView();
-
-
     },
    
     getTemplate: function(){
-      return utils.templates.PorfolioForm;
+      return utils.templates.PorfolioEditor;
+    },
+
+
+
+  });
+
+
+
+  //*************************************************************
+  //       PORFOLIO EDITOR VIEW
+  //*************************************************************
+  Edit.PorfolioEditorView = Marionette.LayoutView.extend({
+    tagName: 'div',
+
+    regions: {
+      porfolioEditor: '#porfolioEditor',
+      referencesContainer: '#referencesContainer',
+    },
+
+    initialize: function(opts){
+      console.log('****Porfolio Editor RENDER model:[%s] [%s]',this.model.whoami, opts.editorOpts.actividad);
+      this.options = opts;
+    },
+
+    onRender: function(){
+      console.log('porfolioRENDER')
+      this.createPorfolioEditor();
+      this.createReferenceView();
+    },
+   
+    getTemplate: function(){
+      return utils.templates.PorfolioEditorLayout;
+    },
+
+    createPorfolioEditor: function(){
+      var self = this;
+
+      this.porfolioEditor = new Edit.PorfolioEditor({
+        model: this.model,
+      });
+
+      this.getRegion('porfolioEditor').show(this.porfolioEditor);
     },
 
     createReferenceView: function(){
@@ -1095,19 +1132,49 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       this.referenceEditor = new Edit.ReferenceEditor({
         model: new DocManager.Entities.PorfolioReference(),
         collection: references,
-        el: this.$('#referencesContainer'),
-
       });
-      this.referenceEditor.render();
 
-
+      this.getRegion('referencesContainer').show(this.referenceEditor);
     },
-    
-    // regions: {
-    //   formRegion: '#form-region',
-    // },
 
     events: {
+      "click .js-instructivo-porfolio" : "showInstructivo",
+    },
+
+    showInstructivo: function(e){
+      var self = this;
+      e.preventDefault();
+      e.stopPropagation();
+
+      console.log('Show Instructivo');
+
+      if(this.options.editorOpts){
+        DocManager.confirm(this.helpDataTpl(this.options.editorOpts),{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
+            self.$('#legal').prop('checked', true);
+        });
+      }
+
+    },
+    helpDataTpl: function(opts){
+      var item;
+
+      //console.log('Actividad: [%s]',opts.parentModel.get('vactividades') || opts.parentModel.get('cactividades'));
+
+      if(opts){
+        if(opts.parentModel){
+          item = opts.parentModel.get('vactividades') || opts.parentModel.get('cactividades')
+          console.log('item: [%s]', item);
+
+          if(item === 'aescenicas')        return utils.templates.MicaInstructivoArtesEscenicas();
+          else if(item === 'musica')       return utils.templates.MicaInstructivoMusica();
+          else if(item === 'audiovisual') return utils.templates.MicaInstructivoAudiovisual();
+          else if(item === 'disenio')      return utils.templates.MicaInstructivoDisenio();
+          else if(item === 'videojuegos')  return utils.templates.MicaInstructivoVideojuego();
+          else if(item === 'editorial')    return utils.templates.MicaInstructivoEditorial();
+        }
+      }
+
+      return utils.templates.MicaInstructivoDefault();
     },
 
     commit: function(){
