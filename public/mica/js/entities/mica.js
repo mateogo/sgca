@@ -572,16 +572,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     validate: function(attrs, options) {
       var errors = {}
 
-      if (_.has(attrs,'vactividades')){
-        if(this.get('rolePlaying').vendedor){
-          if (!attrs.vactividades ) {
-            errors.vactividades = "No puede ser nulo";
-          }
-        }
-      }
+      if(this.get('rolePlaying').vendedor){
 
-      if (_.has(attrs,'vcomentario') && (!attrs.vcomentario )) {
-        errors.vcomentario = "No puede ser nulo";
+        if (_.has(attrs,'vactividades') && (!attrs.vactividades )) {
+          errors.vactividades = "No puede ser nulo";
+        }
+        
+        if (_.has(attrs,'vcomentario') && (!attrs.vcomentario )) {
+          errors.vcomentario = "No puede ser nulo";
+        }
+
       }
 
       if( ! _.isEmpty(errors)){
@@ -641,23 +641,20 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     validate: function(attrs, options) {
       var errors = {}
-
-      if (_.has(attrs,'cactividades')){
-        if(this.get('rolePlaying').comprador){
-          if (!attrs.cactividades ) {
-            errors.cactividades = "No puede ser nulo";
-          }
+      if(this.get('rolePlaying').comprador){
+        if (_.has(attrs,'cactividades') && (!attrs.cactividades )) {
+          errors.cactividades = "No puede ser nulo";
         }
-      }
+        
+        if (_.has(attrs,'ccomentario') && (!attrs.ccomentario )) {
+          errors.ccomentario = "No puede ser nulo";
+        }
 
-      if (_.has(attrs,'ccomentario') && (!attrs.ccomentario )) {
-        errors.ccomentario = "No puede ser nulo";
       }
 
       if( ! _.isEmpty(errors)){
         return errors;
       }
-
 
     },
 
