@@ -4202,7 +4202,7 @@ li.dropdown.user.user-menu {
 }
 .input-group .form-control {
   position: relative;
-  z-index: 2;
+  z-index: 0;
   float: left;
   width: 100%;
   margin-bottom: 0;
