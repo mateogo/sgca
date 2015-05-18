@@ -7,7 +7,7 @@ utils.loadTemplate([
         'HeaderView',
 
         // MailSender
-        'MailTemplateDefault','MailFormSubmitNotification',
+        'MailTemplateDefault','MailFormSubmitNotification','MailFormGuardarProvisorio',
 
         // terminos y condiciones
         'inscripcion/MicaTerminosYCondiciones',

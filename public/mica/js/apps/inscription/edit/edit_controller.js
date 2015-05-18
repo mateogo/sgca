@@ -128,6 +128,14 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       getSession().model.update(session.currentUser, session.representantes, session.vporfolios, session.cporfolios, function(error, model){
         Message.success('Los datos han sido guardados en modo borrador.');
 
+        enviarmail(utils.templates.MailFormGuardarProvisorio, {
+          toName: getSession().currentUser.get('displayName'),
+          cnumber: model.get('cnumber'),
+          fecomp: model.get('fecomp'),
+          nodeId: model.id,
+          slug: model.get('solicitante').emotivation,
+        });
+
         window.open('http://mica.cultura.gob.ar','_self');
         //DocManager.trigger('micarequest:edit', model)
 
