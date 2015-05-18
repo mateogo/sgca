@@ -41,7 +41,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       // ********** SAVE TO SERVER ***********
       if(!self.save(null,{
         success: function(model){
-          console.log('callback SUCCESS')
 
           cb(null,model);
 
@@ -413,7 +412,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           var attr = {};
           attr[fld] = self.get(fld);
           var err = self.validate(attr);
-          console.log('validating: [%s] [%s]',fld, err)
           _.extend(errors, err)
           if(err) valid = false;
       });
@@ -437,7 +435,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         errors.emotivation = "No puede ser nulo";
       }
       if (_.has(attrs,'eprov')) {
-        console.log('validateing PROVINCIA: [%s]', eprov)
 
       }
 
@@ -479,7 +476,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     validateStep: function(step){
-      console.log('VALIDANDO STEP 2')
       var self = this,
           valid = true,
           errors = {};
@@ -491,7 +487,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           var attr = {};
           attr[fld] = self.get(fld);
           var err = self.validate(attr);
-          console.log('validating: [%s] [%s]',fld, err)
           _.extend(errors, err)
           if(err) valid = false;
       });
@@ -557,7 +552,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           var attr = {};
           attr[fld] = self.get(fld);
           var err = self.validate(attr);
-          console.log('validating: [%s] [%s]',fld, err)
           _.extend(errors, err)
           if(err) valid = false;
       });
@@ -627,7 +621,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           var attr = {};
           attr[fld] = self.get(fld);
           var err = self.validate(attr);
-          console.log('validating: [%s] [%s]',fld, err)
           _.extend(errors, err)
           if(err) valid = false;
       });
@@ -708,19 +701,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'Representante: mica.js ',
 
     schema: {
-        aname:    {type: 'Text',  title: 'Nombre'},
-        acargo:   {type: 'Text',  title: 'CARGO'},
-        amail:    {type: 'Text',  title: 'E-mail'},
-        acel:     {type: 'Text',  title: 'Tel celular', editorAttrs:{placeholder:'+pais area numero'}},
-        atel:     {type: 'Text',  title: 'Tel línea',  editorAttrs:{placeholder:'+pais area numero'}},
+        aname:    {type: 'Text',  title: 'Nombre y apellido'},
+        acargo:   {type: 'Text',  title: 'Cargo / Función'},
+        amail:    {type: 'Text',  title: 'Email'},
+        acel:     {type: 'Text',  title: 'Teléfono móvil', editorAttrs:{placeholder:'+54 (área) número'}},
+        atel:     {type: 'Text',  title: 'Teléfono',  editorAttrs:{placeholder:'+54 (área) número'}},
         aidiomas: {type: 'Text',  title: 'Conocimiento de idiomas'},
         afenac:   {type: 'Text',  title: 'Fecha Nacimiento', editorAttrs:{placeholder:'dd/mm/aaaa'}},
-        adni:     {type: 'Text',  title: 'DNI o Pasaporte'},
+        adni:     {type: 'Text',  title: 'DNI / Pasaporte', editorAttrs:{placeholder:'número de documento'}},
     },
  
     validate: function(attrs, options) {
       var errors = {}
-      //console.log(attrs)
       if (_.has(attrs,'rname') && (!attrs.rname )) {
         errors.rname = "No puede ser nulo";
       }     
@@ -763,7 +755,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
  
     validate: function(attrs, options) {
       var errors = {}
-      //console.log(attrs)
       if (_.has(attrs,'rname') && (!attrs.rname )) {
         errors.rname = "No puede ser nulo";
       }     
@@ -804,7 +795,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
  
     validate: function(attrs, options) {
       var errors = {}
-      //console.log(attrs)
+
       if (_.has(attrs,'slug') && (!attrs.slug )) {
         errors.rname = "No puede ser nulo";
       }     
@@ -866,7 +857,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   _facetFactoryStepOne = function(model){
     var data = _.extend({}, model.get('solicitante'));
-    console.log('solicitante: [%s]', data.edisplayName)
     return new Entities.MicaStepOneFacet(data);
   };
   _updateFacetStepOne = function(user, model){
@@ -881,7 +871,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     return new Entities.MicaStepTwoFacet(data);
   };
   _updateFacetStepTwo = function(user, representantes, model){
-    console.log('Representantes: [%s] [%s]', representantes.whoami, representantes.length)
     var responsable = model.get('responsable');
     responsable = model.stepTwo.attributes;
     responsable.representantes = representantes.toJSON();
@@ -947,7 +936,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     fetchMicaByUser: function(user, evento){
-      console.log('fetchMicaByUser BEGIN')
       var entities = new Entities.MicaRegistrationFetchOneCol();
       var query = {},
           defer = $.Deferred();
@@ -960,7 +948,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         type: 'post',
         success: function(data){
           if(data.length){
-            //console.log('INSCRIPCIÓN existente: [%s] [%s]', data.whoami, data.at(0).get('slug'))
             defer.resolve(data.at(0));
           }else{
             defer.resolve(new Entities.MicaRegistration());

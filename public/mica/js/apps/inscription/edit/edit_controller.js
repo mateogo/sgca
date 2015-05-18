@@ -122,20 +122,24 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
   };
 
   var registerBasicViewEvents = function(session, wizardlayout){
-    wizardlayout.on("submit:form", function(model){
-      console.log('******** provisorio SUBMIT PROVISORIO BEGINS********[%s]', model.whoami)
+    wizardlayout.on("submit:form:provisorio", function(model){
+      //console.log('******** provisorio SUBMIT PROVISORIO BEGINS********[%s]', model.whoami)
       
       getSession().model.update(session.currentUser, session.representantes, session.vporfolios, session.cporfolios, function(error, model){
+        Message.success('Los datos han sido guardados en modo borrador.');
 
-        DocManager.trigger('micarequest:edit', model)
+        window.open('http://mica.cultura.gob.ar','_self');
+        //DocManager.trigger('micarequest:edit', model)
 
       });
     });
 
     wizardlayout.on("submit:form:definitivo", function(model){
-      console.log('******** definitivo SUBMIT DEFINITIVO BEGINS********[%s]', model.whoami, model.get('solicitante').emotivation)
+      //console.log('******** definitivo SUBMIT DEFINITIVO BEGINS********[%s]', model.whoami, model.get('solicitante').emotivation)
 
       getSession().model.update(session.currentUser, session.representantes, session.vporfolios, session.cporfolios, function(error, model){
+
+        Message.success('Grabación exitosa. Recibirás un correo electrónico de confirmación');
         enviarmail(utils.templates.MailFormSubmitNotification, {
           toName: getSession().currentUser.get('displayName'),
           cnumber: model.get('cnumber'),
@@ -170,7 +174,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       mailModel.buildMailContent();
       //console.log(sendMail.getData());
 
-      console.dir(mailModel.attributes);
+      //console.dir(mailModel.attributes);
 
       mailModel.sendmail();
   };
@@ -193,8 +197,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
 
     layout.on("show", function(){
-      console.log('**************Layout.on show')
-
       layout.formRegion.show(stepTwoForm);
       DocManager.trigger('representante:edit',representante);
     });
@@ -376,15 +378,10 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
       session.model.update(session.currentUser, session.representantes, session.vporfolios, session.cporfolios, function(error, model){
 
-        console.log('Grabación provisoria del paso: [%s]',step, getSession().model.id);
-
       });
     },
 
   };
-
-      
-
 
   DocManager.on("wizard:next:step", function(step){
     API.saveStep(step);
@@ -392,23 +389,18 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
 
   DocManager.on("vporfolio:edit", function(model){
-    console.log('PORFOLIOS VENDEDOR')
     API.initPorfolioVendedorView(model);
   });
 
 
   DocManager.on("cporfolio:edit", function(model){
-    console.log('PORFOLIOS')
     API.initPorfolioCompradorView(model);
   });
 
 
   DocManager.on("representante:edit", function(model){
-    console.log('REPRESENTANTES')
     API.initRepresentanteView(model);
   });
-
-
 
 
 

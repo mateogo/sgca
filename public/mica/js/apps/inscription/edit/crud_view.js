@@ -18,7 +18,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
 
     initialize: function(options){
       var self = this;
-      console.log('[%s] INIT', self.whoami);
       if(options){
         if(options.template) self.setTemplate(options.template)
         if(options.formTemplate) self.setFormTemplate(options.formTemplate)
@@ -56,17 +55,15 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
 
     itemEdit: function(){
-      console.log('ITEM bubbled!!!')
+      //console.log('ITEM bubbled!!!')
     },
 
     onClickBaseEdit: function(){
-      console.log('Click basicEdit')
       this.trigger('edit:basic:data');
     },
 
     onSave: function(e){
       e.stopPropagation();
-      console.log('onSave:[%s]', this.cid)
   
       this.trigger('save:crud:editor');
       // var errors = this.form.commit(),
@@ -83,7 +80,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
     
     onCancel: function(){
-      console.log('Cancel CLICKED')
       this.trigger('cancel:basic:editor');
     },
 
@@ -169,14 +165,12 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       editClicked: function(e){
 
         this.trigger('edit:item:action');
-        console.log('Click ITEM [%s]:[%s]', this.model.whoami, this.model.get('denominacion'));
         this.model.trigger('edit:me');
         DocManager.trigger('representante:edit',this.model);
 
       },
         
       trashClicked: function(e){
-        console.log('trash Clicked-1');
         this.model.trigger('trash:item:crud', this.model);
       }
   });
@@ -202,14 +196,12 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       editClicked: function(e){
 
         this.trigger('edit:item:action');
-        console.log('Click ITEM [%s]:[%s]', this.model.whoami, this.model.get('slug'));
         this.model.trigger('edit:me');
         DocManager.trigger('cporfolio:edit',this.model);
 
       },
         
       trashClicked: function(e){
-        console.log('trash Clicked-2');
         this.model.trigger('trash:item:crud', this.model);
       }
   });
@@ -235,14 +227,12 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       editClicked: function(e){
 
         this.trigger('edit:item:action');
-        console.log('Click ITEM [%s]:[%s]', this.model.whoami, this.model.get('slug'));
         this.model.trigger('edit:me');
         DocManager.trigger('vporfolio:edit',this.model);
 
       },
         
       trashClicked: function(e){
-        console.log('trash Clicked-3');
         this.model.trigger('trash:item:crud', this.model);
       }
 
@@ -280,7 +270,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     initialize: function(attrs, opts){
       var self = this;
       //model, collection, tablecols
-      console.log('CRUD MANAGER INIT arguments: [%s]  Editor View[%s]', arguments.length, opts.EditorView)
 
       this.options = opts;
       self.filterFactory(self.collection,self.get('filtercols'));
@@ -319,7 +308,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     createLayout: function(opts){
       var self = this;
       var data = _.extend({}, self.get('layoutdefaults'), {itemssofar: self.collection.length});
-      //console.log('createLayout: [%s]', self.options.layoutTpl)
 
       self.layout = new Edit.CrudLayout({
         model: new Backbone.Model(data),
@@ -333,10 +321,8 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       });
 
       self.layout.on('save:crud:editor', function(){
-        console.log('registerSaveEvent Called: form:[%s]', self.form.cid);
         self.form.commit();
         self.collection.add(self.form.model);
-        console.log('[%s]Adding Model[%s] To Col: [%s]:[%s]',self.form.cid, self.form.model.cid,self.form.model.get('slug'), self.collection.length)
 
         DocManager.trigger(self.get('editEventName'), new self.options.editModel());
 
@@ -346,14 +332,12 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     createForm: function(opts){
       var self = this;
       if(self.options.EditorView){
-        console.log('CRUD MANAGER: Create EditorForm: [%s] [%s]',  self.options.modelToEdit.whoami, self.collection.length)
         self.form = new self.options.EditorView({
             model: self.options.modelToEdit,
             editorOpts: (opts.editorOpts ? opts.editorOpts : {}),
         });
 
       }else{
-        console.log('CRUD MANAGER: Create BackboneForm: [%s] [%s]',  self.options.modelToEdit.whoami, self.collection.length)
         self.form = new Backbone.Form({
             model: self.options.modelToEdit,
             template: self.options.formTpl,

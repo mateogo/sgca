@@ -15,7 +15,7 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
           delay: 3000,
           offset: 10,
           z_index: 1041,
-          template: '<div data-notify="container" class="col-xs-10 col-sm-2 alert alert-sgc alert-{0} text-center" role="alert"> '+
+          template: '<div data-notify="container" class="col-xs-10 col-sm-4 alert alert-sgc alert-{0} text-center" role="alert"> '+
                     '   <span data-notify="icon" class="pull-left"></span>'+
                     '   <span data-notify="message">{2}</span>'+
                     '</div>'      
