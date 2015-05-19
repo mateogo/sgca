@@ -537,9 +537,7 @@ window.utils = {
 
     tipoActionEntityList: [
         {val:'no_definido'   , label:'Tipo de Entidad'},
-        {val:'programa'      , label:'Programa'},
         {val:'accion'        , label:'Acción'},
-        {val:'actividad'     , label:'Actividad'},
     ],
 
     tipoActionIniciativeList: [

@@ -3,6 +3,7 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 	LoginApp.Router = Marionette.AppRouter.extend({
 		appRoutes: {
 			'mica': 'loginMica',
+			'inscripcion/nueva': 'loginMica',
 			'sisplan': 'loginSisplan',
 			'usuario(/*path)': 'loginUser',
 			'obras':'loginObras'

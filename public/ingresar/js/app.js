@@ -9,7 +9,6 @@ DocManager.addRegions({
 });
 
 DocManager.navigate = function(route,  options){
-  console.log('DocManager.navigate: app.js');
   options || (options = {});
   Backbone.history.navigate(route, options);
 };
@@ -31,12 +30,10 @@ DocManager.getCurrentRoute = function(){
 };
 
 DocManager.on("start", function(){
-  console.log('DocManager History start: start');
   if(Backbone.history){
     Backbone.history.start();
 
     if(this.getCurrentRoute() === ""){
-      console.log('default route')
       DocManager.trigger("login:user");
     }
   }
