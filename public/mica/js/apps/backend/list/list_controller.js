@@ -65,7 +65,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
 		var fetchingEntities = DocManager.request('micarqst:query:entities', query );
     $.when(fetchingEntities).done(function(entities){
-          console.log('getFiltered PROMISE OK [%s]:[%s]', entities.length, entities.whoami);
           defer.resolve(entities);
  		});
 
@@ -191,7 +190,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
   var registerMainLayoutEvents = function(session, layout, mainlayout, sidebar){
   	mainlayout.on('grid:model:edit', function(model){
-  		console.log('Vamos a Editar!!!!')
   		var view = createView(session, mainlayout, model)
 
   	});

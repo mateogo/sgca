@@ -41,12 +41,10 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     },
 
     hideList: function(){
-      console.log('Hide Toggle List');
       this.$('#list-region').hide();
     },
 
     showList: function(){
-      console.log('Hide Toggle List');
       this.$('#list-region').show();
     },
     
@@ -424,7 +422,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     },
     
     gridFactory: function(collection, columns){
-      console.log('GridFactory: collection[%s] [%s]', collection.length, this.collection.length)
+      //console.log('GridFactory: collection[%s] [%s]', collection.length, this.collection.length)
       this.grid = new Backgrid.Grid({
           className: 'table table-condensed table-bordered table-hover',
           collection: this.collection,

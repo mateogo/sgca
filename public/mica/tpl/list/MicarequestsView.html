@@ -63,7 +63,7 @@
                     <p><%= item.slug %></p>
                     <p><%= item.denominacion %></p>
                         <%  _.each(item.referencias, function(refer){ %>
-                        <p><%= refer.tlink %>: <a href="<%= refer.targeturl %>">refer.slug</a> </p>
+                        <p><%= refer.tlink %>: <a href="<%= refer.targeturl %>"><%= refer.slug %></a> </p>
                         <% }) %>
 
                     <% }) %>
@@ -79,13 +79,13 @@
             <p class="text-muted">Palabras Claves: <%= getFieldLabel('comprador').cdescriptores %></p>
             <p class="text-muted">Negocios extra-fronteras: <%= getFieldLabel('comprador').cexperienciaintl %></p>
             <p class="text-muted"><%= getFieldLabel('comprador').ccomentario %></p>
-            <%  if(hasVendorProfiles()){ %>
+            <%  if(hasCompradorProfiles()){ %>
                     <h4>Referencias</h4>
-                    <%  _.each(getFieldLabel('comprador').vporfolios, function(item){ %>
+                    <%  _.each(getFieldLabel('comprador').cporfolios, function(item){ %>
                     <p><%= item.slug %></p>
                     <p><%= item.denominacion %></p>
                         <%  _.each(item.referencias, function(refer){ %>
-                        <p><%= refer.tlink %>: <a href="<%= refer.targeturl %>">refer.slug</a> </p>
+                        <p><%= refer.tlink %>: <a href="<%= refer.targeturl %>"><%= refer.slug %></a> </p>
                         <% }) %>
 
                     <% }) %>

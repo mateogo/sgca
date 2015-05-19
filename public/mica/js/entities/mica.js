@@ -1013,13 +1013,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     getFilteredByQueryCol: function(query){
-      console.dir(query);
 
       var fetchingEntities = queryCollection(query),
           defer = $.Deferred();
 
       $.when(fetchingEntities).done(function(entities){
-          console.log('getFiltered PROMISE OK');
 
         var filteredEntities = queryFactory(entities);
 
