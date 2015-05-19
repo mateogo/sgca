@@ -18,9 +18,9 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
           var opt = {area: action.get('area')};
           if(user && dao.gestionUser.hasPermissionTo('edit:presupuesto', 'sisplan', opt) ){
             //&& user.hasPermissionTo('gestion:presupuesto')
-            console.log('Dao Get Current user: [%s]', user.get('username'));
-            console.log('Testing User hasAttribute  test gestion:presupuesto [%s]', dao.gestionUser.hasPermissionTo('gestion:presupuesto', 'sisplan', {area:'DNPM'}));
-            console.log('Testing User hasAttribute  test area:[%s]', dao.gestionUser.hasPermissionTo('area', 'sisplan', {area:'DNPM'}));
+            //console.log('Dao Get Current user: [%s]', user.get('username'));
+            //console.log('Testing User hasAttribute  test gestion:presupuesto [%s]', dao.gestionUser.hasPermissionTo('gestion:presupuesto', 'sisplan', {area:'DNPM'}));
+            //console.log('Testing User hasAttribute  test area:[%s]', dao.gestionUser.hasPermissionTo('area', 'sisplan', {area:'DNPM'}));
 
             Build.Session.currentUser = user;
             Build.Session.views.layout = new Build.Layout();
@@ -40,7 +40,11 @@ DocManager.module("BudgetApp.Build", function(Build, DocManager, Backbone, Mario
             loadBudgetsFromDB();
 
           }else{
-            console.log('vuelve a edición de ACTION')
+            console.log('Budget: vuelve a edición de ACTION')
+            console.log('Dao Get Current user: [%s]', user.get('username'));
+            console.log('Testing User hasAttribute  test gestion:presupuesto [%s]', dao.gestionUser.hasPermissionTo('gestion:presupuesto', 'sisplan', opt));
+            console.log('Testing User hasAttribute  test area:[%s]', dao.gestionUser.hasPermissionTo('area', 'sisplan', opt));
+
             DocManager.trigger('action:edit', action);
           }
         });

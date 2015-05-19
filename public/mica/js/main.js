@@ -6,6 +6,12 @@ utils.loadTemplate([
         // Menu principal
         'HeaderView',
 
+        // Administra Inscripciones
+        // -- Vistas basicas
+        'list/CommonBaseLayout','list/CommonSideBarPanel','list/CommonMainLayout',
+        // -- Lista inscripciones
+        'list/MicarequestsLayout','list/MicarequestsView','list/CommonModelEditorLayout',
+
         // MailSender
         'MailTemplateDefault','MailFormSubmitNotification','MailFormGuardarProvisorio',
 

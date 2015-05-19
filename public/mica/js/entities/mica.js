@@ -314,14 +314,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
   Entities.MicaRegistrationFindByQueryCol = Backbone.Collection.extend({
-    whoami: 'MicaRegistrationSearchCol: perfilmica.js',
+    whoami: 'MicaRegistrationFindByQueryCol: mica.js',
     model: Entities.MicaRegistration,
     url: "/navegar/micasuscriptions",
 
   });
 
   Entities.MicaRegistrationFetchOneCol = Backbone.Collection.extend({
-    whoami: 'MicaRegistrationSearchCol: perfilmica.js',
+    whoami: 'MicaRegistrationFetchOneCol: mica.js',
     model: Entities.MicaRegistration,
     url: "/micasuscriptions/fetch",
 
@@ -910,6 +910,50 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
 
+  //*************************************************************
+  //            query factory
+  //*************************************************************
+  var queryFactory = function (entities){
+    var fd = DocManager.Entities.FilteredCollection({
+        collection: entities,
+
+        filterFunction: function(query){
+          return function(node){
+            var test = true;
+            //if((query.taccion.trim().indexOf(node.get('taccion'))) === -1 ) test = false;
+            //console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.taccion,node.get("taccion"),node.get("cnumber"));
+            if(query.evento) {
+              if(query.evento.trim() !== node.get('evento')) test = false;
+            }
+
+
+            if(test) return node;
+          }
+        }
+    });
+    return fd;
+  };
+
+  var queryCollection = function(query){
+      var entities = new Entities.MicaRegistrationFindByQueryCol();
+      var defer = $.Deferred();
+
+      entities.fetch({
+        data: query,
+        type: 'post',
+        success: function(data){
+          defer.resolve(data);
+        },
+        error: function(data){
+            defer.resolve(undefined);
+        }
+      });
+
+      return defer.promise();
+
+  };
+
+
 
 
   //*************************************************************
@@ -968,6 +1012,28 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
     },
 
+    getFilteredByQueryCol: function(query){
+      console.dir(query);
+
+      var fetchingEntities = queryCollection(query),
+          defer = $.Deferred();
+
+      $.when(fetchingEntities).done(function(entities){
+          console.log('getFiltered PROMISE OK');
+
+        var filteredEntities = queryFactory(entities);
+
+        if(query){
+          filteredEntities.filter(query);
+        }
+
+        defer.resolve(filteredEntities);
+
+      });
+      return defer.promise();
+    },
+
+
   };
 
   //*************************************************************
@@ -985,6 +1051,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     }
   });
 
- 
+  DocManager.reqres.setHandler("micarqst:query:entities", function(query){
+    return API.getFilteredByQueryCol(query);
+  });
+
 });
 

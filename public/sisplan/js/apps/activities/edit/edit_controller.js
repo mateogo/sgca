@@ -41,6 +41,7 @@ DocManager.module("AdminrequestsApp.Edit", function(Edit, DocManager, Backbone, 
 
           }else{
             console.log('vuelve a edición de ACTION')
+
             DocManager.trigger('action:edit', action);
           }
         });

@@ -65,6 +65,9 @@ window.dao = {
             'browse:presupuesto':{
                 roles:['presugestor'],
             },
+            'mica:manager':{
+                roles:['admin'],
+            },
             'edit:presupuesto':{
                 roles:['presugestor'],
                 memberOfArea: function(){
@@ -97,8 +100,10 @@ window.dao = {
         };
         var hasperm = true;
 
-        if(_.indexOf(user.get('modulos'), module)) return false;
+        if(_.indexOf(user.get('modulos'), module) === -1) return false;
+
         taskreq = tasks[task];
+
         if (!taskreq) return false;
 
         _.each(taskreq, function(aspect, key){

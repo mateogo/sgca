@@ -1,0 +1,97 @@
+<div class="row">
+    <div class="col-md-6 col-xs-12">
+        <h3 class="text-info">Solicitud</h3>
+        <div class="well" style="overflow-y:auto">
+            <p><%= cnumber%>: <%= solicitante.edisplayName %></p>
+            <p class="text-muted"><%= solicitante.emotivation %></p>
+            <p class="text-muted"><%= solicitante.edescription %></p>
+            <hr>
+            <p class="text-muted"><%= responsable.rname %></p>
+            <p class="text-muted"><%= responsable.rmail %></p>
+        </div>
+    </div>
+    <div class="col-md-6 col-xs-12">
+        <h3  class="text-info">Estado</h3>
+            <table class="table table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th><span  class="text-center">País</span></th>
+                        <th><span  class="text-center">Fundada</span></th>
+                        <th><span  class="text-center">Empleados</span></th>
+                        <th><span  class="pull-right">Facturación</span></th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span  class="text-center"><%= solicitante.epais %></span></td>
+                        <td><span  class="text-center"><%= solicitante.efundacion %></span></td>
+                        <td><span  class="text-center"><%= solicitante.enumempleados %></span></td>
+                        <td><span  class="pull-right"><%= solicitante.eventas %></span></td>
+                    </tr> 
+                </tbody>
+            </table>
+
+            <table class="table table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th><span  class="text-center">Estado</span></th>
+                        <th><span  class="text-center">Nivel Ejecución</span></th>
+                        <th><span  class="text-center">Fecha alta</span></th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span  class="text-center"><%= getFieldLabel('estado_alta')%></span></td>
+                        <td><span  class="text-center"><%= getFieldLabel('nivel_ejecucion')%></span></td>
+                        <td><span  class="text-center"><%= getFieldLabel('fecomp')%></span></td>
+                    </tr> 
+                </tbody>
+            </table>
+
+    </div>
+    <%  if(isVendedor()){ %>
+        <div class="col-md-12 col-xs-12">
+            <h3  class="text-info">Vendedor</h3>
+            <h4>Actividad principal: <%= getFieldLabel('vendedor').vactividades %></h4>
+            <p class="text-muted"><%= vendorSubActivities() %></p>
+            <p class="text-muted">Palabras Claves: <%= getFieldLabel('vendedor').vdescriptores %></p>
+            <p class="text-muted">Negocios extra-fronteras: <%= getFieldLabel('vendedor').vexperienciaintl %></p>
+            <p class="text-muted"><%= getFieldLabel('vendedor').vcomentario %></p>
+            <%  if(hasVendorProfiles()){ %>
+                    <h4>Referencias</h4>
+                    <%  _.each(getFieldLabel('vendedor').vporfolios, function(item){ %>
+                    <p><%= item.slug %></p>
+                    <p><%= item.denominacion %></p>
+                        <%  _.each(item.referencias, function(refer){ %>
+                        <p><%= refer.tlink %>: <a href="<%= refer.targeturl %>">refer.slug</a> </p>
+                        <% }) %>
+
+                    <% }) %>
+            <% } %>
+       </div>
+
+    <% } %>
+    <%  if(isComprador()){ %>
+        <div class="col-md-12 col-xs-12">
+            <h3  class="text-info">Comprador</h3>
+            <h4>Actividad principal: <%= getFieldLabel('comprador').cactividades %></h4>
+            <p class="text-muted"><%= compradorSubActivities() %></p>
+            <p class="text-muted">Palabras Claves: <%= getFieldLabel('comprador').cdescriptores %></p>
+            <p class="text-muted">Negocios extra-fronteras: <%= getFieldLabel('comprador').cexperienciaintl %></p>
+            <p class="text-muted"><%= getFieldLabel('comprador').ccomentario %></p>
+            <%  if(hasVendorProfiles()){ %>
+                    <h4>Referencias</h4>
+                    <%  _.each(getFieldLabel('comprador').vporfolios, function(item){ %>
+                    <p><%= item.slug %></p>
+                    <p><%= item.denominacion %></p>
+                        <%  _.each(item.referencias, function(refer){ %>
+                        <p><%= refer.tlink %>: <a href="<%= refer.targeturl %>">refer.slug</a> </p>
+                        <% }) %>
+
+                    <% }) %>
+            <% } %>
+       </div>
+
+    <% } %>
+
+</div> 
