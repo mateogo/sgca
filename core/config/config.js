@@ -24,9 +24,10 @@ var dbaseProd = 'mongodb://localhost/sgcadb';      //port = 27017  ojo: {auto_re
 //Installed applications
 var mailerTplPth = path.normalize(__dirname + '/mailer/templates'); //ojo
 var calendarApp    = rootPath + '/calendar';
+var sisplanApp    = rootPath + '/sisplan';
 var bacuaApp    = rootPath + '/bacua';
 var coreApp  = rootPath + '/core';
-var apps = [calendarApp];
+var apps = [calendarApp, sisplanApp];
 
 
 //Mailer options
@@ -45,6 +46,7 @@ var instanceDbListeners = function (db,BSON) {
   for(var ix = 0; ix<apps.length; ix++){
       var controllers_path = path.normalize( apps[ix] + '/controllers/');
       fs.readdirSync(controllers_path).forEach(function (file) {
+        if (!file.match(/\.js$/)) { return; }
         require(controllers_path+file).setDb(db).setBSON(BSON).setConfig({publicpath:publicPath});
       });
   }
