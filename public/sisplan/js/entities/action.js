@@ -257,7 +257,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
     
     createNewLocation: function(){
-      return new Entities.ActionLocation({action:this});
+      return new Entities.Location({action:this});
     },
     
     removeLocation: function(location){
