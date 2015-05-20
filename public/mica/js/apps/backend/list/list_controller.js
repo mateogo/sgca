@@ -30,6 +30,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 			});
 
 		}
+
 	}; 
 	
   var loadCurrentUser = function(){
@@ -47,7 +48,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 			}else{
 			  console.log('No validó el Usuario');
 			  Message.warning('Debe iniciar sesión');
-			  //window.open('/ingresar/#mica', '_self');
+			  window.open('/ingresar/#mica', '_self');
 			}
 
  
