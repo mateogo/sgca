@@ -26,9 +26,9 @@ module.exports = function (config, app) {
 
     // sisplan - Locaciones
     var locaciones = require(rootPath + '/sisplan/controllers/locations');
-    app.get   ('/sisplan/locaciones/',     locaciones.findAll);
+    app.get   ('/sisplan/locaciones',     locaciones.findAll);
     app.get   ('/sisplan/locaciones/:id', locaciones.findById);
-    app.post  ('/sisplan/locaciones/',     ensureAuthenticated, locaciones.add);
+    app.post  ('/sisplan/locaciones',     ensureAuthenticated, locaciones.add);
     app.put   ('/sisplan/locaciones/:id', ensureAuthenticated, locaciones.update);
     app.delete('/sisplan/locaciones/:id', ensureAuthenticated, locaciones.delete);
 
