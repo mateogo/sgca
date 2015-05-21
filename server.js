@@ -115,8 +115,10 @@ mongodb.connect(function(err, db){
 
   for(var ix = 0; ix<apps.length; ix++){
       var routes_path = path.join(rootPath,  apps[ix] + '/config/routes.js');
+      var init_path = path.join(rootPath,  apps[ix] + '/config/init.js');
       var controllers_path = path.join(rootPath, apps[ix] + '/controllers/');
 
+      require(init_path);
       require(routes_path)(config, app);
 
       fs.readdirSync(controllers_path).forEach(function (file) {
