@@ -23,14 +23,14 @@ module.exports = function (config, app) {
         console.log('FALLÓ AUTENTICACIÓN!!!!');
         res.redirect('/');
     };
-    
+
     // sisplan - Locaciones
-    var locaciones = require(rootPath + '/sisplan/controllers/locaciones');
-    app.get   ('/sisplan/locaciones/locaciones',     locaciones.findAll);
-    app.get   ('/sisplan/locaciones/locaciones/:id', locaciones.findById);
-    app.post  ('/sisplan/locaciones/locaciones',     ensureAuthenticated, locaciones.add);
-    app.put   ('/sisplan/locaciones/locaciones/:id', ensureAuthenticated, locaciones.update);
-    app.delete('/sisplan/locaciones/locaciones/:id', ensureAuthenticated, locaciones.delete);
+    var locaciones = require(rootPath + '/sisplan/controllers/locations');
+    app.get   ('/sisplan/locaciones/',     locaciones.findAll);
+    app.get   ('/sisplan/locaciones/:id', locaciones.findById);
+    app.post  ('/sisplan/locaciones/',     ensureAuthenticated, locaciones.add);
+    app.put   ('/sisplan/locaciones/:id', ensureAuthenticated, locaciones.update);
+    app.delete('/sisplan/locaciones/:id', ensureAuthenticated, locaciones.delete);
 
     // sisplan - Recursos Linea/Familia/Modelo
     var familias = require(rootPath + '/sisplan/controllers/familias');

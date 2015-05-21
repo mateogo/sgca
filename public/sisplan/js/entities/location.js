@@ -3,7 +3,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     var App = DocManager.module('App');
 
     Entities.Location = Backbone.Model.extend({
-        urlRoot: "/locaciones",
+        urlRoot: "/sisplan/locaciones",
         whoami: 'Location:location.js',
         idAttribute: "_id",
 
