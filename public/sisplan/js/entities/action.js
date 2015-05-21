@@ -550,23 +550,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         this.set('person_id',id);
       },
       
-      /**
-       * utiliza informacion resultado de consulta geocode
-       * @param {Object} place - ver estrucutra en https://developers.google.com/maps/documentation/geocoding/?hl=es#JSON
-       */
-      useGeoplace: function(place){
-        this.set('direccion',place.formatted_address);
-        if(place.geometry && place.geometry.location){
-          var pointer = place.geometry.location;
-          var coord = [pointer.lat,pointer.lng];
-          this.set('coordinate',coord);
-        }
-        
-        //extrae provincia, departamento y localidad
-        var obj = App.parseGeoplace(place);
-        this.set(obj);
-      },
-      
       _receiveLocation: function(p){
         var pos = -1;
         
@@ -591,8 +574,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           collection.push(p);
         }
       },
-      
-      
+    
       save: function(){
         var self = this;
         var $def = $.Deferred();
