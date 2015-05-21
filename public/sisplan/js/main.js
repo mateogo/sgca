@@ -56,7 +56,9 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     'attachmentview/AttachmentItemEditorView','attachmentview/AttachmentLayoutView','attachmentview/AttachmentItem',
     
     
-    'common/DatePatternForm'
+    'common/DatePatternForm',
+
+    'abm/AbmListLayoutView',
     
     ], function() {
 
