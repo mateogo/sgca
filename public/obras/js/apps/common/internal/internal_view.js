@@ -1,5 +1,5 @@
 DocManager.module("ObrasApp.Common", function(Common, DocManager, Backbone, Marionette, $, _){
-  
+
   Common.InternalLayout = Marionette.LayoutView.extend({
     getTemplate: function(){
       return utils.templates.InternalLayoutView
@@ -9,10 +9,10 @@ DocManager.module("ObrasApp.Common", function(Common, DocManager, Backbone, Mari
       mainRegion: '#main-region'
     }
   });
-  
+
   Common.MenuView = Marionette.ItemView.extend({
     getTemplate: function(){
-      return utils.templates.MenuView
+      return utils.templates.MenuView;
     },
     events: {
       'click .js-obras': function(){
@@ -29,5 +29,5 @@ DocManager.module("ObrasApp.Common", function(Common, DocManager, Backbone, Mari
       }
     }
   });
-  
+
 });

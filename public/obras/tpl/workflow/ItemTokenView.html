@@ -1,0 +1,15 @@
+<div style="border-bottom: 1px solid #CCC;margin-top:10px;magin-bottom:10px;padding-bottom:5px">
+  <h4 style="margin-bottom:0"><%=type%></h4>
+  <div class="text-muted">
+      <%=body%>
+  </div>
+  <div style="margin-top:5px">
+    <div class="pull-left">
+      <span class="text-primary"> <%= (from)? from.name : 'desconocido' %></span>
+    </div>
+    <div class="pull-right">
+      <span class="text-success"> <%=dateFormat(fealta)%></span>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</div>

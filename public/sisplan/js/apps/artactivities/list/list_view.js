@@ -1,26 +1,26 @@
 DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, Marionette, $, _){
-  
+
   var Entities =  DocManager.module('Entities');
-  
+
   List.Layout = Marionette.LayoutView.extend({
     className: 'row row-offcanvas row-offcanvas-left',
 
     getTemplate: function(){
       return utils.templates.ArtActivityListLayoutView;
     },
-    
+
     regions: {
       navbarRegion:  '#navbar-region',
       filterRegion:    '#filter-region',
       mainRegion:    '#main-region'
     },
-    
+
     events: {
       'click .js-filter': 'filterClicked',
       'click .js-filterclear': 'filterClearClicked',
       'click .js-agenda': 'agendaClicked'
     },
-    
+
     setFilter: function(filter){
       this.filter = filter;
       var container = this.$el.find('#filterTags');
@@ -33,22 +33,22 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
         container.append('<a class="btn-link js-filterclear">borrar filtro</a>');
       }
     },
-    
+
     filterClicked: function(e){
       List.FilterPopup(this.filter);
     },
-    
+
     filterClearClicked: function(e){
       DocManager.trigger('artactivities:filter',null);
     },
-    
+
     agendaClicked: function(e){
       DocManager.trigger('agenda:list',null);
     }
-    
+
   });
-  
-  
+
+
   Backgrid.ActionsArtactivityCell = Backgrid.Cell.extend({
     // Cell default class names are the lower-cased and dasherized
     // form of the the cell class names by convention.
@@ -67,18 +67,18 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
         'click button.js-trash': 'trashClicked',
         'click .js-filter': 'filterClicked'
     },
-      
+
     editClicked: function(e){
         e.stopPropagation();e.preventDefault();
         DocManager.trigger('artActivity:edit',this.model);
     },
-      
+
     trashClicked: function(e){
         e.stopPropagation();e.preventDefault();
         DocManager.trigger('artActivity:remove',this.model);
     }
   });
-  
+
   var activityCell = Backgrid.Cell.extend({
     render:function(){
       var cnumber = this.model.get('cnumber');
@@ -93,7 +93,7 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       DocManager.trigger('artActivity:edit',this.model);
     }
   });
-  
+
   var actionCell = Backgrid.Cell.extend({
     render:function(){
       var action = this.model.get('action');
@@ -109,7 +109,7 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       DocManager.trigger('action:show',this.model.get('action_id'));
     }
   });
-  
+
   var fieldLabelCell = Backgrid.Cell.extend({
     render:function(){
       var value = this.model.getFieldLabel(this.column.get('name'));
@@ -117,8 +117,8 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       return this;
     }
   });
-  
-  
+
+
 
   List.GridCreator = function(collection){
     return new Backgrid.Grid({
@@ -134,22 +134,22 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
                   {name: '',label: 'Acciones',cell: 'actionsArtactivity',editable:false}
                  ]
       });
-  }; 
-  
+  };
+
   List.FilterCreator = function(collection){
     return new Backgrid.Extension.ClientSideFilter({
         collection: collection,
         fields: ['cnumber','slug','tags']
       });
   };
-  
-  
+
+
   List.FilterPopup = function(filter){
     if(!filter){
       filter=   new Entities.ArtActivityFilterFacet();
     }
     var form = new Backbone.Form({model:filter});
-    
+
     var modal = new Backbone.BootstrapModal({
       content: form,
       title: 'Filtrar Actividades Artísticas',
@@ -157,12 +157,12 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
       cancelText: 'cancelar',
       enterTriggersOk: false,
     });
-    
+
     modal.on('ok',function(){
         form.commit();
         DocManager.trigger('artactivities:filter',filter);
     });
-    
+
     modal.open();
   };
 

@@ -1,7 +1,6 @@
 var root = '../../../../';
 var module = require(root + 'calendar/models/artactivity.js');
 
-
 var ArtActivity = module.getModel();
 
 var artActivity = null;

@@ -17,8 +17,10 @@ it('deberia inicializar DB',function(done){
   dbConnect.connect(config,function(err,db){
     expect(err).toBeNull();
     expect(db).not.toBeNull();
-
-    done();
+    
+    setTimeout(function(){
+      done();  
+    },10);
   });
 });
 

@@ -22,12 +22,12 @@ serializer.initSeries([
 
 
 var ObraArte = BaseModel.extend({
-  
+  idAttribute: "_id",
   constructor: function() {
     this.entityCol = entityCol;
     BaseModel.apply(this,arguments);
   },
-  
+
   defaults: {
     cnumber: null,
     type_event: '',
@@ -38,48 +38,48 @@ var ObraArte = BaseModel.extend({
     dimensions: '',
     value: 0,
     madeyear: '',
-    
+
     estado_alta: 'draft',
     nivel_ejecucion: '',
-    
+
     fealta: null,
     feultmod: null
-      
+
   },
-  
+
   validation: function(cb){
     cb(null);
   },
-  
+
   _beforeSave: function(callback){
     var self = this;
     async.series([
        //setear el número código
        function(cb){
          if(self.get('cnumber') === null){
-           
+
            serializer.nextSerie(serieKey,function(err,number){
              if(err) return cb(err);
-             
+
              self.set('cnumber',number);
              cb();
            });
-           
+
          }else{
-           cb();  
+           cb();
          }
        },
-       
+
        //setear fechas
        function(cb){
          if(self.isNew()){
            self.set('fealta',new Date());
          }
          self.set('feultmod',new Date());
-         
+
          cb();
        }
-       
+
     ],
     //done
     function(err,results){
@@ -97,24 +97,24 @@ var ObraArte = BaseModel.extend({
           function(cb){
             BaseModel.findById.apply(self,[id,function(err,model){
               if(err) return cb(err);
-              
+
               obra = model;
               cb();
             }]);
           },
-          
+
           //buscando las fotos
           function(cb){
             Assets.findByIds(obra.get('photos_ids'),function(err,result){
               if(err) return cb(err);
-              
+
               if(obra){
-                obra.set('photos',result);  
+                obra.set('photos',result);
               }
-              cb();  
+              cb();
             });
           }
-          
+
        ],
        //done
        function(err,results){

@@ -63,11 +63,11 @@ var routesBootstrap = function (app, express) {
       //  return done(err); // server error
       //  return (new Error('User ' + id + ' does not exist'));
       //  process.nextTick(function () {
-      
+
       user.findOne({ username: username }, function (err, userdao) {
-        if (err) { 
+        if (err) {
           //console.log('passport error');
-          return done(err); 
+          return done(err);
         }
         if (!userdao) {
           //console.log('passport USER NOT FOUND');
@@ -88,7 +88,7 @@ var routesBootstrap = function (app, express) {
             }
         });
       });
-  
+
     }
   ));
 
@@ -124,12 +124,13 @@ var routesBootstrap = function (app, express) {
       var routes_path = path.normalize( apps[ix] + '/config/routes.js');
       require(routes_path)(this, app);
   }
-  
+
   require(rootPath + '/calendar/controllers/artactivities.js').configRoutes(app);
   require(rootPath + '/calendar/controllers/events.js').configRoutes(app);
   require(rootPath + '/calendar/controllers/artactivitiesreport.js').configRoutes(app);
   require(rootPath + '/calendar/controllers/obraarte.js').configRoutes(app);
   require(rootPath + '/calendar/controllers/obraartesolicitud.js').configRoutes(app);
+  require(rootPath + '/calendar/controllers/obraswf.js').configRoutes(app);
 };
 
 

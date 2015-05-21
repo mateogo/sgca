@@ -21,16 +21,20 @@
 
 <!-- Le styles -->
 	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/styles.css" rel="stylesheet" media='screen'>
+  <link href="css/styles.css" rel="stylesheet" media='screen'>
+	<link href="css/style_hacks.css" rel="stylesheet" media='screen'>
 	<link href="css/backbone-forms-bootstrap.css" rel="stylesheet">
 	<link href="css/fuelux.min.css" rel="stylesheet" >
 	<link href="css/jquery-ui.min.css" rel="stylesheet" >
 	<link href="css/font-awesome.min.css" rel="stylesheet" >
 	<link href="css/print.css" rel="stylesheet">
-    <link href="css/obras.css" rel="stylesheet">
-    
-   
-    
+  <link href="css/obras.css" rel="stylesheet">
+
+	<link href="lib/backgrid/backgrid.min.css" rel="stylesheet" >
+	<link href="lib/backgrid/backgrid-filter.min.css" rel="stylesheet" >
+
+
+
 </head>
 
 <body>
@@ -52,7 +56,7 @@
 				</div>
 			</div><hr>
 			<div>
-				<img src="http://www.cultura.gob.ar/static/img/logo-presidencia-de-la-nacion-footer.png" alt="Ministerio de Cultura de la Nacion" title="Ministerio de Cultura de la Nacion" width="250"  border="0">				
+				<img src="http://www.cultura.gob.ar/static/img/logo-presidencia-de-la-nacion-footer.png" alt="Ministerio de Cultura de la Nacion" title="Ministerio de Cultura de la Nacion" width="250"  border="0">
 			</div>
 		</section>
 		<div id="test-region" class="container"></div>
@@ -66,7 +70,7 @@
 <script src="lib/underscore.js"></script>
 <script src="lib/backbone.js"></script>
 <script src="lib/backbone-validation.js"></script>
-<script src="lib/backbone.picky.min.js"></script> 
+<script src="lib/backbone.picky.min.js"></script>
 <script src="lib/backbone.marionette.min.js"></script>
 <script src="lib/accounting.min.js"></script>
 
@@ -81,15 +85,21 @@
 <script src="lib/backbone.bootstrap-modal.js"></script>
 <script src="lib/backbone-forms-bootstrap.js"></script>
 
-<script src="lib/fuelux.min.js"></script>    
+<script src="lib/fuelux.min.js"></script>
 
+
+<script src="lib/backgrid/backgrid.min.js"></script>
+<script src="lib/backgrid/backgrid-filter.min.js"></script>
+
+<script src="lib/moment/moment.min.js"></script>
+<script src="lib/moment/es.js"></script>
 
 <!-- -->
 <script src="/js/utils.js"></script>
 <script src="/js/dao.js"></script>
 <script src="/js/models/models.js"></script>
 
-	
+
 <!---->
 <script src="js/apps/config/marionette/regions/dialog.js"></script>
 <script src="js/app.js"></script>
@@ -100,6 +110,7 @@
 <script src="js/entities/autor.js"></script>
 <script src="js/entities/solicitud.js"></script>
 <script src="js/entities/exportador.js"></script>
+<script src="js/entities/workflow.js"></script>
 
 
 <!---->
@@ -138,6 +149,17 @@
 <script src="js/apps/solicitud/edit/edit_controller.js"></script>
 <script src="js/apps/solicitud/list/list_view.js"></script>
 <script src="js/apps/solicitud/list/list_controller.js"></script>
+
+
+<script src="js/apps/workflow/workflow_app.js"></script>
+<script src="js/apps/workflow/common/common_view.js"></script>
+<script src="js/apps/workflow/common/common_controller.js"></script>
+<script src="js/apps/workflow/list/list_view.js"></script>
+<script src="js/apps/workflow/list/list_controller.js"></script>
+<script src="js/apps/workflow/show/show_controller.js"></script>
+<script src="js/apps/workflow/show/show_view.js"></script>
+<script src="js/apps/workflow/actions/actions_controller.js"></script>
+<script src="js/apps/workflow/actions/actions_view.js"></script>
 
 
 <script src="js/main.js"></script>

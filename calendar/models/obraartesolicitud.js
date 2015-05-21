@@ -23,12 +23,12 @@ serializer.initSeries([
 
 
 var Solicitud = BaseModel.extend({
-  
+  idAttribute: "_id",
   constructor: function() {
     this.entityCol = entityCol;
     BaseModel.apply(this,arguments);
   },
-  
+
   defaults: {
     cnumber: null,
     type_event: '',
@@ -39,48 +39,48 @@ var Solicitud = BaseModel.extend({
     dimensions: '',
     value: 0,
     madeyear: '',
-    
+
     estado_alta: 'abierto',
     nivel_ejecucion: 'pendiente',
-    
+
     fealta: null,
     feultmod: null
-      
+
   },
-  
+
   validation: function(cb){
     cb(null);
   },
-  
+
   _beforeSave: function(callback){
     var self = this;
     async.series([
        //setear el número código
        function(cb){
          if(self.get('cnumber') === null){
-           
+
            serializer.nextSerie(serieKey,function(err,number){
              if(err) return cb(err);
-             
+
              self.set('cnumber',number);
              cb();
            });
-           
+
          }else{
-           cb();  
+           cb();
          }
        },
-       
+
        //setear fechas
        function(cb){
          if(self.isNew()){
            self.set('fealta',new Date());
          }
          self.set('feultmod',new Date());
-         
+
          cb();
        }
-       
+
     ],
     //done
     function(err,results){
@@ -98,36 +98,36 @@ var Solicitud = BaseModel.extend({
           function(cb){
             BaseModel.findById.apply(self,[id,function(err,model){
               if(err) return cb(err);
-              
+
               solicitud = model;
               cb();
             }]);
           },
-          
+
           //buscando los documentos
           function(cb){
             Assets.findByIds(solicitud.get('docs_ids'),function(err,result){
               if(err) return cb(err);
-              
+
               if(solicitud){
-                solicitud.set('docs',result);  
+                solicitud.set('docs',result);
               }
-              cb();  
+              cb();
             });
           },
-          
+
           //buscando las obras
           function(cb){
             ObraArte.findByIds(solicitud.get('obras_ids'),function(err,result){
               if(err) return cb(err);
-              
+
               if(solicitud){
-                solicitud.set('obras',result);  
+                solicitud.set('obras',result);
               }
-              cb();  
+              cb();
             });
           }
-          
+
        ],
        //done
        function(err,results){

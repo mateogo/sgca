@@ -1,11 +1,11 @@
 DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionette, $, _){
-  
+
   //https://github.com/thedersen/backbone.validation
-  
+
   Entities.Exportador = Backbone.Model.extend({
     whoami: 'Exportador:exportador.js',
     idAttribute: "_id",
-    
+
     initialize: function(opts){
       if(opts){
         if(opts.docPhoto1){
@@ -14,9 +14,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         if(opts.docPhoto2){
           this.set('docPhoto2',new Asset(opts.docPhoto2));
         }
+
+
+
+
       }
     },
-    
+
     defaults:{
       name: '',
       lastname: '',
@@ -33,7 +37,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       docPhoto1: null,
       docPhoto2: null
     },
-    
+
     validation: {
       name: {required: true},
       lastname: {required:true},
@@ -49,5 +53,5 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       mobile: {required:false}
     }
   });
-    
+
 });

@@ -1,18 +1,18 @@
 DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
-    
+
   var AppCommon = DocManager.module('App.Common');
   var ObrasCommon = DocManager.module('ObrasApp.Common');
   var AutorAppEdit = DocManager.module('AutorApp.Edit');
   var Entities = DocManager.module('Entities');
-  
+
   Edit.ObrasWizardView =  ObrasCommon.WizardView.extend({
     initialize: function(){
       this.steps = [PhotoEditor,DescriptionEditor,AutorAppEdit.AutorEditorView,PartsEditor,ConfirmStep];
     },
     getTemplate: function(){
-      return utils.templates.ObrasWizard
+      return utils.templates.ObrasWizard;
     },
-    
+
     save: function(){
       var self = this;
       var p = DocManager.request('obra:save',this.model);
@@ -20,29 +20,33 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
         self.trigger('obra:saved',self.model);
       }).fail(function(){
         Message.error('ocurrio un error');
-      })
+      });
     }
   });
-  
-  
+
+  var pepe = {
+
+  };
+
+
   Edit.ObrasEditorView = Marionette.ItemView.extend({
     initialize: function(){
       this.tabs = [PhotoEditor,DescriptionEditor,AutorAppEdit.AutorEditorView,PartsEditor];
       this.listenTo(this.model,'change',this.onChangeModel.bind(this));
     },
     getTemplate: function(){
-      return utils.templates.ObrasEditor
+      return utils.templates.ObrasEditor;
     },
-    
+
     onRender: function(){
       this.selectTab(0);
     },
-    
+
     onDestroy: function(){
       this.tabs = null;
       this.currentTab = null;
     },
-    
+
     selectTab: function(index){
       if(index < 0 || index >= this.tabs.length ) return;
        if(this.currentTab){
@@ -61,19 +65,19 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
        this.$el.find('.nav-tabs li.active').removeClass('active');
        this.$el.find('.nav-tabs li:eq('+index+')').addClass('active');
     },
-    
+
     events:{
       'click .nav-tabs li': 'onSelectTab',
       'click .js-save': 'onSave',
       'click .js-cancel': 'onCancel'
     },
-    
+
     onSelectTab: function(e){
       var pos = this.$el.find('.nav-tabs li').index(e.currentTarget);
       this.selectTab(pos);
-      
+
     },
-    
+
     onChangeModel: function(){
       if(this.model.changed){
         this.$el.find('.js-save').fadeIn().removeClass('disabled');
@@ -81,7 +85,7 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
         this.$el.find('.js-save').addClass('disabled');
       }
     },
-    
+
     onSave: function(e){
       e.stopPropagation();e.preventDefault();
       if(this.currentTab){
@@ -91,26 +95,26 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
         this.currentTab.commit();
         this.currentTab.destroy();
       }
-      
+
       var self = this;
       var btn = $(e.currentTarget);
       btn.button('loading');
       DocManager.request('obra:save',this.model).done(function(){
-        btn.button('reset');  
+        btn.button('reset');
         Message.success('La obra '+self.model.get('cnumber')+'<br/>A sido guardada');
         self.trigger('obra:saved',self.model);
       }).fail(function(e){
         btn.button('reset');
         Message.error('No se pudo guardar');
-      })
+      });
     },
-    
+
     onCancel: function(){
       this.trigger('obra:editCancel',this.model);
     }
-  }); 
-  
-  
+  });
+
+
   var DescriptionEditor = Marionette.ItemView.extend({
     tagName: 'div',
     getTemplate: function(){
@@ -119,17 +123,17 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
     onRender: function(){
       Backbone.Validation.bind(this,{model:this.model});
     },
-    
+
     onDestroy: function(){
       Backbone.Validation.unbind(this);
     },
-    
+
     validate: function(){
       this.commit();
        var valid = this.model.isValid(true);
        return valid;
     },
-    
+
     commit: function(){
       var schema = this.model.validation;
       var data = {};
@@ -138,13 +142,13 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       }
       this.model.set(data);
     },
-    
+
     events:{
       'change input': 'commit',
       'change select': 'commit'
     }
   });
-  
+
   var PhotoEditor = Marionette.ItemView.extend({
     tagName: 'div',
     template: false,
@@ -160,10 +164,10 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
             },
             minImageWidth: 2100,
             minImageHeight: 1500
-            
+
       });
       this.attachView.render();
-      
+
       var self = this;
       this.listenTo(this.attachView,'change',function(){
         self.$el.find('#empty-region').removeClass('alert alert-danger');
@@ -179,14 +183,14 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
     validate: function(){
       var files = this.attachView.getFiles();
       var ok = true;
-      
+
       if(files.length < 1){
         ok = false;
         this.$el.find('#empty-region').addClass('alert alert-danger');
       }else{
         this.$el.find('#empty-region').removeClass('alert alert-danger');
       }
-      
+
       return ok;
     },
     commit: function(){
@@ -194,13 +198,13 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       this.model.set('photos',files.toJSON());
     }
   });
-  
+
   var PartEditor = Marionette.ItemView.extend({
     initialize: function(opts){
       this.childIndex = opts.childIndex;
     },
     getTemplate: function(){
-      return utils.templates.ObrasPartEditor
+      return utils.templates.ObrasPartEditor;
     },
     onRender: function(){
       this.photoView = new ObrasCommon.AttachmentImageBox({
@@ -213,19 +217,19 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
           itemRender: utils.templates.ImageBoxItem
         },
         minImageWidth: 2100,
-        minImageHeight: 1500  
+        minImageHeight: 1500
       });
       this.photoView.render();
       this.$el.find('#labelIndex').html((this.childIndex+1));
     },
-    
+
     onDestroy: function(){
       if(this.photoView){
         this.photoView.destroy();
         this.photoView = null;
       }
     },
-    
+
     /** metodos de 'interface' para paso de wizard **/
     validate: function(){
       return true;
@@ -236,16 +240,16 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       if(files.length > 0){
         file = files.at(0);
       }
-      
+
       var params = {
           photo: file,
           slug: this.$el.find('[name=slug]').val(),
           description: this.$el.find('[name=description]').val()
-      }
+      };
       this.model.set(params);
     }
-  }); 
-  
+  });
+
   var PartsEditor = Marionette.CompositeView.extend({
     initialize: function(opts){
       if(opts.model){
@@ -264,7 +268,7 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
     childViewOptions: function(model, index) {
       return {
         childIndex: index
-      }
+      };
     },
     onRender: function(){
       if(!this.model.isNew()){
@@ -279,18 +283,16 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
         }else{
           this.$el.find('[name=partcant]').val(0);
         }
-          
+
       }else{
         this.$el.find('[name=partcant]').val(0);
       }
       var self = this;
       setTimeout(function(){
-        self.validateCountChildren();  
-      },10)
-      
-      
+        self.validateCountChildren();
+      },10);
     },
-    
+
     validateCountChildren: function(){
       var count = parseInt(this.$el.find('[name=partcant]').val());
       if(count < 0){
@@ -303,7 +305,7 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       }
       var currentCount = this.collection.length;
       if(count === currentCount) return;
-      
+
       this.commit();
       if(count < currentCount){
         var all = this.collection.toArray();
@@ -316,26 +318,27 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
           this.collection.add(obra);
         }
       }
+
     },
-    
-    
+
+
     validate: function(){
       return true;
     },
-    
+
     commit: function(){
       var childrenView = this.children;
       this.children.each(function(child){
         child.commit();
-      })
+      });
       this.model.set('parts',this.collection.toJSON());
     },
-    
+
     events: {
       'change [name=partsenabled]': 'partsEnabledChange',
-      'change [name=partcant]': 'onCountPartChange'  
+      'change [name=partcant]': 'onCountPartChange'
     },
-    
+
     partsEnabledChange: function(e){
       var enabled = this.$el.find('[name=partsenabled]').prop('checked');
       if(enabled){
@@ -351,39 +354,39 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
     onCountPartChange: function(e){
       this.validateCountChildren();
     }
-    
+
   });
-  
-  
+
+
   var ConfirmStep = Marionette.ItemView.extend({
     getTemplate: function(){
       return utils.templates.ObrasResume;
     },
-    
+
     templateHelpers: function(){
         return {
               getUrlAssets: function(photo){
                 var urlpath = photo.urlpath;
                 return  location.origin + '/'+ urlpath;
               }
-          }
+          };
     },
-    
-    
-    
+
+
+
     /** metodos de 'interface' para paso de wizard **/
     validate: function(){
       return true;
     },
     commit: function(){
-      
+
     }
   });
-  
-  
+
+
   Edit.ObraGraciasView = Marionette.ItemView.extend({
     getTemplate: function(){
-      return utils.templates.ObrasGracias
+      return utils.templates.ObrasGracias;
     },
     events: {
       'click .js-obras': function(){
