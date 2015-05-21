@@ -7,11 +7,11 @@
  *     metodos exportados:
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
  */
+var config = require('config');
 var dbi ;
 var BSON;
-var config = {};
-var articlesCol = 'articles';
-var serialCol = 'seriales';
+var articlesCol = config.get('Calendar.collections.articles');
+var serialCol =   config.get('Calendar.collections.seriales');
 var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
     'ERROR: No se pudo borrar el nodo en la base de datos'
@@ -49,7 +49,6 @@ exports.setDb = function(db) {
 };
 
 exports.setConfig = function(conf){
-    config = conf;
     return this;
 };
 

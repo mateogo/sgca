@@ -8,11 +8,11 @@
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
  *
  */
+var config = require('config');
 var dbi ;
 var BSON;
-var config = {};
-var admrqstsCol = 'admrqsts';
-var serialCol = 'seriales';
+var admrqstsCol = config.get('Calendar.collections.admrqsts');
+var serialCol =   config.get('Calendar.collections.seriales');
 var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
     'ERROR: No se pudo borrar el nodo en la base de datos'
@@ -154,7 +154,6 @@ exports.setDb = function(db) {
 
 
 exports.setConfig = function(conf){
-    config = conf;
     return this;
 };
 

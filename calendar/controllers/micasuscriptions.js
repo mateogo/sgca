@@ -8,13 +8,13 @@
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
  *
  */
+var config = require('config');
 var _ = require('underscore');
 
 var dbi ;
 var BSON;
-var config = {};
-var micasuscriptionsCol = 'micasuscriptions';
-var serialCol = 'seriales';
+var micasuscriptionsCol = config.get('Calendar.collections.micasuscriptions');
+var serialCol =           config.get('Calendar.collections.seriales');
 
 var _ = require('underscore');
 
@@ -161,7 +161,6 @@ exports.setDb = function(db) {
 };
 
 exports.setConfig = function(conf){
-    config = conf;
     return this;
 };
 

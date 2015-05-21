@@ -1,11 +1,11 @@
 /*
  *
  */
+var config = require('config');
 var dbi ;
 var BSON;
-var config = {};
-var reportsCol = 'anywproductions';
-var serialCol = 'seriales';
+var reportsCol = config.get('Calendar.collections.anywproductions');
+var serialCol =  config.get('Calendar.collections.seriales');
 var url = require('url');
 var http = require("http");
 var querystring = require('querystring');
@@ -136,7 +136,6 @@ exports.setDb = function(db) {
 };
 
 exports.setConfig = function(conf){
-    config = conf;
     return this;
 };
 

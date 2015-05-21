@@ -1,5 +1,6 @@
 var rootPath = '../../';
 
+var config = require('config');
 
 var async = require('async');
 var Backbone = require('backbone');

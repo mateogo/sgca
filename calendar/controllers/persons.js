@@ -11,13 +11,13 @@
     Ojo: Administrar el cache: ver c´mo
 
  */
+var config = require('config');
 var _ = require('underscore');
 
 var dbi ;
 var BSON;
-var config = {};
-var personsCol = 'persons';
-var serialCol = 'seriales';
+var personsCol = config.get('Calendar.collections.persons');
+var serialCol =  config.get('Calendar.collections.seriales');
 var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
     'ERROR: No se pudo borrar el nodo en la base de datos'
@@ -105,7 +105,6 @@ exports.setDb = function(db) {
 };
 
 exports.setConfig = function(conf){
-    config = conf;
     return this;
 };
 

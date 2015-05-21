@@ -10,13 +10,12 @@
  *     metodos exportados:
  *          open(); findById; findAll; add(), update(); delete()
  */
-
+var config = require('config');
 var _ = require('underscore');
 
 var dbi ;
 var BSON;
-var config = {};
-var assetsCol = 'assets';
+var assetsCol = config.get('Calendar.collections.assets');
 var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
     'ERROR: No se pudo borrar el nodo en la base de datos'
@@ -30,7 +29,6 @@ exports.setBSON = function(bs) {
     return this;
 };
 exports.setConfig = function(conf){
-    config = conf;
     return this;
 };
 

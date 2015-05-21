@@ -11,11 +11,11 @@
  *     metodos exportados:
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
  */
+var config = require('config');
 var dbi ;
 var BSON;
-var config = {};
-var productsCol = 'products';
-var serialCol = 'seriales';
+var productsCol = config.get('Calendar.collections.products');
+var serialCol =   config.get('Calendar.collections.seriales');
 var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
     'ERROR: No se pudo borrar el nodo en la base de datos'
@@ -211,7 +211,6 @@ exports.setDb = function(db) {
     return this;
 };
 exports.setConfig = function(conf){
-    config = conf;
     return this;
 };
 exports.setBSON = function(bs) {
