@@ -1,0 +1,22 @@
+<div class="col-xs-12 col-sm-12">
+
+  <div class="row">
+    <div id="navbar-region" class="col-xs-12 col-sm-12"></div>
+  </div>
+
+  <div class="row">
+    <div id="main-region" class="col-xs-12 col-sm-12">
+        <h3> <%= listTitle %> </h3>
+        <div style="margin-bottom:10px">
+            <div class="pull-left">
+              <% if (canAdd) { %>
+                <button class="btn btn-success btn-sm js-newitem">Nuevo</button>
+              <% } %>
+            </div>
+            <div id="filter-region" class="pull-right"> </div>
+            <div class="clearfix"></div>
+        </div>
+        <div id="table-region"> </div>
+    </div><!--/span 12 -->
+  </div><!--/row-->
+</div><!--/span 12-->
