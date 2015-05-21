@@ -1,11 +1,11 @@
 /*
  *
  */
+var config = require('config');
 var dbi ;
 var BSON;
-var config = {};
-var reportsCol = 'reports';
-var serialCol = 'seriales';
+var reportsCol = config.get('Calendar.collections.reports');
+var serialCol =  config.get('Calendar.collections.seriales');
 
 var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
@@ -133,7 +133,6 @@ exports.setDb = function(db) {
 };
 
 exports.setConfig = function(conf){
-    config = conf;
     return this;
 };
 

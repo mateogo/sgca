@@ -12,6 +12,7 @@
 
  */
 
+var config = require('config');
 var path = require('path');
 var rootPath = path.normalize(__dirname + '/../..');
 
@@ -23,9 +24,8 @@ var salt = bcrypt.genSaltSync(12);
 
 var dbi ;
 var BSON;
-var config = {};
-var usersCol = 'users';
-var serialCol = 'seriales';
+var usersCol =  config.get('Calendar.collections.users');
+var serialCol = config.get('Calendar.collections.seriales');
 var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
     'ERROR: No se pudo borrar el nodo en la base de datos'
@@ -75,7 +75,6 @@ exports.setDb = function(db) {
 };
 
 exports.setConfig = function(conf){
-    config = conf;
     return this;
 };
 

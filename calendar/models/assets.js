@@ -1,3 +1,4 @@
+var config = require('config');
 
 
 var async = require('async');
@@ -7,7 +8,7 @@ var BaseModel = require('./basemodel.js');
 
 var dbi;
 
-var entityCol = 'assets';
+var entityCol = config.get('Calendar.collections.assets');
 
 
 var Assets = BaseModel.extend({

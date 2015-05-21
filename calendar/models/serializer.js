@@ -1,3 +1,4 @@
+var config = require('config');
 
 var BaseModel = require('./basemodel.js');
 var async = require('async');
@@ -7,7 +8,7 @@ var _ = require('underscore');
 var Serializer = BaseModel.extend({
   
   constructor: function(){
-    this.entityCol = 'seriales';
+    this.entityCol = config.get('Calendar.collections.seriales');
     this.seriales = {};
     this.adapters = {};
     this.onReadyCallbacks = [];

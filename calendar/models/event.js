@@ -1,3 +1,4 @@
+var config = require('config');
 
 
 var serializer = require('./serializer.js');
@@ -10,7 +11,7 @@ var BaseModel = require('./basemodel.js');
 
 var dbi;
 
-var entityCol = 'events';
+var entityCol = config.get('Calendar.collections.events');
 var serieKey = 'events101';
 
 serializer.initSeries([

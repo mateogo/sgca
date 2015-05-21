@@ -1,3 +1,4 @@
+var config = require('config');
 
 
 var serializer = require('./serializer.js');
@@ -8,7 +9,7 @@ var BaseModel = require('./basemodel.js');
 
 var dbi;
 
-var entityCol = 'artactivities';
+var entityCol = config.get('Calendar.collections.artactivities');
 var serieKey = 'artactivity101';
 
 serializer.initSeries([

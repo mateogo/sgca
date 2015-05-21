@@ -8,6 +8,7 @@
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
  *
  */
+var config = require('config');
 var _ = require('underscore');
 var async = require('async');
 var ObjectID = require('mongodb').ObjectID;
@@ -20,10 +21,9 @@ var persons = require(rootPath + '/calendar/controllers/persons.js');
 
 var dbi ;
 var BSON;
-var config = {};
-var actionsCol = 'actions';
-var budgetsCol = 'budgets';
-var serialCol = 'seriales';
+var actionsCol = config.get('Calendar.collections.actions');
+var budgetsCol = config.get('Calendar.collections.budgets');
+var serialCol  = config.get('Calendar.collections.seriales');
 
 var _ = require('underscore');
 
@@ -394,7 +394,6 @@ exports.setDb = function(db) {
 };
 
 exports.setConfig = function(conf){
-    config = conf;
     return this;
 };
 

@@ -8,13 +8,13 @@
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
  *
  */
+var config = require('config');
 var _ = require('underscore');
 
 var dbi ;
 var BSON;
-var config = {};
-var fondosuscriptionsCol = 'fondosuscriptions';
-var serialCol = 'seriales';
+var fondosuscriptionsCol = config.get('Calendar.collections.fondosuscriptions');
+var serialCol =            config.get('Calendar.collections.seriales');
 
 var _ = require('underscore');
 
@@ -175,7 +175,6 @@ exports.setDb = function(db) {
 };
 
 exports.setConfig = function(conf){
-    config = conf;
     return this;
 };
 

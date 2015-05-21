@@ -1,3 +1,4 @@
+var config = require('config');
 
 
 var serializer = require('./serializer.js');
@@ -9,7 +10,7 @@ var Assets = require('./assets.js').getModel();
 
 var dbi;
 
-var entityCol = 'obrasarte';
+var entityCol = config.get('Calendar.collections.obrasarte');
 var serieKey = 'obrasarte101';
 
 serializer.initSeries([
