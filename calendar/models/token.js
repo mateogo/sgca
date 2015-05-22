@@ -1,3 +1,4 @@
+var config = require('config');
 
 
 var async = require('async');
@@ -8,7 +9,7 @@ var Assets = require('./assets.js').getModel();
 
 var dbi;
 
-var entityCol = 'token_obras';
+var entityCol = config.get('Calendar.collections.token_obras');
 
 
 var Token = BaseModel.extend({
