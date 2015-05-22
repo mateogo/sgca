@@ -1,0 +1,5 @@
+#!/bin/bash
+cd /home/ubuntu/instancias-sisplan/cultura
+git pull
+git reset --hard origin/cultura
+supervisorctl restart sisplan-cultura

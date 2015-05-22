@@ -1,0 +1,5 @@
+#!/bin/bash
+cd /home/ubuntu/instancias-sisplan/test
+git pull
+git reset --hard origin/test
+supervisorctl restart sisplan-test
