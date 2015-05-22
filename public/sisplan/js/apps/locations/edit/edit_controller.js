@@ -2,12 +2,11 @@ DocManager.module("LocationsApp.Edit", function(Edit, DocManager, Backbone, Mari
   
   Edit.Controller = {};
   
-  Edit.Controller.edit = function(action, model){
-    var editor = new Edit.View({action:action, model:model});
+  Edit.Controller.edit = function(model){
+    var editor = new Edit.View({model:model});
     
     DocManager.mainRegion.show(editor);
-    
-    //Edit.modaledit(action,model);
+
   };
   
 });

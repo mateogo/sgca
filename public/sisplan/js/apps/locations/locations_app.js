@@ -14,14 +14,12 @@ DocManager.module('LocationsApp',function(LocationsApp,DocManager,Backbonone,Mar
 			LocationsApp.List.Controller.list(id);
 		},
 
-		newLocation: function(action){
-             if(action){
-                 API.edit(action, action.createNewLocation());
-             }
+		newLocation: function(){
+			API.edit(new DocManager.Entities.Location());
 		},
 		
-		edit: function(action,location){
-		    LocationsApp.Edit.Controller.edit(action,location);
+		edit: function(location){
+		    LocationsApp.Edit.Controller.edit(location);
 		},
 		
 		remove: function(action,location){
@@ -42,8 +40,8 @@ DocManager.module('LocationsApp',function(LocationsApp,DocManager,Backbonone,Mar
 		API.list(action.id);
   });
 	
-  DocManager.on('location:edit',function(action,location){
-    API.edit(action,location);
+  DocManager.on('location:edit',function(location){
+    API.edit(location);
   });
 	
   DocManager.on('location:new',function(action){

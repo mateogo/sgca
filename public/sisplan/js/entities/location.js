@@ -39,5 +39,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         }
     });
 
+    Entities.LocationCollection = Backbone.Collection.extend({
+
+        model: Entities.Location,
+
+        initialize: function (model, options) {
+        },
+
+        url: "/sisplan/locaciones"
+    });
+
 
 });

@@ -256,10 +256,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return def.promise();
     },
     
-    createNewLocation: function(){
-      return new Entities.Location({action:this});
-    },
-    
     removeLocation: function(location){
       var def = $.Deferred();
       var locs = this.locations;
@@ -574,7 +570,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           collection.push(p);
         }
       },
-    
+
       save: function(){
         var self = this;
         var $def = $.Deferred();
