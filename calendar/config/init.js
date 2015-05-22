@@ -29,6 +29,7 @@ defaults = {
     admrqsts:           'admrqsts',
     activities:         'activities',
     actions:            'actions',
+    token_obras:        'token_obras',
   },
   prefixes: {
 

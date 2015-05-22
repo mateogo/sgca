@@ -1,10 +1,11 @@
+var config = require('config');
 
 
 var BaseModel = require('./basemodel.js');
 
 var dbi;
 
-var entityCol = 'users';
+var entityCol = config.get('Calendar.collections.users');
 
 
 var User = BaseModel.extend({
