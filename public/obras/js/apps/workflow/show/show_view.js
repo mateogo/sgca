@@ -1,12 +1,20 @@
 DocManager.module("WorkflowApp.Show", function(Show, DocManager, Backbone, Marionette, $, _){
 
+
+  var SolicitudShow = DocManager.module('SolicitudApp.Show');
+
   Show.DisplayTokenView = Marionette.LayoutView.extend({
     getTemplate: function(){
       return utils.templates.DisplayTokenView;
     },
     regions: {
-      detailView: '#detailView',
+      detailRegion: '#detail-region',
       actionList: '#actionList'
+    },
+
+    onRender: function(){
+      var obj = this.model.get('obj');
+      this.detailRegion.show(new SolicitudShow.ShowLayoutView({model:obj}));
     },
 
     events: {

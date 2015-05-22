@@ -59,3 +59,52 @@
 .navbar-toolbar{
   min-height: 40px;
 }
+
+
+.resume-grid{
+  margin-bottom: 20px;
+}
+
+.resume-grid h3{
+    border: 1px solid #333;
+    padding: 4px;
+    font-size: 18px;
+}
+
+.resume-grid > div{
+    margin: 5px;
+}
+
+.resume-grid > .row > div:nth-child(odd){
+    color: #444;
+}
+
+.resume-grid > .row > div:nth-child(even){
+    font-weight: bold;
+}
+
+@media screen{
+  .ficha-box{
+    border: 1px solid #CCC;
+    margin-bottom: 30px;
+    background-color:white;
+    padding:10px;
+    -webkit-box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.44);
+    -moz-box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.44);
+    box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.44);
+  }
+}
+
+@media print{
+  .ficha-box{
+    width: 95%;
+  }
+}
+
+.list-decorator > *{
+  border-bottom: 1px solid #999;
+}
+
+.list-decorator > *:nth-last-child(1){
+  border-bottom: 0;
+}

@@ -36,7 +36,14 @@ var ActionCollection = Backbone.Collection.extend({
     var actions = [];
     for (var i = 0; i < this.length; i++) {
       var action = this.at(i);
-      if( (action.get('fromToken') === ALL || action.get('fromToken') === tokenType) && action.hasGroup(groups)){
+      var fromToken = action.get('fromToken');
+      var addAction = false;
+      if(_.isArray(fromToken)){
+        addAction = _.indexOf(fromToken,tokenType) > -1  && action.hasGroup(groups);
+      }else{
+        addAction = (fromToken === ALL || fromToken === tokenType) && action.hasGroup(groups);
+      }
+      if(addAction){
           actions.push(action);
       }
     }
@@ -52,7 +59,7 @@ var actions = new ActionCollection([
    groups: [groups.FALICITADORES]
   },
   {title: 'Pedido de corrección',
-    tokenType: types.PEDIDO_CORRECCION,fromToken: types.FORMALIZANDO,
+    tokenType: types.PEDIDO_CORRECCION,fromToken: [types.FORMALIZANDO,types.CAMBIO],
     groups: [groups.FALICITADORES]
   },
   {title: 'Cancelar la correción',
@@ -60,7 +67,7 @@ var actions = new ActionCollection([
     groups: [groups.FALICITADORES]
   },
   {title: 'Forma OK',
-   tokenType: types.FORMALIZADO, fromToken: types.FORMALIZANDO,
+   tokenType: types.FORMALIZADO, fromToken: [types.FORMALIZANDO,types.CAMBIO],
    groups: [groups.FALICITADORES]
   },
   {title: 'Cancelar solicitud',
@@ -69,7 +76,7 @@ var actions = new ActionCollection([
   },
 
 
-  {title: 'Asignar',
+  {title: 'Tomar solicitud',
    tokenType: types.REVISANDO, fromToken: types.FORMALIZADO,
    groups: [groups.REVISORES]
   },
@@ -82,7 +89,7 @@ var actions = new ActionCollection([
     groups: [groups.REVISORES]
   },
   {title: 'Asignar a otro revisor',
-   tokenType: types.REVISANDO, fromToken: types.FORMALIZADO,
+   tokenType: types.REVISANDO, fromToken: types.REVISADO,
    groups: [groups.REVISORES]
   },
   {title: 'Asignar a Autorizar',

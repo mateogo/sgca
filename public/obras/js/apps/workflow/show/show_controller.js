@@ -19,31 +19,42 @@ DocManager.module("WorkflowApp.Show", function(Show, DocManager, Backbone, Mario
       },
 
       display: function(token){
-        var view = new Show.DisplayTokenView({model:token});
+        var self = this;
+        var p = DocManager.request('token:loadObj',token);
 
-        this.session = {token:token};
+        p.done(function(obj){
+          token.set('obj',obj);
+          var view = new Show.DisplayTokenView({model:token});
 
-        var actionCollection = new Entities.ActionCollection();
-        if(token.get('is_open')){
-          actionCollection.fetch({data:{tokenType:token.get('type')}});
-        }
+          self.session = {token:token};
+
+          var actionCollection = new Entities.ActionCollection();
+          if(token.get('is_open')){
+            actionCollection.fetch({data:{tokenType:token.get('type')}});
+          }
 
 
-        view.on('show',function(){
-          var list = new Show.ActionsListView({collection:actionCollection});
-          view.actionList.show(list);
+          view.on('show',function(){
+            var list = new Show.ActionsListView({collection:actionCollection});
+            view.actionList.show(list);
 
-          list.on('action:run',handler.actionRun);
-          list.on('onDestroy',function(){
-            console.log('DESTRUYENO LIST DE ACCIONES');
-            list.unbind('action:run');
-            list.unbind('onDestroy');
+            list.on('action:run',handler.actionRun);
+            list.on('onDestroy',function(){
+              console.log('DESTRUYENO LIST DE ACCIONES');
+              list.unbind('action:run');
+              list.unbind('onDestroy');
+            });
           });
+
+          var layout = Common.Controller.showMain(view);
+
+          DocManager.mainRegion.show(layout);
+        }).fail(function(e){
+          Message.error('No se encontro el objeto relacionado');
         });
 
-        var layout = Common.Controller.showMain(view);
 
-        DocManager.mainRegion.show(layout);
+
       }
   };
 

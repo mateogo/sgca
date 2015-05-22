@@ -45,4 +45,29 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     url: "/obraswf/actions"
   });
 
+
+
+
+  DocManager.reqres.setHandler("token:loadObj", function(token){
+    var Model = null;
+    var type = token.get('obj_type');
+    if(type === 'solicitud'){
+      Model = Entities.Solicitud;
+    }
+
+    var $def = $.Deferred();
+    if(Model){
+      var model = new Model({_id:token.get('obj_id')});
+      model.fetch().then(function(result){
+        $def.resolve(model);
+      },function(err){
+        $def.reject(err);
+      });
+    }else{
+      $def.reject('Tipo de objeto no reconocido');
+    }
+
+    return $def.promise();
+  });
+
 });

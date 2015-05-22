@@ -1,12 +1,12 @@
 DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
-    
+
   var AppCommon = DocManager.module('App.Common');
-  var ObrasCommon = DocManager.module('ObrasApp.Common'); 
+  var ObrasCommon = DocManager.module('ObrasApp.Common');
   var ObrasList = DocManager.module('ObrasApp.List');
   var Entities = DocManager.module('Entities');
-  
-  
-  
+
+
+
   Edit.SolicitudWizardView =  ObrasCommon.WizardView.extend({
     initialize: function(){
       this.steps = [DescriptionEditor,ExportadoresStep,ObrasStep,DocsStep,ConfirmStep];
@@ -14,7 +14,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     getTemplate: function(){
       return utils.templates.SolicitudWizard;
     },
-    
+
     save: function(){
       var self = this;
       var $btn = this.$el.find('.js-submit');
@@ -26,27 +26,27 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         $btn.button('reset');
         Message.error('No se pudo registrar');
         console.error(e);
-      })
+      });
     }
   });
-  
+
   Edit.SolicitudEditorView = Marionette.ItemView.extend({
     initialize: function(){
       this.tabs = [DescriptionEditor,ExportadoresStep,ObrasStep,DocsStep];
     },
     getTemplate: function(){
-      return utils.templates.SolEditor
+      return utils.templates.SolEditor;
     },
-    
+
     onRender: function(){
       this.selectTab(0);
     },
-    
+
     onDestroy: function(){
       this.tabs = null;
       this.currentTab = null;
     },
-    
+
     selectTab: function(index){
       if(index < 0 || index >= this.tabs.length ) return;
        if(this.currentTab){
@@ -66,23 +66,23 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
        this.$el.find('.nav-tabs li.active').removeClass('active');
        this.$el.find('.nav-tabs li:eq('+index+')').addClass('active');
     },
-    
+
     events:{
       'click .nav-tabs li': 'onSelectTab',
       'click .js-save': 'onSave',
       'click .js-cancel': 'onCancel'
-      
+
     },
-    
+
     onSelectTab: function(e){
       var pos = this.$el.find('.nav-tabs li').index(e.currentTarget);
       this.selectTab(pos);
-      
+
     },
-    
+
     onSave: function(e){
       e.stopPropagation();e.preventDefault();
-      
+
       if(this.currentTab){
         if(!this.currentTab.validate()){
           Message.error('Por favor, Revise el formulario');
@@ -90,27 +90,27 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         }
         this.currentTab.commit();
       }
-      
-      
+
+
       var self = this;
       var btn = $(e.currentTarget);
       btn.button('loading');
       DocManager.request('solicitud:save',this.model).done(function(){
-        btn.button('reset');  
+        btn.button('reset');
         Message.success('La Solicitud '+self.model.get('cnumber') + '<br/>A sido guardada');
         self.trigger('solicitud:saved',self.model);
       }).fail(function(e){
         btn.button('reset');
         Message.error('No se pudo guardar');
-      })
+      });
     },
-    
+
     onCancel: function(){
       this.trigger('solicitud:editCanceled',this.model);
     }
   });
-  
-  
+
+
   var DescriptionEditor = Marionette.ItemView.extend({
     getTemplate: function(){
       return utils.templates.SolDescriptionEditor;
@@ -130,7 +130,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       }
       return data;
     },
-    
+
     validateTypeForm: function(){
       var type = this.$el.find('[name=type]').val();
       if(type === 'temporaria'){
@@ -139,31 +139,31 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         this.$el.find('#durationoutCont').hide();
       }
     },
-    
-    
+
+
     validate: function(){
       this.commit();
-      var valid = this.model.isValid(true); 
+      var valid = this.model.isValid(true);
       return valid;
     },
     commit: function(){
       var data = this.getData();
       this.model.set(data);
     },
-    
+
     events: {
       'change input': 'commit',
       'change select': 'commit',
       'change textarea': 'commit',
       'change [name=type]': 'onChangeType'
     },
-    
+
     onChangeType: function(){
       this.validateTypeForm();
     }
-    
-  })
-  
+
+  });
+
   var ExportadorEditor = Marionette.ItemView.extend({
     getTemplate: function(){
       return utils.templates.SolExportadorEditor;
@@ -176,7 +176,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       Backbone.Validation.unbind(this);
       this.destroyChildren();
     },
-    
+
     initChildren: function(){
       this.photo1View = new ObrasCommon.AttachmentImageBox({
         el:this.$el.find('#photoDoc1Cont'),
@@ -186,10 +186,10 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
           itemRender: utils.templates.ImageBoxItem
         },
         minImageWidth: 900,
-        minImageHeight: 600  
+        minImageHeight: 600
       });
       this.photo1View.render();
-      
+
       this.photo2View = new ObrasCommon.AttachmentImageBox({
         el:this.$el.find('#photoDoc2Cont'),
         model: this.model.get('docPhoto2'),
@@ -198,11 +198,11 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
           itemRender: utils.templates.ImageBoxItem
         },
         minImageWidth: 900,
-        minImageHeight: 600  
+        minImageHeight: 600
       });
       this.photo2View.render();
     },
-    
+
     destroyChildren: function(){
       var children = ['photo1View','photo2View'];
       for (var i = 0; i < children.length; i++) {
@@ -213,7 +213,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         }
       }
     },
-    
+
     getPhotoDoc: function(name){
       var files = this[name].getFiles();
       if(files.length > 0 ){
@@ -222,7 +222,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         return null;
       }
     },
-    
+
     getData: function(){
       var schema = this.model.validation;
       var data = {};
@@ -231,21 +231,21 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       }
       if(data.province === 'no_definido') data.province = '';
       data.ditype = this.$el.find('#typeDocCont').html();
-     
+
       data.docPhoto1 = this.getPhotoDoc('photo1View');
       data.docPhoto2 = this.getPhotoDoc('photo2View');
-      
+
       return data;
     },
     validate: function(){
-      this.commit()
+      this.commit();
       return this.model.isValid(true);
     },
     commit: function(){
       var data = this.getData();
       this.model.set(data);
     },
-    
+
     events:{
       'click #dropDownTypeDoc li': 'onChangeTypeDoc'
     },
@@ -253,8 +253,8 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       var value = $(e.currentTarget).find('a').html();
       this.$el.find('#typeDocCont').html(value);
     }
-  })
-  
+  });
+
   var ExportadoresStep = Marionette.ItemView.extend({
     initialize: function(opts){
       this.collection = new Backbone.Collection();
@@ -267,12 +267,12 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     getTemplate: function(){
       return utils.templates.SolExportadoresStep;
     },
-    
+
     onRender: function(){
       this.validateMenu();
       this.setTab(0);
     },
-    
+
     validateMenu: function(){
       var $list =  this.$el.find('#tabList');
       var $li = this.$el.find('#linkExport2');
@@ -286,7 +286,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         this.$el.find('#tabList li:nth-child(3)').remove();
       }
     },
-    
+
     setTab: function(index){
       if(index >=0 && index < this.collection.length && this.currentIndex != index){
         var exporter = this.collection.at(index);
@@ -304,14 +304,14 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         this.currentIndex = index;
       }
     },
-    
+
     addExportador: function(){
       var exp = (this.exporterRemoved)? this.exporterRemoved : new Entities.Exportador();
       this.collection.push(exp);
       this.validateMenu();
       this.setTab(1);
     },
-    
+
     removeExportador: function(){
       if(this.collection.length > 1){
         this.exporterRemoved = this.collection.pop();
@@ -325,8 +325,8 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         this.setTab(0);
       }
     },
-    
-    
+
+
     /** metodos para "interface" de step de wizard o editor **/
     validate: function(){
       var ok = this.child.validate();
@@ -343,41 +343,41 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       this.child.commit();
       this.model.set('exporters',this.collection.toJSON());
     },
-    
+
     events: {
       'click .js-addexporter': 'onAddExporter',
       'click .js-removeexporter': 'onRemoveExporter',
       'click .js-tabSelect': 'onTabSelect'
     },
-    
+
     onAddExporter: function(){
       this.addExportador();
     },
-    
+
     onRemoveExporter: function(){
       var self = this;
       DocManager.confirm('¿Quiere borrar al segundo exportador?',{okText:'si',cancelText:'no'}).done(function(){
-        self.removeExportador();  
-      })
-      
+        self.removeExportador();
+      });
+
     },
-    
+
     onTabSelect: function(e){
       var index = this.$el.find('#tabList li').index($(e.currentTarget));
       this.setTab(index);
     }
   });
-  
+
   var ObrasStep = Marionette.CompositeView.extend({
     initialize: function(){
       var obras = this.model.get('obras');
       if(obras){
         this.collection = obras;
         if(!(this.collection instanceof Backbone.Collection)){
-          this.collection = new Backbone.Collection(obras);  
+          this.collection = new Backbone.Collection(obras);
         }
       }else{
-        this.collection = new Backbone.Collection();  
+        this.collection = new Backbone.Collection();
       }
     },
     getTemplate: function(){
@@ -385,7 +385,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     },
     childView: ObrasList.ObraItem,
     childViewContainer: '#obras-container',
-    
+
     onRender: function(){
       var self = this;
       this.autoComplete = new ObrasList.AutoCompleteObrasField({el:this.$el.find('#inputSearch'),filterField:['cnumber','slug']});
@@ -396,22 +396,22 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       });
       this.validateTotal();
     },
-    
+
     onDestroy: function(){
       this.autoComplete.unbind('obra:selected');
       this.autoComplete.destroy();
       this.autoComplete = null;
     },
-    
+
     validateTotal: function(){
       var total = 0;
       this.collection.each(function(obra){
         total += parseFloat(obra.get('value'));
-      })
+      });
       this.$el.find('#totalContainer').html('$'+accounting.format(total));
       this.totalValue = total;
     },
-    
+
     validate: function(){
       var ok = this.collection.length > 0;
       if(!ok){
@@ -423,25 +423,25 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       this.model.set('obras',this.collection);
       this.model.set('totalValue',this.totalValue);
     },
-    
+
     openSelector: function(){
       var self = this;
       DocManager.request('obra:selector',function(obras){
         self.collection.add(obras);
         self.validateTotal();
         Message.clear();
-      })
+      });
     },
-    
+
     events: {
       'click .js-obrasselector': 'onClickSelector',
     },
-    
+
     onClickSelector: function(e){
       this.openSelector();
     }
   });
-  
+
   var DocsStep = Marionette.ItemView.extend({
     getTemplate: function(){
       return utils.templates.SolDocsStep;
@@ -456,7 +456,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
     onDestroy: function(){
       this.destroyAttacher();
     },
-    
+
     initAttacher: function(){
       var container = $('<div></div>');
       this.$el.find('#docsContainer').append(container);
@@ -465,21 +465,21 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
             collection: this.model.get('docs')
       });
       this.attachView.render();
-      
+
       var self = this;
       this.listenTo(this.attachView,'change',function(){
         //self.$el.find('#empty-region').removeClass('alert alert-danger');
         //self.commit();
       });
     },
-    
+
     destroyAttacher: function(){
       if(this.attachView){
         this.attachView.destroy();
         this.attachView = null;
       }
     },
-    
+
     validate: function(){
       return true;
     },
@@ -489,7 +489,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         this.model.set('docs',files.toJSON());
       }
     },
-    
+
     events: {
       'click [name=docsenabled]': 'onChangeEnabled'
     },
@@ -502,7 +502,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       }
     }
   });
-  
+
   var ConfirmStep = Marionette.ItemView.extend({
     getTemplate: function(){
       return utils.templates.SolConfirmStep;
@@ -511,14 +511,14 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       return true;
     },
     commit: function(){
-      
+
     }
   });
-  
- 
+
+
   Edit.SolicitudGraciasView = Marionette.ItemView.extend({
     getTemplate: function(){
-      return utils.templates.SolGracias
+      return utils.templates.SolGracias;
     },
     events: {
       'click .js-solicitudes': function(){
@@ -529,6 +529,6 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       }
     }
   });
-  
-  
+
+
 });

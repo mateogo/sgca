@@ -11,7 +11,11 @@ DocManager.module("WorkflowApp.Common", function(Common, DocManager, Backbone, M
         if(!Common.Session.internalView){
 
           var queries = new Entities.QueryCollection();
-          queries.fetch();
+          queries.fetch().done(function(){
+            if(queries.length > 0){
+              DocManager.trigger('query:run',queries.at(0));
+            }
+          });
 
           var layout = new Common.InternalLayout();
 

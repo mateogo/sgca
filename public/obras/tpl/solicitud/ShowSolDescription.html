@@ -1,0 +1,28 @@
+
+<div class="resume-grid">
+  <h3>Descripción</h3>
+  <div class="row">
+    <div class="col-xs-2">tipo</div>
+    <div class="col-xs-4"><%=type%></div>
+    <div class="col-xs-2">causa</div>
+    <div class="col-xs-4"><%=reason%></div>
+  </div>
+  <div class="row">
+    <div class="col-xs-2">destino</div>
+    <div class="col-xs-4"><%=destination%></div>
+    <div class="col-xs-2">lugar de salida</div>
+    <div class="col-xs-4"><%=customs%></div>
+  </div>
+  <div class="row">
+    <div class="col-xs-2">fecha estimada de salida</div>
+    <div class="col-xs-4"><%=dateout%></div>
+    <% if(type === 'temporaria'){ %>
+        <div class="col-xs-2">compromiso de retorno</div>
+        <div class="col-xs-4"><%=durationout%> meses</div>
+    <% } %>
+  </div>
+  <div class="row">
+    <div class="col-xs-2">aclaraciones</div>
+    <div class="col-xs-10"><%=obs%></div>
+  </div>
+</div>

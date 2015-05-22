@@ -1,21 +1,21 @@
 DocManager.module("SolicitudApp.List", function(List, DocManager, Backbone, Marionette, $, _){
-  
+
   var SolicitudListRow = Marionette.ItemView.extend({
     tagName: 'tr',
     getTemplate: function(){
-      return utils.templates.SolicitudListRow
+      return utils.templates.SolicitudListRow;
     },
-    
+
     events: {
       'click .js-edit': 'onClickEdit'
     },
-    
+
     onClickEdit: function(){
       DocManager.trigger('solicitud:edit',this.model);
     }
   });
-  
-  
+
+
   List.SolicitudListView =  Marionette.CompositeView.extend({
     childView: SolicitudListRow,
     childViewContainer: "tbody",
@@ -27,8 +27,8 @@ DocManager.module("SolicitudApp.List", function(List, DocManager, Backbone, Mari
       console.log(this.el);
     }
   });
-  
-  
-  
-  
+
+
+
+
 });

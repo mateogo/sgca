@@ -1,0 +1,34 @@
+
+<div class="resume-grid">
+  <div class="row">
+    <div class="col-xs-3">nombre y apellido</div>
+    <div class="col-xs-9"><%=name%> <%=lastname%></div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">domicilio</div>
+    <div class="col-xs-3"><%=address%></div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">fecha de nacimiento</div>
+    <div class="col-xs-3"><%=birthday%></div>
+    <div class="col-xs-3">Lugar de nacimiento</div>
+    <div class="col-xs-3"><%=bornplace%></div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">fecha de fallecimiento</div>
+    <div class="col-xs-3">
+        <% if(typeof(alive) == 'undefined' || alive === 'si') { %>
+            ----
+        <% }else{ %>
+          <%=deathdate%>
+        <%  }   %>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+        Antecedentes art&iacute;sticos:  <br/>
+        <%=background%>
+    </div>
+  </div>
+</div>

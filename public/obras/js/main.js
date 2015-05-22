@@ -10,12 +10,14 @@ utils.loadTemplate([
     'obras/ObrasDescriptionEditor','obras/ObrasResume', 'obras/ObrasPartEditor','obras/ObrasPartStep',
     'obras/ObrasGracias','obras/ObrasItemSelection','obras/ObraItem',
 
-    'autor/AutorEditor',
+    'autor/AutorEditor','autor/ShowAutorView',
 
     'solicitud/SolicitudList','solicitud/SolicitudListRow',
     'solicitud/SolicitudWizard','solicitud/SolConfirmStep','solicitud/SolDescriptionEditor',
     'solicitud/SolExportadoresStep','solicitud/SolExportadorEditor','solicitud/SolObrasStep',
     'solicitud/SolDocsStep','solicitud/SolGracias','solicitud/SolEditor',
+    'solicitud/ShowSol','solicitud/ShowSolDescription','solicitud/ShowExportador',
+    'solicitud/ShowGenerico',
 
     'attachmentview/AttachmentItemEditorView','attachmentview/AttachmentLayoutView','attachmentview/AttachmentItem',
     'attachmentview/PhotosLayoutView','attachmentview/PhotoItem','attachmentview/PhotoItemEditorView',
@@ -45,6 +47,6 @@ utils.loadTemplate([
         }
     };
 
-    console.log('main: DocManager.start')
+    console.log('main: DocManager.start');
     DocManager.start();
 });
