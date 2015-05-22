@@ -1,0 +1,5 @@
+#!/bin/bash
+cd /home/ubuntu/instancias-sisplan/cck
+git pull
+git reset --hard origin/cck
+supervisorctl restart sisplan-cck
