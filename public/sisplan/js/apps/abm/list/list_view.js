@@ -113,6 +113,7 @@ DocManager.module("AbmApp.List", function(List, DocManager, Backbone, Marionette
         var label='';
         var cell='string';
         var fieldType;
+        var formatter = undefined;
 
         if (typeof(options) == 'string') {
           label = field;
@@ -120,6 +121,18 @@ DocManager.module("AbmApp.List", function(List, DocManager, Backbone, Marionette
         } else {
           fieldType = options.type;
           label = options.title || field;
+          if (options.itemToString) {
+            formatter = {
+              fromRaw: function(value) {
+                var res = [];
+                _.each(value, function(item) {
+                  res.push(options.itemToString(item));
+                });
+                return res.join(' ');
+              },
+              toRaw: function(data) { return data; }
+            }
+          }
         }
 
         switch (fieldType) {
@@ -140,12 +153,15 @@ DocManager.module("AbmApp.List", function(List, DocManager, Backbone, Marionette
             cell='string';
         }
 
+
         columns.push({
           name: field,
           label: label,
           cell: cell,
           editable: false,
+          formatter: formatter,
         });
+
       });
 
     } else {
