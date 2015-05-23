@@ -107,6 +107,10 @@ DocManager.module("AbmApp.List", function(List, DocManager, Backbone, Marionette
     }
     schema = options.schema || schema;
 
+    if (typeof(schema) == 'function') {
+      schema = schema(model);
+    }
+
     // XXX FIXME: completar con otros campos mas?
     if (schema) {
       _.each(schema, function(options, field) {
