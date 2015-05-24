@@ -120,12 +120,16 @@ Reiniciar nginx y supervisord:
 # service supervisord start
 ```
 
-Agregar webhooks desde github:
+## Agregar webhooks desde github:
 
 Ir a https://github.com/mateogo/sgca/settings/hooks
 Click en "Add webhook"
-En "Payload URL" poner el dominio de webhooks apuntado.
+En "Payload URL" poner el dominio+puerto de webhooks apuntado.
 
+Con GitLab:
+
+Editar */home/ubuntu/supervisor/webhooks.conf* para que utilize el script **gitlab-webhooks.py**, el resto es igual en
+Gitlab.
 
 ## Workflow de trabajo
 
