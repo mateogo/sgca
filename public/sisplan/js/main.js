@@ -82,5 +82,5 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     };
     //$.datepicker.setDefaults( $.datepicker.regional[ "es" ] );
     console.log('main: DocManager.start')
-    DocManager.start();
+    DocManager.request('keyvalues:loadFromServer').then(function(){ DocManager.start(); });
 });
