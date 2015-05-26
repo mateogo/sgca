@@ -2,4 +2,5 @@
 cd /home/ubuntu/instancias-sisplan/cck
 git pull
 git reset --hard origin/cck
+npm install
 supervisorctl restart sisplan-cck

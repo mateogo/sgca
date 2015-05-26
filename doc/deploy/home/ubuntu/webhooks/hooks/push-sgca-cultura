@@ -2,4 +2,5 @@
 cd /home/ubuntu/instancias-sisplan/cultura
 git pull
 git reset --hard origin/cultura
+npm install
 supervisorctl restart sisplan-cultura
