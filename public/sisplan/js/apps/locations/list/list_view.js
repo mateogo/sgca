@@ -40,8 +40,8 @@ DocManager.module("LocationsApp.List", function(List, DocManager, Backbone, Mari
       render: function(){
           if(!this.rendered){
              var btnEdit = $('<button class="btn-link js-edit" title="editar"><span class="glyphicon glyphicon-edit"></span></button>');
-             var btnRemove = $('<button class="btn-link js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
-             this.$el.append(btnEdit).append(btnRemove);
+             //var btnRemove = $('<button class="btn-link js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
+             this.$el.append(btnEdit)//.append(btnRemove);
              this.rendered = true;
           }
          return this;
@@ -54,12 +54,12 @@ DocManager.module("LocationsApp.List", function(List, DocManager, Backbone, Mari
       editClicked: function(e){
           e.stopPropagation();e.preventDefault();
           DocManager.trigger('location:edit', this.model);
-      },
+      }
         
-      trashClicked: function(e){
+      /*trashClicked: function(e){
           e.stopPropagation();e.preventDefault();
           DocManager.trigger('location:remove',locationsApp.Model.selectedAction,this.model);
-      }
+      }*/
     });
   
   

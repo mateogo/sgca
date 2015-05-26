@@ -1,5 +1,4 @@
 DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionette, $, _){
-    
     Entities.ArtActivity = Backbone.Model.extend({
         urlRoot: "/artactividades",
         whoami: 'artactivity:backboneModel ',
@@ -56,13 +55,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           fdesde: {type:'DatePicker',title:'Fecha desde'},
           fhasta:  {type:'DatePicker',title:'Fecha hasta'},
           leyendafecha:  {type:'Text',title:'Leyenda-Fecha'},
-            locacion: {type:'SelectRequest',title:'Locación',request:'action:fetch:location',fieldLabel:'name',fieldVal:'nickName'},
           airelibre: {type:'Checkbox',title:'Aire Libre'},
           local: {type:'Select',title:'Local',options:utils.localList},
           localleyenda: {title:'Leyenda-Local'},
           provevento: {type:'Select',title:'Provincia',options:utils.provinciasOptionList.Argentina},
           locevento: {type:'Text',title:'Localidad'},
           cevento: {type:'Text',title:'Código Postal'},
+          locacion: {type:'Select',title:'Locación',options: new DocManager.Entities.LocationCollection()},
           area: {type:'Select',title:'Area',options:utils.actionAreasOptionList},
           estado_alta: {type:'Select',title:'Estado alta',options:utils.estadoaltaOptionList},
           nivel_ejecucion: {type:'Select',title:'Nivel ejecución',options:utils.actionEjecucionOptionList},

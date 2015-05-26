@@ -36,6 +36,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
             var obj = App.parseGeoplace(place);
             this.set(obj);
+        },
+
+        toString: function(){
+            return this.get('name')+': '+this.get('direccion');
         }
     });
 
