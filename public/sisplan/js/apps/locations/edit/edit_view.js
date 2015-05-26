@@ -116,7 +116,7 @@ DocManager.module("LocationsApp.Edit", function(Edit, DocManager, Backbone, Mari
     },
     
     doneEdition: function(){
-      DocManager.trigger('location:list',this.action);
+      DocManager.trigger('location:list');
     },
     
     onSaveClick: function(){

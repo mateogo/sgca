@@ -2,7 +2,7 @@ DocManager.module('LocationsApp',function(LocationsApp,DocManager,Backbonone,Mar
 
 	LocationsApp.Router = Marionette.AppRouter.extend({
 		appRoutes: {
-			'locaciones/:id': 'list'
+			'locaciones': 'list'
 		}
 	});
 	
@@ -34,10 +34,9 @@ DocManager.module('LocationsApp',function(LocationsApp,DocManager,Backbonone,Mar
 		}
   };
 
-	DocManager.on('location:list',function(action){
-		console.log('mostrar lista locaciones',action);
-		DocManager.navigate('locaciones/'+action.id);
-		API.list(action.id);
+	DocManager.on('location:list',function(){
+		DocManager.navigate('locaciones');
+		API.list();
   });
 	
   DocManager.on('location:edit',function(location){
