@@ -34,24 +34,24 @@ DocManager.module('LocationsApp',function(LocationsApp,DocManager,Backbonone,Mar
 		}
   };
 
-	DocManager.on('location:list',function(){
-		DocManager.navigate('locaciones');
-		API.list();
+  DocManager.on('location:list',function(){
+	  DocManager.navigate('locaciones');
+	  API.list();
   });
 	
   DocManager.on('location:edit',function(location){
-    API.edit(location);
+	  API.edit(location);
   });
 	
   DocManager.on('location:new',function(action){
-      API.newLocation(action);
+	  API.newLocation(action);
   });
 	
-	DocManager.on('location:remove',function(action,location){
-    API.remove(action,location);
+  DocManager.on('location:remove',function(action,location){
+	  API.remove(action,location);
   });
 
-	DocManager.addInitializer(function(){
-		new LocationsApp.Router({ controller: API });
-	});
+  DocManager.addInitializer(function(){
+	  new LocationsApp.Router({ controller: API });
+  });
 });

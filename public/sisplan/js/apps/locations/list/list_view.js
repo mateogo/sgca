@@ -53,7 +53,7 @@ DocManager.module("LocationsApp.List", function(List, DocManager, Backbone, Mari
         
       editClicked: function(e){
           e.stopPropagation();e.preventDefault();
-          DocManager.trigger('location:edit',locationsApp.Model.selectedAction,this.model);
+          DocManager.trigger('location:edit', this.model);
       },
         
       trashClicked: function(e){
