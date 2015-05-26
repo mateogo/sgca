@@ -195,7 +195,7 @@ DocManager.module("LocationsApp.Edit", function(Edit, DocManager, Backbone, Mari
         
         var map = L.map('map').setView(coord, 12);
         this.map = map;
-        
+
         // agregando layer OpenStreet
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -229,7 +229,7 @@ DocManager.module("LocationsApp.Edit", function(Edit, DocManager, Backbone, Mari
     
     _updateUI: function(){
       var coord = this.model.get('coordinate');
-      if(coord && this.map){
+      if((coord.length > 0) && this.map){
         
         this.map.panTo(coord);
         
