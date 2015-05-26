@@ -2,4 +2,5 @@
 cd /home/ubuntu/instancias-sisplan/test
 git pull
 git reset --hard origin/test
+npm install
 supervisorctl restart sisplan-test
