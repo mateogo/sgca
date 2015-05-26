@@ -30,7 +30,6 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
       "click button.js-edit": "editClicked",
       "click button.js-budget": "budgetEditClicked",
       "click button.js-participants": "participantEditClicked",
-      "click button.js-locations": "locationsEditClicked",
       "click button.js-newartactivity": "newArtactivityClicked",
       "click button.js-showartactivity": "showArtactivityClicked",
       "click .js-zoom" : 'viewRelated',
@@ -108,11 +107,6 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
       e.preventDefault();e.stopPropagation();
       this.trigger("participant:list", this.model);
       // DocManager.trigger("participant:list", model);
-    },
-    
-    locationsEditClicked: function(e){
-      e.preventDefault();e.stopPropagation();
-      this.trigger("location:list", this.model);
     },
 
     newArtactivityClicked: function(e){

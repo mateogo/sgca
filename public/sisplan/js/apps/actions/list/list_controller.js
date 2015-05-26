@@ -182,10 +182,6 @@ DocManager.module("ActionsApp.List", function(List, DocManager, Backbone, Marion
           DocManager.trigger("participant:list", model);
         });
         
-        documentsListView.on("childview:location:list", function(childView, model){
-          DocManager.trigger("location:list", model);
-        });
-        
         documentsListView.on("childview:artactivity:new", function(childView, model){
           DocManager.trigger("artactivity:new", model);
         });
