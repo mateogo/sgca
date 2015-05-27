@@ -99,11 +99,10 @@ var queries = new QueriesCollection([
       query:{ type: types.FORMALIZADO,is_open: true }
 
     },
-    {title:'Pendiente de revisar',
+    {title:'Mis pendiente',
       code: 'sol_review',
       groups:[groups.REVISORES],
-      query:{ type: types.REVISANDO,is_open: true }
-
+      query:{is_open:true, $or:[{toMe:true},{fromMe:true}]}
     },
     {title:'Últimas revisadas',
       code: 'sol_lastreview',
