@@ -2,8 +2,10 @@
 
 var utilsObras = {
     whoami:'utils!+obras',
-    
-    
+
+
+
+
     proceduresObrasList:[
        {val:'pintura',       label:'pintura'},
        {val:'grabado', label:'grabado'},
@@ -19,24 +21,38 @@ var utilsObras = {
        {val:'video arte',         label:'video arte'},
        {val:'otro',         label:'otro'}
    ],
-   
+
    reasonsExportList: [
        {val:'exposicion',       label:'Exposición'},
        {val:'venta',       label:'Venta'},
        {val:'otros',       label:'Otros'}
    ],
-   
+
    typeExportList: [
          {val:'definitiva',       label:'Definitiva'},
          {val:'temporaria',       label:'Temporaria'}
      ],
-     
+
    countMonthOutList: [
         {val:3,       label:'3 meses'},
         {val:6,       label:'6 meses'},
         {val:12,       label:'12 meses'}
-   ] 
-}
+   ],
+
+
+   getDeepAttr: function(obj,fieldPath){
+     if(!obj) return '';
+
+     var fields = fieldPath.split('.');
+     for (var i = 0; i < fields.length; i++) {
+       var field = fields[i];
+       if(obj){
+         obj = (obj.get)? obj.get(field) : obj[field];
+       }
+     }
+     return obj;
+   }
+};
 
 
 if(window.utils){

@@ -1,9 +1,9 @@
 
 /**
  * Se encarga de buscar el objeto relacionado a un token
- * Se usa el atributo "obj_type" para saber de que tipo es el objeto
+ * Se usa el atributo "obj.typeModel" para saber de que tipo es el objeto
  *
- * 
+ *
  * Ejemplo de uso:
  *
  * objLoader.loadRelated(token,function(err,obj){
@@ -29,7 +29,7 @@ var objLoader = {
       return callback('Tipo de objeto no reconocido');
     }
 
-    Model.findById(token.get('obj_id'),function(err,obj){
+    Model.findById(token.get('obj').id,function(err,obj){
       if(err) return callback(err);
 
       UserModel.findById(obj.get('owner_id'),function(err,user){
@@ -42,7 +42,7 @@ var objLoader = {
   },
 
   _getModel: function(token){
-    var objType = token.get('obj_type');
+    var objType = token.get('obj').typeModel;
     var Model = null;
     if(objType === 'solicitud'){
       Model = SolicitudModel;

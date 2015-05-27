@@ -98,7 +98,10 @@ var Solicitud = BaseModel.extend({
           function(cb){
             BaseModel.findById.apply(self,[id,function(err,model){
               if(err) return cb(err);
-
+              
+              if(!model){
+                return cb('Solicitud inexistente');
+              }
               solicitud = model;
               cb();
             }]);

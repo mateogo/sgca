@@ -20,9 +20,7 @@ DocManager.module("WorkflowApp.Actions", function(Actions, DocManager, Backbone,
       var currentToken = action.get('currentToken');
       var token = new Entities.Token();
       token.set('type',action.get('tokenType'));
-      token.set('obj_id',currentToken.get('obj_id'));
-      token.set('obj_type',currentToken.get('obj_type'));
-      token.set('obj_slug',currentToken.get('obj_slug'));
+      token.set('obj',currentToken.get('obj'));
       token.set(data);
       token.save().done(function(){
         DocManager.trigger('token:open',token);

@@ -11,10 +11,7 @@ var ObrasWorkflowService = require(root + 'workflow/obras/obrasworkflowservice.j
 
 var factory = {
     getService: function(user){
-      if(!this.service){
-        this.service = new ObrasWorkflowService(user);
-      }
-      return this.service;
+      return new ObrasWorkflowService(user);
     }
 };
 
@@ -22,6 +19,8 @@ var factory = {
 var ctrls = {
     findQueries: function(req,res){
       var user = req.user;
+
+      console.log('Buscando queries de workflow para',user);
 
       var service = factory.getService(user);
 

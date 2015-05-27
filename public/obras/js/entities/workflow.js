@@ -17,6 +17,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   Entities.Token = Backbone.Model.extend({
     whoami: 'Token:workflow.js',
     urlRoot: "/obraswf/tokens",
+
+    parse: function(data,options){
+      if(data.type){
+        var deco = tokenDecorators[data.type];
+        if(deco){
+          data = _.extend(data,deco);
+        }
+      }
+      return data;
+    }
+  },{
+    getDeco: function(type){
+      var deco = tokenDecorators[type];
+      return deco;
+    }
   });
 
   Entities.TokenCollection = Backbone.Collection.extend({
@@ -35,6 +50,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 
+  var tokenDecorators = {
+    'asignar_forma' : {label: 'para Formalizar', icon: '', color: '#a94442'  },
+    'formalizando' : {label: 'Formalizando', icon: '', color: '#337ab7'  },
+    'pedido_correccion' : {label: 'Pedido de corrección', icon: '', color: '#8a6d3b'  },
+    'autorizado' : {label: 'Autorizado', icon: '', color: '#3c763d'  },
+    'cancelado' : {label: 'Cancelado', icon: '', color: '#777'  },
+  };
+
+
   Entities.Action = Backbone.Model.extend({
     whoami: 'Action:workflow.js',
     urlRoot: "/obraswf/actions",
@@ -46,18 +70,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 
-
+  DocManager.reqres.setHandler("token:getDeco",function(type){
+    return Entities.Token.getDeco(type);
+  });
 
   DocManager.reqres.setHandler("token:loadObj", function(token){
     var Model = null;
-    var type = token.get('obj_type');
+    var type = utils.getDeepAttr(token,'obj.typeModel');
     if(type === 'solicitud'){
       Model = Entities.Solicitud;
     }
 
     var $def = $.Deferred();
     if(Model){
-      var model = new Model({_id:token.get('obj_id')});
+      var id = utils.getDeepAttr(token,'obj.id');
+      var model = new Model({_id: id});
       model.fetch().then(function(result){
         $def.resolve(model);
       },function(err){

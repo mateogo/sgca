@@ -17,7 +17,7 @@ describe('services',function(){
   describe('ObrasWorkflowService',function(){
 
       it('Deberia retornar queries por grupo',function(done){
-        var user = {id:'3443sadf',name:'Un usuario de prueba',roles:['facilitadores','revisores']};
+        var user = {id:'5564b6d7c626942129682e9c',name:'Un usuario de prueba',roles:['facilitadores','revisores']};
         var service = new ObrasWorkflowService(user);
 
         service.getQueries(function(err,queries){
@@ -39,12 +39,13 @@ describe('services',function(){
 
 
       it('Deberia crear el token de inicio de solicitud',function(done){
-        var user = {id:'3443sadf',name:'Un usuario de prueba',roles:['facilitador']};
+        var user = {id:'5564b6d7c626942129682e9c',name:'Un usuario de prueba',roles:['facilitador']};
         var service = new ObrasWorkflowService(user);
 
         service.iniciarSolicitud(solicitud,function(err,tokenResult){
           expect(err).toBe(null);
           expect(tokenResult).not.toBeNull();
+          expect(tokenResult.get('obj').id.toString()).toBe(solicitud.get('_id').toString());
 
           token = tokenResult;
           done();
@@ -52,7 +53,7 @@ describe('services',function(){
       });
 
       it('Deberia retornar el ultimo token',function(done){
-        var user = {id:'3443sadf',name:'Un usuario de prueba',roles:['facilitador']};
+        var user = {id:'5564b6d7c626942129682e9c',name:'Un usuario de prueba',roles:['facilitador']};
         var service = new ObrasWorkflowService(user);
 
         expect(solicitud.get('_id')).toBeTruthy();
@@ -65,7 +66,7 @@ describe('services',function(){
       });
 
       it('Deberia correr un query para asignar y traer un resultado',function(done){
-        var user = {id:'3443sadf',name:'Un usuario de prueba',roles:['facilitadores','revisores']};
+        var user = {id:'5564b6d7c626942129682e9c',name:'Un usuario de prueba',roles:['facilitadores','revisores']};
         var service = new ObrasWorkflowService(user);
 
         service.runQuery('sol_news',function(err,tokens){
@@ -79,9 +80,10 @@ describe('services',function(){
 
 
       it('Deberia rechazar agregar el token sin tipo',function(done){
-        var user = {id:'3443sadf',name:'Un usuario de prueba',roles:['facilitador']};
+        var user = {id:'5564b6d7c626942129682e9c',name:'Un usuario de prueba',roles:['facilitador']};
         var service = new ObrasWorkflowService(user);
         var token = new Token();
+        token.set('obj',{id:'5564b6d7c626942129682e9c',type:'solicitud'});
 
         service.add(token,function(err,result){
           expect(err).not.toBeNull();

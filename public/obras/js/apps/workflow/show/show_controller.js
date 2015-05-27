@@ -6,7 +6,7 @@ DocManager.module("WorkflowApp.Show", function(Show, DocManager, Backbone, Mario
 
   Show.Controller = {
       open: function(token){
-        var type = token.get('obj_type');
+        var type = utils.getDeepAttr(token,'obj.typeModel');
         if(type === 'solicitud'){
 
           this.display(token);
@@ -23,7 +23,7 @@ DocManager.module("WorkflowApp.Show", function(Show, DocManager, Backbone, Mario
         var p = DocManager.request('token:loadObj',token);
 
         p.done(function(obj){
-          token.set('obj',obj);
+          token.obj = obj;
           var view = new Show.DisplayTokenView({model:token});
 
           self.session = {token:token};
@@ -62,9 +62,7 @@ DocManager.module("WorkflowApp.Show", function(Show, DocManager, Backbone, Mario
     actionRun: function(action){
       var token  = Show.Controller.session.token;
       var obj = token.get('obj');
-      var obj_id = token.get('obj_id');
       action.set('obj',obj);
-      action.set('obj_id',obj_id);
       action.set('currentToken',token);
       DocManager.trigger('action:run',action);
     }

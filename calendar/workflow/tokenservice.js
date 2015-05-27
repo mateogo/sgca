@@ -1,4 +1,5 @@
 var async = require('async');
+var _ = require('underscore');
 
 var root = '../';
 var TokenModel = require(root + 'models/token.js').getModel();
@@ -20,7 +21,7 @@ var AppError = require(root +'../core/apperror.js');
 function TokenService(config){
   this.strategies = {};
   this.globalStrategies = [];
-  this.user = {'name':'dummy','id':'5554a006f4217b720e50fabe'};
+  this.user = {'name':'dummy','id':'5564b6d7c626942129682e9c',mail:''};
 }
 
 /**
@@ -76,7 +77,7 @@ TokenService.prototype.getStrategies = function(type){
 TokenService.prototype.add = function(token,callback){
   var self = this;
   var type = token.get('type');
-  var obj_id = token.get('obj_id');
+  var objId = token.get('obj').id;
   var currentToken = null;
 
   if(!type){
@@ -95,8 +96,7 @@ TokenService.prototype.add = function(token,callback){
 
       // obtine el token actual
       function(cb){
-        TokenModel.getLastToken(token.get('obj_id'),function(err,lastToken){
-          console.log('%%%%% TOKEN OBTENIDO ',lastToken);
+        TokenModel.getLastToken(objId,function(err,lastToken){
           currentToken = lastToken;
           cb();
         });
@@ -192,6 +192,10 @@ TokenService.prototype.runQuery = function(code,callback){
 
   var query = queryMeta.get('query');
 
+  query = _.clone(query);
+
+  console.log('Buscando TOKENS query sin reasignar',JSON.stringify(query));
+
   //verificando si es para usuario logueado
   this.replaceUserLogged(query);
 
@@ -211,9 +215,12 @@ TokenService.prototype.runQuery = function(code,callback){
 * Los cambia por el usuario logueado
 */
 TokenService.prototype.replaceUserLogged = function(query){
-  if(!this.user || !query) return;
+  if(!this.user || !query){
+    console.warn('NO HAY USUARIO logueado O QUERY es null');
+    return;
+  }
 
-  var id = this.user.id;
+  var id = (this.user.id) ? this.user.id : this.user._id;
   if(typeof(id) === 'string'){
     id = new BaseModel.ObjectID(id);
   }
@@ -250,13 +257,12 @@ TokenService.prototype.upatePreviousTokens = function(token,callback){
  * Retorna por el callback todos los token asociados a un objeto
  * @callback function(err,<array de token>);
  */
-TokenService.prototype.getByObject = function(obj_id,callback){
-  if(!(obj_id instanceof BaseModel.ObjectID)){
-    obj_id = new BaseModel.ObjectID(obj_id);
+TokenService.prototype.getByObject = function(objId,callback){
+  if(!(objId instanceof BaseModel.ObjectID)){
+    objId = new BaseModel.ObjectID(objId);
   }
 
-  var query = {};
-  query.obj_id = obj_id;
+  var query = {'obj.id' : objId };
 
   console.log('buscando historia',query);
   TokenModel.find(query,{fealta:-1},function(err,results){

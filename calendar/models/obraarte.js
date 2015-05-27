@@ -22,7 +22,6 @@ serializer.initSeries([
 
 
 var ObraArte = BaseModel.extend({
-  idAttribute: "_id",
   constructor: function() {
     this.entityCol = entityCol;
     BaseModel.apply(this,arguments);
@@ -98,6 +97,9 @@ var ObraArte = BaseModel.extend({
             BaseModel.findById.apply(self,[id,function(err,model){
               if(err) return cb(err);
 
+              if(!model){
+                return cb('Obra inexistente');
+              }
               obra = model;
               cb();
             }]);

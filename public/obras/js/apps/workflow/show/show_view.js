@@ -13,8 +13,21 @@ DocManager.module("WorkflowApp.Show", function(Show, DocManager, Backbone, Mario
     },
 
     onRender: function(){
-      var obj = this.model.get('obj');
+      var obj = this.model.obj;
       this.detailRegion.show(new SolicitudShow.ShowLayoutView({model:obj}));
+    },
+
+    templateHelpers: function () {
+      return {
+        getLabelType: function(type){
+          var deco = DocManager.request('token:getDeco',type);
+          return (deco)? deco.label : type;
+        },
+        getColorType: function(type){
+          var deco = DocManager.request('token:getDeco',type);
+          return (deco)? deco.color : type;
+        }
+      };
     },
 
     events: {
@@ -27,7 +40,7 @@ DocManager.module("WorkflowApp.Show", function(Show, DocManager, Backbone, Mario
     },
 
     onHistory: function(){
-      DocManager.trigger('action:history',this.model.get('obj_id'));
+      DocManager.trigger('action:history',this.model.get('obj').id);
     }
   });
 

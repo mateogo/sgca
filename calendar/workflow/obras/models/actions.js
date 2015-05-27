@@ -59,7 +59,7 @@ var actions = new ActionCollection([
    groups: [groups.FALICITADORES]
   },
   {title: 'Pedido de corrección',
-    tokenType: types.PEDIDO_CORRECCION,fromToken: [types.FORMALIZANDO,types.CAMBIO],
+    tokenType: types.PEDIDO_CORRECCION,fromToken: [types.FORMALIZANDO,types.MODIFICACION],
     groups: [groups.FALICITADORES]
   },
   {title: 'Cancelar la correción',
@@ -67,7 +67,7 @@ var actions = new ActionCollection([
     groups: [groups.FALICITADORES]
   },
   {title: 'Forma OK',
-   tokenType: types.FORMALIZADO, fromToken: [types.FORMALIZANDO,types.CAMBIO],
+   tokenType: types.FORMALIZADO, fromToken: [types.FORMALIZANDO,types.MODIFICACION],
    groups: [groups.FALICITADORES]
   },
   {title: 'Cancelar solicitud',
@@ -81,11 +81,15 @@ var actions = new ActionCollection([
    groups: [groups.REVISORES]
   },
   {title: 'Pedido de corrección',
-    tokenType: types.PEDIDO_CORRECCION,fromToken: types.REVISANDO,
+    tokenType: types.PEDIDO_CORRECCION,fromToken: [types.REVISANDO,types.REVISAR_MODIFICACION,types.MODIFICACION],
+    groups: [groups.REVISORES]
+  },
+  {title: 'Cancelar la correción',
+    tokenType: types.REVISANDO,fromToken: types.PEDIDO_CORRECCION,
     groups: [groups.REVISORES]
   },
   {title: 'Registrar mi revisión',
-    tokenType: types.REVISADO, fromToken: types.REVISANDO,
+    tokenType: types.REVISADO, fromToken: [types.REVISANDO,types.REVISAR_MODIFICACION,types.MODIFICACION],
     groups: [groups.REVISORES]
   },
   {title: 'Asignar a otro revisor',

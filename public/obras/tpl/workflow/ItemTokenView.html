@@ -1,15 +1,14 @@
-<div style="border-bottom: 1px solid #CCC;margin-top:10px;magin-bottom:10px;padding-bottom:5px">
-  <h4 style="margin-bottom:0"><%=type%></h4>
-  <div class="text-muted">
-      <%=body%>
+<div style="border: 1px solid #CCC;border-radius:5px;margin-top:10px;magin-bottom:10px;padding:5px;background-color:white">
+  <div class="pull-left">
+    <h5 class="text-muted" style="margin-bottom:0;margin-top:0"><%=getLabelType(type)%></h5>
+    <div class="text-info">
+        <%=body%>
+    </div>
   </div>
-  <div style="margin-top:5px">
-    <div class="pull-left">
-      <span class="text-primary"> <%= (from)? from.name : 'desconocido' %></span>
-    </div>
-    <div class="pull-right">
-      <span class="text-success"> <%=dateFormat(fealta)%></span>
-    </div>
+  <div class="pull-right">
+    <span class="text-info"> <%= (from)? from.name : 'desconocido' %></span>
+    <br/>
+    <span class="text-muted"> <%=dateFormat(fealta)%></span>
   </div>
   <div class="clearfix"></div>
 </div>

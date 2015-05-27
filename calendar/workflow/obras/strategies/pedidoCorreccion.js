@@ -10,6 +10,7 @@ var pedidoCorreccion = {
         if(err) return callback(err);
 
         token.set('to',obj.get('owner'));
+        token.set('responsable',userLogged);
         callback();
       });
     }

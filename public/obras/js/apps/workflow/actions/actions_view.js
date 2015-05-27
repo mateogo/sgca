@@ -48,6 +48,10 @@ DocManager.module("WorkflowApp.Actions", function(Actions, DocManager, Backbone,
     },
     templateHelpers: function () {
       return {
+        getLabelType: function(type){
+          var deco = DocManager.request('token:getDeco',type);
+          return (deco)? deco.label : type;
+        },
         dateFormat: function(date){
           return moment(date).format('dddd, D MMMM YYYY, HH:mm');
         }

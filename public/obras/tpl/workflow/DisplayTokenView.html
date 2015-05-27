@@ -1,7 +1,20 @@
 <div>
     <div>
-        <h2><%=obj_type%> <%=obj_slug%></h2>
-        <h5><%=global_type%></h5>
+      <div class="pull-left">
+          <h2><%=obj.type%> <%=obj.slug%>
+            <small class="label label-default" style="background-color:<%=getColorType(global_type)%>;font-size:14px" >
+              <%=getLabelType(global_type)%>
+            </small>
+          </h2>
+
+      </div>
+      <div class="pull-right">
+        <h5 style="margin-top:30px"> <small class="text-muted" style="font-size:10px">por</small>
+          <span class="text-primary"><%=obj.owner.name%></span>
+          <span class="text-muted"> <%=obj.owner.mail%></span>
+        </h5>
+      </div>
+      <div class="clearfix"></div>
     </div>
     <div id="actionRegion" class="navbar navbar-toolbar hidden-print" style="margin-bottom:0">
         <div class="container-fluid" style="margin-left:0">

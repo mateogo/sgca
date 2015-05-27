@@ -24,12 +24,10 @@ var Token = BaseModel.extend({
     subject: '',
     body: '',
     type: '', // tipo de token
+    global_type: '', // tipo de token, paso actual del tramite, un hilo de tramite se define por el obj.id
     assets: null,
     is_open: true,
-    obj_id: null,
-    obj_type: '',
-    obj_slug: '',
-    global_type: '', // tipo de token, paso actual del tramite, un hilo de tramite se define por el obj_id
+    obj: null,
 
     fealta: null,
     feultmod: null
@@ -53,34 +51,34 @@ var Token = BaseModel.extend({
          cb();
        },
 
-       //serealizando usuario
+       //serealizando atributos de usuario
        function(cb){
-         var from = self.get('from');
-         if(from){
-           if(from.attributes){
-             from = from.attributes;
-           }
-           from = _.pick(from,'_id','name','username','mail');
-           self.set('from',from);
-         }
+          function serializeUser(user){
+            var raw = user;
+            if(user){
+              if(user.attributes) user = user.attributes;
+              raw = _.pick(user,'_id','name','username','mail');
+            }
+            return raw;
+          }
 
-         var to = self.get('to');
-         if(to){
-           if(to.attributes){
-             to = to.attributes;
-           }
-           to = _.pick(to,'_id','name','username','mail');
-           self.set('to',to);
-         }
+          var toCheck = ['from','to','responsable'];
+          for (var i = 0; i < toCheck.length; i++) {
+            var field = toCheck[i];
+            if(self.has(field)){
+              self.set(field,serializeUser(self.get(field)));
+            }
+          }
 
          cb();
        },
 
-       //verificando que el obj_id sea un ObjectID
+       //verificando que el obj.id sea un ObjectID
        function(cb){
-         var obj_id = self.get('obj_id');
-         if(!(obj_id instanceof BaseModel.ObjectID)){
-           self.set('obj_id',new BaseModel.ObjectID(obj_id));
+         var obj =  self.get('obj');
+         if(!(obj.id instanceof BaseModel.ObjectID)){
+           obj.id = new BaseModel.ObjectID(obj.id);
+           self.set('obj',obj);
          }
          cb();
        }
@@ -104,10 +102,10 @@ var Token = BaseModel.extend({
   defaultSort: {fealta:1},
   // cierra tokens anteriores y actualiza a nuevo estado
   closePreviousTokens: function(token,callback){
-    var obj_id = token.get('obj_id');
+    var objId = token.get('obj').id;
 
-    if(!(obj_id instanceof BaseModel.ObjectID)){
-      obj_id = new BaseModel.ObjectID(obj_id);
+    if(!(objId instanceof BaseModel.ObjectID)){
+      objId = new BaseModel.ObjectID(objId);
     }
 
     var raw = {
@@ -116,24 +114,22 @@ var Token = BaseModel.extend({
       feultmod: new Date()
     };
 
-    BaseModel.dbi.collection(this.entityCol).update({'obj_id':obj_id}, {$set: raw}, {multi:true}, callback);
+    BaseModel.dbi.collection(this.entityCol).update({'obj.id':objId}, {$set: raw}, {multi:true}, callback);
   },
 
   /**
    * retorna por callback el ultimo token
-   * @param {ObjectID}   obj_id
+   * @param {ObjectID}   objId
    * @callback {Function} callback
    */
-  getLastToken: function(obj_id,callback){
+  getLastToken: function(objId,callback){
 
-    if(!(obj_id instanceof BaseModel.ObjectID)){
-      obj_id = new BaseModel.ObjectID(obj_id);
+    if(!(objId instanceof BaseModel.ObjectID)){
+      objId = new BaseModel.ObjectID(objId);
     }
 
-    console.log('BUSCANDO ULTIMO TOKEN de',obj_id);
+    BaseModel.dbi.collection(this.entityCol).findOne({'obj.id':objId,is_open:true}, {sort:{fealta:-1}}, function(err, token) {
 
-    BaseModel.dbi.collection(this.entityCol).findOne({'obj_id':obj_id,is_open:true}, {sort:{fealta:-1}}, function(err, token) {
-      
       callback(err,new Token(token));
     });
   },
