@@ -98,6 +98,15 @@ DocManager.module("WorkflowApp.List", function(List, DocManager, Backbone, Mario
   };
 
 
+  List.AlertTokenToFix = Marionette.ItemView.extend({
+    getTemplate: function(){
+      return utils.templates.AlertTokenItem;
+    }
+  });
+
+  List.AlertTokenList = Marionette.CollectionView.extend({
+    childView: List.AlertTokenToFix
+  });
 
 
 });

@@ -5,11 +5,15 @@ var _ = require('underscore');
 var groups = require('./groups.js');
 var types = require('./tokentypes.js');
 
+var ALL = '**todos**';
 
 var Query = Backbone.Model.extend({
   hasGroup: function(groups){
     var hasGroup = false;
     var queryGroups = this.get('groups');
+    if(queryGroups === ALL){
+      return true;
+    }
     var count = queryGroups.length;
     for (var i = 0; i < groups.length && !hasGroup; i++) {
       var group = groups[i];
@@ -62,7 +66,7 @@ var queries = new QueriesCollection([
     // SOLICITANTES
     {title:'Notificaciones/Pedidos',
       code: 'toFix',
-      groups:[groups.SOLICITANTES],
+      groups:ALL,
       query:{type:types.PEDIDO_CORRECCION,is_open:true,toMe:true}
     },
     // FALICITADORES
@@ -81,7 +85,7 @@ var queries = new QueriesCollection([
       groups:[groups.FALICITADORES],
       query:{ global_type: {$in: types.getInProgress()},is_open:true}
     },
-    {title:'Últimos formalizados',
+    {title:'Últimas formalizadas',
       code: 'lastform',
       groups:[groups.FALICITADORES],
       query:{type:types.FORMALIZADO}
@@ -118,7 +122,7 @@ var queries = new QueriesCollection([
     },
     {title:'Autorizado',
       code: 'sol_authok',
-      groups:[groups.FALICITADORES , groups.REVISORES, groups.AUTORIZADORES],
+      groups:[groups.AUTORIZADORES],
       query:{ type: types.AUTORIZADO,is_open: true }
     }
 ]);

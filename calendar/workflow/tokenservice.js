@@ -179,10 +179,16 @@ TokenService.prototype.getActions = function(tokenType,callback){
 
 /**
  * @param {string} code - Código del query a correr
+ * @param {object} query (opcional) parametros adicionales desde request
  */
-TokenService.prototype.runQuery = function(code,callback){
+TokenService.prototype.runQuery = function(code,queryParams,callback){
   if(!this.groups) return callback('No hay grupos habilitantes');
   if(!this.queries) return callback('No hay consultas registradas');
+
+  //si no hay callback entonces el callback debe ser  el queryParams
+  if(callback === undefined){
+    callback = queryParams;
+  }
 
   //buscando query
   var queryMeta = this.queries.getByCode(code);
@@ -196,6 +202,9 @@ TokenService.prototype.runQuery = function(code,callback){
 
   var query = queryMeta.get('query');
 
+  //toma otras condiciones externas
+  query = this.mergeQuery(query,queryParams);
+
   //verificando si es para usuario logueado
   query = this.replaceUserLogged(query);
 
@@ -205,6 +214,18 @@ TokenService.prototype.runQuery = function(code,callback){
 
     callback(null,results);
   });
+};
+
+
+TokenService.prototype.mergeQuery = function(query,queryParams){
+  console.log('mergeando query',queryParams);
+  if(!queryParams) return query;
+
+  if(queryParams.objId){
+    query['obj.id'] = new BaseModel.ObjectID(queryParams.objId);
+  }
+
+  return query;
 };
 
 /**
@@ -269,7 +290,6 @@ TokenService.prototype.getByObject = function(objId,callback){
 
   var query = {'obj.id' : objId };
 
-  console.log('buscando historia',query);
   TokenModel.find(query,{fealta:-1},function(err,results){
     if(err) return callback(err);
 

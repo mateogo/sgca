@@ -38,6 +38,10 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       return utils.templates.ObrasEditor;
     },
 
+    getRegionToFix: function(){
+      return this.$el.find('#toFixList-region');
+    },
+
     onRender: function(){
       this.selectTab(0);
     },
@@ -400,4 +404,5 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
       }
     }
   });
+
 });

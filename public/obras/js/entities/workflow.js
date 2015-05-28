@@ -38,8 +38,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'TokenCollection:workflow.js',
     url: '/obraswf/tokens/query',
 
-    fetchByQuery: function(queryCode){
+    fetchByQuery: function(queryCode,params){
       this.url = '/obraswf/tokens/query/'+queryCode;
+
+      if(params){
+        this.url += '?' + $.param(params);
+      }
       this.fetch();
     },
 
@@ -95,6 +99,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     }
 
     return $def.promise();
+  });
+
+
+  DocManager.reqres.setHandler("token:query",function(name,params){
+    var col = new Entities.TokenCollection();
+    col.fetchByQuery(name,params);
+    return col;
   });
 
 });

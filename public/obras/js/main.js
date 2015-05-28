@@ -24,7 +24,8 @@ utils.loadTemplate([
     'attachmentview/ImageBoxLayoutView','attachmentview/ImageBoxItem',
 
     'workflow/WorkflowLayout','workflow/DisplayTokenView',
-    'workflow/DefaultActionView','workflow/ItemTokenView'
+    'workflow/DefaultActionView','workflow/ItemTokenView',
+    'workflow/AlertTokenItem'
 
     ], function() {
 

@@ -3,6 +3,8 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
   var Common = DocManager.module('ObrasApp.Common');
   var Entities = DocManager.module('Entities');
 
+  var WorkflowList = DocManager.module('WorkflowApp.List');
+
   Edit.Controller = {
       wizard: function(){
 
@@ -27,6 +29,10 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
           var view = new Edit.ObrasEditorView({model:obra});
 
           var layout = Common.Controller.showMain(view);
+
+
+
+
           DocManager.mainRegion.show(layout);
 
           view.on('obra:saved',function(model){
@@ -43,6 +49,12 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
             });
           });
 
+          layout.on('show',function(){
+            initToFixList(view);
+          });
+
+
+
         }).fail(function(e){
           Message.error('Problemas al traer la obra');
         });
@@ -57,5 +69,16 @@ DocManager.module("ObrasApp.Edit", function(Edit, DocManager, Backbone, Marionet
         $('body').scrollTop(0);
       }
   };
+
+
+  function initToFixList(obrasEditorView){
+    console.log('inicializando to fix');
+    var el = obrasEditorView.getRegionToFix();
+
+    var collection = new Backbone.Collection([{body:'uno de prueba'}]);
+
+    var listView = new WorkflowList.AlertTokenList({el:el,collection:collection});
+
+  }
 
 });

@@ -33,9 +33,10 @@ var ctrls = {
 
     runQuery: function(req,res){
         var code = req.params.code;
+        var query = req.query;
 
         var service = factory.getService(req.user);
-        service.runQuery(code,function(err,result){
+        service.runQuery(code,query,function(err,result){
           if(err) return res.send(422,err);
 
           res.json(result);

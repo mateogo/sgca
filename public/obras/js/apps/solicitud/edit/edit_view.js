@@ -38,6 +38,10 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       return utils.templates.SolEditor;
     },
 
+    getRegionToFix: function(){
+      return this.$el.find('#toFixList-region');
+    },
+
     onRender: function(){
       this.selectTab(0);
     },

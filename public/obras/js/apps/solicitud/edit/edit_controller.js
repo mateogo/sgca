@@ -4,6 +4,8 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
 
   var Entities = DocManager.module('Entities');
 
+  var WorkflowList = DocManager.module('WorkflowApp.List');
+
   Edit.Controller = {
       wizard: function(){
 
@@ -51,6 +53,8 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
             });
           });
 
+          initToFixList(view,solicitud);
+
         }).fail(function(){
           Message.error('No se encontro la solicitud');
         });
@@ -64,5 +68,18 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         $('body').scrollTop(0);
       }
   };
+
+
+  function initToFixList(view,model){
+    console.log('inicializando to fix');
+    var el = view.getRegionToFix();
+
+    var collection =  DocManager.request('token:query','toFix',{objId:model.id});
+
+    var listView = new WorkflowList.AlertTokenList({el:el,collection:collection});
+    listView.render();
+
+  }
+
 
 });

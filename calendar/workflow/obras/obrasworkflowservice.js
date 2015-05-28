@@ -89,8 +89,8 @@ clazz.getQueries = function(callback){
   this.tokenService.getQueries(callback);
 };
 
-clazz.runQuery = function(code,callback){
-  this.tokenService.runQuery(code,callback);
+clazz.runQuery = function(code,query,callback){
+  this.tokenService.runQuery(code,query,callback);
 };
 
 clazz.getActions = function(tokenType,callback){
