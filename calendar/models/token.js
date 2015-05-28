@@ -58,6 +58,9 @@ var Token = BaseModel.extend({
             if(user){
               if(user.attributes) user = user.attributes;
               raw = _.pick(user,'_id','name','username','mail');
+              if(!(raw._id instanceof BaseModel.ObjectID)){
+                  raw._id = new BaseModel.ObjectID(raw._id);
+              }
             }
             return raw;
           }
