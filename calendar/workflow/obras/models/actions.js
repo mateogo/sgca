@@ -59,7 +59,7 @@ var actions = new ActionCollection([
    groups: [groups.FALICITADORES]
   },
   {title: 'Pedido de corrección',
-    tokenType: types.PEDIDO_CORRECCION,fromToken: [types.FORMALIZANDO,types.MODIFICACION],
+    tokenType: types.PEDIDO_CORRECCION,fromToken: [types.FORMALIZANDO,types.MODIFICACION,types.REVISAR_MODIFICACION],
     groups: [groups.FALICITADORES]
   },
   {title: 'Cancelar la correción',
@@ -67,7 +67,7 @@ var actions = new ActionCollection([
     groups: [groups.FALICITADORES]
   },
   {title: 'Forma OK',
-   tokenType: types.FORMALIZADO, fromToken: [types.FORMALIZANDO,types.MODIFICACION],
+   tokenType: types.FORMALIZADO, fromToken: [types.FORMALIZANDO,types.MODIFICACION,types.REVISAR_MODIFICACION],
    groups: [groups.FALICITADORES]
   },
   {title: 'Cancelar solicitud',

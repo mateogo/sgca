@@ -218,7 +218,6 @@ TokenService.prototype.runQuery = function(code,queryParams,callback){
 
 
 TokenService.prototype.mergeQuery = function(query,queryParams){
-  console.log('mergeando query',queryParams);
   if(!queryParams) return query;
 
   if(queryParams.objId){
@@ -244,8 +243,6 @@ TokenService.prototype.replaceUserLogged = function(query){
   }
 
   var copy = {};
-
-  //console.log('inyectando usuario logueado',id,this.user);
 
   var tmp;
   for(var key in query){

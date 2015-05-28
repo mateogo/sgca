@@ -71,6 +71,14 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
        this.$el.find('.nav-tabs li:eq('+index+')').addClass('active');
     },
 
+    saveStarted: function(){
+      this.$el.find('.js-save').button('loading');
+    },
+
+    saveStopped: function(){
+      this.$el.find('.js-save').button('reset');
+    },
+
     events:{
       'click .nav-tabs li': 'onSelectTab',
       'click .js-save': 'onSave',
@@ -95,18 +103,7 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
         this.currentTab.commit();
       }
 
-
-      var self = this;
-      var btn = $(e.currentTarget);
-      btn.button('loading');
-      DocManager.request('solicitud:save',this.model).done(function(){
-        btn.button('reset');
-        Message.success('La Solicitud '+self.model.get('cnumber') + '<br/>A sido guardada');
-        self.trigger('solicitud:saved',self.model);
-      }).fail(function(e){
-        btn.button('reset');
-        Message.error('No se pudo guardar');
-      });
+      this.trigger('solitictud:doSave',this.model);
     },
 
     onCancel: function(){

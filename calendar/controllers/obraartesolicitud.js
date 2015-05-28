@@ -58,6 +58,12 @@ var ctrls = {
           initWorkFlow = true;
         }
 
+        var extra = null;
+        if(obj.has('extra')){
+          extra = obj.get('extra');
+          obj.unset('extra');
+        }
+
         obj.save(function(err,result){
           if(err) return res.status(422).send(err);
 
@@ -67,7 +73,7 @@ var ctrls = {
               res.json(result);
             });
           }else{
-            workflow.registrarCambioSolicitud(obj,function(err,token){
+            workflow.registrarCambioSolicitud(obj,extra,function(err,token){
               res.json(result);
             });
           }

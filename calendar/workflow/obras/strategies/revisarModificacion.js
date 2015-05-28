@@ -1,27 +1,13 @@
 
 /**
- * acción para cuando un Usuario solicitante realiza una modificacion en
- * una solicitud o en una obra
- *
+ * acción para cuando un Usuario solicitante avisa que ya corrigio todos los errores
  *
  */
 var types = require('../models/tokentypes.js');
 
-var registroCambio = {
+var revisarModificacion = {
   beforeAdd: function(token,userLogged,currentToken,callback){
-      //se manda a la persona actual
-
       if(!currentToken) return callback();
-
-      var currentType = currentToken.get('global_type');
-
-      if(currentType){
-        //registra el cambio pero no cambia el estado global del tramite o hilo
-
-        var nextType = currentType;
-
-        token.set('global_type',nextType);
-      }
 
       // es el responsable asignado que esta tratando el tramite
       // se setea en pedidoCorreccion.js
@@ -38,4 +24,4 @@ var registroCambio = {
 };
 
 
-module.exports = registroCambio;
+module.exports = revisarModificacion;

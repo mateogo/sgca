@@ -2,7 +2,7 @@ DocManager.module("ObrasApp.Common", function(Common, DocManager, Backbone, Mari
 
   Common.InternalLayout = Marionette.LayoutView.extend({
     getTemplate: function(){
-      return utils.templates.InternalLayoutView
+      return utils.templates.InternalLayoutView;
     },
     regions: {
       menuRegion: '#menu-region',

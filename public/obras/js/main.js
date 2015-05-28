@@ -2,7 +2,7 @@ utils.loadTemplate([
 
     'HeaderView',
 
-    'common/MenuView','common/InternalLayoutView',
+    'common/MenuView','common/InternalLayoutView', 'common/SaveAndNoti',
 
     'home/HomeView',
 

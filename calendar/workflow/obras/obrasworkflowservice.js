@@ -14,6 +14,7 @@ var updateObjStateStrg  = require('./strategies/updateObjState.js');
 var autoSetUserLoggedStrg = require('./strategies/autoSetUserLogged.js');
 var pedidoCorreccionStrg = require('./strategies/pedidoCorreccion.js');
 var registroModificacion = require('./strategies/registroModificacion.js');
+var revisarModificacion = require('./strategies/revisarModificacion.js');
 
 /**
  * @param {user.js} user - Usuario logueado
@@ -33,6 +34,7 @@ function ObrasWorkflowService(user){
   this.tokenService.registerStrategy(autoSetUserLoggedStrg,tokenTypes.REVISANDO);
   this.tokenService.registerStrategy(pedidoCorreccionStrg,tokenTypes.PEDIDO_CORRECCION);
   this.tokenService.registerStrategy(registroModificacion,tokenTypes.MODIFICACION);
+  this.tokenService.registerStrategy(revisarModificacion,tokenTypes.REVISAR_MODIFICACION);
 }
 
 var clazz = ObrasWorkflowService.prototype;
@@ -52,12 +54,28 @@ clazz.iniciarSolicitud = function(solicitud,callback){
   });
 };
 
-clazz.registrarCambioSolicitud = function(solicitud,callback){
+clazz.registrarCambioSolicitud = function(solicitud,extraData,callback){
   var self = this;
+  var type,
+      body;
+
+  type = tokenTypes.MODIFICACION;
+
+  if(extraData){
+    if(extraData.allFixed){
+      type = tokenTypes.REVISAR_MODIFICACION;
+    }
+
+    if(extraData.body){
+      body = extraData.body;
+    }
+  }
+
 
   var token = new Token();
-  token.set('type',tokenTypes.MODIFICACION);
+  token.set('type',type);
   token.set('from',this.user);
+  token.set('body',body);
 
   token.set('obj',this._prepareSolicitud(solicitud));
 

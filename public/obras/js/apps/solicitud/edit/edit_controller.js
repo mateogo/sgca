@@ -31,6 +31,8 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
       },
 
       edit: function(solicitud){
+        Edit.session = {};
+        Edit.session.editing = solicitud;
 
         DocManager.request('solicitud:load',solicitud).done(function(solicitud){
           var view = new Edit.SolicitudEditorView({model:solicitud});
@@ -51,6 +53,10 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
               view.unbind('solicitud:saved');
               view.unbind('solicitud:editCanceled');
             });
+          });
+
+          view.on('solitictud:doSave',function(model){
+            onSaveHandler(view);
           });
 
           initToFixList(view,solicitud);
@@ -76,9 +82,39 @@ DocManager.module("SolicitudApp.Edit", function(Edit, DocManager, Backbone, Mari
 
     var collection =  DocManager.request('token:query','toFix',{objId:model.id});
 
+    Edit.session.tofixCollection = collection;
+
     var listView = new WorkflowList.AlertTokenList({el:el,collection:collection});
     listView.render();
+  }
 
+  function onSaveHandler(view){
+    if(Edit.session.tofixCollection && Edit.session.tofixCollection.length > 0){
+      saveWidthMessage(view);
+    }else{
+      saveDefault(view);
+    }
+  }
+
+  function saveDefault(view){
+    var model = Edit.session.editing;
+    view.saveStarted();
+    DocManager.request('solicitud:save',model).done(function(){
+      view.saveStopped();
+      Message.success('La Solicitud '+model.get('cnumber') + '<br/>A sido guardada');
+      DocManager.trigger('solicitud:list');
+    }).fail(function(e){
+      view.saveStopped();
+      Message.error('No se pudo guardar');
+    });
+  }
+
+  function saveWidthMessage(view){
+    Common.popupSaveAndNoti(function(obj){
+      var model = Edit.session.editing;
+      model.set('extra',obj);
+      saveDefault(view);
+    });
   }
 
 
