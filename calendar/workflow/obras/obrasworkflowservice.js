@@ -22,7 +22,7 @@ function ObrasWorkflowService(user){
   this.user = user;
 
   this.tokenService = new TokenService();
-  this.tokenService.user = user;
+  this.tokenService.setUser(user);
 
   this.tokenService.setActiveGroups(this.user.roles);
   this.tokenService.setQueries(queries);
@@ -79,10 +79,8 @@ clazz._prepareSolicitud = function(solicitud){
     slug: solicitud.get('cnumber'),
     owner: owner
   };
-  console.log('la solicitud',solicitud);
-  console.log('antes de extender',obj);
+
   obj = _.extend(obj,attrs);
-  console.log('despues de extender',obj);
 
   return obj;
 };

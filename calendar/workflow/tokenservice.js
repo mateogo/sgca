@@ -44,6 +44,10 @@ TokenService.prototype.setActions = function(actions){
   this.actions = actions;
 };
 
+TokenService.prototype.setUser = function(user){
+  this.user = user;
+};
+
 
 TokenService.prototype.registerStrategy = function(strategy,tokenType){
   if(!tokenType){
@@ -192,15 +196,8 @@ TokenService.prototype.runQuery = function(code,callback){
 
   var query = queryMeta.get('query');
 
-  query = _.clone(query);
-
-  console.log('Buscando TOKENS query sin reasignar',JSON.stringify(query));
-
   //verificando si es para usuario logueado
-  this.replaceUserLogged(query);
-
-
-  console.log('Buscando TOKENS',JSON.stringify(query));
+  query = this.replaceUserLogged(query);
 
   //Ejecutando el query
   TokenModel.find(query,function(err,results){
@@ -225,25 +222,33 @@ TokenService.prototype.replaceUserLogged = function(query){
     id = new BaseModel.ObjectID(id);
   }
 
+  var copy = {};
+
+  //console.log('inyectando usuario logueado',id,this.user);
+
   var tmp;
   for(var key in query){
     if(key === 'toMe'){
       tmp = 'to._id';
-      query[tmp] = id;
-      delete query.toMe;
+      copy[tmp] = id;
     }else if(key === 'fromMe'){
       tmp = 'from._id';
-      query[tmp] = id;
-      delete query.fromMe;
+      copy[tmp] = id;
     }else if(query[key] instanceof Array){
       var array = query[key];
+      var arrayCopy = [];
       for (var i = 0; i < array.length; i++) {
-        this.replaceUserLogged(array[i]);
+         arrayCopy[i] = this.replaceUserLogged(array[i]);
       }
+      copy[key] = arrayCopy;
     }else if(typeof(query[key]) === 'object'){
-      this.replaceUserLogged(query[key]);
+      copy[key] = this.replaceUserLogged(query[key]);
+    }else{
+      copy[key] = query[key];
     }
   }
+
+  return copy;
 };
 
 
