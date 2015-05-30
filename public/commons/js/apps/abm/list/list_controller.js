@@ -32,7 +32,11 @@ DocManager.module('AbmApp.List',function(List,DocManager,Backbonone,Marionette,$
       layout.listenTo(options.collection, 'abm:edit', this.editItem);
       layout.listenTo(options.collection, 'abm:remove', this.removeItem);
 
-      DocManager.mainRegion.show(layout);
+      if (options.region) {
+        options.region.show(layout);
+      } else {
+        DocManager.mainRegion.show(layout);
+      }
     },
 
     newItem: function () {
