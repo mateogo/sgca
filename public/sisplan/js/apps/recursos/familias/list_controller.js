@@ -11,6 +11,7 @@ DocManager.module('RecursosApp.Familias.List',function(List,DocManager,Backbonon
         canAdd: true,
         canEdit: true,
         canRemove: true,
+        modal: false,
       });
 
       _.bindAll(self, 'onSelectFamilia', 'onNuevaFamilia', 'cargarSubFamilias', 'navegar');
@@ -33,7 +34,7 @@ DocManager.module('RecursosApp.Familias.List',function(List,DocManager,Backbonon
       self.navBar = new List.NavBar({collection: self.ruta});
 
       var layout = this.layout = new List.Layout(options);
-      layout.on('show', function() {
+      layout.on('show shown', function() {
         DocManager.request('abm:list', {
           listTitle: 'Familias',
           collection: familias,
@@ -51,7 +52,33 @@ DocManager.module('RecursosApp.Familias.List',function(List,DocManager,Backbonon
         self.navegar(familia);
       });
 
-      DocManager.mainRegion.show(layout);
+      if (options.modal) {
+        var modal = self.modal = new Backbone.BootstrapModal({
+          content: layout,
+          title: 'Elegir Familia',
+          cancelText: 'Cancelar',
+          okText: 'Elegir',
+          animate: true
+        });
+
+        modal.once('ok', function () {
+          self.trigger('modal:select', self.familia);
+        });
+
+        modal.once('cancel', function () {
+          self.trigger('modal:cancel');
+        });
+
+        modal.once('hidden', function () {
+          self.layout.destroy();
+          self.destroy();
+        });
+
+        modal.open();
+
+      } else {
+        DocManager.mainRegion.show(layout);
+      }
     },
 
     navegar: function(familia) {
@@ -83,6 +110,8 @@ DocManager.module('RecursosApp.Familias.List',function(List,DocManager,Backbonon
       }
 
       this.cargarSubFamilias(familia);
+
+      this.trigger('navegar', familia);
     },
 
     cargarSubFamilias: function(familia) {

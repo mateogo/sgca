@@ -29,8 +29,8 @@ DocManager.module('RecursosApp',function(RecursosApp,DocManager,Backbonone,Mario
       });
     },
 
-    listFamilias: function(){
-      return new RecursosApp.Familias.List.Controller();
+    listFamilias: function(options){
+      return new RecursosApp.Familias.List.Controller(options);
     },
 
     show: function(){
@@ -74,6 +74,10 @@ DocManager.module('RecursosApp',function(RecursosApp,DocManager,Backbonone,Mario
 
   DocManager.on('recurso:remove',function(recurso){
     API.remove(recurso);
+  });
+
+  DocManager.reqres.setHandler('recursos:familia:select', function(options) {
+    return API.listFamilias({ modal: true });
   });
 
   DocManager.addInitializer(function(){
