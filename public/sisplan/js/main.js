@@ -58,8 +58,14 @@ utils.loadTemplate(['HomeView', 'HeaderView',
     
     'common/DatePatternForm',
 
-    'abm/AbmListLayoutView',
-    
+  'abm/AbmListLayoutView',
+
+  'recursos/RecursosFamiliasListLayout',
+  'recursos/RecursosFamiliasHeader',
+  'recursos/RecursosFamiliasDetalle',
+  'recursos/RecursosFamiliasNavBar',
+  'recursos/RecursosFamiliasNavBarItem',
+
     ], function() {
 
     $('[data-toggle=offcanvas]').click(function() {
