@@ -1,1 +1,5 @@
-<button class="btn-link js-nav-familia"> <%= nombre %> </button> /
+<% if (active) { %>
+  <%= nombre %>
+<% } else { %>
+    <a class="btn-link js-nav-familia"> <%= nombre %> </a>
+<% } %>

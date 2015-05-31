@@ -44,7 +44,7 @@ DocManager.module("RecursosApp.Familias.List", function(List, DocManager, Backbo
   });
 
   List.NavBarItem = Marionette.ItemView.extend({
-    tagName: 'span',
+    tagName: 'li',
 
     triggers: {
       'click .js-nav-familia': 'nav',
@@ -57,9 +57,17 @@ DocManager.module("RecursosApp.Familias.List", function(List, DocManager, Backbo
     initialize: function() {
       this.listenTo(this.model, 'change', this.render);
     },
+
+    templateHelpers: function() {
+      return {
+        active: this.options.active,
+      }
+    },
   });
 
   List.NavBar = Marionette.CollectionView.extend({
+    tagName: 'ol',
+    className: 'breadcrumb',
     childView: List.NavBarItem,
     childViewEventPrefix: 'nav',
 
@@ -69,8 +77,6 @@ DocManager.module("RecursosApp.Familias.List", function(List, DocManager, Backbo
     getTemplate: function(){
       return utils.templates.RecursosFamiliasHeader;
     },
-
   });
-
 
 });
