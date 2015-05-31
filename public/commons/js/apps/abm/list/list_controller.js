@@ -40,7 +40,19 @@ DocManager.module('AbmApp.List',function(List,DocManager,Backbonone,Marionette,$
     },
 
     newItem: function () {
-      DocManager.request('abm:new', this.options);
+      var ok = {};
+      var cb = this.options.beforeNew;
+      if (cb && typeof(cb) == 'function') {
+        ok = cb(this.options);
+      }
+
+      if (ok == false) {
+        return;
+      }
+
+      var options = _.defaults(ok, this.options);
+
+      DocManager.request('abm:new', options);
     },
 
     removeItem: function (model) {
@@ -50,9 +62,17 @@ DocManager.module('AbmApp.List',function(List,DocManager,Backbonone,Marionette,$
     },
 
     editItem: function (model) {
-      DocManager.request('abm:edit', {
-        model: model,
-      });
+      var ok = true;
+      var cb = this.options.beforeEdit;
+      if (cb && typeof(cb) == 'function') {
+        ok = cb(model, this.options);
+      }
+
+      if (ok) {
+        DocManager.request('abm:edit', {
+          model: model,
+        });
+      }
     }
   });
 
