@@ -14,7 +14,7 @@ module.exports = {
     },
     root: rootPath,                                 // XXX FIXME: hacer que los routes de las aplicaciones tomen el de app y no este.
     publicPath: publicPath,                         // XXX FIXME: hacer que los routes de las aplicaciones tomen el de app y no este.
-    apps: ['common_api', 'calendar'],
+    apps: ['common_api', 'calendar', 'sisplan'],
     notifier: {
       APN: false,
       email: false, // true
