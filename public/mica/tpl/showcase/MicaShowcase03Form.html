@@ -1,0 +1,94 @@
+<div id="musica-form" class="row">
+  <hr>     
+  <div class="form-group col-sm-12">
+      <label class="control-label" for="sello">Sello discográfico</label>
+      <input type="text" id="sello" class="form-control" placeholder="" name="sello" value="<%= sello %>">
+  </div>
+
+  <div class="col-sm-12">
+    <div class="control-label heading"><strong>Género o estilo musical (marcar los que correspondan)</strong></div>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="m01">
+      <input type="checkbox" id="m01" class="sr-only" 
+        <%= generomusical.folklore ? 'checked="checked"' : '' %> 
+        name="generomusical" value="folklore" > <span class="checkbox-label">Folklore</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="m02">
+      <input type="checkbox" id="m02" class="sr-only" 
+        <%= generomusical.tango ? 'checked="checked"' : '' %> 
+        name="generomusical" value="tango" > <span class="checkbox-label">Tango</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="m03">
+      <input type="checkbox" id="m03" class="sr-only" 
+        <%= generomusical.tropical ? 'checked="checked"' : '' %> 
+        name="generomusical" value="tropical" > <span class="checkbox-label">Tropical / Cumbia / Cuarteto</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="m06">
+      <input type="checkbox" id="m06" class="sr-only" 
+        <%= generomusical.rock ? 'checked="checked"' : '' %> 
+        name="generomusical" value="rock" > <span class="checkbox-label">Rock / Pop</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="m08">
+      <input type="checkbox" id="m08" class="sr-only" 
+        <%= generomusical.reggae ? 'checked="checked"' : '' %> 
+        name="generomusical" value="reggae" > <span class="checkbox-label">Reggae / Ska</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="m10">
+      <input type="checkbox" id="m10" class="sr-only" 
+        <%= generomusical.electronica ? 'checked="checked"' : '' %> 
+        name="generomusical" value="electronica" > <span class="checkbox-label">Electrónica / Hip Hop</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="m12">
+      <input type="checkbox" id="m12" class="sr-only" 
+        <%= generomusical.jazz ? 'checked="checked"' : '' %> 
+        name="generomusical" value="jazz" > <span class="checkbox-label">Jazz / Blues / Gospel</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="m15">
+      <input type="checkbox" id="m15" class="sr-only" 
+        <%= generomusical.contemporanea ? 'checked="checked"' : '' %> 
+        name="generomusical" value="contemporanea" > <span class="checkbox-label">Clásica / Música Contemporánea</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="m16">
+      <input type="checkbox" id="m16" class="sr-only" 
+        <%= generomusical.fusion ? 'checked="checked"' : '' %> 
+        name="generomusical" value="fusion" > <span class="checkbox-label">Fusión</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="m17">
+      <input type="checkbox" id="m17" class="sr-only" 
+        <%= generomusical.otros ? 'checked="checked"' : '' %> 
+        name="generomusical" value="otros" > <span class="checkbox-label">Otros</span>
+    </label>
+    <hr>
+
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <label class="control-label" for="discografia">Discografía </label>
+        <textarea id="discografia" class="form-control" rows="6" maxlength="500" placeholder="Título y año del material discográfico editado" name="discografia"><%= discografia %></textarea>
+        <span class="help-block"></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <label class="control-label" for="festivales">Experiencia previa en festivales / mercados nacionales y/o internacionales </label>
+        <textarea id="festivales" class="form-control" rows="6" maxlength="500" placeholder="Festival / año de las experiencias previas en los últimos 24 meses" name="festivales"><%= festivales %></textarea>
+        <span class="help-block"></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <label class="control-label" for="giras">Plan de giras 2015-2016</label>
+        <textarea id="giras" class="form-control" rows="6" maxlength="500" placeholder="Describa las giras previstas para el período 2015-2016" name="giras"><%= giras %></textarea>
+        <span class="help-block"></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-12">
+        <label class="control-label" for="escenario">Descripción de la planta del escenario</label>
+        <textarea id="escenario" class="form-control" rows="6" maxlength="500" placeholder="Describa requerimientos para la planta del escenario. Indique el número de músicos en el escenario." name="escenario"><%= escenario %></textarea>
+        <span class="help-block"></span>
+      </div>
+    </div>
+
+
+    <hr>
+  </div>
+</div>

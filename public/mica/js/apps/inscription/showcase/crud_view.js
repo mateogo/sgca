@@ -174,70 +174,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
         this.model.trigger('trash:item:crud', this.model);
       }
   });
-
-  Backgrid.IntegranteActionCell = Backgrid.Cell.extend({
-      // Cell default class names are the lower-cased and dasherized
-      // form of the the cell class names by convention.
-      className: "action-cell",
-      render: function(){
-          if(!this.rendered){
-             var btnEdit = $('<button class="btn-link js-item-edit" title="editar"><span class="glyphicon glyphicon-edit"></span></button>');
-             var btnRemove = $('<button class="btn-link js-item-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
-             this.$el.append(btnEdit).append(btnRemove);
-             this.rendered = true;
-          }
-         return this;
-      },
-      events: {
-          'click button.js-item-edit': 'editClicked',
-          'click button.js-item-trash': 'trashClicked',
-      },
-        
-      editClicked: function(e){
-
-        this.trigger('edit:item:action');
-        this.model.trigger('edit:me');
-        DocManager.trigger('integrante:edit',this.model);
-
-      },
-        
-      trashClicked: function(e){
-        this.model.trigger('trash:item:crud', this.model);
-      }
-  });
-
-  Backgrid.ReferenciaActionCell = Backgrid.Cell.extend({
-      // Cell default class names are the lower-cased and dasherized
-      // form of the the cell class names by convention.
-      className: "action-cell",
-      render: function(){
-          if(!this.rendered){
-             var btnEdit = $('<button class="btn-link js-item-edit" title="editar"><span class="glyphicon glyphicon-edit"></span></button>');
-             var btnRemove = $('<button class="btn-link js-item-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
-             this.$el.append(btnEdit).append(btnRemove);
-             this.rendered = true;
-          }
-         return this;
-      },
-      events: {
-          'click button.js-item-edit': 'editClicked',
-          'click button.js-item-trash': 'trashClicked',
-      },
-        
-      editClicked: function(e){
-
-        this.trigger('edit:item:action');
-        this.model.trigger('edit:me');
-        DocManager.trigger('referencias:edit',this.model);
-
-      },
-        
-      trashClicked: function(e){
-        this.model.trigger('trash:item:crud', this.model);
-      }
-  });  
-
-
+  
   Backgrid.CporfolioActionCell = Backgrid.Cell.extend({
       // Cell default class names are the lower-cased and dasherized
       // form of the the cell class names by convention.
@@ -355,7 +292,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
     
     gridFactory: function(collection, columns){
-      console.log('gridFactory: [%s]', collection.whoami)
       this.grid = new Backgrid.Grid({
           className: 'table table-condensed table-bordered table-hover',
           collection: this.collection,
@@ -387,11 +323,8 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       self.layout.on('save:crud:editor', function(){
         self.form.commit();
         self.collection.add(self.form.model);
-        console.log('save:crud:editor [%s][%s]', self.form.model.whoami, self.get('editEventName'));
-
 
         DocManager.trigger(self.get('editEventName'), new self.options.editModel());
-
 
       });
     },

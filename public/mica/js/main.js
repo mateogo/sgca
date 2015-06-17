@@ -48,6 +48,16 @@ utils.loadTemplate([
         //'inscripcion/FileUploadingForm','inscripcion/FondoMovilidadInscriptionFormLayout','inscripcion/MovilidadCostosForm',
         //'inscripcion/MovilidadDatosGeneralesForm','inscripcion/ParticipacionesAnterioresForm','inscripcion/RegistroEntidadForm',
 
+        // Formulario inscripción SHOWCASE
+        'showcase/MicaShowcaseFormLayout','showcase/MicaShowcase01Form',
+        'showcase/MicaShowcase02Layout','showcase/MicaShowcase02Form',
+        'showcase/MicaShowcase03Layout','showcase/MicaShowcase03Form',
+        'showcase/MicaShowcase04Layout','showcase/MicaShowcase04Form',
+        'showcase/IntegranteLayout','showcase/IntegranteForm',
+        'showcase/ReferenceLayout','showcase/ReferenceForm',
+        'showcase/MailShowcaseProvisorio','showcase/MailShowcaseDefinitivo',
+
+
     ], function() {
 
     $('[data-toggle=offcanvas]').click(function() {

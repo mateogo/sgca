@@ -4,9 +4,16 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 		appRoutes: {
 			'mica': 'loginMica',
 			'inscripcion/nueva': 'loginMica',
+
+			'showcase': 'loginShowcase',
+			'showcase/nueva': 'loginShowcase',
+
 			'sisplan': 'loginSisplan',
+
+			'obras':'loginObras',
+
 			'usuario(/*path)': 'loginUser',
-			'obras':'loginObras'
+
 		}
 	});
 	
@@ -21,6 +28,11 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 		loginMica: function(){
 			console.log('API: Login MICA');
 			this.loginUser('mica/#inscripcion/nueva', 'mica')
+		},
+
+		loginShowcase: function(){
+			console.log('API: Login SHOWCASE');
+			this.loginUser('mica/#showcase/nueva', 'mica')
 		},
 
 		loginSisplan: function(){

@@ -1,0 +1,57 @@
+<h3>Concurso para participar en las muestras en vivo (showcase) de<br> Música o Artes Escénicas </h3>
+<p>Seleccioná el tipo de expresión artística al que querés inscribir a tu banda/ grupo/ elenco/ compañía</p>
+<div class="row">  
+  <div class="form-group required">
+    <div class="col-sm-4 selectContainer">
+      <label class="control-label" for="tsolicitud">Seleccione Música ó Artes Escénicas</label>
+      <select  id="tsolicitud" class="form-control" name="tsolicitud">
+        <option value='no_definido'
+        <%= tsolicitud == 'no_definido' ? 'selected':'' %>>Tipo de Inscripción</option>
+        <option value='musica'
+        <%= tsolicitud == 'musica' ? 'selected':'' %>>Música</option>
+        <option value='aescenicas'
+        <%= tsolicitud == 'aescenicas' ? 'selected':'' %>>Artes Escénicas</option>
+      </select>
+      <span class="help-block"></span>
+    </div>
+  </div>
+</div>
+
+
+<div class="col-sm-12 col-xs-12 form-group required">
+  <div class="row">  
+    <label class="control-label" for="edisplayName">Nombre del Grupo / Solista / Elenco / Compañía</label>
+    <!-- label class="control-label en" for="edisplayName">Business name</label -->
+    <div class="input-group">
+      <input type="text" id="edisplayName" class="form-control" name="edisplayName" value='<%= edisplayName %>'/>
+      <div class="input-group-addon">
+        <div title="Indique el nombre artístico del grupo/solista (para música) o del elenco/compañía (artes escénicas)" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+    </div>
+    <span class="help-block"></span>
+  </div>
+</div>
+
+<div class="form-group col-sm-12 required">
+  <div class="row">
+    <label class="control-label" for="edescription">Breve reseña artística / Biografía</label>
+    <div class="input-group">
+      <textarea id="edescription" class="form-control" rows="6"  maxlength="600" placeholder="" name="edescription" ><%= edescription %></textarea>
+      <div class="input-group-addon">
+        <div title="Describa brevemente la trayectoria del grupo / elenco. Señale los hitos artísticos más relevantes (Máximo 600 caracteres)" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+      <p id="limit-chars"></p>
+    </div>
+    <span class="help-block"></span>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-sm-12"><h4>Agregue (opcional) una imagen de perfil del grupo/ elenco</h4></div>
+  <div class="col-sm-12  js-avatar" style="border: 1px solid rgb(204, 204, 204);margin-bottom: 20px;" ></div>
+</div>

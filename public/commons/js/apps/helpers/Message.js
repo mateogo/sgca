@@ -12,7 +12,7 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
               from: 'top',
               align: 'center'
           },
-          delay: 3000,
+          delay: 5000,
           offset: 10,
           z_index: 1041,
           template: '<div data-notify="container" class="col-xs-10 col-sm-4 alert alert-sgc alert-{0} text-center" role="alert"> '+
@@ -23,45 +23,50 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
   }  
    
   
-    var NotifyImpl = {
-      success: function(str){
-          notify(str,'success','glyphicon glyphicon-ok');
-          console.log(this);
-      },
-      info: function(str){
-          notify(str,'info','glyphicon glyphicon-info-sign');
-      },
-      warning: function(str){
-          notify(str,'warning','glyphicon glyphicon-warning-sign');
-      },
-      error: function(str){
-          notify(str,'danger','glyphicon glyphicon-warning-sign');
-      }
+  var NotifyImpl = {
+    success: function(str){
+        notify(str,'success','glyphicon glyphicon-ok');
+        console.log(this);
+    },
+    info: function(str){
+        notify(str,'info','glyphicon glyphicon-info-sign');
+    },
+    warning: function(str){
+        notify(str,'warning','glyphicon glyphicon-warning-sign');
+    },
+    error: function(str){
+        notify(str,'danger','glyphicon glyphicon-warning-sign');
     }
-    
-   var InlineImpl = {
-      success: function(str){
-        this.notify(str,'success','glyphicon glyphicon-ok');
-      },
-      info: function(str){
-        this.notify(str,'info','glyphicon glyphicon-info-sign');
-      },
-      warning: function(str){
-        this.notify(str,'warning','glyphicon glyphicon-warning-sign');
-      },
-      error: function(str){
-          this.notify(str,'danger','glyphicon glyphicon-warning-sign');
-      },
-      notify: function(str,type,icon){
-        utils.showAlert('','<i class="'+icon+'"></i> ' + str,'alert-'+type);
-        this.autoHide();
-      },
-      autoHide: function(){
-        setTimeout(function(){
-          $('.alert').slideUp();
-        },3000);
-      }
+  }
+  
+  var InlineImpl = {
+    success: function(str){
+      this.notify(str,'success','glyphicon glyphicon-ok');
+    },
+    info: function(str){
+      this.notify(str,'info','glyphicon glyphicon-info-sign');
+    },
+    warning: function(str){
+      this.notify(str,'warning','glyphicon glyphicon-warning-sign');
+    },
+    error: function(str){
+        this.notify(str,'danger','glyphicon glyphicon-warning-sign');
+    },
+    notify: function(str,type,icon){
+      utils.showAlert('','<i class="'+icon+'"></i> ' + str,'alert-'+type);
+      this.autoHide();
+    },
+    autoHide: function(){
+      setTimeout(function(){
+        $('.alert').slideUp();
+      },5000);
+    },
+    autoHide: function(){
+      setTimeout(function(){
+        $('.alert').slideUp();
+      },5000);
     }
+  }
     
   Message = {
       success: function(str){
@@ -80,7 +85,6 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
         return NotifyImpl;
       }
   }; 
-  
   window.Message = Message;
     
 });

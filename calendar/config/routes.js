@@ -193,6 +193,19 @@ module.exports = function (config, app) {
     app.delete('/micasuscriptions/:id',      micasuscriptions.delete);
 
 
+    // micashowcase -perfil inscriptos MICA- routes
+    var micashowcase = require(rootPath + '/calendar/controllers/micashowcase');
+    app.post('/actualizar/micashowcase', micashowcase.partialupdate);
+    app.get ('/micashowcase',            micashowcase.findAll);
+    app.post('/micashowcase/fetch',      micashowcase.findOne);
+    app.post('/navegar/micashowcase',    micashowcase.find);
+
+    app.get ('/micashowcase/:id',        micashowcase.findById);
+    app.post('/micashowcase',            micashowcase.add);
+    app.put ('/micashowcase/:id',        micashowcase.update);
+    app.delete('/micashowcase/:id',      micashowcase.delete);
+
+
     // fondosuscribe -perfil inscriptos FONDO- routes
     var fondosuscribe = require(rootPath + '/calendar/controllers/fondosuscriptions');
     app.post('/actualizar/fondosuscriptions', fondosuscribe.partialupdate);

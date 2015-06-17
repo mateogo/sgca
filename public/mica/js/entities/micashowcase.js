@@ -1,8 +1,8 @@
 DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionette, $, _){
     
-  Entities.MicaRegistration = Backbone.Model.extend({
-    urlRoot: "/micasuscriptions",
-    whoami: 'MicaRegistration:mica.js ',
+  Entities.ShowcaseRegistration = Backbone.Model.extend({
+    urlRoot: "/micashowcase",
+    whoami: 'ShowcaseRegistration:micashowcase.js ',
     idAttribute: "_id",
     
     initialize: function(opts){
@@ -30,13 +30,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
-    update: function(user, representantes, vporfolios, cporfolios, cb){
+    update: function(user, integrantes, mreferencias, areferencias, cb){
       var self = this;
       initModelForUpdate(user, self);
       _updateFacetStepOne(user, self);
-      _updateFacetStepTwo(user, representantes, self);
-      _updateFacetStepThree(user, vporfolios, self);
-      _updateFacetStepFour(user, cporfolios, self);
+      _updateFacetStepTwo(user, integrantes, self);
+      _updateFacetStepThree(user, mreferencias, self);
+      _updateFacetStepFour(user, areferencias, self);
 
       // ********** SAVE TO SERVER ***********
       if(!self.save(null,{
@@ -55,12 +55,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     defaults: {
        _id: null,
-      tregistro:'inscripcion',
-      evento:'mica',
+      tregistro:'musica',
+      evento:'mica_showcase',
       rubro:'general',
       legal: '',
 
-      //inscripcion
       cnumber:'',
       documid: '',
       fealta: '',
@@ -71,225 +70,97 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       edicionevento: '2015',
       nivel_ejecucion: 'enproceso',
 
-      //user 
       user:{
         usermail: '',
         userid: '',
         personid: '',
       },
 
-      // Empresa o persona solicitante
       solicitante:{
-        pfisica: true, // false
-        pjuridica: false, // true
-        etipojuridico: 'pfisica', //  [pfisica, funcacion, asociacion, cooperativa, sa, srl]
+        tsolicitud: 'no_definido',
 
         edisplayName: '',
-        ename: '',
-        emotivation: '',
+
         edescription: '',
-        epais: 'AR',
-        eprov: '',
-        elocalidad: '',
-        ecuit: '',
-        edomicilio: '',
-        ecp: '',
-        email: '',
-        eweb: '',
-        efundacion: '',
-        enumempleados: '',
-        eventas: '',
         eavatar: '',
 
-
-        // solo para personas juridicas
-        eactividad: '',
-        efechapj: '',
       },
 
-      // Responsable empresa o titular
       responsable:{
         rmail: '',
         rname: '',
         rcargo: '',
 
-        //
         rdocnum: '',
-        rfenac: '',
 
         rtel: '',
         rcel: '',
+        rmail2: '',
 
-
-        ridiomas: '',
-        representantes: [],
+        integrantes: [],
       },
       
       isComprador: '',
       isVendedor: '',
 
-      vendedor: {
+      musica: {
         rolePlaying:{
-          vendedor: false
+          musica: false
         },
 
-        vactividades: '',
+        generomusical: {
+          folklore: false,
+          tango: false,
+          tropical: false,
+          cumbia: false,
+          cuarteto: false,
+          rock: false,
+          pop: false,
+          reggae: false,
+          ska: false,
+          electronica: false,
+          hiphop: false,
+          jazz: false,
+          blues: false,
+          gospel: false,
+          clasica: false,
+          contemporanea: false,
+          fusion: false,
+          otros: false,
 
-/*
-        vactividades: {
-          aescenicas: false,
-          audiovisual: false,
-          disenio: false,
-          editorial: false,
-          musica: false,
-          videojuegos: false,
         },
+        sello: '',
+        discografia: '',
+        festivales: '',
+        giras: '',
+        escenario: '',
 
-*/      
-        sub_aescenicas: {
-          diseniador: false,
-          direccion: false,
-          dramaturgia: false,
-          coreografia: false,
-          programadorfestivales: false,
-          programadorsalas: false,
-          camaras: false,
-          proveedores: false,
-        },
-        sub_audiovisual: {
-          pservicios: false,
-          pcontenidos: false,
-          servicios: false,
-          vjs: false,
-          profesional: false,
-          programador: false,
-          distribuidor: false,
-          exhibtelevision: false,
-          exhibcine: false,
-          exhibmultiplataforma: false,
-          camaras: false,
-          editores: false,
-        },
-        sub_editorial: {
-          editor: false,
-          libreria: false,
-          distribuidora: false,
-          ilustrador: false,
-          revistacultural: false,
-          elecronico: false,
-        },
-        sub_musica: {
-          representante: false,
-          produccion: false,
-          festival: false,
-          salas: false,
-          sello: false,
-          servicios: false,
-          camaras: false,
-        },
-        sub_disenio: {
-          grafico: false,
-          indumentaria: false,
-          industrial: false,
-          joyeria: false,
-          multimedia: false,
-        },
-        sub_videojuegos: {
-          programacion: false,
-          arte: false,
-          disenio: false,
-          guion: false,
-          produccion: false,
-          musica: false,
-          testeo: false,
-          comunicacion: false,
-          comunidades: false,
-        },
-
-        vexperienciaintl: 1,
-        vdescriptores: [],
-        vcomentario: '',
-        vporfolio: {
-          denominacion:'',
-          referencias: [],
-        },
-        vporfolios: [],
+        mreferencias: [],
       },
 
 
-      comprador: {
+      aescenica: {
         rolePlaying:{
-          comprador: false
+          aescenica: false
         },
 
-        cactividades: '',
+        generoteatral: {
+          teatro: false,
+          teatrodanza: false,
+          titeres: false,
+          circo: false,
+          nuevastecnologias: false,
+          performance: false,
+          comediamusical: false,
+          opereta: false,
+          otros: false,
+        },
 
-        sub_aescenicas: {
-          diseniador: false,
-          direccion: false,
-          dramaturgia: false,
-          coreografia: false,
-          programadorfestivales: false,
-          programadorsalas: false,
-          camaras: false,
-          proveedores: false,
-        },
-        sub_audiovisual: {
-          pservicios: false,
-          pcontenidos: false,
-          servicios: false,
-          vjs: false,
-          profesional: false,
-          programador: false,
-          distribuidor: false,
-          exhibtelevision: false,
-          exhibcine: false,
-          exhibmultiplataforma: false,
-          camaras: false,
-          editores: false,
-        },
-        sub_editorial: {
-          editor: false,
-          libreria: false,
-          distribuidora: false,
-          ilustrador: false,
-          revistacultural: false,
-          elecronico: false,
-        },
-        sub_musica: {
-          representante: false,
-          produccion: false,
-          festival: false,
-          salas: false,
-          sello: false,
-          servicios: false,
-          camaras: false,
-        },
-        sub_disenio: {
-          grafico: false,
-          indumentaria: false,
-          industrial: false,
-          joyeria: false,
-          multimedia: false,
-        },
-        sub_videojuegos: {
-          programacion: false,
-          arte: false,
-          disenio: false,
-          guion: false,
-          produccion: false,
-          musica: false,
-          testeo: false,
-          comunicacion: false,
-          comunidades: false,
-        },
-        cexperienciaintl: 1,
-        ccomentario: '',
-        cporfolio: {
-          denominacion:'',
-          referencias: [],
-        },
-        cporfolios: [],
+        propuestaartistica: '',
+        experiencia: '',
+        aescenario: '',
+
+        areferencias: [],
       },
 
 
@@ -308,22 +179,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   });
     
-  Entities.MicaRegistrationCol = Backbone.Collection.extend({
-    model: Entities.MicaRegistration,
-    url: "/micasuscriptions"
+  Entities.ShowcaseRegistrationCol = Backbone.Collection.extend({
+    model: Entities.ShowcaseRegistration,
+    url: "/micashowcase"
   });
 
-  Entities.MicaRegistrationFindByQueryCol = Backbone.Collection.extend({
-    whoami: 'MicaRegistrationFindByQueryCol: mica.js',
-    model: Entities.MicaRegistration,
-    url: "/navegar/micasuscriptions",
+  Entities.ShowcaseRegistrationFindByQueryCol = Backbone.Collection.extend({
+    whoami: 'ShowcaseRegistrationFindByQueryCol: micashowcase.js',
+    model: Entities.ShowcaseRegistration,
+    url: "/navegar/micashowcase",
 
   });
 
-  Entities.MicaRegistrationFetchOneCol = Backbone.Collection.extend({
-    whoami: 'MicaRegistrationFetchOneCol: mica.js',
-    model: Entities.MicaRegistration,
-    url: "/micasuscriptions/fetch",
+  Entities.ShowcaseRegistrationFetchOneCol = Backbone.Collection.extend({
+    whoami: 'ShowcaseRegistrationFetchOneCol: micashowcase.js',
+    model: Entities.ShowcaseRegistration,
+    url: "/micashowcase/fetch",
 
   });
 
@@ -358,15 +229,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
     var initialdata = {
-      tregistro:'inscripcion',
-      evento:'mica',
+      tregistro:model.get('solicitante').tsolicitud,
+      evento:'mica_showcase',
       edicionevento:'2015',
       rubro:'general',
       cnumber:'',
       documid: '',
       fealta: fealta.getTime(),
       fecomp: fecomp,
-      slug: 'Inscripcion MICA 2015' + model.get('solicitante').edisplayName,
+      slug: 'Inscripcion Showcase' + model.get('solicitante').edisplayName,
       description: '',
       estado_alta:'activo',
       nivel_ejecucion: 'enproceso',
@@ -386,9 +257,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //            FACET ONE (EMPRESA)
   //*************************************************************
 
-  Entities.MicaStepOneFacet = Backbone.Model.extend({
-    urlRoot: "/micasuscriptions",
-    whoami: 'MicaStepOneFacet:mica.js ',
+  Entities.ShowcaseStepOneFacet = Backbone.Model.extend({
+    urlRoot: "/micashowcase",
+    whoami: 'ShowcaseStepOneFacet:micashowcase.js ',
     idAttribute: "_id",
     
     initialize: function(opts){
@@ -405,7 +276,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           valid = true,
           errors = {};
 
-      var check = [['edisplayName'],['edescription'],['emotivation'],['eprov'],['eventas']];
+      var check = [['tsolicitud'],['edisplayName'],['edescription']];
       //if(step>2 || step<1) return null;
 
       _.each(check, function(fld){
@@ -424,25 +295,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     validate: function(attrs, options) {
       var errors = {}
+      //console.dir(attrs)
 
+      if (_.has(attrs,'tsolicitud') && (attrs.tsolicitud === 'no_definido' )) {
+        errors.tsolicitud = "Seleccione una opción";
+      }
       if (_.has(attrs,'edisplayName') && (!attrs.edisplayName )) {
         errors.edisplayName = "No puede ser nulo";
       }
       if (_.has(attrs,'edescription') && (!attrs.edescription )) {
         errors.edescription = "No puede ser nulo";
-      }
-      if (_.has(attrs,'emotivation') && (!attrs.emotivation )) {
-        errors.emotivation = "No puede ser nulo";
-      }
-      if (_.has(attrs,'eprov')) {
-
-      }
-
-      if (_.has(attrs,'eprov') && (!attrs.eprov )) {
-        errors.eprov = "No puede ser nulo";
-      }
-      if (_.has(attrs,'eventas') && (!attrs.eventas )) {
-        errors.eventas = "No puede ser nulo";
       }
 
       if( ! _.isEmpty(errors)){
@@ -461,9 +323,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //            FACET TWO (Participaciones anteriores)
   //*************************************************************
 
-  Entities.MicaStepTwoFacet = Backbone.Model.extend({
-    urlRoot: "/micasuscriptions",
-    whoami: 'MicaStepTwoFacet:mica.js ',
+  Entities.ShowcaseStepTwoFacet = Backbone.Model.extend({
+    urlRoot: "/micashowcase",
+    whoami: 'ShowcaseStepTwoFacet:micashowcase.js ',
     idAttribute: "_id",
     
     initialize: function(opts){
@@ -526,9 +388,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //            FACET THREE (MODALIDAD: VIAJE LOCAL o AL EXTERIOR)
   //*************************************************************
 
-  Entities.MicaStepThreeFacet = Backbone.Model.extend({
-    urlRoot: "/micasuscriptions",
-    whoami: 'MicaStepThreeFacet:mica.js ',
+  Entities.ShowcaseStepThreeFacet = Backbone.Model.extend({
+    urlRoot: "/micashowcase",
+    whoami: 'ShowcaseStepThreeFacet:micashowcase.js ',
     idAttribute: "_id",
     
     initialize: function(opts){
@@ -545,7 +407,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           valid = true,
           errors = {};
 
-      var check = [['vactividades'],['vcomentario']];
+      var check = [['discografia'],['festivales']];
       //if(step>2 || step<1) return null;
 
       _.each(check, function(fld){
@@ -566,7 +428,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     validate: function(attrs, options) {
       var errors = {}
 
-      if(this.get('rolePlaying').vendedor){
+      if(this.get('rolePlaying').musica){
 
         if (_.has(attrs,'vactividades') && (!attrs.vactividades )) {
           errors.vactividades = "No puede ser nulo";
@@ -595,9 +457,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //            FACET FOUR (TRAMOS, PASAJEROS, EVENTOS)
   //*************************************************************
 
-  Entities.MicaStepFourFacet = Backbone.Model.extend({
-    urlRoot: "/micasuscriptions",
-    whoami: 'MicaStepFourFacet:mica.js ',
+  Entities.ShowcaseStepFourFacet = Backbone.Model.extend({
+    urlRoot: "/micashowcase",
+    whoami: 'ShowcaseStepFourFacet:micashowcase.js ',
     idAttribute: "_id",
     
     initialize: function(opts){
@@ -634,7 +496,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     validate: function(attrs, options) {
       var errors = {}
-      if(this.get('rolePlaying').comprador){
+      if(this.get('rolePlaying').aescenica){
         if (_.has(attrs,'cactividades') && (!attrs.cactividades )) {
           errors.cactividades = "No puede ser nulo";
         }
@@ -662,9 +524,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //            FACET FIVE (UPLOADING)
   //*************************************************************
 
-  Entities.MicaStepFiveFacet = Backbone.Model.extend({
-    urlRoot: "/micasuscriptions",
-    whoami: 'MicaStepFiveFacet:mica.js ',
+  Entities.ShowcaseStepFiveFacet = Backbone.Model.extend({
+    urlRoot: "/micashowcase",
+    whoami: 'ShowcaseStepFiveFacet:micashowcase.js ',
     idAttribute: "_id",
     
     initialize: function(opts){
@@ -695,25 +557,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
   //*************************************************************
-  //            REPRESENTANTES
+  //            INTEGRANTES
   //*************************************************************
-  Entities.Representante = Backbone.Model.extend({
-    whoami: 'Representante: mica.js ',
+  Entities.Integrante = Backbone.Model.extend({
+    whoami: 'Integrante: micashowcase.js ',
 
     schema: {
         aname:    {type: 'Text',  title: 'Nombre y apellido'},
-        acargo:   {type: 'Text',  title: 'Cargo / Función'},
-        amail:    {type: 'Text',  title: 'Email'},
-        acel:     {type: 'Text',  title: 'Teléfono móvil', editorAttrs:{placeholder:'+54 (área) número'}},
-        atel:     {type: 'Text',  title: 'Teléfono',  editorAttrs:{placeholder:'+54 (área) número'}},
-        aidiomas: {type: 'Text',  title: 'Conocimiento de idiomas'},
+        acargo:   {type: 'Text',  title: 'Rol/ función'},
         afenac:   {type: 'Text',  title: 'Fecha Nacimiento', editorAttrs:{placeholder:'dd/mm/aaaa'}},
         adni:     {type: 'Text',  title: 'DNI / Pasaporte', editorAttrs:{placeholder:'número de documento'}},
     },
  
     validate: function(attrs, options) {
       var errors = {}
-      if (_.has(attrs,'rname') && (!attrs.rname )) {
+      if (_.has(attrs,'aname') && (!attrs.rname )) {
         errors.rname = "No puede ser nulo";
       }     
 
@@ -725,80 +583,37 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     defaults: {
       aname: '',
       acargo: '',
-      amail: '',
-      acel: '',
-      atel: '',
-      aidiomas: '',
       afenac: '',
       adni: '',
     },
   }); 
   
-  Entities.RepresentanteCol = Backbone.Collection.extend({
-    whoami: 'Entities.RepresentanteCol:mica.js ',
-    model: Entities.Representante,
+  Entities.IntegranteCol = Backbone.Collection.extend({
+    whoami: 'Entities.IntegranteCol:micashowcase.js ',
+    model: Entities.Integrante,
     comparator: "aname",
   });
 
-  //*************************************************************
-  //            PORFOLIO
-  //*************************************************************
-  Entities.Porfolio = Backbone.Model.extend({
-    whoami: 'Porfolio: MICA.js ',
-    
-    schema: {
-        slug: {type: 'Text',  title: 'Denominación del producto o servicio', editorAttrs:{placeholder:'Título o denominación para este elemento del porfolio'}},
-        denominacion: {type: 'TextArea',  title: 'Describa su producto, proyecto o servicio', editorAttrs:{placeholder:'Síntesis ejecutiva del producto/servicio a destacar'}},
-        //referencias:  {type: 'TextArea',  title: 'Indique referencias externas (enlaces a sitio web, notas periodísticas, audios, videos, u otros)'},
-    },
-
- 
-    validate: function(attrs, options) {
-      var errors = {}
-      if (_.has(attrs,'rname') && (!attrs.rname )) {
-        errors.rname = "No puede ser nulo";
-      }     
-
-      if( ! _.isEmpty(errors)){
-        return errors;
-      }
-    },
-
-    defaults: {
-      slug: '',
-      denominacion: '',
-      referencias: [],
-    },
-  }); 
-  
-  Entities.PorfolioCol = Backbone.Collection.extend({
-    whoami: 'PorfolioCol: mica.js',
-    model: Entities.Porfolio,
-    comparator: "rname",
-  });
 
 
   //*************************************************************
-  //            PORFOLIO LINKS
+  //            REFERENCIAS - ENLACES
   //*************************************************************
-  Entities.PorfolioReference = Backbone.Model.extend({
+  Entities.Referencia = Backbone.Model.extend({
     // links externos, a modo de referencias, asociados al porfolio
 
-    whoami: 'PorfolioReference: MICA.js ',
+    whoami: 'Referencia: micashowcase.js ',
     
     schema: {
-      tlink:     {type: 'Select',   title: 'Tipo de enlace externo',   editorAttrs:{placeholder:'Tipo de referencia externa'},options: utils.linkTypeOpLst },
+      tlink:     {type: 'Select',   title: 'Tipo de enlace externo',   editorAttrs:{placeholder:'Tipo de referencia externa'},options: utils.referenceLinkOpLst },
       slug:      {type: 'Text',     title: 'Descripción',      editorAttrs:{placeholder:'Descripción/ comentario del enlace propuesto'}},
       targeturl: {type: 'Text',     title: 'Enlace (URL)',      editorAttrs:{placeholder:'http://www.dominio.com.pais'}, dataType:'url', validators:['required', 'url']},
     },
 
  
     validate: function(attrs, options) {
-      var errors = {}
-
-      if (_.has(attrs,'slug') && (!attrs.slug )) {
-        errors.rname = "No puede ser nulo";
-      }     
+      console.log('validate Referencia;')
+      var errors = {};
 
       if( ! _.isEmpty(errors)){
         return errors;
@@ -821,9 +636,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   }); 
   
-  Entities.PorfolioReferenceCol = Backbone.Collection.extend({
-    whoami: 'PorfolioReferenceCol: mica.js',
-    model: Entities.PorfolioReference,
+  Entities.ReferenciaCol = Backbone.Collection.extend({
+    whoami: 'ReferenciaCol: micashowcase.js',
+    model: Entities.Referencia,
     comparator: "tlink",
   });
 
@@ -857,7 +672,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var _facetFactoryStepOne = function(model){
     var data = _.extend({}, model.get('solicitante'));
-    return new Entities.MicaStepOneFacet(data);
+    return new Entities.ShowcaseStepOneFacet(data);
   };
   var _updateFacetStepOne = function(user, model){
     var solicitante = model.get('solicitante');
@@ -867,45 +682,45 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var _facetFactoryStepTwo = function(model){
     var data = _.extend({}, model.get('responsable'));
-    model.representantes = model.get('responsable').representantes;
-    return new Entities.MicaStepTwoFacet(data);
+    model.integrantes = model.get('responsable').integrantes;
+    return new Entities.ShowcaseStepTwoFacet(data);
   };
-  var _updateFacetStepTwo = function(user, representantes, model){
+  var _updateFacetStepTwo = function(user, integrantes, model){
     var responsable = model.get('responsable');
     responsable = model.stepTwo.attributes;
-    responsable.representantes = representantes.toJSON();
+    responsable.integrantes = integrantes.toJSON();
     model.set('responsable', responsable);
   };
 
   var _facetFactoryStepThree = function(model){
-    //var data = _.extend({}, model.get('rolePlaying'), model.get('vendedor'));
-    model.vporfolios = model.get('vendedor').vporfolios;
-    return new Entities.MicaStepThreeFacet(model.get('vendedor'));
+    //var data = _.extend({}, model.get('rolePlaying'), model.get('musica'));
+    model.mreferencias = model.get('musica').mreferencias;
+    return new Entities.ShowcaseStepThreeFacet(model.get('musica'));
   };
-  var _updateFacetStepThree = function(user, porfolios, model){
+  var _updateFacetStepThree = function(user, mreferencias, model){
     //var rolePlaying = model.get('rolePlaying');
-    var vendedor;
-    vendedor = model.stepThree.attributes;
-    vendedor.vporfolios = porfolios.toJSON();
-    model.set('vendedor', vendedor);
+    var musica;
+    musica = model.stepThree.attributes;
+    musica.mreferencias = mreferencias.toJSON();
+    model.set('musica', musica);
   };
 
   var _facetFactoryStepFour = function(model){
-    //var data = _.extend({}, model.get('rolePlaying'), model.get('comprador'));
-    model.cporfolios = model.get('comprador').cporfolios;
-    return new Entities.MicaStepFourFacet(model.get('comprador'));
+    //var data = _.extend({}, model.get('rolePlaying'), model.get('aescenica'));
+    model.areferencias = model.get('aescenica').areferencias;
+    return new Entities.ShowcaseStepFourFacet(model.get('aescenica'));
   };
-  var _updateFacetStepFour = function(user, porfolios, model){
+  var _updateFacetStepFour = function(user, areferencias, model){
     //var rolePlaying = model.get('rolePlaying');
-    var comprador;
-    comprador = model.stepFour.attributes;
-    comprador.cporfolios = porfolios.toJSON();
-    model.set('comprador', comprador);
+    var aescenica;
+    aescenica = model.stepFour.attributes;
+    aescenica.areferencias = areferencias.toJSON();
+    model.set('aescenica', aescenica);
   };
 
   var _facetFactoryStepFive = function(model){
     var data = _.extend({}, model.get('pasajero'), model.get('evento'), model.get('tramo'), model.get('viaje'));
-    return new Entities.MicaStepFiveFacet(data);
+    return new Entities.ShowcaseStepFiveFacet(data);
   };
 
 
@@ -935,7 +750,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   };
 
   var queryCollection = function(query){
-      var entities = new Entities.MicaRegistrationFindByQueryCol();
+      var entities = new Entities.ShowcaseRegistrationFindByQueryCol();
       var defer = $.Deferred();
 
       entities.fetch({
@@ -962,7 +777,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var API = {
 
     getEntity: function(entityId){
-      var request = new Entities.MicaRegistration({_id: entityId});
+      var request = new Entities.ShowcaseRegistration({_id: entityId});
       var defer = $.Deferred();
       if(entityId){
         request.fetch({
@@ -979,8 +794,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
     },
 
-    fetchMicaByUser: function(user, evento){
-      var entities = new Entities.MicaRegistrationFetchOneCol();
+    fetchEntityByUser: function(user, evento){
+      var entities = new Entities.ShowcaseRegistrationFetchOneCol();
       var query = {},
           defer = $.Deferred();
 
@@ -994,11 +809,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           if(data.length){
             defer.resolve(data.at(0));
           }else{
-            defer.resolve(new Entities.MicaRegistration());
+            defer.resolve(new Entities.ShowcaseRegistration());
           }
         },
         error: function(data){
-            defer.resolve(new Entities.MicaRegistration());          
+            defer.resolve(new Entities.ShowcaseRegistration());          
         }
       });
       return defer.promise();
@@ -1006,7 +821,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     newEntityFactory: function(){
-      var request = new Entities.MicaRegistration();
+      var request = new Entities.ShowcaseRegistration();
       var defer = $.Deferred();
       defer.resolve(request);
       return defer.promise();
@@ -1037,19 +852,19 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //*************************************************************
   //            entity HANDLERS
   //*************************************************************
-  DocManager.reqres.setHandler("micarqst:entity", function(id){
+  DocManager.reqres.setHandler("showcase:entity", function(id){
     return API.getEntity(id);
   });
 
-  DocManager.reqres.setHandler("micarqst:factory:new", function(user, evento){
+  DocManager.reqres.setHandler("showcase:factory:new", function(user, evento){
     if(user){
-      return API.fetchMicaByUser(user, evento);
+      return API.fetchEntityByUser(user, evento);
     }else{
       return API.newEntityFactory();
     }
   });
 
-  DocManager.reqres.setHandler("micarqst:query:entities", function(query){
+  DocManager.reqres.setHandler("showcase:query:entities", function(query){
     return API.getFilteredByQueryCol(query);
   });
 
