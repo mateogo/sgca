@@ -13,7 +13,6 @@ var actions = require('./models/actions.js');
 var updateObjStateStrg  = require('./strategies/updateObjState.js');
 var autoSetUserLoggedStrg = require('./strategies/autoSetUserLogged.js');
 var pedidoCorreccionStrg = require('./strategies/pedidoCorreccion.js');
-var registroModificacion = require('./strategies/registroModificacion.js');
 
 /**
  * @param {user.js} user - Usuario logueado
@@ -32,7 +31,6 @@ function ObrasWorkflowService(user){
   this.tokenService.registerStrategy(autoSetUserLoggedStrg,tokenTypes.FORMALIZANDO);
   this.tokenService.registerStrategy(autoSetUserLoggedStrg,tokenTypes.REVISANDO);
   this.tokenService.registerStrategy(pedidoCorreccionStrg,tokenTypes.PEDIDO_CORRECCION);
-  this.tokenService.registerStrategy(registroModificacion,tokenTypes.MODIFICACION);
 }
 
 var clazz = ObrasWorkflowService.prototype;
