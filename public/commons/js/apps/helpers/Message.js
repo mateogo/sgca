@@ -228,4 +228,5 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
 
   window.Message = Message;
 
+
 });
