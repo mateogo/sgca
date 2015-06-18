@@ -32,11 +32,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     update: function(user, integrantes, mreferencias, areferencias, cb){
       var self = this;
-      initModelForUpdate(user, self);
       _updateFacetStepOne(user, self);
       _updateFacetStepTwo(user, integrantes, self);
       _updateFacetStepThree(user, mreferencias, self);
       _updateFacetStepFour(user, areferencias, self);
+
+      initModelForUpdate(user, self);
 
       // ********** SAVE TO SERVER ***********
       if(!self.save(null,{
@@ -89,7 +90,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       responsable:{
         rmail: '',
         rname: '',
-        rcargo: '',
 
         rdocnum: '',
 
@@ -112,18 +112,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           folklore: false,
           tango: false,
           tropical: false,
-          cumbia: false,
-          cuarteto: false,
           rock: false,
-          pop: false,
           reggae: false,
-          ska: false,
           electronica: false,
-          hiphop: false,
           jazz: false,
-          blues: false,
-          gospel: false,
-          clasica: false,
           contemporanea: false,
           fusion: false,
           otros: false,
@@ -226,8 +218,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     fecomp = utils.dateToStr(fealta),
     personid = userGetPersonId(user);
 
-
-
     var initialdata = {
       tregistro:model.get('solicitante').tsolicitud,
       evento:'mica_showcase',
@@ -237,8 +227,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       documid: '',
       fealta: fealta.getTime(),
       fecomp: fecomp,
-      slug: 'Inscripcion Showcase' + model.get('solicitante').edisplayName,
-      description: '',
+      slug: 'Inscripción Showcase: ' + model.get('solicitante').edisplayName,
+      description: 'Formulario de solicitud de participación en el SHOWCASE - MICA 2015',
       estado_alta:'activo',
       nivel_ejecucion: 'enproceso',
       user:{
@@ -249,12 +239,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     };
     model.set(initialdata);
-
   };
 
 
   //*************************************************************
-  //            FACET ONE (EMPRESA)
+  //            FACET ONE GRUPO - BANDA - COMPAÑIA
   //*************************************************************
 
   Entities.ShowcaseStepOneFacet = Backbone.Model.extend({
@@ -320,7 +309,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
   //*************************************************************
-  //            FACET TWO (Participaciones anteriores)
+  //            FACET TWO REPRESENTANTE E INTEGRANTES
   //*************************************************************
 
   Entities.ShowcaseStepTwoFacet = Backbone.Model.extend({
@@ -338,11 +327,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     validateStep: function(step){
+      console.log('validate step [%s]',step)
       var self = this,
           valid = true,
           errors = {};
 
-      var check = [['rname'],['rdocnum']];
+      var check = [['rname'],['rdocnum'], ['rtel'], ['rcel'], ['rmail2']];
       //if(step>2 || step<1) return null;
 
       _.each(check, function(fld){
@@ -369,6 +359,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if (_.has(attrs,'rdocnum') && (!attrs.rdocnum )) {
         errors.rdocnum = "No puede ser nulo";
       }
+      if (_.has(attrs,'rcel') && (!attrs.rcel )) {
+        errors.rcel = "No puede ser nulo";
+      }
+      if (_.has(attrs,'rtel') && (!attrs.rtel )) {
+        errors.rtel = "No puede ser nulo";
+      }
+      if (_.has(attrs,'rmail2') && (!attrs.rmail2 )) {
+        errors.rmail2 = "No puede ser nulo";
+      }
 
       if( ! _.isEmpty(errors)){
         return errors;
@@ -385,7 +384,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
   //*************************************************************
-  //            FACET THREE (MODALIDAD: VIAJE LOCAL o AL EXTERIOR)
+  //            FACET THREE CASO MUSICA
   //*************************************************************
 
   Entities.ShowcaseStepThreeFacet = Backbone.Model.extend({
@@ -407,7 +406,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           valid = true,
           errors = {};
 
-      var check = [['discografia'],['festivales']];
+      var check = [['discografia'],['giras'], ['generomusical']];
       //if(step>2 || step<1) return null;
 
       _.each(check, function(fld){
@@ -430,12 +429,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       if(this.get('rolePlaying').musica){
 
-        if (_.has(attrs,'vactividades') && (!attrs.vactividades )) {
-          errors.vactividades = "No puede ser nulo";
+        if (_.has(attrs,'discografia') && (!attrs.discografia )) {
+          errors.discografia = "No puede ser nulo";
         }
         
-        if (_.has(attrs,'vcomentario') && (!attrs.vcomentario )) {
-          errors.vcomentario = "No puede ser nulo";
+        if (_.has(attrs,'giras') && (!attrs.giras )) {
+          errors.giras = "No puede ser nulo";
+        }
+
+        if (_.has(attrs,'generomusical')){
+          if(!_.contains(attrs.generomusical, true)){
+            errors.generomusical = "Debe seleccionar al menos un género musical";
+          }
         }
 
       }
@@ -476,7 +481,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           valid = true,
           errors = {};
 
-      var check = [['cactividades'],['ccomentario']];
+      var check = [['aescenario'],['propuestaartistica'], ['generoteatral']];
       //if(step>2 || step<1) return null;
 
       _.each(check, function(fld){
@@ -497,13 +502,20 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     validate: function(attrs, options) {
       var errors = {}
       if(this.get('rolePlaying').aescenica){
-        if (_.has(attrs,'cactividades') && (!attrs.cactividades )) {
-          errors.cactividades = "No puede ser nulo";
+        if (_.has(attrs,'aescenario') && (!attrs.aescenario )) {
+          errors.aescenario = "No puede ser nulo";
         }
         
-        if (_.has(attrs,'ccomentario') && (!attrs.ccomentario )) {
-          errors.ccomentario = "No puede ser nulo";
+        if (_.has(attrs,'propuestaartistica') && (!attrs.propuestaartistica )) {
+          errors.propuestaartistica = "No puede ser nulo";
         }
+
+        if (_.has(attrs,'generoteatral')){
+          if(!_.contains(attrs.generoteatral, true)){
+            errors.generoteatral = "Debe seleccionar al menos un tipo de práctica";
+          }
+        }
+
 
       }
 
@@ -607,7 +619,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     schema: {
       tlink:     {type: 'Select',   title: 'Tipo de enlace externo',   editorAttrs:{placeholder:'Tipo de referencia externa'},options: utils.referenceLinkOpLst },
       slug:      {type: 'Text',     title: 'Descripción',      editorAttrs:{placeholder:'Descripción/ comentario del enlace propuesto'}},
-      targeturl: {type: 'Text',     title: 'Enlace (URL)',      editorAttrs:{placeholder:'http://www.dominio.com.pais'}, dataType:'url', validators:['required', 'url']},
+      targeturl: {type: 'Text',     title: 'Enlace (URL en el formato indicado)',      editorAttrs:{placeholder:'http://www.dominio.com.pais'}, dataType:'url', validators:['required', 'url']},
     },
 
  
@@ -674,9 +686,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     var data = _.extend({}, model.get('solicitante'));
     return new Entities.ShowcaseStepOneFacet(data);
   };
+
   var _updateFacetStepOne = function(user, model){
     var solicitante = model.get('solicitante');
+
     solicitante = model.stepOne.attributes;
+
+    model.set ('tregistro', solicitante.tsolicitud);
+    
+    if(solicitante.tsolicitud === 'musica' ){
+      model.stepThree.set('rolePlaying',{musica: true});
+      model.stepFour.set( 'rolePlaying',{aescenica: false});
+    }else{
+      model.stepThree.set('rolePlaying',{musica: false});
+      model.stepFour.set( 'rolePlaying',{aescenica: true});
+    }
+
     model.set('solicitante', solicitante);
   };
 
@@ -685,6 +710,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     model.integrantes = model.get('responsable').integrantes;
     return new Entities.ShowcaseStepTwoFacet(data);
   };
+  
   var _updateFacetStepTwo = function(user, integrantes, model){
     var responsable = model.get('responsable');
     responsable = model.stepTwo.attributes;
@@ -710,6 +736,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     model.areferencias = model.get('aescenica').areferencias;
     return new Entities.ShowcaseStepFourFacet(model.get('aescenica'));
   };
+
   var _updateFacetStepFour = function(user, areferencias, model){
     //var rolePlaying = model.get('rolePlaying');
     var aescenica;
@@ -720,6 +747,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var _facetFactoryStepFive = function(model){
     var data = _.extend({}, model.get('pasajero'), model.get('evento'), model.get('tramo'), model.get('viaje'));
+    console.log('facetfactoryStepFive');
+    console.dir(data)
     return new Entities.ShowcaseStepFiveFacet(data);
   };
 

@@ -179,17 +179,21 @@ window.utils = {
 
     referenceLinkOpLst:[
         {val:'no_definido', label:'Seleccione opción'},
+        {val:'no_definido', label:'==== Tipos de enlaces para MUSICA ==='},
         {val:'bandcamp',    label:'Enlace BandCamp'},
         {val:'soundcloud',  label:'Enlace SoundCloud'},
         {val:'audio',       label:'Enlace audio'},
-        {val:'vivo',        label:'Enlace video show en vivo'},
+        {val:'vivo',        label:'Enlace presentación en vivo'},
         {val:'notasprensa', label:'Notas de Prensa'},
-        {val:'web',         label:'Sitio web del grupo'},
-        {val:'no_definido', label:'------------------'},
-        {val:'obra',        label:'Obra completa'},
-        {val:'trailer',     label:'Trailer / demo'},
         {val:'premio',      label:'Premios recibidos'},
+        {val:'web',         label:'Sitio web del grupo'},
+        {val:'no_definido', label:'==== Tipos de enlaces para ARTES ESCENICAS ==='},
+        {val:'trailer',     label:'Trailer / demo'},
         {val:'obra',        label:'Obra completa'},
+        {val:'vivo',        label:'Enlace presentación en vivo'},
+        {val:'notasprensa', label:'Notas de Prensa'},
+        {val:'premio',      label:'Premios recibidos'},
+        {val:'web',         label:'Sitio web del grupo'},
     ],
 
 

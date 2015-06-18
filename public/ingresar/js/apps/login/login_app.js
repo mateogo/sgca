@@ -56,6 +56,12 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 		API.loginUser(path);
   });
 	
+	DocManager.on('login:mica:inscripcion',function(){
+		console.log('Login MICA:');
+		DocManager.navigate('inscripcion/nueva');
+		API.loginMica(path);
+  });
+	
 	DocManager.addInitializer(function(){
 		new LoginApp.Router({
 			controller: API

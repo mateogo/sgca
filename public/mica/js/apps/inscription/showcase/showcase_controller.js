@@ -54,20 +54,26 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
           $.when(fetchingEntity).done(function(entity){
             console.log('MicaRequestApp.Showcase BEGIN [%s] [%s]', entity.whoami, entity.id);
 
-            entity.initDataForEdit()
+            entity.initDataForEdit();
 
             getSession().model = entity;
 
-            initDataForEdit(user, entity)
+            setDefaultData(user, entity, micarqst);
             defer.resolve(entity);
              
           });
 
         }else{
           // NO TIENE una inscripción
-          Message.warning('ATENCIÓN: es necesario INSCRIBIRSE en MICA y registrarse<br> para aplicar al SHOWCASE');
-          window.open('http://mica.cultura.gob.ar','_self');
-          //DocManager.trigger('micarequest:edit', model)
+          Message.confirm('ATENCIÓN: es necesario <strong>INSCRIBIRSE en MICA</strong><br> para aplicar al SHOWCASE MICA-2015.<br>Desea INSCRIBIRSE o VOLVER a la página de MICA?',['Volver','Inscribirme'], function(response){
+            console.log('iajuuu: [%s]', response);
+            if(response === 'Volver'){
+              window.open('http://mica.cultura.gob.ar','_self');
+            }else{
+              window.open('/ingresar/#mica','_self');
+            }
+
+          });
 
         }
 
@@ -81,11 +87,19 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
     return defer.promise();
   };
 
-  var initDataForEdit = function(user, model){
-    if(user){
-      model.get('responsable').rmail = user.get('mail');
-      model.stepTwo.set('rmail', user.get('mail'))
-      model.stepTwo.set('rmail2', user.get('mail'))
+  var setDefaultData = function(user, model, micarqst){
+
+    if(!model.id){
+      if(user){
+        model.get('responsable').rmail = user.get('mail');
+        model.stepTwo.set('rmail', user.get('mail'));
+        model.stepTwo.set('rmail2', user.get('mail'));
+        model.stepTwo.set('rname', micarqst.get('responsable').rname);
+        model.stepTwo.set('rdocnum', micarqst.get('responsable').rdocnum);
+        model.stepTwo.set('rtel', micarqst.get('responsable').rtel);
+        model.stepTwo.set('rcel', micarqst.get('responsable').rcel);
+      }
+
     }
 
   };
@@ -396,13 +410,55 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
     saveStep: function(step){
       var session = getSession();
-
+      console.log('Save  Step');
+ 
       session.model.update(session.currentUser, session.integrantes, session.mreferencias, session.areferencias, function(error, model){
+        session.views.stepThree.$('#musica').prop('checked', false);
+        session.views.stepFour.$('#aescenica').prop('checked', false);
+        session.views.stepThree.$('#infomusica').toggleClass("hidden", true);
+        session.views.stepFour.$('#infoaescenica').toggleClass("hidden", true);
+        if(session.model.get('solicitante').tsolicitud === 'musica' ){
+          session.views.stepThree.$('#musica').prop('checked', true);
+          session.views.stepThree.$('#infomusica').toggleClass("hidden", false);
+        }
+        if(session.model.get('solicitante').tsolicitud === 'aescenicas'){
+          session.views.stepFour.$('#aescenica').prop('checked', true);
+          session.views.stepFour.$('#infoaescenica').toggleClass("hidden", false);
+        }
 
       });
     },
 
   };
+  var checkReferencias = function(refCol, errors){
+    if(refCol.length === 0){
+      errors.referencias = 'ATENCIÓN: debe ingresar ENLACES <br> a modo de REFERENCIAS';
+      Message.error(errors.referencias);
+      return false;
+    }else if(refCol.length <5){
+      errors.referencias = 'ATENCIÓN: te recordamos la importancia de informar al menos 5 enlaces';
+      Message.warning(errors.referencias);
+      return true;
+
+    }else{
+      return true;
+    }
+  }
+
+  DocManager.reqres.setHandler("validate:mreferencias", function(view){
+    console.log('Validating mreferencias');
+    var session = getSession();
+    var errors = {};
+    return checkReferencias(session.mreferencias, errors);
+
+  });
+
+  DocManager.reqres.setHandler("validate:areferencias", function(view){
+    console.log('Validating areferencias');
+    var session = getSession();
+    var errors = {};
+    return checkReferencias(session.areferencias, errors);
+  });
 
   DocManager.on("showcase:wizard:next:step", function(step){
     console.log('Ready to save STEP: [%s]', step)

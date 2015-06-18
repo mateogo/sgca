@@ -1,64 +1,67 @@
 <div id="comprador-form" class="row">
   <div class="col-xs-12">
-    <hr>     
-    <div class="control-label heading"><strong>Práctica artística (marcar los que correspondan)</strong></div>
-    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a00">
-      <input type="checkbox" id="a00" class="sr-only" 
-        <%= generoteatral.teatro ? 'checked="checked"' : '' %> 
-        name="generoteatral" value="teatro" > <span class="checkbox-label">Teatro</span>
-    </label>
-    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a01">
-      <input type="checkbox" id="a01" class="sr-only" 
-        <%= generoteatral.teatrodanza ? 'checked="checked"' : '' %> 
-        name="generoteatral" value="teatrodanza" > <span class="checkbox-label">Teatro Danza</span>
-    </label>
-    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a02">
-      <input type="checkbox" id="a02" class="sr-only" 
-        <%= generoteatral.titeres ? 'checked="checked"' : '' %> 
-        name="generoteatral" value="titeres" > <span class="checkbox-label">Títeres</span>
-    </label>
-    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a03">
-      <input type="checkbox" id="a03" class="sr-only" 
-        <%= generoteatral.circo ? 'checked="checked"' : '' %> 
-        name="generoteatral" value="circo" > <span class="checkbox-label">Circo</span>
-    </label>
-    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a04">
-      <input type="checkbox" id="a04" class="sr-only" 
-        <%= generoteatral.nuevastecnologias ? 'checked="checked"' : '' %> 
-        name="generoteatral" value="nuevastecnologias" > <span class="checkbox-label">Nuevas Tecnologías</span>
-    </label>
-    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a05">
-      <input type="checkbox" id="a05" class="sr-only" 
-        <%= generoteatral.performance ? 'checked="checked"' : '' %> 
-        name="generoteatral" value="performance" > <span class="checkbox-label">Performance</span>
-    </label>
-    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a06">
-      <input type="checkbox" id="a06" class="sr-only" 
-        <%= generoteatral.comediamusical ? 'checked="checked"' : '' %> 
-        name="generoteatral" value="comediamusical" > <span class="checkbox-label">Comedia Musical</span>
-    </label>
-    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a07">
-      <input type="checkbox" id="a07" class="sr-only" 
-        <%= generoteatral.opereta ? 'checked="checked"' : '' %> 
-        name="generoteatral" value="opereta" > <span class="checkbox-label">Opereta</span>
-    </label>
-    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a08">
-      <input type="checkbox" id="a08" class="sr-only" 
-        <%= generoteatral.otros ? 'checked="checked"' : '' %> 
-        name="generoteatral" value="otros" > <span class="checkbox-label">Otros</span>
-    </label>
+    <hr>
+    <label for='generoteatral'>Práctica artística (marcar los que correspondan)</label> 
+    <div id='generoteatral' class="form-group">
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a00">
+        <input type="checkbox" id="a00" class="sr-only" 
+          <%= generoteatral.teatro ? 'checked="checked"' : '' %> 
+          name="generoteatral" value="teatro" > <span class="checkbox-label">Teatro</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a01">
+        <input type="checkbox" id="a01" class="sr-only" 
+          <%= generoteatral.teatrodanza ? 'checked="checked"' : '' %> 
+          name="generoteatral" value="teatrodanza" > <span class="checkbox-label">Teatro Danza</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a02">
+        <input type="checkbox" id="a02" class="sr-only" 
+          <%= generoteatral.titeres ? 'checked="checked"' : '' %> 
+          name="generoteatral" value="titeres" > <span class="checkbox-label">Títeres</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a03">
+        <input type="checkbox" id="a03" class="sr-only" 
+          <%= generoteatral.circo ? 'checked="checked"' : '' %> 
+          name="generoteatral" value="circo" > <span class="checkbox-label">Circo</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a04">
+        <input type="checkbox" id="a04" class="sr-only" 
+          <%= generoteatral.nuevastecnologias ? 'checked="checked"' : '' %> 
+          name="generoteatral" value="nuevastecnologias" > <span class="checkbox-label">Nuevas Tecnologías</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a05">
+        <input type="checkbox" id="a05" class="sr-only" 
+          <%= generoteatral.performance ? 'checked="checked"' : '' %> 
+          name="generoteatral" value="performance" > <span class="checkbox-label">Performance</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a06">
+        <input type="checkbox" id="a06" class="sr-only" 
+          <%= generoteatral.comediamusical ? 'checked="checked"' : '' %> 
+          name="generoteatral" value="comediamusical" > <span class="checkbox-label">Comedia Musical</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a07">
+        <input type="checkbox" id="a07" class="sr-only" 
+          <%= generoteatral.opereta ? 'checked="checked"' : '' %> 
+          name="generoteatral" value="opereta" > <span class="checkbox-label">Opereta</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="a08">
+        <input type="checkbox" id="a08" class="sr-only" 
+          <%= generoteatral.otros ? 'checked="checked"' : '' %> 
+          name="generoteatral" value="otros" > <span class="checkbox-label">Otros</span>
+      </label>
+      <span class="help-block"></span>
+    </div>
 
     <hr>
 
     <div class="row">
-      <div class="form-group col-sm-12">
+      <div class="form-group col-sm-12 required" >
         <label class="control-label" for="propuestaartistica">Propuesta (descripción y síntesis argumental) </label>
         <textarea id="propuestaartistica" class="form-control" rows="6" maxlength="500" placeholder="Descripción de la propuesta artística" name="propuestaartistica"><%= propuestaartistica %></textarea>
         <span class="help-block"></span>
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-sm-12">
+      <div class="form-group col-sm-12 required">
         <label class="control-label" for="aescenario">Descripción de la planta del aescenario</label>
         <textarea id="aescenario" class="form-control" rows="6" maxlength="500" placeholder="Describa el tipo de espacio, ficha técnica, plano de luces, planta escenográfica, requerimientos técnicos y de escenario" name="aescenario"><%= aescenario %></textarea>
         <span class="help-block"></span>

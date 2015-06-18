@@ -11,39 +11,41 @@
 <div>
   <div class="row">
     <div class="form-group required col-sm-12">
-        <label class="control-label" for="rname">Nombre del Representante (booking, manager, promotor, responsable )</label>
+        <label class="control-label" for="rname">Nombre del Representante (booking, manager, promotor, responsable). Los cambios que realice en esta sección NO modifican los datos consignados en la inscripción general del MICA, aplican exclusivamente al evento Showcase.</label>
         <input type="text" id="rname" class="form-control" placeholder="Indique razón social ó nombre y apellido" name="rname" value="<%= rname %>">
     </div>
 
   </div>
 </div>
 
-<div>
-  <div class="row">
-    <div class="form-group col-sm-4 required">
-        <label class="control-label" for="rdocnum">DNI</label>
-        <input type="text" id="rdocnum" class="form-control" placeholder="número de documento" name="rdocnum" value="<%= rdocnum %>">
-        <!--A completar automáticamente-->
-    </div>
-
-
-    <div class="form-group col-sm-4 required">
-        <label class="control-label" for="rtel">Teléfono</label>
-        <input type="text" id="rtel" class="form-control" placeholder="+54 (área) número" name="rtel" value="<%= rtel %>">
-    </div>
-
-    <div class="form-group col-sm-4 required">
-        <label class="control-label" for="rcel">Teléfono móvil</label>
-        <input type="text" id="rcel" class="form-control" placeholder="+54 (área) número" name="rcel" value="<%= rcel %>">
-    </div>
+<div class="row">
+  <div class="form-group col-sm-4 required">
+      <label class="control-label" for="rdocnum">DNI</label>
+      <input type="text" id="rdocnum" class="form-control" placeholder="número de documento" name="rdocnum" value="<%= rdocnum %>">
+      <!--A completar automáticamente-->
+      <span class="help-block"></span>
   </div>
-  <div class="row">
-      <div class="form-group col-sm-12 required">
-          <label class="control-label" for="rmail">Correo electrónico representante</label>
-          <input type="text" id="rmail" class="form-control" placeholder="Email" name="rmail" value="<%= rmail %>" >
-          <!--A completar automáticamente-->
-      </div>
-    </div>
+
+
+  <div class="form-group col-sm-4 required">
+      <label class="control-label" for="rtel">Teléfono</label>
+      <input type="text" id="rtel" class="form-control" placeholder="+54 (área) número" name="rtel" value="<%= rtel %>">
+      <span class="help-block"></span>
+  </div>
+
+  <div class="form-group col-sm-4 required">
+      <label class="control-label" for="rcel">Teléfono móvil</label>
+      <input type="text" id="rcel" class="form-control" placeholder="+54 (área) número" name="rcel" value="<%= rcel %>">
+      <span class="help-block"></span>
+  </div>
+</div>
+<div class="row">
+  <div class="form-group col-sm-12 required">
+      <label class="control-label" for="rmail2">Correo electrónico representante (para ser utilizado en toda comunicación referente al Showcase)</label>
+      <input type="text" id="rmail2" class="form-control" placeholder="Correo electronico" name="rmail2" value="<%= rmail2 %>" >
+      <!--A completar automáticamente-->
+      <span class="help-block"></span>
+  </div>
 </div>
 
 <hr class="spacer">

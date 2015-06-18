@@ -73,10 +73,35 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
     },
 
     onShow: function(){
+      var self = this;
 
 
       $('#myWizard').wizard();
 
+
+      $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
+        evt.stopPropagation();
+        var step = data.step;
+        var currentStep = parseInt(step);
+        var forward = data.direction === 'next';
+        var targetStep = currentStep + (forward ? 1 : -1);
+        console.log('wizard LAYOUT:[%s]/[%s] frwd: [%s]', currentStep, targetStep , forward);
+
+        if(targetStep === 3 && self.model.get('solicitante').tsolicitud !== 'musica' ){
+            evt.preventDefault();
+            $('#myWizard').wizard('selectedItem', {
+              step: (forward ? '4' : '2')
+            });          
+
+        }
+        if(targetStep === 4 && self.model.get('solicitante').tsolicitud !== 'aescenicas'){
+            evt.preventDefault();
+            $('#myWizard').wizard('selectedItem', {
+              step: (forward ? '5' : '3')
+            });          
+        }
+
+      });
 
     },
 
@@ -172,28 +197,17 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
     onRender: function(){
       var self = this;
       $('#myWizard').wizard();
+      registerStepWizardAction(self, '1');
 
       // INIT radio tipo juridico
       self.$('.radio-custom').radio();
-      if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
 
       // ayuda popover
       self.$('[data-toggle="popover"]').popover()
       self.toggleStateInput();
 
       helpPopUp(self);
-
       
-/*      var croppicOptions = {
-        uploadUrl:'/img',
-        cropUrl:'/cropImg',
-        imgEyecandy:true,
-        loaderHtml:'<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> '
-      };
-      console.log('YES, [%s]',self.$('#cropContainerEyecandy'))
-      var objn = self.$('#cropContainerEyecandy');
-      var cropContainerEyecandy = new Croppic('cropContainerEyecandy',objn , croppicOptions);
-*/
       var $div = self.$el.find('.js-avatar').append($('<div></div>'));
 
       self.avatarEditor = new Showcase.AvatarEditor({
@@ -201,25 +215,6 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
         el: $div,
       })
       self.avatarEditor.render();
-
-
-      $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        evt.stopPropagation();
-        var step = data.step;
-        if(step == 1){
-          if(data.direction === 'next'){
-            if(!self.validateStep(step)){
-              evt.preventDefault();
-              $('#myWizard').wizard('selectedItem', {step: step});
-            }else{
-
-              DocManager.trigger('showcase:wizard:next:step', step);
-
-            }
-          }
-        } 
-      });
-
 
     },
     validateStep: function(step){
@@ -340,24 +335,8 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
       self.$('.checkbox-custom').checkbox();
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
 
-      $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        evt.stopPropagation();
-        var step = data.step;
+      registerStepWizardAction(self, '2');
 
-        if(step == 2){
-          //console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
-          if(data.direction === 'next'){
-            if(!self.validateStep(step)){
-              evt.preventDefault();
-              $('#myWizard').wizard('selectedItem', {step: step});
-            }else{
-
-              DocManager.trigger('showcase:wizard:next:step', step);
-            }
-          }
-        }
-
-      });    
     },
     validateStep: function(step){
       var errors = this.model.validateStep(step);
@@ -372,7 +351,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
   });
 
   //*************************************************************
-  //           FORM STEP-TRES: VENDEDOR
+  //           FORM STEP-TRES: MUSICA
   //*************************************************************
   Showcase.StepThreeLayout = Marionette.LayoutView.extend({
 
@@ -401,6 +380,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
     openMusica: function(ev){
       var self = this,
           $buttonswitch = self.$('#data.switch input#musica');
+          
       self.$('#infomusica').toggleClass("hidden", !$buttonswitch.is(":checked"));
 
       if($buttonswitch.is(":checked")){
@@ -467,25 +447,9 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
           }
 
       });
-
- 
-      $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        evt.stopPropagation();
-        var step = data.step;
-        if(step == 3){
-
-          if(data.direction === 'next'){
-            if(!self.validateStep(step)){
-              evt.preventDefault();
-              $('#myWizard').wizard('selectedItem', {step: step});
-            }else{
-
-              DocManager.trigger('showcase:wizard:next:step', step);
-            }
-          }
-        }
-      });    
+      registerStepWizardAction(self, '3');
     },
+
     events: {
       'click .js-btn-add1': 'linksAudio',
       'click .js-btn-remove': 'removeAudio',
@@ -632,24 +596,8 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
           }
 
       });
+      registerStepWizardAction(self, '4');
 
-      $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        evt.stopPropagation();
-        var step = data.step;
-        if(step == 4){
-          if(data.direction === 'next'){
-            if(!self.validateStep(step)){
-              evt.preventDefault();
-              $('#myWizard').wizard('selectedItem', {step: step});
-            }else{
-
-              DocManager.trigger('showcase:wizard:next:step', step);
-
-            }
-          }
-        }
-
-      });    
     },
     events: {
     },
@@ -1151,6 +1099,57 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 //=======================
 // Helper functions
 // =======================
+
+  var registerStepWizardAction = function(stepView, currentStep){
+    var step;
+
+    $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
+      evt.stopPropagation();
+      step = data.step;
+      //console.log('wizard step:[%s] currentStep:[%s]', step, currentStep );
+      if(step == currentStep && data.direction === 'next'){
+        if(!stepView.validateStep(step)){
+          evt.preventDefault();
+          $('#myWizard').wizard('selectedItem', {step: step});
+
+        }else{
+          if(currentStep === '3'){
+            console.log('triggering validating mreferencias')
+
+            if(DocManager.request('validate:mreferencias', stepView)){
+              console.log('1')
+
+              DocManager.trigger('showcase:wizard:next:step', step);
+
+            }else{
+              console.log('2')
+              evt.preventDefault();
+              $('#myWizard').wizard('selectedItem', {step: step});
+            }
+ 
+          }else if(currentStep === '4'){
+
+            if(DocManager.request('validate:areferencias', stepView)){
+
+              DocManager.trigger('showcase:wizard:next:step', step);
+
+            }else{
+              evt.preventDefault();
+              $('#myWizard').wizard('selectedItem', {step: step});
+            }
+
+          }else{
+              console.log('3')
+            DocManager.trigger('showcase:wizard:next:step', step);
+
+          }
+
+
+        }
+      }
+    });
+  };
+
   var helpPopUp = function(view){
 
       var $targets = view.$( '[rel~=tooltip]' ),
@@ -1220,84 +1219,3 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
     
 });
-
-/*
-
-        //AGREGAR CAMPOS ADICIONALES PARA VENDEDOR
-        $(document).on('click', '.btn-add', function(e) {e.preventDefault();
-            var controlForm = $('.vaudiocontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vaudio').val('');
-            controlForm.find('.ventry:not(:last) .btn-add')
-                .removeClass('btn-add').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e){
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-        $(document).on('click', '.btn-add2', function(e) {e.preventDefault();
-            var controlForm = $('.vvideocontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vvideo').val('');
-            controlForm.find('.ventry:not(:last) .btn-add2')
-                .removeClass('btn-add2').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e) {
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-        $(document).on('click', '.btn-add3', function(e) {e.preventDefault();
-            var controlForm = $('.vimgcontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vimg').val('');
-            controlForm.find('.ventry:not(:last) .btn-add3')
-                .removeClass('btn-add3').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e) {
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-        $(document).on('click', '.btn-add4', function(e) {e.preventDefault();
-            var controlForm = $('.vwebcontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vweb').val('');
-            controlForm.find('.ventry:not(:last) .btn-add4')
-                .removeClass('btn-add4').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e) {
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-        $(document).on('click', '.btn-add5', function(e) {e.preventDefault();
-            var controlForm = $('.vothercontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vother').val('');
-            controlForm.find('.ventry:not(:last) .btn-add5')
-                .removeClass('btn-add5').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e) {
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-
-*/
