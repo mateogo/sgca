@@ -79,15 +79,17 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
       $('#myWizard').wizard();
 
 
+/*
       $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
         evt.stopPropagation();
         var step = data.step;
         var currentStep = parseInt(step);
         var forward = data.direction === 'next';
         var targetStep = currentStep + (forward ? 1 : -1);
-        //console.log('wizard LAYOUT:[%s]/[%s] frwd: [%s]', currentStep, targetStep , forward);
+        console.log('wizard LAYOUT:[%s]/[%s] frwd: [%s]', currentStep, targetStep , forward);
 
         if(targetStep === 3 && self.model.get('solicitante').tsolicitud !== 'musica' ){
+          console.log('salteo 3')
             evt.preventDefault();
             $('#myWizard').wizard('selectedItem', {
               step: (forward ? '4' : '2')
@@ -95,6 +97,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
         }
         if(targetStep === 4 && self.model.get('solicitante').tsolicitud !== 'aescenicas'){
+          console.log('salteo 4')
             evt.preventDefault();
             $('#myWizard').wizard('selectedItem', {
               step: (forward ? '5' : '3')
@@ -103,6 +106,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
       });
 
+*/    
     },
 
     regions: {
