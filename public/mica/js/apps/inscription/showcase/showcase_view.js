@@ -1117,7 +1117,8 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
           $('#myWizard').wizard('selectedItem', {step: step});
 
         }else{
-          if(currentStep === '3'){
+          if(currentStep === '3' && stepView.model.get('rolePlaying').musica) {
+
 
             if(DocManager.request('validate:mreferencias', stepView)){
 
@@ -1130,7 +1131,8 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
             }
  
-          }else if(currentStep === '4'){
+          }else if(currentStep === '4' && stepView.model.get('rolePlaying').aescenica){
+
 
             if(DocManager.request('validate:areferencias', stepView)){
 
