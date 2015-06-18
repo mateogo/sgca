@@ -35,13 +35,13 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
         fetchingMicaRequest;
 
     dao.gestionUser.getUser(DocManager, function (user){
-      console.log('Dao Get Current user: [%s]', user.get('username'));
+      //console.log('Dao Get Current user: [%s]', user.get('username'));
       getSession().currentUser = user;
 
       //Verificación: el usuario YA TIENE una inscripción en MICA
       fetchingMicaRequest = DocManager.request("micarqst:factory:new", user, "mica");
       $.when(fetchingMicaRequest).done(function(micarqst){
-        console.log('FETCHING MicaRequest [%s] [%s]', micarqst.whoami, micarqst.id);
+        //console.log('FETCHING MicaRequest [%s] [%s]', micarqst.whoami, micarqst.id);
         if(micarqst && micarqst.id ){
           // YA TIENE una inscripción
 
@@ -52,7 +52,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
           }
          
           $.when(fetchingEntity).done(function(entity){
-            console.log('MicaRequestApp.Showcase BEGIN [%s] [%s]', entity.whoami, entity.id);
+            //console.log('MicaRequestApp.Showcase BEGIN [%s] [%s]', entity.whoami, entity.id);
 
             entity.initDataForEdit();
 
@@ -66,7 +66,6 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
         }else{
           // NO TIENE una inscripción
           Message.confirm('ATENCIÓN: es necesario <strong>INSCRIBIRSE en MICA</strong><br> para aplicar al SHOWCASE MICA-2015.<br>Desea INSCRIBIRSE o VOLVER a la página de MICA?',['Volver','Inscribirme'], function(response){
-            console.log('iajuuu: [%s]', response);
             if(response === 'Volver'){
               window.open('http://mica.cultura.gob.ar','_self');
             }else{
@@ -256,7 +255,6 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
       mailModel.setTemplate(template);      
       mailModel.buildMailContent();
       //console.log(sendMail.getData());
-
       //console.dir(mailModel.attributes);
 
       mailModel.sendmail();
@@ -410,7 +408,6 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
     saveStep: function(step){
       var session = getSession();
-      console.log('Save  Step');
  
       session.model.update(session.currentUser, session.integrantes, session.mreferencias, session.areferencias, function(error, model){
         session.views.stepThree.$('#musica').prop('checked', false);
@@ -446,7 +443,6 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
   }
 
   DocManager.reqres.setHandler("validate:mreferencias", function(view){
-    console.log('Validating mreferencias');
     var session = getSession();
     var errors = {};
     return checkReferencias(session.mreferencias, errors);
@@ -454,14 +450,12 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
   });
 
   DocManager.reqres.setHandler("validate:areferencias", function(view){
-    console.log('Validating areferencias');
     var session = getSession();
     var errors = {};
     return checkReferencias(session.areferencias, errors);
   });
 
   DocManager.on("showcase:wizard:next:step", function(step){
-    console.log('Ready to save STEP: [%s]', step)
     API.saveStep(step);
   });
 

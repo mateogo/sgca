@@ -279,21 +279,18 @@ window.dao = {
 
         getActionListType: function(){
             var grupo = this.getUserGroup();
-            console.log('USER: [%s]', grupo);
             var listado = 'documentos';
  
             return listado;
         },
         getBudgetListType: function(){
             var grupo = this.getUserGroup();
-            console.log('USER: [%s]', grupo);
             var listado = 'documentos';
 
             return listado;
         },
         getDocumListType: function(){
             var grupo = this.getUserGroup();
-            console.log('USER: [%s]', grupo);
             var listado = 'items';
             if(grupo === 'tecnica'){
                 listado = 'items';
@@ -323,7 +320,6 @@ window.dao = {
             if(! this.user){
                 this.fetchUser(cb);  
             } else {
-                console.log('getUser: currentUser')
                 cb(this.user);
             }
         },
@@ -333,7 +329,6 @@ window.dao = {
         },
         
         fetchUser: function(cb){
-            console.log('fetchUser: currentUser');
             var self = this;
             $.ajax({
                 type: 'get',
@@ -845,9 +840,7 @@ window.dao = {
         var documentsRender = function(items){
             //console.log('DOCUM renderview:callback: [%s]',spec.documentsselector);
             if(items) spec.documents = items;
-            console.log('antes de crear Documents view');
             spec.documview = new DocumentsView({collection:spec.documents});
-            console.log('doppo de crear Documents view');
             $(spec.documentsselector, spec.context).html(spec.documview.render().el);
         };
         var notasRender = function(items){
@@ -870,7 +863,6 @@ window.dao = {
         };
         var personsfromuserRender = function(persons){
             if(persons) spec.persons = persons;
-            console.log('personsfromuserRender:begins [%s] length:[%s]', spec.personsselector, spec.persons.length)
             spec.anview = new PersonsFromUserView({model:spec.persons});
             $(spec.personsselector,spec.context).html(spec.anview.render().el);
         };

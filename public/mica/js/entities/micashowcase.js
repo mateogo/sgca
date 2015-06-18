@@ -327,7 +327,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     validateStep: function(step){
-      console.log('validate step [%s]',step)
       var self = this,
           valid = true,
           errors = {};
@@ -624,7 +623,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
  
     validate: function(attrs, options) {
-      console.log('validate Referencia;')
       var errors = {};
 
       if( ! _.isEmpty(errors)){
@@ -747,8 +745,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   var _facetFactoryStepFive = function(model){
     var data = _.extend({}, model.get('pasajero'), model.get('evento'), model.get('tramo'), model.get('viaje'));
-    console.log('facetfactoryStepFive');
-    console.dir(data)
     return new Entities.ShowcaseStepFiveFacet(data);
   };
 

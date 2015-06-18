@@ -85,7 +85,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
         var currentStep = parseInt(step);
         var forward = data.direction === 'next';
         var targetStep = currentStep + (forward ? 1 : -1);
-        console.log('wizard LAYOUT:[%s]/[%s] frwd: [%s]', currentStep, targetStep , forward);
+        //console.log('wizard LAYOUT:[%s]/[%s] frwd: [%s]', currentStep, targetStep , forward);
 
         if(targetStep === 3 && self.model.get('solicitante').tsolicitud !== 'musica' ){
             evt.preventDefault();
@@ -1114,17 +1114,16 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
         }else{
           if(currentStep === '3'){
-            console.log('triggering validating mreferencias')
 
             if(DocManager.request('validate:mreferencias', stepView)){
-              console.log('1')
 
               DocManager.trigger('showcase:wizard:next:step', step);
 
             }else{
-              console.log('2')
+
               evt.preventDefault();
               $('#myWizard').wizard('selectedItem', {step: step});
+
             }
  
           }else if(currentStep === '4'){
@@ -1139,7 +1138,6 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
             }
 
           }else{
-              console.log('3')
             DocManager.trigger('showcase:wizard:next:step', step);
 
           }
