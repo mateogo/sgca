@@ -355,7 +355,6 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     },
     
     gridFactory: function(collection, columns){
-      console.log('gridFactory: [%s]', collection.whoami)
       this.grid = new Backgrid.Grid({
           className: 'table table-condensed table-bordered table-hover',
           collection: this.collection,
@@ -387,7 +386,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       self.layout.on('save:crud:editor', function(){
         self.form.commit();
         self.collection.add(self.form.model);
-        console.log('save:crud:editor [%s][%s]', self.form.model.whoami, self.get('editEventName'));
+        //console.log('save:crud:editor [%s][%s]', self.form.model.whoami, self.get('editEventName'));
 
 
         DocManager.trigger(self.get('editEventName'), new self.options.editModel());
