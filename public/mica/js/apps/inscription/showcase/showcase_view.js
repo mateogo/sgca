@@ -1077,6 +1077,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
       if(!session.views.stepOne.validateStep(step)) {
         evt.preventDefault();
+        Message.warning('Debe completar los campos obligatorios para avanzar');
         $('#myWizard').wizard('selectedItem', {step: step});
       }else{
         DocManager.trigger('showcase:wizard:next:step', step);
@@ -1087,6 +1088,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
       if(!session.views.stepTwoForm.validateStep(step)) {
         evt.preventDefault();
+        Message.warning('Debe completar los campos obligatorios para avanzar');
         $('#myWizard').wizard('selectedItem', {step: step});
       }else{
         DocManager.trigger('showcase:wizard:next:step', step);
@@ -1097,6 +1099,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
       if(!session.views.stepThreeForm.validateStep(step) || !checkMusicReferences(getSession().mreferencias)) {
         evt.preventDefault();
+        Message.warning('Debe completar los campos obligatorios para avanzar');
         $('#myWizard').wizard('selectedItem', {step: step});
       }else{
         DocManager.trigger('showcase:wizard:next:step', step);
@@ -1107,6 +1110,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
       if(!session.views.stepFourForm.validateStep(step) || !checkAescenicReferences(getSession().areferencias)) {
         evt.preventDefault();
+        Message.warning('Debe completar los campos obligatorios para avanzar');
         $('#myWizard').wizard('selectedItem', {step: step});
       }else{
         DocManager.trigger('showcase:wizard:next:step', step);
