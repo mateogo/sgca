@@ -77,36 +77,8 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
 
       $('#myWizard').wizard();
+      registerStepWizardAction();
 
-
-/*
-      $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        evt.stopPropagation();
-        var step = data.step;
-        var currentStep = parseInt(step);
-        var forward = data.direction === 'next';
-        var targetStep = currentStep + (forward ? 1 : -1);
-        console.log('wizard LAYOUT:[%s]/[%s] frwd: [%s]', currentStep, targetStep , forward);
-
-        if(targetStep === 3 && self.model.get('solicitante').tsolicitud !== 'musica' ){
-          console.log('salteo 3')
-            evt.preventDefault();
-            $('#myWizard').wizard('selectedItem', {
-              step: (forward ? '4' : '2')
-            });          
-
-        }
-        if(targetStep === 4 && self.model.get('solicitante').tsolicitud !== 'aescenicas'){
-          console.log('salteo 4')
-            evt.preventDefault();
-            $('#myWizard').wizard('selectedItem', {
-              step: (forward ? '5' : '3')
-            });          
-        }
-
-      });
-
-*/    
     },
 
     regions: {
@@ -127,6 +99,13 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
       'click .js-definitivo': 'submitFormDefinitivo',
       'click  .js-termsofuse': 'termsOfUse',
       'change #legal': 'change',
+    },
+
+    wizardclick: function(e){
+      //'click  .steps li': 'wizardclick',
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
     },
 
     change: function(e){
@@ -201,7 +180,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
     onRender: function(){
       var self = this;
       $('#myWizard').wizard();
-      registerStepWizardAction(self, '1');
+      //registerStepWizardAction(self, '1');
 
       // INIT radio tipo juridico
       self.$('.radio-custom').radio();
@@ -221,6 +200,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
       self.avatarEditor.render();
 
     },
+
     validateStep: function(step){
       var errors = this.model.validateStep(step);
       this.onFormDataInvalid((errors||{}));
@@ -339,7 +319,8 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
       self.$('.checkbox-custom').checkbox();
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
 
-      registerStepWizardAction(self, '2');
+      $('#myWizard').wizard();
+      //registerStepWizardAction(self, '2');
 
     },
     validateStep: function(step){
@@ -435,23 +416,9 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
       self.$('.radio-custom').radio();
       self.$('.checkbox-custom').checkbox();
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
-      initTagsInput(self, 'vdescriptores');
 
-
-
-      //self.$('.togglejuridica').addClass('hidden');
-      _.each(['aescenicas', 'audiovisual', 'disenio', 'editorial', 'musica', 'videojuegos'], function(item){
-          if(item === self.model.get('vactividades')){
-
-          }else{
-            var selector = '#toggle-v' + item;
-
-            self.$(selector).addClass('hidden');
-
-          }
-
-      });
-      registerStepWizardAction(self, '3');
+      $('#myWizard').wizard();
+      //registerStepWizardAction(self, '3');
     },
 
     events: {
@@ -587,20 +554,9 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
       self.$('.checkbox-custom').checkbox();
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
       //self.$('.togglejuridica').addClass('hidden');
-      initTagsInput(self, 'cdescriptores');
 
-      _.each(['aescenicas', 'audiovisual', 'disenio', 'editorial', 'musica', 'videojuegos'], function(item){
-          if(item === self.model.get('cactividades')){
-
-          }else{
-            var selector = '#toggle-c' + item;
-
-            self.$(selector).addClass('hidden');
-
-          }
-
-      });
-      registerStepWizardAction(self, '4');
+      $('#myWizard').wizard();
+      //registerStepWizardAction(self, '4');
 
     },
     events: {
@@ -1103,56 +1059,151 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 //=======================
 // Helper functions
 // =======================
+  var getSession = function(){
 
-  var registerStepWizardAction = function(stepView, currentStep){
-    var step;
+    return Showcase.Session;
+
+  }
+
+  var validateWizardStep = function(evt, data){
+    evt.stopPropagation();
+    var step = data.step;
+    var currentStep = parseInt(step);
+    var forward = data.direction === 'next';
+    var targetStep = currentStep + (forward ? 1 : -1);
+    var session = getSession();
+    //console.log('wizard LAYOUT [%s] new age:[%s]/[%s] frwd: [%s] session[%s]',step, currentStep, targetStep , forward,session );
+    if(step === 1){
+
+      if(!session.views.stepOne.validateStep(step)) {
+        evt.preventDefault();
+        $('#myWizard').wizard('selectedItem', {step: step});
+      }else{
+        DocManager.trigger('showcase:wizard:next:step', step);
+        setNextStep(evt, data, step, currentStep, forward, targetStep)
+      }
+ 
+    }else if(step === 2){
+
+      if(!session.views.stepTwoForm.validateStep(step)) {
+        evt.preventDefault();
+        $('#myWizard').wizard('selectedItem', {step: step});
+      }else{
+        DocManager.trigger('showcase:wizard:next:step', step);
+        setNextStep(evt, data, step, currentStep, forward, targetStep)
+      }
+
+    }else if(step === 3){
+
+      if(!session.views.stepThreeForm.validateStep(step) || !checkMusicReferences(getSession().mreferencias)) {
+        evt.preventDefault();
+        $('#myWizard').wizard('selectedItem', {step: step});
+      }else{
+        DocManager.trigger('showcase:wizard:next:step', step);
+        setNextStep(evt, data, step, currentStep, forward, targetStep)
+      }
+
+    }else if(step === 4){
+
+      if(!session.views.stepFourForm.validateStep(step) || !checkAescenicReferences(getSession().areferencias)) {
+        evt.preventDefault();
+        $('#myWizard').wizard('selectedItem', {step: step});
+      }else{
+        DocManager.trigger('showcase:wizard:next:step', step);
+        setNextStep(evt, data, step, currentStep, forward, targetStep)
+      }
+
+    }
+
+  };
+
+  var setNextStep = function (evt, data, step, currentStep, forward, targetStep){
+    //console.log('NEXT STEP [%s] new age:[%s]/[%s] frwd: [%s] ',getSession().model.get('solicitante').tsolicitud, currentStep, targetStep, forward );
+    if(targetStep === 3 && getSession().model.get('solicitante').tsolicitud !== 'musica' ){
+      evt.preventDefault();
+      $('#myWizard').wizard('selectedItem', {
+        step: (forward ? 4 : 2)
+      });
+    }
+    if(targetStep === 4 && getSession().model.get('solicitante').tsolicitud !== 'aescenicas'){
+        evt.preventDefault();
+        $('#myWizard').wizard('selectedItem', {
+          step: (forward ? 5 : 3)
+        });
+    }
+  };
+
+  var checkMusicReferences = function(refCol){
+    var errors = {};
+
+    if(refCol.length === 0){
+      errors.referencias = 'ATENCIÓN: debe ingresar ENLACES <br> a modo de REFERENCIAS';
+      Message.error(errors.referencias);
+      return false;
+
+    }else if(refCol.length <5){
+      errors.referencias = 'ATENCIÓN: te recordamos la importancia de informar al menos 5 enlaces';
+      Message.warning(errors.referencias);
+      return true;
+
+    }else{
+      return true;
+    }
+  };
+
+  var checkAescenicReferences = function(refCol){
+    var errors = {};
+    if(refCol.length === 0){
+      errors.referencias = 'ATENCIÓN: En la sección ENLACES, debe ingresar <br> a modo de REFERENCIAS';
+      Message.error(errors.referencias);
+      return false;
+
+    }else if(! minAescenicReferences(refCol)){
+      errors.referencias = 'ATENCIÓN:  En la sección ENLACES, debe ingresar al menos:<ul><li>1 (un) ENLACE a la Obra Completa</li><li>1 (un) ENLACE al Trailer</li></ul>';
+      Message.confirm(errors.referencias, ['Aceptar'], function(response){});
+      return false;
+
+    }else if(refCol.length <5){
+      errors.referencias = 'ATENCIÓN: le recordamos la importancia de informar al menos 5 enlaces';
+      Message.warning(errors.referencias);
+      return true;
+
+    }else{
+      return true;
+    }
+  };
+  var minAescenicReferences = function(col){
+    var countByTlink = _.countBy(col.toJSON(), function(item){
+      return item.tlink;
+    });
+
+    if(!countByTlink.obra || !countByTlink.trailer){
+      return false;
+    }
+    return true;
+
+  };
+
+  var registerStepWizardAction = function(){
 
     $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
       evt.stopPropagation();
-      step = data.step;
-      //console.log('wizard step:[%s] currentStep:[%s]', step, currentStep );
-      if(step == currentStep && data.direction === 'next'){
-        if(!stepView.validateStep(step)){
-          evt.preventDefault();
-          $('#myWizard').wizard('selectedItem', {step: step});
+      var step = data.step;
+      var currentStep = parseInt(step);
+      var forward = data.direction === 'next';
+      var targetStep = currentStep + (forward ? 1 : -1);
+      var session = getSession();
 
-        }else{
-          if(currentStep === '3' && stepView.model.get('rolePlaying').musica) {
+      if(data.direction === 'next'){
+        validateWizardStep(evt, data);
+      }else{
+        setNextStep(evt, data, step, currentStep, forward, targetStep)
 
-
-            if(DocManager.request('validate:mreferencias', stepView)){
-
-              DocManager.trigger('showcase:wizard:next:step', step);
-
-            }else{
-
-              evt.preventDefault();
-              $('#myWizard').wizard('selectedItem', {step: step});
-
-            }
- 
-          }else if(currentStep === '4' && stepView.model.get('rolePlaying').aescenica){
-
-
-            if(DocManager.request('validate:areferencias', stepView)){
-
-              DocManager.trigger('showcase:wizard:next:step', step);
-
-            }else{
-              evt.preventDefault();
-              $('#myWizard').wizard('selectedItem', {step: step});
-            }
-
-          }else{
-            DocManager.trigger('showcase:wizard:next:step', step);
-
-          }
-
-
-        }
       }
     });
+
   };
+
 
   var helpPopUp = function(view){
 

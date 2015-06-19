@@ -263,19 +263,15 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
 
   var registerStepTwoEvents = function(session, layout){
-    session.views.stepTwo = layout;
-    var responsable = session.model['stepTwo'];
-    //console.log('RESPONSABLES: [%s] [%s]', responsable.get('rmail'), session.model.integrantes.length);
 
-
-    var stepTwoForm = new Showcase.StepTwoForm({model: responsable});
-
+    //console.log('RESPONSABLES:  [%s]',  session.model.integrantes.length);
+    var stepTwoForm = new Showcase.StepTwoForm({model: session.model['stepTwo']});
+    session.views.stepTwoForm = stepTwoForm;
 
     var integranteCol = new Entities.IntegranteCol(session.model.integrantes);
     var integrante = new Entities.Integrante();
 
     session.integrantes = integranteCol;
-
 
     layout.on("show", function(){
       layout.formRegion.show(stepTwoForm);
@@ -284,14 +280,14 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
   };
 
   var registerStepThreeEvents = function(session, layout){
-    session.views.stepThree = layout;
+
     var stepThreeForm = new Showcase.StepThreeForm({model: session.model['stepThree']});
+    session.views.stepThreeForm = stepThreeForm;
 
     var referenciaCol = new Entities.ReferenciaCol(session.model.mreferencias);
     var referencia = new Entities.Referencia();
 
     session.mreferencias = referenciaCol;
-
 
     layout.on("show", function(){
       layout.formRegion.show(stepThreeForm);
@@ -301,16 +297,14 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
 
 
   var registerStepFourEvents = function(session, layout){
-    session.views.stepFour = layout;
-    var stepFourForm = new Showcase.StepFourForm({model: session.model['stepFour']});
 
+    var stepFourForm = new Showcase.StepFourForm({model: session.model['stepFour']});
+    session.views.stepFourForm = stepFourForm;
 
     var referenciaCol = new Entities.ReferenciaCol(session.model.areferencias);
     var referencia = new Entities.Referencia();
 
     session.areferencias = referenciaCol;
-
-
 
     layout.on("show", function(){
       layout.formRegion.show(stepFourForm);
@@ -411,14 +405,18 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
  
       session.model.update(session.currentUser, session.integrantes, session.mreferencias, session.areferencias, function(error, model){
         session.views.stepThree.$('#musica').prop('checked', false);
+        session.views.stepThree.$('#musica').prop('disabled', true);
         session.views.stepFour.$('#aescenica').prop('checked', false);
+        session.views.stepFour.$('#aescenica').prop('disabled', true);
         session.views.stepThree.$('#infomusica').toggleClass("hidden", true);
         session.views.stepFour.$('#infoaescenica').toggleClass("hidden", true);
         if(session.model.get('solicitante').tsolicitud === 'musica' ){
+          session.views.stepThree.$('#musica').prop('disabled', false);
           session.views.stepThree.$('#musica').prop('checked', true);
           session.views.stepThree.$('#infomusica').toggleClass("hidden", false);
         }
         if(session.model.get('solicitante').tsolicitud === 'aescenicas'){
+          session.views.stepFour.$('#aescenica').prop('disabled', false);
           session.views.stepFour.$('#aescenica').prop('checked', true);
           session.views.stepFour.$('#infoaescenica').toggleClass("hidden", false);
         }

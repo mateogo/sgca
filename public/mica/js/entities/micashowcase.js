@@ -141,10 +141,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           teatrodanza: false,
           titeres: false,
           circo: false,
-          nuevastecnologias: false,
           performance: false,
           comediamusical: false,
-          opereta: false,
           otros: false,
         },
 

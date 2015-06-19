@@ -1,16 +1,16 @@
-<h3>Concurso para participar en las muestras en vivo (showcase) de<br> Música o Artes Escénicas </h3>
-<p>Seleccioná el tipo de expresión artística al que querés inscribir a tu banda/ grupo/ elenco/ compañía</p>
+<h3>Concurso para participar en la Muestra de Música en Vivo o <br>Presentación de Obras en Vivo - Artes Escénicas</h3>
+<p>Seleccioná el tipo de expresión artística en la que querés inscribir a tu banda/ grupo/ elenco/ compañía</p>
 <div class="row">  
   <div class="form-group required">
-    <div class="col-sm-4 selectContainer">
-      <label class="control-label" for="tsolicitud">Seleccione Música ó Artes Escénicas</label>
+    <div class="col-sm-6 selectContainer">
+      <label class="control-label" for="tsolicitud">Seleccione Muestra en Vivo de Música ó Artes Escénicas</label>
       <select  id="tsolicitud" class="form-control" name="tsolicitud">
         <option value='no_definido'
         <%= tsolicitud == 'no_definido' ? 'selected':'' %>>Tipo de Inscripción</option>
         <option value='musica'
-        <%= tsolicitud == 'musica' ? 'selected':'' %>>Música</option>
+        <%= tsolicitud == 'musica' ? 'selected':'' %>>Muestra de Música en Vivo</option>
         <option value='aescenicas'
-        <%= tsolicitud == 'aescenicas' ? 'selected':'' %>>Artes Escénicas</option>
+        <%= tsolicitud == 'aescenicas' ? 'selected':'' %>>Presentación de Obras en Vivo (Artes escéncias)</option>
       </select>
       <span class="help-block"></span>
     </div>
