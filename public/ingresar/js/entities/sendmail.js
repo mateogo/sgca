@@ -21,7 +21,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             nodeId: '',
             slug: '',
             server: '',
-           
+
         },
         setTemplate: function(tpl){
             this.template = tpl;
@@ -34,22 +34,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         buildMailContent: function(data){
             this.set('html', this.template(this.toJSON()));
         },
-        
+
         sendmail : function (){
-            console.log('sendmail: Entities')
-        
-            $.ajax({
+            console.log('sendmail: Entities');
+
+            var p = $.ajax({
             type: "POST",
             url: "/sendmail",
             dataType: "text",
             data: this.toJSON(),
             success: function(data){
-              console.log('Mail Enviado!!!!!')
+              console.log('Mail Enviado!!!!!');
             }
             });
-        
+            return p;
         },
-    
+
     });
 
 

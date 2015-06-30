@@ -3,13 +3,13 @@
   	<a class="logo navbar-brand" href="http://www.cultura.gob.ar/"> <img src="http://www.cultura.gob.ar/static/img/logo-cultura-nacion.png" class="img-responsive text-center"></a>
       <div class="panel-title">Entrar</div>
       <div style="float:right; font-size: 80%; position: relative; top:-10px">
-        <a href="#">Recuperar contraseña</a>
+        <a href="#" class="js-recoverypass">Recuperar clave de acceso</a>
       </div>
   </div>
 
   <div style="padding-top:30px" class="panel-body" >
     <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
-    
+
     <form id="loginform" class="form-horizontal" role="form" action="/login<%= target ? '/'+target: '' %>" method="post">
 
     <div class="form-group">
@@ -25,8 +25,8 @@
     <div class="col-sm-12">
       <div class="input-group" style="margin-bottom: 10px" >
         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-        <input id="login-password" type="password" class="form-control" name="password" 
-          placeholder="contraseña">
+        <input id="login-password" type="password" class="form-control" name="password"
+          placeholder="clave de acceso">
       </div>
     </div>
     </div>
@@ -50,7 +50,7 @@
 
     <div class="form-group">
       <div class="col-md-12 control">
-        <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" ><h4>¿Aún no tenés cuenta? 
+        <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" ><h4>¿Aún no tenés cuenta?
           <button id="registeruser" class="btn btn-default" role="button">Registrate ingresando aquí</button></h4>
         </div>
       </div>

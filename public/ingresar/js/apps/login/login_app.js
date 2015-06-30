@@ -14,34 +14,40 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 
 			'usuario(/*path)': 'loginUser',
 
+			'recuperar/clave/:id': 'recovery'
+
 		}
 	});
-	
-	LoginApp.Model = {selectedAction: null}; 
+
+	LoginApp.Model = {selectedAction: null};
 
 	var API = {
 		loginUser: function(path, targetUser){
 			console.log('API: loginUser');
 			LoginApp.Edit.Controller.login(path, targetUser);
 		},
-	
+
 		loginMica: function(){
 			console.log('API: Login MICA');
-			this.loginUser('mica/#inscripcion/nueva', 'mica')
+			this.loginUser('mica/#inscripcion/nueva', 'mica');
 		},
 
 		loginShowcase: function(){
 			console.log('API: Login SHOWCASE');
-			this.loginUser('mica/#showcase/nueva', 'mica')
+			this.loginUser('mica/#showcase/nueva', 'mica');
 		},
 
 		loginSisplan: function(){
 			console.log('API: Login SISPLAN');
-			this.loginUser('sisplan', 'sisplan')
+			this.loginUser('sisplan', 'sisplan');
 		},
-		
+
 		loginObras: function(){
 		  this.loginUser('obras', 'obras');
+		},
+
+		recovery: function(id){
+			LoginApp.Edit.Controller.recovery(id);
 		}
 
 	};
@@ -51,17 +57,17 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 		if(path){
 			DocManager.navigate('usuario/'+path);
 		}else{
-			DocManager.navigate('usuario');		
+			DocManager.navigate('usuario');
 		}
 		API.loginUser(path);
   });
-	
+
 	DocManager.on('login:mica:inscripcion',function(){
 		console.log('Login MICA:');
 		DocManager.navigate('inscripcion/nueva');
 		API.loginMica(path);
   });
-	
+
 	DocManager.addInitializer(function(){
 		new LoginApp.Router({
 			controller: API

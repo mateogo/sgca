@@ -7,7 +7,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     idAttribute: "_id",
 
     validate: function(attrs, options) {
-      var errors = {}
+      var errors = {};
 
       if (_.has(attrs,'username') && ! attrs.username) {
         errors.username = "Usuario: No puede ser nulo";
@@ -37,7 +37,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         person = new Entities.Person();
         self[predicate] = person;
       }
-      
+
       person.set(per_attrs);
 
       person.update(function(person){
@@ -67,7 +67,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
                 error: function () {
                     console.log('ERROR: Ocurrió un error al intentar actualizar este nodo: [%s]',model.get('username'));
                 }
-            });          
+            });
           }
         });
     },
@@ -99,9 +99,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       query.nodes = [self.id ];
       query.newdata = data;
-  
+
       var update = new Entities.UserUpdate(query);
-      update.save({
+      return update.save({
         success: function() {
         }
       });
@@ -164,7 +164,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         passwordcopia:  {type: 'Password', title: 'Reingrese clave'},
         termsofuse:      {type: 'Checkbox',options: ['Aceptado'] , title:'Acepto los términos de uso y las políticas de privacidad del MCN'},
    termsofuse:      {type: 'Checkbox',options: ['Aceptado'] , title:'Acepto',editorAttrs:{placeholder : 'acepta los términos de referencia'}},
-    
+
 person: tipojuridico: {pfisicia/pjridica/pideal/porganismo}
 person.roles:{adherente/proveedor/empleado}
 person.taglist: [sisplan]
@@ -217,14 +217,14 @@ atribuciones (array)
                             {type:'match', message:'Las claves no coinciden', field:'password'}]},
         //termsofuse:      {type: 'Radio',title: '¿Acepta condicones de uso?',options: [{label:'Acepto',val:'Aceptoval'},{label:'NoAcepto',val:'NoAceptoval'}] },
         termsofuse:      {type: 'Checkbox',options: [{val:'Aceptado', label:'Aceptado'}] , title:'Acepto términos y condiciones de uso del sitio', validators:['required'] },
-    
+
 
     },
 
     initialize: function () {
 
     },
-    
+
     setTarget: function(path, target){
       this.set({
         target: path || '',
@@ -376,7 +376,7 @@ atribuciones (array)
         }
       }
 
-      
+
       if (attrs.password) {
         if(attrs.password.length < 6 ) {
           errors.password = "La clave es muy corta";
@@ -384,7 +384,7 @@ atribuciones (array)
         //errors.username = "Usuario: dato requerido";
         //errors.otro = 'otro error no reconocido';
       }
-      
+
       if( ! _.isEmpty(errors)){
         return errors;
       }
@@ -559,7 +559,7 @@ atribuciones (array)
         list = _.map(user.get(predicate),function(item){
                 //console.log('iterando: enabled predicate:[%s] itemid:[%s] slug:[%s]',predicate,item.id,item.slug)
                 aperson = new Entities.Person({_id:item.id},item);
-                
+
                 var defer = $.Deferred();
 
                 aperson.fetch({
@@ -584,6 +584,14 @@ atribuciones (array)
 
     },
 
+    changePassword: function(user){
+      var data = {
+        password: user.get('password')
+      };
+
+      return user.partialUpdate(data);
+    }
+
   };
 
   DocManager.reqres.setHandler("user:by:username", function(username){
@@ -598,5 +606,8 @@ atribuciones (array)
     return API.getEntity(id);
   });
 
+  DocManager.reqres.setHandler("user:changepassword",function(user){
+    return API.changePassword(user);
+  });
 
 });

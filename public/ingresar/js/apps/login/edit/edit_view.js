@@ -11,7 +11,7 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
     getTemplate: function(){
       return utils.templates.LoginDefaultLayout;
     },
-    
+
     regions: {
       loginRegion:     '#loginbox',
      }
@@ -21,7 +21,7 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
   //           LOGIN FORM
   //*************************************************************
   Edit.LoginForm = DocManager.LoginApp.Common.Views.FormLogin.extend({
-    whoami: 'LoginForm: edit_view.js',    
+    whoami: 'LoginForm: edit_view.js',
     getTemplate: function(){
       return utils.templates.LoginForm;
     },
@@ -30,18 +30,18 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
       var self = this;
       return {
         formatDate: function(date){
-          console.log('templateHelpers!!!!!!!! oops!')
+          console.log('templateHelpers!!!!!!!! oops!');
           return moment(date).format('dddd LL');
         },
         getFieldLabel: function(fieldName){
-          console.log('templateHelpers!!!!!!!! oops!')
+          console.log('templateHelpers!!!!!!!! oops!');
           return self.model.getFieldLabel(fieldName);
         }
       };
     },
 
     initialize: function(options){
-      console.log('LoginForm INIT')
+      console.log('LoginForm INIT');
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
@@ -50,7 +50,7 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
     events: {
       "click #registeruser": "registerUser",
       "click .js-login-submit": "login",
-
+      "click .js-recoverypass": 'recoveryPass'
     },
 
     registerUser: function(e){
@@ -59,21 +59,24 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
       this.trigger('register:user:form');
 
     },
- 
+
     login: function(e){
       console.log('LoginUser Click');
       this.trigger('login:user');
-
     },
- 
+
+    recoveryPass: function(e){
+      this.trigger('login:recoverpass');
+    }
+
   });
-  
+
 
   //*************************************************************
   //           REGISTER FORM
   //*************************************************************
   Edit.SignUpForm = Marionette.ItemView.extend({
-    whoami: 'SignUpForm: edit_view.js',    
+    whoami: 'SignUpForm: edit_view.js',
 
     getTemplate: function(){
         return utils.templates.SignUpForm;
@@ -150,7 +153,7 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
               console.log('validation OK')
               self.trigger('create:new:user', self.model);
             }
-        });        
+        });
       }else{
         console.log('comit VALIDATION has ERRORS')
       }
@@ -164,8 +167,128 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
 
     }
   });
-  
-  
+
+  /**
+   * Vista formulario para cambiar contraseña
+   */
+  Edit.RecoveryView = Marionette.ItemView.extend({
+    getTemplate: function(){
+      return utils.templates.ProfileEditPasswordForm;
+    },
+    onRender: function(){
+      var self = this;
+      setTimeout(function(){
+        self.$el.find('[name=password]').focus();
+      });
+    },
+    showError: function(msg){
+      this.$el.find('.alert').html(msg).slideDown();
+    },
+    hideError: function(){
+      this.$el.find('.alert').hide();
+    },
+    commit: function(){
+      this.model.set('password',this.$el.find('[name=password]').val());
+    },
+    validate: function(){
+      var ok = true;
+      var pass = this.$el.find('[name=password]').val();
+      var newPass = this.$el.find('[name=newpassword]').val();
+      if(pass !== newPass){
+        this.showError('Las claves no coinciden, favor ingrese nuevamente la nueva contraseña');
+        ok = false;
+
+      }else if(pass.length < 6){
+        this.showError('La clave es demasiado corta, favor ingrese al menos seis dígitos alfanuméricos');
+        ok = false;
+      }
+      return ok;
+    },
+    events: {
+      'click .js-submit': 'onSubmit'
+    },
+    onSubmit: function(){
+      this.hideError();
+      if(this.validate()){
+        this.commit();
+        var self = this;
+        var $btn = this.$el.find('.js-submit');
+        $btn.button('loading');
+        var p = DocManager.request('user:changepassword',this.model);
+        p.done(function(){
+          self.trigger('password:changed');
+          $btn.button('reset');
+        }).fail(function(err){
+          this.showError('No se pudo cambiar la contraseña');
+          $btn.button('reset');
+        });
+      }
+    }
+  });
+
+
+  /**
+   * vista popup para pedir cambio de contreseña
+   */
+  Edit.RecoveryPass = Marionette.ItemView.extend({
+    initialize: function(){
+      this.listenTo(this,'ok',this.okClicked.bind(this));
+    },
+    getTemplate: function(){
+      return utils.templates.RecoveryPassword;
+    },
+    onRender: function(){
+      var self = this;
+      setTimeout(function(){
+        self.$el.find('[name=username]').focus();
+      },500);
+    },
+    getEmail: function(){
+      return this.$el.find('[name=username]').val();
+    },
+
+    showError: function(msg){
+      this.$el.find('.alert').html(msg).slideDown();
+    },
+    hideError: function(){
+      this.$el.find('.alert').hide();
+    },
+
+    okClicked: function (modal) {
+        modal.preventClose();
+        this.hideError();
+        var self = this;
+        var username = this.$el.find('[name=username]').val();
+        this.model.set('username',this.$el.find('[name=username]').val());
+        this.model.loadusers(username,function(users){
+          if(users.length > 0){
+            self.trigger('user:recovery',users.at(0));
+            modal.close();
+          }else{
+            self.showError('No existe un usuario registrado con dicho email');
+          }
+        });
+    }
+  });
+
+  /**
+   * @param  {[type]} email puede ser nulo
+   */
+  Edit.recoveryPassPopup = function(userFacet){
+    var view = new Edit.RecoveryPass({model:userFacet});
+
+    var modal = new Backbone.BootstrapModal({
+      content: view,
+      title: 'Recuperación de clave de acceso',
+      okText: 'Confirmar',
+      cancelText: 'cancelar',
+      enterTriggersOk: false,
+      animate: true
+    });
+
+    modal.open();
+    return view;
+  };
+
+
 });
-
-
