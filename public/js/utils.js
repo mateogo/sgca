@@ -177,6 +177,14 @@ window.utils = {
         {val:'otros',       label:'Otros'},
     ],
 
+    itinerarioTipoTramoOpLst:[
+        {val:'no_definido', label:'Seleccione opción'},
+        {val:'ida',    label:'IDA     Tramo de ida'},
+        {val:'vta',    label:'VUELTA  Tramo de Vuelta'},
+        {val:'idavta', label:'IDA/VTA Único destino'},
+    ],
+
+
     referenceLinkOpLst:[
         {val:'no_definido', label:'Seleccione opción'},
         {val:'no_definido', label:'==== Tipos de enlaces para MUSICA ==='},

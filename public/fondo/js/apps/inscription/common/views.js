@@ -19,7 +19,7 @@ DocManager.module("FondoRequestApp.Common.Views", function(Views, DocManager, Ba
                     });
           */      
     },
-
+/*
     buildTags: function(target){
       console.log('buildtags [%s]', target.selectedOptions)
       if(target.multiple){
@@ -31,19 +31,21 @@ DocManager.module("FondoRequestApp.Common.Views", function(Views, DocManager, Ba
         this.model.set(target.name, list);        
       }
     },
-
+*/
     change: function (event) {
-        //utils.hideAlert();
-        console.log('FORM CHANGE')
-        var target = event.target;
-        var change = {};
-				switch (target.type){
+        var target = event.target,
+            change = {};
+        
+        if(!target.name) return;
+				
+        switch (target.type){
 						case 'checkbox':
+              //console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
 							this.model.get(target.name)[target.value] = target.checked;
               //{
               //  name: {something: true, elsesomething: false, etc: true}
               //}
-							console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
+							//console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
 							break;
 						case 'radio':
               //console.log('[%s]:[%s]   checked:[%s]: name:[%s] value:[%s] ',this.model.whoami,this.model.get(target.name),target.checked, target.name, target.value);
@@ -59,18 +61,18 @@ DocManager.module("FondoRequestApp.Common.Views", function(Views, DocManager, Ba
               //  name: elsesomething
               //}
               //$('#ccoperativa').radio('check');
-						 	console.log('checked:[%s]: name:[%s] value:[%s] [%s]',target.checked, target.name, target.value, this.model.get(target.name)[target.value]);
+						 	//console.log('checked:[%s]: name:[%s] value:[%s] [%s]',target.checked, target.name, target.value, this.model.get(target.name)[target.value]);
 							break;
 						
 						case 'select-multiple':
-							this.buildTags(target)
-						 	this.model.set(change);  
-							break;
+              //console.log('CHANGE MULTIPLE: name:[%s] id[%s] value:[%s] tags:[%s]', target.name, target.id, target.value, this.$('#'+target.id).tagsinput('items'));
+              this.model.set(target.name, this.$('#'+target.id).tagsinput('items'));  
+						  break;
 						
 						default:
 							change[target.name] = target.value;
 							this.model.set(change);
-							console.log('CHANGE DEFAULT: [%s]: [%s] [%s]',target.name, target.value, target['multiple']);
+							//console.log('CHANGE DEFAULT: [%s]: [%s] [%s]',target.name, target.value, target['multiple']);
               //console.dir(this.model.attributes)
               break;
 				}
@@ -102,7 +104,7 @@ DocManager.module("FondoRequestApp.Common.Views", function(Views, DocManager, Ba
         this.onFormDataInvalid((err||{}));
       }else{
         //var data = Backbone.Syphon.serialize(this);
-        console.log('FORM SUBMITTED');
+        //console.log('FORM SUBMITTED');
         this.trigger("form:submit", this.model);        
       }
 
@@ -135,7 +137,7 @@ DocManager.module("FondoRequestApp.Common.Views", function(Views, DocManager, Ba
       tstyle = 'has-' + tstyle;
       selector = "." + tstyle;
 
-      console.log('onForm Notifications [%s][%s]', tstyle, selector);
+      //console.log('onForm Notifications [%s][%s]', tstyle, selector);
 
       var clearFormErrors = function(){
         $view.find(selector).each(function(){
@@ -168,7 +170,7 @@ DocManager.module("FondoRequestApp.Common.Views", function(Views, DocManager, Ba
       }
 
       var markErrors = function(value, key){
-        console.log('Mark Erross: value: [%s]  key:[%s]', value, key)
+        //console.log('Mark Erross: value: [%s]  key:[%s]', value, key)
         var $controlGroup = $view.find("#" + key).closest('.form-group');
         $controlGroup.addClass("has-error");
         $('.help-block', $controlGroup).html(value);

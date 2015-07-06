@@ -30,32 +30,43 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   
   var loadModel = function(id){
 
-    console.log('FondoRequestApp.Edit.Controller.loadModel');
-    
     var defer = $.Deferred(),
-        fetchingFondoRequest;
+        fetchingMicaRequest;
 
-    if(id){
-        fetchingFondoRequest = DocManager.request("fondorqst:entity", id);
-    }else{
-        fetchingFondoRequest = DocManager.request("fondorqst:factory:new");
-    }
-   
-    $.when(fetchingFondoRequest).done(function(fondorqst){
-      console.log('FondoRequestApp.Edit BEGIN [%s]', fondorqst.whoami);
-      getSession().model = fondorqst;
+    dao.gestionUser.getUser(DocManager, function (user){
+      //console.log('Dao Get Current user: [%s]', user.get('username'));
+      getSession().currentUser = user;
 
-      dao.gestionUser.getUser(DocManager, function (user){
-          console.log('Dao Get Current user: [%s]', user.get('username'));
+      if(id){
+          fetchingMicaRequest = DocManager.request("fondorqst:entity", id);
+      }else{
+          fetchingMicaRequest = DocManager.request("fondorqst:factory:new", user, "fondo");
+      }
+     
+      $.when(fetchingMicaRequest).done(function(fondorqst){
+        //console.log('FondoRequestApp.Edit BEGIN [%s] [%s]', fondorqst.whoami, fondorqst.id);
 
-          getSession().currentUser = user;
-          defer.resolve(fondorqst);
-       
+        fondorqst.initDataForEdit()
+
+        getSession().model = fondorqst;
+
+        initDataForEdit(user, fondorqst)
+        defer.resolve(fondorqst);
+         
       });
-          
+ 
     });
     return defer.promise();
-  }
+  };
+
+  var initDataForEdit = function(user, model){
+    //todo
+    // if(user){
+    //   model.get('responsable').rmail = user.get('mail');
+    //   model.stepTwo.set('rmail', user.get('mail'))
+    // }
+
+  };
 
   var createNotFound = function(){
     DocManager.mainRegion.show(new Edit.NotFoundView());
@@ -68,7 +79,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     
     session.views.layout = new Edit.Layout({model:session.model});
     
-    console.log('ready to Show Main Region')
     registerLayoutEvents(session.views.layout);
   };
 
@@ -80,21 +90,27 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   var createWizardFormViews = function(){
     var session = getSession();
     var layout = Edit.Session.views.layout;
-    var wizardlayout = new Edit.MovilidadWizardLayout({model:session.model});
+    var wizardlayout = new Edit.WizardLayout({model:session.model});
     var stepOne = new Edit.StepOneForm({model: session.model['stepOne']});
-    var stepTwo = new Edit.StepTwoForm({model: session.model['stepTwo']});
-    var stepThree = new Edit.StepThreeForm({model: session.model['stepThree']});
-    var stepFour = new Edit.StepFourForm({model: session.model['stepFour']});
-    var stepFive = new Edit.StepFiveForm({model: session.model['stepFive']});
+
+    var stepTwo = new Edit.StepTwoLayout({model: session.model['stepTwo']});
+    registerStepTwoEvents(session, stepTwo);
+
+
+    var stepThree = new Edit.StepThreeLayout({model: session.model['stepThree']});
+    registerStepThreeEvents(session, stepThree);
+
+    var stepFour = new Edit.StepFourLayout({model: session.model['stepFour']});
+    registerStepFourEvents(session, stepFour);
 
     session.views.wizardlayout = wizardlayout;
     session.views.stepOne   = stepOne;
     session.views.stepTwo   = stepTwo;
     session.views.stepThree = stepThree;
     session.views.stepFour = stepFour;
-    session.views.stepFive = stepFive;
 
-    //         this.trigger('adminrequest:cost:changed', costo_total);
+
+    // //         this.trigger('adminrequest:cost:changed', costo_total);
     registerBasicViewEvents(session, wizardlayout);
 
     layout.getRegion('formRegion').show(wizardlayout);
@@ -102,12 +118,292 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     wizardlayout.getRegion('steptwoRegion').show(stepTwo);
     wizardlayout.getRegion('stepthreeRegion').show(stepThree);
     wizardlayout.getRegion('stepfourRegion').show(stepFour);
-    wizardlayout.getRegion('stepfiveRegion').show(stepFive);
+
 
   };
 
   var registerBasicViewEvents = function(session, wizardlayout){
+    //TODO
+
+/*
+    wizardlayout.on("submit:form:provisorio", function(model){
+      //console.log('******** provisorio SUBMIT PROVISORIO BEGINS********[%s]', model.whoami)
+      
+      getSession().model.update(session.currentUser, session.representantes, session.tramos, session.cporfolios, function(error, model){
+        Message.success('Los datos han sido guardados en modo borrador.');
+
+        enviarmail(utils.templates.MailFormGuardarProvisorio, {
+          toName: getSession().currentUser.get('displayName'),
+          cnumber: model.get('cnumber'),
+          fecomp: model.get('fecomp'),
+          nodeId: model.id,
+          slug: model.get('requerimiento').emotivation,
+        });
+
+        window.open('http://mica.cultura.gob.ar','_self');
+        //DocManager.trigger('micarequest:edit', model)
+
+      });
+    });
+
+    wizardlayout.on("submit:form:definitivo", function(model){
+      //console.log('******** definitivo SUBMIT DEFINITIVO BEGINS********[%s]', model.whoami, model.get('requerimiento').emotivation)
+
+      getSession().model.update(session.currentUser, session.representantes, session.tramos, session.cporfolios, function(error, model){
+
+        Message.success('Grabación exitosa. Recibirás un correo electrónico de confirmación');
+        enviarmail(utils.templates.MailFormSubmitNotification, {
+          toName: getSession().currentUser.get('displayName'),
+          cnumber: model.get('cnumber'),
+          fecomp: model.get('fecomp'),
+          nodeId: model.id,
+          slug: model.get('requerimiento').emotivation,
+        });
+
+        window.open('http://mica.cultura.gob.ar','_self');
+        //DocManager.trigger('micarequest:edit', model)
+
+      });
+
+    });
+
+
+*/
+
   };
+
+  var enviarmail = function(template, data){
+      var mailModel = new DocManager.Entities.SendMail({
+          from: 'intranet.mcn@gmail.com',
+          subject:'[MICA] Inscripción en Mica 2015',
+      });
+
+      mailModel.set('to',getSession().currentUser.get('username'));
+      
+      //todo:ver donde configurar el servidor de produccion
+      mailModel.set( 'server','http://sisplan.cultura.gob.ar:3000');
+      //mailModel.set( 'server','http://localhost:3000');
+
+      mailModel.set(data)
+      mailModel.setTemplate(template);      
+      mailModel.buildMailContent();
+      //console.log(sendMail.getData());
+
+      //console.dir(mailModel.attributes);
+
+      mailModel.sendmail();
+  };
+    
+
+
+  var registerStepTwoEvents = function(session, layout){
+    session.views.stepTwo = layout;
+    var responsable = session.model['stepTwo'];
+    //console.log('RESPONSABLES: [%s] [%s]', responsable.get('rmail'), session.model.representantes.length);
+
+
+    var stepTwoForm = new Edit.StepTwoForm({model: responsable});
+
+
+    // var representanteCol = new Entities.RepresentanteCol(session.model.representantes);
+    // var representante = new Entities.Representante();
+
+    // session.representantes = representanteCol;
+
+
+    layout.on("show", function(){
+      layout.formRegion.show(stepTwoForm);
+      //DocManager.trigger('representante:edit',representante);
+    });
+  };
+
+
+  var registerStepThreeEvents = function(session, layout){
+    session.views.stepThree = layout;
+    var stepThreeForm = new Edit.StepThreeForm({model: session.model['stepThree']});
+
+    var tramosCol = new Entities.TramosCol(session.model.tramos);
+    var tramo = new Entities.Tramo();
+    session.tramos = tramosCol;
+
+    var pasajerosCol = new Entities.PasajerosCol(session.model.pasajeros);
+    var pasajero = new Entities.Pasajero();
+    session.pasajeros = pasajerosCol;
+
+
+    layout.on("show", function(){
+      layout.formRegion.show(stepThreeForm);
+      DocManager.trigger('tramos:edit',tramo);
+      DocManager.trigger('pasajeros:edit',pasajero);
+    });
+  };
+
+
+  var registerStepFourEvents = function(session, layout){
+    session.views.stepFour = layout;
+    var stepFourForm = new Edit.StepFourForm({model: session.model['stepFour']});
+
+    // TODO
+    // var porfolioCol = new Entities.PorfolioCol(session.model.cporfolios);
+    // var porfolio = new Entities.Porfolio();
+
+    // session.cporfolios = porfolioCol;
+
+
+    layout.on("show", function(){
+      layout.formRegion.show(stepFourForm);
+      //DocManager.trigger('cporfolio:edit',porfolio);
+    });
+
+  };
+
+  var API = {
+
+    initRepresentanteView: function(representante){
+      var session = getSession();
+      var crudManager = new Edit.CrudManager(
+          {
+            gridcols:[
+              {name:'aname',  label:'Nombre', cell:'string', editable:false},
+              {name:'acargo', label:'Cargo',  cell:'string', editable:false},
+              {name:'amail',  label:'Mail',   cell:'string', editable:false},
+              {label: 'Acciones', cell: 'representanteAction', editable:false, sortable:false},
+            ],
+            filtercols:['aname', 'acargo', 'amail'],
+            editEventName: 'representante:edit',
+
+          },
+          {
+            layoutTpl: utils.templates.RepresentanteLayout,
+            formTpl: utils.templates.RepresentanteForm,
+            collection: session.representantes,
+            editModel: Entities.Representante,
+            modelToEdit: representante,
+            editorOpts: {},
+          }
+      );
+      session.views.stepTwo.representanteRegion.show(crudManager.getLayout());
+
+
+    },
+ 
+    initPorfolioCompradorView: function(porfolio){
+      var session = getSession();
+      var crudManager = new Edit.CrudManager(
+          {
+            gridcols:[
+              {name:'slug', label:'Denominación del producto/proyecto/servicio', cell:'string', editable:false},
+              {label: 'Acciones', cell: 'cporfolioAction', editable:false, sortable:false},
+            ],
+            filtercols:['slug'],
+            editEventName: 'cporfolio:edit',
+
+          },
+          {
+            test: 'TestOK',
+            layoutTpl: utils.templates.PorfolioLayout,
+            formTpl: utils.templates.PorfolioForm,
+            collection: session.cporfolios,
+            editModel: Entities.Porfolio,
+            modelToEdit: porfolio,
+            EditorView: Edit.PorfolioEditorView,
+            editorOpts: {parentModel: session.model['stepFour']},
+          }
+      );
+      session.views.stepFour.porfolioRegion.show(crudManager.getLayout());
+    },
+
+    initTramosView: function(model){
+      var session = getSession();
+      var crudManager = new Edit.CrudManager(
+          {
+            gridcols:[
+              {name:'fesalida', label:'Salida', cell:'string', editable:false},
+              {name:'origen',   label:'Origen', cell:'string', editable:false},
+              {name:'destino',  label:'Destino', cell:'string', editable:false},
+              {name:'eventname',  label:'Evento', cell:'string', editable:false},
+              {label: 'Acciones', cell: 'ItinerarioAction', editable:false, sortable:false},
+            ],
+            filtercols:['origen', 'destino'],
+            editEventName: 'tramos:edit',
+
+          },
+          {
+            test: 'TestOK',
+            layoutTpl: utils.templates.ItinerarioLayout,
+            formTpl: utils.templates.ItinerarioForm,
+            collection: session.tramos,
+            editModel: Entities.Tramo,
+            modelToEdit: model,
+            editorOpts: {},
+          }
+      );
+      session.views.stepThree.itinerarioRegion.show(crudManager.getLayout());
+
+    },
+
+    initPasajerosView: function(model){
+      var session = getSession();
+      var crudManager = new Edit.CrudManager(
+          {
+            gridcols:[
+              {name:'pnombre',   label:'Nombre', cell:'string', editable:false},
+              {name:'papellido', label:'Apellido', cell:'string', editable:false},
+              {name:'pmail',     label:'Correo Electrónico', cell:'string', editable:false},
+              {name:'pdni',      label:'DNI', cell:'string', editable:false},
+              {label: 'Acciones', cell: 'PasajeroAction', editable:false, sortable:false},
+            ],
+            filtercols:['pnombre', 'papellido', 'pmail'],
+            editEventName: 'pasajeros:edit',
+
+          },
+          {
+            test: 'TestOK',
+            layoutTpl: utils.templates.PasajeroLayout,
+            formTpl: utils.templates.PasajeroForm,
+            collection: session.pasajeros,
+            editModel: Entities.Pasajero,
+            modelToEdit: model,
+            editorOpts: {},
+          }
+      );
+      session.views.stepThree.pasajeroRegion.show(crudManager.getLayout());
+
+    },
+
+    saveStep: function(step){
+      var session = getSession();
+      //TODO
+      // session.model.update(session.currentUser, session.representantes, session.tramos, session.cporfolios, function(error, model){
+
+      // });
+    },
+
+  };
+
+  DocManager.on("wizard:next:step", function(step){
+    API.saveStep(step);
+  });
+
+
+  DocManager.on("tramos:edit", function(model){
+    API.initTramosView(model);
+  });
+
+  DocManager.on("pasajeros:edit", function(model){
+    API.initPasajerosView(model);
+  });
+
+
+  DocManager.on("cporfolio:edit", function(model){
+    API.initPorfolioCompradorView(model);
+  });
+
+
+  DocManager.on("representante:edit", function(model){
+    API.initRepresentanteView(model);
+  });
+
 
 
 });

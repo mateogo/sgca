@@ -1,0 +1,99 @@
+<h4>Tipo de solicitud</h4>
+
+<div class="row">
+  <div class="form-group required col-sm-6 selectContainer">
+      <label class="control-label" for="tsolicitud">Seleccione el tipo de movilidad que solicita</label>
+      <select  id="tsolicitud" class="form-control" name="tsolicitud">
+        <option value='no_definido'
+        <%= tsolicitud == 'no_definido' ? 'selected':'' %>>Tipo de Movilidad requerida</option>
+        <option value='nacional'
+        <%= tsolicitud == 'nacional' ? 'selected':'' %>>Nacional: movilidad dentro del país</option>
+        <option value='nacional_mica'
+        <%= tsolicitud == 'nacional_mica' ? 'selected':'' %>>MICA: movilidad para participar en MICA-2015</option>
+        <option value='internacional'
+        <%= tsolicitud == 'internacional' ? 'selected':'' %>>Internacional: movilidad para un destino fuera del país</option>
+      </select>
+      <span class="help-block"></span>
+    </div>
+</div>
+<hr>
+<h4>Datos del Evento/ Actividad / Gira en la que desea participar</h4>
+<div class="row">  
+  <div class="col-sm-12 col-xs-12 form-group required">
+    <label class="control-label" for="eventname">Evento/ actividad/ gira en el que desea participar</label>
+    <!-- label class="control-label en" for="eventname">Business name</label -->
+    <div class="input-group">
+      <input type="text" id="eventname" class="form-control" name="eventname" value='<%= eventname %>'/>
+      <div class="input-group-addon">
+        <div title="Nombre del principal evento en el que desea participar y motiva su viaje ó <br>denominación de la gira que desea emprender" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+    </div>
+    <span class="help-block"></span>
+  </div>
+</div>
+
+<div class="row">  
+
+  <div class="form-group required col-sm-6 col-xs-12 selectContainer">
+      <label class="control-label" for="eventtype">Tipo de evento/ actividad / gira</label>
+      <select  id="eventtype" class="form-control" name="eventtype">
+        <option value='no_definido'
+        <%= eventtype == 'no_definido' ? 'selected':'' %>>Tipo de Evento</option>
+
+        <option value='feria'
+        <%= eventtype == 'feria' ? 'selected':'' %>>Ferias o mercados</option>
+
+        <option value='festivales'
+        <%= eventtype == 'festivales' ? 'selected':'' %>>Festivales o encuentros</option>
+
+        <option value='gira'
+        <%= eventtype == 'gira' ? 'selected':'' %>>Gira artística</option>
+
+        <option value='mica'
+        <%= eventtype == 'mica' ? 'selected':'' %>>MICA: participación en MICA-2015</option>
+
+      </select>
+      <span class="help-block"></span>
+  </div>
+
+
+  <div class="col-sm-6 col-xs-12 form-group">
+    <label class="control-label" for="eventurl">Enlace (link) a la página oficial del evento/ actividad/ gira</label>
+    <!-- label class="control-label en" for="eventurl">Business name</label -->
+    <div class="input-group">
+      <input type="text" id="eventurl" class="form-control" placeholder="http://www.dominio.com.ar" name="eventurl" value='<%= eventurl %>'/>
+      <div class="input-group-addon">
+        <div title="Indique la dirección Web (URL) principal del evento" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+    </div>
+    <span class="help-block"></span>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="form-group col-sm-12 required">
+    <label class="control-label" for="motivacion">Objetivo esperado</label>
+    <div class="input-group">
+      <textarea id="motivacion" class="form-control" rows="6"  maxlength="600" placeholder="" name="motivacion" ><%= motivacion %></textarea>
+      <div class="input-group-addon">
+        <div title="Describa los beneficios esperados al participar en el evento / actividad / gira (Máximo 600 caracteres)" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+      <p id="limit-chars"></p>
+    </div>
+    <span class="help-block"></span>
+  </div>
+</div>
+
+
+
+<div class="row">
+  <div class="col-sm-12"><h4>Agregue (opcional) una imagen de perfil del grupo/ elenco</h4></div>
+  <div class="col-sm-12  js-avatar" style="border: 1px solid rgb(204, 204, 204);margin-bottom: 20px;" ></div>
+</div>

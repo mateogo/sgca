@@ -1,0 +1,83 @@
+<div id="dialog-region"></div>
+
+<div id="colorbar"></div>
+<div class="container">
+  <div>
+    <div class="col-xs-12 col-md-12">
+      <div class="panel">
+        <div id='logoform' class="panel-heading">
+          <div id="logo-form" class="col-xs-12 col-sm-5 pull-right"></div>
+          <h1>Formulario de Inscripción</h1>
+          <h2>Fondo Argentino de Desarrollo Cultural - Linea MOVILIDAD</h2>
+        </div>
+        <div class="panel-body fuelux"> 
+          <!--BEG FORM-->
+          <div class="fu-example section">
+            <div class="wizard" data-initialize="wizard" id="myWizard">
+              <ul class="steps" style="margin-left: 0">
+                <li data-step="1"  class="active"><span class="badge badge-info">1</span>Inicio<span class="chevron"></span></li>
+                <li data-step="2"><span class="badge">2</span>Requirente<span class="chevron"></span></li>
+                <li data-step="3"><span class="badge">3</span>Itinerario<span class="chevron"></span></li>
+                <li data-step="4"><span class="badge">4</span>Archivos<span class="chevron"></span></li>
+                <li data-step="5"><span class="badge">5</span>Confirmación<span class="chevron"></span></li>
+              </ul>
+              <div class="actions">
+                <button class="btn btn-default btn-prev" disabled="disabled"><span class="fa fa-arrow-left"></span></button>
+                <button class="btn btn-default btn-next" data-last="GUARDAR"><span class="fa fa-arrow-right"></span></button>
+              </div>
+
+              <div class="step-content">
+                
+                <!-- BEG INICIO  -->
+                <div id='stepone-region' class="step-pane" data-step="1"></div>
+                <!-- END EMPRESA  -->
+
+                <!--BEG EMPRESA / REPRESENTANTE-->
+                <div id='steptwo-region' class="step-pane" data-step="2"></div>
+                <!--END REPRESENTANTE-->
+                
+                <!--BEG ITINERARIO-->
+                <div id='stepthree-region' class="step-pane" data-step="3"></div>
+                <!--END VENDER-->
+
+                <!--BEG ARCHIVOS-->
+                <div id='stepfour-region' class="step-pane" data-step="4"></div>
+                <!--END COMPRAR-->
+
+
+                 <div class="step-pane" data-step="6">
+                  <h4>Confirmación</h4>
+                  <p>!Felicitaciones!</p>
+                  <p>¡Has llegado al último paso!</p>
+                  <div class="form-group required">
+                    <div class="row">
+                      <div class="col-sm-12">
+                         <div id="print-legal">Al confirmar esta solicitud, te será enviado un correo electrónico para toda referencia futura.</div>
+                        <hr class="spacer" />
+                        <p>Utiliza 'Guardar borrador' si aún no has terminado de perfeccionar la carga de la información requerida. La información cargada hasta este momento no se publica y no es visible para terceros.</p>
+                        <button type="button" class="btn btn-primary js-provisorio">Guardar borrador</button>
+                        <hr class="spacer" />
+
+                        <p>Al 'Guardar definitivo' esta solicitud se cierra y pasa a revisión y evaluación por parte de la organización. </p>
+                        <label id='legal1' for="legal">
+                          <input type="checkbox" id="legal" name="legal"  <%= legal === 'aceptado' ? 'checked="checked"' : '' %>   value='aceptado' > 
+                          <span class="checkbox-label control-label">He leído y acepto los <a href="http://www.cultura.gob.ar" class='js-termsofuse' target="_blank">términos y condiciones</a></span>
+                        </label>
+                        <hr>
+                        <button  type="button" class="btn btn-primary js-definitivo">Guardar definitivo</button>
+                     </div>
+                    </div>
+                  </div>
+                  <hr class="spacer">
+                </div><!-- END STEP 5 --> 
+
+              </div><!--STEP content--> 
+
+            </div>
+          </div>
+          <!--END FORM--> 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

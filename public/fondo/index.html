@@ -20,7 +20,7 @@
 
 <!-- Le styles -->
 	<link href="css/styles.css" media='screen' rel="stylesheet" >
-	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" >
+	<link href="css/font-awesome.min.css" rel="stylesheet" >
 
 	<link href="lib/backbone-forms-bootstrap3.css" rel="stylesheet">
 
@@ -28,10 +28,24 @@
 	<link href="css/bootstrap-tagsinput.css" rel="stylesheet">
 
 	<link href="css/fuelux.min.css" rel="stylesheet">
+  <link href="/sisplan/lib/backgrid/backgrid.min.css" rel="stylesheet" >
+  <link href="/sisplan/lib/backgrid/backgrid-filter.min.css" rel="stylesheet" >
+
 
 	<link rel="stylesheet" href="css/theme-fondo.css">
 	<link rel="stylesheet" href="css/datepicker3.css">
 
+	<style type="text/css">
+
+		#messageDrop{
+		    border: 4px dotted #CCC;
+		    background-color:rgba(240,240,240,0.5);
+		    position:absolute;top:0;bottom:0;left:0;right:0;
+		    text-align:center;
+		    color: #555;
+		    display:none;
+		}
+	</style>
 
 
 </head>
@@ -66,6 +80,12 @@
 <!-- -->
 <!--script src="lib/jquery-ui.min.js"></script -->
 <script src="lib/bootstrap-datepicker.js"></script>
+
+<script src="/sisplan/lib/bootstrap-notify.min.js"></script>
+
+<script src="/sisplan/lib/backgrid/backgrid.min.js"></script>
+<script src="/sisplan/lib/backgrid/backgrid-filter.min.js"></script>
+
 <!-- script src="lib/TimeCircles.js"></script -->
 <script src="lib/moment.min.js"></script>
 <script src="lib/moment-locale-es.js"></script>
@@ -101,7 +121,12 @@
 
 <script src="js/entities/fondo.js"></script>
 
+<!--   commons  -->
+<script src="/commons/js/apps/helpers/message.js"></script>
+<script src="/commons/js/entities/filtercollection.js"></script>
+
 <!--   splash entities  -->
+<script src="/commons/js/entities/assets.js"></script>
 <script src="js/entities/features.js"></script>
 <script src="js/entities/home.js"></script>
 
@@ -115,9 +140,15 @@
 <script src="js/apps/home/show/show_view.js"></script>
 <script src="js/apps/home/show/show_controller.js"></script>
 
+<!--upload-->
+<script src="/commons/js/apps/attachment/attachment-view.js"></script>
+
+
 <!--inscrpcion-->
 <script src="js/apps/inscription/common/views.js"></script>
 <script src="js/apps/inscription/inscription_app.js"></script>
+
+<script src="js/apps/inscription/edit/crud_view.js"></script>
 <script src="js/apps/inscription/edit/edit_view.js"></script>
 <script src="js/apps/inscription/edit/edit_controller.js"></script>
 

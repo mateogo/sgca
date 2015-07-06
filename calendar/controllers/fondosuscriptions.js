@@ -3,11 +3,11 @@
  *  package: /calendar/controllers
  *  DOC: 'fondosuscriptions' collection controller
  *  Use:
- *     Exporta el objeto controller de un fondoprofile via 'exports'
+ *     Exporta el objeto controller de un fondosuscription via 'exports'
  *     metodos exportados:
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
  *
- */
+ */ 
 var _ = require('underscore');
 
 var dbi ;
@@ -30,7 +30,7 @@ var series = ['movilidad2015','sustentabilidad2015','innovacion2015','infraestru
 var seriales = {};
 
 //ATENCION: revisar el criterio de seleccion de registro en setNodeCode()
-var tfondoprofile_adapter = {
+var tfondosuscription_adapter_adapter = {
     movilidad:{
         serie: 'movilidad2015',
         base: 100000,
@@ -66,6 +66,7 @@ var loadSeriales = function(){
 };
 
 var fetchserial = function(serie){
+    //console.log("INIT:fetchserie:fondosuscription.js:[%s]",serie);
     var collection = dbi.collection(serialCol);
     collection.findOne({'serie':serie}, function(err, item) {
         if(!item){
@@ -88,7 +89,7 @@ var fetchserial = function(serie){
 
 var addSerial = function(serial,data){
     seriales[serial] = data;
-    //console.log('addSerial:fondoprofile.js INIT con exito: [%s] next:[%s]',seriales[serial].serie,seriales[serial].nextnum);
+    //console.log('addSerial:fondosuscription.js INIT con exito: [%s] next:[%s]',seriales[serial].serie,seriales[serial].nextnum);
 };
 
 var initSerial = function(serie){
@@ -109,7 +110,7 @@ var updateSerialCollection = function(serial){
 
 var setNodeCode = function(node){
     //console.log('setNodeCode:[%s]',node.tregistro);
-    var adapter = tfondoprofile_adapter[node.tregistro] || tfondoprofile_adapter['poromision'];
+    var adapter = tfondosuscription_adapter[node.tregistro] || tfondosuscription_adapter['poromision'];
     node.cnumber = nextSerial(adapter);
 
 };
@@ -126,7 +127,6 @@ var nextSerial = function (adapter){
 };
 
 var addNewProfile = function(req, res, node, cb){
-    //console.log("addNewProfile:fondosuscriptions.js ");
 
     setNodeCode(node);
     insertNewProfile(req, res, node, cb);
@@ -134,7 +134,7 @@ var addNewProfile = function(req, res, node, cb){
 
 
 var fetchOne = function(query, cb) {
-    console.log('findProfile Retrieving fondoprofile collection for passport');
+    console.log('findProfile Retrieving fondosuscription collection for passport');
 
     dbi.collection(fondosuscriptionsCol, function(err, collection) {
         collection.findOne(query, function(err, item) {
@@ -143,11 +143,11 @@ var fetchOne = function(query, cb) {
     });
 };
 
-var insertNewProfile = function (req, res, fondoprofile, cb){
-    //console.log('insertNewProfile:fondosuscriptions.js BEGIN [%s]',fondoprofile.slug);
+var insertNewProfile = function (req, res, fondosuscription, cb){
+    console.log('insertNewProfile:fondosuscriptions.js BEGIN [%s]',fondosuscription.slug);
     //dbi.collection(fondosuscriptionsCol, function(err, collection) {
 
-    dbi.collection(fondosuscriptionsCol).insert(fondoprofile,{w:1}, function(err, result) {
+    dbi.collection(fondosuscriptionsCol).insert(fondosuscription,{w:1}, function(err, result) {
             if (err) {
                 if(res){
                     res.send({'error':'An error has occurred'});
@@ -187,17 +187,14 @@ exports.setBSON = function(bs) {
 exports.findOne = function(req, res) {
     var query = req.body;
 
+    console.log('findONE:fondosuscription Retrieving fondosuscription collection with query');
 
-    var sort = {cnumber: 1};
-    if (query.cnumber['$lt']) sort = {cnumber: -1};
-
-    console.log('findONE:fondoprofile Retrieving fondoprofile collection with query [%s] sort:[%s]',query.cnumber, sort.cnumber);
- 
     dbi.collection(fondosuscriptionsCol, function(err, collection) {
-        collection.find   (query).sort(sort).toArray(function(err, items) {
+        collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
             res.send(items[0]);
         });
     });
+ 
 };
 
 exports.fetchById = function(id, cb) {
@@ -222,7 +219,7 @@ exports.findById = function(req, res) {
 exports.find = function(req, res) {
     var query = req.body; //{};
 
-    console.log('find:fondoprofile Retrieving fondoprofile collection with query');
+    console.log('find:fondosuscription Retrieving fondosuscription collection with query');
 
     dbi.collection(fondosuscriptionsCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
@@ -241,25 +238,25 @@ exports.findAll = function(req, res) {
 };
 
 exports.add = function(req, res) {
-    console.log('add:fondoprofile.js: NEW RECEIPT BEGINS');
-    var fondoprofile = req.body;
-    addNewProfile(req, res, fondoprofile);
+    console.log('add:fondosuscription.js: NEW RECEIPT BEGINS');
+    var fondosuscription = req.body;
+    addNewProfile(req, res, fondosuscription);
 };
 
 exports.update = function(req, res) {
     var id = req.params.id;
-    var fondoprofile = req.body;
-    delete fondoprofile._id;
+    var fondosuscription = req.body;
+    delete fondosuscription._id;
     console.log('Updating node id:[%s] ',id);
-    console.log(JSON.stringify(fondoprofile));
+    console.log(JSON.stringify(fondosuscription));
     dbi.collection(fondosuscriptionsCol, function(err, collection) {
-        collection.update({'_id':new BSON.ObjectID(id)}, fondoprofile, {safe:true}, function(err, result) {
+        collection.update({'_id':new BSON.ObjectID(id)}, fondosuscription, {safe:true}, function(err, result) {
             if (err) {
                 console.log('Error updating %s error: %s',fondosuscriptionsCol,err);
                 res.send({error: MSGS[0] + err});
             } else {
                 console.log('UPDATE: se insertaron exitosamente [%s] nodos',result);
-                res.send(fondoprofile);
+                res.send(fondosuscription);
             }
         });
     });
