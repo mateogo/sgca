@@ -18,6 +18,9 @@ utils.loadTemplate([
         // Templates pasajer
         'pasajeros/PasajeroForm','pasajeros/PasajeroLayout',
 
+        // terminos y condiciones
+        'fondomov/FondoTerminosYCondiciones',
+
 
         // Avatar
         //'attachmentview/PhotosLayoutView','attachmentview/PhotoItem','attachmentview/PhotoItemEditorView',
