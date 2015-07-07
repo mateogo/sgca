@@ -26,6 +26,14 @@ DocManager.getCurrentRoute = function(){
   return Backbone.history.fragment
 };
 
+DocManager.getCurrentDomain = function(){
+  if (!window.location.origin) {
+    window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
+  }
+
+  return location.origin;
+};
+
 /**
  * @return {promise}
  */

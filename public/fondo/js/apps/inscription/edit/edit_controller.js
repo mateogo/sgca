@@ -26,11 +26,12 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       Edit.Session = {views:{},model:null};
     }
     return Edit.Session;
-  }
+  };
   
   var loadModel = function(id){
 
     var defer = $.Deferred(),
+        fetchingRequest,
         fetchingMicaRequest;
 
     dao.gestionUser.getUser(DocManager, function (user){
@@ -38,20 +39,28 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       getSession().currentUser = user;
 
       if(id){
-          fetchingMicaRequest = DocManager.request("fondorqst:entity", id);
+          fetchingRequest = DocManager.request("fondorqst:entity", id);
       }else{
-          fetchingMicaRequest = DocManager.request("fondorqst:factory:new", user, "fondo");
+          fetchingRequest = DocManager.request("fondorqst:factory:new", user, "fondo");
       }
      
-      $.when(fetchingMicaRequest).done(function(fondorqst){
+      $.when(fetchingRequest).done(function(fondorqst){
         //console.log('FondoRequestApp.Edit BEGIN [%s] [%s]', fondorqst.whoami, fondorqst.id);
 
-        fondorqst.initDataForEdit()
+        // off the record: si tiene inscripción en MICA buscamos datos default
+        fetchingMicaRequest = DocManager.request("micarqst:factory:new", user, "mica");
+        $.when(fetchingMicaRequest).done(function(micarqst){
+          //console.log('FETCHING MicaRequest [%s] [%s]', micarqst.whoami, micarqst.id);
 
-        getSession().model = fondorqst;
+          fondorqst.initDataForEdit();
+          getSession().model = fondorqst;
+          initData(user, fondorqst);
+          if(micarqst && micarqst.id ){
+            setDefaultData(user, fondorqst, micarqst);
+          }
+          defer.resolve(fondorqst);
 
-        initDataForEdit(user, fondorqst)
-        defer.resolve(fondorqst);
+        });
          
       });
  
@@ -59,14 +68,31 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     return defer.promise();
   };
 
-  var initDataForEdit = function(user, model){
-    //todo
-    // if(user){
-    //   model.get('responsable').rmail = user.get('mail');
-    //   model.stepTwo.set('rmail', user.get('mail'))
-    // }
-
+  var initData = function(user, model){
+    if(!model.id){
+      if(user){
+        model.get('responsable').rmail = user.get('mail');
+        model.stepTwo.set('rmail', user.get('mail'));
+        model.stepTwo.set('rmail2', user.get('mail'));
+      }
+    }
   };
+
+  var setDefaultData = function(user, model, micarqst){
+
+    if(!model.id){
+      if(user){
+        console.log('yes! default data: ', micarqst.get('responsable').rname);
+        model.stepTwo.set('rname', micarqst.get('responsable').rname);
+        model.stepTwo.set('rdocnum', micarqst.get('responsable').rdocnum);
+        model.stepTwo.set('rtel', micarqst.get('responsable').rtel);
+        model.stepTwo.set('rcel', micarqst.get('responsable').rcel);
+        model.stepTwo.set('rfenac', micarqst.get('responsable').rfenac);
+        model.stepTwo.set('rcargo', micarqst.get('responsable').rcargo);
+      }
+    }
+  };
+
 
   var createNotFound = function(){
     DocManager.mainRegion.show(new Edit.NotFoundView());
@@ -125,11 +151,10 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   var registerBasicViewEvents = function(session, wizardlayout){
     //TODO
 
-/*
     wizardlayout.on("submit:form:provisorio", function(model){
       //console.log('******** provisorio SUBMIT PROVISORIO BEGINS********[%s]', model.whoami)
       
-      getSession().model.update(session.currentUser, session.representantes, session.tramos, session.cporfolios, function(error, model){
+      getSession().model.update(session.currentUser, session.pasajeros, session.tramos, function(error, model){
         Message.success('Los datos han sido guardados en modo borrador.');
 
         enviarmail(utils.templates.MailFormGuardarProvisorio, {
@@ -139,8 +164,8 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
           nodeId: model.id,
           slug: model.get('requerimiento').emotivation,
         });
-
-        window.open('http://mica.cultura.gob.ar','_self');
+// TODO
+        //window.open('http://mica.cultura.gob.ar','_self');
         //DocManager.trigger('micarequest:edit', model)
 
       });
@@ -149,7 +174,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     wizardlayout.on("submit:form:definitivo", function(model){
       //console.log('******** definitivo SUBMIT DEFINITIVO BEGINS********[%s]', model.whoami, model.get('requerimiento').emotivation)
 
-      getSession().model.update(session.currentUser, session.representantes, session.tramos, session.cporfolios, function(error, model){
+      getSession().model.update(session.currentUser, session.pasajeros, session.tramos, function(error, model){
 
         Message.success('Grabación exitosa. Recibirás un correo electrónico de confirmación');
         enviarmail(utils.templates.MailFormSubmitNotification, {
@@ -160,15 +185,13 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
           slug: model.get('requerimiento').emotivation,
         });
 
-        window.open('http://mica.cultura.gob.ar','_self');
+//TODO
+        //window.open('http://mica.cultura.gob.ar','_self');
         //DocManager.trigger('micarequest:edit', model)
 
       });
 
     });
-
-
-*/
 
   };
 
@@ -181,7 +204,8 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       mailModel.set('to',getSession().currentUser.get('username'));
       
       //todo:ver donde configurar el servidor de produccion
-      mailModel.set( 'server','http://sisplan.cultura.gob.ar:3000');
+      console.log('enviarMail: currentDomain: [%s]',DocManager.getCurrentDomain());
+      mailModel.set( 'server',DocManager.getCurrentDomain());
       //mailModel.set( 'server','http://localhost:3000');
 
       mailModel.set(data)
@@ -197,19 +221,12 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
 
   var registerStepTwoEvents = function(session, layout){
-    session.views.stepTwo = layout;
-    var responsable = session.model['stepTwo'];
-    //console.log('RESPONSABLES: [%s] [%s]', responsable.get('rmail'), session.model.representantes.length);
-
-
-    var stepTwoForm = new Edit.StepTwoForm({model: responsable});
-
+    var stepTwoForm = new Edit.StepTwoForm({model: session.model['stepTwo']});
+    session.views.stepTwoForm = stepTwoForm;
 
     // var representanteCol = new Entities.RepresentanteCol(session.model.representantes);
     // var representante = new Entities.Representante();
-
     // session.representantes = representanteCol;
-
 
     layout.on("show", function(){
       layout.formRegion.show(stepTwoForm);
@@ -219,8 +236,8 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
 
   var registerStepThreeEvents = function(session, layout){
-    session.views.stepThree = layout;
     var stepThreeForm = new Edit.StepThreeForm({model: session.model['stepThree']});
+    session.views.stepThreeForm = stepThreeForm;
 
     var tramosCol = new Entities.TramosCol(session.model.tramos);
     var tramo = new Entities.Tramo();
@@ -240,15 +257,14 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
 
   var registerStepFourEvents = function(session, layout){
-    session.views.stepFour = layout;
     var stepFourForm = new Edit.StepFourForm({model: session.model['stepFour']});
+    session.views.stepFourForm = stepFourForm;
 
     // TODO
     // var porfolioCol = new Entities.PorfolioCol(session.model.cporfolios);
     // var porfolio = new Entities.Porfolio();
 
     // session.cporfolios = porfolioCol;
-
 
     layout.on("show", function(){
       layout.formRegion.show(stepFourForm);
@@ -349,7 +365,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
             gridcols:[
               {name:'pnombre',   label:'Nombre', cell:'string', editable:false},
               {name:'papellido', label:'Apellido', cell:'string', editable:false},
-              {name:'pmail',     label:'Correo Electrónico', cell:'string', editable:false},
               {name:'pdni',      label:'DNI', cell:'string', editable:false},
               {label: 'Acciones', cell: 'PasajeroAction', editable:false, sortable:false},
             ],
@@ -373,10 +388,9 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
     saveStep: function(step){
       var session = getSession();
-      //TODO
-      // session.model.update(session.currentUser, session.representantes, session.tramos, session.cporfolios, function(error, model){
+      session.model.update(session.currentUser, session.pasajeros, session.tramos, function(error, model){
 
-      // });
+      });
     },
 
   };

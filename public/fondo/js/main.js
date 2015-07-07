@@ -17,6 +17,10 @@ utils.loadTemplate([
         'itinerario/ItinerarioForm','itinerario/ItinerarioLayout',
         // Templates pasajer
         'pasajeros/PasajeroForm','pasajeros/PasajeroLayout',
+        
+        // mails
+        'mailtemplates/MailFormGuardarProvisorio','mailtemplates/MailFormSubmitNotification','mailtemplates/MailTemplateDefault',
+
 
         // terminos y condiciones
         'fondomov/FondoTerminosYCondiciones',

@@ -179,9 +179,9 @@ window.utils = {
 
     itinerarioTipoTramoOpLst:[
         {val:'no_definido', label:'Seleccione opción'},
-        {val:'ida',    label:'IDA     Tramo de ida'},
-        {val:'vta',    label:'VUELTA  Tramo de Vuelta'},
-        {val:'idavta', label:'IDA/VTA Único destino'},
+        {val:'idavta', label:'IDA/VUELTA Único destino'},
+        {val:'ida',    label:'IDA     a destino de GIRA'},
+        {val:'vta',    label:'VUELTA  retorno de GIRA'},
     ],
 
 

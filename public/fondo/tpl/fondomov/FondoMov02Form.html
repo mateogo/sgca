@@ -57,7 +57,7 @@
 
 <div class="row">
   <div class="form-group col-sm-6">
-      <label class="control-label" for="ecuit">CUIT (del titular o persona jurídica)</label>
+      <label class="control-label" for="ecuit">CUIT (persona jurídica) - CUIT/CUIL (titular persona física) )</label>
       <div class="input-group">
         <input type="text" id="ecuit" class="form-control" name="ecuit" value="<%= ecuit %>">
         <div class="input-group-addon">
@@ -184,12 +184,12 @@
         <input type="text" id="rfenac" class="form-control" name="rfenac" value="<%= rfenac %>" placeholder="dd/mm/aaaa">
     </div>
 
-    <div class="col-sm-3">
+    <div class="col-sm-3 form-group required">
         <label class="control-label" for="rtel">Teléfono</label>
         <input type="text" id="rtel" class="form-control" placeholder="+54 (área) número" name="rtel" value="<%= rtel %>">
     </div>
 
-    <div class="col-sm-3">
+    <div class="col-sm-3 form-group">
         <label class="control-label" for="rcel">Teléfono móvil</label>
         <input type="text" id="rcel" class="form-control" placeholder="+54 (área) número" name="rcel" value="<%= rcel %>">
     </div>

@@ -14,7 +14,25 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             cc:'',
             subject:'',
             html:'',
+
+            toName: '',
+            cnumber: '',
+            fecomp: '',
+            nodeId: '',
+            slug: '',
+            server: '',
            
+        },
+        setTemplate: function(tpl){
+            this.template = tpl;
+        },
+
+        getMailContent: function(){
+            return this.template(this.toJSON());
+        },
+
+        buildMailContent: function(data){
+            this.set('html', this.template(this.toJSON()));
         },
         
         sendmail : function (){
@@ -33,5 +51,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         },
     
     });
+
+
 
 });

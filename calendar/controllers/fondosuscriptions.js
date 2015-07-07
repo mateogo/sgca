@@ -30,7 +30,7 @@ var series = ['movilidad2015','sustentabilidad2015','innovacion2015','infraestru
 var seriales = {};
 
 //ATENCION: revisar el criterio de seleccion de registro en setNodeCode()
-var tfondosuscription_adapter_adapter = {
+var tfondosuscription_adapter = {
     movilidad:{
         serie: 'movilidad2015',
         base: 100000,
@@ -41,12 +41,12 @@ var tfondosuscription_adapter_adapter = {
         base: 100000,
         prefix: 'FDO-SUS'
         },
-    movilidad:{
+    innovacion:{
         serie: 'innovacion2015',
         base: 100000,
         prefix: 'FDO-INN'
         },
-    movilidad:{
+    infraestructura:{
         serie: 'infraestructura2015',
         base: 100000,
         prefix: 'FDO-INF'

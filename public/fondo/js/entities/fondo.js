@@ -30,12 +30,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
-    update: function(user, integrantes, mreferencias, areferencias, cb){
+    update: function(user, pasajeros, tramos, cb){
       var self = this;
       _updateFacetStepOne(user, self);
-      _updateFacetStepTwo(user, integrantes, self);
-      _updateFacetStepThree(user, mreferencias, self);
-      _updateFacetStepFour(user, areferencias, self);
+      _updateFacetStepTwo(user, self);
+      _updateFacetStepThree(user, pasajeros, tramos, self);
+      //TODO
+      //_updateFacetStepFour(user, areferencias, self);
 
       initModelForUpdate(user, self);
 
@@ -56,7 +57,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     defaults: {
        _id: null,
-      tregistro:'musica',
+      tregistro:'movilidad',
       evento:'fondo',
       rubro:'general',
       legal: '',
@@ -83,23 +84,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         eventurl: '',
         eventtype: '',
         motivacion: '',
-        edescription: '',
         eavatar: '',
 
       },
 
-/* borrar
-      requerimiento:{
-        tsolicitud: 'no_definido',
-
-        edisplayName: '',
-
-        edescription: '',
-        eavatar: '',
-
-      },
-
-*/
       responsable:{
         etipojuridico: 'not_defined',
         edisplayName: '',
@@ -157,8 +145,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         rcel: '',
         rmail2: '',
 
-        ridiomas: '',
-        representantes: [],
       },
       
       isComprador: '',
@@ -252,19 +238,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     var self = this,
     fealta = new Date(),
     fecomp = utils.dateToStr(fealta),
-    personid = userGetPersonId(user);
+    personid = userGetPersonId(user),
+    rubro = model.get('requerimiento').tsolicitud,
+    tsol = rubro.indexOf('_') > 0 ? rubro.substring(0, rubro.indexOf('_')) : rubro;
 
     var initialdata = {
-      tregistro:model.get('requerimiento').tsolicitud,
+      tregistro: tsol,
       evento:'fondo',
       edicionevento:'2015',
-      rubro:'general',
+      rubro: rubro,
       cnumber:'',
       documid: '',
       fealta: fealta.getTime(),
       fecomp: fecomp,
-      slug: 'Inscripción Fondo: ' + model.get('requerimiento').edisplayName,
-      description: 'Formulario de solicitud Fondo Argentino 2015',
+      slug: 'Inscripción Fondo: ' + model.get('requerimiento').eventname,
+      description: 'Formulario de aplicación al Fondo Argentino de Cultura - Edición 2015',
       estado_alta:'activo',
       nivel_ejecucion: 'enproceso',
       user:{
@@ -641,8 +629,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         papellido: {type: 'Text',  title: 'Apellido'},
         pfenac:    {type: 'Text',  title: 'Fecha Nacimiento',  editorAttrs:{placeholder:'dd/mm/aaaa'}},
         pdni:      {type: 'Text',  title: 'DNI',                editorAttrs:{placeholder:'número de documento'}},
-        pmail:     {type: 'Text',  title: 'Correo electrónico', editorAttrs:{placeholder:'correo de contacto'}},
-        pcelular:  {type: 'Text',  title: 'Telefono',           editorAttrs:{placeholder:'celular de contacto'}},
     },
  
     validate: function(attrs, options) {
@@ -661,8 +647,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       papellido: '',
       pafenac: '',
       pdni: '',
-      pmail: '',
-      pcelular: '',
     },
   }); 
   
@@ -682,11 +666,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'Tramo:fondo.js ',
     
     schema: {
-      ttramo:     {type: 'Select',   title: 'Tramo',   editorAttrs:{placeholder:'Ida/ Ida-Vta'},options: utils.itinerarioTipoTramoOpLst },
-      fesalida:   {type: 'Text',     title: 'Salida',  editorAttrs:{placeholder:'dd/mm/aaaa'}},
-      fevuelta:   {type: 'Text',     title: 'Regreso', editorAttrs:{placeholder:'de/mm/aaaa'}},
-      origen:     {type: 'Text',     title: 'Origen',  editorAttrs:{placeholder:'Lugar/ puerto/ aeropuerto de salida'}},
-      destino:    {type: 'Text',     title: 'Destino', editorAttrs:{placeholder:'Lugar/ puerto/ aeropuerto de llegada'}},
+      ttramo:     {type: 'Select',   title: 'Tramo (Ida o Vuelta)',   editorAttrs:{placeholder:'Ida/ Ida-Vta'},options: utils.itinerarioTipoTramoOpLst },
+      fesalida:   {type: 'Text',     title: 'Fecha de Salida',  editorAttrs:{placeholder:'dd/mm/aaaa'}},
+      fevuelta:   {type: 'Text',     title: 'Fecha de Regreso', editorAttrs:{placeholder:'de/mm/aaaa'}},
+      origen:     {type: 'Text',     title: 'Origen (lugar/ puerto/ aeropuerto de partida)',  editorAttrs:{placeholder:'Lugar/ puerto/ aeropuerto de salida'}},
+      destino:    {type: 'Text',     title: 'Destino (lugar/ puerto/ aeropuerto de llegada)', editorAttrs:{placeholder:'Lugar/ puerto/ aeropuerto de llegada'}},
       eventname:  {type: 'Text',     title: 'Evento',  editorAttrs:{placeholder:'Denominación evento/ show en destino'}},
       eventurl:   {type: 'Text',     title: 'Enlace (URL) evento', editorAttrs:{placeholder:'http://www.dominio.com.ar'}},
     },
@@ -790,29 +774,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     var data = _.extend({}, model.get('requerimiento'));
     return new Entities.FondoStepOneFacet(data);
   };
-
   var _updateFacetStepOne = function(user, model){
-    var requerimiento = model.get('requerimiento');
-
-    requerimiento = model.stepOne.attributes;
-
+    var requerimiento = model.stepOne.attributes;
     model.set ('tregistro', requerimiento.tsolicitud);
-    
     model.set('requerimiento', requerimiento);
   };
 
+
   var _facetFactoryStepTwo = function(model){
     var data = _.extend({}, model.get('responsable'));
-    model.integrantes = model.get('responsable').integrantes;
     return new Entities.FondoStepTwoFacet(data);
   };
-  
-  var _updateFacetStepTwo = function(user, integrantes, model){
-    var responsable = model.get('responsable');
-    responsable = model.stepTwo.attributes;
-    responsable.integrantes = integrantes.toJSON();
+  var _updateFacetStepTwo = function(user, model){
+    var responsable = model.stepTwo.attributes;
     model.set('responsable', responsable);
   };
+
 
   var _facetFactoryStepThree = function(model){
     //var data = _.extend({}, model.get('rolePlaying'), model.get('musica'));
@@ -820,11 +797,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     model.pasajeros = model.get('movilidad').pasajeros;
     return new Entities.FondoStepThreeFacet(model.get('movilidad'));
   };
-  var _updateFacetStepThree = function(user, tramos, model){
+  var _updateFacetStepThree = function(user, pasajeros, tramos, model){
     //var rolePlaying = model.get('rolePlaying');
-    var data;
-    data = model.stepThree.attributes;
+    var data = model.stepThree.attributes;
     data.tramos = tramos.toJSON();
+    data.pasajeros = pasajeros.toJSON();
     model.set('movilidad', data);
   };
 

@@ -7,12 +7,16 @@
       <select  id="tsolicitud" class="form-control" name="tsolicitud">
         <option value='no_definido'
         <%= tsolicitud == 'no_definido' ? 'selected':'' %>>Tipo de Movilidad requerida</option>
-        <option value='nacional'
-        <%= tsolicitud == 'nacional' ? 'selected':'' %>>Nacional: movilidad dentro del país</option>
-        <option value='nacional_mica'
-        <%= tsolicitud == 'nacional_mica' ? 'selected':'' %>>MICA: movilidad para participar en MICA-2015</option>
-        <option value='internacional'
-        <%= tsolicitud == 'internacional' ? 'selected':'' %>>Internacional: movilidad para un destino fuera del país</option>
+
+        <option value='movilidad_nacional'
+        <%= tsolicitud == 'movilidad_nacional' ? 'selected':'' %>>Ayudas a la Movilidad dentro del país</option>
+
+        <option value='movilidad_mica'
+        <%= tsolicitud == 'movilidad_intl' ? 'selected':'' %>>Ayudas a la Movilidad al exterior</option>
+
+        <option value='movilidad_intl'
+        <%= tsolicitud == 'movilidad_mica' ? 'selected':'' %>>Ayudas a la Movilidad para la participación MICA 2015</option>
+
       </select>
       <span class="help-block"></span>
     </div>
@@ -44,16 +48,16 @@
         <%= eventtype == 'no_definido' ? 'selected':'' %>>Tipo de Evento</option>
 
         <option value='feria'
-        <%= eventtype == 'feria' ? 'selected':'' %>>Ferias o mercados</option>
+        <%= eventtype == 'feria' ? 'selected':'' %>>Presencia en ferias y mercados</option>
 
         <option value='festivales'
-        <%= eventtype == 'festivales' ? 'selected':'' %>>Festivales o encuentros</option>
+        <%= eventtype == 'festivales' ? 'selected':'' %>>Presencia en festivales y encuentros</option>
 
         <option value='gira'
-        <%= eventtype == 'gira' ? 'selected':'' %>>Gira artística</option>
+        <%= eventtype == 'gira' ? 'selected':'' %>>Ayudas a giras artísticas y culturales</option>
 
         <option value='mica'
-        <%= eventtype == 'mica' ? 'selected':'' %>>MICA: participación en MICA-2015</option>
+        <%= eventtype == 'mica' ? 'selected':'' %>>Ayuda a participar en MICA 2015</option>
 
       </select>
       <span class="help-block"></span>

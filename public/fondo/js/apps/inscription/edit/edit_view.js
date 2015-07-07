@@ -3,7 +3,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   var AppCommon = DocManager.module('App.Common');
   
   Edit.Layout = Marionette.LayoutView.extend({
-
     templateData: '<div id="form-region"></div>',
 
     tagName: "div",
@@ -12,7 +11,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     },
 
     onRender: function(){
-      //console.log('STEP MAIN LAYOUT RENDER ******************************')
     },
 
     getTemplate: function(){
@@ -36,7 +34,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       //console.log('Click basicEdit')
       this.trigger('edit:basic:data');
     },
-
   });
   
   //NOT FOUND VIEW
@@ -50,33 +47,28 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
 
 
-
-
   // ********** WIZARD FORM LAYOUT **********
   Edit.WizardLayout = Marionette.LayoutView.extend({
     whoami: 'WizardLayout',
     tagName: "div",
+    
     attributes: {
       id: 'formWizardLayout'
     },
+
     initialize: function(opts){
       if(opts.tab){
         this.selectedTab = opts.tab;
       }
-      // ver LPVNLO
-      //Marionette.ItemView.prototype.initialize.apply(this,arguments);
-
-      // this.events = _.extend({},this.formevents,this.events);
-      // this.delegateEvents();
     },
+    
     onRender: function(){
     },
 
     onShow: function(){
 
-
       $('#myWizard').wizard();
-
+      registerStepWizardAction();
 
     },
 
@@ -182,21 +174,8 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
       // ayuda popover
       self.$('[data-toggle="popover"]').popover()
-      self.toggleStateInput();
-
       helpPopUp(self);
 
-      
-/*      var croppicOptions = {
-        uploadUrl:'/img',
-        cropUrl:'/cropImg',
-        imgEyecandy:true,
-        loaderHtml:'<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> '
-      };
-      console.log('YES, [%s]',self.$('#cropContainerEyecandy'))
-      var objn = self.$('#cropContainerEyecandy');
-      var cropContainerEyecandy = new Croppic('cropContainerEyecandy',objn , croppicOptions);
-*/
       var $div = self.$el.find('.js-avatar').append($('<div></div>'));
 
       self.avatarEditor = new Edit.AvatarEditor({
@@ -205,26 +184,8 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       })
       self.avatarEditor.render();
 
-
-      $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        evt.stopPropagation();
-        var step = data.step;
-        if(step == 1){
-          if(data.direction === 'next'){
-            if(!self.validateStep(step)){
-              evt.preventDefault();
-              $('#myWizard').wizard('selectedItem', {step: step});
-            }else{
-
-              DocManager.trigger('wizard:next:step', step);
-
-            }
-          }
-        } 
-      });
-
-
     },
+
     validateStep: function(step){
       var errors = this.model.validateStep(step);
       this.onFormDataInvalid((errors||{}));
@@ -236,32 +197,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     },
 
     events: {
-      'change #epais':'stateinput',
-    },
-
-    stateinput:function(e){ 
-      e.preventDefault();
-      e.stopPropagation();
-
-      this.change(e);
-      this.toggleStateInput(e);
-    },
-
-    toggleStateInput: function(e){
-      if (this.model.get('epais') !='AR'){
-//        $('#eprov').replaceWith('<input class="form-control" type="text" name="eprov" id="eprov">');
-          this.$('.js-provext').show();
-          this.$('.js-provarg').hide();
-          if(e) this.$('.js-provext').val('')
-      }
-      else{
-        //Eligio otro pais y vuelve a elegir Argentina se arman las opciones de provincias otra vez
-//        var aprov = utils.buildSelectOptions("eprov",utils.provinciasOptionList.Argentina, province);
-//        $('#eprov').replaceWith('<select class="form-control" id="eprov" name="eprov> aprov("eprov")</select>');
-//        $('#eprov').html(aprov);
-          this.$('.js-provarg').show();
-          this.$('.js-provext').hide();
-      }
     },
 
     uservalidation: function(e){
@@ -342,25 +277,13 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       self.$('.radio-custom').radio();
       self.$('.checkbox-custom').checkbox();
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
+      $('#myWizard').wizard();
 
-      $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        evt.stopPropagation();
-        var step = data.step;
+      // ayuda popover
+      self.$('[data-toggle="popover"]').popover()
+      helpPopUp(self);
 
-        if(step == 2){
-          //console.log('[%s]: wizard EVENT: step:[%s]  direction:[%s]', self.whoami, data.step, data.direction);
-          if(data.direction === 'next'){
-            if(!self.validateStep(step)){
-              evt.preventDefault();
-              $('#myWizard').wizard('selectedItem', {step: step});
-            }else{
 
-              DocManager.trigger('wizard:next:step', step);
-            }
-          }
-        }
-
-      });    
     },
     validateStep: function(step){
       var errors = this.model.validateStep(step);
@@ -375,7 +298,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   });
 
   //*************************************************************
-  //           FORM STEP-TRES: VENDEDOR
+  //           FORM STEP-TRES: ITINERARIO
   //*************************************************************
   Edit.StepThreeLayout = Marionette.LayoutView.extend({
 
@@ -440,35 +363,23 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       self.$('.radio-custom').radio();
       self.$('.checkbox-custom').checkbox();
 
+      $('#myWizard').wizard();
 
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
       initTagsInput(self, 'vdescriptores');
+      // ayuda popover
 
+      self.$('[data-toggle="popover"]').popover()
+      helpPopUp(self);
 
-
-
- 
-      $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        evt.stopPropagation();
-        var step = data.step;
-        if(step == 3){
-
-          if(data.direction === 'next'){
-            if(!self.validateStep(step)){
-              evt.preventDefault();
-              $('#myWizard').wizard('selectedItem', {step: step});
-            }else{
-
-              DocManager.trigger('wizard:next:step', step);
-            }
-          }
-        }
-      });    
     },
+
     events: {
       'click .js-btn-add1': 'linksAudio',
       'click .js-btn-remove': 'removeAudio',
+      'change #epais':'stateinput',
     },
+
 
     removeAudio: function(e){
       $(e.target).parents('.ventry:first').remove();
@@ -604,26 +515,9 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       this.attachMinistra.render();
       this.attachDocIdentidad.render();
 
-
-
-      $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        evt.stopPropagation();
-        var step = data.step;
-        if(step == 4){
-          if(data.direction === 'next'){
-            if(!self.validateStep(step)){
-              evt.preventDefault();
-              $('#myWizard').wizard('selectedItem', {step: step});
-            }else{
-
-              DocManager.trigger('wizard:next:step', step);
-
-            }
-          }
-        }
-
-      });    
+      $('#myWizard').wizard();
     },
+
     events: {
     },
         
@@ -682,24 +576,10 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     tagName: 'div',
     template: false,
     initialize: function(opts){
-      //console.log('AVATAR Editor RENDER model:[%s]',this.model.whoami);
 
     },
-    onRender: function(){
 
-/*
-      this.attachView = new AppCommon.AttachmentView({
-            el:this.$el,
-            model:this.model,
-            collection: this.model.get('photos'),
-            templates: {
-              list: utils.templates.PhotosLayoutView,
-              itemRender: utils.templates.PhotoItem,
-              itemEditor: utils.templates.PhotoItemEditorView
-            }
-            
-      });
-*/      
+    onRender: function(){
       
       this.attachView = new AppCommon.AttachmentImageBox({
             el:this.$el,
@@ -780,11 +660,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
   Edit.ReferenceItemLayoutView = Marionette.LayoutView.extend({
     whoami: 'Edit.ReferenceItemLayoutView:edit_view.js',
-    //tagName: "div",
-    //className: "list-group",
-
-    //childView: Views.SidebarItem,
-    //childViewContainer: "article",
     
     initialize: function(opts){
       this.options = opts;
@@ -819,16 +694,12 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     activeView: 'view',
     editItem: function(){
       if(this.activeView === 'view'){
-        // this.getRegion('itemViewRegion').$el.hide();
-        // this.getRegion('itemEditRegion').$el.show();
         this.$el.find('#reference-item-view-region').hide();
         this.$el.find('#reference-item-edit-region').show();
         this.$el.find('.js-itemdata-edit').html('<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>');
         this.activeView = "edit";
 
       }else{
-        // this.getRegion('itemViewRegion').$el.show();
-        // this.getRegion('itemEditRegion').$el.hide();
         this.$el.find('#reference-item-edit-region').hide();
         this.$el.find('#reference-item-view-region').show();
         this.$el.find('.js-itemdata-edit').html('<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>');
@@ -1124,12 +995,125 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
 
 
+//=======================
+// Helper functions
+// =======================
+
+  var getSession = function(){
+    return Edit.Session;
+  };
+
+  var validateWizardStep = function(evt, data){
+    evt.stopPropagation();
+    var step = data.step;
+    var currentStep = parseInt(step);
+    var forward = data.direction === 'next';
+    var targetStep = currentStep + (forward ? 1 : -1);
+    var session = getSession();
+    //console.log('wizard LAYOUT [%s] new age:[%s]/[%s] frwd: [%s] session[%s]',step, currentStep, targetStep , forward,session );
+    if(step === 1){
+
+      if(!session.views.stepOne.validateStep(step)) {
+        evt.preventDefault();
+        Message.warning('Debe completar los campos obligatorios para avanzar');
+        $('#myWizard').wizard('selectedItem', {step: step});
+      }else{
+        DocManager.trigger('wizard:next:step', step);
+        setNextStep(evt, data, step, currentStep, forward, targetStep)
+      }
+ 
+    }else if(step === 2){
+
+      if(!session.views.stepTwoForm.validateStep(step)) {
+        evt.preventDefault();
+        Message.warning('Debe completar los campos obligatorios para avanzar');
+        $('#myWizard').wizard('selectedItem', {step: step});
+      }else{
+        DocManager.trigger('wizard:next:step', step);
+        setNextStep(evt, data, step, currentStep, forward, targetStep)
+      }
+
+    }else if(step === 3){
+
+      if(!session.views.stepThreeForm.validateStep(step)) {
+        evt.preventDefault();
+        Message.warning('Debe completar los campos obligatorios para avanzar');
+        $('#myWizard').wizard('selectedItem', {step: step});
+      }else{
+        DocManager.trigger('wizard:next:step', step);
+        setNextStep(evt, data, step, currentStep, forward, targetStep)
+      }
+
+    }else if(step === 4){
+
+      if(!session.views.stepFourForm.validateStep(step)) {
+        evt.preventDefault();
+        Message.warning('Debe completar los campos obligatorios para avanzar');
+        $('#myWizard').wizard('selectedItem', {step: step});
+      }else{
+        DocManager.trigger('wizard:next:step', step);
+        setNextStep(evt, data, step, currentStep, forward, targetStep)
+      }
+
+    }
+
+  };
+
+  var setNextStep = function (evt, data, step, currentStep, forward, targetStep){
+    //console.log('NEXT STEP [%s] new age:[%s]/[%s] frwd: [%s] ',getSession().model.get('solicitante').tsolicitud, currentStep, targetStep, forward );
+    // if(targetStep === 3 && getSession().model.get('solicitante').tsolicitud !== 'musica' ){
+    //   evt.preventDefault();
+    //   $('#myWizard').wizard('selectedItem', {
+    //     step: (forward ? 4 : 2)
+    //   });
+    // }
+  };
+
+  // var checkMusicReferences = function(refCol){
+  //   var errors = {};
+
+  //   if(refCol.length === 0){
+  //     errors.referencias = 'ATENCIÓN: debe ingresar ENLACES <br> a modo de REFERENCIAS';
+  //     Message.error(errors.referencias);
+  //     return false;
+
+  //   }else if(refCol.length <5){
+  //     errors.referencias = 'ATENCIÓN: te recordamos la importancia de informar al menos 5 enlaces';
+  //     Message.warning(errors.referencias);
+  //     return true;
+
+  //   }else{
+  //     return true;
+  //   }
+  // };
+
+
+  var registerStepWizardAction = function(){
+
+    $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
+      evt.stopPropagation();
+      var step = data.step;
+      var currentStep = parseInt(step);
+      var forward = data.direction === 'next';
+      var targetStep = currentStep + (forward ? 1 : -1);
+      var session = getSession();
+
+      if(data.direction === 'next'){
+        validateWizardStep(evt, data);
+      }else{
+        setNextStep(evt, data, step, currentStep, forward, targetStep)
+
+      }
+    });
+
+  };
+
+
 
 //=======================
 // Helper functions
 // =======================
   var helpPopUp = function(view){
-    console.log('tooltip')
 
       var $targets = view.$( '[rel~=tooltip]' ),
           $target  = false,
@@ -1196,87 +1180,5 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       });
 
   };
-
     
 });
-
-/*
-
-        //AGREGAR CAMPOS ADICIONALES PARA VENDEDOR
-        $(document).on('click', '.btn-add', function(e) {e.preventDefault();
-            var controlForm = $('.vaudiocontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vaudio').val('');
-            controlForm.find('.ventry:not(:last) .btn-add')
-                .removeClass('btn-add').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e){
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-        $(document).on('click', '.btn-add2', function(e) {e.preventDefault();
-            var controlForm = $('.vvideocontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vvideo').val('');
-            controlForm.find('.ventry:not(:last) .btn-add2')
-                .removeClass('btn-add2').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e) {
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-        $(document).on('click', '.btn-add3', function(e) {e.preventDefault();
-            var controlForm = $('.vimgcontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vimg').val('');
-            controlForm.find('.ventry:not(:last) .btn-add3')
-                .removeClass('btn-add3').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e) {
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-        $(document).on('click', '.btn-add4', function(e) {e.preventDefault();
-            var controlForm = $('.vwebcontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vweb').val('');
-            controlForm.find('.ventry:not(:last) .btn-add4')
-                .removeClass('btn-add4').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e) {
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-        $(document).on('click', '.btn-add5', function(e) {e.preventDefault();
-            var controlForm = $('.vothercontrols div:first'),
-                currentEntry = $(this).parents('.ventry:first'),
-                newEntry = $(currentEntry.clone()).appendTo(controlForm);
-            newEntry.find('input.vother').val('');
-            controlForm.find('.ventry:not(:last) .btn-add5')
-                .removeClass('btn-add5').addClass('btn-remove')
-                .removeClass('btn-warning').addClass('btn-danger')
-                .html('<span class="glyphicon glyphicon-minus"></span>');
-        }).on('click', '.btn-remove', function(e) {
-        $(this).parents('.ventry:first').remove();
-        e.preventDefault();
-        return false;
-        });
-
-
-*/
