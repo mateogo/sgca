@@ -41,3 +41,7 @@ legend {
 .tree a {
   font-weight: bold;
 }
+
+.checkbox-inline  {
+  margin-right: 15px;
+}

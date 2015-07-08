@@ -63,7 +63,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       legal: '',
 
       cnumber:'',
-      documid: '',
       fealta: '',
       fecomp: '',
       slug: '',
@@ -89,7 +88,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       },
 
       responsable:{
-        etipojuridico: 'not_defined',
+        etipojuridico: 'pfisica',
         edisplayName: '',
         ename: '',
         epais: '',
@@ -248,7 +247,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       edicionevento:'2015',
       rubro: rubro,
       cnumber:'',
-      documid: '',
       fealta: fealta.getTime(),
       fecomp: fecomp,
       slug: 'Inscripción Fondo: ' + model.get('requerimiento').eventname,
@@ -360,7 +358,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           valid = true,
           errors = {};
 
-      var check = [];
+      var check = [['ename'], ['edisplayName'], ['epais'], ['email'], ['rodocum'], ['rtel'], ['actividadppal'], ['fondo2014'], ['mica2014']];
       //if(step>2 || step<1) return null;
 
       _.each(check, function(fld){
@@ -380,6 +378,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     validate: function(attrs, options) {
       var errors = {}
+
+      if (_.has(attrs,'ename') && (!attrs.ename )) {
+        errors.ename = "No puede ser nulo";
+      }
+
+      if (_.has(attrs,'edisplayName') && (!attrs.edisplayName )) {
+        errors.edisplayName = "No puede ser nulo";
+      }
+
+      if (_.has(attrs,'epais') && (!attrs.epais )) {
+        errors.epais = "No puede ser nulo";
+      }
+
+      if (_.has(attrs,'email') && (!attrs.email )) {
+        errors.email = "No puede ser nulo";
+      }
+
 
       if (_.has(attrs,'rname') && (!attrs.rname )) {
         errors.rname = "No puede ser nulo";
@@ -671,7 +686,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       fevuelta:   {type: 'Text',     title: 'Fecha de Regreso', editorAttrs:{placeholder:'de/mm/aaaa'}},
       origen:     {type: 'Text',     title: 'Origen (lugar/ puerto/ aeropuerto de partida)',  editorAttrs:{placeholder:'Lugar/ puerto/ aeropuerto de salida'}},
       destino:    {type: 'Text',     title: 'Destino (lugar/ puerto/ aeropuerto de llegada)', editorAttrs:{placeholder:'Lugar/ puerto/ aeropuerto de llegada'}},
-      eventname:  {type: 'Text',     title: 'Evento',  editorAttrs:{placeholder:'Denominación evento/ show en destino'}},
+      eventname:  {type: 'Text',     title: 'Evento/ Actividad a desarrollar en destino',  editorAttrs:{placeholder:'Denominación evento/ show en destino'}},
       eventurl:   {type: 'Text',     title: 'Enlace (URL) evento', editorAttrs:{placeholder:'http://www.dominio.com.ar'}},
     },
 

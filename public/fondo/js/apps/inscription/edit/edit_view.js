@@ -170,8 +170,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       self.$('.radio-custom').radio();
       self.$('.checkbox-custom').checkbox();
 
-      //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
-
       // ayuda popover
       self.$('[data-toggle="popover"]').popover()
       helpPopUp(self);
@@ -255,7 +253,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
   });
   //*************************************************************
-  //           FORM STEP-DOS: REPRESENTANTES
+  //           FORM STEP-DOS: REQUIRENTE
   //*************************************************************
   Edit.StepTwoForm = DocManager.FondoRequestApp.Common.Views.Form.extend({
     whoami: 'StepTwoForm',
@@ -279,12 +277,43 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
       $('#myWizard').wizard();
 
+      if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
+      if(self.model.get('fondo2014') === 'no') self.$('#fondo-detail').addClass('hidden');
+      if(self.model.get('mica2014') === 'no') self.$('#mica-detail').addClass('hidden');
+
       // ayuda popover
       self.$('[data-toggle="popover"]').popover()
       helpPopUp(self);
 
+      self.toggleStateInput();
 
     },
+
+    events: {
+      'change #epais':'stateinput',
+    },
+
+    stateinput:function(e){ 
+      e.preventDefault();
+      e.stopPropagation();
+
+      this.change(e);
+      this.toggleStateInput(e);
+    },
+
+    toggleStateInput: function(e){
+      if (this.model.get('epais') !='AR'){
+          this.$('.js-provext').show();
+          this.$('.js-provarg').hide();
+          if(e) this.$('.js-provext').val('')
+      }
+      else{
+          this.$('.js-provarg').show();
+          this.$('.js-provext').hide();
+      }
+    },
+
+
     validateStep: function(step){
       var errors = this.model.validateStep(step);
       this.onFormDataInvalid((errors||{}));
@@ -1034,10 +1063,11 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       }
 
     }else if(step === 3){
+      console.log('Validacion Step 3')
 
-      if(!session.views.stepThreeForm.validateStep(step)) {
+      if(!session.views.stepThreeForm.validateStep(step) || !checkTramosList(getSession().tramos) || !checkPersonas(getSession().pasajeros)) {
         evt.preventDefault();
-        Message.warning('Debe completar los campos obligatorios para avanzar');
+        Message.warning('Hay errores en el formulario');
         $('#myWizard').wizard('selectedItem', {step: step});
       }else{
         DocManager.trigger('wizard:next:step', step);
@@ -1069,23 +1099,45 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     // }
   };
 
-  // var checkMusicReferences = function(refCol){
-  //   var errors = {};
+  var checkTramosList = function(refCol){
+    var errors = {},
+        evType = getSession().views.stepOne.model.get('eventtype');
+    console.log('Check Tramos: [%s]', evType);
 
-  //   if(refCol.length === 0){
-  //     errors.referencias = 'ATENCIÓN: debe ingresar ENLACES <br> a modo de REFERENCIAS';
-  //     Message.error(errors.referencias);
-  //     return false;
+    if(refCol.length === 0){
+      errors.referencias = 'ATENCIÓN: debe ingresar el ITINERARIO DETALLADO <br> o lista de TRAMOS, si es Gira';
+      Message.error(errors.referencias);
+      return false;
 
-  //   }else if(refCol.length <5){
-  //     errors.referencias = 'ATENCIÓN: te recordamos la importancia de informar al menos 5 enlaces';
-  //     Message.warning(errors.referencias);
-  //     return true;
+    }else if(refCol.length >1 && evType !== 'gira'){
+      errors.referencias = 'ATENCIÓN: tenés que ingresar sólo un destino (Ida y Vuelta)';
+      Message.error(errors.referencias);
+      return false;
 
-  //   }else{
-  //     return true;
-  //   }
-  // };
+    }else{
+      return true;
+    }
+  };
+
+  var checkPersonas = function(refCol){
+    var errors = {},
+        qpaxmin = getSession().views.stepThreeForm.model.get('qpaxmin');
+    console.log('Check Personas: [%s]', qpaxmin);
+
+    if(refCol.length === 0){
+      errors.referencias = 'ATENCIÓN: debe ingresar Pasajeros ';
+      Message.error(errors.referencias);
+      return false;
+
+    }else if(refCol.length < qpaxmin ){
+      errors.referencias = 'ATENCIÓN: Ha informado menos pasajeros que el mínimo indicado: ' + qpaxmin;
+      Message.warning(errors.referencias);
+      return true;
+
+    }else{
+      return true;
+    }
+  };
 
 
   var registerStepWizardAction = function(){
