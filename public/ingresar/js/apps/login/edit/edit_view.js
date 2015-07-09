@@ -30,18 +30,15 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
       var self = this;
       return {
         formatDate: function(date){
-          console.log('templateHelpers!!!!!!!! oops!');
           return moment(date).format('dddd LL');
         },
         getFieldLabel: function(fieldName){
-          console.log('templateHelpers!!!!!!!! oops!');
           return self.model.getFieldLabel(fieldName);
         }
       };
     },
 
     initialize: function(options){
-      console.log('LoginForm INIT');
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
@@ -55,13 +52,11 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
 
     registerUser: function(e){
       e.stopPropagation();e.preventDefault();
-      console.log('registerUser Click');
       this.trigger('register:user:form');
 
     },
 
     login: function(e){
-      console.log('LoginUser Click');
       this.trigger('login:user');
     },
 
@@ -86,25 +81,21 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
       var self = this;
       return {
         formatDate: function(date){
-          console.log('templateHelpers!!!!!!!! oops!')
           return moment(date).format('dddd LL');
         },
         getFieldLabel: function(fieldName){
-          console.log('templateHelpers!!!!!!!! oops!')
           return self.model.getFieldLabel(fieldName);
         }
       };
     },
 
     initialize: function(options){
-      console.log('SignUpForm INIT')
       var self = this;
       this.events = _.extend({},this.formevents,this.events);
       this.delegateEvents();
     },
 
     onRender: function(){
-      console.log('OnRender: [%s]',this.model.whoami);
       Backbone.Form.validators.errMessages.required = 'Dato requerido';
       Backbone.Form.validators.errMessages.email = 'No es un correo válido';
       Backbone.Form.validators.errMessages.match = 'El dato no coincide';
@@ -115,7 +106,7 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
       });
 
       this.form.on('username:blur', function(form, editorContent) {
-          console.log('***Blur:key: [%s] value:[%s]', editorContent.key,editorContent.getValue());
+          //console.log('***Blur:key: [%s] value:[%s]', editorContent.key,editorContent.getValue());
 
           this.model.validusername(editorContent.getValue(),function(error){
               if(error){
@@ -142,27 +133,23 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
     saveNewUser: function(e){
       var self = this;
       e.stopPropagation();e.preventDefault();
-      console.log('NewUser CLICK')
       var errors = self.form.commit({validate: true});
       if(!errors){
         self.model.validusername(self.model.get('username'),function(error){
             if(error){
-              console.log('validation HAS ERRORS')
               var errors = self.form.commit({validate:true});
             }else{
-              console.log('validation OK')
               self.trigger('create:new:user', self.model);
             }
         });
       }else{
-        console.log('comit VALIDATION has ERRORS')
+        //console.log('comit VALIDATION has ERRORS')
       }
 
     },
 
     loginUser: function(e){
       e.stopPropagation();e.preventDefault();
-      console.log('loginUser Click');
       this.trigger('login:user:form');
 
     }

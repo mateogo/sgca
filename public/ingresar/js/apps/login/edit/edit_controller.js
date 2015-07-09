@@ -6,7 +6,6 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
 	  dao.gestionUser.getUser(DocManager, function (user){
 
 	    if(false){ //user.id
-	    	console.log('LOGIN: usuario detectado, redireccionando a [%s]',path);
 
 	    }else{
 	      var layout = createLayout();
@@ -20,7 +19,6 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
 
     var p = DocManager.request('user:entity',idUser);
     p.done(function(user){
-      console.log('el usuario',user);
       var view = new Edit.RecoveryView({model:user});
       layout.getRegion('loginRegion').show(view);
       view.once('password:changed',function(){
@@ -145,7 +143,26 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
 
           mailModel.sendmail();
 
+        }else if(targetUser === 'fondo'){
+
+          data = {
+              username: user.get('username'),
+              toName: user.get('displayName'),
+              cnumber: '',
+              fecomp: '',
+              nodeId: '',
+              slug: 'Alta de Usuario para el Fondo Argentino de Desarrollo Cultural',
+            };
+
+            mailModel.set(data);
+            mailModel.setTemplate(utils.templates.MailAltaUsuarioObras);
+
+            mailModel.buildMailContent();
+
+            mailModel.sendmail();
+
         }else if(targetUser === 'sisplan'){
+
 
         }else if(targetUser === 'obras'){
 

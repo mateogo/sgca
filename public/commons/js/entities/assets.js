@@ -48,18 +48,19 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     buildPredicateData: function (ancestor, child, predicate) {
         var ancestordata = {
                 id: ancestor.id,
-                code: ancestor.get('productcode') || 'ASSET',
+                code: ancestor.get('cnumber') || 'ASSET',
                 slug: ancestor.get('slug'),
                 predicate: predicate
             };
         var tlist = child.fetchFilteredPredicateArray(predicate, child, ancestor);
         tlist.push(ancestordata);
 
-        child.set(predicate, tlist);
+        child.set('es_asset_de', tlist);
 
         return child;
     },
 
+    // publica
     linkChildsToAncestor: function (childs, ancestor, predicate, cb) {
         var deferreds = [], 
             defer;
@@ -69,10 +70,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             childs.push(tempo);
         }
 
+        // childs es un array
         for (var i = childs.length - 1; i >= 0; i--) {
             var child = childs[i];
 
-            child = child.buildPredicateData(ancestor,child, predicate);
+            child = child.buildPredicateData(ancestor, child, predicate);
             ///
             defer = child.save(null, {
                 success: function (child) {
@@ -119,15 +121,148 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
   Entities.AssetCollection = Backbone.Collection.extend({
-
+    whoami: 'Entities.AssetCollection:asstes.js',
     model: Entities.Asset,
-    
+
     initialize: function (model, options) {
        if(options) this.options = options;
     },
-
     url: "/recuperar/activos"
   });
 
+
+  //*************************************************************
+  //            Helper Functions
+  //*************************************************************
+  var queryCollection = function(query){
+      var entities = new Entities.AssetCollection();
+      var defer = $.Deferred();
+
+      entities.fetch({
+        data: query,
+        type: 'post',
+        success: function(data){
+          defer.resolve(data);
+        },
+        error: function(data){
+            defer.resolve(undefined);
+        }
+      });
+
+      return defer.promise();
+  };
+
+  var queryFactory = function (entities){
+    var fd = DocManager.Entities.FilteredCollection({
+        collection: entities,
+
+        filterFunction: function(query){
+          return function(node){
+            var test = true;
+            //if((query.taccion.trim().indexOf(node.get('taccion'))) === -1 ) test = false;
+            //console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.taccion,node.get("taccion"),node.get("cnumber"));
+            if(query.evento) {
+              if(query.evento.trim() !== node.get('evento')) test = false;
+            }
+
+
+            if(test) return node;
+          }
+        }
+    });
+    return fd;
+  };
+
+  //*************************************************************
+  //            entity API
+  //*************************************************************
+  var API = {
+
+    getEntity: function(entityId){
+      var request = new Entities.Asset({_id: entityId});
+      var defer = $.Deferred();
+      if(entityId){
+        request.fetch({
+          success: function(data){
+            defer.resolve(data);
+          },
+          error: function(data){
+            defer.resolve(undefined);
+          }
+       });
+      }else{
+        defer.resolve(request);
+      }
+      return defer.promise();
+    },
+
+
+    getEntities: function(query){
+
+      var fetchingEntities = queryCollection(query),
+          defer = $.Deferred();
+
+      $.when(fetchingEntities).done(function(entities){
+
+
+        defer.resolve(entities);
+
+      });
+      return defer.promise();
+    },
+
+    fetchLocalFilteredEntities: function(col, query){
+        var filteredEntities = queryFactory(col);
+        if(query){
+          filteredEntities.filter(query);
+        }
+        return filteredEntities;
+    },
+
+    groupByPredicate: function(assets, parentid){
+        var adjuntos = {},
+            predicate,
+            tokens,
+            lista ;
+
+        assets.each(function(asset){
+          tokens = asset.get('es_asset_de');
+          _.each(tokens, function(token){
+            if(token.id = parentid){
+              predicate = token.predicate;
+              if(adjuntos[predicate]){
+                adjuntos[predicate].push(asset.attributes);
+              }else{
+                adjuntos[predicate] = [asset.attributes];
+              }
+            }
+          });
+        });
+        return adjuntos;    
+    },
+  };
+
+  //*************************************************************
+  //            entity HANDLERS
+  //*************************************************************
+  DocManager.reqres.setHandler("asset:entity", function(id){
+    return API.getEntity(id);
+  });
+
+  DocManager.reqres.setHandler("assets:filtered:entities", function(query){
+    return API.getEntities(query);
+  });
+
+  DocManager.reqres.setHandler("assets:local:query", function(entitiesCol, query){
+    return API.fetchLocalFilteredEntities(entitiesCol, query);
+  });
+
+  DocManager.reqres.setHandler("assets:groupby:predicate", function(assets, parentid){
+    return API.groupByPredicate(assets, parentid);
+  });
+
 });
+
+
+
 

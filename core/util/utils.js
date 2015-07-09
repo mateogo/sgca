@@ -111,7 +111,8 @@ var rutas = {
     'gestion:comprobantes:list'    :'/gestion/#comprobantes',
     'sisplan:acciones:list'        :'/sisplan/#acciones',
     'studio:producciones:list'     :'/studio',
-    'mica:rondas'    			   :'/mica'
+    'mica:rondas'    			   :'/mica',
+    'fondo:inscripcion'            :'/fondo/#inscripcion/nueva'
 };
 
 

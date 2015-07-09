@@ -146,13 +146,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       },
       
-      isComprador: '',
-      isVendedor: '',
+
       movilidad: {
         tmovilidad: 'no_definido',
         qpax: 0,
         qpaxmin: 0,
-        qtramos: 0,
         description: '',
 
 
@@ -485,7 +483,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
   //*************************************************************
-  //            FACET FOUR (TRAMOS, PASAJEROS, EVENTOS)
+  //            FACET FOUR (ARCHIVOS ADJUNTOS)
   //*************************************************************
 
   Entities.FondoStepFourFacet = Backbone.Model.extend({
@@ -527,28 +525,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     validate: function(attrs, options) {
       var errors = {}
-      if(this.get('rolePlaying').aescenica){
-        if (_.has(attrs,'aescenario') && (!attrs.aescenario )) {
-          errors.aescenario = "No puede ser nulo";
-        }
-        
-        if (_.has(attrs,'propuestaartistica') && (!attrs.propuestaartistica )) {
-          errors.propuestaartistica = "No puede ser nulo";
-        }
-
-        if (_.has(attrs,'generoteatral')){
-          if(!_.contains(attrs.generoteatral, true)){
-            errors.generoteatral = "Debe seleccionar al menos un tipo de práctica";
-          }
-        }
-
-
-      }
 
       if( ! _.isEmpty(errors)){
         return errors;
       }
-
     },
 
 
@@ -559,7 +539,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
   //*************************************************************
-  //            FACET FIVE (UPLOADING)
+  //            FACET FIVE (confirma)
   //*************************************************************
 
   Entities.FondoStepFiveFacet = Backbone.Model.extend({
@@ -633,6 +613,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 
+  //*************************************************************
+  //            ASSET TOKEN
+  //*************************************************************
+  Entities.AssetToken = Backbone.Model.extend({
+    whoami: 'AssetToken: fondo.js ',
+
+    defaults: {
+      _id: null,
+      id: '',
+      cnumber: '',
+      predicate: '',
+      slug: '',
+    },
+  }); 
+  
   //*************************************************************
   //            PASAJEROS
   //*************************************************************
@@ -821,8 +816,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   };
 
   var _facetFactoryStepFour = function(model){
-    //var data = _.extend({}, model.get('rolePlaying'), model.get('aescenica'));
-    return new Entities.FondoStepFourFacet(model.get('adjuntos'));
+    var data = _.extend({},model.get('adjuntos'), {_id: model.id, cnumber: model.get('cnumber')} );
+    return new Entities.FondoStepFourFacet(data);
   };
 
   var _updateFacetStepFour = function(user, areferencias, model){

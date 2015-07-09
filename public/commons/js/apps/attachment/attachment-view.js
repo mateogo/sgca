@@ -29,6 +29,8 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
   var AttachmentItemView = Backbone.Marionette.ItemView.extend({
     
     initialize: function(opts){
+      console.log('****************************************')
+      console.log('AttachmentItemView INIT: [%s]', this.model.whoami);
      
       this.templates = {
           itemRender: utils.templates.AttachmentItem,
@@ -75,14 +77,17 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
     onRender: function(){
       this.upload();
     },
+
     upload: function(){
-      var file = this.model.get('file');
+      var self = this,
+          file = self.model.get('file'),
+          parentModel = self.model.get('parentModel'),
+          progressbar = self.$el.find('.progress-bar');
+      
       if(!(file instanceof File)) return;
+
+      console.log('upload: [%s]', self.model.whoami)
       
-      var parentModel = this.model.get('parentModel');
-      
-      var progressbar = this.$el.find('.progress-bar');
-      var self = this;
       uploadFile(file, progressbar, function(srvresponse, asset){
         var filelink = '<a href="'+srvresponse.urlpath+'" >'+srvresponse.name+'</a>';
         
@@ -95,12 +100,17 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
         self.render();
         
         self.triggerMethod('uploaded',self.model);
-         
+        /**
+        * parentModel = {id: ancestor.id, code: ancestor.get('cnumber') || 'ASSET', slug: ancestor.get('slug'), predicate: predicate}
+        *
+        *
+        */         
         if(parentModel){
-          asset.linkChildsToAncestor(asset, parentModel,'es_asset_de',function(){
+          asset.linkChildsToAncestor(asset, parentModel,parentModel.get('predicate'),function(){
               console.log('ASSET linked to ancestor');
           });  
-        }   
+        }
+        console.dir(self.model.attributes);
       });
     },
     
@@ -157,8 +167,13 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
       });
     }
   });
-  
+
+
+  // ***************
+  // COMPOSITE
+  // **************
   Common.AttachmentView = Marionette.CompositeView.extend({
+    whoami: 'Common.AttachmenView:attachment-view.js',
      
      childView:  AttachmentItemView,
      childViewContainer: '#list-region',
@@ -170,21 +185,33 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
      }, 
      
      initialize: function(opts){
-       if(opts.model && opts.model.assets){
-         this.collection = opts.model.assets;
-       }else if(opts.collection){
-         this.collection = opts.collection;
+      var self = this;
+      console.log('AttachmentView INIT: opts:[%s] model:[%s] same:[%s]', opts.model.whoami, this.model.whoami, this.model === opts.model)
+
+       if(self.model && self.model.assets){
+        console.log('Caso-1');
+         this.collection = self.model.assets;
+       }else if(self.collection){
+        console.log('Caso-2');
+         this.collection = self.collection;
          if(!(this.collection instanceof DocManager.Entities.AssetCollection)){
            this.collection = new DocManager.Entities.AssetCollection(this.collection);
          }
        }else{
+        console.log('Caso-3');
          this.collection = new DocManager.Entities.AssetCollection();  
+        console.log('Caso-3: [%s]', this.collection.length);
+         
        } 
        
-       if(opts.model instanceof DocManager.Entities.Asset){
-         this.collection.push(opts.model);
-       }else if(opts.model && opts.model.urlpath){
-         this.model = new DocManager.Entities.Asset(opts.model);
+       // model puede ser un Asset en sí mismo, con lo cual se trata de él mismo
+       // model puede ser un hash, que representa un Asset, en ese caso instancio el Asset.
+       if(self.model instanceof DocManager.Entities.Asset){
+          console.log('Caso-4');
+         this.collection.push(self.model);
+       }else if(self.model && self.model.urlpath){
+          console.log('Caso-5: un pseudo asset');
+         this.model = new DocManager.Entities.Asset(self.model);
          this.collection.push(this.model);
        }
        
@@ -218,8 +245,8 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
      },
      
      addFile: function(file){
-      //console.log('addFile parentModel:[%s]', this.model.whoami);
-      //console.dir(file);
+      console.log('addFile parentModel:[%s]', this.model.whoami);
+      console.dir(file);
        if(!file) return;
        var maxSize = 50 * 1024 * 1024;
          
@@ -281,6 +308,7 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
      },
      
      dropHandler: function(event){
+      // la cosa arranca acá
        var e = event.originalEvent;
        e.stopPropagation();
        e.preventDefault();
@@ -296,12 +324,15 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
        
      },
      
-     onAssetsChange: function(){
+     onAssetsChange: function(asset){
+       console.log('asset:changed    model: [%s]  asset: [%s]', this.model.whoami, asset.whoami );
+
+       this.trigger('asset:changed', this.model.whoami, asset.whoami )
        this.triggerMethod('change');
        this.$el.find('[type=file]').val('');
      },
      
-     onAssetsRemoved: function(){
+     onAssetsRemoved: function(asset){
       var self = this;
       setTimeout(function(){
        self.triggerMethod('change'); 
@@ -310,7 +341,7 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
      
   });
   
-
+///////////////////////////////////////////////////
   Common.AttachmentImageBox = Common.AttachmentView.extend({
     maxCountFiles: 1,
     
@@ -370,7 +401,7 @@ DocManager.module("App.Common", function(Common, DocManager, Backbone, Marionett
   var uploadFile = function(uploadingfile, progressbar, cb){
         var formData = new FormData();
         var folder = 'files';
-        //console.log(' uploadFiles BEGINS folder:[%s]', folder);
+        console.log(' uploadFiles BEGINS folder:[%s]', folder);
         
         if(!uploadingfile) return false;
 

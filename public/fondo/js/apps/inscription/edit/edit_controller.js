@@ -32,7 +32,9 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
     var defer = $.Deferred(),
         fetchingRequest,
-        fetchingMicaRequest;
+        fetchingMicaRequest,
+        fetchingAssets,
+        query;
 
     dao.gestionUser.getUser(DocManager, function (user){
       //console.log('Dao Get Current user: [%s]', user.get('username'));
@@ -48,28 +50,46 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
         //console.log('FondoRequestApp.Edit BEGIN [%s] [%s]', fondorqst.whoami, fondorqst.id);
 
         // off the record: si tiene inscripción en MICA buscamos datos default
-        fetchingMicaRequest = DocManager.request("micarqst:factory:new", user, "mica");
-        $.when(fetchingMicaRequest).done(function(micarqst){
-          //console.log('FETCHING MicaRequest [%s] [%s]', micarqst.whoami, micarqst.id);
 
-          fondorqst.initDataForEdit();
-          getSession().model = fondorqst;
-          initData(user, fondorqst);
-          if(micarqst && micarqst.id ){
-            setDefaultData(user, fondorqst, micarqst);
-          }
-          defer.resolve(fondorqst);
+        query = {
+          'es_asset_de.id': fondorqst.id
+        }
+        fetchingAssets = DocManager.request("assets:filtered:entities", query);
+        $.when(fetchingAssets).done(function(assets){
+          getSession().assts = assets;
+          //console.log('Assets Fetched so far: [%s]', assets.length);
 
-        });
-         
-      });
+          fetchingMicaRequest = DocManager.request("micarqst:factory:new", user, "mica");
+          $.when(fetchingMicaRequest).done(function(micarqst){
+            //console.log('FETCHING MicaRequest [%s] [%s]', micarqst.whoami, micarqst.id);
+
+            fondorqst.initDataForEdit();
+
+            getSession().model = fondorqst;
+            
+            getSession().adjuntos = DocManager.request('assets:groupby:predicate', assets, fondorqst.id);
+            
+            initData(user, fondorqst);
+            
+            if(micarqst && micarqst.id ){
+              setDefaultData(user, fondorqst, micarqst);
+            }
+            defer.resolve(fondorqst);
+
+          }); // mica
+        });// asstes
+      });//fondo
  
-    });
+    });//user
     return defer.promise();
   };
 
   var initData = function(user, model){
-    if(!model.id){
+    // Load Assets
+ 
+    if(model.id){
+
+    }else{
       if(user){
         model.get('responsable').rmail = user.get('mail');
         model.stepTwo.set('rmail', user.get('mail'));
@@ -82,7 +102,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
     if(!model.id){
       if(user){
-        console.log('yes! default data: ', micarqst.get('responsable').rname);
+        //console.log('yes! default data: ', micarqst.get('responsable').rname);
         model.stepTwo.set('rname', micarqst.get('responsable').rname);
         model.stepTwo.set('rdocnum', micarqst.get('responsable').rdocnum);
         model.stepTwo.set('rtel', micarqst.get('responsable').rtel);
@@ -204,7 +224,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       mailModel.set('to',getSession().currentUser.get('username'));
       
       //todo:ver donde configurar el servidor de produccion
-      console.log('enviarMail: currentDomain: [%s]',DocManager.getCurrentDomain());
+      //console.log('enviarMail: currentDomain: [%s]',DocManager.getCurrentDomain());
       mailModel.set( 'server',DocManager.getCurrentDomain());
       //mailModel.set( 'server','http://localhost:3000');
 

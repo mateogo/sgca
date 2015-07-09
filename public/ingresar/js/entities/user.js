@@ -51,7 +51,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     update: function(key, data, cb){
         var self = this;
         if(!self.id){
-          console.log('NO PUEDO HACER UPDATE: Falta el ID [%s] [%s]',self.id, self.get('username'));
+          //console.log('NO PUEDO HACER UPDATE: Falta el ID [%s] [%s]',self.id, self.get('username'));
           return;
         }
         self.fetch({
@@ -60,7 +60,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             model.set(key, data);
             model.save(null, {
                 success: function (model) {
-                    console.log('udate user:SUCCESS: [%s] ',model.get('username'));
+                    //console.log('udate user:SUCCESS: [%s] ',model.get('username'));
 
                     if(cb) cb(model);
                 },
@@ -75,14 +75,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     updateProfile: function(data, cb){
         var self = this;
         if(!self.id){
-          console.log('NO PUEDO HACER UPDATE: Falta el ID [%s] [%s]',self.id, self.get('username'));
+          //console.log('NO PUEDO HACER UPDATE: Falta el ID [%s] [%s]',self.id, self.get('username'));
           return;
         }
         model.beforeUpdate();
         model.set(data);
         model.save(null, {
             success: function (model) {
-                console.log('udate user:SUCCESS: [%s] ',model.get('username'));
+                //console.log('udate user:SUCCESS: [%s] ',model.get('username'));
                 if(cb) cb(model);
             },
             error: function () {
@@ -297,6 +297,16 @@ atribuciones (array)
             user.atributos = [];
 
             user.modulos = ['mica'];
+            user.estado_alta = 'activo';
+
+        }else if(target === 'fondo'){
+            user.grupo = 'adherente';
+            user.home = 'fondo:inscripcion';
+
+            user.roles = ['usuario'];
+            user.atributos = [];
+
+            user.modulos = ['fondo'];
             user.estado_alta = 'activo';
 
         }

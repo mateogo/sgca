@@ -5,6 +5,9 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 			'mica': 'loginMica',
 			'inscripcion/nueva': 'loginMica',
 
+			'fondo': 'loginFondo',
+			'fondo/inscripcion/nueva': 'loginFondo',
+
 			'showcase': 'loginShowcase',
 			'showcase/nueva': 'loginShowcase',
 
@@ -23,22 +26,27 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 
 	var API = {
 		loginUser: function(path, targetUser){
-			console.log('API: loginUser');
+			//console.log('API: loginUser');
 			LoginApp.Edit.Controller.login(path, targetUser);
 		},
 
 		loginMica: function(){
-			console.log('API: Login MICA');
+			//console.log('API: Login MICA');
 			this.loginUser('mica/#inscripcion/nueva', 'mica');
 		},
 
+		loginFondo: function(){
+			//console.log('API: Login FONDO');
+			this.loginUser('fondo/#inscripcion/nueva', 'fondo');
+		},
+
 		loginShowcase: function(){
-			console.log('API: Login SHOWCASE');
+			//console.log('API: Login SHOWCASE');
 			this.loginUser('mica/#showcase/nueva', 'mica');
 		},
 
 		loginSisplan: function(){
-			console.log('API: Login SISPLAN');
+			//console.log('API: Login SISPLAN');
 			this.loginUser('sisplan', 'sisplan');
 		},
 
@@ -53,7 +61,7 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 	};
 
 	DocManager.on('login:user',function(path){
-		console.log('Login user: [%s]',path);
+		//console.log('Login user: [%s]',path);
 		if(path){
 			DocManager.navigate('usuario/'+path);
 		}else{
@@ -63,7 +71,7 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
   });
 
 	DocManager.on('login:mica:inscripcion',function(){
-		console.log('Login MICA:');
+		//console.log('Login MICA:');
 		DocManager.navigate('inscripcion/nueva');
 		API.loginMica(path);
   });

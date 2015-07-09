@@ -521,28 +521,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       //if(self.model.get('etipojuridico') === 'pfisica') self.$('.togglejuridica').addClass('hidden');
       //self.$('.togglejuridica').addClass('hidden');
       //initTagsInput(self, 'cdescriptores');
-
-      this.attachMinistra = new AppCommon.AttachmentView({el:this.$el.find('#cartaministra'),model:this.model});
-      this.attachDocIdentidad = new AppCommon.AttachmentView({el:this.$el.find('#docidentidad'),model:this.model});
-      this.attachEspecifico = new AppCommon.AttachmentView({el:this.$el.find('#especifico'),model:this.model});
-      this.attachInvitacion = new AppCommon.AttachmentView({el:this.$el.find('#invitacion'),model:this.model});
-      this.attachConstanciacuit = new AppCommon.AttachmentView({el:this.$el.find('#constanciacuit'),model:this.model});
-      this.attachResenia = new AppCommon.AttachmentView({el:this.$el.find('#resenia'),model:this.model});
-      this.attachrRsolucionotorgam = new AppCommon.AttachmentView({el:this.$el.find('#resolucionotorgam'),model:this.model});
-      this.attachDesignacionautoridades = new AppCommon.AttachmentView({el:this.$el.find('#designacionautoridades'),model:this.model});
-      this.attachBalanceentidad = new AppCommon.AttachmentView({el:this.$el.find('#balanceentidad'),model:this.model});
-      this.attachEstatutoentidad = new AppCommon.AttachmentView({el:this.$el.find('#estatutoentidad'),model:this.model});
-
-      this.attachEspecifico.render();
-      this.attachInvitacion.render();
-      this.attachConstanciacuit.render();
-      this.attachResenia.render();
-      this.attachrRsolucionotorgam.render();
-      this.attachDesignacionautoridades.render();
-      this.attachBalanceentidad.render();
-      this.attachEstatutoentidad.render();
-      this.attachMinistra.render();
-      this.attachDocIdentidad.render();
+      buildAttachments(self, self.model);
 
       $('#myWizard').wizard();
     },
@@ -1032,6 +1011,67 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     return Edit.Session;
   };
 
+  var buildAttachments = function(view, model){
+    var model = getSession().model;
+    var adjuntos = getSession().adjuntos;
+
+
+    var attachTypes = ['especifico', 'cartaministra', 'invitacion',  'docidentidad', 'constanciacuit', 'resenia'];
+    _.each(attachTypes, function(attchType){
+      var data = {
+        _id: model.get('_id'),
+        cnumber: model.get('cnumber'),
+        predicate: attchType,
+        slug: model.get('slug'),
+      }
+      var token = new DocManager.Entities.AssetToken(data);
+      token.id = model.get('_id');
+
+      if(adjuntos[attchType] && adjuntos[attchType].length){
+        token.assets = new DocManager.Entities.AssetCollection(adjuntos[attchType]); 
+      }else{
+        token.assets = new DocManager.Entities.AssetCollection(); 
+      }
+
+      view[attchType] = new AppCommon.AttachmentView({el:view.$el.find('#'+attchType), model:token});
+      view[attchType].render();
+
+    });
+
+  };
+
+
+
+
+
+
+/*
+      this.attachDocIdentidad = new AppCommon.AttachmentView({el:this.$el.find('#docidentidad'),model:this.model});
+      this.attachEspecifico = new AppCommon.AttachmentView({el:this.$el.find('#especifico'),model:this.model});
+      this.attachInvitacion = new AppCommon.AttachmentView({el:this.$el.find('#invitacion'),model:this.model});
+      this.attachConstanciacuit = new AppCommon.AttachmentView({el:this.$el.find('#constanciacuit'),model:this.model});
+      this.attachResenia = new AppCommon.AttachmentView({el:this.$el.find('#resenia'),model:this.model});
+      this.attachrRsolucionotorgam = new AppCommon.AttachmentView({el:this.$el.find('#resolucionotorgam'),model:this.model});
+      this.attachDesignacionautoridades = new AppCommon.AttachmentView({el:this.$el.find('#designacionautoridades'),model:this.model});
+      this.attachBalanceentidad = new AppCommon.AttachmentView({el:this.$el.find('#balanceentidad'),model:this.model});
+      this.attachEstatutoentidad = new AppCommon.AttachmentView({el:this.$el.find('#estatutoentidad'),model:this.model});
+
+      this.attachEspecifico.render();
+      this.attachInvitacion.render();
+      this.attachConstanciacuit.render();
+      this.attachResenia.render();
+      this.attachrRsolucionotorgam.render();
+      this.attachDesignacionautoridades.render();
+      this.attachBalanceentidad.render();
+      this.attachEstatutoentidad.render();
+      this.attachDocIdentidad.render();
+
+*/
+
+
+
+
+
   var validateWizardStep = function(evt, data){
     evt.stopPropagation();
     var step = data.step;
@@ -1063,7 +1103,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       }
 
     }else if(step === 3){
-      console.log('Validacion Step 3')
 
       if(!session.views.stepThreeForm.validateStep(step) || !checkTramosList(getSession().tramos) || !checkPersonas(getSession().pasajeros)) {
         evt.preventDefault();
@@ -1102,7 +1141,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   var checkTramosList = function(refCol){
     var errors = {},
         evType = getSession().views.stepOne.model.get('eventtype');
-    console.log('Check Tramos: [%s]', evType);
 
     if(refCol.length === 0){
       errors.referencias = 'ATENCIÓN: debe ingresar el ITINERARIO DETALLADO <br> o lista de TRAMOS, si es Gira';
@@ -1122,7 +1160,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   var checkPersonas = function(refCol){
     var errors = {},
         qpaxmin = getSession().views.stepThreeForm.model.get('qpaxmin');
-    console.log('Check Personas: [%s]', qpaxmin);
 
     if(refCol.length === 0){
       errors.referencias = 'ATENCIÓN: debe ingresar Pasajeros ';
@@ -1173,7 +1210,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
           title   = false;
    
       $targets.bind('mouseenter', function(){
-        console.log('mouse-enter')
           $target  = $( this );
           tip     = $target.attr( 'title' );
           tooltip = $( '<div id="tooltip"></div>' );
