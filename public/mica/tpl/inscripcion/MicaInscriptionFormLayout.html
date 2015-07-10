@@ -47,25 +47,29 @@
                 <!--END COMPRAR-->
 
                  <div class="step-pane" data-step="5">
-                  <h4>Confirmación</h4>
-                  <p>!Felicitaciones!</p>
-                  <p>¡Has llegado al último paso!</p>
+                  <h3>Confirmación</h3>
+                  <span class="h4 en">Confirmation</span><hr>
+                  
+                  <p>!Felicitaciones! <span class="en">Congratulations!</span></p>
+                  <p>¡Has llegado al último paso! <span class="en">you have reached the last step!</span></p>
                   <div class="form-group required">
                     <div class="row">
                       <div class="col-sm-12">
                          <div id="print-legal">Al confirmar esta solicitud, le será enviado un correo electrónico para toda referencia futura.</div>
                         <hr class="spacer" />
                         <p>Utiliza 'Guardar borrador' si aún no has terminado de perfeccionar la carga de la información requerida. La información cargada hasta este momento no se publica y no es visible para terceros.</p>
-                        <button type="button" class="btn btn-primary js-provisorio">Guardar borrador</button>
+                        <p class="en">Click on "Save draft" if you have not finished entering the required information. Information entered so far is not yet published or visible to others.</p>
+                        <button type="button" class="btn btn-primary js-provisorio">Guardar borrador / Save Draft</button>
                         <hr class="spacer" />
 
                         <p>Al 'Guardar y Publicar' la información cargada en este formulario podrá ser visible por otros participantes de las rondas cuando la organización del MICA lo determine. La información cargada siempre está a tu disposición para ser revisada, editada y/o ampliada. Cuando vuelvas a ingresar al sistema serás automáticamente redireccionado a tu espacio de trabajo. En algunos minutos recibirás un mail con la confirmación exitosa del alta de tu inscripción.</p>
+                        <p class="en">Once you click on "Save and send" the information loaded in this form will be visible to other participants of the business rounds, subject to MICA organization approval. All information loaded will always be available for you to review, edit, and/or expand. Next time you access the system you will be automathicaly redirected to your workspace. In a few minutes you will receive an e-mail with the confirmation of your registration.</p>
                         <label id='legal1' for="legal">
                           <input type="checkbox" id="legal" name="legal"  <%= legal === 'aceptado' ? 'checked="checked"' : '' %>   value='aceptado' > 
-                          <span class="checkbox-label control-label">He leído y acepto los <a href="http://www.cultura.gob.ar" class='js-termsofuse' target="_blank">términos y condiciones</a></span>
+                          <span class="checkbox-label control-label">He leído y acepto los <a href="http://www.cultura.gob.ar" class='js-termsofuse' target="_blank">términos y condiciones</a> / <span class="en">I have read and accept the <a href="http://www.cultura.gob.ar" class='js-termsofuse' target="_blank">Terms and Conditions</a></span></span>
                         </label>
                         <hr>
-                        <button  type="button" class="btn btn-primary js-definitivo">Guardar y publicar</button>
+                        <button  type="button" class="btn btn-primary js-definitivo">Guardar y publicar / Save and send</button>
                      </div>
                     </div>
                   </div>
