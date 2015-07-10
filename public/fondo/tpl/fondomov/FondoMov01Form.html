@@ -2,7 +2,7 @@
 
 
 <div class="row">
-  <div class="form-group required col-sm-6 selectContainer">
+  <div class="form-group required col-sm-6 col-xs-12  selectContainer">
       <label class="control-label" for="tsolicitud">Seleccione el tipo de movilidad que solicita</label>
       <select  id="tsolicitud" class="form-control" name="tsolicitud">
         <option value='no_definido'
@@ -19,27 +19,7 @@
 
       </select>
       <span class="help-block"></span>
-    </div>
-</div>
-<hr>
-<h4>Datos del Evento/ Actividad / Gira en la que desea participar</h4>
-<div class="row">  
-  <div class="col-sm-12 col-xs-12 form-group required">
-    <label class="control-label" for="eventname">Evento/ actividad/ gira en el que desea participar</label>
-    <!-- label class="control-label en" for="eventname">Business name</label -->
-    <div class="input-group">
-      <input type="text" id="eventname" class="form-control" name="eventname" value='<%= eventname %>'/>
-      <div class="input-group-addon">
-        <div title="Nombre del principal evento en el que desea participar y motiva su viaje ó <br>denominación de la gira que desea emprender" rel="tooltip">
-          <span class="fa fa-question-circle"></span>
-        </div>
-      </div>
-    </div>
-    <span class="help-block"></span>
   </div>
-</div>
-
-<div class="row">  
 
   <div class="form-group required col-sm-6 col-xs-12 selectContainer">
       <label class="control-label" for="eventtype">Categoría</label>
@@ -64,7 +44,29 @@
   </div>
 
 
-  <div class="col-sm-6 col-xs-12 form-group">
+
+</div>
+<hr>
+<h4>Datos del Evento/ Actividad / Gira en la que desea participar</h4>
+<div class="row">  
+  <div class="col-sm-12 col-xs-12 form-group required">
+    <label class="control-label" for="eventname">Evento/ actividad/ gira en el que desea participar</label>
+    <!-- label class="control-label en" for="eventname">Business name</label -->
+    <div class="input-group">
+      <input type="text" id="eventname" class="form-control" name="eventname" value='<%= eventname %>'/>
+      <div class="input-group-addon">
+        <div title="Nombre del principal evento en el que desea participar y motiva su viaje ó <br>denominación de la gira que desea emprender" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+    </div>
+    <span class="help-block"></span>
+  </div>
+</div>
+
+<div class="row">  
+
+  <div class="col-sm-12 col-xs-12 form-group">
     <label class="control-label" for="eventurl">Enlace (link) a la página oficial del evento/ actividad/ gira</label>
     <!-- label class="control-label en" for="eventurl">Business name</label -->
     <div class="input-group">
