@@ -1030,11 +1030,20 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   };
 
   var buildAttachments = function(view, model){
-    var model = getSession().model;
-    var adjuntos = getSession().adjuntos;
+    var model = getSession().model,
+        adjuntos = getSession().adjuntos,
+        tsolicitud = getSession().views.stepOne.model.get('tsolicitud'),
+        attachTypes;
+        
+    console.log('TSOLICITUD EN BUILDATTACH: [%s]', tsolicitud)
+    if(tsolicitud === 'movilidad_mica'){
+      attachTypes = ['cartaministra',  'docidentidad', 'constanciacuit', 'resenia'];
+    }else{
+      attachTypes = ['especifico', 'cartaministra', 'invitacion',  'docidentidad', 'constanciacuit', 'resenia'];
+
+    }
 
 
-    var attachTypes = ['especifico', 'cartaministra', 'invitacion',  'docidentidad', 'constanciacuit', 'resenia'];
     _.each(attachTypes, function(attchType){
       var data = {
         _id: model.get('_id'),
