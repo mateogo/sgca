@@ -49,7 +49,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       $.when(fetchingRequest).done(function(fondorqst){
         //console.log('FondoRequestApp.Edit BEGIN [%s] [%s]', fondorqst.whoami, fondorqst.id);
 
-        // off the record: si tiene inscripción en MICA buscamos datos default
+        // off the record: si tiene inscripción en mica buscamos datos default
 
         query = {
           'es_asset_de.id': fondorqst.id
@@ -72,6 +72,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
             initData(user, fondorqst);
             
             if(micarqst && micarqst.id ){
+              getSession().mica = micarqst;
               setDefaultData(user, fondorqst, micarqst);
             }
             defer.resolve(fondorqst);
@@ -218,7 +219,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   var enviarmail = function(template, data){
       var mailModel = new DocManager.Entities.SendMail({
           from: 'intranet.mcn@gmail.com',
-          subject:'[MICA] Inscripción en Mica 2015',
+          subject:'[FONDO] Inscripción Fondo Argentino de Desarrollo Cultural - Movilidad',
       });
 
       mailModel.set('to',getSession().currentUser.get('username'));

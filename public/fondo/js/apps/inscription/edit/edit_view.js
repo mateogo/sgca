@@ -195,6 +195,24 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     },
 
     events: {
+      'change #tsolicitud':'changeTsol',
+    },
+
+    changeTsol: function(event){
+      var self = this,
+          tsol = event.target.value;
+      console.log('tsolicitud:[%s]',tsol);
+      if(tsol === 'movilidad_mica'){
+        self.model.set();
+        self.model.set({
+          eventname:  'Participación en MICA, número inscripción: ' + getSession().mica.get('cnumber'),
+          eventtype: 'mica',
+          eventurl: 'http://mica.cultura.gob.ar/'
+        });
+        self.render();
+
+      }
+
     },
 
     uservalidation: function(e){

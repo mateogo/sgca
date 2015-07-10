@@ -11,10 +11,10 @@
         <option value='movilidad_nacional'
         <%= tsolicitud == 'movilidad_nacional' ? 'selected':'' %>>Ayudas a la Movilidad dentro del país</option>
 
-        <option value='movilidad_mica'
+        <option value='movilidad_intl'
         <%= tsolicitud == 'movilidad_intl' ? 'selected':'' %>>Ayudas a la Movilidad al exterior</option>
 
-        <option value='movilidad_intl'
+        <option value='movilidad_mica'
         <%= tsolicitud == 'movilidad_mica' ? 'selected':'' %>>Ayudas a la Movilidad para la participación MICA 2015</option>
 
       </select>
@@ -42,7 +42,7 @@
 <div class="row">  
 
   <div class="form-group required col-sm-6 col-xs-12 selectContainer">
-      <label class="control-label" for="eventtype">Tipo de evento/ actividad / gira</label>
+      <label class="control-label" for="eventtype">Categoría</label>
       <select  id="eventtype" class="form-control" name="eventtype">
         <option value='no_definido'
         <%= eventtype == 'no_definido' ? 'selected':'' %>>Tipo de Evento</option>

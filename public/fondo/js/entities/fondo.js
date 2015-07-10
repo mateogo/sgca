@@ -91,7 +91,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         etipojuridico: 'pfisica',
         edisplayName: '',
         ename: '',
-        epais: '',
+        epais: 'AR',
         eprov: '',
         otraprov: '',
         elocalidad: '',
