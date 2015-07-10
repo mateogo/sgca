@@ -104,7 +104,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       var self = this;
       e.preventDefault();
       e.stopPropagation();
-      //TODO
+
       DocManager.confirm(utils.templates.FondoTerminosYCondiciones(),{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
           self.$('#legal').prop('checked', true);
       });
@@ -118,7 +118,13 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
     submitFormDefinitivo: function(evt){
       evt.stopPropagation();
-      this.trigger('submit:form:definitivo', this.model);
+
+      if(!checkAttachments()) {
+        evt.preventDefault();
+        Message.error('Debe adjuntar los documentos solicitados para grabar definitivo');
+      }else{
+        this.trigger('submit:form:definitivo', this.model);
+      }
 
     },
     
@@ -480,7 +486,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   }
 
   //*************************************************************
-  //           FORM STEP-CUATRO: COMPRADOR
+  //           FORM STEP-CUATRO: ADJUNTOS
   //*************************************************************
   Edit.StepFourLayout = Marionette.LayoutView.extend({
 
@@ -555,7 +561,13 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     },
         
     validateStep: function(step){
-      var errors = this.model.validateStep(step);
+      var self = this,
+          errors = this.model.validateStep(step);
+
+      if(!checkAttachments()) {
+        Message.warning('Debe adjuntar los documentos solicitados para grabar definitivo');
+      }
+
       this.onFormDataInvalid((errors||{}));
       if(errors){
         return false
@@ -564,42 +576,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       }
     },
 
-  });
-
-
-  //*************************************************************
-  //           ALTA REPRESENTANTE ADICIONAL
-  //*************************************************************
-  Edit.NewRepresentante = DocManager.FondoRequestApp.Common.Views.Form.extend({
-    whoami:'NewRepresentante:edit_view.js',
-    templates: {
-      representante: 'RepresentanteForm',
-    },
-
-    getTemplate: function(){
-      return utils.templates[this.templates['representante']];
-    },
-
-    initialize: function(options){
-      var self = this;
-      this.events = _.extend({},this.formevents,this.events);
-      this.delegateEvents();
-      this.options = options;
-    },
- 
-    events: {
-      "click .js-js-newrepresentante": "newRepresentante",
-      "click .js-productsch": "productsearch",
-      "click .js-personsch": "personsearch",
-    },
-
-    newRepresentante: function(){
-      var self = this;
-      this.trigger('add:new:representante', this.model, function(entity){
-        self.destroy();
-      });
-
-    },
   });
 
   //*************************************************************
@@ -662,371 +638,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
   });
 
-  //*************************************************************
-  //       PORFOLIO: REFERENCIAS
-  //*************************************************************
-  Edit.ReferenceItemView = Marionette.ItemView.extend({
-    whoami: 'Edit.ReferenceItemView:edit_view.js',
-    //tagName: "div",
-
-    getTemplate: function(){
-      return utils.templates.ReferenciasItemView;
-    },
-    templateHelpers: function(){
-      var self = this;
-      return {
-        linkType: function(item){
-          return utils.fetchLabel(utils.linkTypeOpLst, item);
-        },
-        formatDate: function(date){
-          return moment(date).format('dddd LL');
-        },
-        getFieldLabel: function(fieldName){
-          return self.model.getFieldLabel(fieldName);
-        }
-      };
-    },
-
-
-
-  });
-
-  Edit.ReferenceItemLayoutView = Marionette.LayoutView.extend({
-    whoami: 'Edit.ReferenceItemLayoutView:edit_view.js',
-    
-    initialize: function(opts){
-      this.options = opts;
-    },
- 
-    getTemplate: function(){
-      return utils.templates.ReferenciasItemList;
-    },
-
-    onRender: function(){
-      var itemView = new Edit.ReferenceItemView({
-        model: this.model
-      });
-
-      var itemEdit = new Edit.ReferenceFormView({
-        model: this.model
-      });
-      this.getRegion('itemEditRegion').show(itemEdit);      
-      this.getRegion('itemViewRegion').show(itemView);      
-    },
-
-    regions: {
-      itemEditRegion: '#reference-item-edit-region',
-      itemViewRegion: '#reference-item-view-region',
-    },
-
-    events: {
-      'click .js-itemdata-edit': 'editItem',
-      'click .js-itemdata-remove': 'removeItem',
-    },
-
-    activeView: 'view',
-    editItem: function(){
-      if(this.activeView === 'view'){
-        this.$el.find('#reference-item-view-region').hide();
-        this.$el.find('#reference-item-edit-region').show();
-        this.$el.find('.js-itemdata-edit').html('<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>');
-        this.activeView = "edit";
-
-      }else{
-        this.$el.find('#reference-item-edit-region').hide();
-        this.$el.find('#reference-item-view-region').show();
-        this.$el.find('.js-itemdata-edit').html('<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>');
-        this.activeView = "view";
-
-      }
-
-
-    },
-    removeItem: function(){
-      this.trigger('remove:item', this.model);
-
-    },
-
-  });
-
-  Edit.ReferenceListView = Marionette.CollectionView.extend({
-    whoami: 'Edit.ReferenceListView:edit_view.js',
-    //tagName: "div",
-    //className: "list-group",
-
-    //childView: Views.SidebarItem,
-    //childViewContainer: "article",
-    childView: Edit.ReferenceItemLayoutView,
-
-    initialize: function(opts){
-      this.options = opts;
-    },
- 
-    events: {
-    },
-
-    onRender: function(){
-      //console.log('[%s] RENDER ',this.whoami)      
-    },
-
-    childEvents: {
-      'remove:item': function(view, model){
-        //console.log('Bubbled event[%s] [%s]', arguments.length, model.get('slug'));
-        this.collection.remove(model);
-
-      }
-
-    },
-
-
-    childViewOptions: function(model, index) {
-      //console.log('childViewOptions [%s] [%s] [%s]',model.whoami, model.get('slug'), this.options.itemtype);
-      // return {
-      //   model: model,
-      //   collection: model.getItems(),
-      //   itemtype:this.options.itemtype,
-      // }
-    },
-    
-  });
-
-  Edit.ReferenceFormView = Marionette.LayoutView.extend({
-    whoami: 'Edit.ReferenceFormView:edit_view.js',
-    //tagName: "div",
-    //className: "list-group",
-
-    //childView: Views.SidebarItem,
-    //childViewContainer: "article",
-    
-    initialize: function(opts){
-      this.options = opts;
-    },
- 
-    getTemplate: function(){
-      return utils.templates.ReferenciasFormLayout;
-    },
-
-    onRender: function(){
-      var itemEditor = new Backbone.Form({
-        model: this.model,
-        template: utils.templates.ReferenciasItemEditor,
-      });
-
-      itemEditor.on('blur', function(form, editor){
-        var error = form.commit();
-      });
-
-      this.getRegion('editRegion').show(itemEditor);
-    },
-
-/*
-    onRender: function(){
-      console.log('onRender:[%s]', this.model.whoami);
-      this.form = new Backbone.Form({
-        model: this.model,
-        template: this.templates['form'],
-      });
-      this.form.render();
-      this.$el.find('#formContainer').html(this.form.el);
-    },
-
-*/
-    regions: {
-      editRegion: '#reference-item-editor',
-    },
-
-    events: {
-    },
-
-  });
-
-
-
-
-
-  Edit.ReferenceEditor = Marionette.LayoutView.extend({
-    whoami: 'Edit.ReferenceEditor:edit_view.js',
-
-    tagName: "div",
-    attributes: {
-      id: 'referenciasLayout'
-    },
-
-    initialize: function(opts){
-      //console.log('[%s] INIT model:[%s]',this.whoami, this.model.whoami);
-      this.options = opts;
-
-      this.listView = this.initListView();
-      this.formView = this.initFormView();
-
-    },
-
-    getTemplate: function(){
-      return utils.templates.ReferenciasLayout;
-    },
-
-    initListView: function(){
-      var view = new Edit.ReferenceListView({
-        collection: this.collection
-      })
-      return view;
-
-    },
-
-    initFormView: function(){
-      var view = new Edit.ReferenceFormView({
-        model: this.model
-      })
-      return view;
-
-    },
-
-    onRender: function(){
-      this.getRegion('formRegion').show(this.formView);
-      this.getRegion('listRegion').show(this.listView);
-    },
-
-    regions: {
-      listRegion: '#references-list-region',
-      formRegion: '#references-form-region',
-    },
-
-    events: {
-      'click .js-add-new-item': 'addNewItem',
-    },
-
-    addNewItem: function(){
-      this.collection.add(this.model.clone() );
-      this.model.clear();
-      this.formView.render();
-
-
-    },
-
-
-  });
-
-
-
-  //*************************************************************
-  //       PORFOLIO EDITOR VIEW
-  //*************************************************************
-  Edit.PorfolioEditor = DocManager.FondoRequestApp.Common.Views.Form.extend({
-    template: false,
-    initialize: function(opts){
-      this.events = _.extend({},this.formevents,this.events);
-      this.delegateEvents();
-      this.options = opts;
-    },
-
-    onRender: function(){
-    },
-   
-    getTemplate: function(){
-      return utils.templates.PorfolioEditor;
-    },
-
-
-
-  });
-
-
-
-  //*************************************************************
-  //       PORFOLIO EDITOR VIEW
-  //*************************************************************
-  Edit.PorfolioEditorView = Marionette.LayoutView.extend({
-    tagName: 'div',
-
-    regions: {
-      porfolioEditor: '#porfolioEditor',
-      referencesContainer: '#referencesContainer',
-    },
-
-    initialize: function(opts){
-      this.options = opts;
-    },
-
-    onRender: function(){
-      this.createPorfolioEditor();
-      this.createReferenceView();
-    },
-   
-    getTemplate: function(){
-      return utils.templates.PorfolioEditorLayout;
-    },
-
-    createPorfolioEditor: function(){
-      var self = this;
-
-      this.porfolioEditor = new Edit.PorfolioEditor({
-        model: this.model,
-      });
-
-      this.getRegion('porfolioEditor').show(this.porfolioEditor);
-    },
-
-    createReferenceView: function(){
-      var self = this,
-          references = new DocManager.Entities.PorfolioReferenceCol(self.model.get('referencias'));
-
-      this.referenceEditor = new Edit.ReferenceEditor({
-        model: new DocManager.Entities.PorfolioReference(),
-        collection: references,
-      });
-
-      this.getRegion('referencesContainer').show(this.referenceEditor);
-    },
-
-    events: {
-      "click .js-instructivo-porfolio" : "showInstructivo",
-    },
-
-    showInstructivo: function(e){
-      var self = this;
-      e.preventDefault();
-      e.stopPropagation();
-
-      if(this.options.editorOpts){
-        DocManager.confirm(this.helpDataTpl(this.options.editorOpts),{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
-            self.$('#legal').prop('checked', true);
-        });
-      }
-
-    },
-    helpDataTpl: function(opts){
-      var item;
-
-      //console.log('Actividad: [%s]',opts.parentModel.get('vactividades') || opts.parentModel.get('cactividades'));
-
-      if(opts){
-        if(opts.parentModel){
-          //TODO
-
-          // item = opts.parentModel.get('vactividades') || opts.parentModel.get('cactividades')
-
-          // if(item === 'aescenicas')        return utils.templates.FondoInstructivoArtesEscenicas();
-          // else if(item === 'musica')       return utils.templates.FondoInstructivoMusica();
-          // else if(item === 'audiovisual') return utils.templates.FondoInstructivoAudiovisual();
-          // else if(item === 'disenio')      return utils.templates.FondoInstructivoDisenio();
-          // else if(item === 'videojuegos')  return utils.templates.FondoInstructivoVideojuego();
-          // else if(item === 'editorial')    return utils.templates.FondoInstructivoEditorial();
-
-
-        }
-      }
-
-      return utils.templates.FondoInstructivoDefault();
-    },
-
-    commit: function(){
-      this.model.set('referencias', this.referenceEditor.collection.toJSON());
-    },
-
-
-  });
-
-
 
 //=======================
 // Helper functions
@@ -1042,7 +653,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
         tsolicitud = getSession().views.stepOne.model.get('tsolicitud'),
         attachTypes;
 
-    console.log('TSOLICITUD EN BUILDATTACH: [%s]', tsolicitud)
     if(tsolicitud === 'movilidad_mica'){
       attachTypes = ['cartaministra',  'docidentidad', 'constanciacuit', 'resenia'];
     }else{
@@ -1151,7 +761,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
       if(!session.views.stepFourForm.validateStep(step)) {
         evt.preventDefault();
-        Message.warning('Debe completar los campos obligatorios para avanzar');
+        Message.error('Debe adjuntar los documentos solicitados para avanzar');
         $('#myWizard').wizard('selectedItem', {step: step});
       }else{
         DocManager.trigger('wizard:next:step', step);
@@ -1209,6 +819,35 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       return true;
     }
   };
+  
+  var checkAttachments = function(){
+      var view = getSession().views.stepFourForm,
+          tsolicitud = getSession().views.stepOne.model.get('tsolicitud'),
+          attacherror = {},
+          hasErrors = false,
+          uploaded = 0,
+          attachTypes;
+
+      if(tsolicitud === 'movilidad_mica'){
+        attachTypes = ['cartaministra',  'docidentidad', 'constanciacuit', 'resenia'];
+      }else{
+        attachTypes = ['especifico', 'cartaministra', 'invitacion',  'docidentidad', 'constanciacuit', 'resenia'];
+      }
+      _.each(attachTypes, function(type){
+        uploaded = view[type].model.assets.length
+        if(!uploaded){
+          hasErrors = true;
+          attacherror[type] = 'Debe adjuntar archivo';
+          getSession().views.stepFour.model.set(type, false);
+        }else{
+          getSession().views.stepFour.model.set(type, true);
+        }
+      });
+
+      return !hasErrors;
+
+  };
+
 
 
   var registerStepWizardAction = function(){

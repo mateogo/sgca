@@ -70,7 +70,7 @@ DocManager.module("FondoRequestApp.Common.Views", function(Views, DocManager, Ba
 						  break;
 						
 						default:
-							change[target.name] = target.value;
+              change[target.name] = target.value;
 							this.model.set(change);
 							//console.log('CHANGE DEFAULT: [%s]: [%s] [%s]',target.name, target.value, target['multiple']);
               //console.dir(this.model.attributes)

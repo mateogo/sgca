@@ -56,8 +56,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
         }
         fetchingAssets = DocManager.request("assets:filtered:entities", query);
         $.when(fetchingAssets).done(function(assets){
-          getSession().assts = assets;
-          //console.log('Assets Fetched so far: [%s]', assets.length);
 
           fetchingMicaRequest = DocManager.request("micarqst:factory:new", user, "mica");
           $.when(fetchingMicaRequest).done(function(micarqst){
@@ -87,6 +85,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
   var initData = function(user, model){
     // Load Assets
+    model.stepTwo.set('epais','AR');
  
     if(model.id){
 
@@ -170,7 +169,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   };
 
   var registerBasicViewEvents = function(session, wizardlayout){
-    //TODO
 
     wizardlayout.on("submit:form:provisorio", function(model){
       //console.log('******** provisorio SUBMIT PROVISORIO BEGINS********[%s]', model.whoami)
@@ -185,16 +183,16 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
           nodeId: model.id,
           slug: model.get('requerimiento').emotivation,
         });
-// TODO
-        //window.open('http://mica.cultura.gob.ar','_self');
-        //DocManager.trigger('micarequest:edit', model)
+
+        window.open('http://fondo.cultura.gob.ar','_self');
+        //DocManager.trigger('fondorequest:edit', model)
 
       });
     });
 
     wizardlayout.on("submit:form:definitivo", function(model){
       //console.log('******** definitivo SUBMIT DEFINITIVO BEGINS********[%s]', model.whoami, model.get('requerimiento').emotivation)
-
+      getSession().model.set('nivel_ejecucion', 'submit_definitivo');
       getSession().model.update(session.currentUser, session.pasajeros, session.tramos, function(error, model){
 
         Message.success('Grabación exitosa. Recibirás un correo electrónico de confirmación');
@@ -206,9 +204,8 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
           slug: model.get('requerimiento').emotivation,
         });
 
-//TODO
-        //window.open('http://mica.cultura.gob.ar','_self');
-        //DocManager.trigger('micarequest:edit', model)
+        window.open('http://fondo.cultura.gob.ar','_self');
+        //DocManager.trigger('fondorequest:edit', model)
 
       });
 
@@ -281,75 +278,14 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     var stepFourForm = new Edit.StepFourForm({model: session.model['stepFour']});
     session.views.stepFourForm = stepFourForm;
 
-    // TODO
-    // var porfolioCol = new Entities.PorfolioCol(session.model.cporfolios);
-    // var porfolio = new Entities.Porfolio();
-
-    // session.cporfolios = porfolioCol;
-
     layout.on("show", function(){
       layout.formRegion.show(stepFourForm);
-      //DocManager.trigger('cporfolio:edit',porfolio);
     });
 
   };
 
   var API = {
-
-    initRepresentanteView: function(representante){
-      var session = getSession();
-      var crudManager = new Edit.CrudManager(
-          {
-            gridcols:[
-              {name:'aname',  label:'Nombre', cell:'string', editable:false},
-              {name:'acargo', label:'Cargo',  cell:'string', editable:false},
-              {name:'amail',  label:'Mail',   cell:'string', editable:false},
-              {label: 'Acciones', cell: 'representanteAction', editable:false, sortable:false},
-            ],
-            filtercols:['aname', 'acargo', 'amail'],
-            editEventName: 'representante:edit',
-
-          },
-          {
-            layoutTpl: utils.templates.RepresentanteLayout,
-            formTpl: utils.templates.RepresentanteForm,
-            collection: session.representantes,
-            editModel: Entities.Representante,
-            modelToEdit: representante,
-            editorOpts: {},
-          }
-      );
-      session.views.stepTwo.representanteRegion.show(crudManager.getLayout());
-
-
-    },
  
-    initPorfolioCompradorView: function(porfolio){
-      var session = getSession();
-      var crudManager = new Edit.CrudManager(
-          {
-            gridcols:[
-              {name:'slug', label:'Denominación del producto/proyecto/servicio', cell:'string', editable:false},
-              {label: 'Acciones', cell: 'cporfolioAction', editable:false, sortable:false},
-            ],
-            filtercols:['slug'],
-            editEventName: 'cporfolio:edit',
-
-          },
-          {
-            test: 'TestOK',
-            layoutTpl: utils.templates.PorfolioLayout,
-            formTpl: utils.templates.PorfolioForm,
-            collection: session.cporfolios,
-            editModel: Entities.Porfolio,
-            modelToEdit: porfolio,
-            EditorView: Edit.PorfolioEditorView,
-            editorOpts: {parentModel: session.model['stepFour']},
-          }
-      );
-      session.views.stepFour.porfolioRegion.show(crudManager.getLayout());
-    },
-
     initTramosView: function(model){
       var session = getSession();
       var crudManager = new Edit.CrudManager(
@@ -420,7 +356,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     API.saveStep(step);
   });
 
-
   DocManager.on("tramos:edit", function(model){
     API.initTramosView(model);
   });
@@ -428,17 +363,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   DocManager.on("pasajeros:edit", function(model){
     API.initPasajerosView(model);
   });
-
-
-  DocManager.on("cporfolio:edit", function(model){
-    API.initPorfolioCompradorView(model);
-  });
-
-
-  DocManager.on("representante:edit", function(model){
-    API.initRepresentanteView(model);
-  });
-
 
 
 });

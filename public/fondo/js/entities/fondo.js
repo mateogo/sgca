@@ -35,8 +35,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       _updateFacetStepOne(user, self);
       _updateFacetStepTwo(user, self);
       _updateFacetStepThree(user, pasajeros, tramos, self);
-      //TODO
-      //_updateFacetStepFour(user, areferencias, self);
+      _updateFacetStepFour(user, self);
 
       initModelForUpdate(user, self);
 
@@ -160,22 +159,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       },
       adjuntos:{
         //cartaministra,docidentidad, especifico, invitacion, constanciacuit, resenia, resolucionotorgam, designacionautoridades, balanceentidad, estatutoentidad
-        //
-        cartaministra: '',
-        docidentidad: '',
-        especifico: '',
-        invitacion: '',
-        constanciacuit: '',
-        resenia: '',
-        resolucionotorgam: '',
-        designacionautoridades: '',
-        balanceentidad: '',
-        estatutoentidad: '',
-
-      }
-
-
-      
+        especifico: false,
+        cartaministra: false,
+        invitacion: false,
+        docidentidad: false,
+        constanciacuit: false,
+        resenia: false,
+      }      
     },
 
     facetFactory: function (){
@@ -184,7 +174,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       self.stepTwo = _facetFactoryStepTwo(self);
       self.stepThree = _facetFactoryStepThree(self);
       self.stepFour = _facetFactoryStepFour(self);
-      // self.stepFive = _facetFactoryStepFive(self);
 
     },
 
@@ -356,7 +345,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           valid = true,
           errors = {};
 
-      var check = [['ename'], ['edisplayName'], ['epais'], ['email'], ['rodocum'], ['rtel'], ['actividadppal'], ['fondo2014'], ['mica2014']];
+      var check = [['ename'], ['edisplayName'], ['epais'], ['email'], ['rodocum'], ['rtel'], ['rcel'], ['actividadppal'], ['fondo2014'], ['mica2014']];
       //if(step>2 || step<1) return null;
 
       _.each(check, function(fld){
@@ -539,81 +528,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
   //*************************************************************
-  //            FACET FIVE (confirma)
-  //*************************************************************
-
-  Entities.FondoStepFiveFacet = Backbone.Model.extend({
-    urlRoot: "/fondosuscriptions",
-    whoami: 'FondoStepFiveFacet:fondo.js ',
-    idAttribute: "_id",
-    
-    initialize: function(opts){
-
-    },
-
-    getFieldFormatedValue: function(field){
-      return _getFieldFormatedValue(this, field);
-
-    },
-
-    validateStep: function(step){
-      var self = this,
-          valid = true,
-          errors = {};
-
-
-    },
-
-    validate: function(attrs, options) {
-
-    },
-
-
-    defaults: {
-    },
-
-  });
-
-  //*************************************************************
-  //            INTEGRANTES
-  //*************************************************************
-  Entities.Integrante = Backbone.Model.extend({
-    whoami: 'Integrante: fondo.js ',
-
-    schema: {
-        aname:    {type: 'Text',  title: 'Nombre y apellido'},
-        acargo:   {type: 'Text',  title: 'Rol/ función'},
-        afenac:   {type: 'Text',  title: 'Fecha Nacimiento', editorAttrs:{placeholder:'dd/mm/aaaa'}},
-        adni:     {type: 'Text',  title: 'DNI / Pasaporte', editorAttrs:{placeholder:'número de documento'}},
-    },
- 
-    validate: function(attrs, options) {
-      var errors = {}
-      if (_.has(attrs,'aname') && (!attrs.rname )) {
-        errors.rname = "No puede ser nulo";
-      }     
-
-      if( ! _.isEmpty(errors)){
-        return errors;
-      }
-    },
-
-    defaults: {
-      aname: '',
-      acargo: '',
-      afenac: '',
-      adni: '',
-    },
-  }); 
-  
-  Entities.IntegranteCol = Backbone.Collection.extend({
-    whoami: 'Entities.IntegranteCol:fondo.js ',
-    model: Entities.Integrante,
-    comparator: "aname",
-  });
-
-
-  //*************************************************************
   //            ASSET TOKEN
   //*************************************************************
   Entities.AssetToken = Backbone.Model.extend({
@@ -714,46 +628,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 
-
-  //*************************************************************
-  //            REFERENCIAS - ENLACES
-  //*************************************************************
-  Entities.Referencia = Backbone.Model.extend({
-    // links externos, a modo de referencias, asociados al porfolio
-
-    whoami: 'Referencia: fondo.js ',
-    
-    schema: {
-      tlink:     {type: 'Select',   title: 'Tipo de enlace externo',   editorAttrs:{placeholder:'Tipo de referencia externa'},options: utils.referenceLinkOpLst },
-      slug:      {type: 'Text',     title: 'Descripción',      editorAttrs:{placeholder:'Descripción/ comentario del enlace propuesto'}},
-      targeturl: {type: 'Text',     title: 'Enlace (URL en el formato indicado)',      editorAttrs:{placeholder:'http://www.dominio.com.pais'}, dataType:'url', validators:['required', 'url']},
-    },
-
- 
-    validate: function(attrs, options) {
-      var errors = {};
-
-      if( ! _.isEmpty(errors)){
-        return errors;
-      }
-    },
-
-    defaults: {
-      tlink: 'no_definido',
-      targeturl: '',
-      slug: '',
-    },
-
-  }); 
-  
-  Entities.ReferenciaCol = Backbone.Collection.extend({
-    whoami: 'ReferenciaCol: fondo.js',
-    model: Entities.Referencia,
-    comparator: "tlink",
-  });
-
-
-
   //*************************************************************
   //            Helper Functions
   //*************************************************************
@@ -820,17 +694,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     return new Entities.FondoStepFourFacet(data);
   };
 
-  var _updateFacetStepFour = function(user, areferencias, model){
-    //var rolePlaying = model.get('rolePlaying');
+  var _updateFacetStepFour = function(user, model){
     var adjuntos;
     adjuntos = model.stepFour.attributes;
     model.set('adjuntos', adjuntos);
   };
 
-  var _facetFactoryStepFive = function(model){
-    var data = _.extend({}, model.get('pasajero'), model.get('evento'), model.get('tramo'), model.get('viaje'));
-    return new Entities.FondoStepFiveFacet(data);
-  };
 
 
 
