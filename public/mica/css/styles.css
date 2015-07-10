@@ -9809,3 +9809,15 @@ input.cmn-toggle-round:checked + label:after {
   left: auto;
   margin: 0;
 }
+
+/*** MULTI-IDIOMA ***/
+.en {
+  color: #9DA4A8;
+  font-weight: normal;
+}
+label.en {
+  display: block;
+} 
+span.en:before {
+  content: ' / ';
+}
