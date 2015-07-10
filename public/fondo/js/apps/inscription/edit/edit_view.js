@@ -185,8 +185,16 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     },
 
     validateStep: function(step){
-      var errors = this.model.validateStep(step);
-      this.onFormDataInvalid((errors||{}));
+      var errors = this.model.validateStep(step) ;
+
+      if(this.model.get('tsolicitud')=== 'movilidad_mica' && !getSession().mica.id){
+        console.log('Tsolicitud con PROBLEMAS')
+        errors = errors ||{};
+        errors.tsolicitud = 'Para aplicar a MOVILIDAD MICA debe contar con una INSCRIPCIÓN ACTIVA en dicho evento';
+
+      }
+
+      this.onFormDataInvalid((errors || {}));
       if(errors){
         return false
       }else{
@@ -203,7 +211,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
           tsol = event.target.value;
       console.log('tsolicitud:[%s]',tsol);
       if(tsol === 'movilidad_mica'){
-        self.model.set();
         self.model.set({
           eventname:  'Participación en MICA, número inscripción: ' + getSession().mica.get('cnumber'),
           eventtype: 'mica',
@@ -1034,7 +1041,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
         adjuntos = getSession().adjuntos,
         tsolicitud = getSession().views.stepOne.model.get('tsolicitud'),
         attachTypes;
-        
+
     console.log('TSOLICITUD EN BUILDATTACH: [%s]', tsolicitud)
     if(tsolicitud === 'movilidad_mica'){
       attachTypes = ['cartaministra',  'docidentidad', 'constanciacuit', 'resenia'];
