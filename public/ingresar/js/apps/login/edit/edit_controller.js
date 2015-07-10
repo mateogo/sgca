@@ -120,7 +120,7 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
       mailModel.set('to',user.get('username'));
 
       //todo:ver donde configurar el servidor de produccion
-      mailModel.set( 'server','http://sisplan.cultura.gob.ar:3000');
+      mailModel.set( 'server','http://200.80.154.217:3000');
       //mailModel.set( 'server','http://localhost:3000');
       if(targetUser){
         if(targetUser === 'mica'){
@@ -155,7 +155,7 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
             };
 
             mailModel.set(data);
-            mailModel.setTemplate(utils.templates.MailAltaUsuarioObras);
+            mailModel.setTemplate(utils.templates.MailAltaUsuarioFondo);
 
             mailModel.buildMailContent();
 
