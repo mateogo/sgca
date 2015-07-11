@@ -5,7 +5,7 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 			return utils.templates.HomeShowLayoutView;
 		},
 		regions: {
-			mainRegion: '#main-region',
+			mainRegion: '#submain-region',
 		  featureRegion: '#feature-block-region',
 		  itemsRegion: '#feature-items-region',
 		  galleryRegion: '#gallery-grid-region',
