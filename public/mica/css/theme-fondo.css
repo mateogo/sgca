@@ -67,15 +67,15 @@ legend {
 /*RESET TYPOGRAPHY*/
 h1 {font-family: 'Montserrat', sans-serif;font-size: 28px!important;margin-bottom: 0.8em;}
 h2 {font-family: 'Montserrat', sans-serif;font-size: 22px!important;margin-bottom: 0.5em;}
-h3 {font-family: 'Montserrat', sans-serif;font-size: 15px!important;margin-bottom: 0.3em;}
-h4 {font-family: 'Montserrat', sans-serif;font-size: 14px!important;margin-bottom: 0.2em;}
+h3 {font-family: 'Montserrat', sans-serif;font-size: 18px!important;margin-bottom: 0.5em;}
+h4 {font-family: 'Montserrat', sans-serif;font-size: 14px!important;margin-bottom: 0.5em;}
 h5 {font-size: 13px!important;margin-bottom: 0.1em;}
 h6 {font-size: 13px!important;margin-bottom: 0.1em;}
 h1 a, h2 a, h3 a, h4 a, h5 a {color: #222;}
 .form-control {font-size: 13px;color: #222}
 .panel {background: transparent;}
 .panel-heading {background: transparent;}
-
+a {color: #1C84A9}
 /* ============================================================
   SWITCH 1 - ROUND
 ============================================================ */

@@ -53,7 +53,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 
 
   Views.Layout = Marionette.LayoutView.extend({
-    className: 'container',
+    //className: 'container',
 
     getTemplate: function(){
       return utils.templates.CommonBaseLayout;
