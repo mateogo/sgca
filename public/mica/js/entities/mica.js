@@ -9,6 +9,24 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
+    schema: {
+      nivel_ejecucion: {type: 'Select',   title: 'Nivel de ejecucion',options: tdata.nivel_ejecucionOL },
+      'solicitante.eprov': {type: 'Select',   title: 'Provincias',options: tdata.provinciasOL },
+    },
+
+    getFieldLabel: function(field){
+      var value;
+      if(!field) return '';
+      if(field.indexOf('.')!=-1){
+        //console.log('Objeto: [%s] propiedad:[%s]', field.substring(0, field.indexOf('.')), field.substring(field.indexOf('.')+1) )
+        value =  this.get(field.substring(0, field.indexOf('.')))[field.substring(field.indexOf('.')+1)];
+        return _getSelectValue(this, field, value);
+      }
+      return _getFieldFormatedValue(this, field);
+
+    },
+
+
     getFieldFormatedValue: function(field){
       return _getFieldFormatedValue(this, field);
     },
@@ -27,6 +45,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     
     initDataForEdit: function(){
       this.facetFactory();
+
+    },
+    changeNivelDeEjecucion: function(state){
+      this.set('nivel_ejecucion', state);
 
     },
 
@@ -325,6 +347,50 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     model: Entities.MicaRegistration,
     url: "/micasuscriptions/fetch",
 
+  });
+
+
+  Entities.MicaRegistrationUpdate = Backbone.Model.extend({
+    whoami: 'Entities.MicaRegistrationUpdate:mica.js ',
+
+    urlRoot: "/actualizar/micasuscriptions",
+
+  });
+
+
+  //*************************************************************
+  //            FILTER filter FACET
+  //*************************************************************
+  Entities.MicaFilterFacet = Backbone.Model.extend({
+    whoami: 'Entities.MicaFilterFacet:mica.js',
+    initialize: function(opts){
+      console.log('initialize Mica FILTER [%s]', this.get('subsector'))
+      this.schema.subsector.options = tdata.subSectorOL[this.get('sector')];
+
+
+    },
+
+    schema: {
+        rolePlaying:   {type: 'Select',  title: 'Rol del participante', options: tdata.rolesOL },
+        cnumber:       {type: 'Text',    title: 'Número Inscripción' },
+        provincia:     {type: 'Select',  title: 'Provincia',  options: tdata.provinciasOL },
+        sector:        {type: 'Select',  title: 'Sector',  options: tdata.sectorOL },
+        subsector:     {type: 'Select',  title: 'SubSector',  options: tdata.subSectorOL.aescenicas },
+        nivel_ejecucion: {type: 'Select',  title: 'Estado',  options: tdata.nivel_ejecucionOL },
+    },
+
+
+    defaults: {
+      rolePlaying: 'no_definido',
+      provincia: 'no_definido',
+      cnumber: '',
+      sector: 'no_definido',
+      subsector: 'no_definido',
+      evento: 'mica',
+      rubro: 'general',
+      nivel_ejecucion: 'no_definido',
+
+    },
   });
 
 
@@ -827,32 +893,25 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     comparator: "tlink",
   });
 
-
-
   //*************************************************************
   //            Helper Functions
   //*************************************************************
   var _getFieldFormatedValue = function(model, field){
-    
-    if(!model.schema){
-      return model.get(field);
-    }
 
-    if(!(field in model.schema)) return model.get(field) || '';
-    
-    if(model.schema[field].type === 'Select'){
-      var value = model.get(field);
-      if(value === 'no_definido' || value === "nodefinido") return '';
-      
-      var options = model.schema[field].options;
-      var selected = _.findWhere(options,{val:value});
-      return (selected)? selected.label : value;
 
-    }else{
+    return _getSelectValue(model, field, model.get(field));
+  };
 
-      return model.get(field);
+  var _getSelectValue = function(model, field, value){
+    var selected;
+    if(!model.schema || !(field in model.schema) || model.schema[field].type !== 'Select' ) return value || '';
 
-    }
+    if(value === 'no_definido' || value === "nodefinido") return '';
+
+    selected = _.findWhere(model.schema[field].options, {val: value});
+    return (selected)? selected.label : value;
+
+
   };
 
   var _facetFactoryStepOne = function(model){
@@ -1012,12 +1071,37 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
     },
 
+    partialUpdate: function(models, data){
+      var query = {},
+          nodes,
+          update;
+
+      if(_.isArray(models)){
+        nodes = models;
+      }else if(_.isObject(models)){
+        nodes = [models.id];
+      }else{
+        nodes = [models];
+      }
+
+      query.nodes = nodes;
+      query.newdata = data;  
+      var update = new Entities.MicaRegistrationUpdate(query);
+      update.save({
+        success: function() {
+        }
+      });
+    },
+
     getFilteredByQueryCol: function(query){
+      console.log('query: [%s]', query);
+      console.dir(query)
 
       var fetchingEntities = queryCollection(query),
           defer = $.Deferred();
 
       $.when(fetchingEntities).done(function(entities){
+        console.log('entities: [%s]', entities.length)
 
         var filteredEntities = queryFactory(entities);
 
@@ -1047,6 +1131,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     }else{
       return API.newEntityFactory();
     }
+  });
+
+  DocManager.reqres.setHandler("micarqst:partial:update", function(models, keys){
+    return API.partialUpdate(models, keys);
   });
 
   DocManager.reqres.setHandler("micarqst:query:entities", function(query){

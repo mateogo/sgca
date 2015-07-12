@@ -16,8 +16,6 @@ var config = {};
 var micasuscriptionsCol = 'micasuscriptions';
 var serialCol = 'seriales';
 
-var _ = require('underscore');
-
 
 var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
@@ -203,9 +201,10 @@ exports.findById = function(req, res) {
 };
 
 exports.find = function(req, res) {
-    var query = req.body; //{};
+    var query = buildQuery(req.body); 
+    //query['vendedor.rolePlaying.vendedor'] = true;
 
-    console.log('find:micasuscription Retrieving micasuscription collection with query');
+    console.log('find:micasuscription Retrieving micasuscription collection with QUERY');
 
     dbi.collection(micasuscriptionsCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
@@ -265,19 +264,56 @@ var buildTargetNodes = function(data){
         return query
     }
 };
+
 var buildUpdateData = function(data){
     if(!data.newdata) return;
     return data.newdata;
 };
 
+// BUILD QUERY
 var buildQuery = function(qr){
-    var query = {}; 
+    var query = {},
+        prov = [], 
+        subc = {},
+        subv = {},
+        tmp = {},
+        conditions = [];
+
     if(!qr) return query;
-    if(qr.areas){
-        query.$or = buildAreaList(qr.areas);
+
+    if(qr.rolePlaying && qr.rolePlaying !== 'no_definido'){
+        if(qr.rolePlaying === 'comprador'){
+            conditions.push({'comprador.rolePlaying.comprador': true});
+        }else{
+            conditions.push({'vendedor.rolePlaying.vendedor': true});
+        }
     }
+    if(qr.sector && qr.sector !== 'no_definido'){
+        conditions.push({'$or': [{'comprador.cactividades': qr.sector}, {'vendedor.vactividades': qr.sector}] });
+
+        if(qr.subsector && qr.subsector !== 'no_definido'){
+            subc['comprador.sub_' + qr.sector + '.' + qr.subsector] = true;
+            subv['vendedor.sub_' + qr.sector + '.' + qr.subsector] = true;
+            conditions.push({'$or': [{'$and': [subc, {'comprador.cactividades': qr.sector}]}, {'$and': [subv, {'vendedor.vactividades': qr.sector}]} ]} );
+        }
+    }
+
+
+
+    if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'solicitante.eprov': qr.provincia});
+    if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
+
+    if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
+    if(qr.evento) conditions.push({evento: qr.evento});
+    if(qr.rubro) conditions.push({rubro: qr.rubro});
+
+    console.log('conditions: [%s]', conditions.length)
+    console.dir(conditions)
+
+    query['$and'] = conditions;
     return query;
 };
+
 var buildAreaList = function(areas){
     return _.map(areas, function(item){
         return {area: item};

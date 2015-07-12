@@ -1,5 +1,56 @@
 DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbone, Marionette, $, _){
 
+  Views.filterPopup = function(filterData, FilterModel, targetEvent, filterTitle){
+    console.dir(filterData.attributes)
+    if(!filterData){
+      filterData=   new FilterModel();
+    }
+
+    filterData.schema.subsector.options = tdata.subSectorOL[filterData.get('sector')];
+    var form = new Backbone.Form({model:filterData});
+
+    form.on('sector:change', function(form, editorContent) {
+        console.log('onchange:key');
+        var contenido = editorContent.getValue(),
+            newOptions = tdata.subSectorOL[contenido];
+        form.fields.subsector.editor.setOptions(newOptions);
+    });
+
+    var modal = new Backbone.BootstrapModal({
+      content: form,
+      title: filterTitle || 'Filtros' ,
+      okText: 'aceptar',
+      cancelText: 'cancelar',
+      enterTriggersOk: false,
+    });
+
+    modal.on('ok',function(){
+        form.commit();
+        console.log('Modal OK: [%S]', targetEvent);
+        console.dir(filterData.attributes); 
+        DocManager.trigger(targetEvent, filterData);
+    });
+
+    modal.open();
+  };
+
+
+        // form.on('tipocontacto:change', function(form, editorContent) {
+        //     console.log('onchange:key');
+        //     var contenido = editorContent.getValue(),
+        //         newOptions = utils.tipocontactoOL[contenido];
+        //     form.fields.subcontenido.editor.setOptions(newOptions);
+        // });
+
+        // form.on('contenido:tematica:change', function(form, editor, editorContent) {
+        //     var tematica = editor.nestedForm.fields.tematica.getValue(),
+        //       newOptions = utils.subtematicasOptionList[tematica];
+        //     //utils.inspect(editorContent,0,'editorContent',3);
+        //     form.fields.contenido.editor.nestedForm.fields.subtematica.editor.setOptions(newOptions);
+        // });
+
+
+
 
   Views.Layout = Marionette.LayoutView.extend({
     className: 'container',
@@ -289,6 +340,9 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
         if(options.formTemplate) self.setFormTemplate(options.formTemplate)
         this.options = options;
       }
+      if(options.filterInstance){
+        this.filter = options.filterInstance;
+      }
     },
 
     onRender: function(){
@@ -316,8 +370,14 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       'click .js-basicedit':'onClickBaseEdit',
       'click .js-save': 'onSave',
       'click .js-cancel': 'onCancel',
+      'click .js-filter': 'filterList',
       'click button.js-item-edit': 'itemEdit',
       'click button.js-item-trash': 'itemTrash',
+    },
+
+    filterList: function(e){
+      console.log('FILTER LIST: [%s]', this.options.filterEventName);
+      Views.filterPopup(this.filter, this.options.filterModel, this.options.filterEventName, this.options.filterTitle);
     },
 
     itemEdit: function(){
@@ -351,6 +411,8 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 
   });
 
+
+
   Views.gridFactory = function(collection, columns){
       return new Backgrid.Grid({
           className: 'table table-condensed table-bordered table-hover',
@@ -383,7 +445,12 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     },
     
     events: {
-      'click button.js-close': 'closeView'
+      'click button.js-close': 'closeView',
+      'click button.js-aceptar-comprador': 'aceptarComprador',
+    },
+    aceptarComprador: function(e){
+      console.log('Aceptar comprador')
+      this.trigger('accept:buyer');
     },
     
     closeView: function(e){
@@ -402,7 +469,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     initialize: function(attrs, opts){
       var self = this;
       //model, collection, tablecols
-
+      console.log('CrudManager Initialize: [%s]', opts.filterEventName);
       this.options = opts;
       self.filterFactory(self.collection,self.get('filtercols'));
       self.gridFactory(self.collection,self.get('gridcols'));
@@ -442,7 +509,11 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 
       self.layout = new Views.CrudLayout({
         model: new Backbone.Model(data),
-        template: self.options.layoutTpl,
+        template: opts.layoutTpl,
+        filterEventName: opts.filterEventName,
+        filterModel: opts.filterModel,
+        filterTitle: opts.filterTitle,
+        filterInstance: opts.filterInstance,
       });
 
       self.layout.on('show',function(){
