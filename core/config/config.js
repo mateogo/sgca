@@ -41,6 +41,7 @@ var notifier = {
 };
 
 var instanceDbListeners = function (db,BSON) {
+
   //loads modules that needs a reference to the db connection
   for(var ix = 0; ix<apps.length; ix++){
       var controllers_path = path.normalize( apps[ix] + '/controllers/');

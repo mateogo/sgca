@@ -92,7 +92,6 @@ var fetchserial = function(serie){
         if(!item){
             console.log('INIT:fetchserial:serial not found: [%s]',serie);
             item = initSerial(serie);
-
             collection.insert(item, {safe:true}, function(err, result) {
                 if (err) {
                     console.log('Error initializing  [%s] error: %s',serialCol,err);

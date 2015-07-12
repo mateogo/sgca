@@ -33,6 +33,7 @@ exports.connect = function (config,cb){
         }
         if(cb) cb(err,db);
         
+
         for (var i = 0; i < callbacks.length; i++) {
           callbacks[i](err,db);
         }
@@ -45,7 +46,7 @@ exports.dburi = dburi;
 exports.getDb = function(cb){
   if(!cb) return dbdriver;
   
-  console.log('agrendo db a dbconnect');
+  //console.log('agrendo db a dbconnect');
   if(dbdriver){
     cb(null,dbdriver);
   }else{
