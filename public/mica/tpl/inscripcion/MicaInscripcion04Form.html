@@ -2,47 +2,48 @@
   <div class="col-xs-12">
     <hr> 
     <div id="cactividades" class="form-group required">
-      <div class="control-label heading">Sector principal en que desea inscribirse como Comprador</div>  
+      <div class="control-label heading">Sector principal en que desea inscribirse como Comprador</div>
+      <div class="control-label heading en">Select main cathegory in which you wish to sign up as purchaser</div>
 
       <div id="buyteatro" class="radio" data-initialize="radio">
         <label class="radio-custom" for="caescenicas" >
           <input type="radio" id="caescenicas" class="sr-only" data-toggle="#toggle-caescenicas" <%= cactividades === 'aescenicas' ? 'checked="checked"' : '' %> name="cactividades" value="aescenicas">
-          Artes escénicas
+          Artes escénicas <span class="en">Performing Arts</span>
         </label>
       </div>
 
       <div id="buyaudiovisual" class="radio" data-initialize="radio" >
         <label class="radio-custom" for="caudiovisual">
           <input type="radio" id="caudiovisual" class="sr-only" data-toggle="#toggle-caudiovisual" <%= cactividades === 'audiovisual' ? 'checked="checked"' : '' %> name="cactividades" value="audiovisual">
-          Audiovisual
+          Audiovisual <span class="en">Audiovisual</span>
         </label>
       </div>
       
       <div id="buydiseno" class="radio" data-initialize="radio">
         <label class="radio-custom" for="cdisenio">
           <input type="radio" id="cdisenio" class="sr-only" data-toggle="#toggle-cdisenio" <%= cactividades === 'disenio' ? 'checked="checked"' : '' %> name="cactividades" value="disenio">
-          Diseño
+          Diseño <span class="en">Design</span>
         </label>
       </div>
 
       <div id="buyeditorial" class="radio" data-initialize="radio">
         <label class="radio-custom" for="ceditorial">
           <input type="radio" id="ceditorial" class="sr-only" data-toggle="#toggle-ceditorial" <%= cactividades === 'editorial' ? 'checked="checked"' : '' %> name="cactividades" value="editorial">
-          Editorial
+          Editorial <span class="en">Publishing</span>
         </label>
       </div>
 
       <div id="buymusica" class="radio" data-initialize="radio">
         <label class="radio-custom" for="cmusica">
           <input type="radio" id="cmusica" class="sr-only" data-toggle="#toggle-cmusica" <%= cactividades === 'musica' ? 'checked="checked"' : '' %> name="cactividades" value="musica">
-          Música
+          Música <span class="en">Music</span>
         </label>
       </div>
 
       <div id="buyvideojuegos" class="radio" data-initialize="radio">
         <label class="radio-custom" for="cideojuegos">
           <input type="radio" id="cideojuegos" class="sr-only" data-toggle="#toggle-cvideojuegos" <%= cactividades === 'videojuegos' ? 'checked="checked"' : '' %> name="cactividades" value="videojuegos">
-          Videojuegos
+          Videojuegos <span class="en">Videogames</span>
         </label>
       </div>
     </div>
@@ -51,80 +52,82 @@
       <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
 
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector1">
-        <input type="checkbox" id="c1subsector1" class="sr-only" <%= sub_aescenicas.diseniador ? 'checked="checked"' : '' %> name="sub_aescenicas" value="diseniador"> <span class="checkbox-label">Diseñadores, realizadores y técnicos</span>
+        <input type="checkbox" id="c1subsector1" class="sr-only" <%= sub_aescenicas.diseniador ? 'checked="checked"' : '' %> name="sub_aescenicas" value="diseniador"> <span class="checkbox-label">Diseñadores, realizadores y técnicos</span> <span class="checkbox-label en">Designers, producers, technicians</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector2">
-        <input type="checkbox" id="c1subsector2" class="sr-only" <%= sub_aescenicas.direccion ? 'checked="checked"' : '' %> name="sub_aescenicas" value="direccion"> <span class="checkbox-label">Dirección</span>
+        <input type="checkbox" id="c1subsector2" class="sr-only" <%= sub_aescenicas.direccion ? 'checked="checked"' : '' %> name="sub_aescenicas" value="direccion"> <span class="checkbox-label">Dirección</span> <span class="checkbox-label en">Direction</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector3">
-        <input type="checkbox" id="c1subsector3" class="sr-only" <%= sub_aescenicas.dramaturgia ? 'checked="checked"' : '' %> name="sub_aescenicas" value="dramaturgia"> <span class="checkbox-label">Dramaturgia</span>
+        <input type="checkbox" id="c1subsector3" class="sr-only" <%= sub_aescenicas.dramaturgia ? 'checked="checked"' : '' %> name="sub_aescenicas" value="dramaturgia"> <span class="checkbox-label">Dramaturgia</span> <span class="checkbox-label en">Dramaturgy</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector4">
-        <input type="checkbox" id="c1subsector3" class="sr-only" <%= sub_aescenicas.coreografia ? 'checked="checked"' : '' %> name="sub_aescenicas" value="coreografia"> <span class="checkbox-label">Coreografía</span>
+        <input type="checkbox" id="c1subsector3" class="sr-only" <%= sub_aescenicas.coreografia ? 'checked="checked"' : '' %> name="sub_aescenicas" value="coreografia"> <span class="checkbox-label">Coreografía</span> <span class="checkbox-label en">Choreography</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector5">
-        <input type="checkbox" id="c1subsector3" class="sr-only" <%= sub_aescenicas.programadorfestivales ? 'checked="checked"' : '' %> name="sub_aescenicas" value="programadorfestivales"> <span class="checkbox-label">Programadores, directores o representantes de festivales, muestras o redes</span>
+        <input type="checkbox" id="c1subsector3" class="sr-only" <%= sub_aescenicas.programadorfestivales ? 'checked="checked"' : '' %> name="sub_aescenicas" value="programadorfestivales"> <span class="checkbox-label">Programadores, directores o representantes de festivales, muestras o redes</span> <span class="checkbox-label en">Festival / exhibition planners, directors or representatives</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector6">
-        <input type="checkbox" id="c1subsector3" class="sr-only" <%= sub_aescenicas.programadorsalas ? 'checked="checked"' : '' %> name="sub_aescenicas" value="programadorsalas"> <span class="checkbox-label">Programadores de salas de exhibición y/o producción (teatros, centros culturales, etc.)</span>
+        <input type="checkbox" id="c1subsector3" class="sr-only" <%= sub_aescenicas.programadorsalas ? 'checked="checked"' : '' %> name="sub_aescenicas" value="programadorsalas"> <span class="checkbox-label">Programadores de salas de exhibición y/o producción (teatros, centros culturales, etc.)</span> <span class="checkbox-label en">Theatrical exhibition planners (Cultural centers, theatres, etc.)</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector7">
-        <input type="checkbox" id="c1subsector3" class="sr-only" <%= sub_aescenicas.camaras ? 'checked="checked"' : '' %> name="sub_aescenicas" value="camaras"> <span class="checkbox-label">Cámaras/ asociaciones / agrupaciones</span>
+        <input type="checkbox" id="c1subsector3" class="sr-only" <%= sub_aescenicas.camaras ? 'checked="checked"' : '' %> name="sub_aescenicas" value="camaras"> <span class="checkbox-label">Cámaras/ asociaciones / agrupaciones</span> <span class="checkbox-label en">Associations, groups</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c1subsector8">
-        <input type="checkbox" id="c1subsector3" class="sr-only" <%= sub_aescenicas.proveedores ? 'checked="checked"' : '' %> name="sub_aescenicas" value="proveedores"> <span class="checkbox-label">Proveedores de servicios artísticos o técnicos</span>
+        <input type="checkbox" id="c1subsector3" class="sr-only" <%= sub_aescenicas.proveedores ? 'checked="checked"' : '' %> name="sub_aescenicas" value="proveedores"> <span class="checkbox-label">Proveedores de servicios artísticos o técnicos</span> <span class="checkbox-label en">Art / technical services suppliers</span>
       </label>
     </div>
 
     <div class="form-group required" id="toggle-caudiovisual">
       <div class="control-label heading">Sub-sector específico donde desarrolla su actividad</div>
+      <div class="control-label heading en">Specific sub-sector in which your activity is performed</div>
 
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector1">
-        <input type="checkbox" id="c2subsector1" class="sr-only" <%= sub_audiovisual.pservicios ? 'checked="checked"' : '' %> name="sub_audiovisual" value="pservicios"> <span class="checkbox-label">Proveedores de servicios: cámaras, luces, sonido, edición, post, servicios varios</span>
+        <input type="checkbox" id="c2subsector1" class="sr-only" <%= sub_audiovisual.pservicios ? 'checked="checked"' : '' %> name="sub_audiovisual" value="pservicios"> <span class="checkbox-label">Proveedores de servicios: cámaras, luces, sonido, edición, post, servicios varios</span> <span class="checkbox-label en">Service providers: Cameras, lighting, postproduction and related equipment</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector2">
-        <input type="checkbox" id="c2subsector2" class="sr-only" <%= sub_audiovisual.pcontenidos ? 'checked="checked"' : '' %> name="sub_audiovisual" value="pcontenidos"> <span class="checkbox-label">Productoras de contenido</span>
+        <input type="checkbox" id="c2subsector2" class="sr-only" <%= sub_audiovisual.pcontenidos ? 'checked="checked"' : '' %> name="sub_audiovisual" value="pcontenidos"> <span class="checkbox-label">Productoras de contenido</span> <span class="checkbox-label en">Content production</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector3">
-        <input type="checkbox" id="c2subsector3" class="sr-only" <%= sub_audiovisual.servicios ? 'checked="checked"' : '' %> name="sub_audiovisual" value="servicios"> <span class="checkbox-label">Servicios de producción: televisión, cine, publicidad</span>
+        <input type="checkbox" id="c2subsector3" class="sr-only" <%= sub_audiovisual.servicios ? 'checked="checked"' : '' %> name="sub_audiovisual" value="servicios"> <span class="checkbox-label">Servicios de producción: televisión, cine, publicidad</span> <span class="checkbox-label en">Production services: broadcasting, cinema and advertising</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector4">
-        <input type="checkbox" id="c2subsector4" class="sr-only" <%= sub_audiovisual.vjs ? 'checked="checked"' : '' %> name="sub_audiovisual" value="vjs"> <span class="checkbox-label">VJS, artistas visuales, realizadores de video clip, realizadores de piezas audiovisuales</span>
+        <input type="checkbox" id="c2subsector4" class="sr-only" <%= sub_audiovisual.vjs ? 'checked="checked"' : '' %> name="sub_audiovisual" value="vjs"> <span class="checkbox-label">VJS, artistas visuales, realizadores de video clip, realizadores de piezas audiovisuales</span> <span class="checkbox-label en">Vjs, visual artists, videoclip producers</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector5">
-        <input type="checkbox" id="c2subsector5" class="sr-only" <%= sub_audiovisual.profesional ? 'checked="checked"' : '' %> name="sub_audiovisual" value="profesional"> <span class="checkbox-label">profesionales: Guión, dirección, productor, director de fotografía/arte, sonidista, editor, colorista, etc.</span>
+        <input type="checkbox" id="c2subsector5" class="sr-only" <%= sub_audiovisual.profesional ? 'checked="checked"' : '' %> name="sub_audiovisual" value="profesional"> <span class="checkbox-label">profesionales: Guión, dirección, productor, director de fotografía/arte, sonidista, editor, colorista, etc.</span> <span class="checkbox-label en">Proffesionals: Script, Filmmakers, Producres, director of photography</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector6">
-        <input type="checkbox" id="c2subsector6" class="sr-only" <%= sub_audiovisual.programador ? 'checked="checked"' : '' %> name="sub_audiovisual" value="programador"> <span class="checkbox-label">Programadores, directores o representantes de Festivales</span>
+        <input type="checkbox" id="c2subsector6" class="sr-only" <%= sub_audiovisual.programador ? 'checked="checked"' : '' %> name="sub_audiovisual" value="programador"> <span class="checkbox-label">Programadores, directores o representantes de Festivales</span> <span class="checkbox-label en">Planners, Directors or agents of Festivals and screennings</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector7">
-        <input type="checkbox" id="c2subsector7" class="sr-only" <%= sub_audiovisual.distribuidor ? 'checked="checked"' : '' %> name="sub_audiovisual" value="distribuidor"> <span class="checkbox-label">Distribuidores / agentes de venta</span>
+        <input type="checkbox" id="c2subsector7" class="sr-only" <%= sub_audiovisual.distribuidor ? 'checked="checked"' : '' %> name="sub_audiovisual" value="distribuidor"> <span class="checkbox-label">Distribuidores / agentes de venta</span> <span class="checkbox-label en">Distributors / Sales agents</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector8">
-        <input type="checkbox" id="c2subsector8" class="sr-only" <%= sub_audiovisual.exhibtelevision ? 'checked="checked"' : '' %> name="sub_audiovisual" value="exhibtelevision"> <span class="checkbox-label">Exhibidores de televisión</span>
+        <input type="checkbox" id="c2subsector8" class="sr-only" <%= sub_audiovisual.exhibtelevision ? 'checked="checked"' : '' %> name="sub_audiovisual" value="exhibtelevision"> <span class="checkbox-label">Exhibidores de televisión</span> <span class="checkbox-label en">TV (broadcasting) exhibitors</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector9">
-        <input type="checkbox" id="c2subsector9" class="sr-only" <%= sub_audiovisual.exhibmultiplataforma ? 'checked="checked"' : '' %> name="sub_audiovisual" value="exhibmultiplataforma"> <span class="checkbox-label">Exhibidores multiplataforma</span>
+        <input type="checkbox" id="c2subsector9" class="sr-only" <%= sub_audiovisual.exhibmultiplataforma ? 'checked="checked"' : '' %> name="sub_audiovisual" value="exhibmultiplataforma"> <span class="checkbox-label">Exhibidores multiplataforma</span> <span class="checkbox-label en">Multi platform exhibitors</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector10">
-        <input type="checkbox" id="c2subsector10" class="sr-only" <%= sub_audiovisual.exhibcine ? 'checked="checked"' : '' %> name="sub_audiovisual" value="exhibcine"> <span class="checkbox-label">Exhibidores cinematográficos</span>
+        <input type="checkbox" id="c2subsector10" class="sr-only" <%= sub_audiovisual.exhibcine ? 'checked="checked"' : '' %> name="sub_audiovisual" value="exhibcine"> <span class="checkbox-label">Exhibidores cinematográficos</span> <span class="checkbox-label en">Film exhibitors</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector11">
-        <input type="checkbox" id="c2subsector11" class="sr-only" <%= sub_audiovisual.camaras ? 'checked="checked"' : '' %> name="sub_audiovisual" value="camaras"> <span class="checkbox-label">Cámaras/ Asociaciones/ Agrupaciones</span>
+        <input type="checkbox" id="c2subsector11" class="sr-only" <%= sub_audiovisual.camaras ? 'checked="checked"' : '' %> name="sub_audiovisual" value="camaras"> <span class="checkbox-label">Cámaras/ Asociaciones/ Agrupaciones</span> <span class="checkbox-label en">Assosiations / Groups</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c2subsector12">
-        <input type="checkbox" id="c2subsector12" class="sr-only" <%= sub_audiovisual.editores ? 'checked="checked"' : '' %> name="sub_audiovisual" value="editores"> <span class="checkbox-label">Editores de publicaciones especializadas</span>
+        <input type="checkbox" id="c2subsector12" class="sr-only" <%= sub_audiovisual.editores ? 'checked="checked"' : '' %> name="sub_audiovisual" value="editores"> <span class="checkbox-label">Editores de publicaciones especializadas</span> <span class="checkbox-label en">Audiovisual publishing specialized editors</span>
       </label>
     </div>
 
     <div class="form-group required" id="toggle-cdisenio">
       <div class="control-label heading" class="control-label">Sub-sector específico donde desarrolla su actividad</div>
+      <div class="control-label heading en">Specific sub-sector in which your activity is performed</div>
 
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c3subsector1">
-        <input type="checkbox" id="c3subsector1" class="sr-only" <%= sub_disenio.grafica ? 'checked="checked"' : '' %> name="sub_disenio" value="grafica"> <span class="checkbox-label">Gráfico/ Ilustración</span>
+        <input type="checkbox" id="c3subsector1" class="sr-only" <%= sub_disenio.grafica ? 'checked="checked"' : '' %> name="sub_disenio" value="grafica"> <span class="checkbox-label">Gráfico/ Ilustración</span> <span class="checkbox-label en">Graphic design / Illustration</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c3subsector2">
-        <input type="checkbox" id="c3subsector2" class="sr-only" <%= sub_disenio.indumentaria ? 'checked="checked"' : '' %> name="sub_disenio" value="indumentaria"> <span class="checkbox-label">Indumentaria y afines</span>
+        <input type="checkbox" id="c3subsector2" class="sr-only" <%= sub_disenio.indumentaria ? 'checked="checked"' : '' %> name="sub_disenio" value="indumentaria"> <span class="checkbox-label">Indumentaria y afines</span> <span class="checkbox-label en">Clothing and related design</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c3subsector3">
         <input type="checkbox" id="c3subsector3" class="sr-only" <%= sub_disenio.industrial ? 'checked="checked"' : '' %> name="sub_disenio" value="industrial"> <span class="checkbox-label">Industrial / objetos</span>
@@ -133,94 +136,98 @@
         <input type="checkbox" id="c3subsector4" class="sr-only" <%= sub_disenio.joyeria ? 'checked="checked"' : '' %> name="sub_disenio" value="joyeria"> <span class="checkbox-label">Joyería</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c3subsector5">
-        <input type="checkbox" id="c3subsector5" class="sr-only" <%= sub_disenio.multimedia ? 'checked="checked"' : '' %> name="sub_disenio" value="multimedia"> <span class="checkbox-label">Multimedia/ web</span>
+        <input type="checkbox" id="c3subsector5" class="sr-only" <%= sub_disenio.multimedia ? 'checked="checked"' : '' %> name="sub_disenio" value="multimedia"> <span class="checkbox-label">Multimedia/ web</span> <span class="checkbox-label en">Multimedia/ Web</span>
       </label>
     </div>
 
     <div class="form-group required" id="toggle-ceditorial">
       <div class="control-label heading" class="control-label">Sub-sector específico donde desarrolla su actividad</div>
+      <div class="control-label heading en">Specific sub-sector in which your activity is performed</div>
 
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c4subsector1">
-        <input type="checkbox" id="c4subsector1" class="sr-only" <%= sub_editorial.editor ? 'checked="checked"' : '' %> name="sub_editorial" value="editor"> <span class="checkbox-label">Editor</span>
+        <input type="checkbox" id="c4subsector1" class="sr-only" <%= sub_editorial.editor ? 'checked="checked"' : '' %> name="sub_editorial" value="editor"> <span class="checkbox-label">Editor</span> <span class="checkbox-label en">Publishers</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c4subsector2">
-        <input type="checkbox" id="c4subsector2" class="sr-only" <%= sub_editorial.libreria ? 'checked="checked"' : '' %> name="sub_editorial" value="libreria"> <span class="checkbox-label">Librería</span>
+        <input type="checkbox" id="c4subsector2" class="sr-only" <%= sub_editorial.libreria ? 'checked="checked"' : '' %> name="sub_editorial" value="libreria"> <span class="checkbox-label">Librería</span> <span class="checkbox-label en">Bookstore</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c4subsector3">
-        <input type="checkbox" id="c4subsector3" class="sr-only" <%= sub_editorial.distribuidora ? 'checked="checked"' : '' %> name="sub_editorial" value="distribuidora"> <span class="checkbox-label">Distribuidora</span>
+        <input type="checkbox" id="c4subsector3" class="sr-only" <%= sub_editorial.distribuidora ? 'checked="checked"' : '' %> name="sub_editorial" value="distribuidora"> <span class="checkbox-label">Distribuidora</span> <span class="checkbox-label en">Distributor</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c4subsector4">
-        <input type="checkbox" id="c4subsector4" class="sr-only" <%= sub_editorial.ilustrador ? 'checked="checked"' : '' %> name="sub_editorial" value="ilustrador"> <span class="checkbox-label">Ilustrador</span>
+        <input type="checkbox" id="c4subsector4" class="sr-only" <%= sub_editorial.ilustrador ? 'checked="checked"' : '' %> name="sub_editorial" value="ilustrador"> <span class="checkbox-label">Ilustrador</span> <span class="checkbox-label en">Illustrator</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c4subsector5">
-        <input type="checkbox" id="c4subsector5" class="sr-only" <%= sub_editorial.revistacultural ? 'checked="checked"' : '' %> name="sub_editorial" value="revistacultural"> <span class="checkbox-label">Revista cultural</span>
+        <input type="checkbox" id="c4subsector5" class="sr-only" <%= sub_editorial.revistacultural ? 'checked="checked"' : '' %> name="sub_editorial" value="revistacultural"> <span class="checkbox-label">Revista cultural</span> <span class="checkbox-label en">Cultural magazine</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c4subsector6">
-        <input type="checkbox" id="c4subsector6" class="sr-only" <%= sub_editorial.electronico ? 'checked="checked"' : '' %> name="sub_editorial" value="electronico"> <span class="checkbox-label">Editor de publicaciones electrónicas</span>
+        <input type="checkbox" id="c4subsector6" class="sr-only" <%= sub_editorial.electronico ? 'checked="checked"' : '' %> name="sub_editorial" value="electronico"> <span class="checkbox-label">Editor de publicaciones electrónicas</span> <span class="checkbox-label en">EBook editor</span>
       </label>
     </div>
 
     <div class="form-group required" id="toggle-cmusica">
       <div class="control-label heading" class="control-label">Sub-sector específico donde desarrolla su actividad</div>
+      <div class="control-label heading en">Specific sub-sector in which your activity is performed</div>
 
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector1">
-        <input type="checkbox" id="c5subsector1" class="sr-only" <%= sub_musica.representante ? 'checked="checked"' : '' %> name="sub_musica" value="representante"> <span class="checkbox-label">Representate (manager, booking)</span>
+        <input type="checkbox" id="c5subsector1" class="sr-only" <%= sub_musica.representante ? 'checked="checked"' : '' %> name="sub_musica" value="representante"> <span class="checkbox-label">Representate (manager, booking)</span> <span class="checkbox-label en">Agents (management, booking)</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector2">
-        <input type="checkbox" id="c5subsector2" class="sr-only" <%= sub_musica.produccion ? 'checked="checked"' : '' %> name="sub_musica" value="produccion"> <span class="checkbox-label">Producción (programación, curaduría)</span>
+        <input type="checkbox" id="c5subsector2" class="sr-only" <%= sub_musica.produccion ? 'checked="checked"' : '' %> name="sub_musica" value="produccion"> <span class="checkbox-label">Producción (programación, curaduría)</span> <span class="checkbox-label en">Production (planning, curatorship)</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector3">
-        <input type="checkbox" id="c5subsector3" class="sr-only" <%= sub_musica.festival ? 'checked="checked"' : '' %> name="sub_musica" value="festival"> <span class="checkbox-label">Festival</span>
+        <input type="checkbox" id="c5subsector3" class="sr-only" <%= sub_musica.festival ? 'checked="checked"' : '' %> name="sub_musica" value="festival"> <span class="checkbox-label">Festival</span> <span class="checkbox-label en">Festival</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector4">
-        <input type="checkbox" id="c5subsector4" class="sr-only" <%= sub_musica.salas ? 'checked="checked"' : '' %> name="sub_musica" value="salas"> <span class="checkbox-label">Sala de concierto</span>
+        <input type="checkbox" id="c5subsector4" class="sr-only" <%= sub_musica.salas ? 'checked="checked"' : '' %> name="sub_musica" value="salas"> <span class="checkbox-label">Sala de concierto</span> <span class="checkbox-label en">Concert venue</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector5">
-        <input type="checkbox" id="c5subsector5" class="sr-only" <%= sub_musica.sello ? 'checked="checked"' : '' %> name="sub_musica" value="sello"> <span class="checkbox-label">Sello discográfico/ distribución</span>
+        <input type="checkbox" id="c5subsector5" class="sr-only" <%= sub_musica.sello ? 'checked="checked"' : '' %> name="sub_musica" value="sello"> <span class="checkbox-label">Sello discográfico/ distribución</span> <span class="checkbox-label en">Record label (and / or distributor)</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector6">
-        <input type="checkbox" id="c5subsector6" class="sr-only" <%= sub_musica.servicios ? 'checked="checked"' : '' %> name="sub_musica" value="servicios"> <span class="checkbox-label">Servicios afines</span>
+        <input type="checkbox" id="c5subsector6" class="sr-only" <%= sub_musica.servicios ? 'checked="checked"' : '' %> name="sub_musica" value="servicios"> <span class="checkbox-label">Servicios afines</span> <span class="checkbox-label en">Various services</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c5subsector7">
-        <input type="checkbox" id="c5subsector7" class="sr-only" <%= sub_musica.camaras ? 'checked="checked"' : '' %> name="sub_musica" value="camaras"> <span class="checkbox-label">Cámaras, agrupaciones, asociaciones</span>
+        <input type="checkbox" id="c5subsector7" class="sr-only" <%= sub_musica.camaras ? 'checked="checked"' : '' %> name="sub_musica" value="camaras"> <span class="checkbox-label">Cámaras, agrupaciones, asociaciones</span> <span class="checkbox-label en">Associations, groups</span>
       </label>
     </div>
 
     <div class="form-group required" id="toggle-cvideojuegos">
       <div class="control-label heading" class="control-label">Sub-sector específico donde desarrolla su actividad</div>
+      <div class="control-label heading en">Specific sub-sector in which your activity is performed</div>
 
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector1">
-        <input type="checkbox" id="c6subsector1" class="sr-only" <%= sub_videojuegos.programacion ? 'checked="checked"' : '' %> name="sub_videojuegos" value="programacion"> <span class="checkbox-label">Programación</span>
+        <input type="checkbox" id="c6subsector1" class="sr-only" <%= sub_videojuegos.programacion ? 'checked="checked"' : '' %> name="sub_videojuegos" value="programacion"> <span class="checkbox-label">Programación</span> <span class="checkbox-label en">Programming</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector2">
-        <input type="checkbox" id="c6subsector2" class="sr-only" <%= sub_videojuegos.arte ? 'checked="checked"' : '' %> name="sub_videojuegos" value="arte"> <span class="checkbox-label">Arte (2d, 3d, ilustración)</span>
+        <input type="checkbox" id="c6subsector2" class="sr-only" <%= sub_videojuegos.arte ? 'checked="checked"' : '' %> name="sub_videojuegos" value="arte"> <span class="checkbox-label">Arte (2d, 3d, ilustración)</span> <span class="checkbox-label en">2d, 3d, illustrations Arts.</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector3">
-        <input type="checkbox" id="c6subsector3" class="sr-only" <%= sub_videojuegos.disenio ? 'checked="checked"' : '' %> name="sub_videojuegos" value="disenio"> <span class="checkbox-label">Diseñador lúdico</span>
+        <input type="checkbox" id="c6subsector3" class="sr-only" <%= sub_videojuegos.disenio ? 'checked="checked"' : '' %> name="sub_videojuegos" value="disenio"> <span class="checkbox-label">Diseñador lúdico</span> <span class="checkbox-label en">Game interface designer</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector4">
-        <input type="checkbox" id="c6subsector4" class="sr-only" <%= sub_videojuegos.guion ? 'checked="checked"' : '' %> name="sub_videojuegos" value="guion"> <span class="checkbox-label">Guión</span>
+        <input type="checkbox" id="c6subsector4" class="sr-only" <%= sub_videojuegos.guion ? 'checked="checked"' : '' %> name="sub_videojuegos" value="guion"> <span class="checkbox-label">Guión</span> <span class="checkbox-label en">Script</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector5">
-        <input type="checkbox" id="c6subsector5" class="sr-only" <%= sub_videojuegos.produccion ? 'checked="checked"' : '' %> name="sub_videojuegos" value="produccion"> <span class="checkbox-label">Producción</span>
+        <input type="checkbox" id="c6subsector5" class="sr-only" <%= sub_videojuegos.produccion ? 'checked="checked"' : '' %> name="sub_videojuegos" value="produccion"> <span class="checkbox-label">Producción</span> <span class="checkbox-label en">Production</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector6">
-        <input type="checkbox" id="c6subsector6" class="sr-only" <%= sub_videojuegos.musica ? 'checked="checked"' : '' %> name="sub_videojuegos" value="musica"> <span class="checkbox-label">Música/ Diseño de sonido</span>
+        <input type="checkbox" id="c6subsector6" class="sr-only" <%= sub_videojuegos.musica ? 'checked="checked"' : '' %> name="sub_videojuegos" value="musica"> <span class="checkbox-label">Música/ Diseño de sonido</span> <span class="checkbox-label en">Music / Sound design</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector7">
-        <input type="checkbox" id="c6subsector7" class="sr-only" <%= sub_videojuegos.testeo ? 'checked="checked"' : '' %> name="sub_videojuegos" value="testeo"> <span class="checkbox-label">Testeo</span>
+        <input type="checkbox" id="c6subsector7" class="sr-only" <%= sub_videojuegos.testeo ? 'checked="checked"' : '' %> name="sub_videojuegos" value="testeo"> <span class="checkbox-label">Testeo</span> <span class="checkbox-label en">Testing</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector8">
-        <input type="checkbox" id="c6subsector8" class="sr-only" <%= sub_videojuegos.comunicacion ? 'checked="checked"' : '' %> name="sub_videojuegos" value="comunicacion"> <span class="checkbox-label">Comunicación y marketing</span>
+        <input type="checkbox" id="c6subsector8" class="sr-only" <%= sub_videojuegos.comunicacion ? 'checked="checked"' : '' %> name="sub_videojuegos" value="comunicacion"> <span class="checkbox-label">Comunicación y marketing</span> <span class="checkbox-label en">Marketing and communication</span> <span class="checkbox-label en">Community manager</span>
       </label>
       <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="c6subsector9">
-        <input type="checkbox" id="c6subsector9" class="sr-only" <%= sub_videojuegos.comunidades ? 'checked="checked"' : '' %> name="sub_videojuegos" value="comunidades"> <span class="checkbox-label">Gestión de comunidades</span>
+        <input type="checkbox" id="c6subsector9" class="sr-only" <%= sub_videojuegos.comunidades ? 'checked="checked"' : '' %> name="sub_videojuegos" value="comunidades"> <span class="checkbox-label">Gestión de comunidades</span> <span class="checkbox-label en">Community manager</span>
       </label>
     </div>
     
     <div class="row">    
       <div class="form-group">
         <label class="col-sm-12 control-label" for="cdescriptores">Palabras clave que identifiquen su proyecto</label>
+        <label class="col-sm-12 control-label en" for="vdescriptores">Enter keywords that describe your project</label>
         <div class="col-sm-12">
           <select id="cdescriptores" class="form-control" multiple data-role="tagsinput" placeholder="Ingrese términos claves y luego presione Enter."  name="cdescriptores">
           </select>
@@ -230,16 +237,17 @@
 
     <div class="row">
       <div class="form-group col-sm-12 radio">
+        <div class="control-label heading">¿Realiza o realizó negocios en el exterior?</div>
+        <div class="control-label heading en">Do you do or did business abroad?</div>
         <div class="form-group">
-          <p><strong>¿Realiza o realizó negocios en el exterior?</strong></p>
           <label class="radio-custom radio-inline" data-initialize="radio" for="cexpinternacional4">
-            <input type="radio" id="cexpinternacional4" class="sr-only" <%= cexperienciaintl === '4' ? 'checked="checked"' : '' %> name="cexperienciaintl" value="4"> Frecuentemente
+            <input type="radio" id="cexpinternacional4" class="sr-only" <%= cexperienciaintl === '4' ? 'checked="checked"' : '' %> name="cexperienciaintl" value="4"> Frecuentemente <span class="en">Frequently</span>
           </label>
           <label class="radio-custom radio-inline" data-initialize="radio" for="cexpinternacional2">
-            <input type="radio" id="cexpinternacional2" class="sr-only" <%= cexperienciaintl === '2' ? 'checked="checked"' : '' %> name="cexperienciaintl" value="2"> Esporádicamente
+            <input type="radio" id="cexpinternacional2" class="sr-only" <%= cexperienciaintl === '2' ? 'checked="checked"' : '' %> name="cexperienciaintl" value="2"> Esporádicamente <span class="en">Occasionally</span>
           </label>
           <label class="radio-custom radio-inline" data-initialize="radio" for="cexpinternacional1">
-            <input type="radio" id="cexpinternacional1" class="sr-only" <%= cexperienciaintl === '1' ? 'checked="checked"' : '' %> name="cexperienciaintl" value="1"> Nunca
+            <input type="radio" id="cexpinternacional1" class="sr-only" <%= cexperienciaintl === '1' ? 'checked="checked"' : '' %> name="cexperienciaintl" value="1"> Nunca <span class="en">Never</span>
           </label>
         </div>
       </div>
@@ -248,6 +256,7 @@
     <div class="row">
       <div class="form-group col-sm-12">
         <label class="control-label" for="ccomentario">Comentarios adicionales sobre su participación como Comprador en el evento</label>
+        <label class="control-label en" for="ccomentario">If you have any additional comments about your participation in MICA, please enter them here</label>
         <textarea id="ccomentario" class="form-control" rows="6" maxlength="500" placeholder="Máximo 500 caracteres" name="ccomentario"><%= ccomentario %></textarea>
         <span class="help-block"></span>
       </div>

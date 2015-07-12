@@ -1,16 +1,16 @@
 <h3>Datos de la Empresa o Institución</h3>
-
+<h4 class="en">About Company / Project</h4><hr>
 
 <div class="row">  
   <div class="col-sm-5 col-xs-9 form-group required">
     <label class="control-label" for="edisplayName">Nombre de la Empresa/Emprendimiento</label>
-    <!-- label class="control-label en" for="edisplayName">Company Name / Entrepreneurship</label -->
+    <label class="control-label en" for="edisplayName">Company / Project Name</label>
     <input type="text" id="edisplayName" class="form-control" name="edisplayName" value='<%= edisplayName %>'/>
     <span class="help-block"></span>
   </div>
   <div class="col-sm-5 col-xs-9 form-group">
     <label class="control-label" for="ename">Razón social</label>
-    <!-- label class="control-label en" for="ename">Business name</label -->
+    <label class="control-label en" for="ename">Corporate Name</label>
     <div class="input-group">
       <input type="text" id="ename" class="form-control" name="ename" value='<%= ename %>'/>
       <div class="input-group-addon">
@@ -25,6 +25,7 @@
 <div class="form-group col-sm-12 required">
   <div class="row">
     <label class="control-label" for="edescription">Describa el perfil de la Empresa/Emprendimiento</label>
+    <label class="control-label en" for="edescription">Describe company/project profile</label>
     <div class="input-group">
       <textarea id="edescription" class="form-control" rows="6"  maxlength="500" placeholder="Describa brevemente el perfil de su producción (bienes o servicios), a quién está destinada, qué la caracteriza, etc. (Máximo 500 caracteres)" name="edescription" ><%= edescription %></textarea>
       <div class="input-group-addon">
@@ -41,6 +42,7 @@
 <div class="form-group col-sm-12 required">
   <div class="row">
     <label class="control-label" for="emotivation">Explique su principal motivación para participar del MICA</label>
+    <label class="control-label en" for="emotivation">Describe your main motivation for participating in MICA</label>
     <div class="input-group">
       <textarea id="emotivation" class="form-control" rows="6" maxlength="500" placeholder="Describa brevemente por qué quiere participar del evento, en qué actividades en particular, etc. (Máximo 500 caracteres)" name="emotivation"><%= emotivation %></textarea>
       <div class="input-group-addon">
@@ -58,6 +60,7 @@
   <div class="form-group required">
     <div class="col-sm-4 selectContainer">
       <label class="control-label" for="epais">País</label>
+      <label class="control-label en" for="epais">Country</label>
       <select  id="epais" class="form-control" name="epais">
            <%= tdata.buildSelectOptions('paises',tdata.paisesOL, epais) %>
       </select>
@@ -66,6 +69,7 @@
   
     <div class="col-sm-4 selectContainer">
       <label class="control-label" for="eprov">Provincia</label>
+      <label class="control-label en" for="eprov">State</label>
       <select id="eprov" class="form-control js-provarg" name="eprov">
            <%= tdata.buildSelectOptions('provincias',tdata.provinciasOL, eprov) %>
       </select>
@@ -77,6 +81,7 @@
         
   <div class="col-sm-4">
     <label class="control-label" for="elocalidad">Localidad</label>
+    <label class="control-label en" for="elocalidad">City</label>
     <input type="text" id="elocalidad" class="form-control" name="elocalidad" value="<%= elocalidad %>">
   </div>
 </div>
@@ -85,6 +90,7 @@
   <div class="row">
     <div class="col-sm-4">
       <label class="control-label" for="ecuit">CUIT</label>
+      <label class="control-label en" for="ecuit">Fiscal identity code</label>
       <div class="input-group">
         <input type="text" id="ecuit" class="form-control" name="ecuit" value="<%= ecuit %>">
         <div class="input-group-addon">
@@ -97,6 +103,7 @@
 
     <div class="col-sm-6 form-group">
       <label class="control-label" for="edomicilio">Domicilio</label>
+      <label class="control-label en" for="edomicilio">Company Address</label>
       <div class="input-group">
         <input type="text" id="edomicilio" class="form-control" name="edomicilio" value="<%= edomicilio %>">
         <div class="input-group-addon">
@@ -109,6 +116,7 @@
 
     <div class="col-sm-2">
       <label class="control-label" for="ecp">CP</label>
+      <label class="control-label en" for="ecp">Zip Code</label>
       <input type="text" id="ecp" class="form-control" name="ecp" value="<%= ecp %>">
     </div>
   </div>
@@ -118,12 +126,14 @@
   <div class="row">
     <div class="col-sm-6 form-group required">
       <label class="control-label" for="email">Email</label>
+      <label class="control-label en" for="email">Email address</label>
       <input type="email" id="email" class="form-control" name="email" value="<%= email %>">
       <span class="help-block"></span>
     </div>
 
     <div class="col-sm-6">
       <label class="control-label" for="eweb">Web</label>
+      <label class="control-label en" for="eweb">Website</label>
       <input type="text" id="eweb" class="form-control" placeholder="http://www.dominio.com.pais" name="eweb" value="<%= eweb %>">
       <span class="help-block"></span>
     </div>
@@ -134,12 +144,14 @@
   <div class="row">
       <div class="col-sm-3">
           <label class="control-label" for="efundacion">Año de Fundación</label>
+          <label class="control-label en" for="efundacion">Year of establishment</label>
           <input type="text" id="efundacion" class="form-control" name="efundacion" value="<%= efundacion %>">
           <span class="help-block"></span>
       </div>
 
       <div class="col-sm-4 form-group">
         <label class="control-label" for="enumempleados">Cantidad de empleados</label>
+        <label class="control-label en" for="enumempleados">Number of employees</label>
         <div class="input-group">
           <input type="text" id="enumempleados" class="form-control" name="enumempleados" value="<%= enumempleados %>">
           <div class="input-group-addon">
@@ -153,6 +165,7 @@
 
       <div class="col-sm-5 form-group">
         <label class="control-label" for="eventas">Facturación anual</label>
+        <label class="control-label en" for="eventas">Annual sales (expressed in Argentine Pesos - AR$)</label>
         <div class="input-group">
           <div class="input-group-addon">AR$</div>
           <input type="text" id="eventas" class="form-control" name="eventas" value="<%= eventas %>">

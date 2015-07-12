@@ -4,63 +4,104 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MICA - Mercado de Industrias Culturales - Ministerio de Cultura de la Nación</title>
+  	<title>MICA - Mercado de Industrias Culturales Argentinas</title>
 	<link rel="icon" href="http://www.cultura.gob.ar/static/favicon.ico">
-	<meta name="description" content="Otorga ayudas e incentivos económicos para fortalecer el sector cultural. Hay de movilidad, sostenibilidad, infraestructura e innovación.">
+	<meta name="description" content="El MICA es el principal mercado de industrias culturales de Argentina donde se reúnen en un mismo espacio los sectores de artes escénicas, audiovisual, diseño, editorial, música y videojuegos">
 	<meta name="author" content="Dirección General de Tecnología y Sistemas - Ministerio de Cultura">
-	<meta name="geo.position" content="-34.60899163;-58.3702313817" />
-	<meta name="ICBM" content="-34.60899163;-58.3702313817" />
-	<meta name="DC.title" content="Ministerio de Cultura de la Nacion" />
-	<meta name="geo.country" content="AR" />
-	<meta name="geo.region" content="AR-C" />
-	<meta name="geo.placename" content="Buenos Aires, Ciudad Autónoma de Buenos Aires, República Argentina" />
-	<meta name="Language" content="Spanish" />
-	<meta name="Robots" content="all" />
 	<meta name="keywords" content="Ministerio de Cultura de la Nacion, MICA, Mercado de Industrias Culturales Argentinas" />
 
-<!-- Le styles -->
-	<link href="css/styles.css" media='screen' rel="stylesheet" >
-	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<!-- CSS BASE -->
+	
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+	<link href="//code.jquery.com/ui/1.11.4/jquery-ui.min.js" rel="stylesheet">
+	<link href="css/bootstrap-reset.css" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="css/theme-admin.css" rel="stylesheet">
+	<link href="css/style-responsive.css" rel="stylesheet"/>
 
+<!--CSS ADICIONALES-->
+	
 	<link href="/css/backbone-forms-bootstrap.css" rel="stylesheet">
-
-	<link href="/mica2015/css/jquery-ui.min.css" rel="stylesheet" >
-	<link href="/mica2015/css/bootstrap-tagsinput.css" rel="stylesheet">
+	<link href="css/bootstrap-tagsinput.css" rel="stylesheet">
 	<link href="lib/croppic/croppic.css" rel="stylesheet">
 
 	<link href="css/fuelux.min.css" rel="stylesheet">
-  <link href="/sisplan/lib/backgrid/backgrid.min.css" rel="stylesheet" >
-  <link href="/sisplan/lib/backgrid/backgrid-filter.min.css" rel="stylesheet" >
+  	
+  	<link href="/sisplan/lib/backgrid/backgrid.min.css" rel="stylesheet" >
+  	<link href="/sisplan/lib/backgrid/backgrid-filter.min.css" rel="stylesheet" >
 
-	<link rel="stylesheet" href="css/theme-fondo.css">
-	<link rel="stylesheet" href="css/datepicker3.css">
+	<link href="css/theme-fondo.css" rel="stylesheet">
+	<link href="css/datepicker3.css" rel="stylesheet">
 
-	<style type="text/css">
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
 
-		#messageDrop{
-		    border: 4px dotted #CCC;
-		    background-color:rgba(240,240,240,0.5);
-		    position:absolute;top:0;bottom:0;left:0;right:0;
-		    text-align:center;
-		    color: #555;
-		    display:none;
-		}
-	</style>
 </head>
 
 <body>
-	<section id="header-region" class='header hidden-print'></section>
+<section id="container">
+<!--header start-->
+<header class="header fixed-top clearfix">
+	<!--logo start-->
+	<div class="brand">
+		<a href="/" class="logo">
+	        <img src="images/logo.png" alt="Ministerio de Cultura de la Nación" class="img-responsive">
+	    </a>
+	    <div class="sidebar-toggle-box">
+	        <div class="fa fa-bars"></div>
+	    </div>
+	</div>
+	<!--logo end-->
+	<div id="header-region"></div>
+</header>
+<!--header end-->
+
+<!--sidebar start-->
+<aside>
+    <div id="sidebar" class="nav-collapse">
+        <!-- sidebar menu start-->
+        <div class="leftside-navigation" tabindex="5000" style="overflow: hidden; outline: none;">
+            <ul class="sidebar-menu" id="nav-accordion">
+                <li>
+                    <a class="active" href="/mica/#bienvenido">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Escritorio</span>
+                    </a>
+                </li>
+                <li class="sub-menu dcjq-parent-li">
+                    <a href="javascript:;" class="dcjq-parent">
+                        <i class="fa fa-laptop"></i>
+                        <span>MICA</span>
+                    <span class="dcjq-icon"></span></a>
+                    <ul class="sub" style="display: none;">
+                        <li><a href="#">Mi Perfil MICA</a></li>
+                        <li><a href="#showcase/nueva">Showcases</a></li>
+                        <li><a href="#">Rondas de Negocios</a></li>
+                        <li><a href="#">Agenda</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="logo-footer">
+                <img src="http://www.cultura.gob.ar/static/img/logo-presidencia-de-la-nacion-footer.png" alt="Ministerio de Cultura de la Nacion" title="Ministerio de Cultura de la Nacion" class="img-responsive">
+            </div>
+        </div>
+        <!-- sidebar menu end-->
+    <div id="ascrail2000" class="nicescroll-rails" style="width: 3px; z-index: auto; cursor: default; position: absolute; top: 0px; left: 237px; height: 355px; display: block; opacity: 0;"><div style="position: relative; top: 0px; float: right; width: 3px; height: 0px; border: 0px solid rgb(255, 255, 255); border-radius: 0px; background-color: rgb(31, 181, 173); background-clip: padding-box;"></div></div><div id="ascrail2000-hr" class="nicescroll-rails" style="height: 3px; z-index: auto; top: 352px; left: 0px; position: absolute; cursor: default; display: none; opacity: 0; width: 237px;"><div style="position: relative; top: 0px; height: 3px; width: 0px; border: 0px solid rgb(255, 255, 255); border-radius: 0px; left: 0px; background-color: rgb(31, 181, 173); background-clip: padding-box;"></div></div></div>
+</aside>
+<!--sidebar end-->
+
 	<div id="dialog-region"></div>
 	<!-- Off Canvas
 	================================================== -->
 
+<!--main content start-->
 	<div id="main-region"></div>
+<!--main content end-->
+</section>
 
-<footer id="footer-region">
-  <section id="share">
-    <div> <img src="http://www.cultura.gob.ar/static/img/logo-presidencia-de-la-nacion-footer.png" alt="Ministerio de Cultura de la Nacion" title="Ministerio de Cultura de la Nacion" width="250"  border="0"> </div>
-  </section>
-</footer>
 <!-- /container -->
 <!-- Le javascript
 ================================================== -->
@@ -70,7 +111,7 @@
 <script src="lib/backbone.js"></script>
 <!-- script src="/lib/backbone.picky.min.js"></script    --> 
 <script src="lib/backbone.marionette.min.js"></script>
-<script src="lib/bootstrap.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 <script src="/lib/backbone-forms.min.js"></script>
 <script src="/lib/backbone-forms-bootstrap.js"></script>
@@ -173,6 +214,11 @@
 <script src="js/apps/profile/edit/edit_controller.js"></script>
 
 <script src="js/main.js"></script>
+
+<script src="lib/jquery.nicescroll.js"></script>
+<script src="lib/jquery.dcjqaccordion.2.7.js"></script>
+<script src="lib/jquery.scrollTo.js"></script>
+<script src="js/scripts.js"></script>
 
 </body>
 </html>
