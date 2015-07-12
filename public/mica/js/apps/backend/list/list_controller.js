@@ -266,21 +266,21 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     var session = getSession();
     
     session.views.layout = new backendCommons.Layout({model:session.model});
-    session.views.sidebarpanel = new backendCommons.SideBarPanel({model:session.model});
+    //session.views.sidebarpanel = new backendCommons.SideBarPanel({model:session.model});
     session.views.mainlayout = new backendCommons.MainLayout({model:session.model});
     
-    registerSidebarEvents(session, session.views.layout,session.views.mainlayout, session.views.sidebarpanel);
-    registerMainLayoutEvents(session, session.views.layout, session.views.mainlayout,session.views.sidebarpanel);
-    registerLayoutEvents(session, session.views.layout, session.views.mainlayout, session.views.sidebarpanel);
+    registerSidebarEvents(session, session.views.layout,session.views.mainlayout);
+    registerMainLayoutEvents(session, session.views.layout, session.views.mainlayout);
+    registerLayoutEvents(session, session.views.layout, session.views.mainlayout);
 
     session.filter = new backendEntities.MicaFilterFacet();
 
   };
-  var registerSidebarEvents = function(session, layout, mainlayout, sidebar){
+  var registerSidebarEvents = function(session, layout, mainLayout){
 
   };
 
-  var registerMainLayoutEvents = function(session, layout, mainlayout, sidebar){
+  var registerMainLayoutEvents = function(session, layout, mainlayout){
   	mainlayout.on('grid:model:edit', function(model){
   		var view = createView(session, mainlayout, model)
 
@@ -298,9 +298,8 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
   };
   
-  var registerLayoutEvents = function(session, layout, mainlayout, sidebar){
+  var registerLayoutEvents = function(session, layout, mainlayout){
     layout.on('show', function(){
-    	layout.getRegion('sidebarRegion').show(sidebar);
     	layout.getRegion('mainRegion').show(mainlayout);
     });
 

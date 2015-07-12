@@ -339,13 +339,15 @@ ul.sidebar-menu li a.active i {
     height:80px;
     position:relative;
 }
+
 a.logo {
-    font-size:21px;
-    color:#2e2e2e;
-    float:left;
-    margin:22px 22px 0 22px;
-    text-transform:uppercase;
+    color: #2E2E2E;
+    text-transform: uppercase;
+    float: left;
+    width: 100%;
+    padding: 22px 22px 0px;
 }
+
 a.logo:hover,a.logo:focus {
     text-decoration:none;
     outline:none;
@@ -5750,9 +5752,17 @@ ul.tareas li:first-child {
 ul.sidebar-menu {
   padding-bottom: 78px;
 }
+
 .logo-footer {
     position: absolute;
     bottom: 0;
     padding: 20px;
     background: #deded7;
+    width: 100%;
 }
+
+
+
+
+
+

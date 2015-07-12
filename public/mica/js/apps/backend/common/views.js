@@ -62,7 +62,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     regions: {
       //navbarRegion:  '#navbar-region',
       sidebarRegion: '#sidebar-region',
-      mainRegion:        '#main-region',
+      mainRegion:        '#base-region',
 
       headerInfoRegion:  '#sidebar1-region',
       itemsInfoRegion:   '#sidebar2-region',

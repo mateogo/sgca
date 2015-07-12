@@ -8,7 +8,7 @@ utils.loadTemplate([
 
         // Administra Inscripciones
         // -- Vistas basicas
-        'list/CommonBaseLayout','list/CommonSideBarPanel','list/CommonMainLayout',
+        'list/CommonBaseLayout','list/CommonMainLayout',
         // -- Lista inscripciones
         'list/MicarequestsLayout','list/MicarequestsView','list/CommonModelEditorLayout',
 
