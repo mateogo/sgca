@@ -1,32 +1,38 @@
 <div class="row usuario">
-  <div class="col-sm-1 col-xs-12">
-      <a class="js-view-profile" href="#">
-        <img class="avatar" src="/<%= getAvatar() %>" alt="" style="height: 73px; width:73px;" data-user-id="128136730">
+  <div class="col-md-12">
+    <div class="btn-group acciones" role="group" style='float: right;' aria-label="...">
+      <button type="button" class="ask btn btn-sm btn-default"><span class="fa fa-heart"></span></button>
+      <button type="button" class="favorite btn btn-sm btn-success">Solicitar reunión</button>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu pull-right" role="menu">
+          <li><a href="#">Ver perfil completo</a></li>
+          <li><a href="#">Agregar a favoritos</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="content">
+      <a class="js-view-profile usuario-header" href="#">
+            <img class="avatar img-responsive" src="/<%= getAvatar() %>" alt="" style="height: 73px; width:73px;">
       </a>
+      <h4 class="fullname js-action-profile-name"><a href="#"><%= solicitante.edisplayName %></a></h4>
+      <p class="bio"><%= solicitante.emotivation %></p>
+      <p class="metadata">
+        <%  if(getFieldLabel('vendedor').vactividades === 'musica') %>
+          <span class="label label-mica-musica">MÚSICA</span>
+        <%  if(getFieldLabel('vendedor').vactividades === 'aescenicas') %>
+          <span class="label label-mica-aescenicas">ARTES ESCÉNICAS</span>
+        <%  if(getFieldLabel('vendedor').vactividades === 'audiovisual') %>
+          <span class="label label-mica-audiovisual">AUDIOVISUAL</span>
+        <%  if(getFieldLabel('vendedor').vactividades === 'disenio') %>
+          <span class="label label-mica-diseno">DISEÑO</span>
+        <%  if(getFieldLabel('vendedor').vactividades === 'editorial') %>
+          <span class="label label-mica-editorial">EDITORIAL</span>
+        <%  if(getFieldLabel('vendedor').vactividades === 'videojuegos') %>
+          <span class="label label-mica-videojuegos">VIDEOJUEGOS</span>
+      </p>
+    </div>
   </div>
-
-  <div class="col-sm-8 col-xs-12 content">
-    <p><strong class="fullname js-action-profile-name"><%= solicitante.edisplayName %></strong></p>
-    <p class="bio">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur et pretium libero. Aliquam a finibus tellus. Quisque aliquam elit vitae.
-    </p>
-    <p class="metadata"><span class="label label-mica-musica">Música</span></p>
-  </div>
-
-  <div class="col-sm-3 col-xs-12">
-	  <div class="btn-group acciones" role="group" style='float: right;' aria-label="...">
-	    <button type="button" class="ask btn btn-success">Solicitar reunión</button>
-	    <div class="btn-group" role="group">
-	      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-	        <span class="caret"></span>
-	      </button>
-	      <ul class="dropdown-menu pull-right" role="menu">
-	        <li><a href="#">Ver perfil completo</a></li>
-	        <li><a href="#">Agregar a favoritos</a></li>
-	      </ul>
-	    </div>
-	  </div>
-  </div>
-  
 </div>
-<hr>

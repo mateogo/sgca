@@ -73,9 +73,24 @@ h5 {font-size: 13px!important;margin-bottom: 0.1em;}
 h6 {font-size: 13px!important;margin-bottom: 0.1em;}
 h1 a, h2 a, h3 a, h4 a, h5 a {color: #222;}
 .form-control {font-size: 13px;color: #222}
-.panel {background: transparent;}
-.panel-heading {background: transparent;}
+
 a {color: #1C84A9}
+
+
+.btn.ghost {
+  background: transparent;
+  color: #F2F2F2;
+  /* CSS Transition */
+  -webkit-transition: background .2s ease-in-out, border .2s ease-in-out;
+  -moz-transition: background .2s ease-in-out, border .2s ease-in-out;
+  -ms-transition: background .2s ease-in-out, border .2s ease-in-out;
+  -o-transition: background .2s ease-in-out, border .2s ease-in-out;
+  transition: background .2s ease-in-out, border .2s ease-in-out;
+}
+.btn.semighost {
+  opacity: .7;
+}
+
 /* ============================================================
   SWITCH 1 - ROUND
 ============================================================ */
@@ -263,4 +278,19 @@ label.control-label.en {
 span.en:before {
   content: ' / ';
 }
+
+/*** LISTADOS DE OFERENTES ***/
+ul#profiles-collection-hook {
+  padding-left: 0;
+}
+ul.list-unstyled li .usuario {border-bottom:solid 1px #ccc;padding:15px 0px}
+ul.list-unstyled li:last-child .usuario {border-bottom:0}
+ul.list-unstyled .usuario .content{margin-right:190px}
+ul.list-unstyled .usuario .content{margin-left:90px}
+ul.list-unstyled .usuario .avatar{float:left;margin-top:3px;margin-left:-90px}
+ul.list-unstyled .usuario .acciones{float:right}
+ul.list-unstyled .usuario-header img{width:73px;height:73px;overflow:hidden}
+.label-mica-aescenicas{background:#55abdd}.label-mica-audiovisual{background:#faad24}.label-mica-diseno{background:#ef71aa}.label-mica-editorial{background:#f05f2f}.label-mica-musica{background:#8ac43e}.label-mica-videojuegos{background:#a4529f}
+ul.list-unstyled .usuario .label {text-transform: uppercase;}
+.bio {padding-right: 30px;}
 

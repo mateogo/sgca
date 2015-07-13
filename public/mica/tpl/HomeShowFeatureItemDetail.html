@@ -1,10 +1,19 @@
 <div class="col-md-4">
-	<span <%= icon %>>
-		<span <%= size %>>
-			<i <%= tag %>></i>
-		</span>
-	</span>
-	<h3 class="service-heading"><%= head %></h3>
-	<p class="text-muted"><%= text %></p>
-	<div class="space50"></div>
+	<section class="panel">
+        <header class="panel-heading">
+        	<span <%= icon %>>
+				<span <%= size %>>
+					<i <%= tag %>></i>
+				</span>
+			</span>
+        	<%= head %> 
+        	<span class="tools pull-right">
+	            <a href="javascript:;" class="fa fa-chevron-down"></a>
+	            <a href="javascript:;" class="fa fa-times"></a>
+	         </span>
+        </header>
+        <div class="panel-body">
+        	<%= text %><a href="<%= buttonurl %>" class="btn btn-block btn-success semighost"><strong><%= button %></strong></a>
+        </div>
+    </section>
 </div>

@@ -416,11 +416,12 @@ ul.top-menu>li>a:hover,ul.top-menu>li>a:focus {
     font-size:12px;
     margin-right:10px;
 }
-.dropdown-menu.extended .alert-icon,.noti-info {
+.dropdown-menu.extended .alert-icon {
     float:left;
 }
 .noti-info {
-    padding-left:10px;
+    padding-left:50px;
+    padding-right: 10px;
     padding-top:6px;
     color:#414147;
 }

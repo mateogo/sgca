@@ -147,7 +147,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
   });
 
   Browse.ProfileItem = Marionette.ItemView.extend({
-    tagName: "div",
+    tagName: "li",
 
     getTemplate: function(){
       return utils.templates.ProfileItemView;
@@ -209,8 +209,8 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
 
   Browse.ProfileCollection = Marionette.CollectionView.extend({
     whoami: 'ProfileCollection:browse_views.js',
-    tagName: "div",
-    className: "list",
+    tagName: "ul",
+    className: "list-unstyled",
     attributes: {
       id: 'profiles-collection-hook'
     },
