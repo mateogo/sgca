@@ -215,7 +215,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 	var initCrudManager = function(user, criterion){
 
 		$.when(fetchCollection(user, criterion)).done(function(entities){
-			console.log('initCrudManager. when: col[%s]',entities.length)
+			console.log('initCrudManager. when: col[%s] [%s] [%s]',entities.length, entities.whoami, entities.state.firstPage)
 			
 			getSession().collection = entities;
 

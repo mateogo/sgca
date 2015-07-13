@@ -1,7 +1,6 @@
 DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbone, Marionette, $, _){
 
   Views.filterPopup = function(filterData, FilterModel, targetEvent, filterTitle){
-    console.dir(filterData.attributes)
     if(!filterData){
       filterData=   new FilterModel();
     }
@@ -27,7 +26,6 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     modal.on('ok',function(){
         form.commit();
         console.log('Modal OK: [%S]', targetEvent);
-        console.dir(filterData.attributes); 
         DocManager.trigger(targetEvent, filterData);
     });
 
@@ -330,6 +328,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       formRegion: '#formContainer',
       tableRegion: '#table-region',
       filterRegion: '#filter-region',
+      paginatorRegion: '#paginator-region',
 
     },
 
@@ -489,11 +488,18 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     },
     
     gridFactory: function(collection, columns){
-      //console.log('GridFactory: collection[%s] [%s]', collection.length, this.collection.length)
+      console.log('GridFactory: collection[%s] ', collection.whoami)
       this.grid = new Backgrid.Grid({
           className: 'table table-condensed table-bordered table-hover',
           collection: this.collection,
           columns: columns
+        });
+
+      this.gridpaginator = new Backgrid.Extension.Paginator({
+          windowSize:40,
+          slideScale: 0.10,
+          goBackFirstOnSort:false,
+          collection: this.collection,
         });
 
       this.collection.on('trash:item:crud', function(model){
@@ -519,6 +525,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       self.layout.on('show',function(){
         self.layout.filterRegion.show(self.filter);
         self.layout.tableRegion.show(self.grid);
+        self.layout.paginatorRegion.show(self.gridpaginator);
         //self.layout.formRegion.show(self.form);
       });
 

@@ -118,12 +118,26 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     
     events: {
       'click .js-browse': 'browseData',
+      'click .js-previous-page': 'previousPage',
+      'click .js-next-page': 'nextPage',
+    },
+    nextPage: function(e){
+      console.log('NExt DATA!!!!!!: [%s]', this.options.filterEventName)
+      this.form.commit();
+      DocManager.trigger(this.options.filterEventName, this.model, 'next');
+
+    },
+    previousPage: function(e){
+      console.log('Previous DATA!!!!!!: [%s]', this.options.filterEventName)
+      this.form.commit();
+      DocManager.trigger(this.options.filterEventName, this.model, 'previous');
+
     },
 
     browseData: function(e){
       console.log('Browse DATA!!!!!!: [%s]', this.options.filterEventName)
       this.form.commit();
-      DocManager.trigger(this.options.filterEventName, this.model);
+      DocManager.trigger(this.options.filterEventName, this.model, 'reset');
     },
     
     doneEdition: function(){

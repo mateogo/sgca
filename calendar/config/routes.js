@@ -186,6 +186,7 @@ module.exports = function (config, app) {
     app.get ('/micasuscriptions',            micasuscriptions.findAll);
     app.post('/micasuscriptions/fetch',      micasuscriptions.findOne);
     app.post('/navegar/micasuscriptions',    micasuscriptions.find);
+    app.get('/query/micasuscriptions',      micasuscriptions.findByQuery);
 
     app.get ('/micasuscriptions/:id',        micasuscriptions.findById);
     app.post('/micasuscriptions',            micasuscriptions.add);

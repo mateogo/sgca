@@ -354,8 +354,51 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'MicaRegistrationFindByQueryCol: mica.js',
     model: Entities.MicaRegistration,
     url: "/navegar/micasuscriptions",
-
   });
+
+  Entities.MicaRegistrationPaginatedCol = Backbone.PageableCollection.extend({
+    whoami: 'MicaRegistrationPaginatedCol: mica.js',
+    model: Entities.MicaRegistration,
+    //url: "/query/micasuscriptions",
+    url: "/navegar/micasuscriptions",
+
+    getNextPage: function(step){
+      var actualPage = this.state.currentPage || 1;
+      var pageLength = this.state.pageSize || 15;
+      if(step === 'reset'){
+        actualPage = 0;
+      }else if (step === 'next'){
+        actualPage = actualPage + pageLength;
+      }else if (step === 'previous'){
+        actualPage = actualPage - pageLength;
+        if(actualPage <0 ) actualPage = 0;
+      }
+      this.state.firstPage = actualPage;
+      return actualPage;
+    },
+
+    state:{
+      firstPage: 1,
+      pageSize: 15,
+      totalRecords: 30,
+ 
+    },
+
+    parseState: function (resp, queryParams, state, options) {
+      console.log('========== PARSE STATE ========== [%s]', arguments.length);
+      console.dir(state);
+      console.log('response: [%s]',resp[0].total_entries);
+      //this.state = resp[0];
+      return resp[0];
+    },
+
+    parseRecords: function (resp, options) {
+      return resp[1];
+    }
+
+   // You can remap the query parameters from `state` keys from
+   });
+
 
   Entities.MicaRegistrationFetchOneCol = Backbone.Collection.extend({
     whoami: 'MicaRegistrationFetchOneCol: mica.js',
@@ -1008,11 +1051,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     return fd;
   };
 
-  var queryCollection = function(query){
-      var entities = new Entities.MicaRegistrationFindByQueryCol();
+  var queryCollection = function(query, step){
+      var entities = new Entities.MicaRegistrationPaginatedCol();
       var defer = $.Deferred();
 
       entities.fetch({
+        reset: true,
         data: query,
         type: 'post',
         success: function(data){
@@ -1108,11 +1152,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       });
     },
 
-    getFilteredByQueryCol: function(query){
+    getFilteredByQueryCol: function(query, step){
       console.log('query: [%s]', query);
       console.dir(query)
 
-      var fetchingEntities = queryCollection(query),
+      var fetchingEntities = queryCollection(query, step),
           defer = $.Deferred();
 
       $.when(fetchingEntities).done(function(entities){
@@ -1152,8 +1196,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     return API.partialUpdate(models, keys);
   });
 
-  DocManager.reqres.setHandler("micarqst:query:entities", function(query){
-    return API.getFilteredByQueryCol(query);
+  DocManager.reqres.setHandler("micarqst:query:entities", function(query, step){
+    return API.getFilteredByQueryCol(query, step);
   });
 
 });

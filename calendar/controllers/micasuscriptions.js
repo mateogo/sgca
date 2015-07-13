@@ -200,17 +200,68 @@ exports.findById = function(req, res) {
     });
 };
 
+exports.findByQuery = function(req, res) {
+    console.dir(req.params);
+
+    var query = buildQuery(req.params); 
+    //query['vendedor.rolePlaying.vendedor'] = true;
+    var page = parseInt(req.params.page);
+    var limit = parseInt(req.params.per_page);
+    var cursor;
+
+
+    console.log('find:micasuscription Retrieving micasuscription collection with QUERY [%s] [%s]', page, limit);
+
+    cursor = dbi.collection(micasuscriptionsCol).find(query).sort({cnumber:1});
+    if(req.body.page){
+        cursor.count(function(err, total){
+            console.log('CUrsor count: [%s]', total);
+            cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
+                res.send([{total_entries: total}, items  ]);
+
+            });
+
+        })
+
+    }else{
+        cursor.toArray(function(err, items) {
+                res.send(items);
+        });
+
+    }
+
+};
+
 exports.find = function(req, res) {
+    console.dir(req.body);
+
     var query = buildQuery(req.body); 
     //query['vendedor.rolePlaying.vendedor'] = true;
+    var page = parseInt(req.body.page);
+    var limit = parseInt(req.body.per_page);
+    var cursor;
 
-    console.log('find:micasuscription Retrieving micasuscription collection with QUERY');
 
-    dbi.collection(micasuscriptionsCol, function(err, collection) {
-        collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
-            res.send(items);
+    console.log('find:micasuscription Retrieving micasuscription collection with QUERY [%s] [%s]', page, limit);
+
+    cursor = dbi.collection(micasuscriptionsCol).find(query).sort({cnumber:1});
+    if(req.body.page){
+        cursor.count(function(err, total){
+            console.log('CUrsor count: [%s]', total);
+            cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
+                res.send([{total_entries: total}, items  ]);
+
+            });
+
+        })
+
+    }else{
+        cursor.toArray(function(err, items) {
+                res.send(items);
         });
-    });
+
+    }
+
 };
 
 exports.findAll = function(req, res) {

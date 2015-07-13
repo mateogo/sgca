@@ -1,7 +1,6 @@
 DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone, Marionette, $, _){
 
   Views.filterPopup = function(filterData, FilterModel, targetEvent, filterTitle){
-    console.dir(filterData.attributes)
     if(!filterData){
       filterData=   new FilterModel();
     }
@@ -27,7 +26,6 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
     modal.on('ok',function(){
         form.commit();
         console.log('Modal OK: [%S]', targetEvent);
-        console.dir(filterData.attributes); 
         DocManager.trigger(targetEvent, filterData);
     });
 
