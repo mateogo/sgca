@@ -294,3 +294,12 @@ ul.list-unstyled .usuario-header img{width:73px;height:73px;overflow:hidden}
 ul.list-unstyled .usuario .label {text-transform: uppercase;}
 .bio {padding-right: 30px;}
 
+.form-horizontal .form-group {
+  margin-left: 0;
+  margin-right: 0;
+}
+.form-horizontal .control-label {
+  font-weight: 400;
+}
+
+
