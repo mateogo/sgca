@@ -395,7 +395,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return resp[0];
     },
 
-    parseRecords: function (resp, options) {
+    parseRecords: function (resp, options ) {
       return resp[1];
     }
 

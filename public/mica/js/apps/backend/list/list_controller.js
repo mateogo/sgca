@@ -36,8 +36,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 		dao.gestionUser.getUser(DocManager, function (user){
       getSession().currentUser = user;
 
-			//if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
-      if(true){
+			if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
 				console.log('dao validate user OK: [%s]', user.get('username'));
 	      defer.resolve(user);
 
