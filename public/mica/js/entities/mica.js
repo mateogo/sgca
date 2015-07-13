@@ -8,6 +8,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     initialize: function(opts){
 
     },
+    
+    getFieldLabel: function(fieldName){
+      return self.model.get(fieldName);
+    },
+
+    getAvatar: function(){
+      var avatar = this.get('solicitante').eavatar;
+      if(avatar && avatar.urlpath){
+        return avatar.urlpath;
+      }else{
+        return 'mica/images/back-dotted.png';
+      }
+    },
+
+
 
     schema: {
       nivel_ejecucion: {type: 'Select',   title: 'Nivel de ejecucion',options: tdata.nivel_ejecucionOL },
@@ -371,7 +386,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     schema: {
-        rolePlaying:   {type: 'Select',  title: 'Rol del participante', options: tdata.rolesOL },
+        rolePlaying:   {type: 'Select',  title: 'Rol', options: tdata.rolesOL },
         cnumber:       {type: 'Text',    title: 'Número Inscripción' },
         provincia:     {type: 'Select',  title: 'Provincia',  options: tdata.provinciasOL },
         sector:        {type: 'Select',  title: 'Sector',  options: tdata.sectorOL },

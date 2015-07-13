@@ -6,6 +6,9 @@ utils.loadTemplate([
         // Menu principal
         'HeaderView',
 
+        // rondas browse
+        'browse/FilterProfilesLayout','browse/FilterProfilesEditor','browse/BrowseProfilesLayout',
+        'browse/ProfileItemView',
         // Administra Inscripciones
         // -- Vistas basicas
         'list/CommonBaseLayout','list/CommonMainLayout',
