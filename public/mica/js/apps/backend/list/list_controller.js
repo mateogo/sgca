@@ -354,11 +354,23 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
       console.dir(filter.attributes)
       initCrudManager(getSession().currentUser, filter.attributes)
 
-    }
+    },
+
+    buildExcelExport: function(){
+      var excelCol = new DocManager.Entities.MicaExportCollection();
+      excelCol.fetch({
+        success: function(data){
+            excelCol.exportRecords();
+        }
+      })      
+    },
   };
 
   DocManager.on("mica:backend:filter:rows", function(filter){
     API.fetchFilteredCollection(filter);
+  });
+  DocManager.on('mica:suscriptions:export:excel', function(){
+    API.buildExcelExport();
   });
 
 

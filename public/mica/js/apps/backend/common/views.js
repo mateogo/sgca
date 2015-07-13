@@ -229,7 +229,6 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     },
 
     submitClicked: function(e){
-      e.preventDefault();
       var err = this.model.validate(this.model.attributes);
 			
       if(err){
@@ -370,8 +369,14 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       'click .js-save': 'onSave',
       'click .js-cancel': 'onCancel',
       'click .js-filter': 'filterList',
+      'click .js-excel': 'downloadExcel',
       'click button.js-item-edit': 'itemEdit',
       'click button.js-item-trash': 'itemTrash',
+    },
+    downloadExcel: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      DocManager.trigger('mica:suscriptions:export:excel');
     },
 
     filterList: function(e){

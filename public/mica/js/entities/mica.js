@@ -9,10 +9,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
     
-    getFieldLabel: function(fieldName){
-      return self.model.get(fieldName);
-    },
-
     getAvatar: function(){
       var avatar = this.get('solicitante').eavatar;
       if(avatar && avatar.urlpath){
@@ -87,6 +83,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
 
 
+    },
+    isVendedor: function(){
+      return this.get('vendedor').rolePlaying.vendedor;
+    },
+
+    isComprador: function(){
+      return this.get('comprador').rolePlaying.comprador;
     },
 
 
@@ -380,7 +383,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     state:{
       firstPage: 1,
       pageSize: 15,
-      totalRecords: 30,
+      totalRecords: 50,
  
     },
 
@@ -450,6 +453,125 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
   });
+
+
+
+  //*************************************************************
+  //            Exporta a excel EXCEL Excel
+  //*************************************************************
+  Entities.MicaExportCollection = Backbone.Collection.extend({
+    whoami: 'Entities.MicaExportCollection:mica.js ',
+    url: "/micasuscriptions",
+    model: Entities.MicaRegistration,
+    sortfield: 'cnumber',
+    sortorder: -1,
+
+    comparator: function(left, right) {
+      var order = this.sortorder;
+      var l = left.get(this.sortfield);
+      var r = right.get(this.sortfield);
+
+      if (l === void 0) return -1 * order;
+      if (r === void 0) return 1 * order;
+
+      return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    },
+
+    exportRecords: function(){
+      var self = this;
+      if(!self.length) return;
+
+      //console.log('collection export [%s]',self.length);
+
+
+      exportFactory.processRequest(exportFactory.fetchCollection(self));
+      //
+
+    },
+  });
+
+  var exportFactory = {
+    exportHeadings: [
+        {val:'cnumber',                         label:'NroIns',           itemType: 'Text'},
+        {val:'isComprador',                     label:'EsComprador',      itemType: 'Text'},
+        {val:'comprador.cactividades',          label:'ActPpalComprador', itemType: 'Text'},
+        {val:'isVendedor',                      label:'EsVendedor',       itemType: 'Text'},
+        {val:'vendedor.vactividades',           label:'ActPpalVendedor',  itemType: 'Text'},
+        {val:'fecomp',                          label:'FechaAlta',        itemType: 'Text'},
+        {val:'responsable.rname',               label:'NombreResponsable',itemType: 'Text'},
+        {val:'responsable.rmail',               label:'Correo',           itemType: 'Text'},
+        {val:'responsable.rcel',                label:'Celular',          itemType: 'Text'},
+        {val:'solicitante.edisplayName',        label:'Solicitante',      itemType: 'Text'},
+        {val:'solicitante.eprov',               label:'Provincia',        itemType: 'Text'},
+    ],
+
+    fetchCollection: function(collection){
+      var self = this,
+          colItems = [],
+          registro,
+          data;
+
+      collection.each(function(model){
+        registro = [];
+
+        _.each(self.exportHeadings, function(token){
+
+            data = _getFieldLabel(model, token.val);
+
+            if(token.itemType === 'Number'){
+              data = parseInt(data);
+              if(data == NaN){
+                data = 0;
+              }
+
+
+            }else{
+
+              if(typeof data == undefined || data == null || data == ""){
+                data = 'sin_dato';
+              }
+
+            }
+
+            registro.push(data);
+          });
+        colItems.push(registro);
+      });
+      return colItems;
+    },
+
+    fetchLabels: function(){
+      return this.exportHeadings;
+    },
+
+    processRequest: function(col){
+      var self = this;
+      var query = {
+          name: 'Items del Presupuesto',
+          heading: self.fetchLabels(),
+          data: JSON.stringify(col)
+      };
+      //console.log(JSON.stringify(query));
+
+      $.ajax({
+        type: "POST",
+        url: "/excelbuilder",
+        dataType: "json",
+        //contentType:"application/jsonrequest",
+        data: query,
+        success: function(data){
+            //console.dir(data);
+            window.open(data.file)
+
+        }
+      });
+    }
+  };
+
+
+
+
+
 
 
 
@@ -971,6 +1093,28 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
   };
+
+
+
+  var _getFieldLabel = function(model, field){
+      var value;
+      if(!field) return '';
+      if(model[field]){
+        return _getSelectValue(model, field, model[field]());
+
+      }else if(field.indexOf('.') != -1){
+        value =  model.get(field.substring(0, field.indexOf('.')))[field.substring(field.indexOf('.')+1)];
+        return _getSelectValue(model, field, value);
+
+      }else{
+        return _getSelectValue(model, field, model.get(field));
+
+      }
+  };
+
+
+
+
 
   var _facetFactoryStepOne = function(model){
     var data = _.extend({}, model.get('solicitante'));
