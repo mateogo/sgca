@@ -7,6 +7,7 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
         user = (user || new User());
 
         var headers = new List.Headers({collection: links, model: user});
+        var bucketSidebars = new List.BucketHeader({collection: links, model: user});
 
         headers.on("brand:clicked", function(){
           DocManager.trigger("documents:list");
@@ -18,6 +19,7 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
         });
 
         DocManager.headerRegion.show(headers);
+        DocManager.bucketSidebarRegion.show(bucketSidebars);
 
 
       });

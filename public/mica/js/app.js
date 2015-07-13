@@ -2,6 +2,7 @@ var DocManager = new Marionette.Application();
 
 DocManager.addRegions({
   headerRegion: "#header-region",
+  bucketSidebarRegion: "#main-side-menu",
   mainRegion: 	"#main-region",
   footerRegion: "#footer-region",
 });

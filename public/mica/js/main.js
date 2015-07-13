@@ -4,7 +4,7 @@ utils.loadTemplate([
         // Edit Profile
         'ProfileEditLayout', 'ProfileEditUserForm','ProfileEditPersonForm','ProfileEditRelatedForm','ProfileEditPasswordForm',
         // Menu principal
-        'HeaderView',
+        'header/HeaderView','header/BucketHeaderView',
 
         // rondas browse
         'browse/FilterProfilesLayout','browse/FilterProfilesEditor','browse/BrowseProfilesLayout',

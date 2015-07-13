@@ -1,5 +1,25 @@
 DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marionette, $, _){
 
+  List.BucketHeader = Marionette.ItemView.extend({
+
+    getTemplate: function(){
+      return utils.templates.BucketHeaderView;
+    },
+
+    events: {
+      "click a": "navigate"
+    },
+
+    navigate: function(e){
+      e.preventDefault();
+      this.trigger("navigate", this.model);
+    },
+
+    onRender: function(){
+    }
+  });
+
+
   List.Header = Marionette.ItemView.extend({
     template: _.template('<a href="#<%= url %>" title="<%= navigationTrigger %>"><%= name %></a>'),
 

@@ -834,8 +834,8 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
         attachTypes = ['especifico', 'cartaministra', 'invitacion',  'docidentidad', 'constanciacuit', 'resenia'];
       }
       _.each(attachTypes, function(type){
-        uploaded = view[type].model.assets.length
-        if(!uploaded){
+
+        if(!view[type] || !view[type].model.assets.length){
           hasErrors = true;
           attacherror[type] = 'Debe adjuntar archivo';
           getSession().views.stepFour.model.set(type, false);
