@@ -36,15 +36,14 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 		dao.gestionUser.getUser(DocManager, function (user){
       getSession().currentUser = user;
 
-			//if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
-      if(true){
+			if(user && dao.gestionUser.hasPermissionTo('mica:user', 'mica', {} ) ){
 				console.log('dao validate user OK: [%s]', user.get('username'));
 	      defer.resolve(user);
 
 
 			}else{
 			  console.log('No validó el Usuario');
-			  Message.warning('Debe iniciar sesión');
+			  Message.warning('Debe iniciar sesión y estar inscripto en MICA 2015');
 			  window.open('/ingresar/#mica', '_self');
 			}
 

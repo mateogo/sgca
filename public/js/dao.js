@@ -68,6 +68,9 @@ window.dao = {
             'mica:manager':{
                 roles:['admin'],
             },
+            'mica:user':{
+                roles:['admin', 'usuario'],
+            },
             'edit:presupuesto':{
                 roles:['presugestor'],
                 memberOfArea: function(){
