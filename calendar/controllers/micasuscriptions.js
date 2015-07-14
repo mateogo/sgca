@@ -201,19 +201,19 @@ exports.findById = function(req, res) {
 };
 
 exports.findByQuery = function(req, res) {
-    console.dir(req.params);
+    console.log('Query=====************=============[%s][%s]', req.query.page), req.page
+    console.dir(req);
 
-    var query = buildQuery(req.params); 
-    //query['vendedor.rolePlaying.vendedor'] = true;
-    var page = parseInt(req.params.page);
-    var limit = parseInt(req.params.per_page);
+    var query = buildQuery(req.query); 
+    var page = parseInt(req.query.page);
+    var limit = parseInt(req.query.per_page);
     var cursor;
 
 
     console.log('find:micasuscription Retrieving micasuscription collection with QUERY [%s] [%s]', page, limit);
 
     cursor = dbi.collection(micasuscriptionsCol).find(query).sort({cnumber:1});
-    if(req.body.page){
+    if(req.query){
         cursor.count(function(err, total){
             console.log('CUrsor count: [%s]', total);
             cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
@@ -233,6 +233,7 @@ exports.findByQuery = function(req, res) {
 };
 
 exports.find = function(req, res) {
+    console.log('1) ======== params ==========');
     console.dir(req.body);
 
     var query = buildQuery(req.body); 

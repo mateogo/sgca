@@ -54,49 +54,49 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
    	return defer.promise();
   };
 
-	var fetchCollection_nueva = function(user, criterion, step){
-		var defer = $.Deferred(),
-        action,
-				query = {
-					evento: 'mica',
-				};
+	// var fetchCollection_nueva = function(user, criterion, step){
+	// 	var defer = $.Deferred(),
+ //        action,
+	// 			query = {
+	// 				evento: 'mica',
+	// 			};
 
 
-    if(!getSession().collection){
-      getSession().collection =  new DocManager.Entities.MicaRegistrationPaginatedCol();
-    }
+ //    if(!getSession().collection){
+ //      getSession().collection =  new DocManager.Entities.MicaRegistrationPaginatedCol();
+ //    }
 
-    if(criterion){
-      query = _.extend(query, criterion);
-    }
+ //    if(criterion){
+ //      query = _.extend(query, criterion);
+ //    }
 
-    getSession().collection.queryParams = _.extend(query, getSession().collection.state);
-
-
-    if(step === 'next'){
-      action = 'getNextPage'
-      getSession().collection.getPage(2);
-
-    }else if(step === 'previous'){
-      action = 'getPreviousPage'
-
-    }else{
-      action = 'getFirstPage'
-      getSession().collection[action]().done(function(data){
-          defer.resolve(data);
-      });
-     }
-    console.log('===[%s]======== fetchCollection ========= [%s] [%s]  [%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+ //    getSession().collection.queryParams = _.extend(query, getSession().collection.state);
 
 
+ //    if(step === 'next'){
+ //      action = 'getNextPage'
+ //      getSession().collection.getPage(2);
 
-		// var fetchingEntities = DocManager.request('micarqst:query:entities', query, step );
-  //   $.when(fetchingEntities).done(function(entities){
-  //         defer.resolve(entities);
- 	// 	});
+ //    }else if(step === 'previous'){
+ //      action = 'getPreviousPage'
 
- 		return defer.promise();
-	};
+ //    }else{
+ //      action = 'getFirstPage'
+ //      getSession().collection[action]().done(function(data){
+ //          defer.resolve(data);
+ //      });
+ //     }
+ //    console.log('===[%s]======== fetchCollection ========= [%s] [%s]  [%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+
+
+
+	// 	// var fetchingEntities = DocManager.request('micarqst:query:entities', query, step );
+ //  //   $.when(fetchingEntities).done(function(entities){
+ //  //         defer.resolve(entities);
+ // 	// 	});
+
+ // 		return defer.promise();
+	// };
 
   var fetchCollection = function(user, criterion, step){
     var defer = $.Deferred(),
@@ -111,42 +111,33 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     }
 
     if(criterion){
-      query = _.extend(query, criterion);
+      _.extend(query, criterion);
     }
+    getSession().collection.setQuery(query);
 
     if(step === 'next'){
       action = 'getNextPage'
       //getSession().collection.getPage(2);
-      getSession().collection[action]({
-        reset: true,
-        data: query,
-        type: 'post',
-        success: function(data){
-          defer.resolve(data);
-        },
-        error: function(data){
-            defer.resolve(undefined);
-        }
-      });
+      getSession().collection.getNextPage().done(function (data){
+        console.log('===action: [%s]=== NextPage ==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+        defer.resolve(data);
+      })
 
     }else if(step === 'previous'){
       action = 'getPreviousPage'
+      getSession().collection.getPreviousPage().done(function (data){
+        console.log('===action: [%s]=== previousPage==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+        defer.resolve(data);
+      })
+
 
     }else{
       action = 'getFirstPage'
-      getSession().collection[action]({
-        reset: true,
-        data: query,
-        type: 'post',
-        success: function(data){
-          defer.resolve(data);
-        },
-        error: function(data){
-            defer.resolve(undefined);
-        }
+      getSession().collection.getFirstPage().done(function(data){
+        console.log('===action: [%s]==== FirstPage ======= Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+        defer.resolve(data);
       });
-     }
-    console.log('===[%s]======== fetchCollection ========= [%s] [%s]  [%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+    }
 
 
 

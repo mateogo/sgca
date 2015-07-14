@@ -362,30 +362,53 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   Entities.MicaRegistrationPaginatedCol = Backbone.PageableCollection.extend({
     whoami: 'MicaRegistrationPaginatedCol: mica.js',
     model: Entities.MicaRegistration,
-    //url: "/query/micasuscriptions",
-    url: "/navegar/micasuscriptions",
+    url: "/query/micasuscriptions",
+    //url: "/navegar/micasuscriptions",
 
-    getNextPage: function(step){
-      var actualPage = this.state.currentPage || 1;
-      var pageLength = this.state.pageSize || 15;
-      if(step === 'reset'){
-        actualPage = 0;
-      }else if (step === 'next'){
-        actualPage = actualPage + pageLength;
-      }else if (step === 'previous'){
-        actualPage = actualPage - pageLength;
-        if(actualPage <0 ) actualPage = 0;
-      }
-      this.state.firstPage = actualPage;
-      return actualPage;
-    },
+    // getNextPage: function(step){
+    //   var actualPage = this.state.currentPage || 1;
+    //   var pageLength = this.state.pageSize || 15;
+    //   if(step === 'reset'){
+    //     actualPage = 0;
+    //   }else if (step === 'next'){
+    //     actualPage = actualPage + pageLength;
+    //   }else if (step === 'previous'){
+    //     actualPage = actualPage - pageLength;
+    //     if(actualPage <0 ) actualPage = 0;
+    //   }
+    //   this.state.firstPage = actualPage;
+    //   return actualPage;
+    // },
 
     state:{
       firstPage: 1,
-      pageSize: 15,
-      totalRecords: 50,
- 
+      pageSize: 20, 
     },
+    queryParams:{
+      currentPage: 'page',
+      pageSize: 'per_page',
+      totalRecords: 'total_entries',
+    },
+
+
+    setQuery: function(query){
+      this.query = query;
+      _.extend(this.queryParams, query);
+
+    },
+
+    // fetch: function(options){
+    //   console.log('pageable FETCH======================')
+    //   var self = this,
+    //       options = options || {};
+    //   if(self.query){
+    //     options.reset = true;
+    //     options.data = options.data || {};
+    //     _.extend(options.data, self.query)
+    //   }
+    //   console.dir(options)
+    //   return Backbone.Collection.prototype.fetch.apply(this, [options]);
+    // },
 
     parseState: function (resp, queryParams, state, options) {
       console.log('========== PARSE STATE ========== [%s]', arguments.length);
@@ -399,8 +422,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return resp[1];
     }
 
-   // You can remap the query parameters from `state` keys from
-   });
+   // // You can remap the query parameters from `state` keys from
+  
+  });
 
 
   Entities.MicaRegistrationFetchOneCol = Backbone.Collection.extend({
@@ -1199,10 +1223,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var entities = new Entities.MicaRegistrationPaginatedCol();
       var defer = $.Deferred();
 
+      entities.setQuery(query);
       entities.fetch({
-        reset: true,
-        data: query,
-        type: 'post',
         success: function(data){
           defer.resolve(data);
         },
@@ -1297,6 +1319,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     getFilteredByQueryCol: function(query, step){
+      // Client Side Filtering
       console.log('query: [%s]', query);
       console.dir(query)
 
