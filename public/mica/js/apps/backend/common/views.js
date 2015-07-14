@@ -475,8 +475,8 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       //model, collection, tablecols
       console.log('CrudManager Initialize: [%s]', opts.filterEventName);
       this.options = opts;
-      self.filterFactory(self.collection,self.get('filtercols'));
-      self.gridFactory(self.collection,self.get('gridcols'));
+      self.filterFactory(self.collection, self.get('filtercols'));
+      self.gridFactory(self.collection, self.get('gridcols'));
       self.createLayout(opts);
       //self.createForm(opts);
     },

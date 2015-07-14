@@ -18,8 +18,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
     },
 
-
-
     schema: {
       nivel_ejecucion: {type: 'Select',   title: 'Nivel de ejecucion',options: tdata.nivel_ejecucionOL },
       'solicitante.eprov': {type: 'Select',   title: 'Provincias',options: tdata.provinciasOL },
@@ -382,7 +380,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     state:{
       firstPage: 1,
-      pageSize: 20, 
+      pageSize: 25, 
     },
     queryParams:{
       currentPage: 'page',
@@ -415,7 +413,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       console.dir(state);
       console.log('response: [%s]',resp[0].total_entries);
       //this.state = resp[0];
-      return resp[0];
+      return {totalRecords: resp[0].total_entries};
     },
 
     parseRecords: function (resp, options ) {

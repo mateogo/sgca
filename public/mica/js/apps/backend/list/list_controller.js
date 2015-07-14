@@ -20,7 +20,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 					buildLayout();
 				}
 				if(!getSession().crudManager){
-					initCrudManager(user, criterion)
+					initCrudManager(user, criterion, 'reset');
 
 				}
 			});
@@ -53,27 +53,57 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
    	return defer.promise();
   };
 
-	var fetchCollection = function(user, criterion){
-		var defer = $.Deferred(),
-				query = {
-					evento: 'mica',
-					rubro: 'general',
-          //rolePlaying: 'comprador',
-    //      'vendedor.vactividades': 'editorial',
-          //'vendedor.rolePlaying.vendedor': 'true',
-				};
-    if(criterion){
-      //console.log('fetchCollection Criterion [%s]', criterion)
-      query = _.extend(query, criterion);
-    }
- 
-		var fetchingEntities = DocManager.request('micarqst:query:entities', query );
-    $.when(fetchingEntities).done(function(entities){
-          defer.resolve(entities);
- 		});
 
- 		return defer.promise();
-	};
+  var fetchCollection = function(user, criterion, step){
+    var defer = $.Deferred(),
+        action,
+        query = {
+          evento: 'mica',
+        };
+
+
+    if(!getSession().collection){
+      getSession().collection =  new DocManager.Entities.MicaRegistrationPaginatedCol();
+    }
+
+    if(criterion){
+      _.extend(query, criterion);
+    }
+    getSession().collection.setQuery(query);
+
+    if(step === 'next'){
+      action = 'getNextPage';
+      //getSession().collection.getPage(2);
+      getSession().collection.getNextPage().done(function (data){
+        console.log('===action: [%s]=== NextPage ==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+        defer.resolve(data);
+      })
+
+    }else if(step === 'previous'){
+      action = 'getPreviousPage';
+      getSession().collection.getPreviousPage().done(function (data){
+        console.log('===action: [%s]=== previousPage==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+        defer.resolve(data);
+      })
+
+
+    }else{
+      action = 'getFirstPage';
+      getSession().collection.getFirstPage().done(function(data){
+        console.log('===action: [%s]==== FirstPage ======= Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+        defer.resolve(data);
+      });
+    }
+
+
+
+    // var fetchingEntities = DocManager.request('micarqst:query:entities', query, step );
+  //   $.when(fetchingEntities).done(function(entities){
+  //         defer.resolve(entities);
+  //  });
+
+    return defer.promise();
+  };
 
 
   var fieldLabelCell = Backgrid.Cell.extend({
@@ -211,13 +241,10 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     });
   
 
-	var initCrudManager = function(user, criterion){
+	var initCrudManager = function(user, criterion, step){
 
-		$.when(fetchCollection(user, criterion)).done(function(entities){
-			console.log('initCrudManager. when: col[%s] [%s] [%s]',entities.length, entities.whoami, entities.state.firstPage)
+		$.when(fetchCollection(user, criterion, step)).done(function(entities){
 			
-			getSession().collection = entities;
-
 			getSession().crudManager = new backendCommons.CrudManager(
 				  {
 				    gridcols:[
@@ -229,7 +256,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 				      {name: 'nivel_ejecucion', label:'Ejecución', cell:fieldLabelCell, editable:false},
 				      {label:'Acciones', cell: EditViewCell, editable:false, sortable:false},
 				    ],
-				    filtercols:['cnumber', 'bg_vendedor', 'bg_comprador', 'solicitante.edisplayName','solicitante.eprov', 'nivel_ejecucion'],
+				    filtercols:['cnumber', 'bg_vendedor', 'bg_comprador',  'nivel_ejecucion'],
 				    editEventName: 'micarequest:edit',
 
 				  },
@@ -348,10 +375,10 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   };
   var API = {
 
-    fetchFilteredCollection: function(filter){
+    fetchFilteredCollection: function(filter, step){
       console.log('fetchFilteredCollection BEGIN');
       console.dir(filter.attributes)
-      initCrudManager(getSession().currentUser, filter.attributes)
+      initCrudManager(getSession().currentUser, filter.attributes, step)
 
     },
 
@@ -365,9 +392,10 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     },
   };
 
-  DocManager.on("mica:backend:filter:rows", function(filter){
-    API.fetchFilteredCollection(filter);
+  DocManager.on("mica:backend:filter:rows", function(filter, step){
+    API.fetchFilteredCollection(filter, step);
   });
+
   DocManager.on('mica:suscriptions:export:excel', function(){
     API.buildExcelExport();
   });
