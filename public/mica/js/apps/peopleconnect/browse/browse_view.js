@@ -95,7 +95,6 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       
 
       form.on('sector:change', function(form, editorContent) {
-          console.log('onchange:key');
           var contenido = editorContent.getValue(),
               newOptions = tdata.subSectorOL[contenido];
           form.fields.subsector.editor.setOptions(newOptions);
@@ -122,20 +121,17 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       'click .js-next-page': 'nextPage',
     },
     nextPage: function(e){
-      console.log('NExt DATA!!!!!!: [%s]', this.options.filterEventName)
       this.form.commit();
       DocManager.trigger(this.options.filterEventName, this.model, 'next');
 
     },
     previousPage: function(e){
-      console.log('Previous DATA!!!!!!: [%s]', this.options.filterEventName)
       this.form.commit();
       DocManager.trigger(this.options.filterEventName, this.model, 'previous');
 
     },
 
     browseData: function(e){
-      console.log('Browse DATA!!!!!!: [%s]', this.options.filterEventName)
       this.form.commit();
       DocManager.trigger(this.options.filterEventName, this.model, 'reset');
     },
@@ -171,7 +167,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     },
  
     initialize: function(){
-      console.log('ProfileItem ITEM View: INIT')
+      //console.log('ProfileItem ITEM View: INIT')
     },
 
     events: {
@@ -180,7 +176,6 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     },
 
     editProduct: function(){
-      console.log('clie Edit PRODUCT!')
 
       this.trigger('edit:related:product',this.model, function(){
           //no hay callbacl. futuros usos
@@ -190,7 +185,6 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     },
 
     viewProduct: function(){
-      console.log('clie View PRODUCT!')
 
       this.trigger('view:related:product',this.model, function(){
           //no hay callbacl. futuros usos
@@ -218,7 +212,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     childView: Browse.ProfileItem,
 
     initialize: function(){
-      console.log('ProfileItem View: INIT')
+      //console.log('ProfileItem View: INIT')
     },
 
   });

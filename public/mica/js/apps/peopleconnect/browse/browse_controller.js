@@ -36,8 +36,8 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 		dao.gestionUser.getUser(DocManager, function (user){
       getSession().currentUser = user;
 
-			if(user && dao.gestionUser.hasPermissionTo('mica:user', 'mica', {} ) ){
-				console.log('dao validate user OK: [%s]', user.get('username'));
+      //if(user && dao.gestionUser.hasPermissionTo('mica:user', 'mica', {} ) ){
+			if(true){
 	      defer.resolve(user);
 
 
@@ -118,14 +118,14 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
       action = 'getNextPage'
       //getSession().collection.getPage(2);
       getSession().collection.getNextPage().done(function (data){
-        console.log('===action: [%s]=== NextPage ==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+        //console.log('===action: [%s]=== NextPage ==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
         defer.resolve(data);
       })
 
     }else if(step === 'previous'){
       action = 'getPreviousPage'
       getSession().collection.getPreviousPage().done(function (data){
-        console.log('===action: [%s]=== previousPage==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+        //console.log('===action: [%s]=== previousPage==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
         defer.resolve(data);
       })
 
@@ -133,7 +133,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     }else{
       action = 'getFirstPage'
       getSession().collection.getFirstPage().done(function(data){
-        console.log('===action: [%s]==== FirstPage ======= Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+        //console.log('===action: [%s]==== FirstPage ======= Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
         defer.resolve(data);
       });
     }
@@ -287,8 +287,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 	var initCrudManager = function(user, criterion, step){
 
 		$.when(fetchCollection(user, criterion, step)).done(function(entities){
-			console.log('initCrudManager. when: col[%s]',entities.length)
-			
 
 			getSession().crudManager = new backendCommons.CrudManager(
 				  {
@@ -363,7 +361,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
   	});
     mainlayout.on('model:change:state', function(model, state){
-      console.log('cambio de estado: [%s] [%s]', model.get('cnumber'), state);
+      //console.log('cambio de estado: [%s] [%s]', model.get('cnumber'), state);
       model.set('nivel_ejecucion', state);
       DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': state});
 
@@ -396,7 +394,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   	mainlayout.hideList();
 
     editorlayout.on('accept:buyer', function(){
-      console.log('acceptBuyer BUBBLED' )
       model.set('nivel_ejecucion', 'comprador_aceptado');
       DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': 'comprador_aceptado'});
       mainlayout.showList();
@@ -406,7 +403,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
 
   	editorlayout.on('close:view', function(){
-  		console.log('close:view BUBBLED')
 	  	mainlayout.showList();
 	  	editorlayout.destroy();
 
@@ -423,9 +419,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   var API = {
 
     fetchFilteredCollection: function(filter, step){
-      console.log('fetchFilteredCollection BEGIN [%s]', step);
-      console.dir(filter.attributes)
-      //var page = getSession().collection.getNextPage(step);
+      //console.log('fetchFilteredCollection BEGIN [%s]', step);
       initCrudManager(getSession().currentUser, filter.attributes, step)
 
     }

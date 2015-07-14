@@ -409,9 +409,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     // },
 
     parseState: function (resp, queryParams, state, options) {
-      console.log('========== PARSE STATE ========== [%s]', arguments.length);
-      console.dir(state);
-      console.log('PARSE STATE Response: [%s]',resp[0].total_entries);
+      //console.log('========== PARSE STATE ========== [%s]', arguments.length);
+      //console.dir(state);
+      //console.log('PARSE STATE Response: [%s]',resp[0].total_entries);
       //this.state = resp[0];
       return {totalRecords: resp[0].total_entries};
     },
@@ -447,7 +447,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   Entities.MicaFilterFacet = Backbone.Model.extend({
     whoami: 'Entities.MicaFilterFacet:mica.js',
     initialize: function(opts){
-      console.log('initialize Mica FILTER [%s]', this.get('subsector'))
+      //console.log('initialize Mica FILTER [%s]', this.get('subsector'))
       this.schema.subsector.options = tdata.subSectorOL[this.get('sector')];
 
 
@@ -456,6 +456,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     schema: {
         rolePlaying:   {type: 'Select',  title: 'Rol', options: tdata.rolesOL },
         cnumber:       {type: 'Text',    title: 'Número Inscripción' },
+        textsearch:    {type: 'Text',    title: 'Proyecto / solicitante (texto)' },
         provincia:     {type: 'Select',  title: 'Provincia',  options: tdata.provinciasOL },
         sector:        {type: 'Select',  title: 'Sector',  options: tdata.sectorOL },
         subsector:     {type: 'Select',  title: 'SubSector',  options: tdata.subSectorOL.aescenicas },
@@ -467,6 +468,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       rolePlaying: 'no_definido',
       provincia: 'no_definido',
       cnumber: '',
+      textsearch: '',
       sector: 'no_definido',
       subsector: 'no_definido',
       evento: 'mica',
@@ -1318,14 +1320,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     getFilteredByQueryCol: function(query, step){
       // Client Side Filtering
-      console.log('query: [%s]', query);
-      console.dir(query)
+      //console.log('query: [%s]', query);
+      //console.dir(query)
 
       var fetchingEntities = queryCollection(query, step),
           defer = $.Deferred();
 
       $.when(fetchingEntities).done(function(entities){
-        console.log('entities: [%s]', entities.length)
+        //console.log('entities: [%s]', entities.length)
 
         var filteredEntities = queryFactory(entities);
 

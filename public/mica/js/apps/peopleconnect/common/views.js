@@ -9,7 +9,6 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
     var form = new Backbone.Form({model:filterData});
 
     form.on('sector:change', function(form, editorContent) {
-        console.log('onchange:key');
         var contenido = editorContent.getValue(),
             newOptions = tdata.subSectorOL[contenido];
         form.fields.subsector.editor.setOptions(newOptions);
@@ -25,7 +24,6 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
 
     modal.on('ok',function(){
         form.commit();
-        console.log('Modal OK: [%S]', targetEvent);
         DocManager.trigger(targetEvent, filterData);
     });
 
@@ -187,15 +185,15 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
 				
         switch (target.type){
 						case 'checkbox':
-              console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
+              //console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
 							this.model.get(target.name)[target.value] = target.checked;
               //{
               //  name: {something: true, elsesomething: false, etc: true}
               //}
-							console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
+							//console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
 							break;
 						case 'radio':
-              console.log('[%s]:[%s]   checked:[%s]: name:[%s] value:[%s] ',this.model.whoami,this.model.get(target.name),target.checked, target.name, target.value);
+              //console.log('[%s]:[%s]   checked:[%s]: name:[%s] value:[%s] ',this.model.whoami,this.model.get(target.name),target.checked, target.name, target.value);
               if(this.model.get(target.name)[target.value]){
                 this.model.get(target.name)[target.value] = target.checked;
               }else{
@@ -208,7 +206,7 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
               //  name: elsesomething
               //}
               //$('#ccoperativa').radio('check');
-						 	console.log('checked:[%s]: name:[%s] value:[%s] [%s]',target.checked, target.name, target.value, this.model.get(target.name)[target.value]);
+						 	//console.log('checked:[%s]: name:[%s] value:[%s] [%s]',target.checked, target.name, target.value, this.model.get(target.name)[target.value]);
 							break;
 						
 						case 'select-multiple':
@@ -219,7 +217,7 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
 						default:
 							change[target.name] = target.value;
 							this.model.set(change);
-							console.log('CHANGE DEFAULT: [%s]: [%s] [%s]',target.name, target.value, target['multiple']);
+							//console.log('CHANGE DEFAULT: [%s]: [%s] [%s]',target.name, target.value, target['multiple']);
               //console.dir(this.model.attributes)
               break;
 				}
@@ -236,7 +234,6 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
         this.onFormDataInvalid((err||{}));
       }else{
         //var data = Backbone.Syphon.serialize(this);
-        console.log('FORM SUBMITTED');
         this.trigger("form:submit", this.model);        
       }
 
@@ -269,7 +266,7 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
       tstyle = 'has-' + tstyle;
       selector = "." + tstyle;
 
-      console.log('onForm Notifications [%s][%s]', tstyle, selector);
+      //console.log('onForm Notifications [%s][%s]', tstyle, selector);
 
       var clearFormErrors = function(){
         $view.find(selector).each(function(){
@@ -302,7 +299,7 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
       }
 
       var markErrors = function(value, key){
-        console.log('Mark Erross: value: [%s]  key:[%s]', value, key)
+        //console.log('Mark Erross: value: [%s]  key:[%s]', value, key)
         var $controlGroup = $view.find("#" + key).closest('.form-group');
         $controlGroup.addClass("has-error");
         $('.help-block', $controlGroup).html(value);
@@ -350,12 +347,10 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
       'click button.js-aceptar-comprador': 'aceptarComprador',
     },
     aceptarComprador: function(e){
-      console.log('Aceptar comprador')
       this.trigger('accept:buyer');
     },
     
     closeView: function(e){
-      console.log('Close Button')
       this.trigger('close:view');
     }
   });
@@ -422,7 +417,7 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
     },
 
     filterList: function(e){
-      console.log('FILTER LIST: [%s]', this.options.filterEventName);
+      //console.log('FILTER LIST: [%s]', this.options.filterEventName);
       Views.filterPopup(this.filter, this.options.filterModel, this.options.filterEventName, this.options.filterTitle);
     },
 
@@ -465,8 +460,6 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
     
     initialize: function(attrs, opts){
       var self = this;
-      //model, collection, tablecols
-      console.log('CrudManager Initialize: [%s]', opts.filterEditor);
       this.options = opts;
 
       //filter
@@ -486,7 +479,7 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
 
     filterFactory: function(collection, fieldList){
       var self = this;
-      console.log('FilterFactory: [%s]',self.options.filterEditor)
+      //console.log('FilterFactory: [%s]',self.options.filterEditor)
       if(self.options.filterEditor){
         this.filter = new self.options.filterEditor({
             collection: collection,
