@@ -304,4 +304,7 @@ ul.list-unstyled .usuario .label {text-transform: uppercase;}
 .alert-info .noti-info {
   color: #63ADCF;
 }
-
+.nopadding {
+  padding: 2px !important;
+  margin: 0px !important;
+}
