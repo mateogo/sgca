@@ -37,23 +37,29 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       //console.log('Dao Get Current user: [%s]', user.get('username'));
       getSession().currentUser = user;
 
-      if(id){
-          fetchingMicaRequest = DocManager.request("micarqst:entity", id);
+      if(user && dao.gestionUser.hasPermissionTo('mica:user', 'mica', {} ) ){
+        if(id){
+            fetchingMicaRequest = DocManager.request("micarqst:entity", id);
+        }else{
+            fetchingMicaRequest = DocManager.request("micarqst:factory:new", user, "mica");
+        }
+       
+        $.when(fetchingMicaRequest).done(function(micarqst){
+          //console.log('MicaRequestApp.Edit BEGIN [%s] [%s]', micarqst.whoami, micarqst.id);
+
+          micarqst.initDataForEdit()
+
+          getSession().model = micarqst;
+
+          initDataForEdit(user, micarqst)
+          defer.resolve(micarqst);
+           
+        });
       }else{
-          fetchingMicaRequest = DocManager.request("micarqst:factory:new", user, "mica");
+        console.log('No validó el Usuario');
+        Message.warning('Debe iniciar sesión y estar inscripto en MICA 2015');
+        window.open('/ingresar/#mica', '_self');
       }
-     
-      $.when(fetchingMicaRequest).done(function(micarqst){
-        //console.log('MicaRequestApp.Edit BEGIN [%s] [%s]', micarqst.whoami, micarqst.id);
-
-        micarqst.initDataForEdit()
-
-        getSession().model = micarqst;
-
-        initDataForEdit(user, micarqst)
-        defer.resolve(micarqst);
-         
-      });
  
     });
     return defer.promise();

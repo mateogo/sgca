@@ -36,8 +36,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 		dao.gestionUser.getUser(DocManager, function (user){
       getSession().currentUser = user;
 
-      //if(user && dao.gestionUser.hasPermissionTo('mica:user', 'mica', {} ) ){
-			if(true){
+      if(user && dao.gestionUser.hasPermissionTo('mica:user', 'mica', {} ) ){
 	      defer.resolve(user);
 
 
