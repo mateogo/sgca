@@ -301,5 +301,7 @@ ul.list-unstyled .usuario .label {text-transform: uppercase;}
 .form-horizontal .control-label {
   font-weight: 400;
 }
-
+.alert-info .noti-info {
+  color: #63ADCF;
+}
 
