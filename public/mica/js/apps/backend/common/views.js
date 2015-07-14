@@ -26,7 +26,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     modal.on('ok',function(){
         form.commit();
         console.log('Modal OK: [%S]', targetEvent);
-        DocManager.trigger(targetEvent, filterData);
+        DocManager.trigger(targetEvent, filterData, 'reset');
     });
 
     modal.open();
@@ -417,20 +417,20 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 
 
 
-  Views.gridFactory = function(collection, columns){
-      return new Backgrid.Grid({
-          className: 'table table-condensed table-bordered table-hover',
-          collection: collection,
-          columns: columns
-        });
-  }; 
+  // Views.gridFactory = function(collection, columns){
+  //     return new Backgrid.Grid({
+  //         className: 'table table-condensed table-bordered table-hover',
+  //         collection: collection,
+  //         columns: columns
+  //       });
+  // }; 
   
-  Views.filterFactory = function(collection, fieldList){
-      return new Backgrid.Extension.ClientSideFilter({
-          collection: collection,
-          fields: fieldList,
-        });
-  };
+  // Views.filterFactory = function(collection, fieldList){
+  //     return new Backgrid.Extension.ClientSideFilter({
+  //         collection: collection,
+  //         fields: fieldList,
+  //       });
+  // };
 
 
   Views.ModelEditorLayout = Marionette.LayoutView.extend({

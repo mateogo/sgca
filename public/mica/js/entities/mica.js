@@ -411,7 +411,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     parseState: function (resp, queryParams, state, options) {
       console.log('========== PARSE STATE ========== [%s]', arguments.length);
       console.dir(state);
-      console.log('response: [%s]',resp[0].total_entries);
+      console.log('PARSE STATE Response: [%s]',resp[0].total_entries);
       //this.state = resp[0];
       return {totalRecords: resp[0].total_entries};
     },

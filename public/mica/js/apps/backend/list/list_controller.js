@@ -62,18 +62,13 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
         };
 
 
-    if(!getSession().collection){
-      getSession().collection =  new DocManager.Entities.MicaRegistrationPaginatedCol();
-    }
-
     if(criterion){
       _.extend(query, criterion);
     }
-    getSession().collection.setQuery(query);
 
     if(step === 'next'){
       action = 'getNextPage';
-      //getSession().collection.getPage(2);
+      getSession().collection.setQuery(query);
       getSession().collection.getNextPage().done(function (data){
         console.log('===action: [%s]=== NextPage ==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
         defer.resolve(data);
@@ -81,6 +76,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
     }else if(step === 'previous'){
       action = 'getPreviousPage';
+      getSession().collection.setQuery(query);
       getSession().collection.getPreviousPage().done(function (data){
         console.log('===action: [%s]=== previousPage==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
         defer.resolve(data);
@@ -89,6 +85,10 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
     }else{
       action = 'getFirstPage';
+
+      getSession().collection =  new DocManager.Entities.MicaRegistrationPaginatedCol();
+
+      getSession().collection.setQuery(query);
       getSession().collection.getFirstPage().done(function(data){
         console.log('===action: [%s]==== FirstPage ======= Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
         defer.resolve(data);
@@ -376,8 +376,8 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   var API = {
 
     fetchFilteredCollection: function(filter, step){
-      console.log('fetchFilteredCollection BEGIN');
-      console.dir(filter.attributes)
+      console.log('fetchFilteredCollection BEGIN step:[%s]', step);
+      //console.dir(filter.attributes)
       initCrudManager(getSession().currentUser, filter.attributes, step)
 
     },
