@@ -120,7 +120,7 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
       mailModel.set('to',user.get('username'));
 
       //todo:ver donde configurar el servidor de produccion
-      mailModel.set( 'server','http://200.80.154.217:3000');
+      mailModel.set( 'server', DocManager.getCurrentDomain());
       //mailModel.set( 'server','http://localhost:3000');
       if(targetUser){
         if(targetUser === 'mica'){
@@ -200,7 +200,7 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
     mailModel.set('to',user.get('username'));
 
     //todo:ver donde configurar el servidor de produccion
-    mailModel.set( 'server',DocManager.getCurrentDomain());
+    mailModel.set( 'server', DocManager.getCurrentDomain());
     mailModel.set('id',user.id);
 
     data = {
