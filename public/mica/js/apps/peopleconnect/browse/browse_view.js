@@ -88,8 +88,24 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       this.initForm();
       
     },
-    
+
+    templateHelpers: function(){
+      var self = this;
+
+      return {
+        isFavorito: function(){
+          if(this.model.get('favorito') === true){
+            return true;
+          }else{
+            return false;
+          }
+        },
+      }
+    },
+ 
+      
     initForm: function(){
+      console.log('Filter FORM: [%s] [%s]', this.model.whoami, this.model.get('favorito'))
       var form = new Backbone.Form({
         model: this.model,
         template: utils.templates.FilterProfilesEditor,
@@ -105,6 +121,16 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
               newOptions = tdata.subSectorOL[contenido];
           form.fields.subsector.editor.setOptions(newOptions);
       });
+
+      if(this.model.get('favorito')){
+        this.form.$('.js-filter-favorito').toggleClass('active');
+
+      }
+      // this.form.$('.js-filter-favorito').click(function(){
+      //   console.log('SSSSSIIIIIII');
+      //   this.model.set('favorito', !this.model.get('favorito'));
+      //   this.$("js-filter-favorito").toggleClass('active');
+      // });
       
     },
         
@@ -125,7 +151,17 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       'click .js-browse': 'browseData',
       'click .js-previous-page': 'previousPage',
       'click .js-next-page': 'nextPage',
+      'click .js-filter-favorito': 'toggleFavoritos',
     },
+
+    toggleFavoritos: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('toggleFavoritos [%s]',this.model.get('favorito'))
+      this.model.set('favorito', !this.model.get('favorito'));
+      this.form.$(".js-filter-favorito").toggleClass('active');
+    },
+
     nextPage: function(e){
       this.form.commit();
       DocManager.trigger(this.options.filterEventName, this.model, 'next');
@@ -169,6 +205,14 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
         getAvatar: function(){
           return self.model.getAvatar();
         },
+        isFavorito: function(){
+          var userid = getSession().currentUser.id
+          if(userid && self.model.get(userid) && self.model.get(userid).favorito === true){
+            return true;
+          }else{
+            return false;
+          }
+        },
       }
     },
  
@@ -179,6 +223,16 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     events: {
       "click .js-productbrowse": "viewProduct",
       "click .js-profile-view": "viewProfile",
+      "click .js-add-to-favorite": "addToFavorite",
+    },
+
+    addToFavorite: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('addToFavorite CLICK!!!');
+      getSession().views.mainlayout.trigger('toggle:profile:favorite',this.model);
+      this.$(".js-add-to-favorite").toggleClass('active');
+
     },
 
     viewProfile: function(e){

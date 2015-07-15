@@ -316,6 +316,12 @@ window.tdata = {
         {val:'comprador_rechazado', label:'Rechazado', classattr:'info'},
         {val:'observado',           label:'Observado', classattr:'info'},
    ],
+    estado_altaOL:[
+        {val:'no_definido',  label:'Nivel de Ejecución',  classattr:'info'},
+        {val:'activo',       label:'Activo',         classattr:'info'},
+        {val:'baja',         label:'Anulado/ baja',  classattr:'warning'},
+   ],
+
 
    sectorOL: [
         {val: 'no_definido',  label:'Sector Cultural'},

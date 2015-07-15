@@ -378,17 +378,31 @@ var buildQuery = function(qr){
             conditions.push({'$or': [{'$and': [subc, {'comprador.cactividades': qr.sector}]}, {'$and': [subv, {'vendedor.vactividades': qr.sector}]} ]} );
         }
     }
+    if(qr.favorito && (qr.favorito == true || qr.favorito == "true") && qr.userid){
+        console.log('Favorito: [%s] userid:[%s]', qr.favorito, qr.userid);
+        var token = {};
+        token[qr.userid+'.favorito'] =  true;
+        conditions.push(token);
+    }
 
 
 
     if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'solicitante.eprov': qr.provincia});
+
     if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
+    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
+        conditions.push({estado_alta: qr.estado_alta});
+    }else{
+        conditions.push({estado_alta: 'activo'});
+    }
 
     if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
     if(qr.evento) conditions.push({evento: qr.evento});
     if(qr.rubro) conditions.push({rubro: qr.rubro});
 
-
+    console.log('Conditions Array: ========')
+    console.dir(conditions);
+    console.log('Conditions Array: ********')
     query['$and'] = conditions;
     return query;
 };

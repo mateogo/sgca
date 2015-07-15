@@ -308,3 +308,6 @@ ul.list-unstyled .usuario .label {text-transform: uppercase;}
   padding: 2px !important;
   margin: 0px !important;
 }
+button.active > .fa-heart{
+  color:red;
+}

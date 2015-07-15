@@ -507,11 +507,11 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
           collection: this.collection,
         });
 
-      this.collection.on('trash:item:crud', function(model){
+      // this.collection.on('trash:item:crud', function(model){
 
-          this.remove(model);
+      //     this.remove(model);
 
-      });
+      // });
     },
 
     createLayout: function(opts){

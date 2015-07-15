@@ -21,6 +21,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         return errors;
       }
     },
+    isSupervisor: function(){
+      var supervisor = false;
+      var roles = _.intersection(this.get('roles'), ['supervisor', 'admin']);
+      return (roles.length > 0 ? true : false);
+    },
 
     beforeUpdate: function() {
         this.set({feum:new Date().getTime()});

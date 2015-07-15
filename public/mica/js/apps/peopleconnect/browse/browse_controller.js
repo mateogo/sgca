@@ -37,7 +37,22 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
       getSession().currentUser = user;
 
       if(user && dao.gestionUser.hasPermissionTo('mica:user', 'mica', {} ) ){
-	      defer.resolve(user);
+
+        //Verificación: el usuario YA TIENE una inscripción en MICA
+        fetchingMicaRequest = DocManager.request("micarqst:fetchby:user", user, "mica");
+        $.when(fetchingMicaRequest).done(function(micarqst){
+          //console.log('FETCHING MicaRequest [%s] [%s]', micarqst.whoami, micarqst.id);
+          if((micarqst && micarqst.id ) || dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
+            // YA TIENE una inscripción
+            setInscriptionData(micarqst);
+            defer.resolve(user);
+          }else{
+            console.log('No encuentro Inscripción');
+            Message.warning('Debe estar inscripto en MICA 2015 para acceder a esta aplicación');
+            window.open('/ingresar/#mica', '_self');
+
+          }
+        });
 
 
 			}else{
@@ -95,11 +110,17 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
  // 		return defer.promise();
 	// };
+  var setInscriptionData = function(micarqst){
+    console.log('Inscripción encontrada: [%s]', micarqst.get('cnumber'));
+    getSession().micarqst = micarqst;
+
+  };
 
   var fetchCollection = function(user, criterion, step){
     var defer = $.Deferred(),
         action,
         query = {
+          estado_alta: 'activo',
           evento: 'mica',
         };
 
@@ -356,16 +377,24 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   		var view = createView(session, mainlayout, model)
 
   	});
+    mainlayout.on('toggle:profile:favorite', function(model){
+      console.log('MainLayout View Profile BUBLLED!!!!')
+
+      toggleFavoritos(session, mainlayout, model)
+
+    });
+
   	mainlayout.on('grid:model:remove', function(model){
   		console.log('Vamos a Remover!!!!')
 
   	});
-    mainlayout.on('model:change:state', function(model, state){
-      //console.log('cambio de estado: [%s] [%s]', model.get('cnumber'), state);
-      model.set('nivel_ejecucion', state);
-      DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': state});
+    // TODO add:profile:to:favorite
+    // mainlayout.on('model:change:state', function(model, state){
+    //   //console.log('cambio de estado: [%s] [%s]', model.get('cnumber'), state);
+    //   model.set('nivel_ejecucion', state);
+    //   DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': state});
 
-    });
+    // });
 
   };
   
@@ -392,14 +421,14 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   	
 
   	mainlayout.hideList();
+    // TODO
+    // editorlayout.on('accept:buyer', function(){
+    //   model.set('nivel_ejecucion', 'comprador_aceptado');
+    //   DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': 'comprador_aceptado'});
+    //   mainlayout.showList();
+    //   editorlayout.destroy();
 
-    editorlayout.on('accept:buyer', function(){
-      model.set('nivel_ejecucion', 'comprador_aceptado');
-      DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': 'comprador_aceptado'});
-      mainlayout.showList();
-      editorlayout.destroy();
-
-    });
+    // });
 
 
   	editorlayout.on('close:view', function(){
@@ -416,10 +445,33 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   	mainlayout.getRegion('editRegion').show(editorlayout);
 
   };
+
+  //***************** ALTA EN FAVORITOS favoritos ***************
+  var toggleFavoritos = function(session, mainlayout, model){
+    var token = {};
+    var mydata = model.get(getSession().currentUser.id) || {};
+    if(mydata.favorito){
+      if(mydata.favorito == true || maydata.favorito == 'true'){
+        mydata.favorito = false;
+      }else{
+        mydata.favorito = true;
+      }
+    }else{
+     mydata.favorito = true;
+    }
+    token[getSession().currentUser.id] = mydata;
+    DocManager.request("micarqst:partial:update",[model.id], token);
+
+  };
+
+
   var API = {
 
     fetchFilteredCollection: function(filter, step){
       //console.log('fetchFilteredCollection BEGIN [%s]', step);
+      //filter.set('favorito', true);
+      filter.set('userid', getSession().currentUser.id);
+
       initCrudManager(getSession().currentUser, filter.attributes, step)
 
     }

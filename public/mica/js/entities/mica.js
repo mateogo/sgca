@@ -456,11 +456,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     schema: {
         rolePlaying:   {type: 'Select',  title: 'Rol', options: tdata.rolesOL },
         cnumber:       {type: 'Text',    title: 'Número Inscripción' },
-        textsearch:    {type: 'Text',    title: 'Proyecto / solicitante (texto)' },
+        textsearch:    {type: 'Text',    title: 'Proyecto/Solicitante' },
         provincia:     {type: 'Select',  title: 'Provincia',  options: tdata.provinciasOL },
         sector:        {type: 'Select',  title: 'Sector',  options: tdata.sectorOL },
         subsector:     {type: 'Select',  title: 'SubSector',  options: tdata.subSectorOL.aescenicas },
-        nivel_ejecucion: {type: 'Select',  title: 'Estado',  options: tdata.nivel_ejecucionOL },
+        nivel_ejecucion: {type: 'Select',  title: 'Aprobación',  options: tdata.nivel_ejecucionOL },
+        estado_alta:   {type: 'Select',  title: 'Estado',  options: tdata.estado_altaOL },
     },
 
 
@@ -474,6 +475,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       evento: 'mica',
       rubro: 'general',
       nivel_ejecucion: 'no_definido',
+      estado_alta: 'activo',
+      favorito: false,
+      userid: '',
 
     },
   });
@@ -1349,6 +1353,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //*************************************************************
   DocManager.reqres.setHandler("micarqst:entity", function(id){
     return API.getEntity(id);
+  });
+
+  DocManager.reqres.setHandler("micarqst:fetchby:user", function(user, evento){
+    return API.fetchMicaByUser(user, evento);
   });
 
   DocManager.reqres.setHandler("micarqst:factory:new", function(user, evento){

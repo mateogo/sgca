@@ -59,6 +59,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
         action,
         query = {
           evento: 'mica',
+          estado_alta: 'activo',
         };
 
 
@@ -312,12 +313,33 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
   	});
   	mainlayout.on('grid:model:remove', function(model){
-  		console.log('Vamos a Remover!!!!')
+      if(model.get('estado_alta')=== 'activo'){
+        console.log('Vamos a Remover!!!!')
+        Message.confirm('<h3>¿Confirma la baja?</h3>',
+            [{label:'Cancelar', class:'btn-success'},{label:'Aceptar', class:'btn-danger'} ], function(response){
+          if(response === 'Aceptar'){
+            DocManager.request("micarqst:partial:update",[model.id],{'estado_alta': 'baja'});
+            getSession().collection.remove(model);
+          }
+        });
+      }else{
+        console.log('Vamos a Recuperar!!!!')
+        Message.confirm('<h3>¿Confirma la reactivación de la inscripción?</h3>',
+            [{label:'Cancelar', class:'btn-success'},{label:'Aceptar', class:'btn-danger'} ], function(response){
+          if(response === 'Aceptar'){
+            DocManager.request("micarqst:partial:update",[model.id],{'estado_alta': 'activo'});
+            getSession().collection.remove(model);
+          }
+        });
+
+      }
 
   	});
+
     mainlayout.on('model:change:state', function(model, state){
       console.log('cambio de estado: [%s] [%s]', model.get('cnumber'), state);
       model.set('nivel_ejecucion', state);
+
       DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': state});
 
     });

@@ -1,15 +1,14 @@
 <div class="row usuario">
   <div class="col-md-12">
     <div class="btn-group acciones" role="group" style='float: right;' aria-label="...">
-      <button type="button" class="ask btn btn-sm btn-default"><span class="fa fa-heart"></span></button>
-      <button type="button" class="favorite btn btn-sm btn-success">Solicitar reunión</button>
+      <button type="button" class="btn btn-sm btn-default <%= isFavorito() ? 'active' : '' %> js-add-to-favorite"><span class="fa fa-heart"></span></button>
+      <button type="button" class="btn btn-sm btn-success">Solicitar reunión</button>
       <div class="btn-group" role="group">
         <button type="button" class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
           <li><a href="#" class="js-profile-view" >Ver perfil completo</a></li>
-          <li><a href="#">Agregar a favoritos</a></li>
         </ul>
       </div>
     </div>
