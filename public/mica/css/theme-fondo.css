@@ -290,6 +290,12 @@ ul.list-unstyled .usuario .content{margin-left:90px}
 ul.list-unstyled .usuario .avatar{float:left;margin-top:3px;margin-left:-90px}
 ul.list-unstyled .usuario .acciones{float:right}
 ul.list-unstyled .usuario-header img{width:73px;height:73px;overflow:hidden}
+p.metadata {
+  margin-bottom: 5px;
+}
+.label {
+  padding: 0.3em 0.8em;
+}
 .label-mica-aescenicas{background:#55abdd}.label-mica-audiovisual{background:#faad24}.label-mica-diseno{background:#ef71aa}.label-mica-editorial{background:#f05f2f}.label-mica-musica{background:#8ac43e}.label-mica-videojuegos{background:#a4529f}
 ul.list-unstyled .usuario .label {text-transform: uppercase;}
 .bio {padding-right: 30px;}
@@ -308,3 +314,170 @@ ul.list-unstyled .usuario .label {text-transform: uppercase;}
   padding: 2px !important;
   margin: 0px !important;
 }
+ol.portfolio > li {
+  border-bottom: solid 1px #ccc;
+  padding: 15px 0;
+}
+ol.portfolio > li:last-child {
+  border-bottom: 0;
+  padding: 15px 0;
+}
+.label-tag {
+  text-transform: uppercase;
+  background: #DBDBDB;
+  color: #9D9D9D;
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+button.favorite.active {
+  background-color: rgb(218, 87, 87);
+  border: solid 1px rgb(221, 118, 118);
+}
+button.favorite.active:hover,
+button.favorite:hover {
+  background-color: rgb(215, 143, 143);
+  border: solid 1px rgb(215, 143, 143);
+}
+
+/*** REDES SOCIAL LINK ICONS ***/
+.social-navigation {
+  margin: 0;
+}
+.social-navigation ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+.social-navigation li {
+  float: left;
+  margin-left: 5px;
+}
+.social-navigation a {
+  display: block;
+  height: 30px;
+  position: relative;
+  width: 30px;
+}
+
+.social-navigation a:before {
+  content: "\f415";
+  font-size: 18px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #444444;
+  padding-top: 7px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  color: #fff;
+}
+.social-navigation a:before {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-family: "FontAwesome";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  speak: none;
+  text-align: center;
+  text-decoration: inherit;
+  text-transform: none;
+  vertical-align: top;
+  content: "\f0ac";
+}
+.social-navigation a[href*="facebook.com"]:before {
+  content: "\f09a";
+}
+.social-navigation a[href*="facebook.com"]:hover:before {
+  background-color: #3b5998;
+}
+
+.social-navigation a[href*="flickr.com"]:before {
+  content: "\f16e";
+}
+.social-navigation a[href*="flickr.com"]:hover:before {
+  background-color:#ff0084;
+}
+
+.social-navigation a[href*="foursquare.com"]:before {
+  content: "\f180";
+}
+.social-navigation a[href*="foursquare.com"]:hover:before {
+  background-color:#26B2ED;
+}
+
+.social-navigation a[href*="plus.google.com"]:before {
+  content: "\f1a0";
+}
+.social-navigation a[href*="plus.google.com"]:hover:before {
+  background-color:#dd4b39;
+}
+
+.social-navigation a[href*="instagram.com"]:before {
+  content: "\f16d";
+}
+.social-navigation a[href*="instagram.com"]:hover:before {
+  background-color:#A17860;
+}
+
+.social-navigation a[href*="linkedin.com"]:before {
+  content: "\f08c";
+}
+.social-navigation a[href*="linkedin.com"]:hover:before {
+  background-color:#007bb6;
+}
+
+.social-navigation a[href*="pinterest.com"]:before {
+  content: "\f0d2";
+}
+.social-navigation a[href*="pinterest.com"]:hover:before {
+  background-color:#cb2027;
+}
+
+.social-navigation a[href*="tumblr.com"]:before {
+  content: "\f173";
+}
+.social-navigation a[href*="tumblr.com"]:hover:before {
+  background-color:#32506d;
+}
+
+.social-navigation a[href*="twitter.com"]:before {
+  content: "\f099";
+}
+.social-navigation a[href*="twitter.com"]:hover:before {
+  background-color:#00aced;
+}
+
+.social-navigation a[href*="vimeo.com"]:before {
+  content: "\f194";
+}
+.social-navigation a[href*="vimeo.com"]:hover:before {
+  background-color:#45bbff;
+}
+
+.social-navigation a[href*="youtube.com"]:before {
+  content: "\f16a";
+}
+.social-navigation a[href*="youtube.com"]:hover:before {
+  background-color:#bb0000;
+}
+
+.social-navigation a[href*="mailto:"]:before {
+  content: "\f0e0";
+}
+.social-navigation a[href*="mailto:"]:hover:before {
+  background-color:#99aabb;
+}
+
+.social-navigation a[href*="spotify.com"]:before {
+  content: "\f1bc";
+}
+.social-navigation a[href*="spotify.com"]:hover:before {
+  background-color:#2EBD59;
+}
+

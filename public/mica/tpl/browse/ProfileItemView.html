@@ -17,9 +17,11 @@
       <a class="js-view-profile usuario-header" href="#">
             <img class="avatar img-responsive" src="/<%= getAvatar() %>" alt="" style="height: 73px; width:73px;">
       </a>
-      <h4 class="fullname js-action-profile-name"><a href="#"><%= solicitante.edisplayName %></a></h4>
+      <h4 class="fullname js-action-profile-name"><a href="#"><%= solicitante.edisplayName %></a> <span class="nro-serie"> (<%= cnumber%>) </span> </h4>
       <p class="bio"><%= solicitante.emotivation %></p>
+      <%  if(vendedor.rolePlaying.vendedor === true) %>
       <p class="metadata">
+        <!--SI ES VENDEDOR--><span class="label label-default">Vendedor</span> 
         <%  if(getFieldLabel('vendedor').vactividades === 'musica') %>
           <span class="label label-mica-musica">MÚSICA</span>
         <%  if(getFieldLabel('vendedor').vactividades === 'aescenicas') %>
@@ -31,6 +33,22 @@
         <%  if(getFieldLabel('vendedor').vactividades === 'editorial') %>
           <span class="label label-mica-editorial">EDITORIAL</span>
         <%  if(getFieldLabel('vendedor').vactividades === 'videojuegos') %>
+          <span class="label label-mica-videojuegos">VIDEOJUEGOS</span>
+      </p>
+      <%  if(comprador.rolePlaying.comprador === true) %>
+      <p class="metadata">
+        <!--SI ES COMPRADOR--><span class="label label-default">Comprador</span>
+        <%  if(getFieldLabel('comprador').cactividades === 'musica') %>
+          <span class="label label-mica-musica">MÚSICA</span>
+        <%  if(getFieldLabel('comprador').cactividades === 'aescenicas') %>
+          <span class="label label-mica-aescenicas">ARTES ESCÉNICAS</span>
+        <%  if(getFieldLabel('comprador').cactividades === 'audiovisual') %>
+          <span class="label label-mica-audiovisual">AUDIOVISUAL</span>
+        <%  if(getFieldLabel('comprador').cactividades === 'disenio') %>
+          <span class="label label-mica-diseno">DISEÑO</span>
+        <%  if(getFieldLabel('comprador').cactividades === 'editorial') %>
+          <span class="label label-mica-editorial">EDITORIAL</span>
+        <%  if(getFieldLabel('comprador').cactividades === 'videojuegos') %>
           <span class="label label-mica-videojuegos">VIDEOJUEGOS</span>
       </p>
     </div>
