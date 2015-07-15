@@ -331,14 +331,15 @@ ol.portfolio > li:last-child {
   margin-right: 5px;
   margin-bottom: 5px;
 }
-button.favorite.active {
-  background-color: rgb(218, 87, 87);
-  border: solid 1px rgb(221, 118, 118);
+button.js-add-to-favorite.active {
+  background-color: rgb(218, 87, 87)!important;
+  border: solid 1px rgb(221, 118, 118)!important;
 }
-button.favorite.active:hover,
-button.favorite:hover {
-  background-color: rgb(215, 143, 143);
-  border: solid 1px rgb(215, 143, 143);
+button.js-add-to-favorite.active:hover,
+button.js-add-to-favorite:hover,
+button.js-add-to-favorite:focus {
+  background-color: rgb(215, 143, 143)!important;
+  border: solid 1px rgb(215, 143, 143)!important;
 }
 
 /*** REDES SOCIAL LINK ICONS ***/
