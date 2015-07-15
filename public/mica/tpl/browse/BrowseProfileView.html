@@ -6,9 +6,8 @@
         <p><span class="fa fa-globe"></span> <a href="<%= solicitante.eweb %>" target="_blank"><%= solicitante.eweb %></a><br>
         <span class="fa fa-envelope-o"></span> <a href="mailto:<%= solicitante.email %>"><%= solicitante.email %></a></p>
     </div>
-    <div class="col-md-8 col-xs-12">
+    <div class="col-md-9 col-xs-12">
         
-        <h3>Solicitud</h3>
         <div>
             <p><%= solicitante.emotivation %></p><hr>
             <p><%= solicitante.edescription %></p>
@@ -17,62 +16,123 @@
             <p><%= responsable.rmail %></p>
         </div>
     </div>
-    <div class="col-md-4 col-xs-12">
+    <div class="col-md-3 col-xs-12">
     <!--N: AGREGAR EL RESTO DE LOS ESTADOS-->
-        <h3>Estado <%  if(getFieldLabel('estado_alta') === 'activo') %><span class="label label-success">ACTIVO</span></h3>
-        <div><strong>PAIS:</strong> <%= solicitante.epais %></div>
-        <div><strong>Año de Fundación:</strong> <%= solicitante.efundacion %></div>
-        <div><strong>Cantidad de Empleados:</strong> <%= solicitante.enumempleados %></div>
-        <div><strong>Facturación:</strong> AR$ <%= solicitante.eventas %></div>
-        <hr>
-        <div><strong>Nivel de Ejecución:</strong> <%= getFieldLabel('nivel_ejecucion')%></div>
-        <div><strong>Fecha de Alta:</strong> <%= getFieldLabel('fecomp')%></div>
+        <img src="/<%= solicitante.eavatar.urlpath %>" class="img-responsive">
     </div>
     <%  if(isVendedor()){ %>
-    
         <div class="col-md-12 col-xs-12">
-            <h3><span class="fa fa-briefcase"></span> Perfil de Vendedor</h3><hr>
-            <h4>Actividad principal: <%= getFieldLabel('vendedor').vactividades %></h4>
-            <p><%= vendorSubActivities() %></p>
-            <p>Palabras Claves: <%= getFieldLabel('vendedor').vdescriptores %></p>
-            <p>Negocios extra-fronteras: <%= getFieldLabel('vendedor').vexperienciaintl %></p>
+            <h3><span class="fa fa-briefcase"></span> Perfil de Vendedor 
+                <%  if(getFieldLabel('vendedor').vactividades === 'musica') { %>
+                  <span class="label label-mica-musica">MÚSICA</span>
+                <% } %>
+                <%  if(getFieldLabel('vendedor').vactividades === 'aescenicas') { %>
+                  <span class="label label-mica-aescenicas">ARTES ESCÉNICAS</span>
+                <% } %>
+                <%  if(getFieldLabel('vendedor').vactividades === 'audiovisual') { %>
+                  <span class="label label-mica-audiovisual">AUDIOVISUAL</span>
+                <% } %>
+                <%  if(getFieldLabel('vendedor').vactividades === 'disenio') { %>
+                  <span class="label label-mica-diseno">DISEÑO</span>
+                <% } %>
+                <%  if(getFieldLabel('vendedor').vactividades === 'editorial') { %>
+                  <span class="label label-mica-editorial">EDITORIAL</span>
+                <% } %>
+                <%  if(getFieldLabel('vendedor').vactividades === 'videojuegos') { %>
+                  <span class="label label-mica-videojuegos">VIDEOJUEGOS</span>
+                <% } %>
+            </h3><hr>
+                
+            
             <p><%= getFieldLabel('vendedor').vcomentario %></p>
+            <p><%= vendorSubActivities() %></p>
+            
+            <p><strong>Negocios extra-fronteras: </strong>
+                <%  if(getFieldLabel('vendedor').vexperienciaintl === "4") { %>Frecuentes<% } %>
+                <%  if(getFieldLabel('vendedor').vexperienciaintl === "2") { %>Esporádicos<% } %>
+                <%  if(getFieldLabel('vendedor').vexperienciaintl === "1") { %>Nunca<% } %>
+            </p>
+                    
             <%  if(hasVendorProfiles()){ %>
-                    <h4>Referencias</h4>
+                    <h4>Portfolio</h4>
+                    <ol class="portfolio">
                     <%  _.each(getFieldLabel('vendedor').vporfolios, function(item){ %>
-                    <p><%= item.slug %></p>
-                    <p><%= item.denominacion %></p>
-                        <%  _.each(item.referencias, function(refer){ %>
-                        <p><%= refer.tlink %>: <a href="<%= refer.targeturl %>"><%= refer.slug %></a> </p>
-                        <% }) %>
-
+                        <li><h4><%= item.slug %></h4>
+                            <p><%= item.denominacion %></p>
+                            <div class="social-navigation row">
+                                <ul>
+                                <%  _.each(item.referencias, function(refer){ %>
+                                    <li>
+                                        <a href="<%= refer.targeturl %>" target="_blank" title="<%= refer.slug %>">
+                                            <span class="sr-only"><%= refer.tlink %></span>
+                                        </a>
+                                    </li>
+                                <% }) %>
+                                </ul>
+                            </div>
+                        </li>
                     <% }) %>
+                    </ol>
             <% } %>
        </div>
-
     <% } %>
     <%  if(isComprador()){ %>
-    <hr>
-        <div class="col-md-12 col-xs-12">
-            <h3><span class="fa fa-shopping-cart"></span> Perfil de Comprador</h3><hr>
-            <h4>Actividad principal: <%= getFieldLabel('comprador').cactividades %></h4>
-            <p><%= compradorSubActivities() %></p>
-            <p>Palabras Claves: <%= getFieldLabel('comprador').cdescriptores %></p>
-            <p>Negocios extra-fronteras: <%= getFieldLabel('comprador').cexperienciaintl %></p>
+        <div class="col-md-12 col-xs-12"><hr>
+            <h3><span class="fa fa-shopping-cart"></span> Perfil de Comprador 
+                <%  if(getFieldLabel('comprador').cactividades === 'musica') { %>
+                  <span class="label label-mica-musica">MÚSICA</span>
+                <% } %>
+                <%  if(getFieldLabel('comprador').cactividades === 'aescenicas') { %>
+                  <span class="label label-mica-aescenicas">ARTES ESCÉNICAS</span>
+                <% } %>
+                <%  if(getFieldLabel('comprador').cactividades === 'audiovisual') { %>
+                  <span class="label label-mica-audiovisual">AUDIOVISUAL</span>
+                <% } %>
+                <%  if(getFieldLabel('comprador').cactividades === 'disenio') { %>
+                  <span class="label label-mica-diseno">DISEÑO</span>
+                <% } %>
+                <%  if(getFieldLabel('comprador').cactividades === 'editorial') { %>
+                  <span class="label label-mica-editorial">EDITORIAL</span>
+                <% } %>
+                <%  if(getFieldLabel('comprador').cactividades === 'videojuegos') { %>
+                  <span class="label label-mica-videojuegos">VIDEOJUEGOS</span>
+                <% } %>
+            </h3>
+            <hr>
+            <%  if(getFieldLabel('comprador').cdescriptores != '') { %>
+                <p><%= getFieldLabel('comprador').cdescriptores %></p>
+            <% } %>
             <p><%= getFieldLabel('comprador').ccomentario %></p>
+            <!--<p><%= compradorSubActivities() %></p>-->
+            <p><strong>Negocios extra-fronteras: </strong>
+                <%  if(getFieldLabel('comprador').cexperienciaintl === "4") { %>Frecuentes<% } %>
+                <%  if(getFieldLabel('comprador').cexperienciaintl === "2") { %>Esporádicos<% } %>
+                <%  if(getFieldLabel('comprador').cexperienciaintl === "1") { %>Nunca<% } %>
+            </p>
+            
             <%  if(hasCompradorProfiles()){ %>
-                    <h4>Referencias</h4>
+                    <h4>Porfolio</h4>
+                    <ol class="portfolio">
                     <%  _.each(getFieldLabel('comprador').cporfolios, function(item){ %>
-                    <p><%= item.slug %></p>
-                    <p><%= item.denominacion %></p>
-                        <%  _.each(item.referencias, function(refer){ %>
-                        <p><%= refer.tlink %>: <a href="<%= refer.targeturl %>"><%= refer.slug %></a> </p>
-                        <% }) %>
-
+                        <li>
+                            <h4><%= item.slug %></h4>
+                            <p><%= item.denominacion %></p>
+                            <div class="social-navigation row">
+                                <ul>
+                                <%  _.each(item.referencias, function(refer){ %>
+                                    <li>
+                                        <a href="<%= refer.targeturl %>" target="_blank" title="<%= refer.slug %>">
+                                            <span class="sr-only"><%= refer.tlink %></span>
+                                        </a>
+                                    </li>
+                                <% }) %>
+                                </ul>
+                            </div>
+                        </li>
                     <% }) %>
+                    </ol>
             <% } %>
        </div>
-
     <% } %>
 
 </div> 
