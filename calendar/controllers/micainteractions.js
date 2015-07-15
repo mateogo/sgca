@@ -1,9 +1,9 @@
 /*
- *  calendar micasuscriptions.js
+ *  calendar micainteractions.js
  *  package: /calendar/controllers
- *  DOC: 'micasuscriptions' collection controller
+ *  DOC: 'micainteractions' collection controller
  *  Use:
- *     Exporta el objeto controller de un micasuscription via 'exports'
+ *     Exporta el objeto controller de un micainteraction via 'exports'
  *     metodos exportados:
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
  *
@@ -14,7 +14,7 @@ var _ = require('underscore');
 var dbi ;
 var BSON;
 var config = {};
-var micasuscriptionsCol = 'micasuscriptions';
+var micainteractionsCol = 'micainteractions';
 var serialCol = 'seriales';
 
 var utils = require(rootPath + '/core/util/utils');
@@ -25,13 +25,13 @@ var MSGS = [
     'ERROR: No se pudo borrar el nodo en la base de datos'
 ];
 
-//ATENCION: para agregar un serial, agregar entrada en tmicasuscription_adapter y en series;
+//ATENCION: para agregar un serial, agregar entrada en tmicainteraction_adapter y en series;
 var series = ['profile101','profile999'];
 
 var seriales = {};
 
 //ATENCION: revisar el criterio de seleccion de registro en setNodeCode()
-var tmicasuscription_adapter = {
+var tmicainteraction_adapter = {
     inscripcion:{
         serie: 'profile101',
         base: 100000,
@@ -52,7 +52,7 @@ var loadSeriales = function(){
 };
 
 var fetchserial = function(serie){
-    //console.log("INIT:fetchserie:micasuscription.js:[%s]",serie);
+    //console.log("INIT:fetchserie:micainteraction.js:[%s]",serie);
     var collection = dbi.collection(serialCol);
     collection.findOne({'serie':serie}, function(err, item) {
         if(!item){
@@ -75,7 +75,7 @@ var fetchserial = function(serie){
 
 var addSerial = function(serial,data){
     seriales[serial] = data;
-    //console.log('addSerial:micasuscription.js INIT con exito: [%s] next:[%s]',seriales[serial].serie,seriales[serial].nextnum);
+    //console.log('addSerial:micainteraction.js INIT con exito: [%s] next:[%s]',seriales[serial].serie,seriales[serial].nextnum);
 };
 
 var initSerial = function(serie){
@@ -96,7 +96,7 @@ var updateSerialCollection = function(serial){
 
 var setNodeCode = function(node){
     //console.log('setNodeCode:[%s]',node.tregistro);
-    var adapter = tmicasuscription_adapter[node.tregistro] || tmicasuscription_adapter['poromision'];
+    var adapter = tmicainteraction_adapter[node.tregistro] || tmicainteraction_adapter['poromision'];
     node.cnumber = nextSerial(adapter);
 
 };
@@ -113,7 +113,7 @@ var nextSerial = function (adapter){
 };
 
 var addNewProfile = function(req, res, node, cb){
-    //console.log("addNewProfile:micasuscriptions.js ");
+    //console.log("addNewProfile:micainteractions.js ");
 
     setNodeCode(node);
     insertNewProfile(req, res, node, cb);
@@ -121,20 +121,20 @@ var addNewProfile = function(req, res, node, cb){
 
 
 var fetchOne = function(query, cb) {
-    //console.log('findProfile Retrieving micasuscription collection for passport');
+    //console.log('findProfile Retrieving micainteraction collection for passport');
 
-    dbi.collection(micasuscriptionsCol, function(err, collection) {
+    dbi.collection(micainteractionsCol, function(err, collection) {
         collection.findOne(query, function(err, item) {
             cb(err, item);
         });
     });
 };
 
-var insertNewProfile = function (req, res, micasuscription, cb){
-    //console.log('insertNewProfile:micasuscriptions.js BEGIN [%s]',micasuscription.slug);
-    //dbi.collection(micasuscriptionsCol, function(err, collection) {
+var insertNewProfile = function (req, res, micainteraction, cb){
+    //console.log('insertNewProfile:micainteractions.js BEGIN [%s]',micainteraction.slug);
+    //dbi.collection(micainteractionsCol, function(err, collection) {
 
-    dbi.collection(micasuscriptionsCol).insert(micasuscription,{w:1}, function(err, result) {
+    dbi.collection(micainteractionsCol).insert(micainteraction,{w:1}, function(err, result) {
             if (err) {
                 if(res){
                     res.send({'error':'An error has occurred'});
@@ -174,9 +174,9 @@ exports.setBSON = function(bs) {
 exports.findOne = function(req, res) {
     var query = req.body;
 
-    //console.log('findONE:micasuscription Retrieving micasuscription collection with query');
+    //console.log('findONE:micainteraction Retrieving micainteraction collection with query');
 
-    dbi.collection(micasuscriptionsCol, function(err, collection) {
+    dbi.collection(micainteractionsCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
             res.send(items[0]);
         });
@@ -185,8 +185,8 @@ exports.findOne = function(req, res) {
 };
 
 exports.fetchById = function(id, cb) {
-    //console.log('findById: Retrieving %s id:[%s]', micasuscriptionsCol,id);
-    dbi.collection(micasuscriptionsCol, function(err, collection) {
+    //console.log('findById: Retrieving %s id:[%s]', micainteractionsCol,id);
+    dbi.collection(micainteractionsCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             cb(err, item);
         });
@@ -195,8 +195,8 @@ exports.fetchById = function(id, cb) {
 
 exports.findById = function(req, res) {
     var id = req.params.id;
-    //console.log('findById: Retrieving %s id:[%s]', micasuscriptionsCol,id, req.user);
-    dbi.collection(micasuscriptionsCol, function(err, collection) {
+    //console.log('findById: Retrieving %s id:[%s]', micainteractionsCol,id, req.user);
+    dbi.collection(micainteractionsCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             res.send(item);
         });
@@ -216,9 +216,9 @@ exports.findByQuery = function(req, res) {
     /////
     var textsearch = initTextSearch(req.query);
 
-    //console.log('find:micasuscription Retrieving micasuscription collection with QUERY [%s] [%s]', page, limit);
+    //console.log('find:micainteraction Retrieving micainteraction collection with QUERY [%s] [%s]', page, limit);
 
-    cursor = dbi.collection(micasuscriptionsCol).find(query).sort({cnumber:1});
+    cursor = dbi.collection(micainteractionsCol).find(query).sort({cnumber:1});
     if(textsearch){
         cursor.toArray(function(err, items){
             resultset = textFilter(textsearch, items);
@@ -274,9 +274,9 @@ exports.find = function(req, res) {
     var cursor;
 
 
-    //console.log('find:micasuscription Retrieving micasuscription collection with QUERY [%s] [%s]', page, limit);
+    //console.log('find:micainteraction Retrieving micainteraction collection with QUERY [%s] [%s]', page, limit);
 
-    cursor = dbi.collection(micasuscriptionsCol).find(query).sort({cnumber:1});
+    cursor = dbi.collection(micainteractionsCol).find(query).sort({cnumber:1});
     if(req.body.page){
         cursor.count(function(err, total){
             console.log('CUrsor count: [%s]', total);
@@ -297,8 +297,8 @@ exports.find = function(req, res) {
 };
 
 exports.findAll = function(req, res) {
-    //console.log('findAll: Retrieving all instances of [%s] collection', micasuscriptionsCol);
-    dbi.collection(micasuscriptionsCol, function(err, collection) {
+    //console.log('findAll: Retrieving all instances of [%s] collection', micainteractionsCol);
+    dbi.collection(micainteractionsCol, function(err, collection) {
         collection.find().sort({cnumber:1}).toArray(function(err, items) {
             res.send(items);
         });
@@ -306,23 +306,23 @@ exports.findAll = function(req, res) {
 };
 
 exports.add = function(req, res) {
-    //console.log('add:micasuscription.js: NEW RECEIPT BEGINS');
-    var micasuscription = req.body;
-    addNewProfile(req, res, micasuscription);
+    //console.log('add:micainteraction.js: NEW RECEIPT BEGINS');
+    var micainteraction = req.body;
+    addNewProfile(req, res, micainteraction);
 };
 
 exports.update = function(req, res) {
     var id = req.params.id;
-    var micasuscription = req.body;
-    delete micasuscription._id;
-    dbi.collection(micasuscriptionsCol, function(err, collection) {
-        collection.update({'_id':new BSON.ObjectID(id)}, micasuscription, {safe:true}, function(err, result) {
+    var micainteraction = req.body;
+    delete micainteraction._id;
+    dbi.collection(micainteractionsCol, function(err, collection) {
+        collection.update({'_id':new BSON.ObjectID(id)}, micainteraction, {safe:true}, function(err, result) {
             if (err) {
-                console.log('Error updating %s error: %s',micasuscriptionsCol,err);
+                console.log('Error updating %s error: %s',micainteractionsCol,err);
                 res.send({error: MSGS[0] + err});
             } else {
                 //console.log('UPDATE: se insertaron exitosamente [%s] nodos',result);
-                res.send(micasuscription);
+                res.send(micainteraction);
             }
         });
     });
@@ -412,9 +412,9 @@ exports.partialupdate = function(req, res) {
     //console.log('UPDATING partial fields nodes:[%s]', query.$or[0]._id );
     //res.send({query:query, update:update});
 
-    dbi.collection(micasuscriptionsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
+    dbi.collection(micainteractionsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
         if (err) {
-            console.log('Error partial updating %s error: %s',micasuscriptionsCol,err);
+            console.log('Error partial updating %s error: %s',micainteractionsCol,err);
             if(res){
                 res.send({error: MSGS[0] + err});
             }else if(cb){
@@ -435,7 +435,7 @@ exports.partialupdate = function(req, res) {
 exports.delete = function(req, res) {
     var id = req.params.id;
     console.log('Deleting node: [%s] ', id);
-    dbi.collection(micasuscriptionsCol, function(err, collection) {
+    dbi.collection(micainteractionsCol, function(err, collection) {
         collection.remove({'_id':new BSON.ObjectID(id)}, function(err, result) {
             if (err) {
                 res.send({error: MSGS[1] + err});

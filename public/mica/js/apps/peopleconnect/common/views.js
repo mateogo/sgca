@@ -330,7 +330,7 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
   Views.ModelEditorLayout = Marionette.LayoutView.extend({
 
     getTemplate: function(){
-      return utils.templates.CommonModelEditorLayout;
+      return utils.templates.BrowseProfileLayout;
     },
     
     regions: {

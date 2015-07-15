@@ -1,10 +1,16 @@
 DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Marionette, $, _){
 
   var backendApp = DocManager.module('RondasApp');
+  var getSession = function(){
+    if(!Browse.Session){
+      Browse.Session = {views:{},model:null};
+    }
+    return Browse.Session;
+  }
 
-  Browse.MicaRequestView = Marionette.ItemView.extend({
+  Browse.BrowseProfileView = Marionette.ItemView.extend({
     getTemplate: function(){
-      return utils.templates.MicarequestsView;
+      return utils.templates.BrowseProfileView;
     },
     
     templateHelpers: function(){
@@ -172,15 +178,17 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
 
     events: {
       "click .js-productbrowse": "viewProduct",
-      "click .js-productedit": "editProduct",
+      "click .js-profile-view": "viewProfile",
     },
 
-    editProduct: function(){
-
-      this.trigger('edit:related:product',this.model, function(){
-          //no hay callbacl. futuros usos
-      });
-
+    viewProfile: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('ViewProfile CLICK!!!');
+      // this.trigger('grid:model:edit',this.model, function(){
+      //     //no hay callbacl. futuros usos
+      // });
+      getSession().views.mainlayout.trigger('grid:model:edit',this.model);
 
     },
 

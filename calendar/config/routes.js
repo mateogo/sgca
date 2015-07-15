@@ -194,6 +194,20 @@ module.exports = function (config, app) {
     app.delete('/micasuscriptions/:id',      micasuscriptions.delete);
 
 
+    // micainteractions - ronda entre participantes MICA- routes
+    var micainteractions = require(rootPath + '/calendar/controllers/micainteractions');
+    app.post('/actualizar/micainteractions', micainteractions.partialupdate);
+    app.get ('/micainteractions',            micainteractions.findAll);
+    app.post('/micainteractions/fetch',      micainteractions.findOne);
+    app.post('/navegar/micainteractions',    micainteractions.find);
+    app.get('/query/micainteractions',      micainteractions.findByQuery);
+
+    app.get ('/micainteractions/:id',        micainteractions.findById);
+    app.post('/micainteractions',            micainteractions.add);
+    app.put ('/micainteractions/:id',        micainteractions.update);
+    app.delete('/micainteractions/:id',      micainteractions.delete);
+
+
     // micashowcase -perfil inscriptos MICA- routes
     var micashowcase = require(rootPath + '/calendar/controllers/micashowcase');
     app.post('/actualizar/micashowcase', micashowcase.partialupdate);

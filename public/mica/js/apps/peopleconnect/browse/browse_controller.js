@@ -352,6 +352,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
   var registerMainLayoutEvents = function(session, layout, mainlayout){
   	mainlayout.on('grid:model:edit', function(model){
+      console.log('MainLayout View Profile BUBLLED!!!!')
   		var view = createView(session, mainlayout, model)
 
   	});
@@ -385,7 +386,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   };
 
   var registerEditorLayoutEvents = function(session, mainlayout, editorlayout, model){
-  	var modelView = new Browse.MicaRequestView({
+  	var modelView = new Browse.BrowseProfileView({
   		model: model
   	})
   	
