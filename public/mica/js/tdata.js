@@ -404,6 +404,12 @@ window.tdata = {
         ],
     },
     
+    rolesInteractionsOL: [
+        {val:'no_definido', label:'Esta solicitud es para...'},
+        {val:'comprar',   label:'Demandar productos o servicios'},
+        {val:'vender',    label:'Ofrecer productos o servicios'},
+    ],
+
     rolesOL: [
         {val:'no_definido', label:'Seleccione rol'},
         {val:'comprador',   label:'Comprador'},

@@ -184,6 +184,8 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     
   });
 
+
+//aca1
   Browse.ProfileItem = Marionette.ItemView.extend({
     tagName: "li",
 
@@ -224,6 +226,15 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       "click .js-productbrowse": "viewProduct",
       "click .js-profile-view": "viewProfile",
       "click .js-add-to-favorite": "addToFavorite",
+      "click .js-interact-reunion": "addMeeting",
+    },
+
+    addMeeting: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Solicitar Reunión  CLICK!!!');
+      getSession().views.mainlayout.trigger('add:meeting:rondas',this.model);
+      this.$(".js-interact-reunion").toggleClass('active');
     },
 
     addToFavorite: function(e){

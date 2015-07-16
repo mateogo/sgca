@@ -384,10 +384,12 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
     });
 
-  	mainlayout.on('grid:model:remove', function(model){
-  		console.log('Vamos a Remover!!!!')
+    mainlayout.on('add:meeting:rondas', function(model){
+      console.log('MainLayout View Meeting BUBLLED!!!!')
+      var editor = openMeetingEditor(session, mainlayout, model)
 
-  	});
+    });
+
     // TODO add:profile:to:favorite
     // mainlayout.on('model:change:state', function(model, state){
     //   //console.log('cambio de estado: [%s] [%s]', model.get('cnumber'), state);
@@ -405,7 +407,10 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
     DocManager.mainRegion.show(layout);
   };
-  //***************** Vista de un Modelo ***************
+
+  //=============================
+  // Model Detailed View
+  //=============================
   var createView = function(session, mainlayout, model){
   	var editorLayout = new backendCommons.ModelEditorLayout({
   		model: model
@@ -413,13 +418,11 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   	registerEditorLayoutEvents(session, mainlayout, editorLayout, model)
 
   };
-
   var registerEditorLayoutEvents = function(session, mainlayout, editorlayout, model){
   	var modelView = new Browse.BrowseProfileView({
   		model: model
   	})
   	
-
   	mainlayout.hideList();
     // TODO
     // editorlayout.on('accept:buyer', function(){
@@ -429,24 +432,61 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     //   editorlayout.destroy();
 
     // });
-
-
   	editorlayout.on('close:view', function(){
 	  	mainlayout.showList();
 	  	editorlayout.destroy();
 
   	});
-
-
   	editorlayout.on('show', function(){
     	editorlayout.getRegion('showRegion').show(modelView);
  
   	})
   	mainlayout.getRegion('editRegion').show(editorlayout);
+  };
+
+
+
+  //=============================
+  // Solicitud de Entrevista
+  //=============================
+  var openMeetingEditor = function(session, mainlayout, otherprofile){
+    var facetEditor = new DocManager.Entities.MicaInteractionFactoryFacet();
+    openMeetingForm(session, mainlayout, otherprofile, facetEditor);
 
   };
 
-  //***************** ALTA EN FAVORITOS favoritos ***************
+  var openMeetingForm = function(session, mainlayout, otherprofile, facetEditor){
+    console.log('Meeting FORM: [%s] [%s]', otherprofile.whoami, otherprofile.get('cnumber'));
+    var form = new Backbone.Form({
+      model: facetEditor,
+    });
+    
+    var modal = new Backbone.BootstrapModal({
+      content: form,
+      title: 'Mensaje' ,
+      okText: 'aceptar',
+      cancelText: 'cancelar',
+      enterTriggersOk: false,
+    });
+
+    modal.on('ok',function(){
+        form.commit();
+        console.log('FORM COMMIT: ready to insert');
+        //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
+        DocManager.request('micainteractions:new:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile);
+        toggleReunion(session, mainlayout, otherprofile);
+        //DocManager.trigger(targetEvent, filterData);
+    });
+
+    modal.open();    
+  };
+        
+
+
+
+  //=============================================================
+  // TOGGLE toggle Toggle Favoritos FAVORITOS favoritos
+  //=============================================================
   var toggleFavoritos = function(session, mainlayout, model){
     var token = {};
     var mydata = model.get(getSession().currentUser.id) || {};
@@ -461,6 +501,25 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     }
     token[getSession().currentUser.id] = mydata;
     DocManager.request("micarqst:partial:update",[model.id], token);
+
+  };
+  //=============================================================
+  // TOGGLE toggle Toggle Reunion REUNION reunion
+  //=============================================================
+  var toggleReunion = function(session, mainlayout, otherprofile){
+    var token = {};
+    var mydata = otherprofile.get(getSession().currentUser.id) || {};
+    if(mydata.reunion){
+      if(mydata.reunion == 1 || maydata.reunion === '1'){
+        mydata.reunion = 0;
+      }else{
+        mydata.reunion = 1;
+      }
+    }else{
+     mydata.reunion = 1;
+    }
+    token[getSession().currentUser.id] = mydata;
+    DocManager.request("micarqst:partial:update",[otherprofile.id], token);
 
   };
 
