@@ -325,7 +325,7 @@ window.tdata = {
 
    sectorOL: [
         {val: 'no_definido',  label:'Sector Cultural'},
-        {val: 'aescenicas',  label:'Artes escéncias'},
+        {val: 'aescenicas',  label:'Artes escénicas'},
         {val: 'audiovisual',  label:'Audiovisual'},
         {val: 'disenio',  label:'Diseño'},
         {val: 'editorial',  label:'Editorial'},
@@ -338,8 +338,8 @@ window.tdata = {
           {val: 'no_definido',  label:'Subsectores'},
         ],
         aescenicas:[
-          {val: 'no_definido',  label:'Subsector de Artes Escenicas'},
-          {val: 'diseniador', label: 'Diseñador/realizador/téncios'},
+          {val: 'no_definido',  label:'Subsector de Artes Escénicas'},
+          {val: 'diseniador', label: 'Diseñador/realizador/técnicos'},
           {val: 'direccion', label: 'Dirección'},
           {val: 'dramaturgia', label: 'Dramaturgia'},
           {val: 'coreografia', label: 'Coreografía'},

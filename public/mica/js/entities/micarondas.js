@@ -762,7 +762,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var query = {};
       console.log('FetchByProfile!!!')
       //OjO TODO OjO
-      if(mode === 'receptor'){
+      // Mode: receptor / 
+      if(mode === 'emisor'){
         query.emisor_userid = userid;
         query.receptor_inscriptionid = otherprofile.id;
 
