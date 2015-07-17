@@ -256,7 +256,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
           }else if(myprofile.isReunionPermited(self.model)){
             return 'Solicitar Reunión';
           }else{
-            return '';
+            return 'Ver perfil';
           }
         },
         hasResponse: function(){
