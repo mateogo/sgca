@@ -1395,4 +1395,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 });
-
+/****
+*  Buscar TODO y aca
+*  Serie numérica en micainteractions
+*  Revisar / sacar console.log
+*
+*
+*
+*
+*/

@@ -9,6 +9,7 @@ utils.loadTemplate([
         // rondas browse
         'browse/FilterProfilesLayout','browse/FilterProfilesEditor','browse/BrowseProfilesLayout',
         'browse/ProfileItemView', 'browse/BrowseProfileView', 'browse/BrowseProfileLayout',
+        'browse/InteractionResumeView',
         // Administra Inscripciones
         // -- Vistas basicas
         'list/CommonBaseLayout','list/CommonMainLayout',

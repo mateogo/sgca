@@ -489,27 +489,31 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   };
 
   //=============================
-  // Respondo Entrevista
+  // Answer Entrevista
   //=============================
   var openAnswerEditor = function(session, mainlayout, otherprofile){
     var userid = getSession().currentUser.id,
         myprofile = getSession().micarqst,
         mode = 'receptor',
-        fetchRecords;
+        fetchRecords,
+        facetEditor;
     console.log('OpenAnswerEditor: fetchRecors FIRED')
  
     fetchRecords = DocManager.request("micainteraction:queryby:otherprofile", userid, myprofile, otherprofile, mode);
     $.when(fetchRecords).done(function(entities){
       console.log('entities found: [%s]', entities.length);
+      if(!entities.length) {
+        Message.warning('No hay solicitudes pendientes para este perfil');
+      }else{
+        facetEditor = new DocManager.Entities.MicaInteractionAnswerFacet();
+        openAnswerForm(session, mainlayout, otherprofile, facetEditor, entities.at(0))
+      }
 
     });  
 
-    // var facetEditor = new DocManager.Entities.MicaInteractionFactoryFacet();
-    // openMeetingForm(session, mainlayout, otherprofile, facetEditor);
-
   };
 
-  var openAnswerForm = function(session, mainlayout, otherprofile, facetEditor){
+  var openAnswerForm = function(session, mainlayout, otherprofile, facetEditor, interactionRecord){
     console.log('Meeting FORM: [%s] [%s]', otherprofile.whoami, otherprofile.get('cnumber'));
     var form = new Backbone.Form({
       model: facetEditor,
@@ -527,9 +531,9 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         form.commit();
         console.log('FORM COMMIT: ready to insert');
         //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
-        toggleReunion(getSession().currentUser.id, otherprofile, 'reusolicitada');
-        DocManager.request('micainteractions:new:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile);
-        toggleReunion(otherprofile.get('user').userid, getSession().micarqst, 'reurecibida');
+        //toggleReunion(getSession().currentUser.id, otherprofile, 'reusolicitada');
+        DocManager.request('micainteractions:answer:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile, interactionRecord);
+        //toggleReunion(otherprofile.get('user').userid, getSession().micarqst, 'reurecibida');
         //DocManager.trigger(targetEvent, filterData);
     });
 

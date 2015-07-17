@@ -60,7 +60,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       self.initBeforeSave();
       self.save(null, {
           success: function (model) {
-              console.log('Exito! se insertó una nueva Interacción');
+              console.log('Exito! se actualizó una nueva Interacción');
               if(cb) cb(model);
           },
           error: function () {
@@ -218,6 +218,28 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   });
 
+  var initAnswerInteraction = function(model, facet, user, myprofile, otherprofile){
+    // model: nuevo entrada en la colección de interacciones
+    // facet: FactoryFacet, modelo helper para el formulario de alta
+    // myprofile: suscripción de mica, en cabeza de la cual queda establecido el pedido
+    // user: ususario responsable
+    // otherprofile: el perfil de la contraparte
+    var fealta = new Date(),
+        fecomp = utils.dateToStr(fealta),
+        userid = user.id;
+
+    model.set({
+      receptor_slug: facet.get('slug'),
+      receptor_nivel_interes: facet.get('nivel_interes') ,
+      receptor_hasread: 1,
+      receptor_hasmessage: 1,
+      receptor_hasanswer: 1,
+      receptor_anwerdate: fecomp,
+    });
+ 
+  };
+
+
   var initNewInteraction = function(model, facet, user, myprofile, otherprofile){
     // model: nuevo entrada en la colección de interacciones
     // facet: FactoryFacet, modelo helper para el formulario de alta
@@ -297,11 +319,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           {val:3, label: 'Muy interesado'}, {val:2, label: 'Interesado'}, {val:1, label: 'Poco interesado'}]},
 
     },
-    addRespuesta: function(user, myprofile, otherprofile){
-      var self = this,
-          interaction = new Entities.MicaInteraction();
-      //initNewInteraction(interaction, self, user, myprofile, otherprofile);
-      //interaction.update();
+    addRespuesta: function(user, myprofile, otherprofile, interaction){
+      var self = this;
+      initAnswerInteraction(interaction, self, user, myprofile, otherprofile);
+      interaction.update();
     },
 
 
@@ -735,12 +756,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       });
       return defer.promise();
     },
-    addNewInteraction: function(facet, user, myprofile, otherprofile){
-      console.log('Add New Interaction INIT');
-      facet.createNewInteraction(user, myprofile, otherprofile);
 
-
-    },
 
     fetchByProfile: function(userid, myprofile, otherprofile, mode){
       var query = {};
@@ -774,6 +790,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
     },
 
+    addNewInteraction: function(facet, user, myprofile, otherprofile){
+      console.log('Add New Interaction INIT');
+      facet.createNewInteraction(user, myprofile, otherprofile);
+
+    },
+
+    addAnswerInteraction: function(facet, user, myprofile, otherprofile, interactionRecord){
+      console.log('Add Answer Interaction INIT');
+      facet.addRespuesta(user, myprofile, otherprofile, interactionRecord);
+
+    },
+
 
   };
 
@@ -792,6 +820,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   DocManager.reqres.setHandler("micainteractions:new:interaction", function(facet, user, myprofile, otherprofile){
     return API.addNewInteraction(facet, user, myprofile, otherprofile);
   });
+
+  DocManager.reqres.setHandler("micainteractions:answer:interaction", function(facet, user, myprofile, otherprofile, interactionRecord){
+    return API.addAnswerInteraction(facet, user, myprofile, otherprofile, interactionRecord);
+  });
+
 
   DocManager.reqres.setHandler("micainteraction:factory:new", function(user, evento){
     if(user){

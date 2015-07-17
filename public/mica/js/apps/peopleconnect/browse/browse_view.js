@@ -270,6 +270,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     events: {
       "click .js-productbrowse": "viewProduct",
       "click .js-profile-view": "viewProfile",
+      "click .js-interactions-view": "viewInteractions",
       "click .js-add-to-favorite": "addToFavorite",
       "click .js-interact-reunion": "addMeeting",
     },
@@ -280,7 +281,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       var self = this,
           userid = getSession().currentUser.id,
           myprofile = getSession().micarqst;
-
+console.log('addmeeting bootstraping')
       if(myprofile.hasReunionSolicitada(userid, self.model)){
         modificoReunionSolicitada(self, self.model, myprofile, userid);
       }else if(myprofile.hasReunionRecibida(userid, self.model)){
@@ -299,6 +300,18 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       console.log('addToFavorite CLICK!!!');
       getSession().views.mainlayout.trigger('toggle:profile:favorite',this.model);
       this.$(".js-add-to-favorite").toggleClass('active');
+
+    },
+
+    viewInteractions: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('ViewInteractions CLICK!!!');
+      DocManager.confirm(utils.templates.InteractionResumeView(),{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
+         self.$('#legal').prop('checked', true);
+      });
+
+      //getSession().views.mainlayout.trigger('grid:model:edit',this.model);
 
     },
 
