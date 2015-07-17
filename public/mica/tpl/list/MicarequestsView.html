@@ -2,14 +2,14 @@
     <hr>
     <div class="col-xs-12">
         <h2 class="solicitante"><%= solicitante.edisplayName %> <span class="nro-serie">(<%= cnumber%>)</span></h2>
+        <%  if( !isComprador() && !isVendedor()) { %>
+            <h5 class="alert alert-danger">Este usuario ha iniciado la inscripción, sin embargo no ha habilitado su perfil de Vendedor, de Comprador, así como tampoco ha aceptado los términos y condiciones. </h5>
+        <% } %>
         <h4><%= solicitante.epais %> | | <%= solicitante.eprov %> | <%= solicitante.otraprov %> | <%= solicitante.elocalidad %> </h4><hr>
-        <p>
-        <span class="fa fa-globe"></span> <a href="<%= solicitante.eweb %>" target="_blank"><%= solicitante.eweb %></a><br>
+        <p><span class="fa fa-globe"></span> <a href="<%= solicitante.eweb %>" target="_blank"><%= solicitante.eweb %></a><br>
         <span class="fa fa-envelope-o"></span> <a href="mailto:<%= solicitante.email %>"><%= solicitante.email %></a></p>
     </div>
     <div class="col-md-8 col-xs-12">
-        
-        <h3>Solicitud</h3>
         <div>
             <p><%= solicitante.emotivation %></p><hr>
             <p><%= solicitante.edescription %></p>
@@ -20,14 +20,21 @@
     </div>
     <div class="col-md-4 col-xs-12">
     <!--N: AGREGAR EL RESTO DE LOS ESTADOS-->
-        <h3>Estado <%  if(getFieldLabel('estado_alta') === 'activo') %><span class="label label-success">ACTIVO</span></h3>
+        <div><strong>Estado:</strong> <%  if(getFieldLabel('estado_alta') === 'activo') %><span class="label label-success">ACTIVO</span></div>
         <div><strong>Pais:</strong> <%= solicitante.epais %></div>
         <div><strong>Año de Fundación:</strong> <%= solicitante.efundacion %></div>
         <div><strong>Cantidad de Empleados:</strong> <%= solicitante.enumempleados %></div>
         <div><strong>Facturación:</strong> AR$ <%= solicitante.eventas %></div>
-        <hr>
-        <div><strong>Nivel de Ejecución:</strong> <%= getFieldLabel('nivel_ejecucion')%></div>
         <div><strong>Fecha de Alta:</strong> <%= getFieldLabel('fecomp')%></div>
+        
+        <%  if( isComprador() ) { %>
+        <div>
+        <%  if(getFieldLabel('nivel_ejecucion') === 'comprador_rechazado') { %><span class="label label-danger">PERFIL DE COMPRADOR RECHAZADO</span><% } %>
+        <%  if(getFieldLabel('nivel_ejecucion') === 'comprador_aceptado') { %><span class="label label-success">PERFIL DE COMPRADOR ACEPTADO</span><% } %>
+        <%  if(getFieldLabel('nivel_ejecucion') === 'observado') { %><span class="label label-info">PERFIL DE COMPRADOR OBSERVADO</span><% } %>
+        </div>
+        <% } %>
+        
     </div>
     <%  if(isVendedor()){ %>
     
