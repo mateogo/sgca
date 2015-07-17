@@ -41,7 +41,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
           var memo = "";
           var render = _.reduce(subact, function(memo, item, index){
               //console.log('reduce: [%s] [%s]: [%s]', item, index, memo);
-              if(item) memo = memo + index + '/ ' ;
+              if(item) memo = memo + '<span class="label label-tag">' + tdata.getSubactLabel(self.model.get('vendedor').vactividades, index) + '</span> '  ;
               return memo;
 
           },memo);
@@ -54,7 +54,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
           var memo = "";
           var render = _.reduce(subact, function(memo, item, index){
               //console.log('reduce: [%s] [%s]: [%s]', item, index, memo);
-              if(item) memo = memo + index + '/ ' ;
+              if(item) memo = memo + '<span class="label label-tag">' + tdata.getSubactLabel(self.model.get('comprador').cactividades, index) + '</span> '  ;
               return memo;
 
           },memo);

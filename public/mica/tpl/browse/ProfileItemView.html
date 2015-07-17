@@ -10,7 +10,6 @@
         <ul class="dropdown-menu pull-right" role="menu">
           <li><a href="#" class="js-profile-view" >Ver perfil completo</a></li>
           <li><a href="#" class="js-interactions-view" >Ver solicitudes</a></li>
-          <li><a href="#" class="js-drop-interaction" >Eliminar solicitud</a></li>
         </ul>
       </div>
     </div>
@@ -18,7 +17,7 @@
       <a class="js-view-profile usuario-header" href="#">
             <img class="avatar img-responsive" src="/<%= getAvatar() %>" alt="" style="height: 73px; width:73px;">
       </a>
-      <h4 class="fullname js-action-profile-name"><a href="#"><%= solicitante.edisplayName %></a> <span class="nro-serie"> (<%= cnumber%>) </span> </h4>
+      <h4 class="fullname js-action-profile-name"><a href="#" class="js-profile-view" ><%= solicitante.edisplayName %></a> <span class="nro-serie"> (<%= cnumber%>) </span> </h4>
       <p class="bio"><%= solicitante.emotivation %></p>
       <%  if(vendedor.rolePlaying.vendedor === true) %>
       <p class="metadata">

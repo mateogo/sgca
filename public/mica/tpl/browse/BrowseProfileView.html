@@ -42,11 +42,12 @@
                 <%  if(getFieldLabel('vendedor').vactividades === 'videojuegos') { %>
                   <span class="label label-mica-videojuegos">VIDEOJUEGOS</span>
                 <% } %>
-            </h3><hr>
+            </h3>
+            <p><%= vendorSubActivities() %></p>
+            <hr>
                 
             
             <p><%= getFieldLabel('vendedor').vcomentario %></p>
-            <p><%= vendorSubActivities() %></p>
             
             <p><strong>Negocios extra-fronteras: </strong>
                 <%  if(getFieldLabel('vendedor').vexperienciaintl === "4") { %>Frecuentes<% } %>

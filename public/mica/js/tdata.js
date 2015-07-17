@@ -39,6 +39,14 @@ window.tdata = {
         });
         return optionStr;
     },
+    getSubactLabel: function(actividad, subactividad){
+      if(this.subSectorOL[actividad]){
+        return this.fetchLabel(this.subSectorOL[actividad], subactividad);
+      }else{
+        subactividad;
+      }
+
+    },
 
 
    	paisesOL: [
