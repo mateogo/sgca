@@ -482,7 +482,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         toggleReunion(getSession().currentUser.id, otherprofile, 'reusolicitada');
         DocManager.request('micainteractions:new:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile);
         toggleReunion(otherprofile.get('user').userid, getSession().micarqst, 'reurecibida');
-        //DocManager.trigger(targetEvent, filterData);
     });
 
     modal.open();    
@@ -531,10 +530,9 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         form.commit();
         console.log('FORM COMMIT: ready to insert');
         //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
-        //toggleReunion(getSession().currentUser.id, otherprofile, 'reusolicitada');
+        responseReunion(getSession().currentUser.id, otherprofile, 'reusolicitada');
         DocManager.request('micainteractions:answer:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile, interactionRecord);
-        //toggleReunion(otherprofile.get('user').userid, getSession().micarqst, 'reurecibida');
-        //DocManager.trigger(targetEvent, filterData);
+        responseReunion(otherprofile.get('user').userid, getSession().micarqst, 'reurecibida');
     });
 
     modal.open();    
@@ -579,6 +577,19 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     DocManager.request("micarqst:partial:update",[micaprofile.id], token);
 
   };
+
+  //=============================================================
+  // RESPONSE OK Reunion REUNION reunion
+  //=============================================================
+  var responseReunion = function(userid, micaprofile, modoreunion){
+    var token = {};
+    var mydata = micaprofile.get(userid) || {};
+    mydata[modoreunion] = 2;
+    token[userid] = mydata;
+    DocManager.request("micarqst:partial:update",[micaprofile.id], token);
+
+  };
+
 
 
   var API = {

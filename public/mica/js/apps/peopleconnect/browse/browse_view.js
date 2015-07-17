@@ -259,6 +259,29 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
             return '';
           }
         },
+        hasResponse: function(){
+          var userid = getSession().currentUser.id,
+              myprofile = getSession().micarqst;
+          if(myprofile.hasResponse(userid, self.model))
+            return 'active';
+          else
+            return '';
+
+
+        },
+        hasMeetingClassAttr: function(){
+          var userid = getSession().currentUser.id,
+              myprofile = getSession().micarqst;
+
+          if(myprofile.hasReunionSolicitada(userid, self.model)){
+            return 'solicitada';
+          }else if(myprofile.hasReunionRecibida(userid, self.model)){
+            return 'recibida';
+          }else{
+            return '';
+          }
+
+        },
       }
     },
  
@@ -271,6 +294,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       "click .js-productbrowse": "viewProduct",
       "click .js-profile-view": "viewProfile",
       "click .js-interactions-view": "viewInteractions",
+      "click .js-drop-interaction": "dropInteraction",
       "click .js-add-to-favorite": "addToFavorite",
       "click .js-interact-reunion": "addMeeting",
     },
@@ -281,7 +305,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       var self = this,
           userid = getSession().currentUser.id,
           myprofile = getSession().micarqst;
-console.log('addmeeting bootstraping')
+
       if(myprofile.hasReunionSolicitada(userid, self.model)){
         modificoReunionSolicitada(self, self.model, myprofile, userid);
       }else if(myprofile.hasReunionRecibida(userid, self.model)){
@@ -300,6 +324,19 @@ console.log('addmeeting bootstraping')
       console.log('addToFavorite CLICK!!!');
       getSession().views.mainlayout.trigger('toggle:profile:favorite',this.model);
       this.$(".js-add-to-favorite").toggleClass('active');
+
+    },
+
+    dropInteraction: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      var self = this;
+      console.log('DropInteraction CLICK!!!');
+      DocManager.confirm(utils.templates.InteractionResumeView(),{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
+        DocManager.request('micainteractions:drop:interaction', getSession().currentUser, getSession().micarqst,    self.model);
+      });
+
+      //getSession().views.mainlayout.trigger('grid:model:edit',this.model);
 
     },
 
@@ -365,8 +402,8 @@ console.log('addmeeting bootstraping')
   var solicitoReunion = function(view, otherprofile, myprofile, userid){
     console.log('Solicitar Reunión  CLICK!!!');
     getSession().views.mainlayout.trigger('add:meeting:rondas',otherprofile);
-    view.$(".js-interact-reunion").toggleClass('active');
     view.$(".js-interact-reunion").html('¡Reunión Solicitada!');
+    view.$(".js-interact-reunion").addClass('solicitada');
   };
   var modificoReunionSolicitada = function(view, otherprofile, myprofile, userid){
     console.log('TODO Modificar Reunión  CLICK!!!');
@@ -375,6 +412,9 @@ console.log('addmeeting bootstraping')
   var contestoReunionRecibida = function(view, otherprofile, myprofile, userid){
     console.log('Contesto Reunión  CLICK!!!');
     getSession().views.mainlayout.trigger('answer:meeting:rondas',otherprofile);
+    view.$(".js-interact-reunion").html('¡Reunión Recibida!');
+    view.$(".js-interact-reunion").addClass('recibida');
+    view.$(".js-interact-reunion").addClass('active');
   };
 
 });

@@ -821,6 +821,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     return API.addNewInteraction(facet, user, myprofile, otherprofile);
   });
 
+  DocManager.reqres.setHandler("micainteractions:drop:interaction", function(facet, user, myprofile, otherprofile, interactionRecord){
+    //return API.addAnswerInteraction(facet, user, myprofile, otherprofile, interactionRecord);
+  });
+
   DocManager.reqres.setHandler("micainteractions:answer:interaction", function(facet, user, myprofile, otherprofile, interactionRecord){
     return API.addAnswerInteraction(facet, user, myprofile, otherprofile, interactionRecord);
   });

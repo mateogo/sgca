@@ -97,6 +97,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     hasReunionRecibida: function(userid, otherprofile){
       return (userid && otherprofile.get(userid) && otherprofile.get(userid).reurecibida != 0);
     },
+    hasResponse: function(userid, otherprofile){
+      return ((userid && otherprofile.get(userid) && otherprofile.get(userid).reurecibida > 1) || (userid && otherprofile.get(userid) && otherprofile.get(userid).reusolicitada > 1));
+    },
 
     isReunionPermited: function(otherprofile){
       // La regla es que tengan perfiles cruzados entre self y other profile 

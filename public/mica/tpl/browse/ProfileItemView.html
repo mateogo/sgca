@@ -2,7 +2,7 @@
   <div class="col-md-12">
     <div class="btn-group acciones" role="group" style='float: right;' aria-label="...">
       <button type="button" class="btn btn-sm btn-default <%= isFavorito() ? 'active' : '' %> js-add-to-favorite"><span class="fa fa-heart"></span></button>
-      <button type="button" class="btn btn-sm btn-success js-interact-reunion"><%= hasMeeting() %></button>
+      <button type="button" class="btn btn-sm btn-success js-interact-reunion <%= hasMeetingClassAttr() %>  <%= hasResponse() %>"><%= hasMeeting() %></button>
       <div class="btn-group" role="group">
         <button type="button" class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
           <span class="caret"></span>
@@ -10,6 +10,7 @@
         <ul class="dropdown-menu pull-right" role="menu">
           <li><a href="#" class="js-profile-view" >Ver perfil completo</a></li>
           <li><a href="#" class="js-interactions-view" >Ver solicitudes</a></li>
+          <li><a href="#" class="js-drop-interaction" >Eliminar solicitud</a></li>
         </ul>
       </div>
     </div>
