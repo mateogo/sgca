@@ -392,7 +392,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
     mainlayout.on('answer:meeting:rondas', function(model){
       console.log('MainLayout View ANSWER Meeting BUBLLED!!!!')
-      var editor = openMeetingEditor(session, mainlayout, model)
+      var editor = openAnswerEditor(session, mainlayout, model)
 
     });
 
@@ -491,10 +491,16 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   //=============================
   // Respondo Entrevista
   //=============================
-  var openAnswerEditor = function(session, mainlayout, userid, myprofile, otherprofile){
-    var mode = 'receptor';
-    var fetchRecords = DocManager.request("micainteraction:queryby:otherprofile", userid, myprofile, otherprofile, mode);
+  var openAnswerEditor = function(session, mainlayout, otherprofile){
+    var userid = getSession().currentUser.id,
+        myprofile = getSession().micarqst,
+        mode = 'receptor',
+        fetchRecords;
+    console.log('OpenAnswerEditor: fetchRecors FIRED')
+ 
+    fetchRecords = DocManager.request("micainteraction:queryby:otherprofile", userid, myprofile, otherprofile, mode);
     $.when(fetchRecords).done(function(entities){
+      console.log('entities found: [%s]', entities.length);
 
     });  
 

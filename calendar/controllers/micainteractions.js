@@ -266,34 +266,15 @@ var textFilter = function(textsearch, items){
 
 
 exports.find = function(req, res) {
+    var query = req.body; //{};
 
-    var query = buildQuery(req.body); 
-    //query['vendedor.rolePlaying.vendedor'] = true;
-    var page = parseInt(req.body.page);
-    var limit = parseInt(req.body.per_page);
-    var cursor;
+    console.log('find:micainteraction Retrieving micainteraction collection with query');
 
-
-    //console.log('find:micainteraction Retrieving micainteraction collection with QUERY [%s] [%s]', page, limit);
-
-    cursor = dbi.collection(micainteractionsCol).find(query).sort({cnumber:1});
-    if(req.body.page){
-        cursor.count(function(err, total){
-            console.log('CUrsor count: [%s]', total);
-            cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
-                res.send([{total_entries: total}, items  ]);
-
-            });
-
-        })
-
-    }else{
-        cursor.toArray(function(err, items) {
-                res.send(items);
+    dbi.collection(micainteractionsCol, function(err, collection) {
+        collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
+            res.send(items);
         });
-
-    }
-
+    });
 };
 
 exports.findAll = function(req, res) {

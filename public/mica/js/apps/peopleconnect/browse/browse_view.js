@@ -357,7 +357,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
   };
   var modificoReunionSolicitada = function(view, otherprofile, myprofile, userid){
     console.log('TODO Modificar Reunión  CLICK!!!');
-    getSession().views.mainlayout.trigger('add:meeting:rondas',otherprofile);
+    getSession().views.mainlayout.trigger('answer:meeting:rondas',otherprofile);
   };
   var contestoReunionRecibida = function(view, otherprofile, myprofile, userid){
     console.log('Contesto Reunión  CLICK!!!');

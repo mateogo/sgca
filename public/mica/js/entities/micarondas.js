@@ -1,6 +1,6 @@
 DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionette, $, _){
     
-  Entities.Micainteraction = Backbone.Model.extend({
+  Entities.MicaInteraction = Backbone.Model.extend({
     urlRoot: "/micainteractions",
     whoami: 'MicaInteraction:mica.js ',
     idAttribute: "_id",
@@ -299,7 +299,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
     addRespuesta: function(user, myprofile, otherprofile){
       var self = this,
-          interaction = new Entities.Micainteraction();
+          interaction = new Entities.MicaInteraction();
       //initNewInteraction(interaction, self, user, myprofile, otherprofile);
       //interaction.update();
     },
@@ -334,7 +334,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
     createNewInteraction: function(user, myprofile, otherprofile){
       var self = this,
-          interaction = new Entities.Micainteraction();
+          interaction = new Entities.MicaInteraction();
       initNewInteraction(interaction, self, user, myprofile, otherprofile);
       interaction.update();
     },
@@ -600,10 +600,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             var test = true;
             //if((query.taccion.trim().indexOf(node.get('taccion'))) === -1 ) test = false;
             //console.log('filterfunction:TEST: [%s] [%s] [%s] [%s]',test, query.taccion,node.get("taccion"),node.get("cnumber"));
-            if(query.evento) {
-              if(query.evento.trim() !== node.get('evento')) test = false;
-            }
-
 
             if(test) return node;
           }
@@ -613,16 +609,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   };
 
   var queryCollection = function(query, step){
-      var entities = new Entities.MicaInteractionPaginatedCol();
+      var entities = new Entities.MicaInteractionFindByQueryCol();
       var defer = $.Deferred();
+      console.log('queryCollection')
 
-      entities.setQuery(query);
+      //entities.setQuery(query);
       entities.fetch({
+        data: query,
+        type: 'post',
+
         success: function(data){
+          console.log('query collection: success')
           defer.resolve(data);
         },
         error: function(data){
-            defer.resolve(undefined);
+          console.log('query collection error')
+          defer.resolve(undefined);
         }
       });
 
@@ -742,29 +744,31 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     fetchByProfile: function(userid, myprofile, otherprofile, mode){
       var query = {};
-      if(mode === 'emisor'){
+      console.log('FetchByProfile!!!')
+      //OjO TODO OjO
+      if(mode === 'receptor'){
         query.emisor_userid = userid;
-        query.emisor_inscriptionid = otherprofile.id;
+        query.receptor_inscriptionid = otherprofile.id;
 
       }else{
         query.receptor_userid = userid;
-        query.receptor_inscriptionid = otherprofile.id;
+        query.emisor_inscriptionid = otherprofile.id;
 
       }
 
-      var fetchingEntities = queryCollection(query, step),
+      var fetchingEntities = queryCollection(query, 'reset'),
           defer = $.Deferred();
 
       $.when(fetchingEntities).done(function(entities){
-        //console.log('entities: [%s]', entities.length)
+        console.log('entities: [%s]', entities.length)
 
-        var filteredEntities = queryFactory(entities);
+        //var filteredEntities = queryFactory(entities);
 
         // if(query){
         //   filteredEntities.filter(query);
         // }
 
-        defer.resolve(filteredEntities);
+        defer.resolve(entities);
 
       });
       return defer.promise();
@@ -781,7 +785,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
   DocManager.reqres.setHandler("micainteraction:queryby:otherprofile", function(userid, myprofile, otherprofile, mode){
-    return API.fetchByProfile(otherprofile, mode);
+    return API.fetchByProfile(userid, myprofile, otherprofile, mode);
   });
 
 
