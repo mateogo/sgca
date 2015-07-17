@@ -282,8 +282,41 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   };
 
   //*************************************************************
+  //            INTERACTION interaction ANSWER answer FACET
+  //*************************************************************
+  Entities.MicaInteractionAnswerFacet = Backbone.Model.extend({
+    whoami: 'Entities.MicaInteractionFactoryFacet:mica.js',
+    initialize: function(opts){
+      //this.schema.subsector.options = tdata.subSectorOL[this.get('sector')];
+
+    },
+
+    schema: {
+        slug:        {type: 'Text',  title: 'Comentario', editorAttrs:{placeholder: 'Su mensaje a la contraparte'}, validators:['required']},
+        nivel_interes: {type: 'Radio',  title: 'Calificación', options:[
+          {val:3, label: 'Muy interesado'}, {val:2, label: 'Interesado'}, {val:1, label: 'Poco interesado'}]},
+
+    },
+    addRespuesta: function(user, myprofile, otherprofile){
+      var self = this,
+          interaction = new Entities.Micainteraction();
+      //initNewInteraction(interaction, self, user, myprofile, otherprofile);
+      //interaction.update();
+    },
+
+
+
+    defaults: {
+      slug: '',
+      description: '',
+
+    },
+  });
+
+  //*************************************************************
   //            INTERACTION interaction FACTORY NEW new FACET
   //*************************************************************
+
   Entities.MicaInteractionFactoryFacet = Backbone.Model.extend({
     whoami: 'Entities.MicaInteractionFactoryFacet:mica.js',
     initialize: function(opts){
@@ -316,6 +349,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
   });
+
 
 
 
@@ -706,6 +740,36 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
+    fetchByProfile: function(userid, myprofile, otherprofile, mode){
+      var query = {};
+      if(mode === 'emisor'){
+        query.emisor_userid = userid;
+        query.emisor_inscriptionid = otherprofile.id;
+
+      }else{
+        query.receptor_userid = userid;
+        query.receptor_inscriptionid = otherprofile.id;
+
+      }
+
+      var fetchingEntities = queryCollection(query, step),
+          defer = $.Deferred();
+
+      $.when(fetchingEntities).done(function(entities){
+        //console.log('entities: [%s]', entities.length)
+
+        var filteredEntities = queryFactory(entities);
+
+        // if(query){
+        //   filteredEntities.filter(query);
+        // }
+
+        defer.resolve(filteredEntities);
+
+      });
+      return defer.promise();
+    },
+
 
   };
 
@@ -715,6 +779,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   DocManager.reqres.setHandler("micainteraction:entity", function(id){
     return API.getEntity(id);
   });
+
+  DocManager.reqres.setHandler("micainteraction:queryby:otherprofile", function(userid, myprofile, otherprofile, mode){
+    return API.fetchByProfile(otherprofile, mode);
+  });
+
 
   DocManager.reqres.setHandler("micainteractions:new:interaction", function(facet, user, myprofile, otherprofile){
     return API.addNewInteraction(facet, user, myprofile, otherprofile);

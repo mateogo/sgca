@@ -390,6 +390,12 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
     });
 
+    mainlayout.on('answer:meeting:rondas', function(model){
+      console.log('MainLayout View ANSWER Meeting BUBLLED!!!!')
+      var editor = openMeetingEditor(session, mainlayout, model)
+
+    });
+
     // TODO add:profile:to:favorite
     // mainlayout.on('model:change:state', function(model, state){
     //   //console.log('cambio de estado: [%s] [%s]', model.get('cnumber'), state);
@@ -473,15 +479,56 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         form.commit();
         console.log('FORM COMMIT: ready to insert');
         //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
+        toggleReunion(getSession().currentUser.id, otherprofile, 'reusolicitada');
         DocManager.request('micainteractions:new:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile);
-        toggleReunion(session, mainlayout, otherprofile);
+        toggleReunion(otherprofile.get('user').userid, getSession().micarqst, 'reurecibida');
         //DocManager.trigger(targetEvent, filterData);
     });
 
     modal.open();    
   };
-        
 
+  //=============================
+  // Respondo Entrevista
+  //=============================
+  var openAnswerEditor = function(session, mainlayout, userid, myprofile, otherprofile){
+    var mode = 'receptor';
+    var fetchRecords = DocManager.request("micainteraction:queryby:otherprofile", userid, myprofile, otherprofile, mode);
+    $.when(fetchRecords).done(function(entities){
+
+    });  
+
+    // var facetEditor = new DocManager.Entities.MicaInteractionFactoryFacet();
+    // openMeetingForm(session, mainlayout, otherprofile, facetEditor);
+
+  };
+
+  var openAnswerForm = function(session, mainlayout, otherprofile, facetEditor){
+    console.log('Meeting FORM: [%s] [%s]', otherprofile.whoami, otherprofile.get('cnumber'));
+    var form = new Backbone.Form({
+      model: facetEditor,
+    });
+    
+    var modal = new Backbone.BootstrapModal({
+      content: form,
+      title: 'Mensaje' ,
+      okText: 'aceptar',
+      cancelText: 'cancelar',
+      enterTriggersOk: false,
+    });
+
+    modal.on('ok',function(){
+        form.commit();
+        console.log('FORM COMMIT: ready to insert');
+        //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
+        toggleReunion(getSession().currentUser.id, otherprofile, 'reusolicitada');
+        DocManager.request('micainteractions:new:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile);
+        toggleReunion(otherprofile.get('user').userid, getSession().micarqst, 'reurecibida');
+        //DocManager.trigger(targetEvent, filterData);
+    });
+
+    modal.open();    
+  };
 
 
   //=============================================================
@@ -506,20 +553,20 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   //=============================================================
   // TOGGLE toggle Toggle Reunion REUNION reunion
   //=============================================================
-  var toggleReunion = function(session, mainlayout, otherprofile){
+  var toggleReunion = function(userid, micaprofile, modoreunion){
     var token = {};
-    var mydata = otherprofile.get(getSession().currentUser.id) || {};
-    if(mydata.reunion){
-      if(mydata.reunion == 1 || maydata.reunion === '1'){
-        mydata.reunion = 0;
+    var mydata = micaprofile.get(userid) || {};
+    if(mydata[modoreunion]){
+      if(mydata[modoreunion] == 1 || maydata[modoreunion] === '1'){
+        mydata[modoreunion] = 0;
       }else{
-        mydata.reunion = 1;
+        mydata[modoreunion] = 1;
       }
     }else{
-     mydata.reunion = 1;
+     mydata[modoreunion] = 1;
     }
-    token[getSession().currentUser.id] = mydata;
-    DocManager.request("micarqst:partial:update",[otherprofile.id], token);
+    token[userid] = mydata;
+    DocManager.request("micarqst:partial:update",[micaprofile.id], token);
 
   };
 

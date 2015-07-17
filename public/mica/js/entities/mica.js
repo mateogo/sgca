@@ -82,6 +82,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
     },
+
     isVendedor: function(){
       return this.get('vendedor').rolePlaying.vendedor;
     },
@@ -90,6 +91,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return this.get('comprador').rolePlaying.comprador;
     },
 
+    hasReunionSolicitada: function(userid, otherprofile){
+      return (userid && otherprofile.get(userid) && otherprofile.get(userid).reusolicitada != 0);
+    },
+    hasReunionRecibida: function(userid, otherprofile){
+      return (userid && otherprofile.get(userid) && otherprofile.get(userid).reurecibida != 0);
+    },
+
+    isReunionPermited: function(otherprofile){
+      // La regla es que tengan perfiles cruzados entre self y other profile 
+      var self = this;
+      if(self.isVendedor() && otherprofile.isComprador() || self.isComprador() && otherprofile.isVendedor()){
+        return true;
+      }else{
+        return false;
+      }
+    },
 
     defaults: {
        _id: null,
@@ -477,6 +494,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       nivel_ejecucion: 'no_definido',
       estado_alta: 'activo',
       favorito: false,
+      reurecibida: 0,
+      reusolicitada: 0,
       userid: '',
 
     },
