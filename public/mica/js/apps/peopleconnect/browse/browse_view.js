@@ -313,7 +313,8 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       }else if(myprofile.isReunionPermited(self.model)){
         solicitoReunion(self, self.model, myprofile, userid);
       }else{
-        return '';
+        //va a vista detalle
+        getSession().views.mainlayout.trigger('grid:model:edit',self.model);
       }
 
     },
