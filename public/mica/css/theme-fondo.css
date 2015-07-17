@@ -331,17 +331,40 @@ ol.portfolio > li:last-child {
   margin-right: 5px;
   margin-bottom: 5px;
 }
-button.js-add-to-favorite.active {
+button.js-add-to-favorite:hover {
+  background: #C7CBD6;
+}
+button.js-add-to-favorite.active,
+button.js-filter-favorito.active {
   background-color: rgb(218, 87, 87)!important;
   border: solid 1px rgb(221, 118, 118)!important;
 }
 button.js-add-to-favorite.active:hover,
 button.js-add-to-favorite:hover,
-button.js-add-to-favorite:focus {
+button.js-filter-favorito.active:hover,
+button.js-filter-favorito:hover {
   background-color: rgb(215, 143, 143)!important;
   border: solid 1px rgb(215, 143, 143)!important;
 }
+.btn-default.active.focus, 
+.btn-default.active:focus, 
+.btn-default.active:hover, 
+.btn-default.focus:active, 
+.btn-default:active:focus, 
+.btn-default:active:hover, 
+.open > .dropdown-toggle.btn-default.focus, 
+.open > .dropdown-toggle.btn-default:focus, 
+.open > .dropdown-toggle.btn-default:hover {
+  background-color: #b0b5b9;
+  border-color: #b0b5b9;
+  color: #fff;
+}
 
+button.btn.btn-sm.btn-success.js-interact-reunion.active {
+  content: 'Reunión solicitada';
+  background-color: #FAAD24;
+  border-color: #FAAD24;
+}
 /*** REDES SOCIAL LINK ICONS ***/
 .social-navigation {
   margin: 0;
@@ -481,4 +504,113 @@ button.js-add-to-favorite:focus {
 }
 .social-navigation a[href*="spotify.com"]:hover:before {
   background-color:#2EBD59;
+}
+
+/*** DATA TOOLTIP ***/
+/* Add this attribute to the element that needs a tooltip */
+[data-tooltip] {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* Hide the tooltip content by default */
+[data-tooltip]:before,
+[data-tooltip]:after {
+  visibility: hidden;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Position tooltip above the element */
+[data-tooltip]:before {
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  margin-bottom: 5px;
+  margin-left: -80px;
+  padding: 7px;
+  width: 160px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #000;
+  background-color: hsla(0, 0%, 20%, 0.9);
+  color: #fff;
+  content: attr(data-tooltip);
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* Triangle hack to make tooltip look like a speech bubble */
+[data-tooltip]:after {
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -5px;
+  width: 0;
+  border-top: 5px solid #000;
+  border-top: 5px solid hsla(0, 0%, 20%, 0.9);
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  content: " ";
+  font-size: 0;
+  line-height: 0;
+}
+
+/* Show tooltip content on hover */
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+  visibility: visible;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+
+
+/*** BACKBONE FORMS ***/
+.field-nivel_interes  ul {
+  border:0;
+}
+.field-nivel_interes  ul li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+@media only screen  and (max-width: 480px)  {
+  ul.list-unstyled .usuario .content {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  ul.list-unstyled .usuario .avatar {
+    float: left;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  .btn-group.acciones {
+    float: right;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  #filter-form-region {
+    width: 100%;
+  }
+  #filter-form-region > .btn-group {
+    margin-top: 0!important;
+  }
+  .js-reuniones-requeridas,
+  .js-reuniones-solicitadas {
+    font-size: 12px;
+  }
+  .btn-group.hidden-print.nopadding.pull-right {
+    width: 100%;
+    margin-top: 20px!important;
+  }
 }

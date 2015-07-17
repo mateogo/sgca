@@ -295,7 +295,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         rol: {type: 'Select',  title: 'Comprar/vender', options: tdata.rolesInteractionsOL},
         slug:        {type: 'Text',  title: 'Asunto', editorAttrs:{placeholder: 'Su mensaje a la contraparte'}, validators:['required']},
         description: {type: 'TextArea',  title: 'Descripción', },
-        nivel_interes: {type: 'Radio',  title: 'Calificación', options:[
+        nivel_interes: {type: 'Radio',  title: 'Califique su interés en la concreción de esta reunión:', options:[
           {val:3, label: 'Muy interesado'}, {val:2, label: 'Interesado'}, {val:1, label: 'Poco interesado'}]},
 
     },
