@@ -389,17 +389,17 @@ var buildQuery = function(qr){
     if(qr.reurecibida && qr.reurecibida == 1 && qr.userid){
         console.log('Reunión recibida: [%s] userid:[%s]', qr.reurecibida, qr.userid);
         var token = {};
-        token[qr.userid+'.reurecibida'] = 1;
+        token[qr.userid+'.reurecibida'] = {$gt: 0};
         conditions.push(token);
     }
     if(qr.reusolicitada && qr.reusolicitada == 1 && qr.userid){
         console.log('Reunión solicitada: [%s] userid:[%s]', qr.reusolicitada, qr.userid);
         var token = {};
-        token[qr.userid+'.reusolicitada'] = 1;
+        token[qr.userid+'.reusolicitada'] = {$gt: 0};
         conditions.push(token);
     }
 
-
+ 
     if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'solicitante.eprov': qr.provincia});
 
     if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
