@@ -21,34 +21,46 @@
       <%  if(vendedor.rolePlaying.vendedor === true) %>
       <p class="metadata">
         <!--SI ES VENDEDOR--><span class="label label-default">Vendedor</span> 
-        <%  if(getFieldLabel('vendedor').vactividades === 'musica') %>
+        <%  if(getFieldLabel('vendedor').vactividades === 'musica') { %>
           <span class="label label-mica-musica">MÚSICA</span>
-        <%  if(getFieldLabel('vendedor').vactividades === 'aescenicas') %>
+        <% } %>
+        <%  if(getFieldLabel('vendedor').vactividades === 'aescenicas')  { %>
           <span class="label label-mica-aescenicas">ARTES ESCÉNICAS</span>
-        <%  if(getFieldLabel('vendedor').vactividades === 'audiovisual') %>
+        <% } %>
+        <%  if(getFieldLabel('vendedor').vactividades === 'audiovisual') { %>
           <span class="label label-mica-audiovisual">AUDIOVISUAL</span>
-        <%  if(getFieldLabel('vendedor').vactividades === 'disenio') %>
+        <% } %>
+        <%  if(getFieldLabel('vendedor').vactividades === 'disenio') { %>
           <span class="label label-mica-diseno">DISEÑO</span>
-        <%  if(getFieldLabel('vendedor').vactividades === 'editorial') %>
+        <% } %>
+        <%  if(getFieldLabel('vendedor').vactividades === 'editorial') { %>
           <span class="label label-mica-editorial">EDITORIAL</span>
-        <%  if(getFieldLabel('vendedor').vactividades === 'videojuegos') %>
+        <% } %>
+        <%  if(getFieldLabel('vendedor').vactividades === 'videojuegos') { %>
           <span class="label label-mica-videojuegos">VIDEOJUEGOS</span>
+        <% } %>
       </p>
       <%  if(comprador.rolePlaying.comprador === true) %>
       <p class="metadata">
         <!--SI ES COMPRADOR--><span class="label label-default">Comprador</span>
-        <%  if(getFieldLabel('comprador').cactividades === 'musica') %>
+        <%  if(getFieldLabel('comprador').cactividades === 'musica') { %>
           <span class="label label-mica-musica">MÚSICA</span>
-        <%  if(getFieldLabel('comprador').cactividades === 'aescenicas') %>
+        <% } %>
+        <%  if(getFieldLabel('comprador').cactividades === 'aescenicas') { %>
           <span class="label label-mica-aescenicas">ARTES ESCÉNICAS</span>
-        <%  if(getFieldLabel('comprador').cactividades === 'audiovisual') %>
+        <% } %>
+        <%  if(getFieldLabel('comprador').cactividades === 'audiovisual') { %>
           <span class="label label-mica-audiovisual">AUDIOVISUAL</span>
-        <%  if(getFieldLabel('comprador').cactividades === 'disenio') %>
+        <% } %>
+        <%  if(getFieldLabel('comprador').cactividades === 'disenio') { %>
           <span class="label label-mica-diseno">DISEÑO</span>
-        <%  if(getFieldLabel('comprador').cactividades === 'editorial') %>
+        <% } %>
+        <%  if(getFieldLabel('comprador').cactividades === 'editorial') { %>
           <span class="label label-mica-editorial">EDITORIAL</span>
-        <%  if(getFieldLabel('comprador').cactividades === 'videojuegos') %>
+        <% } %>
+        <%  if(getFieldLabel('comprador').cactividades === 'videojuegos') { %>
           <span class="label label-mica-videojuegos">VIDEOJUEGOS</span>
+        <% } %>
       </p>
     </div>
   </div>
