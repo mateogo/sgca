@@ -135,6 +135,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       receptor_displayName: '',
       receptor_actividad: '',
       receptor_slug: '',
+      receptor_answerdate: '',
       receptor_nivel_interes: '',
       receptor_hasread: 0,
       receptor_hasmessage: 0,
@@ -229,12 +230,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         userid = user.id;
 
     model.set({
+      emisor_hasread: 0,
+
       receptor_slug: facet.get('slug'),
       receptor_nivel_interes: facet.get('nivel_interes') ,
       receptor_hasread: 1,
-      receptor_hasmessage: 1,
       receptor_hasanswer: 1,
-      receptor_anwerdate: fecomp,
+      receptor_answerdate: fecomp,
     });
  
   };
@@ -249,7 +251,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     var fealta = new Date(),
         fecomp = utils.dateToStr(fealta),
         userid = user.id,
-        emisorRol = (facet.get('rol') === 'comprar' ? 'comprador' : 'vendedor'),
+        emisorRol = facet.get('rol'),
         receptorRol = (emisorRol === 'comprador' ? 'vendedor' : 'comprador'),
         emisorActividad,
         receptorActividad;
@@ -287,6 +289,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       emisor_actividad: emisorActividad,
       emisor_slug: facet.get('slug'),
       emisor_nivel_interes: facet.get('nivel_interes'),
+      emisor_hasread: 1,
 
 
 
@@ -298,6 +301,53 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       receptor_rmail: otherprofile.get('responsable').rmail,
       receptor_displayName: otherprofile.get('solicitante').edisplayName,
       receptor_actividad: receptorActividad,
+      receptor_hasread: 0,
+      receptor_hasanswer: 0,
+
+    });
+
+  };
+  var updateInteraction = function(model, facet, user, myprofile, otherprofile){
+    // model: nuevo entrada en la colección de interacciones
+    // facet: FactoryFacet, modelo helper para el formulario de alta
+    // myprofile: suscripción de mica, en cabeza de la cual queda establecido el pedido
+    // user: ususario responsable
+    // otherprofile: el perfil de la contraparte
+    var fealta = new Date(),
+        fecomp = utils.dateToStr(fealta),
+        userid = user.id,
+        emisorRol = facet.get('rol'),
+        receptorRol = (emisorRol === 'comprador' ? 'vendedor' : 'comprador'),
+        emisorActividad,
+        receptorActividad;
+
+    if(emisorRol === 'comprador'){
+      emisorActividad = myprofile.get('comprador').cactividades;
+      receptorActividad = otherprofile.get('vendedor').vactividades;
+    }else{
+      emisorActividad = myprofile.get('vendedor').vactividades;
+      receptorActividad = otherprofile.get('comprador').cactividades;
+    }
+    //console.dir(myprofile.attributes);
+
+    model.set({
+      //inscripcion
+      fealta: fealta,
+      fecomp: fecomp,
+      slug: facet.get('slug'),
+      description: facet.get('description'),
+
+
+      /*** ===== SOLICITANTE  EMISOR ======= */
+      emisor_rol: emisorRol,
+      emisor_userid: userid,
+      emisor_inscriptionid: myprofile.id,
+      emisor_rname: myprofile.get('responsable').rname ,
+      emisor_rmail: myprofile.get('responsable').rmail,
+      emisor_displayName: myprofile.get('solicitante').edisplayName,
+      emisor_actividad: emisorActividad,
+      emisor_slug: facet.get('slug'),
+      emisor_nivel_interes: facet.get('nivel_interes'),
 
     });
 
@@ -315,8 +365,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     schema: {
         slug:        {type: 'Text',  title: 'Comentario', editorAttrs:{placeholder: 'Su mensaje a la contraparte'}, validators:['required']},
-        nivel_interes: {type: 'Radio',  title: 'Calificación', options:[
-          {val:3, label: 'Muy interesado'}, {val:2, label: 'Interesado'}, {val:1, label: 'Poco interesado'}]},
+        nivel_interes: {type: 'Radio',  title: 'Calificación', options:tdata.nivel_interesOL },
 
     },
     addRespuesta: function(user, myprofile, otherprofile, interaction){
@@ -349,14 +398,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         rol: {type: 'Select',  title: 'Comprar/vender', options: tdata.rolesInteractionsOL},
         slug:        {type: 'Text',  title: 'Asunto', editorAttrs:{placeholder: 'Su mensaje a la contraparte'}, validators:['required']},
         description: {type: 'TextArea',  title: 'Descripción', },
-        nivel_interes: {type: 'Radio',  title: 'Califique su interés en la concreción de esta reunión:', options:[
-          {val:3, label: 'Muy interesado'}, {val:2, label: 'Interesado'}, {val:1, label: 'Poco interesado'}]},
+        nivel_interes: {type: 'Radio',  title: 'Califique su interés en la concreción de esta reunión:', options:tdata.nivel_interesOL },
 
     },
-    createNewInteraction: function(user, myprofile, otherprofile){
-      var self = this,
-          interaction = new Entities.MicaInteraction();
-      initNewInteraction(interaction, self, user, myprofile, otherprofile);
+    createNewInteraction: function(user, myprofile, otherprofile, interaction){
+      var self = this;
+      if(interaction.id){
+        updateInteraction(interaction, self, user, myprofile, otherprofile);
+
+      }else{
+        initNewInteraction(interaction, self, user, myprofile, otherprofile);
+      }
+
       interaction.update();
     },
 
@@ -790,9 +843,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
     },
 
-    addNewInteraction: function(facet, user, myprofile, otherprofile){
+    addNewInteraction: function(facet, user, myprofile, otherprofile, interactionRecord){
       console.log('Add New Interaction INIT');
-      facet.createNewInteraction(user, myprofile, otherprofile);
+      facet.createNewInteraction(user, myprofile, otherprofile, interactionRecord);
 
     },
 
@@ -817,8 +870,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 
-  DocManager.reqres.setHandler("micainteractions:new:interaction", function(facet, user, myprofile, otherprofile){
-    return API.addNewInteraction(facet, user, myprofile, otherprofile);
+  DocManager.reqres.setHandler("micainteractions:new:interaction", function(facet, user, myprofile, otherprofile, interactionRecord){
+    return API.addNewInteraction(facet, user, myprofile, otherprofile, interactionRecord);
   });
 
   DocManager.reqres.setHandler("micainteractions:drop:interaction", function(facet, user, myprofile, otherprofile, interactionRecord){

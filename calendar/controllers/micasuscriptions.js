@@ -386,16 +386,16 @@ var buildQuery = function(qr){
     }
 
 
-    if(qr.reurecibida && qr.reurecibida == 1 && qr.userid){
-        console.log('Reunión recibida: [%s] userid:[%s]', qr.reurecibida, qr.userid);
+    if(qr.receptor && qr.receptor == 1 && qr.userid){
+        console.log('Reunión recibida: [%s] userid:[%s]', qr.receptor, qr.userid);
         var token = {};
-        token[qr.userid+'.reurecibida'] = {$gt: 0};
+        token[qr.userid+'.receptor'] = {$gt: 0};
         conditions.push(token);
     }
-    if(qr.reusolicitada && qr.reusolicitada == 1 && qr.userid){
-        console.log('Reunión solicitada: [%s] userid:[%s]', qr.reusolicitada, qr.userid);
+    if(qr.emisor && qr.emisor == 1 && qr.userid){
+        console.log('Reunión solicitada: [%s] userid:[%s]', qr.emisor, qr.userid);
         var token = {};
-        token[qr.userid+'.reusolicitada'] = {$gt: 0};
+        token[qr.userid+'.emisor'] = {$gt: 0};
         conditions.push(token);
     }
 

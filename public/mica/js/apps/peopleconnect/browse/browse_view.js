@@ -160,10 +160,10 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       e.preventDefault();
       e.stopPropagation();
       this.form.commit();
-      this.model.set('reurecibida', 1);
-      this.model.set('reusolicitada', 0);
+      this.model.set('receptor', 1);
+      this.model.set('emisor', 0);
       this.triggerRecordsFetching();
-      console.log('Recibidas [%s]',this.model.get('reurecibida'));
+      console.log('Recibidas [%s]',this.model.get('receptor'));
 
     },
 
@@ -171,10 +171,10 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       e.preventDefault();
       e.stopPropagation();
       this.form.commit();
-      this.model.set('reurecibida', 0);
-      this.model.set('reusolicitada', 1);
+      this.model.set('receptor', 0);
+      this.model.set('emisor', 1);
       this.triggerRecordsFetching();
-      console.log('toggleSolicitadas [%s]',this.model.get('reusolicitada'))
+      console.log('toggleSolicitadas [%s]',this.model.get('emisor'))
 
     },
 
@@ -203,8 +203,8 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
 
     browseData: function(e){
       this.form.commit();
-      this.model.set('reurecibida', 0);
-      this.model.set('reusolicitada', 0);
+      this.model.set('receptor', 0);
+      this.model.set('emisor', 0);
       DocManager.trigger(this.options.filterEventName, this.model, 'reset');
     },
     
@@ -399,20 +399,17 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
   // ************************************************
   var solicitoReunion = function(view, otherprofile, myprofile, userid){
     console.log('Solicitar Reunión  CLICK!!!');
-    getSession().views.mainlayout.trigger('add:meeting:rondas',otherprofile);
-    view.$(".js-interact-reunion").html('¡Reunión Solicitada!');
-    view.$(".js-interact-reunion").addClass('solicitada');
+    getSession().views.mainlayout.trigger('add:meeting:rondas',otherprofile, view);
   };
+
   var modificoReunionSolicitada = function(view, otherprofile, myprofile, userid){
     console.log('TODO Modificar Reunión  CLICK!!!');
-    //getSession().views.mainlayout.trigger('answer:meeting:rondas',otherprofile);
+    getSession().views.mainlayout.trigger('add:meeting:rondas',otherprofile, view);
   };
+
   var contestoReunionRecibida = function(view, otherprofile, myprofile, userid){
     console.log('Contesto Reunión  CLICK!!!');
-    getSession().views.mainlayout.trigger('answer:meeting:rondas',otherprofile);
-    view.$(".js-interact-reunion").html('¡Reunión Recibida!');
-    view.$(".js-interact-reunion").addClass('recibida');
-    view.$(".js-interact-reunion").addClass('active');
+    getSession().views.mainlayout.trigger('answer:meeting:rondas',otherprofile, view);
   };
 
 });

@@ -19,10 +19,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 				if(!getSession().mainLayout){
 					buildLayout();
 				}
-				if(!getSession().crudManager){
-					initCrudManager(user, criterion,'reset');
-
-				}
+				initCrudManager(user, criterion,'reset');
 			});
 
 		}
@@ -354,6 +351,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
 	//********** LAYOUT
 	var buildLayout = function(){
+    console.log('========= BUILD LAYOUT ==================')
     var session = getSession();
     
     session.views.layout = new backendCommons.Layout({model:session.model});
@@ -384,15 +382,15 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
     });
 
-    mainlayout.on('add:meeting:rondas', function(model){
+    mainlayout.on('add:meeting:rondas', function(model, view){
       console.log('MainLayout View Meeting BUBLLED!!!!')
-      var editor = openMeetingEditor(session, mainlayout, model)
+      var editor = openMeetingEditor(session, view, model)
 
     });
 
-    mainlayout.on('answer:meeting:rondas', function(model){
+    mainlayout.on('answer:meeting:rondas', function(model, view){
       console.log('MainLayout View ANSWER Meeting BUBLLED!!!!')
-      var editor = openAnswerEditor(session, mainlayout, model)
+      var editor = openAnswerEditor(session, view, model)
 
     });
 
@@ -455,21 +453,40 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   //=============================
   // Solicitud de Entrevista
   //=============================
-  var openMeetingEditor = function(session, mainlayout, otherprofile){
-    var facetEditor = new DocManager.Entities.MicaInteractionFactoryFacet();
-    openMeetingForm(session, mainlayout, otherprofile, facetEditor);
+  var openMeetingEditor = function(session, itemview, otherprofile){
+    var userid = getSession().currentUser.id,
+        myprofile = getSession().micarqst,
+        mode = 'emisor',
+        fetchRecords,
+        facetEditor;
+
+
+    fetchRecords = DocManager.request("micainteraction:queryby:otherprofile", userid, myprofile, otherprofile, mode);
+    $.when(fetchRecords).done(function(entities){
+      console.log('entities found: [%s]', entities.length);
+      if(!entities.length) {
+        facetEditor = new DocManager.Entities.MicaInteractionFactoryFacet();
+        openMeetingForm(session, itemview, otherprofile, facetEditor, new DocManager.Entities.MicaInteraction());
+      }else{
+        facetEditor = new DocManager.Entities.MicaInteractionFactoryFacet( {slug: entities.at(0).get('emisor_slug'), nivel_interes: entities.at(0).get('emisor_nivel_interes'), rol:  entities.at(0).get('emisor_rol'), description: entities.at(0).get('description') } );
+        openMeetingForm(session, itemview, otherprofile, facetEditor, entities.at( 0 ))
+      }
+
+    });  
+
 
   };
 
-  var openMeetingForm = function(session, mainlayout, otherprofile, facetEditor){
+  var openMeetingForm = function(session, itemview, otherprofile, facetEditor, interactionRecord){
     console.log('Meeting FORM: [%s] [%s]', otherprofile.whoami, otherprofile.get('cnumber'));
     var form = new Backbone.Form({
       model: facetEditor,
+      template: _.template(utils.templates.AskEditor(interactionRecord.attributes)),
     });
     
     var modal = new Backbone.BootstrapModal({
       content: form,
-      title: 'Mensaje' ,
+      title: 'Solicitud de reunión' ,
       okText: 'aceptar',
       cancelText: 'cancelar',
       enterTriggersOk: false,
@@ -480,7 +497,10 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         console.log('FORM COMMIT: ready to insert');
         //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
         addNewReunion(getSession().currentUser.id, getSession().micarqst, otherprofile);
-        DocManager.request('micainteractions:new:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile);
+        DocManager.request('micainteractions:new:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile, interactionRecord);
+        itemview.$(".js-interact-reunion").html('¡Reunión Solicitada!');
+        itemview.$(".js-interact-reunion").addClass('solicitada');
+
         //toggleReunion(otherprofile.get('user').userid, , 'reurecibida');
     });
 
@@ -490,7 +510,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   //=============================
   // Answer Entrevista
   //=============================
-  var openAnswerEditor = function(session, mainlayout, otherprofile){
+  var openAnswerEditor = function(session, itemview, otherprofile){
     var userid = getSession().currentUser.id,
         myprofile = getSession().micarqst,
         mode = 'receptor',
@@ -505,14 +525,14 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         Message.warning('No hay solicitudes pendientes para este perfil');
       }else{
         facetEditor = new DocManager.Entities.MicaInteractionAnswerFacet({slug: entities.at(0).get('receptor_slug'), nivel_interes: entities.at(0).get('receptor_nivel_interes')});
-        openAnswerForm(session, mainlayout, otherprofile, facetEditor, entities.at(0))
+        openAnswerForm(session, itemview, otherprofile, facetEditor, entities.at(0))
       }
 
     });  
 
   };
 
-  var openAnswerForm = function(session, mainlayout, otherprofile, facetEditor, interactionRecord){
+  var openAnswerForm = function(session, itemview, otherprofile, facetEditor, interactionRecord){
     console.log('Meeting FORM: [%s] [%s]', otherprofile.whoami, otherprofile.get('cnumber'));
     var form = new Backbone.Form({
       model: facetEditor,
@@ -521,7 +541,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     
     var modal = new Backbone.BootstrapModal({
       content: form,
-      title: 'Mensaje' ,
+      title: 'Pedido de reunión recibida' ,
       okText: 'aceptar',
       cancelText: 'cancelar',
       enterTriggersOk: false,
@@ -533,7 +553,9 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
         responseReunion(getSession().currentUser.id, getSession().micarqst, otherprofile);
         DocManager.request('micainteractions:answer:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile, interactionRecord);
-    });
+        itemview.$(".js-interact-reunion").html('¡Pedido de reunión contestada!');
+        itemview.$(".js-interact-reunion").addClass('recibida');
+        itemview.$(".js-interact-reunion").addClass('active');    });
 
     modal.open();    
   };

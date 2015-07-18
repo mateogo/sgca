@@ -105,6 +105,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     isReunionPermited: function(otherprofile){
       // La regla es que tengan perfiles cruzados entre self y other profile 
       var self = this;
+      if(self.id === otherprofile.id)
+        return false;
+
       if(self.isVendedor() && otherprofile.isComprador() || self.isComprador() && otherprofile.isVendedor()){
         return true;
       }else{

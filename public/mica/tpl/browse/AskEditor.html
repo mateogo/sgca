@@ -1,0 +1,13 @@
+<h2>Mi Solicitud:</h2>
+<div data-fields="rol"></div>
+<div data-fields="slug"></div>
+<div data-fields="description"></div>
+<div data-fields="nivel_interes"></div>
+
+<% if(receptor_rname) { %>
+<h3><%= receptor_rname %> @ <%= receptor_displayName %>, el <%= receptor_answerdate %>, contestó: </h3>
+<blockquote>
+  <p><strong> <%= receptor_slug %></strong></p>
+</blockquote>
+<% } %>
+
