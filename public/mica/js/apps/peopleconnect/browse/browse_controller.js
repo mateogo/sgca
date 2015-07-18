@@ -479,9 +479,9 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         form.commit();
         console.log('FORM COMMIT: ready to insert');
         //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
-        toggleReunion(getSession().currentUser.id, otherprofile, 'reusolicitada');
+        addNewReunion(getSession().currentUser.id, getSession().micarqst, otherprofile);
         DocManager.request('micainteractions:new:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile);
-        toggleReunion(otherprofile.get('user').userid, getSession().micarqst, 'reurecibida');
+        //toggleReunion(otherprofile.get('user').userid, , 'reurecibida');
     });
 
     modal.open();    
@@ -504,7 +504,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
       if(!entities.length) {
         Message.warning('No hay solicitudes pendientes para este perfil');
       }else{
-        facetEditor = new DocManager.Entities.MicaInteractionAnswerFacet();
+        facetEditor = new DocManager.Entities.MicaInteractionAnswerFacet({slug: entities.at(0).get('receptor_slug'), nivel_interes: entities.at(0).get('receptor_nivel_interes')});
         openAnswerForm(session, mainlayout, otherprofile, facetEditor, entities.at(0))
       }
 
@@ -516,6 +516,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     console.log('Meeting FORM: [%s] [%s]', otherprofile.whoami, otherprofile.get('cnumber'));
     var form = new Backbone.Form({
       model: facetEditor,
+      template: _.template(utils.templates.AnswerEditor(interactionRecord.attributes)),
     });
     
     var modal = new Backbone.BootstrapModal({
@@ -530,9 +531,8 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         form.commit();
         console.log('FORM COMMIT: ready to insert');
         //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
-        responseReunion(getSession().currentUser.id, otherprofile, 'reusolicitada');
+        responseReunion(getSession().currentUser.id, getSession().micarqst, otherprofile);
         DocManager.request('micainteractions:answer:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile, interactionRecord);
-        responseReunion(otherprofile.get('user').userid, getSession().micarqst, 'reurecibida');
     });
 
     modal.open();    
@@ -561,35 +561,38 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   //=============================================================
   // TOGGLE toggle Toggle Reunion REUNION reunion
   //=============================================================
-  var toggleReunion = function(userid, micaprofile, modoreunion){
-    var token = {};
-    var mydata = micaprofile.get(userid) || {};
-    if(mydata[modoreunion]){
-      if(mydata[modoreunion] == 1 || maydata[modoreunion] === '1'){
-        mydata[modoreunion] = 0;
-      }else{
-        mydata[modoreunion] = 1;
-      }
-    }else{
-     mydata[modoreunion] = 1;
-    }
-    token[userid] = mydata;
-    DocManager.request("micarqst:partial:update",[micaprofile.id], token);
+  addNewReunion = function(userid, micaprofile, otherprofile){
+    // EMISOR: userid @ micaprofile
+    // RECEPTOR: otheruserid @ otherprofile
 
+    // A) Marcamos el profile del receptor con los datos del emisor
+    //    Este registro lo debe hallar el emisor cuándo busca sus reuniones solicitadas (en las que fue 'emisor')
+    editMeetingToken(userid, otherprofile, 'emisor', 1);
+
+    // B) Marcamos el profile del emisor con los datos del receptor
+    //    Este registro lo debe hallar el receptor cuándo busca las reuniones recibida (en las que fue 'receptor')
+    editMeetingToken(otherprofile.get('user').userid , micaprofile, 'receptor', 1);
+
+
+  }
+
+  var editMeetingToken = function(userid, profile, modosolicitud, solvalue){
+    profile.editMeetingToken(userid, modosolicitud, solvalue);
   };
 
   //=============================================================
   // RESPONSE OK Reunion REUNION reunion
   //=============================================================
-  var responseReunion = function(userid, micaprofile, modoreunion){
-    var token = {};
-    var mydata = micaprofile.get(userid) || {};
-    mydata[modoreunion] = 2;
-    token[userid] = mydata;
-    DocManager.request("micarqst:partial:update",[micaprofile.id], token);
+  responseReunion = function(userid, micaprofile, otherprofile){
+    // RECEPTOR: userid @ micaprofile
+    // EMISOR: otheruserid @ otherprofile
 
-  };
+    // A) Editamos la marca del RECEPTOR, que ahora contesta el peido.
+    editMeetingToken(userid, otherprofile, 'receptor', 2);
 
+    // B) Editamos el profile del EMISOR para que sepa que YA fue visto y calificado por el RECEPTOR
+    editMeetingToken(otherprofile.get('user').userid , micaprofile, 'emisor', 2);
+  }
 
 
   var API = {

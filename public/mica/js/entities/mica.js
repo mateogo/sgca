@@ -91,14 +91,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return this.get('comprador').rolePlaying.comprador;
     },
 
-    hasReunionSolicitada: function(userid, otherprofile){
-      return (userid && otherprofile.get(userid) && otherprofile.get(userid).reusolicitada != 0);
+    hasReunionSolicitada: function(userid){
+      //console.log('hasreunion: cnumber:[%s] [%s] [%s]',this.get('cnumber'), this.get('userid')? this.get(user).emisor : 'sinreunion', (userid && this.get(userid) && this.get(userid).emisor && this.get(userid).emisor > 0))
+      return (userid && this.get(userid) && this.get(userid).emisor && this.get(userid).emisor > 0);
     },
-    hasReunionRecibida: function(userid, otherprofile){
-      return (userid && otherprofile.get(userid) && otherprofile.get(userid).reurecibida != 0);
+    hasReunionRecibida: function(userid){
+      return (userid && this.get(userid) && this.get(userid).receptor && this.get(userid).receptor > 0);
     },
-    hasResponse: function(userid, otherprofile){
-      return ((userid && otherprofile.get(userid) && otherprofile.get(userid).reurecibida > 1) || (userid && otherprofile.get(userid) && otherprofile.get(userid).reusolicitada > 1));
+    hasResponse: function(userid){
+      return ((userid && this.get(userid)) && ( (this.get(userid).receptor && this.get(userid).receptor > 1) || (this.get(userid).emisor && this.get(userid).emisor > 1) ) );
     },
 
     isReunionPermited: function(otherprofile){
@@ -109,6 +110,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }else{
         return false;
       }
+    },
+    editMeetingToken: function(userid, modosolicitud, newvalue){
+      //modosolicitud: ['emisor' || 'receptor']
+      // newvalue: [0: sin reunion; 1: reunion solicitada; 2: reunion apreciada]
+      //
+      var self = this,
+          token = {},
+          tokendata;
+
+      if(!userid || !self.id) return;
+      
+      tokendata = self.get(userid) || {};
+      tokendata[modosolicitud] = newvalue;
+
+      token[userid] = tokendata;
+      DocManager.request("micarqst:partial:update",[self.id], token);
     },
 
     defaults: {

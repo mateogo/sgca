@@ -215,7 +215,6 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
   });
 
 
-//aca1
   Browse.ProfileItem = Marionette.ItemView.extend({
     tagName: "li",
 
@@ -246,23 +245,22 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
           }
         },
         hasMeeting: function(){
-          var userid = getSession().currentUser.id,
-              myprofile = getSession().micarqst;
+          var userid = getSession().currentUser.id;
 
-          if(myprofile.hasReunionSolicitada(userid, self.model)){
+          if(self.model.hasReunionSolicitada(userid)){
+            console.log('reunión solicitada !!!!!!!!!!!!!!!!')
             return '¡Reunión Solicitada!';
-          }else if(myprofile.hasReunionRecibida(userid, self.model)){
+          }else if(self.model.hasReunionRecibida(userid)){
             return '¡Pedido de Reunión Recibida!';
-          }else if(myprofile.isReunionPermited(self.model)){
+          }else if(self.model.isReunionPermited(getSession().micarqst)) {
             return 'Solicitar Reunión';
           }else{
             return 'Ver perfil';
           }
         },
         hasResponse: function(){
-          var userid = getSession().currentUser.id,
-              myprofile = getSession().micarqst;
-          if(myprofile.hasResponse(userid, self.model))
+          var userid = getSession().currentUser.id;
+          if(self.model.hasResponse(userid))
             return 'active';
           else
             return '';
@@ -270,12 +268,11 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
 
         },
         hasMeetingClassAttr: function(){
-          var userid = getSession().currentUser.id,
-              myprofile = getSession().micarqst;
+          var userid = getSession().currentUser.id;
 
-          if(myprofile.hasReunionSolicitada(userid, self.model)){
+          if(self.model.hasReunionSolicitada(userid)){
             return 'solicitada';
-          }else if(myprofile.hasReunionRecibida(userid, self.model)){
+          }else if(self.model.hasReunionRecibida(userid)){
             return 'recibida';
           }else{
             return '';
@@ -306,11 +303,11 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
           userid = getSession().currentUser.id,
           myprofile = getSession().micarqst;
 
-      if(myprofile.hasReunionSolicitada(userid, self.model)){
+      if(self.model.hasReunionSolicitada(userid)){
         modificoReunionSolicitada(self, self.model, myprofile, userid);
-      }else if(myprofile.hasReunionRecibida(userid, self.model)){
+      }else if(self.model.hasReunionRecibida(userid)){
         contestoReunionRecibida(self, self.model, myprofile, userid);
-      }else if(myprofile.isReunionPermited(self.model)){
+      }else if(self.model.isReunionPermited(myprofile)){
         solicitoReunion(self, self.model, myprofile, userid);
       }else{
         //va a vista detalle
@@ -408,7 +405,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
   };
   var modificoReunionSolicitada = function(view, otherprofile, myprofile, userid){
     console.log('TODO Modificar Reunión  CLICK!!!');
-    getSession().views.mainlayout.trigger('answer:meeting:rondas',otherprofile);
+    //getSession().views.mainlayout.trigger('answer:meeting:rondas',otherprofile);
   };
   var contestoReunionRecibida = function(view, otherprofile, myprofile, userid){
     console.log('Contesto Reunión  CLICK!!!');

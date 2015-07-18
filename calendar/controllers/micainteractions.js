@@ -26,19 +26,19 @@ var MSGS = [
 ];
 
 //ATENCION: para agregar un serial, agregar entrada en tmicainteraction_adapter y en series;
-var series = ['profile101','profile999'];
+var series = ['micarondas01','micarondas99'];
 
 var seriales = {};
 
 //ATENCION: revisar el criterio de seleccion de registro en setNodeCode()
 var tmicainteraction_adapter = {
-    inscripcion:{
-        serie: 'profile101',
+    solreunion:{
+        serie: 'micarondas01',
         base: 100000,
-        prefix: 'MI'
+        prefix: 'R'
         },
     poromision: {
-        serie: 'profile999',
+        serie: 'micarondas99',
         base: 1000000,
         prefix: 'X'
     }
