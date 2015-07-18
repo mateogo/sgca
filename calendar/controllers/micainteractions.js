@@ -52,18 +52,15 @@ var loadSeriales = function(){
 };
 
 var fetchserial = function(serie){
-    //console.log("INIT:fetchserie:micainteraction.js:[%s]",serie);
     var collection = dbi.collection(serialCol);
     collection.findOne({'serie':serie}, function(err, item) {
         if(!item){
-            console.log('INIT:fetchserial:serial not found: [%s]',serie);
             item = initSerial(serie);
 
             collection.insert(item, {safe:true}, function(err, result) {
                 if (err) {
                     console.log('Error initializing  [%s] error: %s',serialCol,err);
                 } else {
-                    //console.log('NEW serial: se inserto nuevo [%s] [%s] nodos',serialCol,result);
                     addSerial(serie,result[0]);
                 }
             });
@@ -95,7 +92,6 @@ var updateSerialCollection = function(serial){
 
 
 var setNodeCode = function(node){
-    //console.log('setNodeCode:[%s]',node.tregistro);
     var adapter = tmicainteraction_adapter[node.tregistro] || tmicainteraction_adapter['poromision'];
     node.cnumber = nextSerial(adapter);
 
@@ -131,9 +127,6 @@ var fetchOne = function(query, cb) {
 };
 
 var insertNewProfile = function (req, res, micainteraction, cb){
-    //console.log('insertNewProfile:micainteractions.js BEGIN [%s]',micainteraction.slug);
-    //dbi.collection(micainteractionsCol, function(err, collection) {
-
     dbi.collection(micainteractionsCol).insert(micainteraction,{w:1}, function(err, result) {
             if (err) {
                 if(res){
@@ -143,19 +136,15 @@ var insertNewProfile = function (req, res, micainteraction, cb){
                 }
             } else {
                 if(res){
-                    //console.log('3.1. ADD: se inserto correctamente el nodo %s', JSON.stringify(result[0]));
                     res.send(result[0]);
                 }else if(cb){
-                    //console.log('3.1. ADD: se inserto correctamente el nodo [%s]  [%s] ', result[0]['_id'], JSON.stringify(result[0]['_id'].str));
                     cb({'model':result[0]})
                 }
             }
         });
-    //});
 };
 
 exports.setDb = function(db) {
-    //console.log('***** Profile setDB*******');
     dbi = db;
     loadSeriales();
     return this;
@@ -174,8 +163,6 @@ exports.setBSON = function(bs) {
 exports.findOne = function(req, res) {
     var query = req.body;
 
-    //console.log('findONE:micainteraction Retrieving micainteraction collection with query');
-
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
             res.send(items[0]);
@@ -185,7 +172,6 @@ exports.findOne = function(req, res) {
 };
 
 exports.fetchById = function(id, cb) {
-    //console.log('findById: Retrieving %s id:[%s]', micainteractionsCol,id);
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             cb(err, item);
@@ -195,7 +181,6 @@ exports.fetchById = function(id, cb) {
 
 exports.findById = function(req, res) {
     var id = req.params.id;
-    //console.log('findById: Retrieving %s id:[%s]', micainteractionsCol,id, req.user);
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             res.send(item);
@@ -204,7 +189,6 @@ exports.findById = function(req, res) {
 };
 
 exports.findByQuery = function(req, res) {
-    //console.log('Query=====************=============[%s][%s]', req.query.page), req.page
     var query = buildQuery(req.query); 
     var resultset;
     var itemcount = 0;
@@ -216,7 +200,6 @@ exports.findByQuery = function(req, res) {
     /////
     var textsearch = initTextSearch(req.query);
 
-    //console.log('find:micainteraction Retrieving micainteraction collection with QUERY [%s] [%s]', page, limit);
 
     cursor = dbi.collection(micainteractionsCol).find(query).sort({cnumber:1});
     if(textsearch){
@@ -268,8 +251,6 @@ var textFilter = function(textsearch, items){
 exports.find = function(req, res) {
     var query = req.body; //{};
 
-    console.log('find:micainteraction Retrieving micainteraction collection with query');
-
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
             res.send(items);
@@ -278,7 +259,6 @@ exports.find = function(req, res) {
 };
 
 exports.findAll = function(req, res) {
-    //console.log('findAll: Retrieving all instances of [%s] collection', micainteractionsCol);
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.find().sort({cnumber:1}).toArray(function(err, items) {
             res.send(items);
@@ -287,7 +267,6 @@ exports.findAll = function(req, res) {
 };
 
 exports.add = function(req, res) {
-    //console.log('add:micainteraction.js: NEW RECEIPT BEGINS');
     var micainteraction = req.body;
     addNewProfile(req, res, micainteraction);
 };
@@ -302,7 +281,6 @@ exports.update = function(req, res) {
                 console.log('Error updating %s error: %s',micainteractionsCol,err);
                 res.send({error: MSGS[0] + err});
             } else {
-                //console.log('UPDATE: se insertaron exitosamente [%s] nodos',result);
                 res.send(micainteraction);
             }
         });
@@ -317,7 +295,6 @@ var buildTargetNodes = function(data){
         var node = {};
         var id = nodes[i];
 
-        //console.log('buildTargetNodes: [%s] [%s]', id, typeof id);
         node._id = new BSON.ObjectID(id);
         list.push(node);
     }
@@ -341,36 +318,6 @@ var buildQuery = function(qr){
         tmp = {},
         conditions = [];
 
-    if(!qr) return query;
-
-    if(qr.rolePlaying && qr.rolePlaying !== 'no_definido'){
-        if(qr.rolePlaying === 'comprador'){
-            conditions.push({'comprador.rolePlaying.comprador': true});
-        }else{
-            conditions.push({'vendedor.rolePlaying.vendedor': true});
-        }
-    }
-    if(qr.sector && qr.sector !== 'no_definido'){
-        conditions.push({'$or': [{'comprador.cactividades': qr.sector}, {'vendedor.vactividades': qr.sector}] });
-
-        if(qr.subsector && qr.subsector !== 'no_definido'){
-            subc['comprador.sub_' + qr.sector + '.' + qr.subsector] = true;
-            subv['vendedor.sub_' + qr.sector + '.' + qr.subsector] = true;
-            conditions.push({'$or': [{'$and': [subc, {'comprador.cactividades': qr.sector}]}, {'$and': [subv, {'vendedor.vactividades': qr.sector}]} ]} );
-        }
-    }
-
-
-
-    if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'solicitante.eprov': qr.provincia});
-    if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
-
-    if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
-    if(qr.evento) conditions.push({evento: qr.evento});
-    if(qr.rubro) conditions.push({rubro: qr.rubro});
-
-
-    query['$and'] = conditions;
     return query;
 };
 
@@ -390,9 +337,6 @@ exports.partialupdate = function(req, res) {
     var update = buildUpdateData(data);
 
 
-    //console.log('UPDATING partial fields nodes:[%s]', query.$or[0]._id );
-    //res.send({query:query, update:update});
-
     dbi.collection(micainteractionsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
         if (err) {
             console.log('Error partial updating %s error: %s',micainteractionsCol,err);
@@ -403,7 +347,6 @@ exports.partialupdate = function(req, res) {
             }
 
         } else {
-            //console.log('UPDATE: partial update success [%s] nodos',result);
             if(res){
                 res.send({result: result});
             }else if(cb){
@@ -415,7 +358,6 @@ exports.partialupdate = function(req, res) {
 
 exports.delete = function(req, res) {
     var id = req.params.id;
-    console.log('Deleting node: [%s] ', id);
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.remove({'_id':new BSON.ObjectID(id)}, function(err, result) {
             if (err) {

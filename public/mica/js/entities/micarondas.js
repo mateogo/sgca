@@ -60,11 +60,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       self.initBeforeSave();
       self.save(null, {
           success: function (model) {
-              console.log('Exito! se actualizó una nueva Interacción');
               if(cb) cb(model);
           },
           error: function () {
-              console.log('Error! Ocurrió un error al intentar insertar una nueva Interacción');
               if(cb) cb(false);
           }
       });
@@ -328,7 +326,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       emisorActividad = myprofile.get('vendedor').vactividades;
       receptorActividad = otherprofile.get('comprador').cactividades;
     }
-    //console.dir(myprofile.attributes);
 
     model.set({
       //inscripcion
@@ -478,11 +475,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var self = this;
       if(!self.length) return;
 
-      //console.log('collection export [%s]',self.length);
-
-
       exportFactory.processRequest(exportFactory.fetchCollection(self));
-      //
 
     },
   });
@@ -538,16 +531,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           heading: self.fetchLabels(),
           data: JSON.stringify(col)
       };
-      //console.log(JSON.stringify(query));
 
       $.ajax({
         type: "POST",
         url: "/excelbuilder",
         dataType: "json",
-        //contentType:"application/jsonrequest",
         data: query,
         success: function(data){
-            //console.dir(data);
             window.open(data.file)
 
         }
@@ -685,19 +675,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var queryCollection = function(query, step){
       var entities = new Entities.MicaInteractionFindByQueryCol();
       var defer = $.Deferred();
-      console.log('queryCollection')
 
-      //entities.setQuery(query);
       entities.fetch({
         data: query,
         type: 'post',
 
         success: function(data){
-          console.log('query collection: success')
           defer.resolve(data);
         },
         error: function(data){
-          console.log('query collection error')
           defer.resolve(undefined);
         }
       });
@@ -788,15 +774,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     getFilteredByQueryCol: function(query, step){
-      // Client Side Filtering
-      //console.log('query: [%s]', query);
-      //console.dir(query)
-
       var fetchingEntities = queryCollection(query, step),
           defer = $.Deferred();
 
       $.when(fetchingEntities).done(function(entities){
-        //console.log('entities: [%s]', entities.length)
 
         var filteredEntities = queryFactory(entities);
 
@@ -813,7 +794,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     fetchByProfile: function(userid, myprofile, otherprofile, mode){
       var query = {};
-      console.log('FetchByProfile!!!')
+
       // Mode: receptor / emisor
       if(mode === 'emisor'){
         query.emisor_userid = userid;
@@ -829,7 +810,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           defer = $.Deferred();
 
       $.when(fetchingEntities).done(function(entities){
-        console.log('entities: [%s]', entities.length)
 
         //var filteredEntities = queryFactory(entities);
 
@@ -844,13 +824,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     addNewInteraction: function(facet, user, myprofile, otherprofile, interactionRecord){
-      console.log('Add New Interaction INIT');
       facet.createNewInteraction(user, myprofile, otherprofile, interactionRecord);
 
     },
 
     addAnswerInteraction: function(facet, user, myprofile, otherprofile, interactionRecord){
-      console.log('Add Answer Interaction INIT');
       facet.addRespuesta(user, myprofile, otherprofile, interactionRecord);
 
     },

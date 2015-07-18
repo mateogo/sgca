@@ -15,25 +15,21 @@ module.exports = function (config, app) {
     var passport = require('passport');
 	
     var ensureAuthenticated = function (req, res, next) {
-        console.log('autenticando!!!!');
         if (req.isAuthenticated()) { 
-            console.log('Autenticación OK');
             return next(); 
         }
-        console.log('FALLÓ AUTENTICACIÓN!!!!');
         res.redirect('/');
     };
 
     app.post('/login',
         passport.authenticate('local', {failureRedirect:'/ingresar'}), function(req, res){
-            console.log("/login [%s] [%s]", req.user.username, utils.anywModule());
-            console.log('AUTHENTICATE OK!!!![%s] [%s]', req, res)
+            //console.log("/login [%s] [%s]", req.user.username, utils.anywModule());
             res.redirect(utils.userHome(req.user));
     });
     
     app.post('/login/:route',
         passport.authenticate('local', {failureRedirect:'/ingresar' }), function(req, res){
-            console.log('ROUTE AUTHENTICATE OK!!!![%s] [%s] route:[%s]', req, res, req.params.route)
+            //console.log('ROUTE AUTHENTICATE OK!!!![%s] [%s] route:[%s]', req, res, req.params.route)
             var route = req.params.route;
             if(route){
                 res.redirect(route);
@@ -43,14 +39,13 @@ module.exports = function (config, app) {
     });
 
     app.get('/login', function(req,res,next){
-        console.log("/login:routes.js ");
+        //console.log("/login:routes.js ");
         res.redirect('/');
     });
 	
     app.post('/mica/login',
         passport.authenticate('local', {failureRedirect:'/mica'}), function(req, res){
-            console.log("/mica/login [%s] [%s]", req.user.username, utils.anywModule());
-            console.log('AUTHENTICATE OK!!!![%s] [%s]', req, res)
+            //console.log("/mica/login [%s] [%s]", req.user.username, utils.anywModule());
             res.redirect(utils.userHome(req.user));
     });
 	
@@ -72,13 +67,11 @@ module.exports = function (config, app) {
 				if (err) {
 					console.error(err);
 				} else {
-					console.log("success!");
 				}
 			});
 		});
 	});
     app.get('/mica/login', function(req,res,next){
-        console.log("/mica/login:routes.js ");
         res.redirect('/');
     });
 
@@ -94,7 +87,6 @@ module.exports = function (config, app) {
     
     
     app.get('/inicio', function(req,res,next){
-        //console.log("/inicio:routes.js ");
         res.redirect(utils.userHome(req.user));
     });
     
@@ -102,8 +94,6 @@ module.exports = function (config, app) {
         var request = req.body;
         request.data = JSON.parse(req.body.data); 
 
-        console.log("/excelbuilder.js [%s]", request.name);
-        
         //validar datos
         var error = utils.excelBuilder(request, rootPath, function(error){
             if(error.file) {
@@ -114,8 +104,6 @@ module.exports = function (config, app) {
     });
 
     app.post('/sendmail', function(req,res,next){
-        console.log("/sendmail.js ");
-        
         //validar datos
         var error = utils.sendMail(req.body, function(error){
                     res.send(error)
@@ -124,60 +112,44 @@ module.exports = function (config, app) {
     });
 
     app.post('/files', function(req,res,next){
-        //console.log("/files:routes.js ");
         utils.moveFile2(req, res, next, rootPath);
     });
 
     app.get('/background/img', function(req,res,next){
-        console.log("/files:routes.js ");
         res.redirect(utils.getBgImage());
     });
 
     app.get('/geocode', function(req,res){
         //console.log("/geocode:routes.js ");
-        //4266,conecpcion arenal,capitalfederal,argentina
 
         var pa = '/maps/api/geocode/json?address=';
 
         pa += utils.safeAddress(req.query.address);
         pa += '&sensor=false';
-        //console.log('feini: [%s]',req.query.feinicio);
-        //console.log('fefin: [%s]',req.query.fefinal);
-        //console.log('pa: [%s]',pa);
 
         var options = {
             host: 'maps.googleapis.com',
             //path: '/webservice/response/client.php?Method=GetEventosListFiltered&FechaInicio=2013-10-28&FechaFin=2013-10-30&Latitud=-34.60834737727606&Longitud=-58.39688441711421&OrdenarPor=Distancia&Limit=10'
             path: pa
         };
-
-        //console.log("/geocode:routes.js 1");
         http.get(options, function (http_res) {
             // initialize the container for our data
             var data = "";
 
-            // this event fires many times, each time collecting another piece of the response
-            //console.log("/geocode:routes.js 2");
             http_res.on("data", function (chunk) {
                 // append this chunk to our growing `data` var
-                //console.log("/geocode:routes.js 3");
                 data += chunk;
             });
 
             http_res.on('error',function(e){
-                //console.log("Error: " + e.message); 
-                //console.log( e.stack );
             });
 
             // this event fires *one* time, after all the `data` events/chunks have been gathered
             http_res.on("end", function () {
                 // you can use res.send instead of console.log to output via express
-                //console.log(data);
                 res.send(data);
             });
         });
-        //console.log("/agendacultural:routes.js ");
-        //res.redirect();
     });
 
     // micasuscriptions -perfil inscriptos MICA- routes

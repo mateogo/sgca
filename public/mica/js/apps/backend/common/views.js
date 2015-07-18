@@ -9,7 +9,6 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     var form = new Backbone.Form({model:filterData});
 
     form.on('sector:change', function(form, editorContent) {
-        console.log('onchange:key');
         var contenido = editorContent.getValue(),
             newOptions = tdata.subSectorOL[contenido];
         form.fields.subsector.editor.setOptions(newOptions);
@@ -25,30 +24,11 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 
     modal.on('ok',function(){
         form.commit();
-        console.log('Modal OK: [%S]', targetEvent);
         DocManager.trigger(targetEvent, filterData, 'reset');
     });
 
     modal.open();
   };
-
-
-        // form.on('tipocontacto:change', function(form, editorContent) {
-        //     console.log('onchange:key');
-        //     var contenido = editorContent.getValue(),
-        //         newOptions = utils.tipocontactoOL[contenido];
-        //     form.fields.subcontenido.editor.setOptions(newOptions);
-        // });
-
-        // form.on('contenido:tematica:change', function(form, editor, editorContent) {
-        //     var tematica = editor.nestedForm.fields.tematica.getValue(),
-        //       newOptions = utils.subtematicasOptionList[tematica];
-        //     //utils.inspect(editorContent,0,'editorContent',3);
-        //     form.fields.contenido.editor.nestedForm.fields.subtematica.editor.setOptions(newOptions);
-        // });
-
-
-
 
   Views.Layout = Marionette.LayoutView.extend({
     //className: 'container',
@@ -147,11 +127,9 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     },
 
     modelChanged: function(){
-      console.log('bind EVENT SIDEBAR ITEM');
     },
 
     newactivity: function(e){
-      console.log('activity');
       e.preventDefault();
       this.trigger('activity:new');
       return false;
@@ -187,15 +165,15 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 				
         switch (target.type){
 						case 'checkbox':
-              console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
+              //console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
 							this.model.get(target.name)[target.value] = target.checked;
               //{
               //  name: {something: true, elsesomething: false, etc: true}
               //}
-							console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
+							//console.log('checked:[%s]: name:[%s] value:[%s]',target.checked, target.name, target.value);
 							break;
 						case 'radio':
-              console.log('[%s]:[%s]   checked:[%s]: name:[%s] value:[%s] ',this.model.whoami,this.model.get(target.name),target.checked, target.name, target.value);
+              //console.log('[%s]:[%s]   checked:[%s]: name:[%s] value:[%s] ',this.model.whoami,this.model.get(target.name),target.checked, target.name, target.value);
               if(this.model.get(target.name)[target.value]){
                 this.model.get(target.name)[target.value] = target.checked;
               }else{
@@ -208,7 +186,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
               //  name: elsesomething
               //}
               //$('#ccoperativa').radio('check');
-						 	console.log('checked:[%s]: name:[%s] value:[%s] [%s]',target.checked, target.name, target.value, this.model.get(target.name)[target.value]);
+						 	//console.log('checked:[%s]: name:[%s] value:[%s] [%s]',target.checked, target.name, target.value, this.model.get(target.name)[target.value]);
 							break;
 						
 						case 'select-multiple':
@@ -219,7 +197,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 						default:
 							change[target.name] = target.value;
 							this.model.set(change);
-							console.log('CHANGE DEFAULT: [%s]: [%s] [%s]',target.name, target.value, target['multiple']);
+							//console.log('CHANGE DEFAULT: [%s]: [%s] [%s]',target.name, target.value, target['multiple']);
               //console.dir(this.model.attributes)
               break;
 				}
@@ -235,7 +213,6 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
         this.onFormDataInvalid((err||{}));
       }else{
         //var data = Backbone.Syphon.serialize(this);
-        console.log('FORM SUBMITTED');
         this.trigger("form:submit", this.model);        
       }
 
@@ -268,8 +245,6 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       tstyle = 'has-' + tstyle;
       selector = "." + tstyle;
 
-      console.log('onForm Notifications [%s][%s]', tstyle, selector);
-
       var clearFormErrors = function(){
         $view.find(selector).each(function(){
           $(this).removeClass(tstyle);
@@ -301,7 +276,6 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       }
 
       var markErrors = function(value, key){
-        console.log('Mark Erross: value: [%s]  key:[%s]', value, key)
         var $controlGroup = $view.find("#" + key).closest('.form-group');
         $controlGroup.addClass("has-error");
         $('.help-block', $controlGroup).html(value);
@@ -360,11 +334,12 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       this.templates.form = tpl;
     },
 
-    getTemplate: function(){
-      return this.templates['base'];
-    },
+    // getTemplate: function(){
+    //   return this.templates['base'];
+    // },
 
     events: {
+      'click #textsearchbtn': 'textFilter',
       'click .js-basicedit':'onClickBaseEdit',
       'click .js-save': 'onSave',
       'click .js-cancel': 'onCancel',
@@ -372,7 +347,19 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       'click .js-excel': 'downloadExcel',
       'click button.js-item-edit': 'itemEdit',
       'click button.js-item-trash': 'itemTrash',
+      //'input #querytext': 'textFilter',
     },
+
+    textFilter: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      if(!this.filter) return;
+
+      this.filter.set('textsearch',this.$('#querytext').val());
+
+      DocManager.trigger(this.options.filterEventName, this.filter, 'reset');
+    },
+
     downloadExcel: function(e){
       e.preventDefault();
       e.stopPropagation();
@@ -380,12 +367,10 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     },
 
     filterList: function(e){
-      console.log('FILTER LIST: [%s]', this.options.filterEventName);
       Views.filterPopup(this.filter, this.options.filterModel, this.options.filterEventName, this.options.filterTitle);
     },
 
     itemEdit: function(){
-      //console.log('ITEM bubbled!!!')
     },
 
     onClickBaseEdit: function(){
@@ -396,17 +381,6 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       e.stopPropagation();
   
       this.trigger('save:crud:editor');
-      // var errors = this.form.commit(),
-      //     self = this;
-
-      // console.log('SavE CLICKED [%s]',self.model.get('denominacion'));
-      // self.trigger('save:crud:editor', this.model);
-      
-      // if(!errors){
-      //   self.trigger('save:crud:editor', function(error){
-      //     Message.error('Ops! no se pudo guardar');
-      //   });
-      // }
     },
     
     onCancel: function(){
@@ -415,24 +389,6 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 
   });
 
-
-
-  // Views.gridFactory = function(collection, columns){
-  //     return new Backgrid.Grid({
-  //         className: 'table table-condensed table-bordered table-hover',
-  //         collection: collection,
-  //         columns: columns
-  //       });
-  // }; 
-  
-  // Views.filterFactory = function(collection, fieldList){
-  //     return new Backgrid.Extension.ClientSideFilter({
-  //         collection: collection,
-  //         fields: fieldList,
-  //       });
-  // };
-
-
   Views.ModelEditorLayout = Marionette.LayoutView.extend({
 
     getTemplate: function(){
@@ -440,7 +396,6 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     },
     
     regions: {
-      //navbarRegion:  '#navbar-region',
       controlRegion: '#control-region',
       showRegion:    '#show-region',
       editRegion:    '#edit-region',
@@ -451,14 +406,13 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     events: {
       'click button.js-close': 'closeView',
       'click button.js-aceptar-comprador': 'aceptarComprador',
+
     },
     aceptarComprador: function(e){
-      console.log('Aceptar comprador')
       this.trigger('accept:buyer');
     },
     
     closeView: function(e){
-      console.log('Close Button')
       this.trigger('close:view');
     }
   });
@@ -473,7 +427,6 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     initialize: function(attrs, opts){
       var self = this;
       //model, collection, tablecols
-      console.log('CrudManager Initialize: [%s]', opts.filterEventName);
       this.options = opts;
       self.filterFactory(self.collection, self.get('filtercols'));
       self.gridFactory(self.collection, self.get('gridcols'));
@@ -493,7 +446,6 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     },
     
     gridFactory: function(collection, columns){
-      console.log('GridFactory: collection[%s] ', collection.whoami)
       this.grid = new Backgrid.Grid({
           className: 'table table-condensed table-bordered table-hover',
           collection: this.collection,
@@ -506,12 +458,6 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
           goBackFirstOnSort:false,
           collection: this.collection,
         });
-
-      // this.collection.on('trash:item:crud', function(model){
-
-      //     this.remove(model);
-
-      // });
     },
 
     createLayout: function(opts){
@@ -528,7 +474,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       });
 
       self.layout.on('show',function(){
-        self.layout.filterRegion.show(self.filter);
+        //self.layout.filterRegion.show(self.filter);
         self.layout.tableRegion.show(self.grid);
         self.layout.paginatorRegion.show(self.gridpaginator);
         //self.layout.formRegion.show(self.form);

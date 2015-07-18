@@ -130,7 +130,6 @@ window.dao = {
             if(! this.user){
                 this.fetchUser(app, cb);  
             } else {
-                //console.log('getUser: currentUser')
                 cb(this.user);
             }
         },
@@ -165,19 +164,16 @@ window.dao = {
                     }
                 }
             });
-            //console.log('FETCH Permitted Areas: [%s][%s]',what, list.length);
             return list
         },
 
         fetchUser: function(app, cb){
-            //console.log('fetchUser: currentUser')
             var self = this;
             $.ajax({
                 type: 'get',
                 url: '/currentUser',
                 success: function(data) {
                     self.user = new app.Entities.User(data);
-                    //console.log('FETCH USER: [%s]',self.user.id);
                     if(cb) cb( self.user);
                 }
             });
@@ -337,7 +333,6 @@ window.dao = {
                 type: 'get',
                 url: '/currentUser',
                 success: function(data) {
-                    //console.log('callback SUCCESS');
                     self.user = data;
                     if(cb) cb( self.user);
                 }
@@ -359,7 +354,6 @@ window.dao = {
     uploadFile: function(uploadingfile, progressbar, cb){
         var formData = new FormData();
         var folder = 'files';
-        //console.log(' uploadFiles BEGINS folder:[%s]', folder);
         
         if(!uploadingfile) return false;
 
@@ -374,7 +368,6 @@ window.dao = {
             var srvresponse = JSON.parse(xhr.responseText);
             var asset = new Asset();
             asset.saveAssetData(srvresponse, function(asset){
-                //console.log('asset CREATED!: [%s]',srvresponse.name);
                 cb(srvresponse, asset);
             });
         };
@@ -445,10 +438,8 @@ window.dao = {
     extractData: function(model){
         var qobj = {};
         _.each(model,function(value,key){
-            //console.log('1key:[%s] value:[%s]',key,value);
             if(! (value==null || value==="" || value === "0")){
                 qobj[key]=value;
-                //console.log('2key:[%s] value:[%s]',key,value);
             }
         });
         return qobj;
@@ -456,7 +447,6 @@ window.dao = {
 
     addinstancefacet: {
         init: function(product){
-            //console.log('add instancce facet init');
  
             var builder = {};
             builder.slug = product.get('slug');
@@ -464,7 +454,6 @@ window.dao = {
             this.data = new AddInstanceFacet(builder);
             this.asset = null;
             this.form = null;
-            //console.log('add instancce facet init OK');
             return this.data;
         },
         reset: function(){
@@ -474,7 +463,6 @@ window.dao = {
             this.data.set(data);
         },
         getContent: function(){
-            //console.log('addinstancefacet: [%s]',this.data.get('slug'));
             return this.data.retrieveData();
         },
         setAsset: function(asset) {
@@ -493,7 +481,6 @@ window.dao = {
 
    brandingfacet: {
         init: function(product){
-            //console.log('branding facet init');
             this.data = new BrandingFacet();
             this.asset = null;
             this.form = null;
@@ -574,7 +561,6 @@ window.dao = {
 
     intechfacet: {
         init: function(product){
-            //console.log('intechfacet: [%s]',product.get('slug'));
             this.data = new PaInstanceFacet(product.get('painstancefacet'));
             return this.data;
         },
@@ -613,7 +599,6 @@ window.dao = {
 
     parealizfacet: {
         init: function(product){
-            //console.log('parealizfacet: [%s]',product.get('slug'));
             this.data = new PaRealizationFacet(product.get('realization'));
             return this.data;
         },
@@ -624,7 +609,6 @@ window.dao = {
 
     curaduriafacet: {
         init: function(product){
-            //console.log('curaduriafacet: [%s]',product.get('slug'));
             this.data = new CuraduriaFacet(product.get('curaduria'));
             return this.data;
         },
@@ -635,7 +619,6 @@ window.dao = {
 
     notasfacet: {
         init: function(ancestor){
-            //console.log('notasfacet: [%s]',ancestor.get('slug'));
             this.data = new Article();
             return this.data;
         },
@@ -646,7 +629,6 @@ window.dao = {
 
     comprobantefacet: {
         init: function(ancestor){
-            //console.log('notasfacet: [%s]',ancestor.get('slug'));
             this.data = new Comprobante();
             return this.data;
         },
@@ -660,7 +642,6 @@ window.dao = {
             this.data = new ManageTable({
                 columnById:this.getActualColumns()
             });
-            //console.log('managetable: begins');
             return this.data;
         },
         setActualColumns: function () {
@@ -682,7 +663,6 @@ window.dao = {
             _.each(utils.productListTableHeader,function(element){
                 if(element.flag) display.push(element.id);
             });
-            //console.log('getActualColumns:[%s]',display[0]);
             return display;
         },
         getContent: function(){
@@ -760,8 +740,6 @@ window.dao = {
 
     productViewFactory: function(spec) {
 
-        //console.log('model factory called');
-
         var loadChilds = function(cb){
             spec.product.loadpacapitulos(cb);
         };
@@ -818,49 +796,41 @@ window.dao = {
             });
         };
         var brandingRender = function(items){
-            //console.log('BRANDING renderview:callback: [%S]',spec.brandingselector);
             if(items) spec.brands = items;
 
             $(spec.brandingselector, spec.context).html("");
             spec.brands.each(function(branding){
-                //console.log('BRANDING EACH renderview:callback: [%s]',branding.get('slug'));
                 spec.brandingview = new BrandingEditView({model:branding, viewController: viewController});
                 $(spec.brandingselector, spec.context).append(spec.brandingview.render().el);
             });
         };
         var contactsRender = function(items){
-            //console.log('CONTACTS renderview:callback: [%s]',spec.contactsselector);
             if(items) spec.contacts = items;
             spec.contactsview = new ContactsView({model:spec.contacts});
             $(spec.contactsselector, spec.context).html(spec.contactsview.render().el);
         };
         var usersRender = function(items){
-            //console.log('USERS renderview:callback: [%s]',spec.usersselector);
             if(items) spec.users = items;
             spec.usersview = new UsersView({model:spec.users});
             $(spec.usersselector, spec.context).html(spec.usersview.render().el);
         };
         var documentsRender = function(items){
-            //console.log('DOCUM renderview:callback: [%s]',spec.documentsselector);
             if(items) spec.documents = items;
             spec.documview = new DocumentsView({collection:spec.documents});
             $(spec.documentsselector, spec.context).html(spec.documview.render().el);
         };
         var notasRender = function(items){
-            //console.log('NOTAS renderview:callback: [%s]',spec.notasselector);
             if(items) spec.notas = items;
             spec.notasview = new NotasView({model:spec.notas});
             $(spec.notasselector, spec.context).html(spec.notasview.render().el);
         };
         var ancestorRender = function(ancestors){
             if(ancestors) spec.ancestors = ancestors;
-            //console.log('ancestorRender:begins [%s] length:[%s]', spec.anselector, spec.ancestors.length)
             spec.anview = new AncestorView({model:spec.ancestors});
             $(spec.anselector,spec.context).html(spec.anview.render().el);
         };
         var personancestorRender = function(ancestors){
             if(ancestors) spec.ancestors = ancestors;
-            //console.log('ancestorRender:begins [%s] length:[%s]', spec.anselector, spec.ancestors.length)
             spec.anview = new PersonAncestorView({model:spec.ancestors});
             $(spec.anselector,spec.context).html(spec.anview.render().el);
         };
@@ -870,38 +840,29 @@ window.dao = {
             $(spec.personsselector,spec.context).html(spec.anview.render().el);
         };
         var relatedRender = function(related){
-            //console.log('renderview:callback: [%S]',spec.chselector);
             if(related) spec.related = related;
-            //if(!spec.chview) spec.chview = new ProductChaptersView({model:spec.related});
             spec.relview = new ModelRelatedView({model:spec.related});
             $(spec.relselector, spec.context).html(spec.relview.render().el);
         };
         var childsRender = function(chapters){
-            //console.log('renderview:callback: [%S]',spec.chselector);
             if(chapters) spec.chapters = chapters;
-            //if(!spec.chview) spec.chview = new ProductChaptersView({model:spec.chapters});
             spec.chview = new ProductChaptersView({model:spec.chapters});
             $(spec.chselector, spec.context).html(spec.chview.render().el);
         };
         var instancesRender = function(instances){
-            //console.log('instancerenderview:callback: [%S]',spec.inselector);
             if(instances) spec.instances = instances;
-            //if(!spec.chview) spec.chview = new ProductChaptersView({model:spec.chapters});
             spec.chview = new ProductChaptersView({model:spec.instances});
             $(spec.inselector, spec.context).html(spec.chview.render().el);
         };
 
         var buildBrandingList= function (branding) {
-            //var branding = model.relatedController.getBrands();
             var brands = [];
 
             if(!(branding && branding.length>0)) return;
 
             branding.each(function(brand){
-            //console.log('brands iterate:[%s]',brand.get('slug'));
                 brands.push(brand.attributes);
             });
-            //console.log('brands length:[%s]',brands.length);
             spec.product.set({branding:brands});
         };
 
@@ -991,20 +952,14 @@ window.dao = {
         return viewController;
     },
 
-    loadbranding:function (model, cb) {
-   
-        //console.log('mdel:loadbranding');
-
+    loadbranding:function (model, cb) {   
         var brands = this.fetchBrandingEntries(model, {});
         cb(brands);
     },
 
     fetchBrandingEntries: function (model, query){
-        //console.log('filtered: begins [%s] [%s]', model.get('slug'),model.get('branding').length);
 
         var filtered = _.filter(model.get('branding'),function(elem){
-
-            //console.log('filtered: [%s]', elem.assetName);
 
             var filter = _.reduce(query, function(memo, value, key){
                 //console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
@@ -1019,7 +974,6 @@ window.dao = {
             model: BrandingFacet
 
         });
-        //console.log('Collection:  [%s]', brandingCollection.at(0).get('tc'));
         return brandingCollection;
     },
 
@@ -1050,13 +1004,9 @@ window.dao = {
             entries = ['tipoproducto','nivel_importancia','nivel_ejecucion','patechfacet','clasification','realization'],
             whoami;
 
-        //console.log('Inverted attribute BEGIN PRODUCTS :[%s]', products.length);
-
         products.each(function(product){
-            //console.log('PRODUCTS each iteration :[%s]', product.get('slug'));
             whoami = {name:product.get('productcode'), size: 1};
             self.parseProduct(entries, data, product,  whoami);
-            //console.log(JSON.stringify(data));
         });
         return data;
     },
@@ -1065,7 +1015,6 @@ window.dao = {
         var self = this,
             entry_node, 
             local_node;
-        //console.log('parseProduct: list:[%s] node:[%s] whoami:[%s]', list[0], node.name, whoami.name);
 
         _.each(list, function(entry, index){
             entry_node = self.fetchEntryNode(node, entry);

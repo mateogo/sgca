@@ -52,18 +52,15 @@ var loadSeriales = function(){
 };
 
 var fetchserial = function(serie){
-    //console.log("INIT:fetchserie:micasuscription.js:[%s]",serie);
     var collection = dbi.collection(serialCol);
     collection.findOne({'serie':serie}, function(err, item) {
         if(!item){
-            console.log('INIT:fetchserial:serial not found: [%s]',serie);
             item = initSerial(serie);
 
             collection.insert(item, {safe:true}, function(err, result) {
                 if (err) {
                     console.log('Error initializing  [%s] error: %s',serialCol,err);
                 } else {
-                    //console.log('NEW serial: se inserto nuevo [%s] [%s] nodos',serialCol,result);
                     addSerial(serie,result[0]);
                 }
             });
@@ -95,7 +92,6 @@ var updateSerialCollection = function(serial){
 
 
 var setNodeCode = function(node){
-    //console.log('setNodeCode:[%s]',node.tregistro);
     var adapter = tmicasuscription_adapter[node.tregistro] || tmicasuscription_adapter['poromision'];
     node.cnumber = nextSerial(adapter);
 
@@ -113,16 +109,12 @@ var nextSerial = function (adapter){
 };
 
 var addNewProfile = function(req, res, node, cb){
-    //console.log("addNewProfile:micasuscriptions.js ");
-
     setNodeCode(node);
     insertNewProfile(req, res, node, cb);
 };
 
 
 var fetchOne = function(query, cb) {
-    //console.log('findProfile Retrieving micasuscription collection for passport');
-
     dbi.collection(micasuscriptionsCol, function(err, collection) {
         collection.findOne(query, function(err, item) {
             cb(err, item);
@@ -131,8 +123,6 @@ var fetchOne = function(query, cb) {
 };
 
 var insertNewProfile = function (req, res, micasuscription, cb){
-    //console.log('insertNewProfile:micasuscriptions.js BEGIN [%s]',micasuscription.slug);
-    //dbi.collection(micasuscriptionsCol, function(err, collection) {
 
     dbi.collection(micasuscriptionsCol).insert(micasuscription,{w:1}, function(err, result) {
             if (err) {
@@ -143,19 +133,15 @@ var insertNewProfile = function (req, res, micasuscription, cb){
                 }
             } else {
                 if(res){
-                    //console.log('3.1. ADD: se inserto correctamente el nodo %s', JSON.stringify(result[0]));
                     res.send(result[0]);
                 }else if(cb){
-                    //console.log('3.1. ADD: se inserto correctamente el nodo [%s]  [%s] ', result[0]['_id'], JSON.stringify(result[0]['_id'].str));
                     cb({'model':result[0]})
                 }
             }
         });
-    //});
 };
 
 exports.setDb = function(db) {
-    //console.log('***** Profile setDB*******');
     dbi = db;
     loadSeriales();
     return this;
@@ -174,8 +160,6 @@ exports.setBSON = function(bs) {
 exports.findOne = function(req, res) {
     var query = req.body;
 
-    //console.log('findONE:micasuscription Retrieving micasuscription collection with query');
-
     dbi.collection(micasuscriptionsCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
             res.send(items[0]);
@@ -185,7 +169,6 @@ exports.findOne = function(req, res) {
 };
 
 exports.fetchById = function(id, cb) {
-    //console.log('findById: Retrieving %s id:[%s]', micasuscriptionsCol,id);
     dbi.collection(micasuscriptionsCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             cb(err, item);
@@ -195,7 +178,6 @@ exports.fetchById = function(id, cb) {
 
 exports.findById = function(req, res) {
     var id = req.params.id;
-    //console.log('findById: Retrieving %s id:[%s]', micasuscriptionsCol,id, req.user);
     dbi.collection(micasuscriptionsCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             res.send(item);
@@ -204,7 +186,6 @@ exports.findById = function(req, res) {
 };
 
 exports.findByQuery = function(req, res) {
-    //console.log('Query=====************=============[%s][%s]', req.query.page), req.page
     var query = buildQuery(req.query); 
     var resultset;
     var itemcount = 0;
@@ -235,17 +216,15 @@ exports.findByQuery = function(req, res) {
                 res.send([{total_entries: total}, items]);
 
             });
-
         })
 
     }else{
         cursor.toArray(function(err, items) {
                 res.send(items);
         });
-
     }
-
 };
+
 var initTextSearch = function(query){
     if(!query || !query.textsearch) return null;
 
@@ -268,36 +247,30 @@ var textFilter = function(textsearch, items){
 exports.find = function(req, res) {
 
     var query = buildQuery(req.body); 
-    //query['vendedor.rolePlaying.vendedor'] = true;
     var page = parseInt(req.body.page);
     var limit = parseInt(req.body.per_page);
     var cursor;
 
 
-    //console.log('find:micasuscription Retrieving micasuscription collection with QUERY [%s] [%s]', page, limit);
-
     cursor = dbi.collection(micasuscriptionsCol).find(query).sort({cnumber:1});
     if(req.body.page){
         cursor.count(function(err, total){
-            console.log('CUrsor count: [%s]', total);
+
             cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
                 res.send([{total_entries: total}, items  ]);
 
             });
-
         })
 
     }else{
         cursor.toArray(function(err, items) {
                 res.send(items);
         });
-
     }
 
 };
 
 exports.findAll = function(req, res) {
-    //console.log('findAll: Retrieving all instances of [%s] collection', micasuscriptionsCol);
     dbi.collection(micasuscriptionsCol, function(err, collection) {
         collection.find().sort({cnumber:1}).toArray(function(err, items) {
             res.send(items);
@@ -306,7 +279,6 @@ exports.findAll = function(req, res) {
 };
 
 exports.add = function(req, res) {
-    //console.log('add:micasuscription.js: NEW RECEIPT BEGINS');
     var micasuscription = req.body;
     addNewProfile(req, res, micasuscription);
 };
@@ -321,7 +293,6 @@ exports.update = function(req, res) {
                 console.log('Error updating %s error: %s',micasuscriptionsCol,err);
                 res.send({error: MSGS[0] + err});
             } else {
-                //console.log('UPDATE: se insertaron exitosamente [%s] nodos',result);
                 res.send(micasuscription);
             }
         });
@@ -336,7 +307,6 @@ var buildTargetNodes = function(data){
         var node = {};
         var id = nodes[i];
 
-        //console.log('buildTargetNodes: [%s] [%s]', id, typeof id);
         node._id = new BSON.ObjectID(id);
         list.push(node);
     }
@@ -379,7 +349,6 @@ var buildQuery = function(qr){
         }
     }
     if(qr.favorito && (qr.favorito == true || qr.favorito == "true") && qr.userid){
-        console.log('Favorito: [%s] userid:[%s]', qr.favorito, qr.userid);
         var token = {};
         token[qr.userid+'.favorito'] =  true;
         conditions.push(token);
@@ -387,13 +356,11 @@ var buildQuery = function(qr){
 
 
     if(qr.receptor && qr.receptor == 1 && qr.userid){
-        console.log('Reunión recibida: [%s] userid:[%s]', qr.receptor, qr.userid);
         var token = {};
         token[qr.userid+'.receptor'] = {$gt: 0};
         conditions.push(token);
     }
     if(qr.emisor && qr.emisor == 1 && qr.userid){
-        console.log('Reunión solicitada: [%s] userid:[%s]', qr.emisor, qr.userid);
         var token = {};
         token[qr.userid+'.emisor'] = {$gt: 0};
         conditions.push(token);
@@ -413,9 +380,6 @@ var buildQuery = function(qr){
     if(qr.evento) conditions.push({evento: qr.evento});
     if(qr.rubro) conditions.push({rubro: qr.rubro});
 
-    console.log('Conditions Array: ========')
-    console.dir(conditions);
-    console.log('Conditions Array: ********')
     query['$and'] = conditions;
     return query;
 };
@@ -435,10 +399,6 @@ exports.partialupdate = function(req, res) {
     var query = buildTargetNodes(data);
     var update = buildUpdateData(data);
 
-
-    //console.log('UPDATING partial fields nodes:[%s]', query.$or[0]._id );
-    //res.send({query:query, update:update});
-
     dbi.collection(micasuscriptionsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
         if (err) {
             console.log('Error partial updating %s error: %s',micasuscriptionsCol,err);
@@ -449,7 +409,6 @@ exports.partialupdate = function(req, res) {
             }
 
         } else {
-            //console.log('UPDATE: partial update success [%s] nodos',result);
             if(res){
                 res.send({result: result});
             }else if(cb){
@@ -461,7 +420,6 @@ exports.partialupdate = function(req, res) {
 
 exports.delete = function(req, res) {
     var id = req.params.id;
-    console.log('Deleting node: [%s] ', id);
     dbi.collection(micasuscriptionsCol, function(err, collection) {
         collection.remove({'_id':new BSON.ObjectID(id)}, function(err, result) {
             if (err) {

@@ -68,6 +68,6 @@ utils.loadTemplate([
         $('.row-offcanvas').toggleClass('active');
     });
 	
-    console.log('main: DocManager.start')
+    //console.log('main: DocManager.start')
     DocManager.start();
 });

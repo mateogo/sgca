@@ -90,9 +90,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     isComprador: function(){
       return this.get('comprador').rolePlaying.comprador;
     },
+    isFavorito: function(userid){
+      return (userid && this.get(userid) && this.get(userid).favorito && this.get(userid).favorito === true);
+    },
 
     hasReunionSolicitada: function(userid){
-      //console.log('hasreunion: cnumber:[%s] [%s] [%s]',this.get('cnumber'), this.get('userid')? this.get(user).emisor : 'sinreunion', (userid && this.get(userid) && this.get(userid).emisor && this.get(userid).emisor > 0))
       return (userid && this.get(userid) && this.get(userid).emisor && this.get(userid).emisor > 0);
     },
     hasReunionRecibida: function(userid){
@@ -130,6 +132,33 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       token[userid] = tokendata;
       DocManager.request("micarqst:partial:update",[self.id], token);
     },
+
+    toggleFavoritos: function(userid){
+      var self = this,
+          token = {},
+          tokendata;
+
+      if(!userid || !self.id) return;
+      
+      tokendata = self.get(userid) || {};
+
+
+      if(tokendata.favorito){
+ 
+        if(tokendata.favorito == true || tokendata.favorito == 'true')
+          tokendata.favorito = false;
+        else
+          tokendata.favorito = true;
+ 
+      }else{
+       tokendata.favorito = true;
+      }
+
+      token[userid] = tokendata;
+
+      DocManager.request("micarqst:partial:update",[self.id], token);
+    },
+
 
     defaults: {
        _id: null,
@@ -435,19 +464,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
-    // fetch: function(options){
-    //   console.log('pageable FETCH======================')
-    //   var self = this,
-    //       options = options || {};
-    //   if(self.query){
-    //     options.reset = true;
-    //     options.data = options.data || {};
-    //     _.extend(options.data, self.query)
-    //   }
-    //   console.dir(options)
-    //   return Backbone.Collection.prototype.fetch.apply(this, [options]);
-    // },
-
     parseState: function (resp, queryParams, state, options) {
       //console.log('========== PARSE STATE ========== [%s]', arguments.length);
       //console.dir(state);
@@ -621,16 +637,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           heading: self.fetchLabels(),
           data: JSON.stringify(col)
       };
-      //console.log(JSON.stringify(query));
 
       $.ajax({
         type: "POST",
         url: "/excelbuilder",
         dataType: "json",
-        //contentType:"application/jsonrequest",
         data: query,
         success: function(data){
-            //console.dir(data);
             window.open(data.file)
 
         }
@@ -1365,15 +1378,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     getFilteredByQueryCol: function(query, step){
-      // Client Side Filtering
-      //console.log('query: [%s]', query);
-      //console.dir(query)
 
       var fetchingEntities = queryCollection(query, step),
           defer = $.Deferred();
 
       $.when(fetchingEntities).done(function(entities){
-        //console.log('entities: [%s]', entities.length)
 
         var filteredEntities = queryFactory(entities);
 
@@ -1418,12 +1427,3 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
 });
-/****
-*  Buscar TODO y aca
-*  Serie numérica en micainteractions
-*  Revisar / sacar console.log
-*
-*
-*
-*
-*/

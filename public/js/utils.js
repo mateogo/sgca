@@ -46,7 +46,6 @@ window.utils = {
     },
 
     addValidationError: function (field, message) {
-        console.log('f[%s] [%s]','#' + field,message)
         var controlGroup = $('#' + field).parent();
         controlGroup.addClass('has-error');
         $('.help-block', controlGroup).html(message);
@@ -79,12 +78,11 @@ window.utils = {
     },
 
     fetchFilteredEntries: function (model, entry,query){
-        console.log('fetchfilteredEntries/utils: begins [%s]', model.get(entry).length);
         var filtered = [];
 
         filtered = _.filter(model.get(entry),function(elem){
            var filter = _.reduce(query, function(memo, value, key){
-                console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
+                //console.log('value: [%s]  key:[%s] elem.key:[%s]',value,key,elem[key]);
                 if(value != elem[key]) return memo && false;
                 return memo  && true;
             },true);
@@ -120,7 +118,7 @@ window.utils = {
             var self = this;
             if(!self.map) self.initMap();
  
-            console.log('maprender: [%s] [%s] [%s]',address.nombre,address.latitud,address.longitud);
+            //console.log('maprender: [%s] [%s] [%s]',address.nombre,address.latitud,address.longitud);
             self.lonlat = new OpenLayers.LonLat(address.longitud,address.latitud).transform(
                     new OpenLayers.Projection("EPSG:4326"),
                     new OpenLayers.Projection("EPSG:900913"));
@@ -2240,39 +2238,33 @@ window.utils = {
     },
     fetchLabel:function(list, key){
         var node = _.find(list, function(data){return data.val === key;});
-        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
         return node ? node.label: key;
     },
     fetchClass:function(list, key){
         var node = _.find(list, function(data){return data.val === key;});
-        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
         return node ? node.classattr: "";
     },
 
     fetchNode:function(list, key){
         var node = _.find(list, function(data){return data.val === key;});
-        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
         return node ? node.nodo : "";
     },
 
     fetchPresuprog:function(key){
         var list = utils.actionAreasOptionList;
         var node = _.find(list, function(data){return data.val === key;});
-        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
         return node ? node.presuprog : "";
     },
 
     fetchPresuinciso:function(key){
         var list = utils.tipoBudgetMovimList;
         var node = _.find(list, function(data){return data.val === key;});
-        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
         return node ? node.presuinciso : "";
     },
 
     fetchAdminRequestTemplate:function(key){
         var list = utils.tipoBudgetMovimList;
         var node = _.find(list, function(data){return data.val === key;});
-        //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
         return node ? node.template : "";
     },
 
@@ -2410,7 +2402,6 @@ window.utils = {
                 else tabledata += template1(element);
             }
         });
-        //console.log('<thead><tr>'+tabledata+'</tr></thead>');
         return '<thead><tr>'+tabledata+'</tr></thead>';
     },
 
@@ -2434,20 +2425,17 @@ window.utils = {
         var self = this;
         var tabledata = '';
         _.each(data,function(element, index, list){
-            //console.log('******* 2 *********');
             if(element.flag){
                 element.value = (model.displayItem(element.val)||'#');
                 tabledata += self.buildTableRowTemplates[element.tmpl](element);
             }
         });
-        //console.log(tabledata);
         return tabledata;
     },
 
     buildRowRenderTemplate: function(lista, templates){
         var items =[];
         _.each(lista, function(data,index){
-            //console.log('******* 3 *********');
           if(data.flag){
             data.value = '<%= '+data.val+' %>';
             if(data.tmpl === 'template7'){
@@ -2644,8 +2632,6 @@ window.utils = {
     },
 
     inspect: function  (target, deep, whoami,maxdeep) {
-        //console.log('inspect usage: inspect(target, initial_deep, whoami, maxdeep');
-        //console.log('    suggested: inspect(oo, 0, myname,3');
         var deep = deep+=1 || 1;
         var stop = maxdeep|| 3;
         var self = this;
@@ -2851,12 +2837,10 @@ window.utils = {
     },
 
     buildDateNum: function(str){
-        console.log('buildDateNUM BEGIN [%s]',str)
         return this.parseDateStr(str).getTime();
     },
 
     buildDate: function(str){
-        console.log('buildDate BEGIN [%s]',str)
         return this.parseDateStr(str);
     },
 
@@ -2887,7 +2871,6 @@ window.utils = {
     },
 
     parseDateStr: function(str) {
-    console.log('parseDate BEGIN [%s]',str)
 
         var mx = str.match(/(\d+)/g);
         var ty = new Date();

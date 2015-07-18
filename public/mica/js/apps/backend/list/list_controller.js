@@ -12,17 +12,14 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   
 	List.Controller = {
 		listInscriptions: function(criterion){
-			console.log('list INSCRIPTIONS BEGIN [%s]', criterion);
 	
 			loadCurrentUser().then( function(user){
-				console.log('currentUser LOADED [%s]',user.get('username'));
 				if(!getSession().mainLayout){
 					buildLayout();
 				}
-				if(!getSession().crudManager){
-					initCrudManager(user, criterion, 'reset');
 
-				}
+        initCrudManager(user, criterion, 'reset');
+
 			});
 
 		}
@@ -37,12 +34,11 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
       getSession().currentUser = user;
 
 			if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
-				console.log('dao validate user OK: [%s]', user.get('username'));
+
 	      defer.resolve(user);
 
 
 			}else{
-			  console.log('No validó el Usuario');
 			  Message.warning('Debe iniciar sesión');
 			  window.open('/ingresar/#mica', '_self');
 			}
@@ -71,7 +67,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
       action = 'getNextPage';
       getSession().collection.setQuery(query);
       getSession().collection.getNextPage().done(function (data){
-        console.log('===action: [%s]=== NextPage ==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+        //console.log('===action: [%s]=== NextPage ==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
         defer.resolve(data);
       })
 
@@ -79,7 +75,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
       action = 'getPreviousPage';
       getSession().collection.setQuery(query);
       getSession().collection.getPreviousPage().done(function (data){
-        console.log('===action: [%s]=== previousPage==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+        //console.log('===action: [%s]=== previousPage==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
         defer.resolve(data);
       })
 
@@ -91,7 +87,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
       getSession().collection.setQuery(query);
       getSession().collection.getFirstPage().done(function(data){
-        console.log('===action: [%s]==== FirstPage ======= Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+        //console.log('===action: [%s]==== FirstPage ======= Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
         defer.resolve(data);
       });
     }
@@ -199,37 +195,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
         this.updateRecord(e, 'observado');
       },
 
-/*
-      changeState: function(e){
-        var self = this;
-
-        e.stopPropagation();e.preventDefault();
-        console.log('Change State')
-        Message.confirm('Seleccione el nuevo ESTADO', 
-          [
-            {label:'Comprador Aceptado', class:'btn-success'},
-            {label:'Comprador Rechazado', class:'btn-danger'}, 
-            {label:'Ficha Incompleta', class:'btn-default'}, 
-            {label:'Ficha Observada', class:'btn-default'}
-          ], 
-          function(response){
-          if(response === 'Comprador Aceptado'){
-            console.log('Comprador Aceptado');
-            self.trigger('mica:state:changed');
-
-          }else if (response === 'Comprador Rechazado'){
-            console.log('Change Rechazado')
-          }else if (response === 'Ficha Incompleta'){
-            console.log('Ficha incompleta')
-          }else if (response === 'Ficha Observada'){
-            console.log('Ficha observada')
-          }
-
-        });
-
-
-      },
-*/        
       editClicked: function(e){
           e.stopPropagation();e.preventDefault();
           getSession().views.mainlayout.trigger('grid:model:edit',this.model);
@@ -312,9 +277,9 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   		var view = createView(session, mainlayout, model)
 
   	});
+
   	mainlayout.on('grid:model:remove', function(model){
       if(model.get('estado_alta')=== 'activo'){
-        console.log('Vamos a Remover!!!!')
         Message.confirm('<h3>¿Confirma la baja?</h3>',
             [{label:'Cancelar', class:'btn-success'},{label:'Aceptar', class:'btn-danger'} ], function(response){
           if(response === 'Aceptar'){
@@ -323,7 +288,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
           }
         });
       }else{
-        console.log('Vamos a Recuperar!!!!')
         Message.confirm('<h3>¿Confirma la reactivación de la inscripción?</h3>',
             [{label:'Cancelar', class:'btn-success'},{label:'Aceptar', class:'btn-danger'} ], function(response){
           if(response === 'Aceptar'){
@@ -337,7 +301,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   	});
 
     mainlayout.on('model:change:state', function(model, state){
-      console.log('cambio de estado: [%s] [%s]', model.get('cnumber'), state);
       model.set('nivel_ejecucion', state);
 
       DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': state});
@@ -371,7 +334,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   	mainlayout.hideList();
 
     editorlayout.on('accept:buyer', function(){
-      console.log('acceptBuyer BUBBLED' )
       model.set('nivel_ejecucion', 'comprador_aceptado');
       DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': 'comprador_aceptado'});
       mainlayout.showList();
@@ -381,7 +343,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
 
   	editorlayout.on('close:view', function(){
-  		console.log('close:view BUBBLED')
 	  	mainlayout.showList();
 	  	editorlayout.destroy();
 
@@ -398,8 +359,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   var API = {
 
     fetchFilteredCollection: function(filter, step){
-      console.log('fetchFilteredCollection BEGIN step:[%s]', step);
-      //console.dir(filter.attributes)
       initCrudManager(getSession().currentUser, filter.attributes, step)
 
     },

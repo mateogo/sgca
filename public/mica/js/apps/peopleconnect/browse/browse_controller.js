@@ -12,14 +12,14 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   
 	Browse.Controller = {
 		browseProfiles: function(criterion){
-			console.log('list INSCRIPTIONS BEGIN [%s]', criterion);
 	
 			loadCurrentUser().then( function(user){
-				console.log('currentUser LOADED [%s]',user.get('username'));
 				if(!getSession().mainLayout){
 					buildLayout();
 				}
+
 				initCrudManager(user, criterion,'reset');
+
 			});
 
 		}
@@ -38,13 +38,11 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         //Verificación: el usuario YA TIENE una inscripción en MICA
         fetchingMicaRequest = DocManager.request("micarqst:fetchby:user", user, "mica");
         $.when(fetchingMicaRequest).done(function(micarqst){
-          //console.log('FETCHING MicaRequest [%s] [%s]', micarqst.whoami, micarqst.id);
+
           if((micarqst && micarqst.id ) || dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
-            // YA TIENE una inscripción
             setInscriptionData(micarqst);
             defer.resolve(user);
           }else{
-            console.log('No encuentro Inscripción');
             Message.warning('Debe estar inscripto en MICA 2015 para acceder a esta aplicación');
             window.open('/ingresar/#mica', '_self');
 
@@ -53,7 +51,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
 
 			}else{
-			  console.log('No validó el Usuario');
 			  Message.warning('Debe iniciar sesión y estar inscripto en MICA 2015');
 			  window.open('/ingresar/#mica', '_self');
 			}
@@ -64,51 +61,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
    	return defer.promise();
   };
 
-	// var fetchCollection_nueva = function(user, criterion, step){
-	// 	var defer = $.Deferred(),
- //        action,
-	// 			query = {
-	// 				evento: 'mica',
-	// 			};
-
-
- //    if(!getSession().collection){
- //      getSession().collection =  new DocManager.Entities.MicaRegistrationPaginatedCol();
- //    }
-
- //    if(criterion){
- //      query = _.extend(query, criterion);
- //    }
-
- //    getSession().collection.queryParams = _.extend(query, getSession().collection.state);
-
-
- //    if(step === 'next'){
- //      action = 'getNextPage'
- //      getSession().collection.getPage(2);
-
- //    }else if(step === 'previous'){
- //      action = 'getPreviousPage'
-
- //    }else{
- //      action = 'getFirstPage'
- //      getSession().collection[action]().done(function(data){
- //          defer.resolve(data);
- //      });
- //     }
- //    console.log('===[%s]======== fetchCollection ========= [%s] [%s]  [%s]', action, step, getSession().collection.whoami, getSession().collection.length);
-
-
-
-	// 	// var fetchingEntities = DocManager.request('micarqst:query:entities', query, step );
- //  //   $.when(fetchingEntities).done(function(entities){
- //  //         defer.resolve(entities);
- // 	// 	});
-
- // 		return defer.promise();
-	// };
   var setInscriptionData = function(micarqst){
-    console.log('Inscripción encontrada: [%s]', micarqst.get('cnumber'));
     getSession().micarqst = micarqst;
 
   };
@@ -133,9 +86,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
     if(step === 'next'){
       action = 'getNextPage'
-      //getSession().collection.getPage(2);
       getSession().collection.getNextPage().done(function (data){
-        //console.log('===action: [%s]=== NextPage ==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
         defer.resolve(data);
       })
 
@@ -174,25 +125,14 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     }
   });
 
-
-  Backgrid.SolicitanteCell = Backgrid.Cell.extend({
-      className: "string-cell",
-      render: function(){
-      	this.$el.html(this.model.get('solicitante').edisplayName);
-        return this;
-      },
-  });
+  
   Backgrid.VactivityCell = Backgrid.StringCell.extend({
       className: "string-cell",
       initialize: function(opt){
-      	//console.log('initialize Cell[%s] [%s]', arguments.length, this.model.whoami, this.model.get('vendedor').vactividades)
       	this.model.set('bg_vendedor', this.model.get('vendedor').rolePlaying.vendedor ? this.model.get('vendedor').vactividades + "-" + this.model.get('vendedor').vporfolios.length : '');
 
       },
       render: function(){
-      	//console.log('render Cell[%s] [%s]', arguments.length, this.model.whoami, this.model.get('vendedor').vactividades)
-      	// var actividad = this.model.get('vendedor').rolePlaying.vendedor ? this.model.get('vendedor').vactividades + "-" + this.model.get('vendedor').vporfolios.length : ''
-      	// this.model.set('bg_vendedor', actividad);
       	this.$el.html(this.model.get('bg_vendedor'));
         return this;
       },
@@ -258,37 +198,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         this.updateRecord(e, 'observado');
       },
 
-/*
-      changeState: function(e){
-        var self = this;
-
-        e.stopPropagation();e.preventDefault();
-        console.log('Change State')
-        Message.confirm('Seleccione el nuevo ESTADO', 
-          [
-            {label:'Comprador Aceptado', class:'btn-success'},
-            {label:'Comprador Rechazado', class:'btn-danger'}, 
-            {label:'Ficha Incompleta', class:'btn-default'}, 
-            {label:'Ficha Observada', class:'btn-default'}
-          ], 
-          function(response){
-          if(response === 'Comprador Aceptado'){
-            console.log('Comprador Aceptado');
-            self.trigger('mica:state:changed');
-
-          }else if (response === 'Comprador Rechazado'){
-            console.log('Change Rechazado')
-          }else if (response === 'Ficha Incompleta'){
-            console.log('Ficha incompleta')
-          }else if (response === 'Ficha Observada'){
-            console.log('Ficha observada')
-          }
-
-        });
-
-
-      },
-*/        
       editClicked: function(e){
           e.stopPropagation();e.preventDefault();
           getSession().views.mainlayout.trigger('grid:model:edit',this.model);
@@ -351,7 +260,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
 	//********** LAYOUT
 	var buildLayout = function(){
-    console.log('========= BUILD LAYOUT ==================')
     var session = getSession();
     
     session.views.layout = new backendCommons.Layout({model:session.model});
@@ -370,37 +278,26 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   };
 
   var registerMainLayoutEvents = function(session, layout, mainlayout){
+
   	mainlayout.on('grid:model:edit', function(model){
-      console.log('MainLayout View Profile BUBLLED!!!!')
   		var view = createView(session, mainlayout, model)
 
   	});
-    mainlayout.on('toggle:profile:favorite', function(model){
-      console.log('MainLayout View Profile BUBLLED!!!!')
 
+    mainlayout.on('toggle:profile:favorite', function(model){
       toggleFavoritos(session, mainlayout, model)
 
     });
 
     mainlayout.on('add:meeting:rondas', function(model, view){
-      console.log('MainLayout View Meeting BUBLLED!!!!')
       var editor = openMeetingEditor(session, view, model)
 
     });
 
     mainlayout.on('answer:meeting:rondas', function(model, view){
-      console.log('MainLayout View ANSWER Meeting BUBLLED!!!!')
       var editor = openAnswerEditor(session, view, model)
 
     });
-
-    // TODO add:profile:to:favorite
-    // mainlayout.on('model:change:state', function(model, state){
-    //   //console.log('cambio de estado: [%s] [%s]', model.get('cnumber'), state);
-    //   model.set('nivel_ejecucion', state);
-    //   DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': state});
-
-    // });
 
   };
   
@@ -463,7 +360,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
     fetchRecords = DocManager.request("micainteraction:queryby:otherprofile", userid, myprofile, otherprofile, mode);
     $.when(fetchRecords).done(function(entities){
-      console.log('entities found: [%s]', entities.length);
       if(!entities.length) {
         facetEditor = new DocManager.Entities.MicaInteractionFactoryFacet();
         openMeetingForm(session, itemview, otherprofile, facetEditor, new DocManager.Entities.MicaInteraction());
@@ -478,7 +374,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   };
 
   var openMeetingForm = function(session, itemview, otherprofile, facetEditor, interactionRecord){
-    console.log('Meeting FORM: [%s] [%s]', otherprofile.whoami, otherprofile.get('cnumber'));
     var form = new Backbone.Form({
       model: facetEditor,
       template: _.template(utils.templates.AskEditor(interactionRecord.attributes)),
@@ -494,7 +389,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
     modal.on('ok',function(){
         form.commit();
-        console.log('FORM COMMIT: ready to insert');
         //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
         addNewReunion(getSession().currentUser.id, getSession().micarqst, otherprofile);
         DocManager.request('micainteractions:new:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile, interactionRecord);
@@ -516,11 +410,9 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         mode = 'receptor',
         fetchRecords,
         facetEditor;
-    console.log('OpenAnswerEditor: fetchRecors FIRED')
  
     fetchRecords = DocManager.request("micainteraction:queryby:otherprofile", userid, myprofile, otherprofile, mode);
     $.when(fetchRecords).done(function(entities){
-      console.log('entities found: [%s]', entities.length);
       if(!entities.length) {
         Message.warning('No hay solicitudes pendientes para este perfil');
       }else{
@@ -533,7 +425,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   };
 
   var openAnswerForm = function(session, itemview, otherprofile, facetEditor, interactionRecord){
-    console.log('Meeting FORM: [%s] [%s]', otherprofile.whoami, otherprofile.get('cnumber'));
+
     var form = new Backbone.Form({
       model: facetEditor,
       template: _.template(utils.templates.AnswerEditor(interactionRecord.attributes)),
@@ -549,7 +441,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
     modal.on('ok',function(){
         form.commit();
-        console.log('FORM COMMIT: ready to insert');
         //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
         responseReunion(getSession().currentUser.id, getSession().micarqst, otherprofile);
         DocManager.request('micainteractions:answer:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile, interactionRecord);
@@ -565,21 +456,9 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   // TOGGLE toggle Toggle Favoritos FAVORITOS favoritos
   //=============================================================
   var toggleFavoritos = function(session, mainlayout, model){
-    var token = {};
-    var mydata = model.get(getSession().currentUser.id) || {};
-    if(mydata.favorito){
-      if(mydata.favorito == true || maydata.favorito == 'true'){
-        mydata.favorito = false;
-      }else{
-        mydata.favorito = true;
-      }
-    }else{
-     mydata.favorito = true;
-    }
-    token[getSession().currentUser.id] = mydata;
-    DocManager.request("micarqst:partial:update",[model.id], token);
-
+    model.toggleFavoritos(session.currentUser.id);
   };
+
   //=============================================================
   // TOGGLE toggle Toggle Reunion REUNION reunion
   //=============================================================

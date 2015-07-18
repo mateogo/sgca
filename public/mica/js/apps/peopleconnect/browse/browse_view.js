@@ -40,12 +40,10 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
           var subact = self.model.get('vendedor')['sub_' + self.model.get('vendedor').vactividades];
           var memo = "";
           var render = _.reduce(subact, function(memo, item, index){
-              //console.log('reduce: [%s] [%s]: [%s]', item, index, memo);
               if(item) memo = memo + '<span class="label label-tag">' + tdata.getSubactLabel(self.model.get('vendedor').vactividades, index) + '</span> '  ;
               return memo;
 
           },memo);
-          //console.log('returning: [%s]', render)
           return render;
         },
 
@@ -53,12 +51,10 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
           var subact = self.model.get('comprador')['sub_' + self.model.get('comprador').cactividades];
           var memo = "";
           var render = _.reduce(subact, function(memo, item, index){
-              //console.log('reduce: [%s] [%s]: [%s]', item, index, memo);
               if(item) memo = memo + '<span class="label label-tag">' + tdata.getSubactLabel(self.model.get('comprador').cactividades, index) + '</span> '  ;
               return memo;
 
           },memo);
-          //console.log('returning: [%s]', render)
           return render;
         },
       };
@@ -105,7 +101,6 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
  
       
     initForm: function(){
-      console.log('Filter FORM: [%s] [%s]', this.model.whoami, this.model.get('favorito'))
       var form = new Backbone.Form({
         model: this.model,
         template: utils.templates.FilterProfilesEditor,
@@ -124,18 +119,11 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
 
       if(this.model.get('favorito')){
         this.form.$('.js-filter-favorito').toggleClass('active');
-
       }
-      // this.form.$('.js-filter-favorito').click(function(){
-      //   console.log('SSSSSIIIIIII');
-      //   this.model.set('favorito', !this.model.get('favorito'));
-      //   this.$("js-filter-favorito").toggleClass('active');
-      // });
       
     },
         
     _updateUI: function(){ 
-      //actualiza Backbone.Form
       var fieldsForms = this.form.fields;
       for(var field in fieldsForms){
         var value = this.model.get(field);
@@ -156,58 +144,58 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       'click .js-reuniones-solicitadas': 'filterReunionesSolicitadas',
     },
 
+    browseData: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      this.form.commit();
+
+      this.model.set('receptor', 0);
+      this.model.set('emisor', 0);
+      this.triggerRecordsFetching();
+    },
+    
     filterReunionesRecibidas: function(e){
       e.preventDefault();
       e.stopPropagation();
       this.form.commit();
+      
       this.model.set('receptor', 1);
       this.model.set('emisor', 0);
       this.triggerRecordsFetching();
-      console.log('Recibidas [%s]',this.model.get('receptor'));
-
     },
 
     filterReunionesSolicitadas: function(e){
       e.preventDefault();
       e.stopPropagation();
       this.form.commit();
+      
       this.model.set('receptor', 0);
       this.model.set('emisor', 1);
       this.triggerRecordsFetching();
-      console.log('toggleSolicitadas [%s]',this.model.get('emisor'))
-
-    },
-
-    triggerRecordsFetching: function(){
-      DocManager.trigger(this.options.filterEventName, this.model, 'reset');
     },
 
     toggleFavoritos: function(e){
       e.preventDefault();
       e.stopPropagation();
-      console.log('toggleFavoritos [%s]',this.model.get('favorito'))
+      this.form.commit();
+
       this.model.set('favorito', !this.model.get('favorito'));
       this.form.$(".js-filter-favorito").toggleClass('active');
+      this.triggerRecordsFetching();
     },
 
+    triggerRecordsFetching: function(){
+      DocManager.trigger(this.options.filterEventName, this.model, 'reset');
+    },
     nextPage: function(e){
       this.form.commit();
       DocManager.trigger(this.options.filterEventName, this.model, 'next');
-
     },
     previousPage: function(e){
       this.form.commit();
       DocManager.trigger(this.options.filterEventName, this.model, 'previous');
-
     },
 
-    browseData: function(e){
-      this.form.commit();
-      this.model.set('receptor', 0);
-      this.model.set('emisor', 0);
-      DocManager.trigger(this.options.filterEventName, this.model, 'reset');
-    },
-    
     doneEdition: function(){
       DocManager.trigger('location:list',this.action);
     },
@@ -237,18 +225,13 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
           return self.model.getAvatar();
         },
         isFavorito: function(){
-          var userid = getSession().currentUser.id
-          if(userid && self.model.get(userid) && self.model.get(userid).favorito === true){
-            return true;
-          }else{
-            return false;
-          }
+          return self.model.isFavorito(getSession().currentUser.id)
         },
+
         hasMeeting: function(){
           var userid = getSession().currentUser.id;
 
           if(self.model.hasReunionSolicitada(userid)){
-            console.log('reunión solicitada !!!!!!!!!!!!!!!!')
             return '¡Reunión Solicitada!';
           }else if(self.model.hasReunionRecibida(userid)){
             return '¡Pedido de Reunión Recibida!';
@@ -284,7 +267,6 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
  
     initialize: function(){
 
-      //console.log('ProfileItem ITEM View: INIT')
     },
 
     events: {
@@ -319,7 +301,6 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     addToFavorite: function(e){
       e.preventDefault();
       e.stopPropagation();
-      console.log('addToFavorite CLICK!!!');
       getSession().views.mainlayout.trigger('toggle:profile:favorite',this.model);
       this.$(".js-add-to-favorite").toggleClass('active');
 
@@ -329,34 +310,23 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       e.preventDefault();
       e.stopPropagation();
       var self = this;
-      console.log('DropInteraction CLICK!!!');
       DocManager.confirm(utils.templates.InteractionResumeView(),{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
         DocManager.request('micainteractions:drop:interaction', getSession().currentUser, getSession().micarqst,    self.model);
       });
-
-      //getSession().views.mainlayout.trigger('grid:model:edit',this.model);
 
     },
 
     viewInteractions: function(e){
       e.preventDefault();
       e.stopPropagation();
-      console.log('ViewInteractions CLICK!!!');
       DocManager.confirm(utils.templates.InteractionResumeView(),{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
          self.$('#legal').prop('checked', true);
       });
-
-      //getSession().views.mainlayout.trigger('grid:model:edit',this.model);
-
     },
 
     viewProfile: function(e){
       e.preventDefault();
       e.stopPropagation();
-      console.log('ViewProfile CLICK!!!');
-      // this.trigger('grid:model:edit',this.model, function(){
-      //     //no hay callbacl. futuros usos
-      // });
       getSession().views.mainlayout.trigger('grid:model:edit',this.model);
 
     },
@@ -389,7 +359,6 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     childView: Browse.ProfileItem,
 
     initialize: function(){
-      //console.log('ProfileItem View: INIT')
     },
 
   });
@@ -398,17 +367,14 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
   // ***********  Controler Functions ***************
   // ************************************************
   var solicitoReunion = function(view, otherprofile, myprofile, userid){
-    console.log('Solicitar Reunión  CLICK!!!');
     getSession().views.mainlayout.trigger('add:meeting:rondas',otherprofile, view);
   };
 
   var modificoReunionSolicitada = function(view, otherprofile, myprofile, userid){
-    console.log('TODO Modificar Reunión  CLICK!!!');
     getSession().views.mainlayout.trigger('add:meeting:rondas',otherprofile, view);
   };
 
   var contestoReunionRecibida = function(view, otherprofile, myprofile, userid){
-    console.log('Contesto Reunión  CLICK!!!');
     getSession().views.mainlayout.trigger('answer:meeting:rondas',otherprofile, view);
   };
 
