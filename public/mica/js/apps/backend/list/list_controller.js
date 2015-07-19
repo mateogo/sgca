@@ -161,8 +161,8 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   var EditViewCell = Backgrid.Cell.extend({
       render: function(){
           if(!this.rendered){
-             var btnEdit = $('<button class="btn-link js-edit" title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
-             var btnRemove = $('<button class="btn-link js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
+             var btnEdit = $('<button class="btn-link js-edit btn btn-sm btn-info" title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
+             var btnRemove = $('<button class="btn-link js-trash btn btn-sm btn-danger" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
              this.$el.append(btnEdit).append(btnRemove).append(drpDwnBtn());
              this.rendered = true;
           }

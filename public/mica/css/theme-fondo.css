@@ -69,6 +69,7 @@ h1 {font-family: 'Montserrat', sans-serif;font-size: 28px!important;margin-botto
 h2 {font-family: 'Montserrat', sans-serif;font-size: 22px!important;margin-bottom: 0.5em;}
 h3 {font-family: 'Montserrat', sans-serif;font-size: 18px!important;margin-bottom: 0.5em;}
 h4 {font-family: 'Montserrat', sans-serif;font-size: 14px!important;margin-bottom: 0.5em;}
+h4 {line-height: 1.4em;}
 h5 {font-size: 13px!important;margin-bottom: 0.1em;line-height: 1.4em;}
 h6 {font-size: 13px!important;margin-bottom: 0.1em;line-height: 1.4em;}
 h1 a, h2 a, h3 a, h4 a, h5 a {color: #222;}
@@ -360,8 +361,8 @@ button.js-filter-favorito:hover {
   color: #fff;
 }
 
-button.btn.btn-sm.btn-success.js-interact-reunion.solicitada {
-  content: 'Reunión solicitada';
+button.btn.btn-sm.btn-success.js-interact-reunion.solicitada,
+button.btn.btn-sm.btn-success.js-interact-reunion.recibida {
   background-color: #FAAD24;
   border-color: #FAAD24;
 }
@@ -383,15 +384,102 @@ button.btn.btn-sm.btn-success.js-interact-reunion.solicitada {
   content: "\f017";
   padding-right: 0px;
   margin-left: 10px;
-  background-color: #FAAD24;
-  border-color: #FAAD24;
+    -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 }
 .js-interact-reunion.solicitada.active:after,
 .js-interact-reunion.recibida.active:after {
-  content: "\f087";
+  content: "\f06e";
+    -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+.buscador-sm {
+  display: inline-block;
+  padding: 6px 12px;
+  height: 30px;
+  font-size: 12px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #C7CBD6;
+  border-radius: 4px 0 0 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+.avatar {
+  margin-bottom: 30px;
+}
+.buscador-sm-go {
+  border-radius: 0 4px 4px 0;
+} 
+.renderable .btn-link {
+  margin-right: 2px;
+}
+#feature-block-region ul {
+  padding-left: 0;
+}
+#feature-block-region ul li {
+  text-align: center;
+  list-style: none;
+  margin-bottom: 20px;
+}
+#feature-block-region ul li a:hover .fa-stack {
+  transition: 0.9s;
+  transform: rotateY(360deg);
+}
+.fa-6x {
+  font-size: 6em;
+}
+#feature-block-region .item-1 a .fa-circle{
+  color: rgba(79, 156, 221, 0.6);
+}
+#feature-block-region .item-2 a .fa-circle{
+  color: rgba(79, 156, 221, 0.6);
+}
+#feature-block-region .item-3 a .fa-circle{
+  color: rgba(79, 156, 221, 0.6);
+}
+#feature-block-region .item-4 a .fa-circle{
+  color: rgba(79, 156, 221, 0.6);
+}
+#feature-block-region .item-5 a .fa-circle{
+  color: rgba(79, 156, 221, 0.6);
+}
+#feature-block-region .item-6 a .fa-circle{
+  color: rgba(79, 156, 221, 0.6);
+}
+#feature-block-region .item-7 a .fa-circle{
+  color: rgba(79, 156, 221, 0.6);
+}
+.buttons.splash-right a {
+  white-space: normal;
+  margin-bottom: 10px;
+}
+#feature-items-region {
+  display: none;
+}
+.splash-right a.btn-success {
+  color: #E8F5D2;
+}
+.splash-right a.btn-warning {
+  color: #FCF7E9;
+}
+.splash-right a.btn-info {
+  color: #E6F2F7;
 }
 
-
+.btn-fondo {
+  background: #BF58B3;
+  color: #F0D0ED;
+}
+.btn-fondo:hover {
+  background: #A54C9A;
+  color: #F0D0ED;
+}
 /*** REDES SOCIAL LINK ICONS ***/
 .social-navigation {
   margin: 0;

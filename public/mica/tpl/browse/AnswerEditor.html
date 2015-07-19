@@ -1,10 +1,8 @@
-<h3><%= emisor_rname %> @ <%= emisor_displayName %>, el <%= fecomp %>, dijo: </h3>
-<blockquote>
-  <p><strong> <%= emisor_slug %></strong></p>
-  <p><%= description %></p>
-</blockquote>
-
-<hr>
-<h2>Indique su respuesta y calificación</h2>
+<h4><%= emisor_rname %> @ <%= emisor_displayName %>, el <%= fecomp %>, dijo: </h4>
+<div class="alert alert-info">
+  <p><em><strong> <%= emisor_slug %></strong></em></p>
+  <p><em><%= description %></em></p>
+</div>
+<h4>Indique su respuesta y calificación</h4>
 <div data-fields="slug"></div>
 <div data-fields="nivel_interes"></div>

@@ -9,7 +9,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 		
 		defaults: {
 			titulo: "Mercado de Industrias Culturales Argentinas",
-			description: "El MICA es el principal mercado de industrias culturales de Argentina donde se reúnen en un mismo espacio los sectores de artes escénicas, audiovisual, diseño, editorial, música y videojuegos.",
+			description: "Bienvenido a la plataforma que te permitirá armar tu agenda para participar de las Rondas de negocios de MICA 2015.",
 			items: [{
 				icon: "class='icons'",
 				size: "class='fa'",

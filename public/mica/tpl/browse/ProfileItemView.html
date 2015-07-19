@@ -18,7 +18,7 @@
             <img class="avatar img-responsive" src="/<%= getAvatar() %>" alt="" style="height: 73px; width:73px;">
       </a>
       <h4 class="fullname js-action-profile-name"><a href="#" class="js-profile-view" ><%= solicitante.edisplayName %></a> <span class="nro-serie"> (<%= cnumber%>) </span> </h4>
-      <p class="bio"><%= solicitante.emotivation %></p>
+      <p class="bio"><%= solicitante.edescription %></p>
       <%  if(vendedor.rolePlaying.vendedor === true) %>
       <p class="metadata">
         <!--SI ES VENDEDOR--><span class="label label-default">Vendedor</span> 
