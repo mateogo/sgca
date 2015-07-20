@@ -69,13 +69,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
 
-    isVendedor: function(){
-      return this.get('vendedor').rolePlaying.vendedor;
-    },
+    // isVendedor: function(){
+    //   return this.get('vendedor').rolePlaying.vendedor;
+    // },
 
-    isComprador: function(){
-      return this.get('comprador').rolePlaying.comprador;
-    },
+    // isComprador: function(){
+    //   return (this.get('comprador').rolePlaying.comprador && this.get('nivel_ejecucion') === 'comprador_aceptado';
+    // },
 
 
     defaults: {

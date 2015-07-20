@@ -88,8 +88,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     isComprador: function(){
-      return this.get('comprador').rolePlaying.comprador;
+      return (this.get('comprador').rolePlaying.comprador && this.get('nivel_ejecucion') === 'comprador_aceptado');
     },
+
     isFavorito: function(userid){
       return (userid && this.get(userid) && this.get(userid).favorito && this.get(userid).favorito === true);
     },

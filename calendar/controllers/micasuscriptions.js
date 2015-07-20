@@ -334,7 +334,7 @@ var buildQuery = function(qr){
 
     if(qr.rolePlaying && qr.rolePlaying !== 'no_definido'){
         if(qr.rolePlaying === 'comprador'){
-            conditions.push({'comprador.rolePlaying.comprador': true});
+            conditions.push({$and: [{'comprador.rolePlaying.comprador': true}, {nivel_ejecucion: 'comprador_aceptado'}] } );
         }else{
             conditions.push({'vendedor.rolePlaying.vendedor': true});
         }
