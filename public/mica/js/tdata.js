@@ -352,7 +352,7 @@ window.tdata = {
           {val: 'dramaturgia', label: 'Dramaturgia'},
           {val: 'coreografia', label: 'Coreografía'},
           {val: 'programadorfestivales', label: 'Progamadores festivales'},
-          {val: 'programadorsalas', label: 'Programadores salas de exhibición'},
+          {val: 'programadorsalas', label: 'Programadores de salas de exhibición'},
           {val: 'camaras', label: 'Cámaras/ Asociaciones'},
           {val: 'proveedores', label: 'Proveedores de bienes o servicios'},
         ],
