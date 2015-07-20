@@ -338,7 +338,6 @@ var buildQuery = function(qr){
                 conditions.push({$and: [{'comprador.rolePlaying.comprador': true}, {nivel_ejecucion: 'comprador_aceptado'}] } );
             else
                 conditions.push({'comprador.rolePlaying.comprador': true} );
-            else
         }else{
             conditions.push({'vendedor.rolePlaying.vendedor': true});
         }
