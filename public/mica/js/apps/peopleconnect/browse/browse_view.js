@@ -120,6 +120,12 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       if(this.model.get('favorito')){
         this.form.$('.js-filter-favorito').toggleClass('active');
       }
+      if(this.model.get('receptor')){
+        this.form.$('.js-reuniones-recibidas').addClass('active');
+      }
+      if(this.model.get('emisor')){
+        this.form.$('.js-reuniones-solicitadas').addClass('active');
+      }
       
     },
         

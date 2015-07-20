@@ -12,8 +12,13 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   
 	Browse.Controller = {
 		browseProfiles: function(criterion){
-	
+
 			loadCurrentUser().then( function(user){
+        getSession().filter = new backendEntities.MicaFilterFacet(criterion);
+        getSession().filter.set('userid', getSession().currentUser.id);
+      
+        criterion = getSession().filter.attributes;
+
 				if(!getSession().mainLayout){
 					buildLayout();
 				}
@@ -78,7 +83,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     if(!getSession().collection){
       getSession().collection =  new DocManager.Entities.MicaRegistrationPaginatedCol();
     }
-
+    
     if(criterion){
       _.extend(query, criterion);
     }
@@ -261,7 +266,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 	//********** LAYOUT
 	var buildLayout = function(){
     var session = getSession();
-    
     session.views.layout = new backendCommons.Layout({model:session.model});
     //session.views.sidebarpanel = new backendCommons.SideBarPanel({model:session.model});
     session.views.mainlayout = new backendCommons.MainLayout({model:session.model});
@@ -269,8 +273,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     registerSidebarEvents(session, session.views.layout,session.views.mainlayout);
     registerMainLayoutEvents(session, session.views.layout, session.views.mainlayout);
     registerLayoutEvents(session, session.views.layout, session.views.mainlayout);
-
-    session.filter = new backendEntities.MicaFilterFacet();
 
   };
   var registerSidebarEvents = function(session, layout, mainLayout){
@@ -394,8 +396,6 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         DocManager.request('micainteractions:new:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile, interactionRecord);
         itemview.$(".js-interact-reunion").html('¡Reunión Solicitada!');
         itemview.$(".js-interact-reunion").addClass('solicitada');
-
-        //toggleReunion(otherprofile.get('user').userid, , 'reurecibida');
     });
 
     modal.open();    

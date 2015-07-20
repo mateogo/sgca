@@ -533,8 +533,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       nivel_ejecucion: 'no_definido',
       estado_alta: 'activo',
       favorito: false,
-      reurecibida: 0,
-      reusolicitada: 0,
+      emisor: 0,
+      receptor: 0,
       userid: '',
 
     },

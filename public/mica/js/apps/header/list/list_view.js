@@ -3,7 +3,7 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
   List.BucketHeader = Marionette.ItemView.extend({
 
     getTemplate: function(){
-      return utils.templates.BucketHeaderView;
+      return _.template('<li><a href="#<%= url %>" title="<%= navigationTrigger %>"><%= name %></a></li>');
     },
 
     events: {
@@ -16,6 +16,58 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
     },
 
     onRender: function(){
+    }
+  });
+  List.BucketHeaders = Marionette.CompositeView.extend({
+    //template: "#header-template",
+    //tagName: "nav",
+    //className: "navbar navbar-inverse navbar-fixed-top", 
+
+    childView: List.BucketHeader,
+    childViewContainer: "ul#bucket-sidebar-submenu",
+    
+    getTemplate: function(){
+      return utils.templates.BucketHeaderView;
+    },
+    
+    initialize: function(){
+      //
+      var userlog;
+      dao.gestionUser.getUser(DocManager, function (user){
+        //console.log(user.id);
+        userlog = user.id;
+      })
+      //
+    },
+    
+    events: {
+      "click a.brand": "brandClicked",
+      "click #entrarh": "enterhClicked",
+    },
+
+    enterhClicked: function(){
+      console.log('evento');
+      $('#loginbox').toggleClass('hide show');
+      $('#ins-but').toggleClass('hide show');
+      
+    },
+    
+    brandClicked: function(e){
+      e.preventDefault();
+      this.trigger("brand:clicked");
+    },
+    
+    onRender: function(userlog){
+      if (userlog.model.id != null){
+        //console.log('usuario logueado',userlog.model.id);
+        this.$('.js-statusbar').show();
+
+        
+      }
+      else{
+        //console.log('no esta logueado')
+        this.$('.js-statusbar').hide();
+      }
     }
   });
 
@@ -53,16 +105,16 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
     getTemplate: function(){
       return utils.templates.HeaderView;
     },
-		
-		initialize: function(){
-			//
-			var userlog;
-			dao.gestionUser.getUser(DocManager, function (user){
-				//console.log(user.id);
-				userlog = user.id;
-			})
-			//
-		},
+    
+    initialize: function(){
+      //
+      var userlog;
+      dao.gestionUser.getUser(DocManager, function (user){
+        //console.log(user.id);
+        userlog = user.id;
+      })
+      //
+    },
     
     events: {
       "click a.brand": "brandClicked",
@@ -71,28 +123,28 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
 
     enterhClicked: function(){
       console.log('evento');
-			$('#loginbox').toggleClass('hide show');
-			$('#ins-but').toggleClass('hide show');
+      $('#loginbox').toggleClass('hide show');
+      $('#ins-but').toggleClass('hide show');
       
     },
-		
-		brandClicked: function(e){
+    
+    brandClicked: function(e){
       e.preventDefault();
       this.trigger("brand:clicked");
     },
-		
-		onRender: function(userlog){
-			if (userlog.model.id != null){
-				//console.log('usuario logueado',userlog.model.id);
-				this.$('.js-statusbar').show();
+    
+    onRender: function(userlog){
+      if (userlog.model.id != null){
+        //console.log('usuario logueado',userlog.model.id);
+        this.$('.js-statusbar').show();
 
-				
-			}
-			else{
-				//console.log('no esta logueado')
-				this.$('.js-statusbar').hide();
-			}
-		}
+        
+      }
+      else{
+        //console.log('no esta logueado')
+        this.$('.js-statusbar').hide();
+      }
+    }
   });
 });
 

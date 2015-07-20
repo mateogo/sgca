@@ -21,6 +21,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     ]);
   };
 
+  var initializeMicasidebar = function(){
+    // parent-template: BucketHeaderView.html #js-sidebar-menu
+    Entities.micasidebar = new Entities.HeaderCollection([
+      { name: "Mi Perfil MICA",                   url: "nuevo",    navigationTrigger: "micarequest:add" },
+      { name: "Explorador de emprendimientos",    url: "reporte",  navigationTrigger: "rondas:browse:profiles" },
+      { name: "Mis favoritos",                    url: "lista",    navigationTrigger: "rondas:browse:favoritos" },
+      { name: "Pedidos de reuniones recibidas",   url: "lista",    navigationTrigger: "rondas:browse:receptor" },
+      { name: "Pedidos de reuniones solicitadas", url: "lista",    navigationTrigger: "rondas:browse:emisor" },
+    ]);
+  };
+
   var initdocumheaders = function(){
     Entities.documitems = new Entities.HeaderCollection([
       { name: "Documento", url: "nuevo", navigationTrigger: "document:new" },
@@ -60,6 +71,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
       return Entities.headeritems;
     },
+    getSidebarNavCol: function(){
+      if(Entities.micasidebar === undefined){
+        initializeMicasidebar();
+      }
+      return Entities.micasidebar;
+    },
     getDocumNavCol: function(){
       if(Entities.documitems === undefined){
         initdocumheaders();
@@ -84,6 +101,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   DocManager.reqres.setHandler("header:entities", function(){
     return API.getHeaders();
   });
+
+  DocManager.reqres.setHandler("sidebar:nav:entities", function(){
+    return API.getSidebarNavCol();
+  });
+
   DocManager.reqres.setHandler("docum:nav:entities", function(){
     return API.getDocumNavCol();
   });

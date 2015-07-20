@@ -697,6 +697,24 @@ button.btn.btn-sm.btn-success.js-interact-reunion.recibida {
   margin-right: 10px;
 }
 
+.js-reuniones-recibidas,
+.js-reuniones-solicitadas {
+  font-size: 12px;
+  background-color: #C7CBD6!important;
+  color:#222;
+  border:0;
+}
+
+.js-reuniones-recibidas.active,
+.js-reuniones-solicitadas.active  {
+  background-color: #DA5757!important;
+}
+
+.js-reuniones-recibidas:hover,
+.js-reuniones-solicitadas:hover  {
+  background-color: #D78F8F!important;
+}
+
 @media only screen  and (max-width: 480px)  {
   ul.list-unstyled .usuario .content {
     margin-left: 0;
@@ -720,12 +738,9 @@ button.btn.btn-sm.btn-success.js-interact-reunion.recibida {
   #filter-form-region > .btn-group {
     margin-top: 0!important;
   }
-  .js-reuniones-recibidas,
-  .js-reuniones-solicitadas {
-    font-size: 12px;
-  }
   .btn-group.hidden-print.nopadding.pull-right {
     width: 100%;
     margin-top: 20px!important;
   }
+
 }

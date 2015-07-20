@@ -1,19 +1,33 @@
 DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marionette, $, _){
   List.Controller = {
     listHeader: function(){
-      var links = DocManager.request("header:entities");
-      console.log('listHeader BEGINS  [%s]', links.length);
+
+      var sidebarLinks = DocManager.request("sidebar:nav:entities");
+      var headers = DocManager.request("header:entities");
+
+      console.log('listHeader BEGINS  [%s]', sidebarLinks.length);
+      console.log('Sidebars[0] [%s]  [%s]', sidebarLinks.at(0).get('name'),sidebarLinks.at(0).get('url'));
+
       dao.gestionUser.getUser(DocManager, function (user){
         user = (user || new User());
 
-        var headers = new List.Headers({collection: links, model: user});
-        var bucketSidebars = new List.BucketHeader({collection: links, model: user});
 
+        var bucketSidebars = new List.BucketHeaders({collection: sidebarLinks, model: user});
+        bucketSidebars.on("childview:navigate", function(childView, model){
+          console.log('childview:navigate')
+          var trigger = model.get("navigationTrigger");
+          DocManager.trigger(trigger);
+        });
+
+
+        var headers = new List.Headers({collection: headers, model: user});
         headers.on("brand:clicked", function(){
+          console.log('brand:clicked')
           DocManager.trigger("documents:list");
         });
 
         headers.on("childview:navigate", function(childView, model){
+          console.log('childview:navigate')
           var trigger = model.get("navigationTrigger");
           DocManager.trigger(trigger);
         });
@@ -28,10 +42,10 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
 //Trabajar lo que es el header
     setActiveHeader: function(headerUrl){
 			console.log('Set Active Header headerUrl [%s]',headerUrl);
-//      var links = DocManager.request("header:entities");
-//      var headerToSelect = links.find(function(header){ return header.get("url") === headerUrl; });
+//      var headers = DocManager.request("header:entities");
+//      var headerToSelect = headers.find(function(header){ return header.get("url") === headerUrl; });
 //      headerToSelect.select();
-//      links.trigger("reset");
+//      headers.trigger("reset");
     }
   };
 });
