@@ -4,6 +4,7 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 		appRoutes: {
 			'mica': 'loginMica',
 			'inscripcion/nueva': 'loginMica',
+			'bienvenido': 'loginMica',
 
 			'fondo': 'loginFondo',
 			'fondo/inscripcion/nueva': 'loginFondo',
