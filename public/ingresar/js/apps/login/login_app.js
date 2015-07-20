@@ -31,8 +31,8 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 		},
 
 		loginMica: function(){
-			//console.log('API: Login MICA');
-			this.loginUser('mica/#inscripcion/nueva', 'mica');
+			console.log('API: Login MICA');
+			this.loginUser('mica/#bienvenido', 'mica');
 		},
 
 		loginFondo: function(){

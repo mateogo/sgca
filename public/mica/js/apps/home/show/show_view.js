@@ -198,6 +198,16 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 	});
 	
 	Show.HomeFeatureView = Marionette.CompositeView.extend({
+    templateHelpers: function(){
+      var self = this;
+
+      return {
+        profileHasProblems: function(){
+          return false;
+        },
+      }
+    },
+
 		getTemplate: function(){
 			return utils.templates.HomeShowFeatureItemComposite;
 		},
