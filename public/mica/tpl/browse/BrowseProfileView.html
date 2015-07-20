@@ -7,16 +7,21 @@
             </div>
         <% } %>
         <h2 class="solicitante"><%= solicitante.edisplayName %> <span class="nro-serie">(<%= cnumber%>)</span></h2>
-        <h4><%= solicitante.epais %> | | <%= solicitante.eprov %> | <%= solicitante.otraprov %> | <%= solicitante.elocalidad %> </h4><hr>
-        <p><span class="fa fa-globe"></span> <a href="<%= solicitante.eweb %>" target="_blank"><%= solicitante.eweb %></a><br>
-        <span class="fa fa-envelope-o"></span> <a href="mailto:<%= solicitante.email %>"><%= solicitante.email %></a></p>
+        <h4><%= solicitante.epais %> | | <%= solicitante.eprov %> | <%= solicitante.otraprov %> | <%= solicitante.elocalidad %> </h4>
+        <p>
+        <%  if(getFieldLabel('solicitante').eweb != '') { %>
+            <span class="fa fa-globe"></span> <a href="<%= solicitante.eweb %>" target="_blank"><%= solicitante.eweb %></a><br>
+        <% } %>
+        <%  if(getFieldLabel('solicitante').email != '') { %>
+        <span class="fa fa-envelope-o"></span> <a href="mailto:<%= solicitante.email %>"><%= solicitante.email %></a>
+        <% } %>
+        </p>
         <div>
-            <p><%= solicitante.emotivation %></p><hr>
+            <!--<p><%= solicitante.emotivation %></p><hr>-->
             <p><%= solicitante.edescription %></p>
-            <hr>
             <p><%= responsable.rname %></p>
             <p><%= responsable.rmail %></p>
-        </div>
+        </div><hr>
     </div>
     <%  if(isVendedor()){ %>
         <div class="col-md-12 col-xs-12">
@@ -41,9 +46,6 @@
                 <% } %>
             </h3>
             <p><%= vendorSubActivities() %></p>
-            <hr>
-                
-            
             <p><%= getFieldLabel('vendedor').vcomentario %></p>
             
             <p><strong>Negocios extra-fronteras: </strong>
@@ -97,12 +99,12 @@
                   <span class="label label-mica-videojuegos">VIDEOJUEGOS</span>
                 <% } %>
             </h3>
+            <p><%= compradorSubActivities() %></p>
             <hr>
             <%  if(getFieldLabel('comprador').cdescriptores != '') { %>
                 <p><%= getFieldLabel('comprador').cdescriptores %></p>
             <% } %>
             <p><%= getFieldLabel('comprador').ccomentario %></p>
-            <!--<p><%= compradorSubActivities() %></p>-->
             <p><strong>Negocios extra-fronteras: </strong>
                 <%  if(getFieldLabel('comprador').cexperienciaintl === "4") { %>Frecuentes<% } %>
                 <%  if(getFieldLabel('comprador').cexperienciaintl === "2") { %>Esporádicos<% } %>
