@@ -13,6 +13,8 @@ utils.loadTemplate([
         // Administra Inscripciones
         // -- Vistas basicas
         'list/CommonBaseLayout','list/CommonMainLayout',
+        // -- Ranking
+        //'list/CommonBaseLayout','list/CommonMainLayout',
         // -- Lista inscripciones
         'list/MicarequestsLayout','list/MicarequestsView','list/CommonModelEditorLayout',
 

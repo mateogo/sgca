@@ -198,12 +198,22 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 	});
 	
 	Show.HomeFeatureView = Marionette.CompositeView.extend({
+    initialize: function(opts){
+    	this.micarqst = opts.micarqst;
+
+    },
+
     templateHelpers: function(){
       var self = this;
 
       return {
         profileHasProblems: function(){
-          return false;
+        	console.log('profileHasProblems: [%s] id:[%s]', self.model.whoami, self.micarqst.id)
+          return !self.micarqst.checkConsistency();
+        },
+        hasProfile: function(){
+        	console.log('profileHasProblems: [%s] id:[%s]', self.model.whoami, self.micarqst.id)
+          return self.micarqst.id;
         },
       }
     },

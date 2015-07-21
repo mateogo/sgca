@@ -3,14 +3,19 @@
 	<p class="lead"><%= description %></p>
 
 <hr>
-<% if(profileHasProblems()) {%>
+<% if(!hasProfile()) {%>
   <div class="row">
-    <div class="buttons splash-right col-md-12"><a href="#inscripcion/nueva" class="btn btn-danger strong btn-lg btn-block"><strong>¡Tu perfil requiere una revisión!</strong><br><span style="font-size:13px!important;color:#FFF!important;font-weight:normal">Tienes que activar el perfil de VENDEDOR y detallar la actividad principal</span></a></div>
+    <div class="buttons splash-right col-md-12"><a href="#inscripcion/nueva" class="btn btn-danger strong btn-lg btn-block"><strong>¡Tienes que cargar tu perfil de emprendedor como primer paso!</strong><br><span style="font-size:13px!important;color:#FFF!important;font-weight:normal">Hac clic aquí para acceder al formulario de alta de tu perfil. De esta forma el resto de los emprendedores podrán interactuar contigo.</span></a></div>
+  </div>  
+<% } else if (profileHasProblems()){ %>
+
+  <div class="row">
+    <div class="buttons splash-right col-md-12"><a href="#inscripcion/nueva" class="btn btn-danger strong btn-lg btn-block"><strong>¡Tu perfil requiere una revisión!</strong><br><span style="font-size:13px!important;color:#FFF!important;font-weight:normal">La información obrante en tu perfil no es suficiente. Tienes que activar un perfil (VENDEDOR o COMPRADOR),<br> indicar tu actividad principal y dar de alta el porfolio de antecedentes.</span></a></div>
   </div>  
 <% } %>
   <div class="row">
-    <div class="buttons splash-right col-md-6"><a href="#emprendimientos/explorar" class="btn btn-success strong btn-lg btn-block"><strong>Buscá, encontrá y pedí reuniones </strong><br><span style="font-size:13px!important;color:#FFF!important;font-weight:normal">Seleccioná tus proyectos favoritos y solicitá una reunión</span></a></div>
-    <div class="buttons splash-right col-md-6"><a href="#inscripcion/nueva" class="btn btn-warning strong btn-lg btn-block"><strong>Actualizá tu perfil</strong><br><span style="font-size:13px!important;color:#FFF!important;font-weight:normal">Mejorá tus chances de ser elegido</span></a></div>
+    <div class="buttons splash-right col-md-6"><a href="#emprendimientos/explorar" class="btn btn-success strong btn-lg btn-block"><strong>Buscá, encontrá y pedí reuniones </strong><br><span style="font-size:13px!important;color:#FFF!important;font-weight:normal">Explorá los perfiles de los emprendedores participantes. Seleccioná tus favoritos y solicitá una reunión</span></a></div>
+    <div class="buttons splash-right col-md-6"><a href="#inscripcion/nueva" class="btn btn-warning strong btn-lg btn-block"><strong>Actualizá tu perfil</strong><br><span style="font-size:13px!important;color:#FFF!important;font-weight:normal">Mejorá tus chances de ser elegido manteniendo completando y ajustando los datos de tu perfil</span></a></div>
   </div>
 	<div class="row">
 		<div class="buttons splash-right col-md-6"><a href="#showcase/nueva" class="btn btn-info strong btn-lg btn-block"><strong>Inscribite a los <em>Showcase</em> <br><span style="font-size:13px!important;color:#FFF!important;font-weight:normal">Tenés tiempo hasta el 24 de Julio</span></strong></a></div>

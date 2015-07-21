@@ -117,6 +117,20 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         return false;
       }
     },
+    checkConsistency: function(){
+      var self = this,
+          valid = true;
+      if(!self.id)
+        return false;
+      if(!self.isVendedor() && !self.isComprador()){
+        //A: No tiene habilitado ninguno de los perfiles
+        return false;
+      }
+      return valid;
+
+    },
+
+
     editMeetingToken: function(userid, modosolicitud, newvalue){
       //modosolicitud: ['emisor' || 'receptor']
       // newvalue: [0: sin reunion; 1: reunion solicitada; 2: reunion apreciada]

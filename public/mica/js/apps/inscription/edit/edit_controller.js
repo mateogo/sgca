@@ -58,7 +58,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       }else{
         console.log('No validó el Usuario');
         Message.warning('Debe iniciar sesión y estar inscripto en MICA 2015');
-        window.open('/ingresar/#mica', '_self');
+        window.open('/mica/#bienvenido', '_self');
       }
  
     });

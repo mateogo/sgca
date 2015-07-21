@@ -69,7 +69,7 @@ DocManager.module("MicaRequestApp.Showcase", function(Showcase, DocManager, Back
             if(response === 'Volver'){
               window.open('http://mica.cultura.gob.ar','_self');
             }else{
-              window.open('/ingresar/#mica','_self');
+              window.open('/mica/#bienvenido','_self');
             }
 
           });

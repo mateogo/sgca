@@ -40,7 +40,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
 			}else{
 			  Message.warning('Debe iniciar sesión');
-			  window.open('/mica/#bienvenido', '_self');
+			  window.open('/ingresar/#mica', '_self');
 			}
 
  

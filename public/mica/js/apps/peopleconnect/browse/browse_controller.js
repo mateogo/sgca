@@ -49,7 +49,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
             defer.resolve(user);
           }else{
             Message.warning('Debe estar inscripto en MICA 2015 para acceder a esta aplicación');
-            window.open('/ingresar/#mica', '_self');
+            window.open('/mica/#bienvenido', '_self');
 
           }
         });
@@ -57,7 +57,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
 			}else{
 			  Message.warning('Debe iniciar sesión y estar inscripto en MICA 2015');
-			  window.open('/ingresar/#mica', '_self');
+			  window.open('/mica/#bienvenido', '_self');
 			}
 
  

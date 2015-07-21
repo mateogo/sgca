@@ -14,7 +14,10 @@ var _ = require('underscore');
 var dbi ;
 var BSON;
 var config = {};
+
 var micainteractionsCol = 'micainteractions';
+var micasuscriptionsCol = 'micasuscriptions';
+
 var serialCol = 'seriales';
 
 var utils = require(rootPath + '/core/util/utils');
@@ -370,7 +373,114 @@ exports.delete = function(req, res) {
     });
 };
 
+exports.ranking = function(req, res) {
+    var query = req.body; //{};
 
+    dbi.collection(micasuscriptionsCol, function(err, collection) {
+        collection.find(query).sort({cnumber:1}).toArray(function(err, profiles) {
+
+            dbi.collection(micainteractionsCol, function(err, collection) {
+                collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
+
+                    res.send(getRankedList(profiles, items));
+                });
+            });
+        });
+    });
+
+};
+
+var getRankedList = function(profiles, list){
+    var output = normalizeProfiles(profiles);
+
+    console.log('list: [%s]', list.length)
+
+    _.each(list, function(item){
+        sumarizedIteration(output, item);
+
+    });
+
+    
+    return filterOutput(output);
+
+};
+var filterOutput = function(profiles){
+    var filtered;
+    filtered = _.filter(profiles, function(item){
+        if(item.emisor_requests>0 || item.receptor_requests>0){
+            return true;
+        }else{
+            return false;
+        }
+
+
+    })
+    return filtered;
+}
+
+var sumarizedIteration = function(nprofiles, action){
+    var emisor = _.find(nprofiles, function(item){
+        return (action.emisor_inscriptionid == item.profileid );
+    })
+    if(emisor){
+        emisor.emisor_requests = emisor.emisor_requests + 1;
+        emisor.receptorlist.push(action.receptor_inscriptionid);
+    }else{
+    }
+
+    var receptor = _.find(nprofiles, function(item){
+        return (action.receptor_inscriptionid == item.profileid );
+    })
+    if(receptor){
+        receptor.receptor_requests = receptor.receptor_requests + 1;
+        receptor.emisorlist.push(action.emisor_inscriptionid);
+    }else{
+    }
+
+};
+var normalizeProfiles = function(profiles){
+    var normalized, 
+        profile;
+
+    normalized = _.map(profiles, function(item, index){
+        profile = {
+            profileid: item._id,
+            cnumber: item.cnumber,
+            userid: item.user.userid,
+            usermail: item.user.usermail,
+            rname: item.responsable.rname,
+            ename: item.solicitante.displayName,
+            epais: item.solicitante.epais,
+            eprov: item.solicitante.eprov,
+
+
+
+            isvendedor: item.vendedor.rolePlaying.vendedor,
+            vactividades: item.vendedor.vactividades,
+            
+            iscomprador: (item.comprador.rolePlaying.comprador && (item.nivel_ejecucion === 'comprador_aceptado')),
+            vactividades: item.comprador.cactividades,
+            
+            nivel_ejecucion: item.nivel_ejecucion,
+            estado_alta: item.estado_alta,
+
+
+            emisor_requests: 0,
+            receptor_requests: 0,
+            emisorlist:[],
+            receptorlist:[],
+
+        };
+        return profile;
+    });
+
+    _.each(normalized, function(item){
+        console.log('[%s] [%s] [%s] v:[%s] c:[%s]', item._id, item.cnumber, item.rname, item.isvendedor, item.iscomprador);
+
+    });
+    return normalized;
+
+};
 
 
 
