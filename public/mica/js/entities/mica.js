@@ -1413,14 +1413,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           repairkeys,
           roles = [],
           modulos = [],
-          testindex = 0;
+          testindex = 0,
+          woutuser = 0;
 
       $.when(loadCollection()).done(function(profiles){
         profiles.each(function(profile){
           if(profile.get('user').userid){
             testindex = testindex + 1;
+
             if(testindex > 14500) return;
-            if(testindex >1499) {
+            if(testindex >0) {
 
               userpromise = DocManager.request("user:entity",profile.get('user').userid);
 
@@ -1453,10 +1455,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             }
 
           }else{
-            console.log('======== mica suscription sin user: [%s] [%s]   [%s]', profile.get('cnumber'), profile.get('responsable').rname, profile.get('responsable').rmail)
+            woutuser = woutuser +1;
+            //console.log('======== mica suscription sin user: [%s] [%s]   [%s]', profile.get('cnumber'), profile.get('responsable').rname, profile.get('responsable').rmail)
           }
 
         });
+        console.log('======= total recorods:[%s]    w/outuser: [%s]', testindex, woutuser);
 
       })
 
