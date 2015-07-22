@@ -1418,11 +1418,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       $.when(loadCollection()).done(function(profiles){
         profiles.each(function(profile){
+          testindex = testindex + 1;
           if(profile.get('user').userid){
-            testindex = testindex + 1;
 
             if(testindex > 14500) return;
-            if(testindex >0) {
+            if(false) {
 
               userpromise = DocManager.request("user:entity",profile.get('user').userid);
 
@@ -1455,12 +1455,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             }
 
           }else{
-            woutuser = woutuser +1;
-            //console.log('======== mica suscription sin user: [%s] [%s]   [%s]', profile.get('cnumber'), profile.get('responsable').rname, profile.get('responsable').rmail)
+            if(profile.get('estado_alta') === 'activo'){
+              woutuser = woutuser +1;
+              DocManager.request("micarqst:partial:update", [profile.id],  {estado_alta: 'sinuser'});
+              //console.log('======== mica suscription sin user: [%s] [%s]   [%s]', profile.get('cnumber'), profile.get('responsable').rname, profile.get('responsable').rmail);
+            }
           }
 
         });
-        console.log('======= total recorods:[%s]    w/outuser: [%s]', testindex, woutuser);
+        console.log('======= total recorods:[%s]   (al 22-07: total 2611/130 ) w/outuser: [%s]', testindex, woutuser);
 
       })
 
