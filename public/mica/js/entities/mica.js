@@ -1311,6 +1311,22 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   };
 
+  var loadCollection = function(){
+      var entities = new Entities.MicaRegistrationCol();
+      var defer = $.Deferred();
+
+      entities.fetch({
+        success: function(data){
+          defer.resolve(data);
+        },
+        error: function(data){
+            defer.resolve(undefined);
+        }
+      });
+
+      return defer.promise();
+
+  };
 
 
 
@@ -1392,6 +1408,27 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       });
     },
 
+    checkUsersData: function(){
+      $.when(loadCollection()).done(function(profiles){
+        profiles.each(function(profile){
+          var userpromise = DocManager.request("user:entity",profile.get('user').userid);
+
+          $.when(userpromise).done(function(user){
+            if(user.get('roles').indexOf('usuario') === -1 || user.get('modulos').indexOf('mica') === -1 || user.get('home')!== 'mica:rondas' || user.get('grupo') !== 'adherente'){
+              console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
+                user.get('displayName'),user.get('username'), 
+                user.get('roles'), user.get('modulos'), user.get('estado_alta'), 
+                user.get('grupo'), user.get('home'));              
+            }
+
+          })
+
+        });
+
+      })
+
+    },
+
     getFilteredByQueryCol: function(query, step){
 
       var fetchingEntities = queryCollection(query, step),
@@ -1436,6 +1473,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   DocManager.reqres.setHandler("micarqst:partial:update", function(models, keys){
     return API.partialUpdate(models, keys);
   });
+
+  DocManager.reqres.setHandler("mica:check:users:data", function(){
+    return API.checkUsersData();
+  });
+
 
   DocManager.reqres.setHandler("micarqst:query:entities", function(query, step){
     return API.getFilteredByQueryCol(query, step);

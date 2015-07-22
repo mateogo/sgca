@@ -17,6 +17,11 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 				if(!getSession().mainLayout){
 					buildLayout();
 				}
+        // OjO solo para debug===================
+        if(user.get('username') === 'mgomezortega@gmail.com'){
+          checkUsers();          
+        }
+        // OjO ==================================
 
         initCrudManager(user, criterion, 'reset');
 
@@ -25,6 +30,11 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 		}
 
 	}; 
+  var checkUsers = function(){
+
+    DocManager.request('mica:check:users:data');
+
+  };
 	
   var loadCurrentUser = function(){
 
