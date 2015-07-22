@@ -109,7 +109,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       query.newdata = data;
   
       var update = new Entities.UserUpdate(query);
-      update.save({
+      return update.save({
         success: function() {
         }
       });
