@@ -1411,17 +1411,21 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     checkUsersData: function(){
       $.when(loadCollection()).done(function(profiles){
         profiles.each(function(profile){
-          var userpromise = DocManager.request("user:entity",profile.get('user').userid);
+          if(profile.get('user').userid){
+            var userpromise = DocManager.request("user:entity",profile.get('user').userid);
 
-          $.when(userpromise).done(function(user){
-            if(user.get('roles').indexOf('usuario') === -1 || user.get('modulos').indexOf('mica') === -1 || user.get('home')!== 'mica:rondas' || user.get('grupo') !== 'adherente'){
-              console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
-                user.get('displayName'),user.get('username'), 
-                user.get('roles'), user.get('modulos'), user.get('estado_alta'), 
-                user.get('grupo'), user.get('home'));              
-            }
+            $.when(userpromise).done(function(user){
+              if(user.get('roles').indexOf('usuario') === -1 || user.get('modulos').indexOf('mica') === -1 || user.get('home')!== 'mica:rondas' || user.get('grupo') !== 'adherente'){
+                console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
+                  user.get('displayName'),user.get('username'), 
+                  user.get('roles'), user.get('modulos'), user.get('estado_alta'), 
+                  user.get('grupo'), user.get('home'));              
+              }
+            });
 
-          })
+          }else{
+            console.log('======== mica suscription sin user: [%s] [%s]   [%s]', profile.get('cnumber'), profile.get('responsable').rname, profile.get('responsable').rmail)
+          }
 
         });
 
