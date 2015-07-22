@@ -1409,10 +1409,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     checkUsersData: function(){
+      var userpromise,
+          testindex = 0;
       $.when(loadCollection()).done(function(profiles){
         profiles.each(function(profile){
           if(profile.get('user').userid){
-            var userpromise = DocManager.request("user:entity",profile.get('user').userid);
+            testindex = testindex + 1;
+            if(testindex > 100) return;
+
+            userpromise = DocManager.request("user:entity",profile.get('user').userid);
 
             $.when(userpromise).done(function(user){
               if(user.get('roles').indexOf('usuario') === -1 || user.get('modulos').indexOf('mica') === -1 || user.get('home')!== 'mica:rondas' || user.get('grupo') !== 'adherente'){
