@@ -5,8 +5,8 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
       var sidebarLinks = DocManager.request("sidebar:nav:entities");
       var headers = DocManager.request("header:entities");
 
-      console.log('listHeader BEGINS  [%s]', sidebarLinks.length);
-      console.log('Sidebars[0] [%s]  [%s]', sidebarLinks.at(0).get('name'),sidebarLinks.at(0).get('url'));
+      // console.log('listHeader BEGINS  [%s]', sidebarLinks.length);
+      // console.log('Sidebars[0] [%s]  [%s]', sidebarLinks.at(0).get('name'),sidebarLinks.at(0).get('url'));
 
       dao.gestionUser.getUser(DocManager, function (user){
         user = (user || new User());

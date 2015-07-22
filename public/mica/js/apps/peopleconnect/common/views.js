@@ -414,6 +414,21 @@ DocManager.module("RondasApp.Common.Views", function(Views, DocManager, Backbone
       'click .js-filter': 'filterList',
       'click button.js-item-edit': 'itemEdit',
       'click button.js-item-trash': 'itemTrash',
+      'click button.js-previous-page': 'previousPage',
+      'click button.js-next-page': 'nextPage',
+    },
+    previousPage: function(e){
+      console.log('PreviousPage!!');
+      if(this.filter){
+        DocManager.trigger(this.options.filterEventName, this.filter, 'previous');
+      }
+    },
+
+    nextPage: function(e){
+      console.log('NextPage!!');
+      if(this.filter){
+        DocManager.trigger(this.options.filterEventName, this.filter, 'next');
+      }
     },
 
     filterList: function(e){

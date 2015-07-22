@@ -18,10 +18,10 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 					buildLayout();
 				}
         // OjO solo para debug===================
-        if(user.get('username') === 'mgomezortega@gmail.com'){
-          checkUsers();          
-        }
-        // OjO ==================================
+        // if(user.get('username') === 'mgomezortega@gmail.com'){
+        //   checkUsers();          
+        // }
+        // // OjO ==================================
 
         initCrudManager(user, criterion, 'reset');
 

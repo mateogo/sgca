@@ -1463,7 +1463,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           }
 
         });
-        console.log('======= total recorods:[%s]   (al 22-07: total 2611/130 ) w/outuser: [%s]', testindex, woutuser);
+        console.log('======= total recorods:[%s]   (al 22-07: total 2744/130 ) w/outuser: [%s]', testindex, woutuser);
 
       })
 
