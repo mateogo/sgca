@@ -1419,8 +1419,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         profiles.each(function(profile){
           if(profile.get('user').userid){
             testindex = testindex + 1;
-            if(testindex > 1500) return;
-            if(testindex >499) {
+            if(testindex > 14500) return;
+            if(testindex >1499) {
 
               userpromise = DocManager.request("user:entity",profile.get('user').userid);
 
