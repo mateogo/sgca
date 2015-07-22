@@ -286,9 +286,9 @@ window.tdata = {
       {val: "YU", label:'Yugoslavia'},
       {val: "ZM", label:'Zambia'},
       {val: "ZW", label:'Zimbabue'},
-		],
+    ],
 
-		provinciasOL: [
+    provinciasOL: [
 	    {val: "no_definido", label: 'Seleccione Provincia'},
 	    {val: "CABA", label: 'CABA'},
 	    {val: "BuenosAires", label: 'Buenos Aires'},
@@ -314,7 +314,7 @@ window.tdata = {
 	    {val: "Chubut", label: 'Chubut'},
 	    {val: "SantaCruz", label: 'Santa Cruz'},
 	    {val: "TierraDelFuego", label: 'Tierra del Fuego'},
-		],
+    ],
 
     nivel_ejecucionOL:[
         {val:'no_definido',         label:'Nivel de Ejecución',  classattr:'info'},
@@ -323,15 +323,15 @@ window.tdata = {
         {val:'comprador_aceptado',  label:'Aceptado',  classattr:'info'},
         {val:'comprador_rechazado', label:'Rechazado', classattr:'info'},
         {val:'observado',           label:'Observado', classattr:'info'},
-   ],
+    ],
+    
     estado_altaOL:[
         {val:'no_definido',  label:'Nivel de Ejecución',  classattr:'info'},
         {val:'activo',       label:'Activo',         classattr:'info'},
         {val:'baja',         label:'Anulado/ baja',  classattr:'warning'},
-   ],
+    ],
 
-
-   sectorOL: [
+    sectorOL: [
         {val: 'no_definido',  label:'Sector Cultural'},
         {val: 'aescenicas',  label:'Artes escénicas'},
         {val: 'audiovisual',  label:'Audiovisual'},
@@ -339,9 +339,19 @@ window.tdata = {
         {val: 'editorial',  label:'Editorial'},
         {val: 'musica',  label:'Música'},
         {val: 'videojuegos',  label:'Videojuegos'},
-   ],
+    ],
 
-  subSectorOL:{
+    sectorUppercaseOL: [
+        {val: 'no_definido',  label:'Sector Cultural'},
+        {val: 'aescenicas',   label:'ARTES ESCÉNICAS'},
+        {val: 'audiovisual',  label:'AUDIOVISUAL'},
+        {val: 'disenio',      label:'DISEÑO'},
+        {val: 'editorial',    label:'EDITORIAL'},
+        {val: 'musica',       label:'MÚSICA'},
+        {val: 'videojuegos',  label:'VIDEOJUEGOS'},
+    ],
+
+    subSectorOL:{
         no_definido:[
           {val: 'no_definido',  label:'Subsectores'},
         ],

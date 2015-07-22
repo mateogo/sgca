@@ -18,16 +18,16 @@ DocManager.module("BackendApp.List", function(List, DocManager, Backbone, Marion
           return self.model.get(fieldName);
         },
         isVendedor: function(){
-          return self.model.get('vendedor').rolePlaying.vendedor;
+          return self.model.isVendedor();
         },
         isComprador: function(){
-          return self.model.get('comprador').rolePlaying.comprador;
+          return self.model.isComprador();
         },
         hasVendorProfiles: function(){
-          return self.model.get('vendedor').vporfolios.length;
+          return self.model.hasVendorProfiles();
         },
         hasCompradorProfiles: function(){
-          return self.model.get('comprador').cporfolios.length;
+          return self.model.hasCompradorProfiles();
         },
         
         vendorSubActivities: function(){

@@ -24,16 +24,16 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
           return self.model.get(fieldName);
         },
         isVendedor: function(){
-          return self.model.get('vendedor').rolePlaying.vendedor;
+          return self.model.isVendedor();
         },
         isComprador: function(){
-          return self.model.get('comprador').rolePlaying.comprador;
+          return self.model.isComprador();
         },
         hasVendorProfiles: function(){
-          return self.model.get('vendedor').vporfolios.length;
+          return self.model.hasVendorProfiles();
         },
         hasCompradorProfiles: function(){
-          return self.model.get('comprador').cporfolios.length;
+          return self.model.hasCompradorProfiles();
         },
         
         vendorSubActivities: function(){
@@ -96,6 +96,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
             return false;
           }
         },
+
       }
     },
  
@@ -153,7 +154,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     browseData: function(e){
       e.preventDefault();
       e.stopPropagation();
-      this.form.commit();
+      this.formCommit();
 
       this.model.set('receptor', 0);
       this.model.set('emisor', 0);
@@ -173,7 +174,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     filterReunionesSolicitadas: function(e){
       e.preventDefault();
       e.stopPropagation();
-      this.form.commit();
+      this.formCommit();
       
       this.model.set('receptor', 0);
       this.model.set('emisor', 1);
@@ -183,7 +184,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     toggleFavoritos: function(e){
       e.preventDefault();
       e.stopPropagation();
-      this.form.commit();
+      this.formCommit();
 
       this.model.set('favorito', !this.model.get('favorito'));
       this.form.$(".js-filter-favorito").toggleClass('active');
@@ -194,16 +195,21 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       DocManager.trigger(this.options.filterEventName, this.model, 'reset');
     },
     nextPage: function(e){
-      this.form.commit();
+      this.formCommit();
       DocManager.trigger(this.options.filterEventName, this.model, 'next');
     },
     previousPage: function(e){
-      this.form.commit();
+      this.formCommit();
       DocManager.trigger(this.options.filterEventName, this.model, 'previous');
     },
 
+    formCommit: function(){
+      this.form.commit();
+      this.model.set({estado_alta:'activo', nivel_ejecucion:'no_definido'});
+    },
+
     doneEdition: function(){
-      DocManager.trigger('location:list',this.action);
+      //DocManager.trigger('location:list',this.action);
     },
     
   });
@@ -227,12 +233,23 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
         getFieldLabel: function(fieldName){
           return self.model.get(fieldName);
         },
+        fetchLabel: function(list, key){
+          tdata.fetchLabel(list, key)
+
+        },
         getAvatar: function(){
           return self.model.getAvatar();
         },
         isFavorito: function(){
           return self.model.isFavorito(getSession().currentUser.id)
         },
+        isComprador: function(){
+          return self.model.isComprador();
+        },
+        isVendedor: function(){
+          return self.model.isVendedor();
+        },
+
 
         hasMeeting: function(){
           var userid = getSession().currentUser.id;

@@ -95,6 +95,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return (userid && this.get(userid) && this.get(userid).favorito && this.get(userid).favorito === true);
     },
 
+    hasVendorProfiles: function(){
+      return this.isVendedor() ? this.model.get('vendedor').vporfolios.length : 0;
+    },
+    hasCompradorProfiles: function(){
+      return this.isComprador() ? this.model.get('comprador').cporfolios.length : 0;
+    },
+
+
     hasReunionSolicitada: function(userid){
       return (userid && this.get(userid) && this.get(userid).emisor && this.get(userid).emisor > 0);
     },

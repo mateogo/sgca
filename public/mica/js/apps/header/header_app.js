@@ -2,7 +2,6 @@ DocManager.module("HeaderApp", function(Header, DocManager, Backbone, Marionette
   
   var API = {
     listHeader: function(){
-      console.log('listHeader');
       Header.List.Controller.listHeader();
     }
   };

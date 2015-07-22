@@ -382,8 +382,11 @@ var buildQuery = function(qr){
     if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
     if(qr.evento) conditions.push({evento: qr.evento});
     if(qr.rubro) conditions.push({rubro: qr.rubro});
+    //console.dir(conditions);
+
 
     query['$and'] = conditions;
+
     return query;
 };
 
