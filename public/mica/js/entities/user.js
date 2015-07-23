@@ -331,7 +331,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       //   user.get('grupo'), user.get('home'));
 
       if(roles.indexOf('usuario') === -1) roles.push('usuario');
-      if(modulos.indexOf('mica') === -1) modulos.push('mica');
+      if(modulos.indexOf('mica')  === -1) modulos.push('mica');
       if(modulos.indexOf('fondo') === -1) modulos.push('fondo');
 
       repairkeys = {
@@ -342,7 +342,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       if(!user.get('grupo')) repairkeys.grupo = 'adherente';
       if(user.get('estado_alta') === 'pendaprobacion') repairkeys.estado_alta = 'activo';
 
-      //user.partialUpdate(repairkeys);
+      user.partialUpdate(repairkeys);
     }
 
   };
