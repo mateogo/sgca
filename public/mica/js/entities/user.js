@@ -305,18 +305,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           testindex = testindex + 1;
           roles = user.get('roles')|| [];
           modulos = user.get('modulos')|| [];
-
  
           if( (modulos.indexOf('mica') === -1 && modulos.indexOf('fondo') !== -1) ||
               (modulos.indexOf('mica') !== -1 && modulos.indexOf('fondo') === -1) ||
               (modulos.length === 0)){
             //|| user.get('home')!== 'mica:rondas' || user.get('grupo') !== 'adherente'
             badindex += 1;
+            console.log('[%s]  a:[%s] b:[%s] c:[%s]',user.get('modulos'),(modulos.indexOf('mica') === -1 && modulos.indexOf('fondo') !== -1) ,(modulos.indexOf('mica') !== -1 && modulos.indexOf('fondo') === -1),(modulos.length === 0))
 
-            console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
-              user.get('displayName'),user.get('username'), 
-              user.get('roles'), user.get('modulos'), user.get('estado_alta'), 
-              user.get('grupo'), user.get('home'));
+            // console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
+            //   user.get('displayName'),user.get('username'), 
+            //   user.get('roles'), user.get('modulos'), user.get('estado_alta'), 
+            //   user.get('grupo'), user.get('home'));
 
             if(roles.indexOf('usuario') === -1) roles.push('usuario');
             if(modulos.indexOf('mica') === -1) modulos.push('mica');
@@ -330,7 +330,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             if(!user.get('grupo')) repairkeys.grupo = 'adherente';
             if(user.get('estado_alta') === 'pendaprobacion') repairkeys.estado_alta = 'activo';
 
-            user.partialUpdate(repairkeys);
+            //user.partialUpdate(repairkeys);
           }
         });
 
