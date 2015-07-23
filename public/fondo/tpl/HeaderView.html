@@ -1,41 +1,56 @@
-<nav id="mcn-header">
-  <div class="container">
-    <div class="col-xs-12 col-sm-4 col-md-4 main-navigation">
-      <a href="/fondo" id="site-logo" class="navbar-brand"><img src="./img/cultura-argentina-inv.png" class="img-responsive" alt=""></a>
-    </div>
-    <ul class="main-navigation pull-right js-statusbar">
-      <li>
-        <a href="http://fondo.cultura.gob.ar/">Inicio</a>
-      </li>      
-      <li class="dropdown" data-section="app-notifications">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Notificaciones<i class="caret"></i></a>
-        <div class="dropdown-menu pull-right account-dropdown notifications-list">
-          <ul id="unread-notifications">
-            <li class="empty">Actualmente no tienes nuevas notificaciones</li>
-          </ul>
-        </div>
-      </li>
+<div class="nav notify-row" id="top_menu">
+      <!--  notification start -->
+      <ul class="nav top-menu">
+        <li id="header_notification_bar" class="dropdown">
+              <a data-toggle="dropdown" class="dropdown-toggle" href="#">
 
-      <li class="dropdown pull-right">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          <div class="ident">
-            <img alt="Invitado" src="img/anonimo.jpg">
-          </div>
-          <i class="caret"></i>
-        </a>
-        <ul class="dropdown-menu pull-right account-dropdown">
-          <li>
-            <a href="#perfil"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-              Mis datos personales
-            </a>
+                  <i class="fa fa-bell-o"></i>
+                  <!--<span class="badge bg-warning">1</span>-->
+              </a>
+              <ul class="dropdown-menu extended notification">
+                  <li>
+                      <p>No tiene nuevas notificaciones</p>
+                  </li>
+                  <!--<li>
+                      <div class="alert alert-info clearfix">
+                          <span class="alert-icon"><i class="fa fa-info"></i></span>
+                          <div class="noti-info">
+                              Desde el 20 de Julio podrás acceder a solicitar Rondas de Negocios
+                          </div>
+                      </div>
+                  </li>-->
+
+              </ul>
           </li>
-          <li>
-            <a data-method="delete" href="/logout" rel="nofollow"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-              Salir
-            </a>
-        </li>
-        </ul>
-      </li>
-    </ul>
+          <!-- notification dropdown end -->
+      </ul>
+      <!--  notification end -->
   </div>
-</nav>
+  <div class="top-nav clearfix">
+      <!--search & user info start-->
+      <ul class="nav pull-right top-menu">
+          <!--<li>
+              <input type="text" class="form-control search" placeholder=" Buscar">
+          </li>-->
+          <!-- user login dropdown start-->
+          <li class="dropdown">
+              <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                  <img alt="" src="../mica/images/avatar1_small.jpg">
+                  <span class="username"><%= displayName%></span>
+                  <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu extended logout">
+                  <li><a href="#perfil"><i class=" fa fa-suitcase"></i>Mi perfil</a></li>
+                  <!--<li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>-->
+                  <li><a href="/logout/ingresar/#fondo"><i class="fa fa-key"></i> Salir</a></li>
+              </ul>
+          </li>
+          <!-- user login dropdown end -->
+          <!--<li>
+              <div class="toggle-right-box">
+                  <div class="fa fa-bars"></div>
+              </div>
+          </li>-->
+      </ul>
+      <!--search & user info end-->
+  </div>
