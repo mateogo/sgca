@@ -339,7 +339,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       var crudManager = new Edit.CrudManager(
           {
             gridcols:[
-              {name:'slug', label:'Denominación del producto/proyecto/servicio', cell:'string', editable:false},
+              {name:'slug', label:'LISTADO DE PORTOLIOS', cell:'string', editable:false},
               {label: 'Acciones', cell: 'cporfolioAction', editable:false, sortable:false},
             ],
             filtercols:['slug'],
@@ -365,7 +365,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       var crudManager = new Edit.CrudManager(
           {
             gridcols:[
-              {name:'slug', label:'Denominación del producto/proyecto/servicio', cell:'string', editable:false},
+              {name:'slug', label:'LISTADO DE PORTOLIOS', cell:'string', editable:false},
               {label: 'Acciones', cell: 'vporfolioAction', editable:false, sortable:false},
             ],
             filtercols:['slug'],
