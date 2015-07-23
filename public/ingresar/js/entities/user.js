@@ -415,7 +415,7 @@ atribuciones (array)
             user.roles = ['usuario'];
             user.atributos = [];
 
-            user.modulos = ['mica'];
+            user.modulos = ['mica','fondo','ic'];
             user.estado_alta = 'activo';
 
         }else if(target === 'fondo'){
@@ -425,7 +425,7 @@ atribuciones (array)
             user.roles = ['usuario'];
             user.atributos = [];
 
-            user.modulos = ['fondo'];
+            user.modulos = ['mica','fondo','ic'];
             user.estado_alta = 'activo';
 
         }

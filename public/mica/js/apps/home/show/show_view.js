@@ -16,7 +16,7 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 		whoami: 'RegisterView:show_view.js',
 
     events: {
-			"click .js-insertuser"     : "insertNewUser",     
+		//	"click .js-insertuser"     : "insertNewUser",     
 			"change"	: "change",
 		},
 		
@@ -35,16 +35,16 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 			
 			self.model.validusername(this.model.get('username'),function(error){
 				if(error){
-					console.log('error')
+					//console.log('error')
 				}else{
 					var errors = self.model.validate(self.model.attributes, {strict: true});
 					if(errors){
 						self.displayValidationErrors(errors);
 					}else{
-						console.log('ok READY TO INSERT')
+						//console.log('ok READY TO INSERT')
 						
 						self.model.addNewUser(function(user){
-							console.log('bbbbbBBBBBYYYYYYEEEEE2')
+							//console.log('bbbbbBBBBBYYYYYYEEEEE2')
 							$('#loginbox').toggleClass('hide show');
 							$('#signupbox').toggleClass('hide show');
 						});
@@ -98,7 +98,7 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 
 			if(error){
 				if(error[target.name]){
-					console.log('Validate: Errors[%s]', error[target.name])
+					//console.log('Validate: Errors[%s]', error[target.name])
 					this.addValidationError(target.id, error[target.name], this.el);
 				}else{
 					this.removeValidationError(target.id, this.el);            
@@ -121,7 +121,7 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
     },
 
     addValidationError: function (field, message, context) {
-			console.log('f[%s] [%s]','#' + field,message)
+			//console.log('f[%s] [%s]','#' + field,message)
 			var controlGroup = $('#' + field, context).parent().parent();
 			controlGroup.addClass('has-error');
 			$('.help-block', controlGroup).html(message);
@@ -146,55 +146,55 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 		},
 		
 		events: {
-      "click .js-ins-but": "loginclick",
-      "click #goto-register": "registerclick",
-      "click #signinlink": "registerclick",
+      // "click .js-ins-but": "loginclick",
+      // "click #goto-register": "registerclick",
+      // "click #signinlink": "registerclick",
     },
 		
-		registerclick: function(e){
-			console.log('intenta registrarse');
-			$(this).parent();
-			$('#loginbox').toggleClass('hide show');
-			$('#signupbox').toggleClass('hide show');
+		// registerclick: function(e){
+		// 	console.log('intenta registrarse');
+		// 	$(this).parent();
+		// 	$('#loginbox').toggleClass('hide show');
+		// 	$('#signupbox').toggleClass('hide show');
 			
-			var user = new UserFacet({
-				home: 'mica:rondas',
-				estado_alta: 'activo',
-				grupo: 'adherente'
-			});
+		// 	var user = new UserFacet({
+		// 		home: 'mica:rondas',
+		// 		estado_alta: 'activo',
+		// 		grupo: 'adherente'
+		// 	});
 			
-			var homeView = new Show.RegisterView({
-				model:user, 
-				el:'#signupbox',
-			});
+		// 	var homeView = new Show.RegisterView({
+		// 		model:user, 
+		// 		el:'#signupbox',
+		// 	});
 
-		},
+		// },
 		
-		loginclick: function(e){
-			e.preventDefault();
-			var self = this;
-			var userlog;
+		// loginclick: function(e){
+		// 	e.preventDefault();
+		// 	var self = this;
+		// 	var userlog;
 
-			dao.gestionUser.getUser(DocManager, function (user){
-				console.log(user.id);
-				userlog = user.id;
+		// 	dao.gestionUser.getUser(DocManager, function (user){
+		// 		console.log(user.id);
+		// 		userlog = user.id;
 
-				if (userlog == null) {
-					console.log('no esta logueado');
+		// 		if (userlog == null) {
+		// 			console.log('no esta logueado');
 
-					$('#loginbox').toggleClass('hide show')
-					self.$('#ins-but').toggleClass('hide show');
+		// 			$('#loginbox').toggleClass('hide show')
+		// 			self.$('#ins-but').toggleClass('hide show');
 
-				}else {
-					console.log('esta logueado, tiene que seguir a editar[%s]',self.model.get('items')[0].buttonroute);
-					DocManager.trigger(self.model.get('items')[0].buttonroute);
-				}
+		// 		}else {
+		// 			console.log('esta logueado, tiene que seguir a editar[%s]',self.model.get('items')[0].buttonroute);
+		// 			DocManager.trigger(self.model.get('items')[0].buttonroute);
+		// 		}
 
 
-			});
+		// 	});
 			
 
-		}
+		// }
 	});
 	
 	Show.HomeFeatureView = Marionette.CompositeView.extend({
@@ -208,11 +208,11 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 
       return {
         profileHasProblems: function(){
-        	console.log('profileHasProblems: [%s] id:[%s]', self.model.whoami, self.micarqst.id)
+        	//console.log('profileHasProblems: [%s] id:[%s]', self.model.whoami, self.micarqst.id)
           return !self.micarqst.checkConsistency();
         },
         hasProfile: function(){
-        	console.log('profileHasProblems: [%s] id:[%s]', self.model.whoami, self.micarqst.id)
+        	//console.log('profileHasProblems: [%s] id:[%s]', self.model.whoami, self.micarqst.id)
           return self.micarqst.id;
         },
       }
