@@ -96,10 +96,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     hasVendorProfiles: function(){
-      return this.isVendedor() ? this.model.get('vendedor').vporfolios.length : 0;
+      return this.isVendedor() ? this.get('vendedor').vporfolios.length : 0;
     },
     hasCompradorProfiles: function(){
-      return this.isComprador() ? this.model.get('comprador').cporfolios.length : 0;
+      return this.isComprador() ? this.get('comprador').cporfolios.length : 0;
     },
 
 
