@@ -323,7 +323,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         (modulos.indexOf('mica') !== -1 && modulos.indexOf('fondo') === -1) ||
         (modulos.length === 0)){
       //|| user.get('home')!== 'mica:rondas' || user.get('grupo') !== 'adherente'
-      console.log('[%s]  a:[%s] b:[%s] c:[%s]',user.get('modulos'),(modulos.indexOf('mica') === -1 && modulos.indexOf('fondo') !== -1) ,(modulos.indexOf('mica') !== -1 && modulos.indexOf('fondo') === -1),(modulos.length === 0), modulos.indexOf('mica'), modulos.indexOf('fondo'))
+      console.log('[%s]  a:[%s] b:[%s] c:[%s] ix[%s] ix[%s] [%s] [%s] tx[%s]',user.get('modulos'),(modulos.indexOf('mica') === -1 && modulos.indexOf('fondo') !== -1) ,(modulos.indexOf('mica') !== -1 && modulos.indexOf('fondo') === -1),(modulos.length === 0), modulos.indexOf('mica'), modulos.indexOf('fondo'), modulos[0], modulos[1], modulos.indexOf(modulos[1]));
 
       // console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
       //   user.get('displayName'),user.get('username'), 
