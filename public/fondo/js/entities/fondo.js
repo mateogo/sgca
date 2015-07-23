@@ -274,40 +274,29 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   Entities.FondoFilterFacet = Backbone.Model.extend({
     whoami: 'Entities.FondoFilterFacet:fondo.js',
     initialize: function(opts){
-      //console.log('initialize Fondo FILTER [%s]', this.get('subsector'))
-      this.schema.subsector.options = tdata.subSectorOL[this.get('sector')];
-
 
     },
 
     schema: {
-        rolePlaying:   {type: 'Select',  title: 'Rol', options: tdata.rolesOL },
-        cnumber:       {type: 'Text',    title: 'Número Inscripción' },
-        textsearch:    {type: 'Text',    title: 'Búsqueda por texto' },
-        provincia:     {type: 'Select',  title: 'Provincia',  options: tdata.provinciasOL },
-        sector:        {type: 'Select',  title: 'Sector',  options: tdata.sectorOL },
-        subsector:     {type: 'Select',  title: 'SubSector',  options: tdata.subSectorOL.aescenicas },
+        tsolicitud:      {type: 'Select',  title: 'Tipo de Solicitud', options: tdata.tsolicitudOL },
+        cnumber:         {type: 'Text',    title: 'Número Inscripción' },
+        textsearch:      {type: 'Text',    title: 'Búsqueda por texto' },
+        provincia:       {type: 'Select',  title: 'Provincia',  options: tdata.provinciasOL },
         nivel_ejecucion: {type: 'Select',  title: 'Aprobación',  options: tdata.nivel_ejecucionOL },
-        estado_alta:   {type: 'Select',  title: 'Estado',  options: tdata.estado_altaOL },
+        estado_alta:     {type: 'Select',  title: 'Estado',  options: tdata.estado_altaOL },
     },
 
 
     defaults: {
-      rolePlaying: 'no_definido',
+      tsolicitud: '',
       provincia: 'no_definido',
       cnumber: '',
       textsearch: '',
-      sector: 'no_definido',
-      subsector: 'no_definido',
       evento: 'fondo',
       rubro: 'general',
       nivel_ejecucion: 'no_definido',
       estado_alta: 'activo',
-      favorito: false,
-      emisor: 0,
-      receptor: 0,
       userid: '',
-
     },
   });
 

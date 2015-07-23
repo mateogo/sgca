@@ -338,6 +338,8 @@ var buildQuery = function(qr){
     if(!qr) return query;
 
 
+    if(qr.tsolicitud && qr.tsolicitud !== 'no_definido') conditions.push({'requerimiento.tsolicitud': qr.tsolicitud});
+    if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'responsable.eprov': qr.provincia});
     if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
     if(qr.evento) conditions.push({evento: qr.evento});
     if(qr.rubro) conditions.push({rubro: qr.rubro});

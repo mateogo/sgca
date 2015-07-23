@@ -5,14 +5,7 @@ DocManager.module("FondoBackendApp.Common.Views", function(Views, DocManager, Ba
       filterData=   new FilterModel();
     }
 
-    filterData.schema.subsector.options = tdata.subSectorOL[filterData.get('sector')];
     var form = new Backbone.Form({model:filterData});
-
-    form.on('sector:change', function(form, editorContent) {
-        var contenido = editorContent.getValue(),
-            newOptions = tdata.subSectorOL[contenido];
-        form.fields.subsector.editor.setOptions(newOptions);
-    });
 
     var modal = new Backbone.BootstrapModal({
       content: form,
