@@ -325,6 +325,7 @@ module.exports = function (config, app) {
     app.post('/actualizar/usuarios', user.partialupdate);
     app.post('/recuperar/usuarios', user.find);
     app.get('/currentuser', user.findCurrentUser);
+    app.get('/usuarios', user.findAll);
     app.get('/usuarios/:id', user.findById);
     app.post('/usuarios', user.add);
     app.put('/usuarios/:id', user.update);
