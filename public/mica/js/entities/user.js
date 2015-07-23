@@ -297,6 +297,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           modulos = [],
           testindex = 0,
           badindex = 0;
+      console.log('============  startin user Check ===============')
 
       $.when(loadCollection()).done(function(users){
         console.log('======== loaded users: [%s]', users.length);
@@ -333,8 +334,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           }
         });
 
+        console.log('======= total recorods:[%s]   (al 23-07: total 2744/130 ) badindex: [%s]', testindex, badindex);
       });
-      console.log('======= total recorods:[%s]   (al 23-07: total 2744/130 ) badindex: [%s]', testindex, badindex);
     }
   };
 
