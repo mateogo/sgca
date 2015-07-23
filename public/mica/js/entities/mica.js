@@ -472,7 +472,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     state:{
       firstPage: 1,
-      pageSize: 25, 
+      pageSize: 15, 
     },
     queryParams:{
       currentPage: 'page',
