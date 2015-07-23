@@ -39,6 +39,14 @@ window.tdata = {
         });
         return optionStr;
     },
+    getSubactLabel: function(actividad, subactividad){
+      if(this.subSectorOL[actividad]){
+        return this.fetchLabel(this.subSectorOL[actividad], subactividad);
+      }else{
+        subactividad;
+      }
+
+    },
 
 
    	paisesOL: [
@@ -278,9 +286,9 @@ window.tdata = {
       {val: "YU", label:'Yugoslavia'},
       {val: "ZM", label:'Zambia'},
       {val: "ZW", label:'Zimbabue'},
-		],
+    ],
 
-		provinciasOL: [
+    provinciasOL: [
 	    {val: "no_definido", label: 'Seleccione Provincia'},
 	    {val: "CABA", label: 'CABA'},
 	    {val: "BuenosAires", label: 'Buenos Aires'},
@@ -306,7 +314,7 @@ window.tdata = {
 	    {val: "Chubut", label: 'Chubut'},
 	    {val: "SantaCruz", label: 'Santa Cruz'},
 	    {val: "TierraDelFuego", label: 'Tierra del Fuego'},
-		],
+    ],
 
     nivel_ejecucionOL:[
         {val:'no_definido',         label:'Nivel de Ejecución',  classattr:'info'},
@@ -315,30 +323,46 @@ window.tdata = {
         {val:'comprador_aceptado',  label:'Aceptado',  classattr:'info'},
         {val:'comprador_rechazado', label:'Rechazado', classattr:'info'},
         {val:'observado',           label:'Observado', classattr:'info'},
-   ],
+    ],
+    
+    estado_altaOL:[
+        {val:'no_definido',  label:'Nivel de Ejecución',  classattr:'info'},
+        {val:'activo',       label:'Activo',         classattr:'info'},
+        {val:'baja',         label:'Anulado/ baja',  classattr:'warning'},
+    ],
 
-   sectorOL: [
+    sectorOL: [
         {val: 'no_definido',  label:'Sector Cultural'},
-        {val: 'aescenicas',  label:'Artes escéncias'},
+        {val: 'aescenicas',  label:'Artes escénicas'},
         {val: 'audiovisual',  label:'Audiovisual'},
         {val: 'disenio',  label:'Diseño'},
         {val: 'editorial',  label:'Editorial'},
         {val: 'musica',  label:'Música'},
         {val: 'videojuegos',  label:'Videojuegos'},
-   ],
+    ],
 
-  subSectorOL:{
+    sectorUppercaseOL: [
+        {val: 'no_definido',  label:'Sector Cultural'},
+        {val: 'aescenicas',   label:'ARTES ESCÉNICAS'},
+        {val: 'audiovisual',  label:'AUDIOVISUAL'},
+        {val: 'disenio',      label:'DISEÑO'},
+        {val: 'editorial',    label:'EDITORIAL'},
+        {val: 'musica',       label:'MÚSICA'},
+        {val: 'videojuegos',  label:'VIDEOJUEGOS'},
+    ],
+
+    subSectorOL:{
         no_definido:[
           {val: 'no_definido',  label:'Subsectores'},
         ],
         aescenicas:[
-          {val: 'no_definido',  label:'Subsector de Artes Escenicas'},
-          {val: 'diseniador', label: 'Diseñador/realizador/téncios'},
+          {val: 'no_definido',  label:'Subsector de Artes Escénicas'},
+          {val: 'diseniador', label: 'Diseñador/realizador/técnicos'},
           {val: 'direccion', label: 'Dirección'},
           {val: 'dramaturgia', label: 'Dramaturgia'},
           {val: 'coreografia', label: 'Coreografía'},
           {val: 'programadorfestivales', label: 'Progamadores festivales'},
-          {val: 'programadorsalas', label: 'Programadores salas de exhibición'},
+          {val: 'programadorsalas', label: 'Programadores de salas de exhibición'},
           {val: 'camaras', label: 'Cámaras/ Asociaciones'},
           {val: 'proveedores', label: 'Proveedores de bienes o servicios'},
         ],
@@ -398,10 +422,32 @@ window.tdata = {
         ],
     },
     
+    rolesInteractionsOL: [
+        {val:'no_definido', label:'Esta solicitud es para...'},
+        {val:'comprador',   label:'Demandar productos o servicios'},
+        {val:'vendedor',    label:'Ofrecer productos o servicios'},
+    ],
+
     rolesOL: [
         {val:'no_definido', label:'Seleccione rol'},
         {val:'comprador',   label:'Comprador'},
         {val:'vendedor',    label:'Vendedor'},
     ],
+    nivel_interesOL: [
+        {val:'3' , label:'Muy interesado'},
+        {val:'2' , label:'Interesado'},
+        {val:'1' , label:'Poco interesado'},
+        {val:'0' , label:'No interesado'},
+    ],
+    // ================= Fondo ===============
+    tsolicitudOL: [
+        {val:'no_definido' , label:'Tipo de solicitud'},
+        {val:'movilidad_nacional' , label:'Ayudas a la Movilidad dentro del país'},
+        {val:'movilidad_intl' , label:'Ayudas a la Movilidad al exterior'},
+        {val:'movilidad_mica' , label:'Ayudas a la Movilidad para la participación MICA 2015'},
+    ],
+
+
+
 };
 
