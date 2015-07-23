@@ -27,6 +27,29 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
     });
   };
 
+  Edit.Controller.browseuser = function(username){
+    var layout = createLayout(),
+        user;
+
+    var p = DocManager.request('user:by:username',username);
+    p.done(function(userCol){
+      if(userCol.length){
+        user = userCol.at(0);
+        console.log('User Fetched: [%s]', user.get('username'));
+
+        var view = new Edit.UserView({model:user});
+        layout.getRegion('loginRegion').show(view);
+        view.once('password:changed',function(){
+          //DocManager.trigger('login:user');
+        });
+
+      }else{
+        console.log('no se encontró al USER: [%s]', username);
+      }
+
+    });
+  };
+
 
   createLayout = function(){
 		var layout = new Edit.Layout();

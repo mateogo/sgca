@@ -18,7 +18,9 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 
 			'usuario(/*path)': 'loginUser',
 
-			'recuperar/clave/:id': 'recovery'
+			'recuperar/clave/:id': 'recovery',
+
+			'invitar/usuario/:username': 'browseUser',
 
 		}
 	});
@@ -57,7 +59,12 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 
 		recovery: function(id){
 			LoginApp.Edit.Controller.recovery(id);
-		}
+		},
+
+		browseUser: function(username){
+			LoginApp.Edit.Controller.browseuser(username);
+		},
+
 
 	};
 
@@ -75,6 +82,12 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 		//console.log('Login MICA:');
 		DocManager.navigate('inscripcion/nueva');
 		API.loginMica(path);
+  });
+
+	DocManager.on('login:view:user',function(username){
+		//console.log('Login MICA:');
+		DocManager.navigate('invitar/usuario/' + username);
+		API.browseUser(username);
   });
 
 	DocManager.addInitializer(function(){

@@ -91,6 +91,125 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         });
     },
 
+    inviteUserToMica: function(){
+      var self = this,
+          repairkeys,
+          roles = [],
+          modulos = [];
+
+      console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
+        self.get('displayName'),self.get('username'), 
+        self.get('roles'), self.get('modulos'), self.get('estado_alta'), 
+        self.get('grupo'), self.get('home'));
+
+      roles = self.get('roles')|| [];
+      modulos = self.get('modulos')|| [];
+
+      if(roles.indexOf('usuario') === -1) roles.push('usuario');
+      if(modulos.indexOf('mica') === -1) modulos.push('mica');
+
+      repairkeys = {
+        modulos: modulos,
+        roles: roles
+      }
+      if(!self.get('home')) repairkeys.home = 'mica:rondas';
+      if(!self.get('grupo')) repairkeys.grupo = 'adherente';
+      if(self.get('estado_alta') === 'pendaprobacion') repairkeys.estado_alta = 'activo';
+
+      self.partialUpdate(repairkeys);
+    },
+
+    inviteUserToFondo: function(){
+      var self = this,
+          repairkeys,
+          roles = [],
+          modulos = [];
+
+      console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
+        self.get('displayName'),self.get('username'), 
+        self.get('roles'), self.get('modulos'), self.get('estado_alta'), 
+        self.get('grupo'), self.get('home'));
+
+      roles = self.get('roles')|| [];
+      modulos = self.get('modulos')|| [];
+
+      if(roles.indexOf('usuario') === -1) roles.push('usuario');
+      if(modulos.indexOf('fondo') === -1) modulos.push('fondo');
+
+      repairkeys = {
+        modulos: modulos,
+        roles: roles
+      }
+      if(!self.get('home')) repairkeys.home = 'fondo:inscripcion';
+      if(!self.get('grupo')) repairkeys.grupo = 'adherente';
+      if(self.get('estado_alta') === 'pendaprobacion') repairkeys.estado_alta = 'activo';
+
+      self.partialUpdate(repairkeys);
+    },
+
+    inviteManagerToFondo: function(){
+      var self = this,
+          repairkeys,
+          roles = [],
+          modulos = [];
+
+      console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
+        self.get('displayName'),self.get('username'), 
+        self.get('roles'), self.get('modulos'), self.get('estado_alta'), 
+        self.get('grupo'), self.get('home'));
+
+      roles = self.get('roles')|| [];
+      modulos = self.get('modulos')|| [];
+
+      if(modulos.indexOf('fondo') === -1) modulos.push('fondo');
+
+      if(roles.indexOf('usuario') === -1) roles.push('usuario');
+      if(roles.indexOf('admin') === -1) roles.push('admin');
+      repairkeys = {
+        modulos: modulos,
+        roles: roles
+      }
+      repairkeys.grupo = 'produccion';
+
+
+      if(!self.get('home')) repairkeys.home = 'fondo:inscripcion';
+      if(self.get('estado_alta') === 'pendaprobacion') repairkeys.estado_alta = 'activo';
+
+      self.partialUpdate(repairkeys);
+    },
+
+
+    inviteManagerToMica: function(){
+      var self = this,
+          repairkeys,
+          roles = [],
+          modulos = [];
+
+      console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
+        self.get('displayName'),self.get('username'), 
+        self.get('roles'), self.get('modulos'), self.get('estado_alta'), 
+        self.get('grupo'), self.get('home'));
+
+      roles = self.get('roles')|| [];
+      modulos = self.get('modulos')|| [];
+
+      if(modulos.indexOf('mica') === -1) modulos.push('mica');
+
+      if(roles.indexOf('usuario') === -1) roles.push('usuario');
+      if(roles.indexOf('admin') === -1) roles.push('admin');
+      repairkeys = {
+        modulos: modulos,
+        roles: roles
+      }
+      repairkeys.grupo = 'produccion';
+
+
+      if(!self.get('home')) repairkeys.home = 'mica:rondas';
+      if(self.get('estado_alta') === 'pendaprobacion') repairkeys.estado_alta = 'activo';
+
+      self.partialUpdate(repairkeys);
+    },
+
     partialUpdate: function(data){
       //data: un hash de claves
       //

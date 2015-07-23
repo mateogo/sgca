@@ -278,4 +278,92 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
   };
 
 
+
+  //*************************************************************
+  //           USER VIEW
+  //*************************************************************
+  Edit.UserView = Marionette.ItemView.extend({
+    getTemplate: function(){
+      return utils.templates.UserView;
+    },
+
+    onRender: function(){
+
+    },
+
+
+    showError: function(msg){
+      this.$el.find('.alert').html(msg).slideDown();
+    },
+    hideError: function(){
+      this.$el.find('.alert').hide();
+    },
+    commit: function(){
+      //this.model.set('password',this.$el.find('[name=password]').val());
+    },
+    validate: function(){
+      var ok = true;
+
+      return ok;
+    },
+
+    events: {
+      'click .js-add-user-mica': 'addUserMica',
+      'click .js-add-user-fondo': 'addUserFondo',
+
+      'click .js-add-manager-mica': 'addManagerMica',
+      'click .js-add-manager-fondo': 'addManagerFondo',
+    },
+    addUserMica: function(e){
+      var self = this;
+      console.log('Adding user to MicaProfile ');
+
+      DocManager.confirm('Confirma agregar usuario al perfil de MICA?',{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
+        self.model.inviteUserToMica();
+        self.reload();
+      });
+    },
+
+    addUserFondo: function(e){
+      var self = this;
+      console.log('Adding user to FondoProfile ');
+
+      DocManager.confirm('Confirma agregar usuario al perfil de FONDO?',{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
+        self.model.inviteUserToFondo();
+        self.reload();
+      });
+    },
+
+    addManagerMica: function(e){
+      var self = this;
+      console.log('Adding user to MicaProfile ');
+
+      DocManager.confirm('Confirma atribuir al usuario perfil de ADMINISTRADOR MICA?',{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
+        self.model.inviteManagerToMica();
+        self.reload();
+      });
+    },
+
+    addManagerFondo: function(e){
+      var self = this;
+      console.log('Adding user to FondoProfile ');
+
+      DocManager.confirm('Confirma atribuir al usuario perfil de ADMINISTRADOR FONDO?',{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
+        self.model.inviteManagerToFondo();
+        self.reload();
+      });
+    },
+
+    onSubmit: function(){
+    },
+
+    reload: function(){
+      DocManager.trigger('login:view:user', this.model.get('username'));
+    },
+  });
+
+
+
+
+
 });

@@ -8,15 +8,16 @@
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
  *
  */ 
+var path = require('path');
+var rootPath = path.normalize(__dirname + '/../..');
 var _ = require('underscore');
-
 var dbi ;
 var BSON;
 var config = {};
 var fondosuscriptionsCol = 'fondosuscriptions';
 var serialCol = 'seriales';
 
-var _ = require('underscore');
+var utils = require(rootPath + '/core/util/utils');
 
 
 var MSGS = [
@@ -66,18 +67,15 @@ var loadSeriales = function(){
 };
 
 var fetchserial = function(serie){
-    //console.log("INIT:fetchserie:fondosuscription.js:[%s]",serie);
     var collection = dbi.collection(serialCol);
     collection.findOne({'serie':serie}, function(err, item) {
         if(!item){
-            console.log('INIT:fetchserial:serial not found: [%s]',serie);
             item = initSerial(serie);
 
             collection.insert(item, {safe:true}, function(err, result) {
                 if (err) {
                     console.log('Error initializing  [%s] error: %s',serialCol,err);
                 } else {
-                    console.log('NEW serial: se inserto nuevo [%s] [%s] nodos',serialCol,result);
                     addSerial(serie,result[0]);
                 }
             });
@@ -109,7 +107,6 @@ var updateSerialCollection = function(serial){
 
 
 var setNodeCode = function(node){
-    //console.log('setNodeCode:[%s]',node.tregistro);
     var adapter = tfondosuscription_adapter[node.tregistro] || tfondosuscription_adapter['poromision'];
     node.cnumber = nextSerial(adapter);
 
@@ -134,8 +131,6 @@ var addNewProfile = function(req, res, node, cb){
 
 
 var fetchOne = function(query, cb) {
-    console.log('findProfile Retrieving fondosuscription collection for passport');
-
     dbi.collection(fondosuscriptionsCol, function(err, collection) {
         collection.findOne(query, function(err, item) {
             cb(err, item);
@@ -144,8 +139,6 @@ var fetchOne = function(query, cb) {
 };
 
 var insertNewProfile = function (req, res, fondosuscription, cb){
-    console.log('insertNewProfile:fondosuscriptions.js BEGIN [%s]',fondosuscription.slug);
-    //dbi.collection(fondosuscriptionsCol, function(err, collection) {
 
     dbi.collection(fondosuscriptionsCol).insert(fondosuscription,{w:1}, function(err, result) {
             if (err) {
@@ -156,10 +149,8 @@ var insertNewProfile = function (req, res, fondosuscription, cb){
                 }
             } else {
                 if(res){
-                    console.log('3.1. ADD: se inserto correctamente el nodo %s', JSON.stringify(result[0]));
                     res.send(result[0]);
                 }else if(cb){
-                    console.log('3.1. ADD: se inserto correctamente el nodo [%s]  [%s] ', result[0]['_id'], JSON.stringify(result[0]['_id'].str));
                     cb({'model':result[0]})
                 }
             }
@@ -168,7 +159,6 @@ var insertNewProfile = function (req, res, fondosuscription, cb){
 };
 
 exports.setDb = function(db) {
-    //console.log('***** Profile setDB*******');
     dbi = db;
     loadSeriales();
     return this;
@@ -187,8 +177,6 @@ exports.setBSON = function(bs) {
 exports.findOne = function(req, res) {
     var query = req.body;
 
-    console.log('findONE:fondosuscription Retrieving fondosuscription collection with query');
-
     dbi.collection(fondosuscriptionsCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
             res.send(items[0]);
@@ -198,7 +186,6 @@ exports.findOne = function(req, res) {
 };
 
 exports.fetchById = function(id, cb) {
-    console.log('findById: Retrieving %s id:[%s]', fondosuscriptionsCol,id);
     dbi.collection(fondosuscriptionsCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             cb(err, item);
@@ -208,7 +195,6 @@ exports.fetchById = function(id, cb) {
 
 exports.findById = function(req, res) {
     var id = req.params.id;
-    console.log('findById: Retrieving %s id:[%s]', fondosuscriptionsCol,id, req.user);
     dbi.collection(fondosuscriptionsCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             res.send(item);
@@ -216,10 +202,67 @@ exports.findById = function(req, res) {
     });
 };
 
+exports.findByQuery = function(req, res) {
+    var query = buildQuery(req.query); 
+    var resultset;
+    var itemcount = 0;
+    var page = parseInt(req.query.page);
+    var limit = parseInt(req.query.per_page);
+    var cursor;
+    ///// dummy
+    //req.query.textsearch = 'altersoft';
+    /////
+    var textsearch = initTextSearch(req.query);
+
+    //console.log('find:fondosuscription Retrieving fondosuscription collection with QUERY [%s] [%s]', page, limit);
+
+    cursor = dbi.collection(fondosuscriptionsCol).find(query).sort({cnumber:1});
+    if(textsearch){
+        cursor.toArray(function(err, items){
+            resultset = textFilter(textsearch, items);
+            itemcount = resultset.length;
+            //console.log('====RETURNING: [%s] page:[%s] limit: [%s] itemslength [%s] =========',resultset.length, (page-1)*limit, limit, items.length);
+            res.send([{total_entries: itemcount}, resultset.splice((page-1) * limit, limit)  ]);
+        });
+
+    }else if(req.query){
+        cursor.count(function(err, total){
+            //console.log('CUrsor count: [%s]', total);
+            cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
+
+                res.send([{total_entries: total}, items]);
+
+            });
+        })
+
+    }else{
+        cursor.toArray(function(err, items) {
+                res.send(items);
+        });
+    }
+};
+
+var initTextSearch = function(query){
+    if(!query || !query.textsearch) return null;
+
+    return utils.safeName(query.textsearch);
+}
+
+var textFilter = function(textsearch, items){
+    var rset = [];
+    var querystr;
+    var test;
+    rset = _.filter(items, function(item){
+        querystr = utils.safeName(item.solicitante.edisplayName + item.solicitante.ename + item.solicitante.edescription);
+        test = querystr.indexOf(textsearch) !== -1 ? true : false;
+        return test;
+    });
+    return rset;
+};
+
+
 exports.find = function(req, res) {
     var query = req.body; //{};
-
-    console.log('find:fondosuscription Retrieving fondosuscription collection with query');
 
     dbi.collection(fondosuscriptionsCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
@@ -285,13 +328,30 @@ var buildUpdateData = function(data){
 };
 
 var buildQuery = function(qr){
-    var query = {}; 
+    var query = {},
+        prov = [], 
+        subc = {},
+        subv = {},
+        tmp = {},
+        conditions = [];
+
     if(!qr) return query;
-    if(qr.areas){
-        query.$or = buildAreaList(qr.areas);
-    }
+
+
+    if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
+    if(qr.evento) conditions.push({evento: qr.evento});
+    if(qr.rubro) conditions.push({rubro: qr.rubro});
+    //console.dir(conditions);
+
+
+    query['$and'] = conditions;
+
     return query;
 };
+
+
+
+
 var buildAreaList = function(areas){
     return _.map(areas, function(item){
         return {area: item};
@@ -307,10 +367,6 @@ exports.partialupdate = function(req, res) {
     var query = buildTargetNodes(data);
     var update = buildUpdateData(data);
 
-
-    console.log('UPDATING partial fields nodes:[%s]', query.$or[0]._id );
-    //res.send({query:query, update:update});
-
     dbi.collection(fondosuscriptionsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
         if (err) {
             console.log('Error partial updating %s error: %s',fondosuscriptionsCol,err);
@@ -321,7 +377,6 @@ exports.partialupdate = function(req, res) {
             }
 
         } else {
-            console.log('UPDATE: partial update success [%s] nodos',result);
             if(res){
                 res.send({result: result});
             }else if(cb){
@@ -333,7 +388,6 @@ exports.partialupdate = function(req, res) {
 
 exports.delete = function(req, res) {
     var id = req.params.id;
-    console.log('Deleting node: [%s] ', id);
     dbi.collection(fondosuscriptionsCol, function(err, collection) {
         collection.remove({'_id':new BSON.ObjectID(id)}, function(err, result) {
             if (err) {

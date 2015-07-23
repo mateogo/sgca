@@ -201,6 +201,7 @@ module.exports = function (config, app) {
     app.get ('/fondosuscriptions',            fondosuscribe.findAll);
     app.post('/fondosuscriptions/fetch',      fondosuscribe.findOne);
     app.post('/navegar/fondosuscriptions',    fondosuscribe.find);
+    app.get('/query/fondosuscriptions',       fondosuscribe.findByQuery);
 
     app.get ('/fondosuscriptions/:id',        fondosuscribe.findById);
     app.post('/fondosuscriptions',            fondosuscribe.add);

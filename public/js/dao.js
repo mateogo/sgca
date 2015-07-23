@@ -65,6 +65,12 @@ window.dao = {
             'browse:presupuesto':{
                 roles:['presugestor'],
             },
+            'fondo:manager':{
+                roles:['admin'],
+            },
+            'fondo:user':{
+                roles:['admin','usuario'],
+            },
             'mica:manager':{
                 roles:['admin'],
             },

@@ -1,0 +1,152 @@
+<div class="row">
+    <hr>
+    <div class="col-xs-12">
+        <h2 class="solicitante"><%= solicitante.edisplayName %> <span class="nro-serie">(<%= cnumber%>)</span></h2>
+        <%  if( !isComprador() && !isVendedor()) { %>
+            <h5 class="alert alert-danger">Este usuario ha iniciado la inscripción, sin embargo no ha habilitado su perfil de Vendedor, de Comprador, así como tampoco ha aceptado los términos y condiciones. </h5>
+        <% } %>
+        <h4><%= solicitante.epais %> | | <%= solicitante.eprov %> | <%= solicitante.otraprov %> | <%= solicitante.elocalidad %> </h4><hr>
+        <p><span class="fa fa-globe"></span> <a href="<%= solicitante.eweb %>" target="_blank"><%= solicitante.eweb %></a><br>
+        <span class="fa fa-envelope-o"></span> <a href="mailto:<%= solicitante.email %>"><%= solicitante.email %></a></p>
+    </div>
+    <div class="col-md-8 col-xs-12">
+        <div>
+            <p><%= solicitante.emotivation %></p><hr>
+            <p><%= solicitante.edescription %></p>
+            <hr>
+            <p><%= responsable.rname %></p>
+            <p><%= responsable.rmail %></p>
+        </div>
+    </div>
+    <div class="col-md-4 col-xs-12">
+    <!--N: AGREGAR EL RESTO DE LOS ESTADOS-->
+        <div><strong>Estado:</strong> <%  if(getFieldLabel('estado_alta') === 'activo') %><span class="label label-success">ACTIVO</span></div>
+        <div><strong>Pais:</strong> <%= solicitante.epais %></div>
+        <div><strong>Año de Fundación:</strong> <%= solicitante.efundacion %></div>
+        <div><strong>Cantidad de Empleados:</strong> <%= solicitante.enumempleados %></div>
+        <div><strong>Facturación:</strong> AR$ <%= solicitante.eventas %></div>
+        <div><strong>Fecha de Alta:</strong> <%= getFieldLabel('fecomp')%></div>
+        
+        <%  if( isComprador() ) { %>
+        <div>
+        <%  if(getFieldLabel('nivel_ejecucion') === 'comprador_rechazado') { %><span class="label label-danger">PERFIL DE COMPRADOR RECHAZADO</span><% } %>
+        <%  if(getFieldLabel('nivel_ejecucion') === 'comprador_aceptado') { %><span class="label label-success">PERFIL DE COMPRADOR ACEPTADO</span><% } %>
+        <%  if(getFieldLabel('nivel_ejecucion') === 'observado') { %><span class="label label-info">PERFIL DE COMPRADOR OBSERVADO</span><% } %>
+        </div>
+        <% } %>
+        
+    </div>
+    <%  if(isVendedor()){ %>
+    
+        <div class="col-md-12 col-xs-12">
+            <h3><span class="fa fa-briefcase"></span> Perfil de Vendedor 
+            <%  if(getFieldLabel('vendedor').vactividades === 'musica') { %>
+                  <span class="label label-mica-musica">MÚSICA</span>
+                <% } %>
+                <%  if(getFieldLabel('vendedor').vactividades === 'aescenicas')  { %>
+                  <span class="label label-mica-aescenicas">ARTES ESCÉNICAS</span>
+                <% } %>
+                <%  if(getFieldLabel('vendedor').vactividades === 'audiovisual') { %>
+                  <span class="label label-mica-audiovisual">AUDIOVISUAL</span>
+                <% } %>
+                <%  if(getFieldLabel('vendedor').vactividades === 'disenio') { %>
+                  <span class="label label-mica-diseno">DISEÑO</span>
+                <% } %>
+                <%  if(getFieldLabel('vendedor').vactividades === 'editorial') { %>
+                  <span class="label label-mica-editorial">EDITORIAL</span>
+                <% } %>
+                <%  if(getFieldLabel('vendedor').vactividades === 'videojuegos') { %>
+                  <span class="label label-mica-videojuegos">VIDEOJUEGOS</span>
+                <% } %>
+            </h3><hr>
+            <p><%= vendorSubActivities() %></p>
+            <p>Palabras Claves: <%= getFieldLabel('vendedor').vdescriptores %></p>
+            <p><strong>Negocios extra-fronteras:</strong>
+                <%  if(getFieldLabel('vendedor').vexperienciaintl ==="4") { %>Frecuentes<% } %>
+                <%  if(getFieldLabel('vendedor').vexperienciaintl ==="2") { %>Esporádicos<% } %>
+                <%  if(getFieldLabel('vendedor').vexperienciaintl ===1) { %>Nunca<% } %>
+            </p>
+            <p><%= getFieldLabel('vendedor').vcomentario %></p>
+            <%  if(hasVendorProfiles()){ %>
+                <h4>Portfolio</h4>
+                <ol class="portfolio">
+                <%  _.each(getFieldLabel('vendedor').vporfolios, function(item){ %>
+                    <li>
+                        <h4><%= item.slug %></h4>
+                        <p><%= item.denominacion %></p>
+                        <div class="social-navigation row">
+                            <ul>
+                        <%  _.each(item.referencias, function(refer){ %>
+                        <li>
+                            <a href="<%= refer.targeturl %>" target="_blank" title="<%= refer.slug %>">
+                                <span class="sr-only"><%= refer.tlink %></span>
+                            </a>
+                        </li>
+                        <% }) %>
+
+                            </ul>
+                        </div>
+                    </li>
+                <% }) %>
+                </ol>
+            <% } %>
+       </div>
+
+    <% } %>
+    <%  if(isComprador()){ %>
+    <hr>
+        <div class="col-md-12 col-xs-12">
+            <h3><span class="fa fa-shopping-cart"></span> Perfil de Comprador 
+            <%  if(getFieldLabel('comprador').cactividades === 'musica') { %>
+              <span class="label label-mica-musica">MÚSICA</span>
+            <% } %>
+            <%  if(getFieldLabel('comprador').cactividades === 'aescenicas') { %>
+              <span class="label label-mica-aescenicas">ARTES ESCÉNICAS</span>
+            <% } %>
+            <%  if(getFieldLabel('comprador').cactividades === 'audiovisual') { %>
+              <span class="label label-mica-audiovisual">AUDIOVISUAL</span>
+            <% } %>
+            <%  if(getFieldLabel('comprador').cactividades === 'disenio') { %>
+              <span class="label label-mica-diseno">DISEÑO</span>
+            <% } %>
+            <%  if(getFieldLabel('comprador').cactividades === 'editorial') { %>
+              <span class="label label-mica-editorial">EDITORIAL</span>
+            <% } %>
+            <%  if(getFieldLabel('comprador').cactividades === 'videojuegos') { %>
+              <span class="label label-mica-videojuegos">VIDEOJUEGOS</span>
+            <% } %></h3><hr>
+            <p><%= compradorSubActivities() %></p>
+            <p>Palabras Claves: <%= getFieldLabel('comprador').cdescriptores %></p>
+            <p><strong>Negocios extra-fronteras:</strong>
+                <%  if(getFieldLabel('comprador').cexperienciaintl === "4") { %>Frecuentes<% } %>
+                <%  if(getFieldLabel('comprador').cexperienciaintl === "2") { %>Esporádicos<% } %>
+                <%  if(getFieldLabel('comprador').cexperienciaintl === "1") { %>Nunca<% } %>
+            </p>
+            <p><%= getFieldLabel('comprador').ccomentario %></p>
+            <%  if(hasCompradorProfiles()){ %>
+                    <h4>Portfolio</h4>
+                    <ol class="portfolio">
+                    <%  _.each(getFieldLabel('comprador').cporfolios, function(item){ %>
+                    <li>
+                    <h4><%= item.slug %></h4>
+                    <p><%= item.denominacion %></p>
+                        <div class="social-navigation row">
+                            <ul>
+                            <%  _.each(item.referencias, function(refer){ %>
+                                <li>
+                                    <a href="<%= refer.targeturl %>" target="_blank" title="<%= refer.slug %>">
+                                        <span class="sr-only"><%= refer.tlink %></span>
+                                    </a>
+                                </li>
+                            <% }) %>
+                            </ul>
+                        </div>
+                    </li>
+                    <% }) %>
+                    </ol>
+            <% } %>
+       </div>
+
+    <% } %>
+
+</div> 

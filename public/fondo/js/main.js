@@ -13,6 +13,12 @@ utils.loadTemplate([
         'fondomov/FondoMov03Form','fondomov/FondoMov03Layout',
         'fondomov/FondoMov04Form','fondomov/FondoMov04Layout',
 
+        // -- Lista inscripciones
+        'list/CommonBaseLayout','list/CommonMainLayout',
+        'list/FondorequestsLayout','list/FondorequestsView','list/CommonModelEditorLayout',
+
+
+
         // Templates Itinerario
         'itinerario/ItinerarioForm','itinerario/ItinerarioLayout',
         // Templates pasajer

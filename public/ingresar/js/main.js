@@ -2,7 +2,7 @@ utils.loadTemplate([
 
     'LoginDefaultLayout','LoginForm','SignUpForm','SignUpFormFields','SignUpFormEmployeeFields',
     'MailAltaUsuarioMica','MailAltaUsuarioObras','MailAltaUsuarioFondo',
-    'RecoveryPassword','MailRecoveryPass','ProfileEditPasswordForm'
+    'RecoveryPassword','MailRecoveryPass','ProfileEditPasswordForm', 'UserView'
 
     ], function() {
 

@@ -9,6 +9,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
+    getFieldLabel: function(field){
+      var value;
+      if(!field) return '';
+      if(field.indexOf('.')!=-1){
+        //console.log('Objeto: [%s] propiedad:[%s]', field.substring(0, field.indexOf('.')), field.substring(field.indexOf('.')+1) )
+        value =  this.get(field.substring(0, field.indexOf('.')))[field.substring(field.indexOf('.')+1)];
+        return _getSelectValue(this, field, value);
+      }
+      return _getFieldFormatedValue(this, field);
+
+    },
+
     getFieldFormatedValue: function(field){
       return _getFieldFormatedValue(this, field);
     },
@@ -191,11 +203,112 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   });
 
+  Entities.FondoRegistrationPaginatedCol = Backbone.PageableCollection.extend({
+    whoami: 'FondoRegistrationPaginatedCol: fondo.js',
+    model: Entities.FondoRegistration,
+    url: "/query/fondosuscriptions",
+    //url: "/navegar/fondosuscriptions",
+
+    // getNextPage: function(step){
+    //   var actualPage = this.state.currentPage || 1;
+    //   var pageLength = this.state.pageSize || 15;
+    //   if(step === 'reset'){
+    //     actualPage = 0;
+    //   }else if (step === 'next'){
+    //     actualPage = actualPage + pageLength;
+    //   }else if (step === 'previous'){
+    //     actualPage = actualPage - pageLength;
+    //     if(actualPage <0 ) actualPage = 0;
+    //   }
+    //   this.state.firstPage = actualPage;
+    //   return actualPage;
+    // },
+
+    state:{
+      firstPage: 1,
+      pageSize: 25, 
+    },
+    queryParams:{
+      currentPage: 'page',
+      pageSize: 'per_page',
+      totalRecords: 'total_entries',
+    },
+
+
+    setQuery: function(query){
+      this.query = query;
+      _.extend(this.queryParams, query);
+
+    },
+
+    parseState: function (resp, queryParams, state, options) {
+      //console.log('========== PARSE STATE ========== [%s]', arguments.length);
+      //console.dir(state);
+      //console.log('PARSE STATE Response: [%s]',resp[0].total_entries);
+      //this.state = resp[0];
+      return {totalRecords: resp[0].total_entries};
+    },
+
+    parseRecords: function (resp, options ) {
+      return resp[1];
+    }
+
+   // // You can remap the query parameters from `state` keys from
+  
+  });
+
+
+
+
   Entities.FondoRegistrationFetchOneCol = Backbone.Collection.extend({
     whoami: 'FondoRegistrationFetchOneCol: fondo.js',
     model: Entities.FondoRegistration,
     url: "/fondosuscriptions/fetch",
 
+  });
+
+
+  //*************************************************************
+  //            FILTER filter FACET
+  //*************************************************************
+  Entities.FondoFilterFacet = Backbone.Model.extend({
+    whoami: 'Entities.FondoFilterFacet:fondo.js',
+    initialize: function(opts){
+      //console.log('initialize Fondo FILTER [%s]', this.get('subsector'))
+      this.schema.subsector.options = tdata.subSectorOL[this.get('sector')];
+
+
+    },
+
+    schema: {
+        rolePlaying:   {type: 'Select',  title: 'Rol', options: tdata.rolesOL },
+        cnumber:       {type: 'Text',    title: 'Número Inscripción' },
+        textsearch:    {type: 'Text',    title: 'Búsqueda por texto' },
+        provincia:     {type: 'Select',  title: 'Provincia',  options: tdata.provinciasOL },
+        sector:        {type: 'Select',  title: 'Sector',  options: tdata.sectorOL },
+        subsector:     {type: 'Select',  title: 'SubSector',  options: tdata.subSectorOL.aescenicas },
+        nivel_ejecucion: {type: 'Select',  title: 'Aprobación',  options: tdata.nivel_ejecucionOL },
+        estado_alta:   {type: 'Select',  title: 'Estado',  options: tdata.estado_altaOL },
+    },
+
+
+    defaults: {
+      rolePlaying: 'no_definido',
+      provincia: 'no_definido',
+      cnumber: '',
+      textsearch: '',
+      sector: 'no_definido',
+      subsector: 'no_definido',
+      evento: 'fondo',
+      rubro: 'general',
+      nivel_ejecucion: 'no_definido',
+      estado_alta: 'activo',
+      favorito: false,
+      emisor: 0,
+      receptor: 0,
+      userid: '',
+
+    },
   });
 
 
@@ -632,27 +745,41 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //            Helper Functions
   //*************************************************************
   var _getFieldFormatedValue = function(model, field){
-    
-    if(!model.schema){
-      return model.get(field);
-    }
 
-    if(!(field in model.schema)) return model.get(field) || '';
-    
-    if(model.schema[field].type === 'Select'){
-      var value = model.get(field);
-      if(value === 'no_definido' || value === "nodefinido") return '';
-      
-      var options = model.schema[field].options;
-      var selected = _.findWhere(options,{val:value});
-      return (selected)? selected.label : value;
 
-    }else{
-
-      return model.get(field);
-
-    }
+    return _getSelectValue(model, field, model.get(field));
   };
+
+  var _getSelectValue = function(model, field, value){
+    var selected;
+    if(!model.schema || !(field in model.schema) || model.schema[field].type !== 'Select' ) return value || '';
+
+    if(value === 'no_definido' || value === "nodefinido") return '';
+
+    selected = _.findWhere(model.schema[field].options, {val: value});
+    return (selected)? selected.label : value;
+
+
+  };
+
+
+
+  var _getFieldLabel = function(model, field){
+      var value;
+      if(!field) return '';
+      if(model[field]){
+        return _getSelectValue(model, field, model[field]());
+
+      }else if(field.indexOf('.') != -1){
+        value =  model.get(field.substring(0, field.indexOf('.')))[field.substring(field.indexOf('.')+1)];
+        return _getSelectValue(model, field, value);
+
+      }else{
+        return _getSelectValue(model, field, model.get(field));
+
+      }
+  };
+
 
   var _facetFactoryStepOne = function(model){
     var data = _.extend({}, model.get('requerimiento'));
@@ -727,13 +854,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     return fd;
   };
 
-  var queryCollection = function(query){
-      var entities = new Entities.FondoRegistrationFindByQueryCol();
+  var queryCollection = function(query, step){
+      var entities = new Entities.FondoRegistrationPaginatedCol();
       var defer = $.Deferred();
 
+      entities.setQuery(query);
       entities.fetch({
-        data: query,
-        type: 'post',
         success: function(data){
           defer.resolve(data);
         },
@@ -745,7 +871,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
 
   };
-
 
 
 
@@ -805,9 +930,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
     },
 
-    getFilteredByQueryCol: function(query){
+    getFilteredByQueryCol: function(query, step){
 
-      var fetchingEntities = queryCollection(query),
+      var fetchingEntities = queryCollection(query, step),
           defer = $.Deferred();
 
       $.when(fetchingEntities).done(function(entities){
@@ -842,8 +967,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     }
   });
 
-  DocManager.reqres.setHandler("fondorqst:query:entities", function(query){
-    return API.getFilteredByQueryCol(query);
+
+  DocManager.reqres.setHandler("fondorqst:query:entities", function(query, step){
+    return API.getFilteredByQueryCol(query, step);
   });
 
 });
