@@ -302,42 +302,51 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       $.when(loadCollection()).done(function(users){
         console.log('======== loaded users: [%s]', users.length);
         users.each(function(user){
-          testindex = testindex + 1;
-          roles = user.get('roles')|| [];
-          modulos = user.get('modulos')|| [];
- 
-          if( (modulos.indexOf('mica') === -1 && modulos.indexOf('fondo') !== -1) ||
-              (modulos.indexOf('mica') !== -1 && modulos.indexOf('fondo') === -1) ||
-              (modulos.length === 0)){
-            //|| user.get('home')!== 'mica:rondas' || user.get('grupo') !== 'adherente'
-            badindex += 1;
-            console.log('[%s]  a:[%s] b:[%s] c:[%s]',user.get('modulos'),(modulos.indexOf('mica') === -1 && modulos.indexOf('fondo') !== -1) ,(modulos.indexOf('mica') !== -1 && modulos.indexOf('fondo') === -1),(modulos.length === 0))
-
-            // console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
-            //   user.get('displayName'),user.get('username'), 
-            //   user.get('roles'), user.get('modulos'), user.get('estado_alta'), 
-            //   user.get('grupo'), user.get('home'));
-
-            if(roles.indexOf('usuario') === -1) roles.push('usuario');
-            if(modulos.indexOf('mica') === -1) modulos.push('mica');
-            if(modulos.indexOf('fondo') === -1) modulos.push('fondo');
-
-            repairkeys = {
-              modulos: modulos,
-              roles: roles
-            }
-
-            if(!user.get('grupo')) repairkeys.grupo = 'adherente';
-            if(user.get('estado_alta') === 'pendaprobacion') repairkeys.estado_alta = 'activo';
-
-            //user.partialUpdate(repairkeys);
-          }
+          testUser(user);
         });
 
-        console.log('======= total recorods:[%s]   (al 23-07: total 2744/130 ) badindex: [%s]', testindex, badindex);
+        console.log('======= END');
       });
     }
   };
+
+  var testUser = function(user){
+    var userpromise,
+        repairkeys,
+        roles = [],
+        modulos = [];
+
+    roles = user.get('roles')|| [];
+    modulos = user.get('modulos')|| [];
+
+    if( (modulos.indexOf('mica') === -1 && modulos.indexOf('fondo') !== -1) ||
+        (modulos.indexOf('mica') !== -1 && modulos.indexOf('fondo') === -1) ||
+        (modulos.length === 0)){
+      //|| user.get('home')!== 'mica:rondas' || user.get('grupo') !== 'adherente'
+      console.log('[%s]  a:[%s] b:[%s] c:[%s]',user.get('modulos'),(modulos.indexOf('mica') === -1 && modulos.indexOf('fondo') !== -1) ,(modulos.indexOf('mica') !== -1 && modulos.indexOf('fondo') === -1),(modulos.length === 0), modulos.indexOf('mica'), modulos.indexOf('fondo'))
+
+      // console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
+      //   user.get('displayName'),user.get('username'), 
+      //   user.get('roles'), user.get('modulos'), user.get('estado_alta'), 
+      //   user.get('grupo'), user.get('home'));
+
+      if(roles.indexOf('usuario') === -1) roles.push('usuario');
+      if(modulos.indexOf('mica') === -1) modulos.push('mica');
+      if(modulos.indexOf('fondo') === -1) modulos.push('fondo');
+
+      repairkeys = {
+        modulos: modulos,
+        roles: roles
+      }
+
+      if(!user.get('grupo')) repairkeys.grupo = 'adherente';
+      if(user.get('estado_alta') === 'pendaprobacion') repairkeys.estado_alta = 'activo';
+
+      //user.partialUpdate(repairkeys);
+    }
+
+  };
+
 
   DocManager.reqres.setHandler("user:by:username", function(username){
     return API.getUserByUsername(username);
