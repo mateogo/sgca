@@ -318,7 +318,7 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
       var self = this;
       console.log('Adding user to MicaProfile ');
 
-      DocManager.confirm('Confirma agregar usuario al perfil de MICA?',{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
+      DocManager.confirm('Confirma agregar usuario al perfil de MICA? [' + self.model.get('modulos').indexOf('mica') + '] ['+self.model.get('modulos').indexOf('fondo')+ ']',{okText: 'Aceptar', cancelText: 'cancelar'}).done(function(){
         self.model.inviteUserToMica();
         self.reload();
       });

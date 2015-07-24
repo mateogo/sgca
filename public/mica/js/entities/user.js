@@ -180,7 +180,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     model: Entities.User,
     url: "/usuarios",
 
-    comparator: "nickName"
+    comparator: "username"
   });
 
   Entities.UserFetchCollection = Backbone.Collection.extend({
@@ -194,6 +194,25 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
        if(options) this.options = options;
     },
   });
+
+  var loadCollection = function(){
+      var entities = new Entities.UserCollection();
+      var defer = $.Deferred();
+
+      entities.fetch({
+        success: function(data){
+          defer.resolve(data);
+        },
+        error: function(data){
+            defer.resolve(undefined);
+        }
+      });
+
+      return defer.promise();
+
+  };
+
+
 
 
 
@@ -271,7 +290,63 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
+    addModuleToUser: function(){
+      var userpromise,
+          repairkeys,
+          roles = [],
+          modulos = [],
+          testindex = 0,
+          badindex = 0;
+      console.log('============  startin user Check ===============')
+
+      $.when(loadCollection()).done(function(users){
+        console.log('======== loaded users: [%s]', users.length);
+        users.each(function(user){
+          testUser(user);
+        });
+
+        console.log('======= END');
+      });
+    }
   };
+
+  var testUser = function(user){
+    var userpromise,
+        repairkeys,
+        roles = [],
+        modulos = [];
+
+    roles = user.get('roles')|| [];
+    modulos = user.get('modulos') || [];
+
+    if( (modulos.indexOf('mica') === -1 && modulos.indexOf('fondo') !== -1) ||
+        (modulos.indexOf('mica') !== -1 && modulos.indexOf('fondo') === -1) ||
+        (modulos.length === 0)){
+      //|| user.get('home')!== 'mica:rondas' || user.get('grupo') !== 'adherente'
+      console.log('[%s][%s]  a:[%s] b:[%s] c:[%s] ix[%s] ix[%s] [%s] [%s] tx[%s]',user.get('username'),modulos,(modulos.indexOf('mica') === -1 && modulos.indexOf('fondo') !== -1) ,(modulos.indexOf('mica') !== -1 && modulos.indexOf('fondo') === -1),(modulos.length === 0), modulos.indexOf('mica'), modulos.indexOf('fondo'), modulos[0], modulos[1], modulos.indexOf(modulos[1]));
+
+      // console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
+      //   user.get('displayName'),user.get('username'), 
+      //   user.get('roles'), user.get('modulos'), user.get('estado_alta'), 
+      //   user.get('grupo'), user.get('home'));
+
+      if(roles.indexOf('usuario') === -1) roles.push('usuario');
+      if(modulos.indexOf('mica')  === -1) modulos.push('mica');
+      if(modulos.indexOf('fondo') === -1) modulos.push('fondo');
+
+      repairkeys = {
+        modulos: modulos,
+        roles: roles
+      }
+
+      if(!user.get('grupo')) repairkeys.grupo = 'adherente';
+      if(user.get('estado_alta') === 'pendaprobacion') repairkeys.estado_alta = 'activo';
+
+      user.partialUpdate(repairkeys);
+    }
+
+  };
+
 
   DocManager.reqres.setHandler("user:by:username", function(username){
     return API.getUserByUsername(username);
@@ -285,5 +360,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     return API.getEntity(id);
   });
 
+  DocManager.reqres.setHandler("user:repair:modules", function(){
+    return API.addModuleToUser();
+  });
 
 });

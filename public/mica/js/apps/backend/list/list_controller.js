@@ -18,6 +18,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 					buildLayout();
 				}
         // OjO solo para debug===================
+        // console.log('Ready to check Users [%s]', user.get('username'));
         // if(user.get('username') === 'mgomezortega@gmail.com'){
         //   checkUsers();          
         // }
@@ -31,8 +32,8 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
 	}; 
   var checkUsers = function(){
-
-    DocManager.request('mica:check:users:data');
+    //DocManager.request('mica:check:users:data');
+    //DocManager.request('user:repair:modules');
 
   };
 	
