@@ -129,41 +129,17 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
         return this;
       },
   });
-  // Backgrid.VactivityCell = Backgrid.StringCell.extend({
-  //     className: "string-cell",
-  //     initialize: function(opt){
-  //     	//console.log('initialize Cell[%s] [%s]', arguments.length, this.model.whoami, this.model.get('vendedor').vactividades)
-  //     	this.model.set('bg_vendedor', this.model.get('vendedor').rolePlaying.vendedor ? this.model.get('vendedor').vactividades + "-" + this.model.get('vendedor').vporfolios.length : '');
-
-  //     },
-  //     render: function(){
-  //     	//console.log('render Cell[%s] [%s]', arguments.length, this.model.whoami, this.model.get('vendedor').vactividades)
-  //     	// var actividad = this.model.get('vendedor').rolePlaying.vendedor ? this.model.get('vendedor').vactividades + "-" + this.model.get('vendedor').vporfolios.length : ''
-  //     	// this.model.set('bg_vendedor', actividad);
-  //     	this.$el.html(this.model.get('bg_vendedor'));
-  //       return this;
-  //     },
-  // });
-  // Backgrid.CactivityCell = Backgrid.Cell.extend({
-  //     className: "string-cell",
-  //     render: function(){
-  //     	var actividad = this.model.get('comprador').rolePlaying.comprador ? this.model.get('comprador').cactividades + "-" + this.model.get('comprador').cporfolios.length : ''
-  //     	this.$el.html(actividad);
-  //     	this.model.set('bg_comprador', actividad);
-  //       return this;
-  //     },
-  // });
 
   var drpDwnBtn = function(){
               return $('\
                   <div class="btn-group" role="group">\
-                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">\
+                    <button type="button" class="btn btn-xs btn-default dropdown-toggle" title="modificar calificación" data-toggle="dropdown" aria-expanded="false">\
                       <i class="fa fa-cog"></i>\
                     </button>\
                     <ul class="dropdown-menu pull-right" role="menu">\
-                      <li><a href="#" class="js-trigger js-trigger-compradoraceptado"  role="button">Comprador Aceptado</a></li>\
-                      <li><a href="#" class="js-trigger js-trigger-compradorrechazado" role="button">Comprador Rechazado</a></li>\
-                      <li><a href="#" class="js-trigger js-trigger-observado" role="button">Observado</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-inscripcion-aceptado"  role="button">Aceptado</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-inscripcion-rechazado" role="button">Rechazado</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-inscripcion-observado" role="button">Observado</a></li>\
                     </ul>\
                 </div>');
   };
@@ -171,38 +147,40 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
   var EditViewCell = Backgrid.Cell.extend({
       render: function(){
           if(!this.rendered){
-             var btnEdit = $('<button class="btn-link js-edit btn btn-sm btn-info" title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
-             var btnRemove = $('<button class="btn-link js-trash btn btn-sm btn-danger" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
+             var btnEdit = $('<button class="btn btn-xs btn-info js-edit" title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
+             var btnRemove = $('<button class="btn btn-xs btn-danger js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
              this.$el.append(btnEdit).append(btnRemove).append(drpDwnBtn());
              this.rendered = true;
           }
-         return this;
+        this.$el.css('width','95px');
+        return this;
       },
       
       events: {
           'click button.js-edit': 'editClicked',
           'click button.js-trash': 'trashClicked',
-          'click .js-trigger-compradorrechazado': 'buyerRegected',
-          'click .js-trigger-compradoraceptado': 'buyerAccepted',
-          'click .js-trigger-observado': 'buyerObserved',
+          'click .js-trigger-inscripcion-aceptado': 'formAccepted',
+          'click .js-trigger-inscripcion-observado': 'formObserved',
+          'click .js-trigger-inscripcion-rechazado': 'formRegected',
       },
       updateRecord: function(e, nuevo_estado){
         var self = this;
         e.stopPropagation();e.preventDefault();
  
         self.$('.dropdown-toggle').dropdown('toggle');
+        console.log('updateRecord')
         getSession().views.mainlayout.trigger('model:change:state',this.model, nuevo_estado, function(error){
         });
      },
 
-      buyerAccepted: function(e){
-        this.updateRecord(e, 'comprador_aceptado');
+      formAccepted: function(e){
+        this.updateRecord(e, 'aceptado');
       },
-      buyerRegected: function(e){
-        this.updateRecord(e, 'comprador_rechazado');
-      },
-      buyerObserved: function(e){
+      formObserved: function(e){
         this.updateRecord(e, 'observado');
+      },
+      formRegected: function(e){
+        this.updateRecord(e, 'rechazado');
       },
 
       editClicked: function(e){
@@ -226,11 +204,14 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
 				    gridcols:[
 				      {name: 'cnumber', label:'Nro Inscr', cell:'string', editable:false},
 	            {name: 'requerimiento.tsolicitud', label:'Solicitud', cell:fieldLabelCell, editable:false},
+              {name: 'requerimiento.eventname', label:'Evento', cell:fieldLabelCell, editable:false},
+              {name: 'movilidad.description', label:'Viaje', cell:fieldLabelCell, editable:false},
 
-				      {name: 'responsable.eprov', label:'Prov', cell:fieldLabelCell, editable:false},
+				      {name: 'movilidad.qpax', label:'Pax', cell:fieldLabelCell, editable:false},
+              {name: 'responsable.eprov', label:'Prov', cell:fieldLabelCell, editable:false},
 				      {label:'Acciones', cell: EditViewCell, editable:false, sortable:false},
 				    ],
-				    filtercols:['cnumber', 'responsable.eprov'],
+				    filtercols:['cnumber', 'responsable.eprov', 'movilidad.description'],
 				    editEventName: 'fondorequest:edit',
 
 				  },
@@ -310,6 +291,7 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
 
     mainlayout.on('model:change:state', function(model, state){
       model.set('nivel_ejecucion', state);
+      console.log('partial update')
 
       DocManager.request("fondorqst:partial:update",[model.id],{'nivel_ejecucion': state});
 
@@ -341,13 +323,13 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
 
   	mainlayout.hideList();
 
-    editorlayout.on('accept:buyer', function(){
-      model.set('nivel_ejecucion', 'comprador_aceptado');
-      DocManager.request("fondorqst:partial:update",[model.id],{'nivel_ejecucion': 'comprador_aceptado'});
-      mainlayout.showList();
-      editorlayout.destroy();
+    // editorlayout.on('accept:buyer', function(){
+    //   model.set('nivel_ejecucion', 'aceptado');
+    //   DocManager.request("fondorqst:partial:update",[model.id],{'nivel_ejecucion': 'aceptado'});
+    //   mainlayout.showList();
+    //   editorlayout.destroy();
 
-    });
+    // });
 
 
   	editorlayout.on('close:view', function(){

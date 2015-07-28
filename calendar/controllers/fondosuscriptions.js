@@ -253,7 +253,7 @@ var textFilter = function(textsearch, items){
     var querystr;
     var test;
     rset = _.filter(items, function(item){
-        querystr = utils.safeName(item.solicitante.edisplayName + item.solicitante.ename + item.solicitante.edescription);
+        querystr = utils.safeName(item.responsable.edisplayName + item.responsable.ename + item.responsable.email + item.responsable.actividadppal + item.responsable.rname + item.movilidad.description + item.requerimiento.eventname );
         test = querystr.indexOf(textsearch) !== -1 ? true : false;
         return test;
     });
@@ -313,7 +313,6 @@ var buildTargetNodes = function(data){
         var node = {};
         var id = nodes[i];
 
-        console.log('buildTargetNodes: [%s] [%s]', id, typeof id);
         node._id = new BSON.ObjectID(id);
         list.push(node);
     }
@@ -322,11 +321,13 @@ var buildTargetNodes = function(data){
         return query
     }
 };
+
 var buildUpdateData = function(data){
     if(!data.newdata) return;
     return data.newdata;
 };
 
+// BUILD QUERY
 var buildQuery = function(qr){
     var query = {},
         prov = [], 
@@ -342,8 +343,16 @@ var buildQuery = function(qr){
     if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'responsable.eprov': qr.provincia});
     if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
     if(qr.evento) conditions.push({evento: qr.evento});
-    if(qr.rubro) conditions.push({rubro: qr.rubro});
-    //console.dir(conditions);
+
+    if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
+    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
+        conditions.push({estado_alta: qr.estado_alta});
+    }else{
+        conditions.push({estado_alta: 'activo'});
+    }
+
+
+    console.dir(conditions);
 
 
     query['$and'] = conditions;

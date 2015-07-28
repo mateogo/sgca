@@ -398,11 +398,7 @@ DocManager.module("FondoBackendApp.Common.Views", function(Views, DocManager, Ba
     
     events: {
       'click button.js-close': 'closeView',
-      'click button.js-aceptar-comprador': 'aceptarComprador',
 
-    },
-    aceptarComprador: function(e){
-      this.trigger('accept:buyer');
     },
     
     closeView: function(e){

@@ -29,32 +29,6 @@ DocManager.module("FondoBackendApp.List", function(List, DocManager, Backbone, M
         hasCompradorProfiles: function(){
           return self.model.hasCompradorProfiles();
         },
-        
-        vendorSubActivities: function(){
-          var subact = self.model.get('vendedor')['sub_' + self.model.get('vendedor').vactividades];
-          var memo = "";
-          var render = _.reduce(subact, function(memo, item, index){
-              //console.log('reduce: [%s] [%s]: [%s]', item, index, memo);
-              if(item) memo = memo + index + '/ ' ;
-              return memo;
-
-          },memo);
-          //console.log('returning: [%s]', render)
-          return render;
-        },
-
-        compradorSubActivities: function(){
-          var subact = self.model.get('comprador')['sub_' + self.model.get('comprador').cactividades];
-          var memo = "";
-          var render = _.reduce(subact, function(memo, item, index){
-              //console.log('reduce: [%s] [%s]: [%s]', item, index, memo);
-              if(item) memo = memo + index + '/ ' ;
-              return memo;
-
-          },memo);
-          //console.log('returning: [%s]', render)
-          return render;
-        },
       };
     }
   });

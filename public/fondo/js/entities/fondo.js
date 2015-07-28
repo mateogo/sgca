@@ -267,6 +267,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   });
 
+  Entities.FondoRegistrationUpdate = Backbone.Model.extend({
+    whoami: 'Entities.FondoRegistrationUpdate:fondo.js ',
+
+    urlRoot: "/actualizar/fondosuscriptions",
+
+  });
+
+
 
   //*************************************************************
   //            FILTER filter FACET
@@ -282,7 +290,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         cnumber:         {type: 'Text',    title: 'Número Inscripción' },
         textsearch:      {type: 'Text',    title: 'Búsqueda por texto' },
         provincia:       {type: 'Select',  title: 'Provincia',  options: tdata.provinciasOL },
-        nivel_ejecucion: {type: 'Select',  title: 'Aprobación',  options: tdata.nivel_ejecucionOL },
+        nivel_ejecucion: {type: 'Select',  title: 'Aprobación',  options: tdata.nivel_ejecucionFondoOL },
         estado_alta:     {type: 'Select',  title: 'Estado',  options: tdata.estado_altaOL },
     },
 
@@ -293,7 +301,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       cnumber: '',
       textsearch: '',
       evento: 'fondo',
-      rubro: 'general',
       nivel_ejecucion: 'no_definido',
       estado_alta: 'activo',
       userid: '',
@@ -938,6 +945,28 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
     },
 
+    partialUpdate: function(models, data){
+      var query = {},
+          nodes,
+          update;
+
+      if(_.isArray(models)){
+        nodes = models;
+      }else if(_.isObject(models)){
+        nodes = [models.id];
+      }else{
+        nodes = [models];
+      }
+
+      query.nodes = nodes;
+      query.newdata = data;  
+      var update = new Entities.FondoRegistrationUpdate(query);
+      update.save({
+        success: function() {
+        }
+      });
+    },
+
 
   };
 
@@ -954,6 +983,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     }else{
       return API.newEntityFactory();
     }
+  });
+
+  DocManager.reqres.setHandler("fondorqst:partial:update", function(models, keys){
+    return API.partialUpdate(models, keys);
   });
 
 

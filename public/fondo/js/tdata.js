@@ -325,6 +325,15 @@ window.tdata = {
         {val:'observado',           label:'Observado', classattr:'info'},
     ],
     
+    nivel_ejecucionFondoOL:[
+        {val:'no_definido',         label:'Nivel de Ejecución',  classattr:'info'},
+        {val:'enproceso',           label:'Alta usuario',         classattr:'info'},
+        {val:'submit_definitivo',   label:'Alta definitiva',      classattr:'warning'},
+        {val:'aceptado',            label:'Aceptado',  classattr:'info'},
+        {val:'rechazado',           label:'Rechazado', classattr:'info'},
+        {val:'observado',           label:'Observado', classattr:'info'},
+    ],
+
     estado_altaOL:[
         {val:'no_definido',  label:'Nivel de Ejecución',  classattr:'info'},
         {val:'activo',       label:'Activo',         classattr:'info'},
