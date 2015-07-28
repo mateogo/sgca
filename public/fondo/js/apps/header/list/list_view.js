@@ -38,7 +38,6 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
 			//
 			var userlog;
 			dao.gestionUser.getUser(DocManager, function (user){
-				//console.log(user.id);
 				userlog = user.id;
 			})
 			//
@@ -50,7 +49,6 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
     },
 
     enterhClicked: function(){
-      console.log('evento');
 			$('#loginbox').toggleClass('hide show');
 			$('#ins-but').toggleClass('hide show');
       
@@ -63,13 +61,11 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
 		
 		onRender: function(userlog){
 			if (userlog.model.id != null){
-				//console.log('usuario logueado',userlog.model.id);
 				this.$('.js-statusbar').show();
 
 				
 			}
 			else{
-				//console.log('no esta logueado')
 				this.$('.js-statusbar').hide();
 			}
 		}

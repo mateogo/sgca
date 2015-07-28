@@ -8,7 +8,7 @@ DocManager.module("FondoBackendApp", function(FondoBackendApp, DocManager, Backb
 
   var API = {
     listInscriptions: function(criterion){
-      console.log('API: listar inscripciones [%s]', criterion);
+      //console.log('API: listar inscripciones [%s]', criterion);
       FondoBackendApp.List.Controller.listInscriptions(criterion);
     },
 

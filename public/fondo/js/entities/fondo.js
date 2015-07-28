@@ -454,7 +454,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           valid = true,
           errors = {};
 
-      var check = [['ename'], ['edisplayName'], ['epais'], ['email'], ['rodocum'], ['rtel'], ['rcel'], ['actividadppal'], ['fondo2014'], ['mica2014']];
+      var check = [['ename'], ['edisplayName'], ['epais'],['eprov'], ['email'], ['rodocum'], ['rtel'], ['rcel'], ['actividadppal'], ['fondo2014'], ['mica2014']];
       //if(step>2 || step<1) return null;
 
       _.each(check, function(fld){
@@ -485,6 +485,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       if (_.has(attrs,'epais') && (!attrs.epais )) {
         errors.epais = "No puede ser nulo";
+      }
+
+      if (_.has(attrs,'eprov') && (!attrs.eprov || attrs.eprov === 'no_definido')) {
+        errors.eprov = "No puede ser nulo";
       }
 
       if (_.has(attrs,'email') && (!attrs.email )) {
@@ -699,12 +703,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'Tramo:fondo.js ',
     
     schema: {
-      ttramo:     {type: 'Select',   title: 'Tramo (Ida o Vuelta)',   editorAttrs:{placeholder:'Ida/ Ida-Vta'},options: utils.itinerarioTipoTramoOpLst },
-      fesalida:   {type: 'Text',     title: 'Fecha de Salida',  editorAttrs:{placeholder:'dd/mm/aaaa'}},
-      fevuelta:   {type: 'Text',     title: 'Fecha de Regreso', editorAttrs:{placeholder:'de/mm/aaaa'}},
-      origen:     {type: 'Text',     title: 'Origen (lugar/ puerto/ aeropuerto de partida)',  editorAttrs:{placeholder:'Lugar/ puerto/ aeropuerto de salida'}},
-      destino:    {type: 'Text',     title: 'Destino (lugar/ puerto/ aeropuerto de llegada)', editorAttrs:{placeholder:'Lugar/ puerto/ aeropuerto de llegada'}},
-      eventname:  {type: 'Text',     title: 'Evento/ Actividad a desarrollar en destino',  editorAttrs:{placeholder:'Denominación evento/ show en destino'}},
+      ttramo:     {type: 'Select',   title: 'Tramo (Ida o Vuelta o Tramo intermedio)',   editorAttrs:{placeholder:'Ida/ Ida-Vta'},options: tdata.itinerarioTipoTramoOpLst },
+      fesalida:   {type: 'Text',     title: 'Fecha de Partida',  editorAttrs:{placeholder:'dd/mm/aaaa'}},
+      //fevuelta:   {type: 'Text',     title: 'Fecha de Regreso', editorAttrs:{placeholder:'de/mm/aaaa'}},
+      origen:     {type: 'Text',     title: 'Partida',  editorAttrs:{placeholder:'Lugar/ aeropuerto de partida (Movilidad MICA: mínimo 250 km de CABA)'}},
+      destino:    {type: 'Text',     title: 'Llegada', editorAttrs:{placeholder:'Lugar/ aeropuerto de llegada'}},
+      eventname:  {type: 'Text',     title: 'Evento/ Actividad a desarrollar en destino',  editorAttrs:{placeholder:'Denominación evento'}},
       eventurl:   {type: 'Text',     title: 'Enlace (URL) evento', editorAttrs:{placeholder:'http://www.dominio.com.ar'}},
     },
 

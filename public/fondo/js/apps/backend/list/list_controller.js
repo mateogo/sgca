@@ -168,7 +168,6 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
         e.stopPropagation();e.preventDefault();
  
         self.$('.dropdown-toggle').dropdown('toggle');
-        console.log('updateRecord')
         getSession().views.mainlayout.trigger('model:change:state',this.model, nuevo_estado, function(error){
         });
      },
@@ -291,7 +290,6 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
 
     mainlayout.on('model:change:state', function(model, state){
       model.set('nivel_ejecucion', state);
-      console.log('partial update')
 
       DocManager.request("fondorqst:partial:update",[model.id],{'nivel_ejecucion': state});
 

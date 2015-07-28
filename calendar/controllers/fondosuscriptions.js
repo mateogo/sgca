@@ -352,7 +352,7 @@ var buildQuery = function(qr){
     }
 
 
-    console.dir(conditions);
+   //console.dir(conditions);
 
 
     query['$and'] = conditions;

@@ -2,7 +2,7 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
   List.Controller = {
     listHeader: function(){
       var links = DocManager.request("header:entities");
-      console.log('listHeader BEGINS  [%s]', links.length);
+      //console.log('listHeader BEGINS  [%s]', links.length);
       dao.gestionUser.getUser(DocManager, function (user){
         user = (user || new User());
 

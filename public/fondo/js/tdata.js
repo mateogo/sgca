@@ -456,6 +456,14 @@ window.tdata = {
         {val:'movilidad_mica' , label:'Ayudas a la Movilidad para la participación MICA 2015'},
     ],
 
+    itinerarioTipoTramoOpLst:[
+        {val:'no_definido', label:'Seleccione opción'},
+        {val:'ida',    label:'IDA'},
+        {val:'vta',    label:'VUELTA'},
+        {val:'idavta', label:'TRAMO INTERMEDIO'},
+    ],
+
+
 
 
 };

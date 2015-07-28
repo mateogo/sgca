@@ -7,7 +7,6 @@ DocManager.addRegions({
 });
 
 DocManager.navigate = function(route,  options){
-  console.log('DocManager.navigate: app.js')
   options || (options = {});
   Backbone.history.navigate(route, options);
 };
@@ -22,7 +21,6 @@ DocManager.navigateBack = function(){
 };
 
 DocManager.getCurrentRoute = function(){
-  console.log('DocManager.getCurretnRoute: app.js')
   return Backbone.history.fragment
 };
 
@@ -52,7 +50,6 @@ DocManager.confirm = function(txt,opts){
 };
 
 DocManager.on("start", function(){
-  console.log('DocManager History start: start [%s]',this.getCurrentRoute());
   if(Backbone.history){
     Backbone.history.start();
 

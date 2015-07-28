@@ -175,13 +175,6 @@ window.utils = {
         {val:'otros',       label:'Otros'},
     ],
 
-    itinerarioTipoTramoOpLst:[
-        {val:'no_definido', label:'Seleccione opción'},
-        {val:'idavta', label:'IDA/VUELTA Único destino'},
-        {val:'ida',    label:'IDA     a destino de GIRA'},
-        {val:'vta',    label:'VUELTA  retorno de GIRA'},
-    ],
-
 
     referenceLinkOpLst:[
         {val:'no_definido', label:'Seleccione opción'},
