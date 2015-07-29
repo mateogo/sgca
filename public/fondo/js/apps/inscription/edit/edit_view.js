@@ -791,13 +791,15 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       Message.error(errors.referencias);
       return false;
 
-    // }else if(refCol.length >1 && evType !== 'gira'){
-    //   errors.referencias = 'ATENCIÓN: tenés que ingresar sólo un destino (Ida y Vuelta)';
-    //   Message.error(errors.referencias);
-    //   return false;
+    }else if(refCol.length >2 && evType !== 'gira'){
+      errors.referencias = 'ATENCIÓN: Para solicitar más de 2 tramos deberá seleccionar la CATEGORÍA "Ayuda a Giras Artísticas y Culturales" en el PASO 1.';
+      Message.error(errors.referencias);
+      return false;
 
     }else{
+
       return true;
+
     }
   };
 
