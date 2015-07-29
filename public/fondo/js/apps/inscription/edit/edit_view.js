@@ -791,10 +791,10 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       Message.error(errors.referencias);
       return false;
 
-    }else if(refCol.length >1 && evType !== 'gira'){
-      errors.referencias = 'ATENCIÓN: tenés que ingresar sólo un destino (Ida y Vuelta)';
-      Message.error(errors.referencias);
-      return false;
+    // }else if(refCol.length >1 && evType !== 'gira'){
+    //   errors.referencias = 'ATENCIÓN: tenés que ingresar sólo un destino (Ida y Vuelta)';
+    //   Message.error(errors.referencias);
+    //   return false;
 
     }else{
       return true;
