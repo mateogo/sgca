@@ -1,150 +1,180 @@
 <div class="row">
+  <hr>
+  <div class="col-md-12">
+    <h2 class="solicitante"><span class="nro-serie"><%= cnumber%></span> <%  if(getFieldLabel('estado_alta') === 'activo') %><span class="label label-success">ACTIVO</span></h2>
+    <h2>
+    <% if (requerimiento.tsolicitud==="movilidad_nacional") {%>
+      Movilidad Nacional
+    <% } %>
+    <% if (requerimiento.tsolicitud==="movilidad_intl") {%>
+      Movilidad Internacional
+    <% } %>
+    <% if (requerimiento.tsolicitud==="movilidad_mica") {%>
+      Movilidad MICA
+    <% } %>
+    </h2>
+    <div><strong>Tipo de Evento: </strong>
+    <% if (requerimiento.eventtype==="no_definido") {%>
+      No definido
+    <% } %>
+    <% if (requerimiento.eventtype==="feria") {%>
+      Presencia en ferias y mercados
+    <% } %>
+    <% if (requerimiento.eventtype==="festivales") {%>
+      Presencia en festivales y encuentros
+    <% } %>
+    <% if (requerimiento.eventtype==="gira") {%>
+      Ayudas a giras artísticas y culturales
+    <% } %>
+    <% if (requerimiento.eventtype==="mica") {%>
+      Ayuda a participar en MICA 2015
+    <% } %>
+    </div>
+    <div>
+      <strong>Evento:</strong> <a href="<%= requerimiento.eventurl %>" target="_blank"><%= requerimiento.eventname %></a>
+    </div>
+    <div><strong>Objetivo esperado:</strong> <%= requerimiento.motivacion %></div>
+    <div><strong>Fecha de Alta:</strong> <%= getFieldLabel('fecomp')%></div>
+    
     <hr>
-    <div class="col-md-12">
-        <h2 class="solicitante"><span class="nro-serie"><%= cnumber%></span> <%  if(getFieldLabel('estado_alta') === 'activo') %><span class="label label-success">ACTIVO</span></h2>
-        <h2>
-        <% if (requerimiento.tsolicitud==="movilidad_nacional") {%>
-            Movilidad Nacional
-        <% } %>
-        <% if (requerimiento.tsolicitud==="movilidad_intl") {%>
-            Movilidad Internacional
-        <% } %>
-        <% if (requerimiento.tsolicitud==="movilidad_mica") {%>
-            Movilidad MICA
-        <% } %>
-        </h2>
-        <div><strong>Tipo de Evento: </strong>
-        <% if (requerimiento.eventtype==="no_definido") {%>
-            No definido
-        <% } %>
-        <% if (requerimiento.eventtype==="feria") {%>
-            Presencia en ferias y mercados
-        <% } %>
-        <% if (requerimiento.eventtype==="festivales") {%>
-            Presencia en festivales y encuentros
-        <% } %>
-        <% if (requerimiento.eventtype==="gira") {%>
-            Ayudas a giras artísticas y culturales
-        <% } %>
-        <% if (requerimiento.eventtype==="mica") {%>
-            Ayuda a participar en MICA 2015
-        <% } %>
-        </div>
-        <div>
-            <strong>Evento:</strong> <a href="<%= requerimiento.eventurl %>" target="_blank"><%= requerimiento.eventname %></a>
-        </div>
-        <div><strong>Objetivo esperado:</strong> <%= requerimiento.motivacion %></div>
-        <div><strong>Fecha de Alta:</strong> <%= getFieldLabel('fecomp')%></div>
-        
-        <hr>
+  </div>
+
+  <div class="col-md-12 col-xs-12">
+
+    <h3 class="solicitante">Datos del Postulante</h3>
+    <h3 class="solicitante"><%= responsable.edisplayName %></h3>
+    <% if (responsable.ename!="") {%>  
+    <div><strong>Razón social:</strong> <%= responsable.ename %></div>
+    <% } %>
+    <div><strong>CUIT:</strong> <%= responsable.ecuit %></DIV>
+
+    <div><strong>Forma jurídica:</strong> 
+        <% if (responsable.etipojuridico==="pfisica") {%>Persona física<% } %>
+        <% if (responsable.etipojuridico==="fundacion") {%>Fundación<% } %>
+        <% if (responsable.etipojuridico==="asociacion") {%>Asociación<% } %>
+        <% if (responsable.etipojuridico==="cooperativa") {%>Cooperativa<% } %>
+        <% if (responsable.etipojuridico==="sa") {%>S.A.<% } %>
+        <% if (responsable.etipojuridico==="srl") {%>S.R.L.<% } %>
     </div>
+    
+    <hr>
+    <h4>Dirección legal y datos de contacto</h4>
+    <div><strong>Dirección postal: </strong><%= responsable.edomicilio %> [<%= responsable.ecp %>], <%= responsable.elocalidad %>, <%= responsable.eprov %><% if (responsable.otraprov != '') {%>, <%= responsable.otraprov %><% } %>, <%= responsable.epais %></div>
+    <p><span class="fa fa-globe"></span> <a href="<%= responsable.eweb %>" target="_blank"><%= responsable.eweb %></a><br>
+    <span class="fa fa-envelope-o"></span> <a href="mailto:<%= responsable.email %>"><%= responsable.email %></a></p>
 
-    <div class="col-md-12 col-xs-12">
-    <!--N: AGREGAR EL RESTO DE LOS ESTADOS-->
-        <h3 class="solicitante">Datos del Postulante</h3>
-        <h3 class="solicitante"><%= responsable.edisplayName %></h3>
-        <% if (responsable.ename!="") {%>  
-        <div><strong>Razón social:</strong> <%= responsable.ename %></div>
-        <% } %>
-        <div><strong>CUIT:</strong> <%= responsable.ecuit %></DIV>
-
-        <div><strong>Forma jurídica:</strong> 
-            <% if (responsable.etipojuridico==="pfisica") {%>Persona física<% } %>
-            <% if (responsable.etipojuridico==="fundacion") {%>Fundación<% } %>
-            <% if (responsable.etipojuridico==="asociacion") {%>Asociación<% } %>
-            <% if (responsable.etipojuridico==="cooperativa") {%>Cooperativa<% } %>
-            <% if (responsable.etipojuridico==="sa") {%>S.A.<% } %>
-            <% if (responsable.etipojuridico==="srl") {%>S.R.L.<% } %>
-        </div>
-        
-        <hr>
-        <h4>Dirección legal y datos de contacto</h4>
-        <div><strong>Dirección postal: </strong><%= responsable.edomicilio %> [<%= responsable.ecp %>], <%= responsable.elocalidad %>, <%= responsable.eprov %><% if (responsable.otraprov != '') {%>, <%= responsable.otraprov %><% } %>, <%= responsable.epais %></div>
-        <p><span class="fa fa-globe"></span> <a href="<%= responsable.eweb %>" target="_blank"><%= responsable.eweb %></a><br>
-        <span class="fa fa-envelope-o"></span> <a href="mailto:<%= responsable.email %>"><%= responsable.email %></a></p>
-
-        <h4>Datos del firmante (representante legal o titular):</h4>
-        <div><strong>Email del Representante:</strong> <a href="mailto:<%= responsable.rmail %>"><%= responsable.rmail %></a></div>
-        <div><strong>Nombre y apellido del Representante:</strong> <%= responsable.rname %></div>
-        <div><strong>Cargo / Función:</strong> <%= responsable.rcargo %></div>
-        <div><strong>DNI / Pasaporte:</strong> <%= responsable.rdocnum %></div>
-        <div><strong>Fecha de nacimiento:</strong> <%= responsable.rfenac %></div>
-        <div><strong>Teléfono:</strong> <%= responsable.rtel %></div>
-        <div><strong>Celular:</strong> <%= responsable.rcel %></div>
-
-        <hr>
-
-        <h4>Actividad del postulante</h4>
-        <div><strong>Actividad principal: </strong><%= responsable.actividadppal %></div>
-        <div><strong>Disciplinas: </strong></div>
-
-        <hr>
-        <h4>Participaciones anteriores</h4>
-        <div>Participación FONDO 2014: </div>
-        <div>Participación MICA anterior: </div>
-                
-    </div>
+    <h4>Datos del firmante (representante legal o titular):</h4>
+    <div><strong>Email del Representante:</strong> <a href="mailto:<%= responsable.rmail %>"><%= responsable.rmail %></a></div>
+    <div><strong>Nombre y apellido del Representante:</strong> <%= responsable.rname %></div>
+    <div><strong>Cargo / Función:</strong> <%= responsable.rcargo %></div>
+    <div><strong>DNI / Pasaporte:</strong> <%= responsable.rdocnum %></div>
+    <div><strong>Fecha de nacimiento:</strong> <%= responsable.rfenac %></div>
+    <div><strong>Teléfono:</strong> <%= responsable.rtel %></div>
+    <div><strong>Celular:</strong> <%= responsable.rcel %></div>
 
     <hr>
+
+    <h4>Actividad del postulante</h4>
+    <div><strong>Actividad principal: </strong><%= responsable.actividadppal %></div>
+    <div><strong>Disciplinas: </strong></div>
+
+    <hr>
+    <h4>Participaciones anteriores</h4>
+    <div>Participación FONDO 2014: </div>
+    <div>Participación MICA anterior: </div>
+  </div>
+  <hr>
 </div> 
 
 <div class="row">
-    <div class="col-md-12">
-        <h3 class="solicitante">Itinerario</h3>
+<!--ITINERARIO-->
+    <div class="col-md-12"><hr>
+      <h3>Itinerario</h3>
     </div>
     <div class="col-md-12">
-        <h3 class="solicitante">Viaje</h3>
-
-        <p><strong>Descripción ejecutiva: </strong><%= movilidad.description %></p>
-        <p>Tramos: <%= movilidad.tramos.length %> </p>
-        <p><strong>Pasajeros: </strong><span class="badge"><%= movilidad.qpax %></span>  <strong>Mínimo de pasajeros necesarios para realizar el viaje: </strong><span class="badge"><%= movilidad.qpaxmin %></span></p>
+      <p><strong>Descripción ejecutiva: </strong><%= movilidad.description %></p>
+      <p>Tramos: <%= movilidad.tramos.length %> </p>
+      <p><strong>Pasajeros: </strong><span class="badge"><%= movilidad.qpax %></span>  <strong>Mínimo de pasajeros necesarios para realizar el viaje: </strong><span class="badge"><%= movilidad.qpaxmin %></span></p>
     </div>
     <div class="col-md-12">
-    <% _.each(movilidad.tramos, function(tramo){   %>
-        <h3 class="solicitante">Tramo: <%= tramo.ttramo %></h3>
+      <h3><i class="fa fa-paper-plane"></i> Tramos</h3>
 
-        <div class="row">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>FECHA DE ORIGEN</th>
-                  <th>ORIGEN</th>
-                  <th>FECHA DE DESTINO</th>
-                  <th>DESTINO</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th></th>
-                  <th><%= tramo.fesalida %></th>
-                  <th><%= tramo.origen %></th>
-                  <th><%= tramo.fevuelta %></th>
-                  <th><%= tramo.destino %></th>
-                </tr>
-              </tbody>
-            </table>
-        </div>
-        <div class="row">
-            <div class="col-sm-6 cos-xs-12">
-                <h4>Origen</h4>
-                <p><strong></strong><%= tramo.fesalida %></p>
-                <p><strong></strong><%= tramo.origen %></p>
-            </div>
-            <div class="col-sm-6 cos-xs-12">
-                <h4>Destino</h4>
-                <p><strong></strong><%= tramo.fevuelta %></p>
-                <p><strong></strong><%= tramo.destino %></p>
-            </div>
-        </div>
-    <% }) %>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>FECHA DE SALIDA</th>
+              <th>ORIGEN</th>
+              <th>DESTINO</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+<!--SI LA FECHA DE INSCRIPCION ES ANTERIOR AL 20JUL2015-->
+        <% if (fecomp < "2015-07-29") { %>
+          <% _.each(movilidad.tramos, function(tramo){   %>
+          <!--Si la fecha de alta es anterior a hoy y el tramo es "ida y vuelta" lo divido en dos tramos para mantener la lógica de los últimos cambios, donde cada trayecto se muestra por separado-->
+            <% if (tramo.ttramo === "idavta") { %>
+              <tr>
+                <th><%= tramo.fesalida %></th>
+                <th><%= tramo.origen %></th>
+                <th><%= tramo.destino %></th>
+              </tr>
+              <tr>
+                <th><%= tramo.fevuelta %></th>
+                <th><%= tramo.destino %></th>
+                <th><%= tramo.origen %></th>
+              </tr>
+            <% } else { %>
+              <tr>
+                <th><%= tramo.fesalida %></th>
+                <th><%= tramo.origen %></th>
+                <th><%= tramo.destino %></th>
+              </tr>
+            <% } %>
+          <% }) %>
+        <% } %>
 
+<!--SI LA FECHA DE INSCRIPCION ES POSTERIOR AL 20JUL2015-->
+        <% if (fecomp >= "2015-07-29" ) { %>
+          <% _.each(movilidad.tramos, function(tramo){   %>
+            <tr>
+              <th><%= tramo.fesalida %></th>
+              <th><%= tramo.origen %></th>
+              <th><%= tramo.destino %></th>
+            </tr>
+          <% }) %>
+        <% } %>
+       
 
-
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div class="col-sm-6 col-xs-12">
-        
 
+<!--PASAJEROS-->
+    <div class="col-md-12"><hr>
+      <h3><i class="fa fa-user"></i> Pasajeros</h3>
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>APELLIDO Y NOMBRE</th>
+              <th>DNI</th>
+              <th>FECHA DE NACIMIENTO</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% _.each(movilidad.pasajeros, function(pasajero){   %>
+            <tr>
+              <th><%= pasajero.papellido %>, <%= pasajero.pnombre %></th>
+              <th><%= pasajero.pdni %></th>
+              <th><%= pasajero.pfenac %></th>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
     </div>
 </div>
 
