@@ -298,7 +298,7 @@ var buildQuery = function(qr){
     var query = {},
         prov = [], 
         subc = {},
-        subv = {},
+        subgenero = {},
         tmp = {},
         conditions = [];
 
@@ -307,14 +307,28 @@ var buildQuery = function(qr){
     if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'solicitante.eprov': qr.provincia});
 
     if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
+
     if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
         conditions.push({estado_alta: qr.estado_alta});
     }else{
         conditions.push({estado_alta: 'activo'});
     }
 
+
+
     if(qr.tsolicitud && qr.tsolicitud !== 'no_definido'){ 
         conditions.push({'solicitante.tsolicitud': qr.tsolicitud});
+        if(qr.tsolicitud === 'musica'){
+            if(qr.subgenero && qr.subgenero !== 'no_definido'){
+                subgenero['musica.generomusical.'+qr.subgenero] = true;
+                conditions.push(subgenero);
+            }
+        }else{
+            if(qr.subgenero && qr.subgenero !== 'no_definido'){ 
+                subgenero['aescenica.generoteatral.'+qr.subgenero] = true;
+                conditions.push(subgenero);
+            }
+        }
     }
 
     if(qr.cnumber) conditions.push({cnumber: qr.cnumber});

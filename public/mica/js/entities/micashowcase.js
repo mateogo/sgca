@@ -10,7 +10,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     schema: {
-      nivel_ejecucion: {type: 'Select',   title: 'Nivel de ejecucion',options: tdata.nivel_ejecucionOL },
+      nivel_ejecucion: {type: 'Select',   title: 'Nivel de ejecucion',options: tdata.nivel_ejecucion_showcaseOL },
       'solicitante.eprov': {type: 'Select',   title: 'Provincias',options: tdata.provinciasOL },
       'solicitante.tsolicitud': {type: 'Select',   title: 'Tipo Solicitud',options: tdata.showcaseTSolicitudOL },
     },
@@ -298,29 +298,32 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //            FILTER filter FACET
   //*************************************************************
   Entities.ShowcaseFilterFacet = Backbone.Model.extend({
-    whoami: 'Entities.ShowcaseFilterFacet:mica.js',
+    whoami: 'Entities.ShowcaseFilterFacet:micashowcase.js',
     initialize: function(opts){
+
+      this.schema.subgenero.options = tdata.subgeneroOL[this.get('tsolicitud')];
 
     },
 
     schema: {
+        tsolicitud:    {type: 'Select',  title: 'Tipo Solicitud',  options: tdata.showcaseTSolicitudOL },
+        subgenero:     {type: 'Select',  title: 'Tipo Solicitud',  options: tdata.subgeneroOL['no_definido'] },
         cnumber:       {type: 'Text',    title: 'Número Inscripción' },
         textsearch:    {type: 'Text',    title: 'Búsqueda por texto' },
-        tsolicitud:    {type: 'Select',  title: 'Tipo Solicitud',  options: tdata.showcaseTSolicitudOL },
-        nivel_ejecucion: {type: 'Select',  title: 'Aprobación',  options: tdata.nivel_ejecucionOL },
+        nivel_ejecucion: {type: 'Select',  title: 'Aprobación',  options: tdata.nivel_ejecucion_showcaseOL },
         estado_alta:   {type: 'Select',  title: 'Estado',  options: tdata.estado_altaOL },
     },
 
 
     defaults: {
-      provincia: 'no_definido',
+      tsolicitud: 'no_definido',
+      subgenero: 'no_definido',
       cnumber: '',
       textsearch: '',
       evento: 'mica_showcase',
       rubro: 'general',
       nivel_ejecucion: 'no_definido',
       estado_alta: 'activo',
-
     },
   });
 

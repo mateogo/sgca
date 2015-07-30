@@ -8,12 +8,19 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     if(filterData.schema.subsector)
       filterData.schema.subsector.options = tdata.subSectorOL[filterData.get('sector')];
     
-    var form = new Backbone.Form({model:filterData});
+   if(filterData.schema.subgenero)
+      filterData.schema.subgenero.options = tdata.subgeneroOL[filterData.get('tsolicitud')];
+    
+     var form = new Backbone.Form({model:filterData});
 
     form.on('sector:change', function(form, editorContent) {
         var contenido = editorContent.getValue(),
             newOptions = tdata.subSectorOL[contenido];
         form.fields.subsector.editor.setOptions(newOptions);
+    });
+
+    form.on('tsolicitud:change', function(form, editorContent) {
+        form.fields.subgenero.editor.setOptions(tdata.subgeneroOL[editorContent.getValue()]);
     });
 
     var modal = new Backbone.BootstrapModal({
@@ -392,9 +399,16 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
   });
 
   Views.ModelEditorLayout = Marionette.LayoutView.extend({
+ 
+    initialize: function(opts){
+      this.options = opts;
+    },
 
     getTemplate: function(){
-      return utils.templates.CommonModelEditorLayout;
+      if(!this.options.template)
+        return utils.templates.CommonModelEditorLayout;
+      else
+        return this.options.template;
     },
     
     regions: {
@@ -408,10 +422,16 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     events: {
       'click button.js-close': 'closeView',
       'click button.js-aceptar-comprador': 'aceptarComprador',
+      'click button.js-aceptar-showcase': 'aceptarShowcase',
 
     },
+
     aceptarComprador: function(e){
       this.trigger('accept:buyer');
+    },
+    
+    aceptarShowcase: function(e){
+      this.trigger('accept:showcase');
     },
     
     closeView: function(e){

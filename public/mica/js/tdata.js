@@ -325,6 +325,15 @@ window.tdata = {
         {val:'observado',           label:'Observado', classattr:'info'},
     ],
     
+    nivel_ejecucion_showcaseOL:[
+        {val:'no_definido',         label:'Nivel de Ejecución',  classattr:'info'},
+        {val:'enproceso',           label:'Alta usuario',         classattr:'info'},
+        {val:'submit_definitivo',   label:'Alta definitiva',      classattr:'warning'},
+        {val:'aceptado',            label:'Aceptado',  classattr:'info'},
+        {val:'rechazado',           label:'Rechazado', classattr:'info'},
+        {val:'observado',           label:'Observado', classattr:'info'},
+    ],
+    
     estado_altaOL:[
         {val:'no_definido',  label:'Nivel de Ejecución',  classattr:'info'},
         {val:'activo',       label:'Activo',         classattr:'info'},
@@ -442,8 +451,8 @@ window.tdata = {
 
     showcaseTSolicitudOL: [
         {val:'no_definido', label:'Seleccione Tipo de Solicitud'},
-        {val:'aescenicas',   label:'Artes Escénicas'},
-        {val:'musica',    label:'Música'},
+        {val:'aescenicas',  label:'Artes Escénicas'},
+        {val:'musica',      label:'Música'},
     ],
 
     showcaseMusicaOL: [
@@ -470,6 +479,37 @@ window.tdata = {
         {val:'comediamusical', label:'Comedia Musical'},
         {val:'otros',       label:'Otros géneros'},
     ],
+
+    subgeneroOL: {
+      no_definido: [
+          {val:'no_definido', label:'Seleccione Género'},
+      ],
+
+      musica: [
+          {val:'no_definido', label:'Seleccione Género'},
+          {val:'tango',        label:'Tango'},
+          {val:'folklore',     label:'Folklore'},
+          {val:'tropical',     label:'Tropical'},
+          {val:'rock',         label:'Rock'},
+          {val:'reggae',       label:'Reggae'},
+          {val:'electronica',  label:'Electrónica'},
+          {val:'jazz',         label:'Jazz'},
+          {val:'contemporanea', label:'Contemporánea'},
+          {val:'fusion',       label:'Fusión'},
+          {val:'otros',        label:'Otros géneros'},
+      ],
+
+      aescenicas: [
+          {val:'no_definido', label:'Seleccione Género'},
+          {val:'teatro',      label:'Teatro'},
+          {val:'teatrodanza', label:'Danza'},
+          {val:'titeres',     label:'Títeres'},
+          {val:'circo',       label:'Circo'},
+          {val:'performance', label:'Performance'},
+          {val:'comediamusical', label:'Comedia Musical'},
+          {val:'otros',       label:'Otros géneros'},
+      ],
+    },
 
 };
 

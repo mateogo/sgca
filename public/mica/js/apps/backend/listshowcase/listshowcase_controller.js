@@ -155,12 +155,11 @@ DocManager.module('BackendApp.ListShowcase',function(ListShowcase, DocManager, B
                       <i class="fa fa-cog"></i>\
                     </button>\
                     <ul class="dropdown-menu pull-right" role="menu">\
-                      <li><a href="#" class="js-trigger js-trigger-compradoraceptado"  role="button">Comprador Aceptado</a></li>\
-                      <li><a href="#" class="js-trigger js-trigger-compradorrechazado" role="button">Comprador Rechazado</a></li>\
-                      <li><a href="#" class="js-trigger js-trigger-observado" role="button">Observado</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-inscripcion-aceptado"  role="button">Aceptado</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-inscripcion-rechazado" role="button">Rechazado</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-inscripcion-observado" role="button">Observado</a></li>\
                     </ul>\
-                </div>');
-  };
+                </div>');  };
 
   var EditViewCell = Backgrid.Cell.extend({
       render: function(){
@@ -177,9 +176,9 @@ DocManager.module('BackendApp.ListShowcase',function(ListShowcase, DocManager, B
       events: {
           'click button.js-edit': 'editClicked',
           'click button.js-trash': 'trashClicked',
-          'click .js-trigger-compradorrechazado': 'buyerRegected',
-          'click .js-trigger-compradoraceptado': 'buyerAccepted',
-          'click .js-trigger-observado': 'buyerObserved',
+          'click .js-trigger-inscripcion-aceptado': 'formAccepted',
+          'click .js-trigger-inscripcion-observado': 'formObserved',
+          'click .js-trigger-inscripcion-rechazado': 'formRegected',
       },
       updateRecord: function(e, nuevo_estado){
         var self = this;
@@ -190,14 +189,14 @@ DocManager.module('BackendApp.ListShowcase',function(ListShowcase, DocManager, B
         });
      },
 
-      buyerAccepted: function(e){
-        this.updateRecord(e, 'comprador_aceptado');
+      formAccepted: function(e){
+        this.updateRecord(e, 'aceptado');
       },
-      buyerRegected: function(e){
-        this.updateRecord(e, 'comprador_rechazado');
-      },
-      buyerObserved: function(e){
+      formObserved: function(e){
         this.updateRecord(e, 'observado');
+      },
+      formRegected: function(e){
+        this.updateRecord(e, 'rechazado');
       },
 
       editClicked: function(e){
@@ -234,7 +233,7 @@ DocManager.module('BackendApp.ListShowcase',function(ListShowcase, DocManager, B
             baseLayoutTitle: 'Showcase - 2015',
 				    parentLayoutView: getSession().views.mainlayout,
 
-				    layoutTpl: utils.templates.MicaShowcaseItemLayout,
+				    layoutTpl: utils.templates.MicaShowcaseListLayout,
 				    formTpl: utils.templates.MicaShowcaseFormLayout,
 				    
             collection: getSession().collection,
@@ -323,7 +322,8 @@ DocManager.module('BackendApp.ListShowcase',function(ListShowcase, DocManager, B
   //***************** Vista de un Modelo ***************
   var createView = function(session, mainlayout, model){
   	var editorLayout = new backendCommons.ModelEditorLayout({
-  		model: model
+      template: utils.templates.MicaShowcaseItemLayout,
+  		model: model,
   	})
   	registerEditorLayoutEvents(session, mainlayout, editorLayout, model)
 
@@ -337,9 +337,9 @@ DocManager.module('BackendApp.ListShowcase',function(ListShowcase, DocManager, B
 
   	mainlayout.hideList();
 
-    editorlayout.on('accept:buyer', function(){
-      model.set('nivel_ejecucion', 'comprador_aceptado');
-      DocManager.request("showcase:partial:update",[model.id],{'nivel_ejecucion': 'comprador_aceptado'});
+    editorlayout.on('accept:showcase', function(){
+      model.set('nivel_ejecucion', 'aceptado');
+      DocManager.request("showcase:partial:update",[model.id],{'nivel_ejecucion': 'aceptado'});
       mainlayout.showList();
       editorlayout.destroy();
 

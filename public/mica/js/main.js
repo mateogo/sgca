@@ -20,7 +20,7 @@ utils.loadTemplate([
         'list/MicarequestsLayout','list/MicarequestsView',
 
         // -- Lista showcase
-        'showcaselist/MicaShowcaseItemLayout','showcaselist/MicaShowcaseItemView',
+        'showcaselist/MicaShowcaseListLayout','showcaselist/MicaShowcaseItemLayout','showcaselist/MicaShowcaseItemView',
 
         // MailSender
         'MailTemplateDefault','MailFormSubmitNotification','MailFormGuardarProvisorio',
