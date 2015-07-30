@@ -483,7 +483,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     processRequest: function(col){
       var self = this;
       var query = {
-          name: 'Items del Presupuesto',
+          name: 'Inscriptos Showcase 2015',
           heading: self.fetchLabels(),
           data: JSON.stringify(col)
       };
