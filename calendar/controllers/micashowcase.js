@@ -202,6 +202,7 @@ exports.find = function(req, res) {
     });
 };
 
+
 exports.findByQuery = function(req, res) {
     var query = buildQuery(req.query); 
     var resultset;
@@ -234,6 +235,33 @@ exports.findByQuery = function(req, res) {
 
             });
         })
+
+    }else{
+        cursor.toArray(function(err, items) {
+                res.send(items);
+        });
+    }
+};
+
+
+
+exports.fetchByQuery = function(req, res) {
+    var query = buildQuery(req.query),
+        cursor;
+
+    //console.log('find:micasuscription Retrieving micasuscription collection with QUERY [%s] [%s]', page, limit);
+
+    cursor = dbi.collection(micashowcaseCol).find(query).sort({cnumber:1});
+
+    if(false){
+        // cursor.count(function(err, total){
+        //     //console.log('CUrsor count: [%s]', total);
+        //     cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
+
+        //         res.send([{total_entries: total}, items]);
+
+        //     });
+        // })
 
     }else{
         cursor.toArray(function(err, items) {

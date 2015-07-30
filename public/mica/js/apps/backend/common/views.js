@@ -354,6 +354,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       'click .js-cancel': 'onCancel',
       'click .js-filter': 'filterList',
       'click .js-excel': 'downloadExcel',
+      'click .js-showcase-excel': 'downloadShowcaseExcel',
       'click button.js-item-edit': 'itemEdit',
       'click button.js-item-trash': 'itemTrash',
       //'input #querytext': 'textFilter',
@@ -367,6 +368,12 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       this.filter.set('textsearch',this.$('#querytext').val());
 
       DocManager.trigger(this.options.filterEventName, this.filter, 'reset');
+    },
+
+    downloadShowcaseExcel: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      DocManager.trigger('showcase:suscriptions:export:excel');
     },
 
     downloadExcel: function(e){

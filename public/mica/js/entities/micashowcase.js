@@ -332,12 +332,42 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //*************************************************************
   //            Exporta a excel EXCEL Excel
   //*************************************************************
-  Entities.ShowcaseExportCollection = Backbone.Collection.extend({
-    whoami: 'Entities.ShowcaseExportCollection:mica.js ',
-    url: "/micashowcase",
+
+  Entities.ShowcaseExportCollection = Backbone.PageableCollection.extend({
+    whoami: 'Entities.ShowcaseExportCollection:micashowcase.js ',
     model: Entities.ShowcaseRegistration,
+    url: "/fetch/micashowcase",
     sortfield: 'cnumber',
     sortorder: -1,
+
+    state:{
+      firstPage: 1,
+      pageSize: 15, 
+    },
+    queryParams:{
+      currentPage: 'page',
+      pageSize: 'per_page',
+      totalRecords: 'total_entries',
+    },
+
+
+    setQuery: function(query){
+      this.query = query;
+      _.extend(this.queryParams, query);
+
+    },
+
+    parseState: function (resp, queryParams, state, options) {
+
+      return {totalRecords: resp.length};
+
+    },
+
+    parseRecords: function (resp, options ) {
+
+      return resp;
+
+    },
 
     comparator: function(left, right) {
       var order = this.sortorder;
@@ -366,16 +396,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var exportFactory = {
     exportHeadings: [
         {val:'cnumber',                         label:'NroIns',           itemType: 'Text'},
-        {val:'isComprador',                     label:'EsComprador',      itemType: 'Text'},
-        {val:'comprador.cactividades',          label:'ActPpalComprador', itemType: 'Text'},
-        {val:'isVendedor',                      label:'EsVendedor',       itemType: 'Text'},
-        {val:'vendedor.vactividades',           label:'ActPpalVendedor',  itemType: 'Text'},
-        {val:'fecomp',                          label:'FechaAlta',        itemType: 'Text'},
         {val:'responsable.rname',               label:'NombreResponsable',itemType: 'Text'},
         {val:'responsable.rmail',               label:'Correo',           itemType: 'Text'},
         {val:'responsable.rcel',                label:'Celular',          itemType: 'Text'},
         {val:'solicitante.edisplayName',        label:'Solicitante',      itemType: 'Text'},
-        {val:'solicitante.eprov',               label:'Provincia',        itemType: 'Text'},
+        {val:'solicitante.tsolicitud',          label:'Tipo Solicitud',   itemType: 'Text'},
     ],
 
     fetchCollection: function(collection){
