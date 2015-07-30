@@ -169,7 +169,7 @@ var parseData = function(dataCol ,options){
             }else if(iType === 'Date') {
                 return parseDateStr(item);
             }else if(iType === 'Boolean') {
-                return (isFalsey(item) ? false : true);
+                return (isFalsey(item) ? 0 : 1);
             }else{
                 return item;
             }

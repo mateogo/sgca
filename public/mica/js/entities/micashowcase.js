@@ -67,6 +67,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return _getFieldFormatedValue(this, field);
     },
 
+    integrantesList: function(){
+      return _getIntegrantesData(this.getIntegrantes());
+
+    },
+
     getIntegrantes: function(){
       if(!this.get('responsable').integrantes || !this.get('responsable').integrantes.length ){
         return [];
@@ -396,11 +401,38 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var exportFactory = {
     exportHeadings: [
         {val:'cnumber',                         label:'NroIns',           itemType: 'Text'},
-        {val:'responsable.rname',               label:'NombreResponsable',itemType: 'Text'},
-        {val:'responsable.rmail',               label:'Correo',           itemType: 'Text'},
-        {val:'responsable.rcel',                label:'Celular',          itemType: 'Text'},
-        {val:'solicitante.edisplayName',        label:'Solicitante',      itemType: 'Text'},
         {val:'solicitante.tsolicitud',          label:'Tipo Solicitud',   itemType: 'Text'},
+        {val:'solicitante.edisplayName',        label:'Solicitante',      itemType: 'Text'},
+        {val:'responsable.rmail',               label:'Correo',           itemType: 'Text'},
+        {val:'responsable.rname',               label:'Nombre Responsable',itemType:'Text'},
+        {val:'responsable.rcel',                label:'Celular',          itemType: 'Text'},
+        {val:'solicitante.edescription',        label:'Biografía',        itemType: 'Text'},
+        {val:'integrantesList',                 label:'Integrantes',      itemType: 'Text'},
+        {val:'musica.sello',                    label:'M:Sello',          itemType: 'Text'},
+        {val:'musica.discografia',              label:'M:Discografia',    itemType: 'Text'},
+        {val:'musica.festivales',               label:'M:Festivales',     itemType: 'Text'},
+        {val:'musica.giras',                    label:'M:Giras',          itemType: 'Text'},
+        {val:'musica.escenario',                label:'M:Técnica',        itemType: 'Text'},
+        {val:'musica.generomusical.folklore',      label:'M:Folklore',    itemType: 'Boolean'},
+        {val:'musica.generomusical.tango',         label:'M:Tango',       itemType: 'Boolean'},
+        {val:'musica.generomusical.tropical',      label:'M:Tropical',    itemType: 'Boolean'},
+        {val:'musica.generomusical.rock',          label:'M:Rock',        itemType: 'Boolean'},
+        {val:'musica.generomusical.reggae',        label:'M:Reggae',      itemType: 'Boolean'},
+        {val:'musica.generomusical.electronica',   label:'M:Electronica', itemType: 'Boolean'},
+        {val:'musica.generomusical.jazz',          label:'M:Jazz',        itemType: 'Boolean'},
+        {val:'musica.generomusical.contemporanea', label:'M:Contemporanea', itemType: 'Boolean'},
+        {val:'musica.generomusical.fusion',        label:'M:Fusion',      itemType: 'Boolean'},
+        {val:'musica.generomusical.otros',         label:'M:Otros',       itemType: 'Boolean'},
+        {val:'aescenica.propuestaartistica',           label:'AES:Artística',  itemType: 'Text'},
+        {val:'aescenica.experiencia',                  label:'AES:Experiencia',itemType: 'Text'},
+        {val:'aescenica.aescenario',                   label:'AES:Técnica',    itemType: 'Text'},
+        {val:'aescenica.generoteatral.teatro',         label:'AES:Teatro',     itemType: 'Boolean'},
+        {val:'aescenica.generoteatral.teatrodanza',    label:'AES:Danza',      itemType: 'Boolean'},
+        {val:'aescenica.generoteatral.titeres',        label:'AES:Títeres',    itemType: 'Boolean'},
+        {val:'aescenica.generoteatral.circo',          label:'AES:Circo',      itemType: 'Boolean'},
+        {val:'aescenica.generoteatral.performance',    label:'AES:Performance',itemType: 'Boolean'},
+        {val:'aescenica.generoteatral.comediamusical', label:'AES:ComediaMus', itemType: 'Boolean'},
+        {val:'aescenica.generoteatral.otros',          label:'AES:Otros',      itemType: 'Boolean'},
     ],
 
     fetchCollection: function(collection){
@@ -422,6 +454,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
                 data = 0;
               }
 
+            }else if(token.itemType === 'Boolean'){
+              if(data){
+                data = 1;
+              }else{
+                data = 0;
+              }
 
             }else{
 
@@ -964,7 +1002,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var _stringData = function(anObj){
     var data = [];
     _.reduce(anObj, function(data, value, index){
-      console.log('[%s] [%s] [%s]', data, value, index)
       if(value) data.push(index);
       return data;
 
@@ -973,15 +1010,36 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   };
 
+  var _getIntegrantesData = function(list){
+    var data = [];
+
+    _.reduce(list, function(data, item, index){
+      data.push(item.aname + " (" + item.acargo + ")");
+      return data;
+
+    }, data);
+
+    return data.join('; ');
+  };
 
   var _getFieldLabel = function(model, field){
-      var value;
+      var value,
+          tokens;
       if(!field) return '';
       if(model[field]){
         return _getSelectValue(model, field, model[field]());
 
       }else if(field.indexOf('.') != -1){
-        value =  model.get(field.substring(0, field.indexOf('.')))[field.substring(field.indexOf('.')+1)];
+        tokens = field.split('.');
+        
+        if(tokens.length === 2 ){
+          
+          value =  model.get(tokens[0])[tokens[1]];
+ 
+        }else if(tokens.length === 3){
+          value =  model.get(tokens[0])[tokens[1]][tokens[2]];
+
+        }
         return _getSelectValue(model, field, value);
 
       }else{
