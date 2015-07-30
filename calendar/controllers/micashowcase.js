@@ -8,16 +8,16 @@
  *          open(); find(); findById; findAll; add(), update(); delete(); viewId
  *
  */
+var path = require('path');
+var rootPath = path.normalize(__dirname + '/../..');
 var _ = require('underscore');
-
 var dbi ;
 var BSON;
 var config = {};
 var micashowcaseCol = 'micashowcase';
 var serialCol = 'seriales';
 
-var _ = require('underscore');
-
+var utils = require(rootPath + '/core/util/utils');
 
 var MSGS = [
     'ERROR: No se pudo insertar el nodo en la base de datos',
@@ -56,18 +56,15 @@ var loadSeriales = function(){
 };
 
 var fetchserial = function(serie){
-    //console.log("INIT:fetchserie:micashowcase.js:[%s]",serie);
     var collection = dbi.collection(serialCol);
     collection.findOne({'serie':serie}, function(err, item) {
         if(!item){
-            console.log('INIT:fetchserial:serial not found: [%s]',serie);
             item = initSerial(serie);
 
             collection.insert(item, {safe:true}, function(err, result) {
                 if (err) {
                     console.log('Error initializing  [%s] error: %s',serialCol,err);
                 } else {
-                    console.log('NEW serial: se inserto nuevo [%s] [%s] nodos',serialCol,result);
                     addSerial(serie,result[0]);
                 }
             });
@@ -117,16 +114,12 @@ var nextSerial = function (adapter){
 };
 
 var addNewProfile = function(req, res, node, cb){
-    //console.log("addNewProfile:micapsuscriptions.js ");
-
     setNodeCode(node);
     insertNewProfile(req, res, node, cb);
 };
 
 
 var fetchOne = function(query, cb) {
-    console.log('findProfile Retrieving micashowcase collection for passport');
-
     dbi.collection(micashowcaseCol, function(err, collection) {
         collection.findOne(query, function(err, item) {
             cb(err, item);
@@ -135,7 +128,6 @@ var fetchOne = function(query, cb) {
 };
 
 var insertNewProfile = function (req, res, micashowcase, cb){
-    console.log('insertNewProfile:micashowcase.js BEGIN [%s]',micashowcase.slug);
     //dbi.collection(micashowcaseCol, function(err, collection) {
 
     dbi.collection(micashowcaseCol).insert(micashowcase,{w:1}, function(err, result) {
@@ -147,10 +139,8 @@ var insertNewProfile = function (req, res, micashowcase, cb){
                 }
             } else {
                 if(res){
-                    console.log('3.1. ADD: se inserto correctamente el nodo %s', JSON.stringify(result[0]));
                     res.send(result[0]);
                 }else if(cb){
-                    console.log('3.1. ADD: se inserto correctamente el nodo [%s]  [%s] ', result[0]['_id'], JSON.stringify(result[0]['_id'].str));
                     cb({'model':result[0]})
                 }
             }
@@ -159,7 +149,6 @@ var insertNewProfile = function (req, res, micashowcase, cb){
 };
 
 exports.setDb = function(db) {
-    //console.log('***** Profile setDB*******');
     dbi = db;
     loadSeriales();
     return this;
@@ -178,8 +167,6 @@ exports.setBSON = function(bs) {
 exports.findOne = function(req, res) {
     var query = req.body;
 
-    console.log('findONE:micashowcase Retrieving micashowcase collection with query');
-
     dbi.collection(micashowcaseCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
             res.send(items[0]);
@@ -189,7 +176,6 @@ exports.findOne = function(req, res) {
 };
 
 exports.fetchById = function(id, cb) {
-    console.log('findById: Retrieving %s id:[%s]', micashowcaseCol,id);
     dbi.collection(micashowcaseCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             cb(err, item);
@@ -199,7 +185,6 @@ exports.fetchById = function(id, cb) {
 
 exports.findById = function(req, res) {
     var id = req.params.id;
-    console.log('findById: Retrieving %s id:[%s]', micashowcaseCol,id, req.user);
     dbi.collection(micashowcaseCol, function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
             res.send(item);
@@ -210,8 +195,6 @@ exports.findById = function(req, res) {
 exports.find = function(req, res) {
     var query = req.body; //{};
 
-    console.log('find:micashowcase Retrieving micashowcase collection with query');
-
     dbi.collection(micashowcaseCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
             res.send(items);
@@ -219,8 +202,47 @@ exports.find = function(req, res) {
     });
 };
 
+exports.findByQuery = function(req, res) {
+    var query = buildQuery(req.query); 
+    var resultset;
+    var itemcount = 0;
+    var page = parseInt(req.query.page);
+    var limit = parseInt(req.query.per_page);
+    var cursor;
+    ///// dummy
+    //req.query.textsearch = 'altersoft';
+    /////
+    var textsearch = initTextSearch(req.query);
+
+    //console.log('find:micasuscription Retrieving micasuscription collection with QUERY [%s] [%s]', page, limit);
+
+    cursor = dbi.collection(micashowcaseCol).find(query).sort({cnumber:1});
+    if(textsearch){
+        cursor.toArray(function(err, items){
+            resultset = textFilter(textsearch, items);
+            itemcount = resultset.length;
+            //console.log('====RETURNING: [%s] page:[%s] limit: [%s] itemslength [%s] =========',resultset.length, (page-1)*limit, limit, items.length);
+            res.send([{total_entries: itemcount}, resultset.splice((page-1) * limit, limit)  ]);
+        });
+
+    }else if(req.query){
+        cursor.count(function(err, total){
+            //console.log('CUrsor count: [%s]', total);
+            cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
+
+                res.send([{total_entries: total}, items]);
+
+            });
+        })
+
+    }else{
+        cursor.toArray(function(err, items) {
+                res.send(items);
+        });
+    }
+};
+
 exports.findAll = function(req, res) {
-    console.log('findAll: Retrieving all instances of [%s] collection', micashowcaseCol);
     dbi.collection(micashowcaseCol, function(err, collection) {
         collection.find().sort({cnumber:1}).toArray(function(err, items) {
             res.send(items);
@@ -229,7 +251,6 @@ exports.findAll = function(req, res) {
 };
 
 exports.add = function(req, res) {
-    console.log('add:micashowcase.js: NEW RECEIPT BEGINS');
     var micashowcase = req.body;
     addNewProfile(req, res, micashowcase);
 };
@@ -238,15 +259,12 @@ exports.update = function(req, res) {
     var id = req.params.id;
     var micashowcase = req.body;
     delete micashowcase._id;
-    console.log('Updating node id:[%s] ',id);
-    console.log(JSON.stringify(micashowcase));
     dbi.collection(micashowcaseCol, function(err, collection) {
         collection.update({'_id':new BSON.ObjectID(id)}, micashowcase, {safe:true}, function(err, result) {
             if (err) {
                 console.log('Error updating %s error: %s',micashowcaseCol,err);
                 res.send({error: MSGS[0] + err});
             } else {
-                console.log('UPDATE: se insertaron exitosamente [%s] nodos',result);
                 res.send(micashowcase);
             }
         });
@@ -261,7 +279,6 @@ var buildTargetNodes = function(data){
         var node = {};
         var id = nodes[i];
 
-        console.log('buildTargetNodes: [%s] [%s]', id, typeof id);
         node._id = new BSON.ObjectID(id);
         list.push(node);
     }
@@ -270,25 +287,73 @@ var buildTargetNodes = function(data){
         return query
     }
 };
+
 var buildUpdateData = function(data){
     if(!data.newdata) return;
     return data.newdata;
 };
 
+// BUILD QUERY
 var buildQuery = function(qr){
-    var query = {}; 
+    var query = {},
+        prov = [], 
+        subc = {},
+        subv = {},
+        tmp = {},
+        conditions = [];
+
     if(!qr) return query;
-    if(qr.areas){
-        query.$or = buildAreaList(qr.areas);
+ 
+    if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'solicitante.eprov': qr.provincia});
+
+    if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
+    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
+        conditions.push({estado_alta: qr.estado_alta});
+    }else{
+        conditions.push({estado_alta: 'activo'});
     }
+
+    if(qr.tsolicitud && qr.tsolicitud !== 'no_definido'){ 
+        conditions.push({'solicitante.tsolicitud': qr.tsolicitud});
+    }
+
+    if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
+    if(qr.evento) conditions.push({evento: qr.evento});
+    if(qr.rubro) conditions.push({rubro: qr.rubro});
+    console.dir(conditions);
+
+
+    query['$and'] = conditions;
+
     return query;
 };
+
 var buildAreaList = function(areas){
     return _.map(areas, function(item){
         return {area: item};
 
     });
+};
+
+var initTextSearch = function(query){
+    if(!query || !query.textsearch) return null;
+
+    return utils.safeName(query.textsearch);
 }
+
+var textFilter = function(textsearch, items){
+    var rset = [];
+    var querystr;
+    var test;
+    rset = _.filter(items, function(item){
+        querystr = utils.safeName(item.solicitante.edisplayName + item.solicitante.ename + item.solicitante.edescription);
+        test = querystr.indexOf(textsearch) !== -1 ? true : false;
+        return test;
+    });
+    return rset;
+};
+
+
 
 
 exports.partialupdate = function(req, res) {
@@ -297,10 +362,6 @@ exports.partialupdate = function(req, res) {
     }
     var query = buildTargetNodes(data);
     var update = buildUpdateData(data);
-
-
-    console.log('UPDATING partial fields nodes:[%s]', query.$or[0]._id );
-    //res.send({query:query, update:update});
 
     dbi.collection(micashowcaseCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
         if (err) {
@@ -312,7 +373,6 @@ exports.partialupdate = function(req, res) {
             }
 
         } else {
-            console.log('UPDATE: partial update success [%s] nodos',result);
             if(res){
                 res.send({result: result});
             }else if(cb){
@@ -324,13 +384,11 @@ exports.partialupdate = function(req, res) {
 
 exports.delete = function(req, res) {
     var id = req.params.id;
-    console.log('Deleting node: [%s] ', id);
     dbi.collection(micashowcaseCol, function(err, collection) {
         collection.remove({'_id':new BSON.ObjectID(id)}, function(err, result) {
             if (err) {
                 res.send({error: MSGS[1] + err});
             } else {
-                console.log('DELETE: se eliminaron exitosamente [%s] nodos',result);
                 res.send(req.body);
             }
         });

@@ -1,22 +1,28 @@
-DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marionette, $, _){
+DocManager.module('BackendApp.ListShowcase',function(ListShowcase, DocManager, Backbone, Marionette, $, _){
   var backendApp = DocManager.module('BackendApp');
   var backendCommons = DocManager.module('BackendApp.Common.Views');
   var backendEntities = DocManager.module('Entities');
 
   var getSession = function(){
-    if(!List.Session){
-      List.Session = {views:{},model:null};
+    if(!ListShowcase.Session){
+      ListShowcase.Session = {views:{},model:null};
     }
-    return List.Session;
+    return ListShowcase.Session;
   }
   
-	List.Controller = {
+	ListShowcase.Controller = {
 		listInscriptions: function(criterion){
 	
 			loadCurrentUser().then( function(user){
 				if(!getSession().mainLayout){
 					buildLayout();
 				}
+        // OjO solo para debug===================
+        // console.log('Ready to check Users [%s]', user.get('username'));
+        // if(user.get('username') === 'mgomezortega@gmail.com'){
+        //   checkUsers();          
+        // }
+        // // OjO ==================================
 
         initCrudManager(user, criterion, 'reset');
 
@@ -25,6 +31,11 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 		}
 
 	}; 
+  var checkUsers = function(){
+    //DocManager.request('showcase:check:users:data');
+    //DocManager.request('user:repair:modules');
+
+  };
 	
   var loadCurrentUser = function(){
 
@@ -40,7 +51,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
 			}else{
 			  Message.warning('Debe iniciar sesión');
-			  window.open('/ingresar/#mica', '_self');
+			  window.open('/ingresar/#showcase', '_self');
 			}
 
  
@@ -54,7 +65,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     var defer = $.Deferred(),
         action,
         query = {
-          evento: 'mica',
+          evento: 'mica_showcase',
           estado_alta: 'activo',
         };
 
@@ -83,7 +94,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     }else{
       action = 'getFirstPage';
 
-      getSession().collection =  new DocManager.Entities.MicaRegistrationPaginatedCol();
+      getSession().collection =  new DocManager.Entities.ShowcaseRegistrationPaginatedCol();
 
       getSession().collection.setQuery(query);
       getSession().collection.getFirstPage().done(function(data){
@@ -91,13 +102,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
         defer.resolve(data);
       });
     }
-
-
-
-    // var fetchingEntities = DocManager.request('micarqst:query:entities', query, step );
-  //   $.when(fetchingEntities).done(function(entities){
-  //         defer.resolve(entities);
-  //  });
 
     return defer.promise();
   };
@@ -147,7 +151,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   var drpDwnBtn = function(){
               return $('\
                   <div class="btn-group" role="group">\
-                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">\
+                    <button type="button" class="btn btn-xs btn-default dropdown-toggle" title="modificar calificación" data-toggle="dropdown" aria-expanded="false">\
                       <i class="fa fa-cog"></i>\
                     </button>\
                     <ul class="dropdown-menu pull-right" role="menu">\
@@ -161,12 +165,13 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   var EditViewCell = Backgrid.Cell.extend({
       render: function(){
           if(!this.rendered){
-             var btnEdit = $('<button class="btn-link js-edit btn btn-sm btn-info" title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
-             var btnRemove = $('<button class="btn-link js-trash btn btn-sm btn-danger" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
+             var btnEdit = $('<button class="btn btn-xs btn-info js-edit"  title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
+             var btnRemove = $('<button class="btn btn-xs btn-danger js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
              this.$el.append(btnEdit).append(btnRemove).append(drpDwnBtn());
              this.rendered = true;
           }
-         return this;
+        this.$el.css('width','95px');
+        return this;
       },
       
       events: {
@@ -205,7 +210,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
           getSession().views.mainlayout.trigger('grid:model:remove',this.model);
       }
     });
-  
 
 	var initCrudManager = function(user, criterion, step){
 
@@ -215,33 +219,33 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 				  {
 				    gridcols:[
 				      {name: 'cnumber', label:'Nro Inscr', cell:'string', editable:false},
-				      {name: 'bg_vendedor',label:'Vendedor', cell:'vactivity', editable:false},
-				      {name: 'bg_comprador',label:'Comprador', cell:'cactivity', editable:false},
-				      {name: 'solicitante.edisplayName', label:'Solicitante', cell:fieldLabelCell, editable:false},
-				      {name: 'solicitante.eprov', label:'Prov', cell:fieldLabelCell, editable:false},
+              {name: 'solicitante.tsolicitud', label:'Disciplina', cell:fieldLabelCell, editable:false},
+              {name: 'solicitante.edisplayName', label:'Solicitante', cell:fieldLabelCell, editable:false},
+              {name: 'getGeneros', label:'Géneros', cell:fieldLabelCell, editable:false},
 				      {name: 'nivel_ejecucion', label:'Ejecución', cell:fieldLabelCell, editable:false},
 				      {label:'Acciones', cell: EditViewCell, editable:false, sortable:false},
 				    ],
-				    filtercols:['cnumber', 'bg_vendedor', 'bg_comprador',  'nivel_ejecucion'],
-				    editEventName: 'micarequest:edit',
+				    filtercols:['cnumber',  'nivel_ejecucion'],
+				    editEventName: 'showcase:edit',
 
 				  },
 				  {
 				    test: 'TestOK',
+            baseLayoutTitle: 'Showcase - 2015',
 				    parentLayoutView: getSession().views.mainlayout,
 
-				    layoutTpl: utils.templates.MicarequestsLayout,
-				    formTpl: utils.templates.MicaInscriptionFormLayout,
+				    layoutTpl: utils.templates.MicaShowcaseItemLayout,
+				    formTpl: utils.templates.MicaShowcaseFormLayout,
 				    
             collection: getSession().collection,
 
-				    editModel: backendEntities.MicaRegistration,
+				    editModel: backendEntities.ShowcaseRegistration,
 				    modelToEdit: null,
-				    EditorView: DocManager.MicaRequestApp.Edit.MicaWizardLayout,
+				    EditorView: DocManager.MicaRequestApp.Showcase.MicaWizardLayout,
 				    editorOpts: {},
 
-            filterEventName: 'mica:backend:filter:rows',
-            filterModel: backendEntities.MicaFilterFacet,
+            filterEventName: 'showcase:backend:filter:rows',
+            filterModel: backendEntities.ShowcaseFilterFacet,
             filterTitle: 'Criterios de búsqueda',
             filterInstance: getSession().filter,
 
@@ -257,7 +261,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 	var buildLayout = function(){
     var session = getSession();
     
-    session.views.layout = new backendCommons.Layout({model:new Backbone.Model({title: 'Compradores requeridos'}) });
+    session.views.layout = new backendCommons.Layout({model:new Backbone.Model({title: 'Showcase - 2015'}) });
     //session.views.sidebarpanel = new backendCommons.SideBarPanel({model:session.model});
     session.views.mainlayout = new backendCommons.MainLayout({model:session.model});
     
@@ -265,7 +269,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     registerMainLayoutEvents(session, session.views.layout, session.views.mainlayout);
     registerLayoutEvents(session, session.views.layout, session.views.mainlayout);
 
-    session.filter = new backendEntities.MicaFilterFacet();
+    session.filter = new backendEntities.ShowcaseFilterFacet();
 
   };
   var registerSidebarEvents = function(session, layout, mainLayout){
@@ -283,7 +287,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
         Message.confirm('<h3>¿Confirma la baja?</h3>',
             [{label:'Cancelar', class:'btn-success'},{label:'Aceptar', class:'btn-danger'} ], function(response){
           if(response === 'Aceptar'){
-            DocManager.request("micarqst:partial:update",[model.id],{'estado_alta': 'baja'});
+            DocManager.request("showcase:partial:update",[model.id],{'estado_alta': 'baja'});
             getSession().collection.remove(model);
           }
         });
@@ -291,7 +295,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
         Message.confirm('<h3>¿Confirma la reactivación de la inscripción?</h3>',
             [{label:'Cancelar', class:'btn-success'},{label:'Aceptar', class:'btn-danger'} ], function(response){
           if(response === 'Aceptar'){
-            DocManager.request("micarqst:partial:update",[model.id],{'estado_alta': 'activo'});
+            DocManager.request("showcase:partial:update",[model.id],{'estado_alta': 'activo'});
             getSession().collection.remove(model);
           }
         });
@@ -303,7 +307,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     mainlayout.on('model:change:state', function(model, state){
       model.set('nivel_ejecucion', state);
 
-      DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': state});
+      DocManager.request("showcase:partial:update",[model.id],{'nivel_ejecucion': state});
 
     });
 
@@ -324,9 +328,9 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   	registerEditorLayoutEvents(session, mainlayout, editorLayout, model)
 
   };
-
+//TODO
   var registerEditorLayoutEvents = function(session, mainlayout, editorlayout, model){
-  	var modelView = new List.MicaRequestView({
+  	var modelView = new ListShowcase.MicaShowcaseItemView({
   		model: model
   	})
   	
@@ -335,7 +339,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
     editorlayout.on('accept:buyer', function(){
       model.set('nivel_ejecucion', 'comprador_aceptado');
-      DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': 'comprador_aceptado'});
+      DocManager.request("showcase:partial:update",[model.id],{'nivel_ejecucion': 'comprador_aceptado'});
       mainlayout.showList();
       editorlayout.destroy();
 
@@ -364,7 +368,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     },
 
     buildExcelExport: function(){
-      var excelCol = new DocManager.Entities.MicaExportCollection();
+      var excelCol = new DocManager.Entities.ShowcaseExportCollection();
       excelCol.fetch({
         success: function(data){
             excelCol.exportRecords();
@@ -373,11 +377,11 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     },
   };
 
-  DocManager.on("mica:backend:filter:rows", function(filter, step){
+  DocManager.on("showcase:backend:filter:rows", function(filter, step){
     API.fetchFilteredCollection(filter, step);
   });
 
-  DocManager.on('mica:suscriptions:export:excel', function(){
+  DocManager.on('showcase:suscriptions:export:excel', function(){
     API.buildExcelExport();
   });
 

@@ -439,5 +439,37 @@ window.tdata = {
         {val:'1' , label:'Poco interesado'},
         {val:'0' , label:'No interesado'},
     ],
+
+    showcaseTSolicitudOL: [
+        {val:'no_definido', label:'Seleccione Tipo de Solicitud'},
+        {val:'aescenicas',   label:'Artes Escénicas'},
+        {val:'musica',    label:'Música'},
+    ],
+
+    showcaseMusicaOL: [
+        {val:'no_definido', label:'Seleccione Género'},
+        {val:'tango',        label:'Tango'},
+        {val:'folklore',     label:'Folklore'},
+        {val:'tropical',     label:'Tropical'},
+        {val:'rock',         label:'Rock'},
+        {val:'reggae',       label:'Reggae'},
+        {val:'electronica',  label:'Electrónica'},
+        {val:'jazz',         label:'Jazz'},
+        {val:'contemporanea', label:'Contemporánea'},
+        {val:'fusion',       label:'Fusión'},
+        {val:'otros',        label:'Otros géneros'},
+    ],
+
+    showcaseAEscenicasOL: [
+        {val:'no_definido', label:'Seleccione Género'},
+        {val:'teatro',      label:'Teatro'},
+        {val:'teatrodanza', label:'Danza'},
+        {val:'titeres',     label:'Títeres'},
+        {val:'circo',       label:'Circo'},
+        {val:'performance', label:'Performance'},
+        {val:'comediamusical', label:'Comedia Musical'},
+        {val:'otros',       label:'Otros géneros'},
+    ],
+
 };
 

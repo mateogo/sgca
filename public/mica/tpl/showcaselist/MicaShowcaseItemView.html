@@ -1,0 +1,76 @@
+<div class="row">
+    <hr>
+    <div class="col-xs-12">
+        <h2 class="solicitante"><%= solicitante.edisplayName %> <span class="nro-serie">(<%= cnumber%>)</span></h2>
+
+        <h3 class="solicitante"><%= getFieldLabel('solicitante.tsolicitud') %></h3>
+        <h4 class="solicitante"><%= getGeneros() %></h4>
+
+        <span class="fa fa-envelope-o"></span> <a href="mailto:<%= responsable.rmail %>"><%= responsable.rmail %></a></p>
+    </div>
+    <div class="col-md-8 col-xs-12">
+        <div>
+            <p><%= solicitante.edescription %></p>
+        </div>
+    </div>
+    <div class="col-md-4 col-xs-12">
+    <!--N: AGREGAR EL RESTO DE LOS ESTADOS-->
+        <div><strong>Estado:</strong> <%  if(getFieldLabel('estado_alta') === 'activo') %><span class="label label-success">ACTIVO</span></div>
+        <h3>Responsable:</h3>
+        <p><%= responsable.rname %></p>
+        <p><%= responsable.rmail2 %></p>
+        <p><%= responsable.rcel %></p>
+        <p><%= responsable.rtel %></p>
+        <p><%= responsable.rdocum %></p>
+        
+    <%  if(getIntegrantes().length){  %>
+        <h3>Integrantes:</h3>
+
+        <%  _.each(getIntegrantes(), function(item){  %>
+
+            <p><%= item.aname %> (<%= item.acargo %>)</p>
+    
+        <% 
+         });
+        } 
+    %>
+        
+    </div>
+    <%  if(isMusica()){  %>
+        <h2>Categoría: MÚSICA</h2>
+            <p><strong>Sello: </strong>  <%= musica.sello %></p>
+            <p><strong>Discografía: </strong>  <%= musica.discografia %></p>
+            <p><strong>Festivales: </strong>  <%= musica.festivales %></p>
+            <p><strong>Plan </strong> de Girass: <%= musica.giras %></p>
+            <p><strong>Requerimientos  técnicos: </strong> <%= musica.escenario %></p>
+
+        <h3>Referencias</h3>
+        <%  _.each(getMusicReferences(), function(item){  %>
+
+        <p><strong><%= item.tlink %>: </strong><a href="<%= item.targeturl %>">   <%= item.slug %> </a></p>
+    
+        <% 
+         });
+        } 
+    %>
+
+    <%  if(isAEscenicas()){  %>
+        <h2>Categoría: ARTES ESCÉNICAS</h2>
+            <p><strong>Propuesta artística: </strong>  <%= aescenica.propuestaartistica %></p>
+            <p><strong>Experiencia: </strong>  <%= aescenica.experiencia %></p>
+            <p><strong>Requerimientos  técnicos: </strong> <%= aescenica.aescenario %></p>
+
+        <h3>Referencias</h3>
+        <%  _.each(getAEscenicReferences(), function(item){  %>
+
+        <p><strong><%= item.tlink %>: </strong><a href="<%= item.targeturl %>">   <%= item.slug %> </a></p>
+    
+        <% 
+         });
+        } 
+    %>
+
+
+
+</div> 
+<hr>

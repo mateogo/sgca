@@ -26,6 +26,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     getFieldLabel: function(field){
       var value;
       if(!field) return '';
+      
+      if(this[field]) return this[field]();
+
       if(field.indexOf('.')!=-1){
         //console.log('Objeto: [%s] propiedad:[%s]', field.substring(0, field.indexOf('.')), field.substring(field.indexOf('.')+1) )
         value =  this.get(field.substring(0, field.indexOf('.')))[field.substring(field.indexOf('.')+1)];
@@ -1525,7 +1528,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   DocManager.reqres.setHandler("mica:check:users:data", function(){
     return API.checkUsersData();
   });
-
 
   DocManager.reqres.setHandler("micarqst:query:entities", function(query, step){
     return API.getFilteredByQueryCol(query, step);

@@ -266,7 +266,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 	//********** LAYOUT
 	var buildLayout = function(){
     var session = getSession();
-    session.views.layout = new backendCommons.Layout({model:session.model});
+    session.views.layout = new backendCommons.Layout({model:new Backbone.Model({title: 'Rondas de Negocios - MICA 2015'}) });
     //session.views.sidebarpanel = new backendCommons.SideBarPanel({model:session.model});
     session.views.mainlayout = new backendCommons.MainLayout({model:session.model});
     

@@ -4,8 +4,10 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     if(!filterData){
       filterData=   new FilterModel();
     }
-
-    filterData.schema.subsector.options = tdata.subSectorOL[filterData.get('sector')];
+    
+    if(filterData.schema.subsector)
+      filterData.schema.subsector.options = tdata.subSectorOL[filterData.get('sector')];
+    
     var form = new Backbone.Form({model:filterData});
 
     form.on('sector:change', function(form, editorContent) {

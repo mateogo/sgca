@@ -12,11 +12,15 @@ utils.loadTemplate([
         'browse/InteractionResumeView','browse/AnswerEditor','browse/AskEditor',
         // Administra Inscripciones
         // -- Vistas basicas
-        'list/CommonBaseLayout','list/CommonMainLayout',
+        'list/CommonBaseLayout','list/CommonMainLayout','list/CommonModelEditorLayout',
         // -- Ranking
         //'list/CommonBaseLayout','list/CommonMainLayout',
+
         // -- Lista inscripciones
-        'list/MicarequestsLayout','list/MicarequestsView','list/CommonModelEditorLayout',
+        'list/MicarequestsLayout','list/MicarequestsView',
+
+        // -- Lista showcase
+        'showcaselist/MicaShowcaseItemLayout','showcaselist/MicaShowcaseItemView',
 
         // MailSender
         'MailTemplateDefault','MailFormSubmitNotification','MailFormGuardarProvisorio',

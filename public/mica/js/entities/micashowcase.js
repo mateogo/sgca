@@ -9,8 +9,70 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
+    schema: {
+      nivel_ejecucion: {type: 'Select',   title: 'Nivel de ejecucion',options: tdata.nivel_ejecucionOL },
+      'solicitante.eprov': {type: 'Select',   title: 'Provincias',options: tdata.provinciasOL },
+      'solicitante.tsolicitud': {type: 'Select',   title: 'Tipo Solicitud',options: tdata.showcaseTSolicitudOL },
+    },
+    isMusica: function(){
+      return this.get('musica').rolePlaying.musica;
+    },
+    isAEscenicas: function(){
+      return this.get('aescenica').rolePlaying.aescenica;
+    },
+
+    getFieldLabel: function(field){
+      var value;
+      if(!field) return '';
+
+      if(this[field]) return this[field]();
+
+      if(field.indexOf('.')!=-1){
+        //console.log('Objeto: [%s] propiedad:[%s]', field.substring(0, field.indexOf('.')), field.substring(field.indexOf('.')+1) )
+        value =  this.get(field.substring(0, field.indexOf('.')))[field.substring(field.indexOf('.')+1)];
+        return _getSelectValue(this, field, value);
+      }
+      return _getFieldFormatedValue(this, field);
+
+    },
+
+    getGeneros: function(){
+      var self = this;
+
+      if(self.get('aescenica').rolePlaying.aescenica){
+        return _filterData(self.get('aescenica').generoteatral, tdata.showcaseAEscenicasOL);
+      }else{
+        return _filterData(self.get('musica').generomusical, tdata.showcaseMusicaOL);
+      }
+    },
+
+    getMusicReferences: function(){
+      if(!this.get('musica').mreferencias || !this.get('musica').mreferencias.length ){
+        return [];
+      }else{
+        return this.get('musica').mreferencias;
+      }
+    },
+
+    getAEscenicReferences: function(){
+      if(!this.get('aescenica').areferencias || !this.get('aescenica').areferencias.length ){
+        return [];
+      }else{
+        return this.get('aescenica').areferencias;
+      }
+    },
+
+
     getFieldFormatedValue: function(field){
       return _getFieldFormatedValue(this, field);
+    },
+
+    getIntegrantes: function(){
+      if(!this.get('responsable').integrantes || !this.get('responsable').integrantes.length ){
+        return [];
+      }else{
+        return this.get('responsable').integrantes;
+      }
     },
 
     validate: function(attrs, options) {
@@ -181,12 +243,199 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   });
 
+  Entities.ShowcaseRegistrationPaginatedCol = Backbone.PageableCollection.extend({
+    whoami: 'ShowcaseRegistrationPaginatedCol: mica.js',
+    model: Entities.ShowcaseRegistration,
+    url: "/query/micashowcase",
+
+    state:{
+      firstPage: 1,
+      pageSize: 15, 
+    },
+    queryParams:{
+      currentPage: 'page',
+      pageSize: 'per_page',
+      totalRecords: 'total_entries',
+    },
+
+
+    setQuery: function(query){
+      this.query = query;
+      _.extend(this.queryParams, query);
+
+    },
+
+    parseState: function (resp, queryParams, state, options) {
+
+      return {totalRecords: resp[0].total_entries};
+
+    },
+
+    parseRecords: function (resp, options ) {
+
+      return resp[1];
+
+    }
+  
+  });
+
   Entities.ShowcaseRegistrationFetchOneCol = Backbone.Collection.extend({
     whoami: 'ShowcaseRegistrationFetchOneCol: micashowcase.js',
     model: Entities.ShowcaseRegistration,
     url: "/micashowcase/fetch",
 
   });
+
+  Entities.ShowcaseRegistrationUpdate = Backbone.Model.extend({
+    whoami: 'Entities.ShowcaseRegistrationUpdate:mica.js ',
+
+    urlRoot: "/actualizar/micashowcase",
+
+  });
+
+
+  //*************************************************************
+  //            FILTER filter FACET
+  //*************************************************************
+  Entities.ShowcaseFilterFacet = Backbone.Model.extend({
+    whoami: 'Entities.ShowcaseFilterFacet:mica.js',
+    initialize: function(opts){
+
+    },
+
+    schema: {
+        cnumber:       {type: 'Text',    title: 'Número Inscripción' },
+        textsearch:    {type: 'Text',    title: 'Búsqueda por texto' },
+        tsolicitud:    {type: 'Select',  title: 'Tipo Solicitud',  options: tdata.showcaseTSolicitudOL },
+        nivel_ejecucion: {type: 'Select',  title: 'Aprobación',  options: tdata.nivel_ejecucionOL },
+        estado_alta:   {type: 'Select',  title: 'Estado',  options: tdata.estado_altaOL },
+    },
+
+
+    defaults: {
+      provincia: 'no_definido',
+      cnumber: '',
+      textsearch: '',
+      evento: 'mica_showcase',
+      rubro: 'general',
+      nivel_ejecucion: 'no_definido',
+      estado_alta: 'activo',
+
+    },
+  });
+
+
+
+  //*************************************************************
+  //            Exporta a excel EXCEL Excel
+  //*************************************************************
+  Entities.ShowcaseExportCollection = Backbone.Collection.extend({
+    whoami: 'Entities.ShowcaseExportCollection:mica.js ',
+    url: "/micashowcase",
+    model: Entities.ShowcaseRegistration,
+    sortfield: 'cnumber',
+    sortorder: -1,
+
+    comparator: function(left, right) {
+      var order = this.sortorder;
+      var l = left.get(this.sortfield);
+      var r = right.get(this.sortfield);
+
+      if (l === void 0) return -1 * order;
+      if (r === void 0) return 1 * order;
+
+      return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    },
+
+    exportRecords: function(){
+      var self = this;
+      if(!self.length) return;
+
+      //console.log('collection export [%s]',self.length);
+
+
+      exportFactory.processRequest(exportFactory.fetchCollection(self));
+      //
+
+    },
+  });
+
+  var exportFactory = {
+    exportHeadings: [
+        {val:'cnumber',                         label:'NroIns',           itemType: 'Text'},
+        {val:'isComprador',                     label:'EsComprador',      itemType: 'Text'},
+        {val:'comprador.cactividades',          label:'ActPpalComprador', itemType: 'Text'},
+        {val:'isVendedor',                      label:'EsVendedor',       itemType: 'Text'},
+        {val:'vendedor.vactividades',           label:'ActPpalVendedor',  itemType: 'Text'},
+        {val:'fecomp',                          label:'FechaAlta',        itemType: 'Text'},
+        {val:'responsable.rname',               label:'NombreResponsable',itemType: 'Text'},
+        {val:'responsable.rmail',               label:'Correo',           itemType: 'Text'},
+        {val:'responsable.rcel',                label:'Celular',          itemType: 'Text'},
+        {val:'solicitante.edisplayName',        label:'Solicitante',      itemType: 'Text'},
+        {val:'solicitante.eprov',               label:'Provincia',        itemType: 'Text'},
+    ],
+
+    fetchCollection: function(collection){
+      var self = this,
+          colItems = [],
+          registro,
+          data;
+
+      collection.each(function(model){
+        registro = [];
+
+        _.each(self.exportHeadings, function(token){
+
+            data = _getFieldLabel(model, token.val);
+
+            if(token.itemType === 'Number'){
+              data = parseInt(data);
+              if(data == NaN){
+                data = 0;
+              }
+
+
+            }else{
+
+              if(typeof data == undefined || data == null || data == ""){
+                data = 'sin_dato';
+              }
+
+            }
+
+            registro.push(data);
+          });
+        colItems.push(registro);
+      });
+      return colItems;
+    },
+
+    fetchLabels: function(){
+      return this.exportHeadings;
+    },
+
+    processRequest: function(col){
+      var self = this;
+      var query = {
+          name: 'Items del Presupuesto',
+          heading: self.fetchLabels(),
+          data: JSON.stringify(col)
+      };
+
+      $.ajax({
+        type: "POST",
+        url: "/excelbuilder",
+        dataType: "json",
+        data: query,
+        success: function(data){
+            window.open(data.file)
+
+        }
+      });
+    }
+  };
+
+
 
 
 
@@ -656,27 +905,63 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //            Helper Functions
   //*************************************************************
   var _getFieldFormatedValue = function(model, field){
-    
-    if(!model.schema){
-      return model.get(field);
-    }
 
-    if(!(field in model.schema)) return model.get(field) || '';
-    
-    if(model.schema[field].type === 'Select'){
-      var value = model.get(field);
-      if(value === 'no_definido' || value === "nodefinido") return '';
-      
-      var options = model.schema[field].options;
-      var selected = _.findWhere(options,{val:value});
-      return (selected)? selected.label : value;
 
-    }else{
-
-      return model.get(field);
-
-    }
+    return _getSelectValue(model, field, model.get(field));
   };
+
+  var _getSelectValue = function(model, field, value){
+    var selected;
+    if(!model.schema || !(field in model.schema) || model.schema[field].type !== 'Select' ) return value || '';
+
+    if(value === 'no_definido' || value === "nodefinido") return '';
+
+    selected = _.findWhere(model.schema[field].options, {val: value});
+    return (selected)? selected.label : value;
+
+
+  };
+  var _filterData = function(anObj, labels){
+    var data = [],
+        stringdata;
+    data = _.map(anObj, function(value, index){
+      return value ? tdata.fetchLabel(labels, index) : value;
+    });
+    data = _.filter(data, function(item){
+      return item;
+    });
+    return data.join('; ');
+  };
+
+  var _stringData = function(anObj){
+    var data = [];
+    _.reduce(anObj, function(data, value, index){
+      console.log('[%s] [%s] [%s]', data, value, index)
+      if(value) data.push(index);
+      return data;
+
+    }, data);
+    return data.join('; ');
+
+  };
+
+
+  var _getFieldLabel = function(model, field){
+      var value;
+      if(!field) return '';
+      if(model[field]){
+        return _getSelectValue(model, field, model[field]());
+
+      }else if(field.indexOf('.') != -1){
+        value =  model.get(field.substring(0, field.indexOf('.')))[field.substring(field.indexOf('.')+1)];
+        return _getSelectValue(model, field, value);
+
+      }else{
+        return _getSelectValue(model, field, model.get(field));
+
+      }
+  };
+
 
   var _facetFactoryStepOne = function(model){
     var data = _.extend({}, model.get('solicitante'));
@@ -771,14 +1056,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     });
     return fd;
   };
-
-  var queryCollection = function(query){
-      var entities = new Entities.ShowcaseRegistrationFindByQueryCol();
+  var queryCollection = function(query, step){
+      var entities = new Entities.ShowcaseRegistrationPaginatedCol();
       var defer = $.Deferred();
 
+      entities.setQuery(query);
       entities.fetch({
-        data: query,
-        type: 'post',
         success: function(data){
           defer.resolve(data);
         },
@@ -790,6 +1073,24 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
 
   };
+
+  var loadCollection = function(){
+      var entities = new Entities.ShowcaseRegistrationCol();
+      var defer = $.Deferred();
+
+      entities.fetch({
+        success: function(data){
+          defer.resolve(data);
+        },
+        error: function(data){
+            defer.resolve(undefined);
+        }
+      });
+
+      return defer.promise();
+
+  };
+
 
 
 
@@ -850,9 +1151,92 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
     },
 
-    getFilteredByQueryCol: function(query){
+    partialUpdate: function(models, data){
+      var query = {},
+          nodes,
+          update;
 
-      var fetchingEntities = queryCollection(query),
+      if(_.isArray(models)){
+        nodes = models;
+      }else if(_.isObject(models)){
+        nodes = [models.id];
+      }else{
+        nodes = [models];
+      }
+
+      query.nodes = nodes;
+      query.newdata = data;  
+      var update = new Entities.ShowcaseRegistrationUpdate(query);
+      update.save({
+        success: function() {
+        }
+      });
+    },
+
+    checkUsersData: function(){
+      var userpromise,
+          repairkeys,
+          roles = [],
+          modulos = [],
+          testindex = 0,
+          woutuser = 0;
+
+      $.when(loadCollection()).done(function(profiles){
+        profiles.each(function(profile){
+          testindex = testindex + 1;
+          if(profile.get('user').userid){
+
+            if(testindex > 14500) return;
+            if(false) {
+
+              userpromise = DocManager.request("user:entity",profile.get('user').userid);
+
+              $.when(userpromise).done(function(user){
+                if((user.get('roles').indexOf('usuario') === -1 && user.get('roles').indexOf('admin') === -1) || user.get('modulos').indexOf('mica') === -1 ){
+                  //|| user.get('home')!== 'mica:rondas' || user.get('grupo') !== 'adherente'
+
+                  console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
+                    user.get('displayName'),user.get('username'), 
+                    user.get('roles'), user.get('modulos'), user.get('estado_alta'), 
+                    user.get('grupo'), user.get('home'));
+                  roles = user.get('roles')|| [];
+                  modulos = user.get('modulos')|| [];
+
+                  if(roles.indexOf('usuario') === -1) roles.push('usuario');
+                  if(modulos.indexOf('mica') === -1) modulos.push('mica');
+
+                  repairkeys = {
+                    modulos: modulos,
+                    roles: roles
+                  }
+                  if(!user.get('home')) repairkeys.home = 'mica:rondas';
+                  if(!user.get('grupo')) repairkeys.grupo = 'adherente';
+                  if(user.get('estado_alta') === 'pendaprobacion') repairkeys.estado_alta = 'activo';
+
+                  user.partialUpdate(repairkeys);
+                }
+              });
+
+            }
+
+          }else{
+            if(profile.get('estado_alta') === 'activo'){
+              woutuser = woutuser +1;
+              DocManager.request("showcase:partial:update", [profile.id],  {estado_alta: 'sinuser'});
+              //console.log('======== mica suscription sin user: [%s] [%s]   [%s]', profile.get('cnumber'), profile.get('responsable').rname, profile.get('responsable').rmail);
+            }
+          }
+
+        });
+        console.log('======= total recorods:[%s]   (al 22-07: total 2744/130 ) w/outuser: [%s]', testindex, woutuser);
+
+      })
+
+    },
+
+    getFilteredByQueryCol: function(query, step){
+
+      var fetchingEntities = queryCollection(query, step),
           defer = $.Deferred();
 
       $.when(fetchingEntities).done(function(entities){
@@ -870,6 +1254,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
 
+
   };
 
   //*************************************************************
@@ -877,6 +1262,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //*************************************************************
   DocManager.reqres.setHandler("showcase:entity", function(id){
     return API.getEntity(id);
+  });
+
+  DocManager.reqres.setHandler("showcase:fetchby:user", function(user, evento){
+    return API.fetchEntityByUser(user, evento);
   });
 
   DocManager.reqres.setHandler("showcase:factory:new", function(user, evento){
@@ -887,8 +1276,16 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     }
   });
 
-  DocManager.reqres.setHandler("showcase:query:entities", function(query){
-    return API.getFilteredByQueryCol(query);
+  DocManager.reqres.setHandler("showcase:partial:update", function(models, keys){
+    return API.partialUpdate(models, keys);
+  });
+
+  DocManager.reqres.setHandler("showcase:check:users:data", function(){
+    return API.checkUsersData();
+  });
+
+  DocManager.reqres.setHandler("showcase:query:entities", function(query, step){
+    return API.getFilteredByQueryCol(query, step);
   });
 
 });

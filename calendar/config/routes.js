@@ -188,6 +188,7 @@ module.exports = function (config, app) {
     app.get ('/micashowcase',            micashowcase.findAll);
     app.post('/micashowcase/fetch',      micashowcase.findOne);
     app.post('/navegar/micashowcase',    micashowcase.find);
+    app.get ('/query/micashowcase',      micashowcase.findByQuery);
 
     app.get ('/micashowcase/:id',        micashowcase.findById);
     app.post('/micashowcase',            micashowcase.add);
