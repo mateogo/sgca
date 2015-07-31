@@ -460,6 +460,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               }else{
                 data = 0;
               }
+            }else if(token.itemType === 'Text'){
+              if(typeof data == undefined || data == null || data == ""){
+                data = 'sin_dato';
+              }
+              if(data.length>50){
+                data = data.substr(0,50);
+
+              }
+
 
             }else{
 
