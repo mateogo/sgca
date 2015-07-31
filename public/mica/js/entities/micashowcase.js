@@ -407,7 +407,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         {val:'responsable.rname',               label:'Nombre Responsable',itemType:'Text'},
         {val:'responsable.rcel',                label:'Celular',          itemType: 'Text'},
         {val:'solicitante.edescription',        label:'Biografía',        itemType: 'Text'},
-        //{val:'integrantesList',                 label:'Integrantes',      itemType: 'Text'},
+        {val:'integrantesList',                 label:'Integrantes',      itemType: 'Text'},
         {val:'musica.sello',                    label:'M:Sello',          itemType: 'Text'},
         {val:'musica.discografia',              label:'M:Discografia',    itemType: 'Text'},
         {val:'musica.festivales',               label:'M:Festivales',     itemType: 'Text'},
@@ -464,7 +464,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               if(typeof data == undefined || data == null || data == ""){
                 data = 'sin_dato';
               }
-              data = data.substr(0,250);
+              data = data.substr(0,200);
 
 
             }else{
