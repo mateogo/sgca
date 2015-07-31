@@ -192,6 +192,7 @@ exports.uploadExcelData = function(req, res, next, rootPath){
   form.parse(req, function(err, fields, files){
     console.log('name', fields.name);
     fields.data = JSON.parse(fields.data);
+    fields.heading = JSON.parse(fields.heading);
 
     //console.dir(fields.data)
 

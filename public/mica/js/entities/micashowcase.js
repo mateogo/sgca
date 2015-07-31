@@ -487,7 +487,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var formData = new FormData();
 
       formData.append('name', 'Inscriptos Showcase 2015');
-      formData.append('heading',self.fetchLabels());
+      formData.append('heading',JSON.stringify(self.fetchLabels()));
       formData.append('data',JSON.stringify(col));
 
       var xhr = new XMLHttpRequest();
