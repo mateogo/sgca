@@ -468,6 +468,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               }else{
                 data = 0;
               }
+
             }else if(token.itemType === 'Text'){
               if(typeof data == undefined || data == null || data == ""){
                 data = 'sin_dato';
@@ -510,7 +511,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       xhr.onload = function() {
           var srvresponse = JSON.parse(xhr.responseText);
-          console.log('serverresponse: [%s]', srvresponse.file);
           window.open(srvresponse.file)
 
       };
