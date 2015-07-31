@@ -14,6 +14,7 @@ var SpreadsheetWriter = require('pyspreadsheet').SpreadsheetWriter;
 
 var nodemailer = require('nodemailer');
 var formidable = require('formidable');
+var util = require('util');
 
 var anyw = false;
 
@@ -180,28 +181,61 @@ var parseData = function(dataCol ,options){
     return parsedCol;    
 };
 
+exports.uploadExcelData = function(req, res, next, rootPath){
+  var form = new formidable.IncomingForm();
+  console.log('UploadExcelData');
+
+  form.maxFieldsSize = 3 * 1024 * 1024;
+  //form.type = 'multipart';
+  //form.type = 'urlencoded';
+  
+  form.parse(req, function(err, fields, files){
+    console.log('name', fields.name);
+    fields.data = JSON.parse(fields.data);
+
+    //console.dir(fields.data)
+
+    exports.excelBuilder(fields, rootPath, function(data){
+        res.send(data);
+
+    });
+
+
+
+    // res.writeHead(200, {'content-type': 'text/plain'});
+    // res.write('received upload:\n\n');
+    // res.end(util.inspect({fields: fields, files: files}));
+
+
+  });
+
+    
+
+};
+
+
 var excelHeadings = function(headings){
     var labels = [];
     _.each(headings, function(token){
         labels.push(token.label);
     })
     return labels;
-}
+};
 
-exports.excelBuilder = function (query,rootPath,cb){
+exports.excelBuilder = function (request, rootPath, cb){
     //console.log("utils:begin")
-    var heading = excelHeadings(query.heading);
-    var options = query.options;
+    var heading = excelHeadings(request.heading);
+    var options = request.options;
 
     var publicPath = rootPath + '/public/';
 
-    var name = saveFileName(rootPath, query.name + '.xlsx');
+    var name = saveFileName(rootPath, request.name + '.xlsx');
     
     var relativeName = name.substr(publicPath.length - 1);
 
     var writer = new SpreadsheetWriter(name);
     
-    var pData = parseData(query.data, query.heading);
+    var pData = parseData(request.data, request.heading);
 
     
     writer.addFormat('heading', { font: { bold: true } });
@@ -216,11 +250,11 @@ exports.excelBuilder = function (query,rootPath,cb){
         if (err) throw err;
 
         if(cb){
-            var error = {
+            var respdata = {
                 error: "save concretado",
                 file: relativeName
             };
-        cb(error);    
+            cb(respdata);    
         }
     });
 
@@ -300,6 +334,8 @@ exports.moveFile = function(req, res, next,rootPath){
         }
     });
 };
+
+
 
 exports.moveFile2 = function(req, res, next, rootPath){
   var today = new Date();

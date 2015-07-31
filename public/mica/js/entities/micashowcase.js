@@ -480,7 +480,38 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return this.exportHeadings;
     },
 
+
     processRequest: function(col){
+      var self = this;
+
+      var formData = new FormData();
+
+      formData.append('name', 'Inscriptos Showcase 2015');
+      formData.append('heading',self.fetchLabels());
+      formData.append('data',JSON.stringify(col));
+
+      var xhr = new XMLHttpRequest();
+
+      xhr.open('POST', '/excelbuilder');
+
+      xhr.onload = function() {
+          var srvresponse = JSON.parse(xhr.responseText);
+          window.open(srvresponse.file)
+
+      };
+
+      xhr.upload.onprogress = function(event) {
+          // if (event.lengthComputable) {
+          //     var complete = (event.loaded / event.total * 100 | 0);
+          //     $(progressbar).css({'width':complete+'%'});
+          // }
+      };
+
+      xhr.send(formData);    
+
+    },
+
+    processRequestAnt: function(col){
       var self = this;
       var query = {
           name: 'Inscriptos Showcase 2015',
@@ -489,12 +520,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       };
 
       $.ajax({
-        type: "POST",
         url: "/excelbuilder",
+        type: "POST",
         dataType: "json",
+        //contentType:  'multipart/form-data',
         data: query,
         success: function(data){
-            window.open(data.file)
+          console.dir(data);
+          window.open(data.file)
 
         }
       });

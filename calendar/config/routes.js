@@ -91,15 +91,18 @@ module.exports = function (config, app) {
     });
     
     app.post('/excelbuilder', function(req,res,next){
-        var request = req.body;
-        request.data = JSON.parse(req.body.data); 
 
-        //validar datos
-        var error = utils.excelBuilder(request, rootPath, function(error){
-            if(error.file) {
-                res.send(error);
-            }
-        });
+        utils.uploadExcelData(req, res, next, rootPath);
+
+        // var request = req.body;
+        // request.data = JSON.parse(req.body.data); 
+
+        // //validar datos
+        // var error = utils.excelBuilder(request, rootPath, function(error){
+        //     if(error.file) {
+        //         res.send(error);
+        //     }
+        // });
 
     });
 
