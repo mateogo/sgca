@@ -20,6 +20,24 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return _getFieldFormatedValue(this, field);
 
     },
+    tramosnumber: function(){
+      if(this.get('movilidad').tramos){
+        return this.get('movilidad').tramos.length;
+      }else{
+        return 0;
+      }
+    },
+    getTramos: function(){
+      if(!this.get('movilidad').tramos || !this.get('movilidad').tramos.length ){
+        return [];
+      }else{
+        return this.get('movilidad').tramos;
+      }
+    },
+
+    tramoslabel: function(){
+      return _getTramosData(this.getTramos());
+    },
 
     getFieldFormatedValue: function(field){
       return _getFieldFormatedValue(this, field);
@@ -366,7 +384,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       //console.log('collection export [%s]',self.length);
 
-
       exportFactory.processRequest(exportFactory.fetchCollection(self));
       //
 
@@ -377,9 +394,24 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     exportHeadings: [
         {val:'cnumber',                          label:'NroIns',         itemType: 'Text'},
         {val:'requerimiento.tsolicitud',         label:'Tipo Solicitud', itemType: 'Text'},
+        {val:'requerimiento.eventtype',          label:'Categoría',      itemType: 'Text'},
         {val:'requerimiento.eventname',          label:'Evento',         itemType: 'Text'},
         {val:'requerimiento.eventurl',           label:'URL evento',     itemType: 'Text'},
         {val:'requerimiento.motivacion',         label:'Justificación',  itemType: 'Text'},
+
+        {val:'movilidad.qpax',                  label:'Pax',       itemType: 'Text'},
+        {val:'movilidad.qpaxmin',               label:'PaxMin',    itemType: 'Text'},
+        {val:'movilidad.description',           label:'Viaje',     itemType: 'Text'},
+        {val:'tramosnumber',                    label:'Tramos',    itemType: 'Number'},
+        {val:'tramoslabel',                     label:'Itinerario',itemType: 'Text'},
+
+        {val:'adjuntos.cartaministra',          label:'CMin',     itemType: 'Boolean'},
+        {val:'adjuntos.docidentidad',           label:'DNI',      itemType: 'Boolean'},
+        {val:'adjuntos.especifico',             label:'Espec',    itemType: 'Boolean'},
+        {val:'adjuntos.invitacion',             label:'Invit',    itemType: 'Boolean'},
+        {val:'adjuntos.constanciacuit',         label:'CUIT',     itemType: 'Boolean'},
+        {val:'adjuntos.resenia',                label:'CV',       itemType: 'Boolean'},
+
 
         {val:'responsable.etipojuridico',        label:'Tipo Jurídico',  itemType: 'Text'},
         {val:'responsable.edisplayName',         label:'Nombre',         itemType: 'Text'},
@@ -390,6 +422,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         {val:'responsable.elocalidad',           label:'Localidad',      itemType: 'Text'},
         {val:'responsable.ecuit',                label:'CUIT',           itemType: 'Text'},
         {val:'responsable.edomicilio',           label:'Domicilio',      itemType: 'Text'},
+        {val:'responsable.ecp',                  label:'CPostal',        itemType: 'Text'},
         {val:'responsable.ecp',                  label:'CPostal',        itemType: 'Text'},
 
         {val:'responsable.rmail',                label:'Correo',         itemType: 'Text'},
@@ -454,7 +487,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
                 data = 'sin_dato';
               }
               data = data.substr(0,200);
-
 
             }else{
 
@@ -1013,6 +1045,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     _.reduce(list, function(data, item, index){
       data.push(item.aname + " (" + item.acargo + ")");
+      return data;
+
+    }, data);
+
+    return data.join('; ');
+  };
+
+  var _getTramosData = function(list){
+    var data = [];
+
+    _.reduce(list, function(data, item, index){
+      data.push(' (' + (index+1) + ') Partida: ' + item.origen + " - Llegada: " + item.destino) ;
       return data;
 
     }, data);
