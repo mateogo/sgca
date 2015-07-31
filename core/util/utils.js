@@ -185,7 +185,7 @@ exports.uploadExcelData = function(req, res, next, rootPath){
   var form = new formidable.IncomingForm();
   console.log('UploadExcelData');
 
-  form.maxFieldsSize = 3 * 1024 * 1024;
+  form.maxFieldsSize = 30 * 1024 * 1024;
   //form.type = 'multipart';
   //form.type = 'urlencoded';
   
