@@ -464,7 +464,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               if(typeof data == undefined || data == null || data == ""){
                 data = 'sin_dato';
               }
-              data = data.substr(0,200);
+              data = data.substr(0,220);
 
 
             }else{
