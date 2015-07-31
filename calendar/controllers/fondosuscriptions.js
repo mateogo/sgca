@@ -242,24 +242,18 @@ exports.findByQuery = function(req, res) {
     }
 };
 
-var initTextSearch = function(query){
-    if(!query || !query.textsearch) return null;
+exports.fetchByQuery = function(req, res) {
+    var query = buildQuery(req.query),
+        cursor;
 
-    return utils.safeName(query.textsearch);
-}
+    //console.log('find:micasuscription Retrieving micasuscription collection with QUERY [%s] [%s]', page, limit);
 
-var textFilter = function(textsearch, items){
-    var rset = [];
-    var querystr;
-    var test;
-    rset = _.filter(items, function(item){
-        querystr = utils.safeName(item.responsable.edisplayName + item.responsable.ename + item.responsable.email + item.responsable.actividadppal + item.responsable.rname + item.movilidad.description + item.requerimiento.eventname );
-        test = querystr.indexOf(textsearch) !== -1 ? true : false;
-        return test;
+    cursor = dbi.collection(fondosuscriptionsCol).find(query).sort({cnumber:1});
+    cursor.toArray(function(err, items) {
+            res.send(items);
     });
-    return rset;
-};
 
+};
 
 exports.find = function(req, res) {
     var query = req.body; //{};
@@ -304,6 +298,26 @@ exports.update = function(req, res) {
         });
     });
 };
+
+var initTextSearch = function(query){
+    if(!query || !query.textsearch) return null;
+
+    return utils.safeName(query.textsearch);
+}
+
+var textFilter = function(textsearch, items){
+    var rset = [];
+    var querystr;
+    var test;
+    rset = _.filter(items, function(item){
+        querystr = utils.safeName(item.responsable.edisplayName + item.responsable.ename + item.responsable.email + item.responsable.actividadppal + item.responsable.rname + item.movilidad.description + item.requerimiento.eventname );
+        test = querystr.indexOf(textsearch) !== -1 ? true : false;
+        return test;
+    });
+    return rset;
+};
+
+
 
 var buildTargetNodes = function(data){
     if(!data.nodes) return;
@@ -351,9 +365,7 @@ var buildQuery = function(qr){
         conditions.push({estado_alta: 'activo'});
     }
 
-
    //console.dir(conditions);
-
 
     query['$and'] = conditions;
 

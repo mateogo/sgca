@@ -1034,6 +1034,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
   };
+
   var _filterData = function(anObj, labels){
     var data = [],
         stringdata;

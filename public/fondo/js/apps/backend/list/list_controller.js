@@ -42,8 +42,9 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
 
 		dao.gestionUser.getUser(DocManager, function (user){
       getSession().currentUser = user;
-
-			if(user && dao.gestionUser.hasPermissionTo('fondo:manager', 'fondo', {} ) ){
+//TODO
+      //if(user && dao.gestionUser.hasPermissionTo('fondo:manager', 'fondo', {} ) ){
+			if(true){
 
 	      defer.resolve(user);
 
@@ -57,6 +58,32 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
    	});
 
    	return defer.promise();
+  };
+
+  var downloadCollection = function(user, criterion, exportCol){
+    var defer = $.Deferred(),
+        action,
+        exportCol,
+        query = {
+          evento: 'fondo',
+          estado_alta: 'activo',
+        };
+
+
+    if(criterion){
+      _.extend(query, criterion);
+    }
+
+    action = 'getFirstPage';
+
+    exportCol.setQuery(query);
+
+    exportCol.getFirstPage().done(function(data){
+      //console.log('===action: [%s]==== FirstPage ======= Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+      defer.resolve(data);
+    });
+
+    return defer.promise();
   };
 
 
@@ -353,12 +380,13 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
 
     buildExcelExport: function(){
       var excelCol = new DocManager.Entities.FondoExportCollection();
-      excelCol.fetch({
-        success: function(data){
-            excelCol.exportRecords();
-        }
-      })      
+
+      $.when(downloadCollection(getSession().currentUser, getSession().filter.attributes, excelCol)).done(function(entities){
+        excelCol.exportRecords();
+      });
+
     },
+
   };
 
   DocManager.on("fondo:backend:filter:rows", function(filter, step){

@@ -310,6 +310,228 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
   //*************************************************************
+  //            Exporta a excel EXCEL Excel
+  //*************************************************************
+
+  Entities.FondoExportCollection = Backbone.PageableCollection.extend({
+    whoami: 'Entities.FondoExportCollection:fondo.js ',
+    model: Entities.FondoRegistration,
+    url: "/fetch/fondosuscriptions",
+    sortfield: 'cnumber',
+    sortorder: -1,
+
+    state:{
+      firstPage: 1,
+      pageSize: 15, 
+    },
+    queryParams:{
+      currentPage: 'page',
+      pageSize: 'per_page',
+      totalRecords: 'total_entries',
+    },
+
+
+    setQuery: function(query){
+      this.query = query;
+      _.extend(this.queryParams, query);
+
+    },
+
+    parseState: function (resp, queryParams, state, options) {
+
+      return {totalRecords: resp.length};
+
+    },
+
+    parseRecords: function (resp, options ) {
+
+      return resp;
+
+    },
+
+    comparator: function(left, right) {
+      var order = this.sortorder;
+      var l = left.get(this.sortfield);
+      var r = right.get(this.sortfield);
+
+      if (l === void 0) return -1 * order;
+      if (r === void 0) return 1 * order;
+
+      return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    },
+
+    exportRecords: function(){
+      var self = this;
+      if(!self.length) return;
+
+      //console.log('collection export [%s]',self.length);
+
+
+      exportFactory.processRequest(exportFactory.fetchCollection(self));
+      //
+
+    },
+  });
+
+  var exportFactory = {
+    exportHeadings: [
+        {val:'cnumber',                          label:'NroIns',         itemType: 'Text'},
+        {val:'requerimiento.tsolicitud',         label:'Tipo Solicitud', itemType: 'Text'},
+        {val:'requerimiento.eventname',          label:'Evento',         itemType: 'Text'},
+        {val:'requerimiento.eventurl',           label:'URL evento',     itemType: 'Text'},
+        {val:'requerimiento.motivacion',         label:'Justificación',  itemType: 'Text'},
+
+        {val:'responsable.etipojuridico',        label:'Tipo Jurídico',  itemType: 'Text'},
+        {val:'responsable.edisplayName',         label:'Nombre',         itemType: 'Text'},
+        {val:'responsable.actividadppal',        label:'Actividad Ppal', itemType: 'Text'},
+        {val:'responsable.ename',                label:'Razón social',   itemType: 'Text'},
+        {val:'responsable.epais',                label:'País',           itemType: 'Text'},
+        {val:'responsable.eprov',                label:'Provincia',      itemType: 'Text'},
+        {val:'responsable.elocalidad',           label:'Localidad',      itemType: 'Text'},
+        {val:'responsable.ecuit',                label:'CUIT',           itemType: 'Text'},
+        {val:'responsable.edomicilio',           label:'Domicilio',      itemType: 'Text'},
+        {val:'responsable.ecp',                  label:'CPostal',        itemType: 'Text'},
+
+        {val:'responsable.rmail',                label:'Correo',         itemType: 'Text'},
+        {val:'responsable.rname',                label:'Responsable',    itemType: 'Text'},
+        {val:'responsable.rcargo',               label:'Cargo',          itemType: 'Text'},
+        {val:'responsable.rdocnum',              label:'Documento',      itemType: 'Text'},
+        {val:'responsable.rtel',                 label:'Telefono',       itemType: 'Text'},
+        {val:'responsable.rcel',                 label:'Celular',        itemType: 'Text'},
+
+        {val:'responsable.disciplinas.musica',          label:'Mus',      itemType: 'Boolean'},
+        {val:'responsable.disciplinas.letras',          label:'Letras',   itemType: 'Boolean'},
+        {val:'responsable.disciplinas.artesvisuales',   label:'ArtVis',   itemType: 'Boolean'},
+        {val:'responsable.disciplinas.artesescenicas',  label:'ArtEsc',   itemType: 'Boolean'},
+        {val:'responsable.disciplinas.disenio',         label:'Diseño',   itemType: 'Boolean'},
+        {val:'responsable.disciplinas.audiovisuales',   label:'Audiov',   itemType: 'Boolean'},
+        {val:'responsable.disciplinas.videojuegos',     label:'VideoJue', itemType: 'Boolean'},
+        {val:'responsable.disciplinas.culturadigital',  label:'CultuDig', itemType: 'Boolean'},
+        {val:'responsable.disciplinas.gestioncultural', label:'GesCult',  itemType: 'Boolean'},
+        {val:'responsable.disciplinas.patrimonio',      label:'Patrim',   itemType: 'Boolean'},
+
+        {val:'responsable.fondo2014',                       label:'Fondo2014', itemType: 'Boolean'},
+        {val:'responsable.fondoanteriores.movilidad',       label:'Movil',     itemType: 'Boolean'},
+        {val:'responsable.fondoanteriores.sostenibilidad',  label:'Sosten',    itemType: 'Boolean'},
+        {val:'responsable.fondoanteriores.infraestructura', label:'Infraes',   itemType: 'Boolean'},
+        {val:'responsable.fondoanteriores.innovacion',      label:'Innova',    itemType: 'Boolean'},
+
+        {val:'responsable.micaanteriores.mica',             label:'MicaAnt',   itemType: 'Boolean'},
+        {val:'responsable.micaanteriores.premica',          label:'Premica',   itemType: 'Boolean'},
+        {val:'responsable.micaanteriores.micsur',           label:'Misur',     itemType: 'Boolean'},
+        {val:'responsable.micaanteriores.micaproduce',      label:'MProduce',  itemType: 'Boolean'},
+
+    ],
+
+    fetchCollection: function(collection){
+      var self = this,
+          colItems = [],
+          registro,
+          data;
+
+      collection.each(function(model){
+        registro = [];
+
+        _.each(self.exportHeadings, function(token){
+
+            data = _getFieldLabel(model, token.val);
+
+            if(token.itemType === 'Number'){
+              data = parseInt(data);
+              if(data == NaN){
+                data = 0;
+              }
+
+            }else if(token.itemType === 'Boolean'){
+              if(data){
+                data = 1;
+              }else{
+                data = 0;
+              }
+
+            }else if(token.itemType === 'Text'){
+              if(typeof data == undefined || data == null || data == ""){
+                data = 'sin_dato';
+              }
+              data = data.substr(0,200);
+
+
+            }else{
+
+              if(typeof data == undefined || data == null || data == ""){
+                data = 'sin_dato';
+              }
+
+            }
+
+            registro.push(data);
+          });
+        colItems.push(registro);
+      });
+      return colItems;
+    },
+
+    fetchLabels: function(){
+      return this.exportHeadings;
+    },
+
+
+    processRequest: function(col){
+      var self = this;
+
+      var formData = new FormData();
+
+      formData.append('name', 'Inscriptos Fondo 2015');
+      formData.append('heading',JSON.stringify(self.fetchLabels()));
+      formData.append('data',JSON.stringify(col));
+
+      var xhr = new XMLHttpRequest();
+
+      xhr.open('POST', '/excelfactory');
+
+      xhr.onload = function() {
+          var srvresponse = JSON.parse(xhr.responseText);
+          window.open(srvresponse.file)
+
+      };
+
+      xhr.upload.onprogress = function(event) {
+          // if (event.lengthComputable) {
+          //     var complete = (event.loaded / event.total * 100 | 0);
+          //     $(progressbar).css({'width':complete+'%'});
+          // }
+      };
+
+      xhr.send(formData);    
+
+    },
+
+    processRequestAnt: function(col){
+      var self = this;
+      var query = {
+          name: 'Inscriptos Fondo 2015',
+          heading: self.fetchLabels(),
+          data: JSON.stringify(col)
+      };
+
+      $.ajax({
+        url: "/excelbuilder",
+        type: "POST",
+        dataType: "json",
+        //contentType:  'multipart/form-data',
+        data: query,
+        success: function(data){
+          window.open(data.file)
+
+        }
+      });
+    }
+  };
+
+
+
+
+  //*************************************************************
   //            Helper Functions FOR UPDATE
   //*************************************************************
   var initModelForUpdate = function(user, model){
@@ -762,16 +984,71 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   };
 
+  var _filterData = function(anObj, labels){
+    var data = [],
+        stringdata;
+    data = _.map(anObj, function(value, index){
+      return value ? tdata.fetchLabel(labels, index) : value;
+    });
+    data = _.filter(data, function(item){
+      return item;
+    });
+    return data.join('; ');
+  };
+
+
+  var _stringData = function(anObj){
+    var data = [];
+    _.reduce(anObj, function(data, value, index){
+      if(value) data.push(index);
+      return data;
+
+    }, data);
+    return data.join('; ');
+
+  };
+
+  var _getIntegrantesData = function(list){
+    var data = [];
+
+    _.reduce(list, function(data, item, index){
+      data.push(item.aname + " (" + item.acargo + ")");
+      return data;
+
+    }, data);
+
+    return data.join('; ');
+  };
+
+  var _getReferencesData = function(list){
+    var data;
+
+    data = _.map(list, function(item, index){
+      return item.tlink + "|" + item.targeturl; 
+    });
+
+    return data.join('; ');
+  };
 
 
   var _getFieldLabel = function(model, field){
-      var value;
+      var value,
+          tokens;
       if(!field) return '';
       if(model[field]){
         return _getSelectValue(model, field, model[field]());
 
       }else if(field.indexOf('.') != -1){
-        value =  model.get(field.substring(0, field.indexOf('.')))[field.substring(field.indexOf('.')+1)];
+        tokens = field.split('.');
+        
+        if(tokens.length === 2 ){
+          
+          value =  model.get(tokens[0])[tokens[1]];
+ 
+        }else if(tokens.length === 3){
+          value =  model.get(tokens[0])[tokens[1]][tokens[2]];
+
+        }
         return _getSelectValue(model, field, value);
 
       }else{
