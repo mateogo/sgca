@@ -151,10 +151,12 @@ var isFalsey = function(data){
 var parseData = function(dataCol ,options){
     var row,
         parsedCol = [],
-        iType;
+        iType,
+        indexLinks;
 
     _.each(dataCol, function(itemRow){
         //console.log('ProgNum:[%s] tipomov:[%s] tagasto:[%s] cantidad:[%s] impo:[%s] nivel_ej:[%s] estado_alta:[%s] tramita:[%s] slug:[%s]',itemRow[0], itemRow[1], itemRow[2], itemRow[3], itemRow[4], itemRow[18], itemRow[19], itemRow[13], itemRow[6] );
+        indexLinks = -1;
 
 
         row = _.map(itemRow, function(item, index){
@@ -171,10 +173,19 @@ var parseData = function(dataCol ,options){
                 return parseDateStr(item);
             }else if(iType === 'Boolean') {
                 return (isFalsey(item) ? 0 : 1);
+            }else if(iType === 'Url') {
+                if(item.indexOf('|') !== -1 || item.indexOf(';') !== -1){
+                    indexLinks = index;
+                }
+                return item;
             }else{
                 return item;
             }
         });
+        if(indexLinks !== -1){
+            console.log('indexLinks [%s]', indexLinks);
+            row = row.concat(itemRow[indexLinks].split(/[|;]+/));
+        }
         parsedCol.push(row);
         //console.log('fecha:[%s ]ProgNum:[%s] tipomov:[%s] tagasto:[%s] cantidad:[%s] impo:[%s] nivel_ej:[%s] estado_alta:[%s] tramita:[%s] ', row[11].getTime(),row[0], row[1], row[2], row[3], row[4], row[18], row[19], row[14] );
     });

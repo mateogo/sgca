@@ -72,6 +72,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
+    referencesList: function(){
+      var self = this;
+      return _getReferencesData(_.union(self.getAEscenicReferences(), self.getMusicReferences()));
+    },
+
     getIntegrantes: function(){
       if(!this.get('responsable').integrantes || !this.get('responsable').integrantes.length ){
         return [];
@@ -79,6 +84,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         return this.get('responsable').integrantes;
       }
     },
+
+
 
     validate: function(attrs, options) {
       var errors = {}
@@ -433,6 +440,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         {val:'aescenica.generoteatral.performance',    label:'AES:Performance',itemType: 'Boolean'},
         {val:'aescenica.generoteatral.comediamusical', label:'AES:ComediaMus', itemType: 'Boolean'},
         {val:'aescenica.generoteatral.otros',          label:'AES:Otros',      itemType: 'Boolean'},
+        {val:'referencesList',                         label:'Referencias',    itemType: 'Url'},
     ],
 
     fetchCollection: function(collection){
@@ -502,6 +510,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       xhr.onload = function() {
           var srvresponse = JSON.parse(xhr.responseText);
+          console.log('serverresponse: [%s]', srvresponse.file);
           window.open(srvresponse.file)
 
       };
@@ -532,7 +541,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         //contentType:  'multipart/form-data',
         data: query,
         success: function(data){
-          console.dir(data);
           window.open(data.file)
 
         }
@@ -1060,6 +1068,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     return data.join('; ');
   };
+
+  var _getReferencesData = function(list){
+    var data;
+
+    data = _.map(list, function(item, index){
+      return item.tlink + "|" + item.targeturl; 
+    });
+
+    return data.join('; ');
+  };
+
 
   var _getFieldLabel = function(model, field){
       var value,
