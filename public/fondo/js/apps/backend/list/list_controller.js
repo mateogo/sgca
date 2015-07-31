@@ -42,9 +42,8 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
 
 		dao.gestionUser.getUser(DocManager, function (user){
       getSession().currentUser = user;
-//TODO
-      //if(user && dao.gestionUser.hasPermissionTo('fondo:manager', 'fondo', {} ) ){
-			if(true){
+
+      if(user && dao.gestionUser.hasPermissionTo('fondo:manager', 'fondo', {} ) ){
 
 	      defer.resolve(user);
 
