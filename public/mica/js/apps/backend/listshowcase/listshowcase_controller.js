@@ -44,8 +44,7 @@ DocManager.module('BackendApp.ListShowcase',function(ListShowcase, DocManager, B
 		dao.gestionUser.getUser(DocManager, function (user){
       getSession().currentUser = user;
 
-			//if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
-      if(true){
+			if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
 
 	      defer.resolve(user);
 
