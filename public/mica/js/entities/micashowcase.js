@@ -498,7 +498,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       var xhr = new XMLHttpRequest();
 
-      xhr.open('POST', '/excelbuilder');
+      xhr.open('POST', '/excelfactory');
 
       xhr.onload = function() {
           var srvresponse = JSON.parse(xhr.responseText);

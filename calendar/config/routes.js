@@ -90,19 +90,22 @@ module.exports = function (config, app) {
         res.redirect(utils.userHome(req.user));
     });
     
-    app.post('/excelbuilder', function(req,res,next){
+    app.post('/excelfactory', function(req,res,next){
 
         utils.uploadExcelData(req, res, next, rootPath);
 
-        // var request = req.body;
-        // request.data = JSON.parse(req.body.data); 
+    });
 
-        // //validar datos
-        // var error = utils.excelBuilder(request, rootPath, function(error){
-        //     if(error.file) {
-        //         res.send(error);
-        //     }
-        // });
+    app.post('/excelbuilder', function(req,res,next){
+        var request = req.body;
+        request.data = JSON.parse(req.body.data); 
+
+        //validar datos
+        var error = utils.excelBuilder(request, rootPath, function(error){
+            if(error.file) {
+                res.send(error);
+            }
+        });
 
     });
 
