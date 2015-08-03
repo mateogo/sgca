@@ -491,6 +491,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       // interacciones
       emisor_requests: 0,
       receptor_requests: 0,
+      peso: 10000,
 
       receptorlist:[],
       emisorlist:[],
@@ -530,8 +531,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       _.extend(this.queryParams, query);
 
     },
-    sortfield: 'receptor_requests',
-    sortorder: -1,
+    sortfield: 'peso',
+    sortorder: 1,
 
     comparator: function(left, right) {
       var order = this.sortorder;

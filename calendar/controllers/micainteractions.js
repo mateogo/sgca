@@ -14,6 +14,7 @@ var _ = require('underscore');
 var dbi ;
 var BSON;
 var config = {};
+var PONDERACION = 5;
 
 var micainteractionsCol = 'micainteractions';
 var micasuscriptionsCol = 'micasuscriptions';
@@ -234,7 +235,7 @@ exports.findByQuery = function(req, res) {
 };
 
 exports.rankingByQuery = function(req, res) {
-    var query = buildRankingQuery(req.query); 
+    var query = buildQuery(req.query); 
     var resultset;
     var itemcount = 0;
     var page = parseInt(req.query.page);
@@ -252,7 +253,7 @@ exports.rankingByQuery = function(req, res) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, profiles) {
 
             dbi.collection(micainteractionsCol, function(err, collection) {
-                collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
+                collection.find().sort({cnumber:1}).toArray(function(err, items) {
 
                     res.send(getRankedList(profiles, items));
                 });
@@ -344,6 +345,76 @@ var buildUpdateData = function(data){
     return data.newdata;
 };
 
+// SUSCRIPTION QUERY
+var buildQuery = function(qr){
+    var query = {},
+        prov = [], 
+        subc = {},
+        subv = {},
+        tmp = {},
+        conditions = [];
+
+    if(!qr) return query;
+
+    if(qr.rolePlaying && qr.rolePlaying !== 'no_definido'){
+        if(qr.rolePlaying === 'comprador'){
+            if(qr.nivel_ejecucion === 'no_definido')
+                conditions.push({$and: [{'comprador.rolePlaying.comprador': true}, {nivel_ejecucion: 'comprador_aceptado'}] } );
+            else
+                conditions.push({'comprador.rolePlaying.comprador': true} );
+        }else{
+            conditions.push({'vendedor.rolePlaying.vendedor': true});
+        }
+    }
+    if(qr.sector && qr.sector !== 'no_definido'){
+        conditions.push({'$or': [{'comprador.cactividades': qr.sector}, {'vendedor.vactividades': qr.sector}] });
+
+        if(qr.subsector && qr.subsector !== 'no_definido'){
+            subc['comprador.sub_' + qr.sector + '.' + qr.subsector] = true;
+            subv['vendedor.sub_' + qr.sector + '.' + qr.subsector] = true;
+            conditions.push({'$or': [{'$and': [subc, {'comprador.cactividades': qr.sector}]}, {'$and': [subv, {'vendedor.vactividades': qr.sector}]} ]} );
+        }
+    }
+    if(qr.favorito && (qr.favorito == true || qr.favorito == "true") && qr.userid){
+        var token = {};
+        token[qr.userid+'.favorito'] =  true;
+        conditions.push(token);
+    }
+
+
+    if(qr.receptor && qr.receptor == 1 && qr.userid){
+        var token = {};
+        token[qr.userid+'.receptor'] = {$gt: 0};
+        conditions.push(token);
+    }
+    if(qr.emisor && qr.emisor == 1 && qr.userid){
+        var token = {};
+        token[qr.userid+'.emisor'] = {$gt: 0};
+        conditions.push(token);
+    }
+
+ 
+    if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'solicitante.eprov': qr.provincia});
+
+    if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
+    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
+        conditions.push({estado_alta: qr.estado_alta});
+    }else{
+        conditions.push({estado_alta: 'activo'});
+    }
+
+    if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
+    if(qr.evento) conditions.push({evento: qr.evento});
+    if(qr.rubro) conditions.push({rubro: qr.rubro});
+    console.dir(conditions);
+
+
+    query['$and'] = conditions;
+
+    return query;
+};
+
+
 // BUILD QUERY
 var buildRankingQuery = function(qr){
     var query = {},
@@ -373,6 +444,7 @@ var buildRankingQuery = function(qr){
     }
 
     if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
+    //console.log('micainteractions#376');
     //console.dir(conditions);
 
 
@@ -450,8 +522,6 @@ exports.ranking = function(req, res) {
 var getRankedList = function(profiles, list){
     var output = normalizeProfiles(profiles);
 
-    console.log('list: [%s]', list.length)
-
     _.each(list, function(item){
         sumarizedIteration(output, item);
 
@@ -482,6 +552,8 @@ var sumarizedIteration = function(nprofiles, action){
     if(emisor){
         emisor.emisor_requests = emisor.emisor_requests + 1;
         emisor.receptorlist.push(action.receptor_inscriptionid);
+        emisor.peso = emisor.peso + 1;
+
     }else{
     }
 
@@ -491,6 +563,7 @@ var sumarizedIteration = function(nprofiles, action){
     if(receptor){
         receptor.receptor_requests = receptor.receptor_requests + 1;
         receptor.emisorlist.push(action.emisor_inscriptionid);
+        receptor.peso = receptor.peso + (1 * PONDERACION);
     }else{
     }
 
@@ -526,7 +599,7 @@ var normalizeProfiles = function(profiles){
     profiles = filterProfiles(profiles);
 
     normalized = _.map(profiles, function(item, index){
-        console.log('iterating#446: [%s] [%s] [%]', item._id, item.cnumber, item.user);
+        //console.log('iterating#446: [%s] [%s] [%]', item._id, item.cnumber, item.user);
         profile = {
             profileid: item._id,
             cnumber: item.cnumber,
@@ -536,6 +609,8 @@ var normalizeProfiles = function(profiles){
             ename: item.solicitante.displayName,
             epais: item.solicitante.epais,
             eprov: item.solicitante.eprov,
+
+
 
 
 
@@ -551,6 +626,7 @@ var normalizeProfiles = function(profiles){
 
             emisor_requests: 0,
             receptor_requests: 0,
+            peso: 10000,
             emisorlist:[],
             receptorlist:[],
 
@@ -559,7 +635,7 @@ var normalizeProfiles = function(profiles){
     });
 
     _.each(normalized, function(item){
-        console.log('[%s] [%s] [%s] v:[%s] c:[%s]', item._id, item.cnumber, item.rname, item.isvendedor, item.iscomprador);
+        //console.log('[%s] [%s] [%s] v:[%s] c:[%s]', item._id, item.cnumber, item.rname, item.isvendedor, item.iscomprador);
 
     });
     return normalized;

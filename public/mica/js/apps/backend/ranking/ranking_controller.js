@@ -43,6 +43,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       getSession().currentUser = user;
 
 			if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
+      //if(true){
 
 	      defer.resolve(user);
 
@@ -244,8 +245,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
               {name: 'eprov', label:'Prov', cell:'string', editable:false},
               {name: 'iscomprador', label:'C?', cell:'string', editable:false},
               {name: 'isvendedor', label:'V?', cell:'string', editable:false},
-              {name: 'receptor_requests', label:'Recibidos', cell:'number', editable:false},
-              {name: 'emisor_requests', label:'Requeridos', cell:'number', editable:false},
+              {name: 'receptor_requests', label:'Recibidas', cell:'number', editable:false},
+              {name: 'emisor_requests', label:'Solicitadas', cell:'number', editable:false},
 				      {label:'Acciones', cell: EditViewCell, editable:false, sortable:false},
 				    ],
 				    filtercols:['cnumber',  'nivel_ejecucion'],
