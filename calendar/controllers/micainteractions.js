@@ -438,11 +438,38 @@ var sumarizedIteration = function(nprofiles, action){
     }
 
 };
+var filterProfiles = function(profiles){
+    var filtered;
+
+    filtered = _.filter(profiles, function(item, index){
+        if(!item.cnumber || !item.user || !item.comprador || !item.vendedor || !item.estado_alta || !item.nivel_ejecucion || !item.responsable || !item.solicitante){
+            return false;
+        }
+        if(item.estado_alta !== 'activo') return false;
+
+        return true;
+
+    });
+    return filtered;
+};
+
+var isVendedor = function(item){
+    return (item.vendedor.rolePlaying.vendedor  && item.estado_alta === 'activo');
+};
+
+var isComprador = function(item){
+    return (item.comprador.rolePlaying.comprador && (item.nivel_ejecucion === 'comprador_aceptado') && (item.estado_alta === 'activo'));
+};
+
+
 var normalizeProfiles = function(profiles){
     var normalized, 
         profile;
 
+    profiles = filterProfiles(profiles);
+
     normalized = _.map(profiles, function(item, index){
+        console.log('iterating#446: [%s] [%s] [%]', item._id, item.cnumber, item.user);
         profile = {
             profileid: item._id,
             cnumber: item.cnumber,
