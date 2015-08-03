@@ -1018,8 +1018,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //            Helper Functions
   //*************************************************************
   var _getFieldFormatedValue = function(model, field){
-
-
     return _getSelectValue(model, field, model.get(field));
   };
 

@@ -22,6 +22,10 @@ utils.loadTemplate([
         // -- Lista showcase
         'showcaselist/MicaShowcaseListLayout','showcaselist/MicaShowcaseItemLayout','showcaselist/MicaShowcaseItemView',
 
+        // -- Lista ranking
+        'ranking/MicaRankingListLayout','ranking/MicaRankingItemLayout','ranking/MicaRankingItemView',
+        'ranking/MicaRankingActorListItem',
+
         // MailSender
         'MailTemplateDefault','MailFormSubmitNotification','MailFormGuardarProvisorio',
 

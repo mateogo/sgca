@@ -204,6 +204,7 @@ exports.findByQuery = function(req, res) {
     var textsearch = initTextSearch(req.query);
 
 
+
     cursor = dbi.collection(micainteractionsCol).find(query).sort({cnumber:1});
     if(textsearch){
         cursor.toArray(function(err, items){
@@ -221,7 +222,6 @@ exports.findByQuery = function(req, res) {
                 res.send([{total_entries: total}, items]);
 
             });
-
         })
 
     }else{
@@ -232,6 +232,36 @@ exports.findByQuery = function(req, res) {
     }
 
 };
+
+exports.rankingByQuery = function(req, res) {
+    var query = buildRankingQuery(req.query); 
+    var resultset;
+    var itemcount = 0;
+    var page = parseInt(req.query.page);
+    var limit = parseInt(req.query.per_page);
+    var cursor;
+    ///// dummy
+    //req.query.textsearch = 'altersoft';
+    /////
+    var textsearch = initTextSearch(req.query);
+
+    //console.log('find:micasuscription Retrieving micasuscription collection with QUERY [%s] [%s]', page, limit);
+
+
+    dbi.collection(micasuscriptionsCol, function(err, collection) {
+        collection.find(query).sort({cnumber:1}).toArray(function(err, profiles) {
+
+            dbi.collection(micainteractionsCol, function(err, collection) {
+                collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
+
+                    res.send(getRankedList(profiles, items));
+                });
+            });
+        });
+    });
+};
+
+
 var initTextSearch = function(query){
     if(!query || !query.textsearch) return null;
 
@@ -253,6 +283,8 @@ var textFilter = function(textsearch, items){
 
 exports.find = function(req, res) {
     var query = req.body; //{};
+    //console.log('find: [%s]', micainteractionsCol)
+    //console.dir(query);
 
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
@@ -313,13 +345,38 @@ var buildUpdateData = function(data){
 };
 
 // BUILD QUERY
-var buildQuery = function(qr){
+var buildRankingQuery = function(qr){
     var query = {},
         prov = [], 
         subc = {},
         subv = {},
         tmp = {},
         conditions = [];
+
+    if(!qr) return query;
+
+    if(qr.rolePlaying && qr.rolePlaying !== 'no_definido'){
+        if(qr.rolePlaying === 'comprador'){
+            conditions.push({'iscomprador': true});
+        }else{
+            conditions.push({'isvendedor': true});
+        }
+    }
+ 
+    if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'eprov': qr.provincia});
+
+    if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
+    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
+        conditions.push({estado_alta: qr.estado_alta});
+    }else{
+        conditions.push({estado_alta: 'activo'});
+    }
+
+    if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
+    //console.dir(conditions);
+
+
+    query['$and'] = conditions;
 
     return query;
 };

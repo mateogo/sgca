@@ -430,6 +430,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
       'click button.js-close': 'closeView',
       'click button.js-aceptar-comprador': 'aceptarComprador',
       'click button.js-aceptar-showcase': 'aceptarShowcase',
+      'click button.js-aceptar-micaranking': 'aceptarMicaranking',
 
     },
 
@@ -439,6 +440,10 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     
     aceptarShowcase: function(e){
       this.trigger('accept:showcase');
+    },
+
+    aceptarMicaranking: function(e){
+      this.trigger('accept:micaranking');
     },
     
     closeView: function(e){

@@ -1,22 +1,28 @@
-DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marionette, $, _){
+DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Backbone, Marionette, $, _){
   var backendApp = DocManager.module('BackendApp');
   var backendCommons = DocManager.module('BackendApp.Common.Views');
   var backendEntities = DocManager.module('Entities');
 
   var getSession = function(){
-    if(!List.Session){
-      List.Session = {views:{},model:null};
+    if(!RankingMica.Session){
+      RankingMica.Session = {views:{},model:null};
     }
-    return List.Session;
+    return RankingMica.Session;
   }
   
-	List.Controller = {
-		listInscriptions: function(criterion){
+	RankingMica.Controller = {
+		listRanking: function(criterion){
 	
 			loadCurrentUser().then( function(user){
 				if(!getSession().mainLayout){
 					buildLayout();
 				}
+        // OjO solo para debug===================
+        // console.log('Ready to check Users [%s]', user.get('username'));
+        // if(user.get('username') === 'mgomezortega@gmail.com'){
+        //   checkUsers();          
+        // }
+        // // OjO ==================================
 
         initCrudManager(user, criterion, 'reset');
 
@@ -25,6 +31,9 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 		}
 
 	}; 
+  var checkUsers = function(){
+
+  };
 	
   var loadCurrentUser = function(){
 
@@ -49,12 +58,36 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
    	return defer.promise();
   };
 
+  var downloadCollection = function(user, criterion, exportCol){
+    var defer = $.Deferred(),
+        action,
+        exportCol,
+        query = {
+          estado_alta: 'activo',
+        };
+
+
+    if(criterion){
+      _.extend(query, criterion);
+    }
+
+    action = 'getFirstPage';
+
+    exportCol.setQuery(query);
+
+    exportCol.getFirstPage().done(function(data){
+      //console.log('===action: [%s]==== FirstPage ======= Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+      defer.resolve(data);
+    });
+
+    return defer.promise();
+  };
+
 
   var fetchCollection = function(user, criterion, step){
     var defer = $.Deferred(),
         action,
         query = {
-          evento: 'mica',
           estado_alta: 'activo',
         };
 
@@ -83,7 +116,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     }else{
       action = 'getFirstPage';
 
-      getSession().collection =  new DocManager.Entities.MicaRegistrationPaginatedCol();
+      getSession().collection =  new DocManager.Entities.MicaRankingPaginatedCol();
 
       getSession().collection.setQuery(query);
       getSession().collection.getFirstPage().done(function(data){
@@ -91,13 +124,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
         defer.resolve(data);
       });
     }
-
-
-
-    // var fetchingEntities = DocManager.request('micarqst:query:entities', query, step );
-  //   $.when(fetchingEntities).done(function(entities){
-  //         defer.resolve(entities);
-  //  });
 
     return defer.promise();
   };
@@ -147,34 +173,34 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   var drpDwnBtn = function(){
               return $('\
                   <div class="btn-group" role="group">\
-                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">\
+                    <button type="button" class="btn btn-xs btn-default dropdown-toggle" title="modificar calificación" data-toggle="dropdown" aria-expanded="false">\
                       <i class="fa fa-cog"></i>\
                     </button>\
                     <ul class="dropdown-menu pull-right" role="menu">\
-                      <li><a href="#" class="js-trigger js-trigger-compradoraceptado"  role="button">Comprador Aceptado</a></li>\
-                      <li><a href="#" class="js-trigger js-trigger-compradorrechazado" role="button">Comprador Rechazado</a></li>\
-                      <li><a href="#" class="js-trigger js-trigger-observado" role="button">Observado</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-inscripcion-aceptado"  role="button">Aceptado</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-inscripcion-rechazado" role="button">Rechazado</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-inscripcion-observado" role="button">Observado</a></li>\
                     </ul>\
-                </div>');
-  };
+                </div>');  };
 
   var EditViewCell = Backgrid.Cell.extend({
       render: function(){
           if(!this.rendered){
-             var btnEdit = $('<button class="btn-link js-edit btn btn-sm btn-info" title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
-             var btnRemove = $('<button class="btn-link js-trash btn btn-sm btn-danger" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
+             var btnEdit = $('<button class="btn btn-xs btn-info js-edit"  title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
+             var btnRemove = $('<button class="btn btn-xs btn-danger js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
              this.$el.append(btnEdit).append(btnRemove).append(drpDwnBtn());
              this.rendered = true;
           }
-         return this;
+        this.$el.css('width','95px');
+        return this;
       },
       
       events: {
           'click button.js-edit': 'editClicked',
           'click button.js-trash': 'trashClicked',
-          'click .js-trigger-compradorrechazado': 'buyerRegected',
-          'click .js-trigger-compradoraceptado': 'buyerAccepted',
-          'click .js-trigger-observado': 'buyerObserved',
+          'click .js-trigger-inscripcion-aceptado': 'formAccepted',
+          'click .js-trigger-inscripcion-observado': 'formObserved',
+          'click .js-trigger-inscripcion-rechazado': 'formRegected',
       },
       updateRecord: function(e, nuevo_estado){
         var self = this;
@@ -185,14 +211,14 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
         });
      },
 
-      buyerAccepted: function(e){
-        this.updateRecord(e, 'comprador_aceptado');
+      formAccepted: function(e){
+        this.updateRecord(e, 'aceptado');
       },
-      buyerRegected: function(e){
-        this.updateRecord(e, 'comprador_rechazado');
-      },
-      buyerObserved: function(e){
+      formObserved: function(e){
         this.updateRecord(e, 'observado');
+      },
+      formRegected: function(e){
+        this.updateRecord(e, 'rechazado');
       },
 
       editClicked: function(e){
@@ -205,7 +231,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
           getSession().views.mainlayout.trigger('grid:model:remove',this.model);
       }
     });
-  
 
 	var initCrudManager = function(user, criterion, step){
 
@@ -215,33 +240,35 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 				  {
 				    gridcols:[
 				      {name: 'cnumber', label:'Nro Inscr', cell:'string', editable:false},
-				      {name: 'bg_vendedor',label:'Vendedor', cell:'vactivity', editable:false},
-				      {name: 'bg_comprador',label:'Comprador', cell:'cactivity', editable:false},
-				      {name: 'solicitante.edisplayName', label:'Solicitante', cell:fieldLabelCell, editable:false},
-				      {name: 'solicitante.eprov', label:'Prov', cell:fieldLabelCell, editable:false},
-				      {name: 'nivel_ejecucion', label:'Ejecución', cell:fieldLabelCell, editable:false},
+              {name: 'rname', label:'Responsable', cell:'string', editable:false},
+              {name: 'eprov', label:'Prov', cell:'string', editable:false},
+              {name: 'iscomprador', label:'C?', cell:'string', editable:false},
+              {name: 'isvendedor', label:'V?', cell:'string', editable:false},
+              {name: 'receptor_requests', label:'Recibidos', cell:'number', editable:false},
+              {name: 'emisor_requests', label:'Requeridos', cell:'number', editable:false},
 				      {label:'Acciones', cell: EditViewCell, editable:false, sortable:false},
 				    ],
-				    filtercols:['cnumber', 'bg_vendedor', 'bg_comprador',  'nivel_ejecucion'],
-				    editEventName: 'micarequest:edit',
+				    filtercols:['cnumber',  'nivel_ejecucion'],
+				    editEventName: 'micaranking:edit',
 
 				  },
 				  {
 				    test: 'TestOK',
+            baseLayoutTitle: 'Ranking interacciones - MICA 2015',
 				    parentLayoutView: getSession().views.mainlayout,
 
-				    layoutTpl: utils.templates.MicarequestsLayout,
-				    formTpl: utils.templates.MicaInscriptionFormLayout,
+				    layoutTpl: utils.templates.MicaRankingListLayout,
+				    formTpl: utils.templates.MicaRankingFormLayout,
 				    
             collection: getSession().collection,
 
-				    editModel: backendEntities.MicaRegistration,
+				    editModel: backendEntities.MicaRanking,
 				    modelToEdit: null,
-				    EditorView: DocManager.MicaRequestApp.Edit.MicaWizardLayout,
+				    EditorView: null,
 				    editorOpts: {},
 
-            filterEventName: 'mica:backend:filter:rows',
-            filterModel: backendEntities.MicaFilterFacet,
+            filterEventName: 'micaranking:backend:filter:rows',
+            filterModel: backendEntities.MicaInteractionFilterFacet,
             filterTitle: 'Criterios de búsqueda',
             filterInstance: getSession().filter,
 
@@ -257,7 +284,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 	var buildLayout = function(){
     var session = getSession();
     
-    session.views.layout = new backendCommons.Layout({model:new Backbone.Model({title: 'Compradores requeridos'}) });
+    session.views.layout = new backendCommons.Layout({model:new Backbone.Model({title: 'Ranking interacciones - 2015'}) });
     //session.views.sidebarpanel = new backendCommons.SideBarPanel({model:session.model});
     session.views.mainlayout = new backendCommons.MainLayout({model:session.model});
     
@@ -265,7 +292,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     registerMainLayoutEvents(session, session.views.layout, session.views.mainlayout);
     registerLayoutEvents(session, session.views.layout, session.views.mainlayout);
 
-    session.filter = new backendEntities.MicaFilterFacet();
+    session.filter = new backendEntities.MicaInteractionFilterFacet();
 
   };
   var registerSidebarEvents = function(session, layout, mainLayout){
@@ -283,7 +310,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
         Message.confirm('<h3>¿Confirma la baja?</h3>',
             [{label:'Cancelar', class:'btn-success'},{label:'Aceptar', class:'btn-danger'} ], function(response){
           if(response === 'Aceptar'){
-            DocManager.request("micarqst:partial:update",[model.id],{'estado_alta': 'baja'});
+            DocManager.request("micaranking:partial:update",[model.id],{'estado_alta': 'baja'});
             getSession().collection.remove(model);
           }
         });
@@ -291,7 +318,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
         Message.confirm('<h3>¿Confirma la reactivación de la inscripción?</h3>',
             [{label:'Cancelar', class:'btn-success'},{label:'Aceptar', class:'btn-danger'} ], function(response){
           if(response === 'Aceptar'){
-            DocManager.request("micarqst:partial:update",[model.id],{'estado_alta': 'activo'});
+            DocManager.request("micaranking:partial:update",[model.id],{'estado_alta': 'activo'});
             getSession().collection.remove(model);
           }
         });
@@ -303,7 +330,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     mainlayout.on('model:change:state', function(model, state){
       model.set('nivel_ejecucion', state);
 
-      DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': state});
+      DocManager.request("micaranking:partial:update",[model.id],{'nivel_ejecucion': state});
 
     });
 
@@ -319,23 +346,24 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   //***************** Vista de un Modelo ***************
   var createView = function(session, mainlayout, model){
   	var editorLayout = new backendCommons.ModelEditorLayout({
-  		model: model
+      template: utils.templates.MicaRankingItemLayout,
+  		model: model,
   	})
   	registerEditorLayoutEvents(session, mainlayout, editorLayout, model)
 
   };
-
+//TODO
   var registerEditorLayoutEvents = function(session, mainlayout, editorlayout, model){
-  	var modelView = new List.MicaRequestView({
+  	var modelView = new RankingMica.MicaRankingItemView({
   		model: model
   	})
   	
 
   	mainlayout.hideList();
 
-    editorlayout.on('accept:buyer', function(){
-      model.set('nivel_ejecucion', 'comprador_aceptado');
-      DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': 'comprador_aceptado'});
+    editorlayout.on('accept:micaranking', function(){
+      model.set('nivel_ejecucion', 'aceptado');
+      DocManager.request("micaranking:partial:update",[model.id],{'nivel_ejecucion': 'aceptado'});
       mainlayout.showList();
       editorlayout.destroy();
 
@@ -364,20 +392,20 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     },
 
     buildExcelExport: function(){
-      var excelCol = new DocManager.Entities.MicaExportCollection();
-      excelCol.fetch({
-        success: function(data){
-            excelCol.exportRecords();
-        }
-      })      
+      var excelCol = new DocManager.Entities.MicaInteractionExportCollection();
+
+      $.when(downloadCollection(getSession().currentUser, getSession().filter.attributes, excelCol)).done(function(entities){
+        excelCol.exportRecords();
+      });
+
     },
   };
 
-  DocManager.on("mica:backend:filter:rows", function(filter, step){
+  DocManager.on("micaranking:backend:filter:rows", function(filter, step){
     API.fetchFilteredCollection(filter, step);
   });
 
-  DocManager.on('mica:suscriptions:export:excel', function(){
+  DocManager.on('micaranking:suscriptions:export:excel', function(){
     API.buildExcelExport();
   });
 

@@ -2,7 +2,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     
   Entities.MicaInteraction = Backbone.Model.extend({
     urlRoot: "/micainteractions",
-    whoami: 'MicaInteraction:mica.js ',
+    whoami: 'MicaInteraction:micarondas.js ',
     idAttribute: "_id",
     
     initialize: function(opts){
@@ -165,13 +165,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
   Entities.MicaInteractionFindByQueryCol = Backbone.Collection.extend({
-    whoami: 'MicaInteractionFindByQueryCol: mica.js',
+    whoami: 'MicaInteractionFindByQueryCol: micarondas.js',
     model: Entities.MicaInteraction,
     url: "/navegar/micainteractions",
   });
 
   Entities.MicaInteractionPaginatedCol = Backbone.PageableCollection.extend({
-    whoami: 'MicaInteractionPaginatedCol: mica.js',
+    whoami: 'MicaInteractionPaginatedCol: micarondas.js',
     model: Entities.MicaInteraction,
     url: "/query/micainteractions",
 
@@ -203,7 +203,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
   Entities.MicaInteractionFetchOneCol = Backbone.Collection.extend({
-    whoami: 'MicaInteractionFetchOneCol: mica.js',
+    whoami: 'MicaInteractionFetchOneCol: micarondas.js',
     model: Entities.MicaInteraction,
     url: "/micainteractions/fetch",
 
@@ -211,7 +211,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
   Entities.MicaInteractionUpdate = Backbone.Model.extend({
-    whoami: 'Entities.MicaInteractionUpdate:mica.js ',
+    whoami: 'Entities.MicaInteractionUpdate:micarondas.js ',
 
     urlRoot: "/actualizar/micainteractions",
 
@@ -354,7 +354,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //            INTERACTION interaction ANSWER answer FACET
   //*************************************************************
   Entities.MicaInteractionAnswerFacet = Backbone.Model.extend({
-    whoami: 'Entities.MicaInteractionFactoryFacet:mica.js',
+    whoami: 'Entities.MicaInteractionFactoryFacet:micarondas.js',
     initialize: function(opts){
       //this.schema.subsector.options = tdata.subSectorOL[this.get('sector')];
 
@@ -385,7 +385,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //*************************************************************
 
   Entities.MicaInteractionFactoryFacet = Backbone.Model.extend({
-    whoami: 'Entities.MicaInteractionFactoryFacet:mica.js',
+    whoami: 'Entities.MicaInteractionFactoryFacet:micarondas.js',
     initialize: function(opts){
       //this.schema.subsector.options = tdata.subSectorOL[this.get('sector')];
 
@@ -424,26 +424,172 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
 
+  //*************************************************************
+  //            RANKING ranking Ranking FACET
+  //*************************************************************
+  Entities.MicaRanking = Backbone.Model.extend({
+    urlRoot: "/micainteractions/ranking",
+    whoami: 'MicaRanking:micarondas.js ',
+    idAttribute: "_id",
+    
+    initialize: function(opts){
+
+    },
+    
+
+    schema: {
+    },
+
+    getFieldLabel: function(field){
+      return _getFieldLabel(this, field);
+    },
+
+    validate: function(attrs, options) {
+      var errors = {}
+
+      if( ! _.isEmpty(errors)){
+        return errors;
+      }
+    },
+    isVendedorLabel: function(){
+      return this.get('isvendedor') ? 'Vendedor': '';
+    },
+    isCompradorLabel: function(){
+      return this.get('iscomprador') ? 'Comprador': '';
+    },
+    rolLabel: function(){
+      return this.isCompradorLabel() + ' ' + this.isVendedorLabel();
+    },
+    getActividadLabel: function(){
+      return tdata.fetchLabel(tdata['sectorOL'], this.get('vactividades'));
+    },
+    
+    initBeforeSave: function(){
+
+    },
+    update: function(cb){
+
+    },
+
+
+    defaults: {
+       _id: null,
+
+
+      //inscripcion
+      cnumber:'',
+      profileid: '',
+      userid: '',
+      nivel_ejecucion: '',
+      estado_alta: 'activo',
+
+      // Profile
+      isvendedor: false,
+      iscomprador: false,
+      vactividades: '',
+
+      // interacciones
+      emisor_requests: 0,
+      receptor_requests: 0,
+
+      receptorlist:[],
+      emisorlist:[],
+
+
+      //responsable
+      rname: '',
+
+
+      //solicitante
+      epais: '',
+      eprov: '',
+
+      
+    },
+
+
+  });
+
+  Entities.MicaRankingPaginatedCol = Backbone.PageableCollection.extend({
+    whoami: 'MicaRankingPaginatedCol: micarondas.js',
+    model: Entities.MicaRanking,
+    url: "/micainteractions/ranking",
+
+    state:{
+      firstPage: 1,
+      pageSize: 25, 
+    },
+    queryParams:{
+      currentPage: 'page',
+      pageSize: 'per_page',
+      totalRecords: 'total_entries',
+    },
+
+    setQuery: function(query){
+      this.query = query;
+      _.extend(this.queryParams, query);
+
+    },
+    sortfield: 'receptor_requests',
+    sortorder: -1,
+
+    comparator: function(left, right) {
+      var order = this.sortorder;
+      var l = left.get(this.sortfield);
+      var r = right.get(this.sortfield);
+
+      if (l === void 0) return -1 * order;
+      if (r === void 0) return 1 * order;
+
+      return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    },
+
+
+    parseState: function (resp, queryParams, state, options) {
+      //return {totalRecords: resp[0].total_entries};
+      return {totalRecords: resp.length};
+    },
+
+    parseRecords: function (resp, options ) {
+      return resp;
+    }
+  
+  });
+
+
 
 
   //*************************************************************
   //            FILTER filter FACET
   //*************************************************************
   Entities.MicaInteractionFilterFacet = Backbone.Model.extend({
-    whoami: 'Entities.MicaInteractionFilterFacet:mica.js',
+    whoami: 'Entities.MicaInteractionFilterFacet:micarondas.js',
     initialize: function(opts){
       //this.schema.subsector.options = tdata.subSectorOL[this.get('sector')];
 
     },
 
     schema: {
-        tregistro:     {type: 'Select',  title: 'Solicitado/Recibido', options: tdata.rolesOL },
-
+        rolePlaying:   {type: 'Select',  title: 'Rol', options: tdata.rolesOL },
+        cnumber:       {type: 'Text',    title: 'Número Inscripción' },
+        textsearch:    {type: 'Text',    title: 'Búsqueda por texto' },
+        provincia:     {type: 'Select',  title: 'Provincia',  options: tdata.provinciasOL },
+        nivel_ejecucion: {type: 'Select',  title: 'Aprobación',  options: tdata.nivel_ejecucionOL },
+        estado_alta:   {type: 'Select',  title: 'Estado',  options: tdata.estado_altaOL },
     },
 
 
     defaults: {
-      tregistro:'',
+      rolePlaying: 'no_definido',
+      provincia: 'no_definido',
+      cnumber: '',
+      textsearch: '',
+      nivel_ejecucion: 'no_definido',
+      estado_alta: 'activo',
+      favorito: false,
+      emisor: 0,
+      receptor: 0,
+      userid: '',
 
     },
   });
@@ -454,7 +600,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //            Exporta a excel EXCEL Excel
   //*************************************************************
   Entities.MicaExportInteractionCol = Backbone.Collection.extend({
-    whoami: 'Entities.MicaExportInteractionCol:mica.js ',
+    whoami: 'Entities.MicaExportInteractionCol:micarondas.js ',
     url: "/micainteractions",
     model: Entities.MicaInteraction,
     sortfield: 'cnumber',
@@ -609,8 +755,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //            Helper Functions
   //*************************************************************
   var _getFieldFormatedValue = function(model, field){
-
-
     return _getSelectValue(model, field, model.get(field));
   };
 
@@ -629,13 +773,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
   var _getFieldLabel = function(model, field){
-      var value;
+      var value,
+          tokens;
       if(!field) return '';
       if(model[field]){
         return _getSelectValue(model, field, model[field]());
 
       }else if(field.indexOf('.') != -1){
-        value =  model.get(field.substring(0, field.indexOf('.')))[field.substring(field.indexOf('.')+1)];
+        tokens = field.split('.');
+        
+        if(tokens.length === 2 ){
+          
+          value =  model.get(tokens[0])[tokens[1]];
+ 
+        }else if(tokens.length === 3){
+          value =  model.get(tokens[0])[tokens[1]][tokens[2]];
+
+        }
         return _getSelectValue(model, field, value);
 
       }else{
@@ -643,6 +797,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       }
   };
+
 
 
   //TODO
@@ -675,12 +830,15 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var queryCollection = function(query, step){
       var entities = new Entities.MicaInteractionFindByQueryCol();
       var defer = $.Deferred();
+      console.log('query Collection [%s]', entities.whoami);
 
       entities.fetch({
         data: query,
         type: 'post',
 
         success: function(data){
+          console.log('queryCollection Callback [%s]', data.length);
+          console.dir(query)
           defer.resolve(data);
         },
         error: function(data){
@@ -791,6 +949,36 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
     },
 
+    getActorList: function(model, rol){
+      // rol = [emisor|receptor]
+      var query = {},
+          fetchingEntities,
+          defer = $.Deferred();
+
+      if(rol === 'emisor'){
+        query['emisor_inscriptionid'] = model.get('profileid');
+      }else{
+        query['receptor_inscriptionid'] = model.get('profileid');
+
+      }
+
+      fetchingEntities = queryCollection(query, 'firstPage');
+
+
+      $.when(fetchingEntities).done(function(entities){
+
+        var filteredEntities = queryFactory(entities);
+
+        if(query){
+          filteredEntities.filter(query);
+        }
+
+        defer.resolve(filteredEntities);
+
+      });
+      return defer.promise();
+    },
+
 
     fetchByProfile: function(userid, myprofile, otherprofile, mode){
       var query = {};
@@ -875,6 +1063,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   DocManager.reqres.setHandler("micainteractions:query:entities", function(query, step){
     return API.getFilteredByQueryCol(query, step);
+  });
+
+  DocManager.reqres.setHandler("micainteractions:query:emisorlist", function(model){
+    return API.getActorList(model, 'emisor');
+  });
+
+  DocManager.reqres.setHandler("micainteractions:query:receptorlist", function(model){
+    return API.getActorList(model, 'receptor');
   });
 
 

@@ -4,6 +4,7 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
     appRoutes: {
       "inscripciones": "listInscriptions",
       "showcase/anotados": "listShowcase",
+      "ranking/mica": "browseRanking",
     }
   });
 
@@ -18,10 +19,10 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       BackendApp.ListShowcase.Controller.listInscriptions(criterion);
     },
 
-    // browseRanking: function(criterion){
-    //   console.log('API: listar inscripciones [%s]', criterion);
-    //   BackendApp.List.Controller.listInscriptions(criterion);
-    // },
+    browseRanking: function(criterion){
+      console.log('API: Ranking interacciones [%s]', criterion);
+      BackendApp.RankingMica.Controller.listRanking(criterion);
+    },
   };
 
   DocManager.on("inscriptions:list", function(criterion){
@@ -33,6 +34,12 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
     DocManager.navigate("showcase/anotados/" + criterion);
     API.listShowcase(criterion);
   });
+
+  DocManager.on("rankingmica:list", function(criterion){
+    DocManager.navigate("ranking/mica/" + criterion);
+    API.browseRanking(criterion);
+  });
+
 
   DocManager.addInitializer(function(){
     new BackendApp.Router({
