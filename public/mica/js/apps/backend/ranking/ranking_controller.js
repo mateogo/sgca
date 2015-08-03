@@ -241,7 +241,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 				  {
 				    gridcols:[
 				      {name: 'cnumber', label:'Nro Inscr', cell:'string', editable:false},
-              {name: 'rname', label:'Responsable', cell:'string', editable:false},
+              {name: 'ename', label:'Responsable', cell:'string', editable:false},
               {name: 'eprov', label:'Prov', cell:'string', editable:false},
               {name: 'iscomprador', label:'C?', cell:'string', editable:false},
               {name: 'isvendedor', label:'V?', cell:'string', editable:false},
@@ -249,7 +249,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
               {name: 'emisor_requests', label:'Solicitadas', cell:'number', editable:false},
 				      {label:'Acciones', cell: EditViewCell, editable:false, sortable:false},
 				    ],
-				    filtercols:['cnumber',  'nivel_ejecucion'],
+				    filtercols:['cnumber', 'ename',  'nivel_ejecucion'],
 				    editEventName: 'micaranking:edit',
 
 				  },
