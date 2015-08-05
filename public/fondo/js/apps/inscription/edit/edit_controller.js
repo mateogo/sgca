@@ -5,7 +5,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   Edit.Controller = {
       
       editInscripcion: function(id){
-        loadModel(id).then(function(){
+        loadModel(id, 'edit').then(function(){
           createLayoutView();
           createWizardFormViews();
         });
@@ -13,7 +13,17 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       },
       
       addInscripcion: function(){
-        loadModel().then(function(){
+        // search for existing profiles
+        loadModel(null, 'search').then(function(){
+          createLayoutView();
+          createWizardFormViews();
+        });
+        $('body').scrollTop(0);
+      },
+
+      newInscripcion: function(){
+        // create brand-new profile
+        loadModel(null, 'add').then(function(){
           createLayoutView();
           createWizardFormViews();
         });
@@ -28,25 +38,28 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     return Edit.Session;
   };
   
-  var loadModel = function(id){
+  var loadModel = function(id, mode){
 
     var defer = $.Deferred(),
         fetchingRequest,
         fetchingMicaRequest,
         fetchingAssets,
+        fondorqst,
         query;
 
     dao.gestionUser.getUser(DocManager, function (user){
       //console.log('Dao Get Current user: [%s]', user.get('username'));
       getSession().currentUser = user;
+      
+      fetchingRequest = DocManager.request("fondorqst:factory:new", user, "fondo");
 
-      if(id){
-          fetchingRequest = DocManager.request("fondorqst:entity", id);
-      }else{
-          fetchingRequest = DocManager.request("fondorqst:factory:new", user, "fondo");
-      }
+      // if(id){
+      //     fetchingRequest = DocManager.request("fondorqst:entity", id);
+      // }else{
+      // }
      
-      $.when(fetchingRequest).done(function(fondorqst){
+      $.when(fetchingRequest).done(function(fondorqsts){
+        fondorqst = populateNavigationBar(fondorqsts, id, mode);
         //console.log('FondoRequestApp.Edit BEGIN [%s] [%s]', fondorqst.whoami, fondorqst.id);
 
         // off the record: si tiene inscripción en mica buscamos datos default
@@ -129,6 +142,12 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   };
 
   var registerLayoutEvents = function(layout){
+    layout.on('add:new:profile', function(model){
+      Edit.Controller.newInscripcion();
+
+    });
+
+
     DocManager.mainRegion.show(layout);
   };
   
@@ -281,6 +300,76 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     layout.on("show", function(){
       layout.formRegion.show(stepFourForm);
     });
+
+  };
+
+  var populateNavigationBar = function(list, id, mode){
+    getSession().previousProfiles = new DocManager.Entities.FondoRegistrationFindByQueryCol();
+    if(!list){
+      //console.log('Caso 0: list is null');
+      DocManager.navigate("inscripcion/nueva");
+      return new DocManager.Entities.FondoRegistration();
+
+    }
+    if(list.whoami === 'FondoRegistracion'){
+      if(list.id){
+        //console.log('Caso 1.1.: existing Model');
+        DocManager.navigate("inscripcion/" + list.id + "/edit");
+        return list;
+
+      }else{
+        //console.log('Caso 1.2.: new Model');
+        DocManager.navigate("inscripcion/nueva");
+        return list;
+
+      }
+
+    }else if(list.whoami === 'FondoRegistrationFindByQueryCol'){
+      getSession().previousProfiles = list;
+      createButtonAccess(list);
+      if(list.length){
+
+        var entity = selectOneFromList(list, id, mode);
+        if(entity.id){
+          //console.log('Caso 2.1.1: Retrieve id');
+          DocManager.navigate("inscripcion/" + entity.id + "/edit");
+        }else{
+          //console.log('Caso 2.1.2: id not found');
+          DocManager.navigate("inscripcion/nueva");
+ 
+        }
+        return entity;
+
+      }else{
+        //console.log('Caso 2.2: collection has no models');
+        DocManager.navigate("inscripcion/nueva");
+        return new DocManager.Entities.FondoRegistration();
+
+      }
+
+    }
+
+  };
+
+  var createButtonAccess = function(list){
+    $('#fondo-active-profiles').html('');
+    var colView = new Edit.ActiveRecordsCollectionView({collection: list, el:$('#fondo-active-profiles') });
+    colView.render();
+  };
+
+  var selectOneFromList = function(list, id, mode){
+    var model;
+    if(mode === 'add'){
+      return new DocManager.Entities.FondoRegistration();
+    }else if(id){
+      model = list.find(function(model){
+        if(model.id === id) return true;
+        else return false;
+      })
+      return model || new DocManager.Entities.FondoRegistration();
+    }else{
+      return list.at(0);
+    }
 
   };
 

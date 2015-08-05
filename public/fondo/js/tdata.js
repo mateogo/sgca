@@ -449,8 +449,9 @@ window.tdata = {
         {val:'0' , label:'No interesado'},
     ],
     // ================= Fondo ===============
+
     tsolicitudOL: [
-        {val:'no_definido' , label:'Tipo de solicitud'},
+        {val:'no_definido' , label:'Tipo de movilidad requerida'},
         {val:'movilidad_nacional' , label:'Ayudas a la Movilidad dentro del país'},
         {val:'movilidad_intl' , label:'Ayudas a la Movilidad al exterior'},
         {val:'movilidad_mica' , label:'Ayudas a la Movilidad para la participación MICA 2015'},
@@ -462,9 +463,6 @@ window.tdata = {
         {val:'vta',    label:'VUELTA'},
         {val:'idavta', label:'TRAMO INTERMEDIO'},
     ],
-
-
-
 
 };
 

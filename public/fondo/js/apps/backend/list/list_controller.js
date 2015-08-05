@@ -24,10 +24,25 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
         // // OjO ==================================
 
         initCrudManager(user, criterion, 'reset');
-
 			});
+		},
 
-		}
+    viewInscription: function(cnumber){
+  
+      loadCurrentUser().then( function(user){
+        if(!getSession().mainLayout){
+          buildLayout();
+        }
+        // OjO solo para debug===================
+        // if(user.get('username') === 'mgomezortega@gmail.com'){
+        //   checkUsers();          
+        // }
+        // // OjO ==================================
+        getSession().filter.set({cnumber: cnumber});
+
+        initCrudManager(user, getSession().filter.attributes, 'reset');
+      });
+    },
 
 	}; 
   var checkUsers = function(){
@@ -332,16 +347,24 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
   };
   //***************** Vista de un Modelo ***************
   var createView = function(session, mainlayout, model){
-  	var editorLayout = new backendCommons.ModelEditorLayout({
-  		model: model
-  	})
-  	registerEditorLayoutEvents(session, mainlayout, editorLayout, model)
+
+    var assets = DocManager.request('fondorqst:fetch:assets', model);
+    assets.done(function(assetList){
+      var editorLayout = new backendCommons.ModelEditorLayout({
+        model: model,
+      })
+      registerEditorLayoutEvents(session, mainlayout, editorLayout, model, assetList)
+
+    });
+
+
 
   };
 
-  var registerEditorLayoutEvents = function(session, mainlayout, editorlayout, model){
+  var registerEditorLayoutEvents = function(session, mainlayout, editorlayout, model, assetList){
   	var modelView = new List.FondoRequestView({
-  		model: model
+  		model: model,
+      adjuntos: assetList
   	})
   	
 

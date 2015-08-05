@@ -11,6 +11,14 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     },
 
     onRender: function(){
+      var self = this;
+      $('.js-new-profile').click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        self.trigger('add:new:profile', self.model);
+      });
+
+
     },
 
     getTemplate: function(){
@@ -19,11 +27,15 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     
     regions: {
       formRegion: '#form-region',
+      navigateRegion: '#fondo-open-forms',
     },
 
     events: {
       'click .js-basicedit':'onClickBaseEdit',
+      'click .js-new-profile': 'addNewSuscription',
       'click ': 'formSubmit',
+    },
+    addNewSuscription: function(e){
     },
 
     onFormSubmit: function(){
@@ -158,7 +170,40 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
         },
         getFieldLabel: function(fieldName){
           return self.model.getFieldLabel(fieldName);
-        }
+        },
+
+        buildMovilidadOptions: function(){
+            var template = _.template("<option value='<%= val %>' <%= selected %> ><%= label %></option>");
+            var alreadyTypes = fetchProfilesTypesSoFar();
+            var isEditing = getSession().model.id;
+            var actualvalue = self.model.get('tsolicitud');
+
+            var data = _.filter(tdata.tsolicitudOL, function(item){
+              if(item.val === 'no_definido') return true;
+              if(isEditing){
+                if(item.val === actualvalue) return true;
+                else return false;
+
+              }else{
+                if(alreadyTypes.indexOf(item.val) === -1){
+                  return true
+                }else{
+                  return false
+                }
+              }
+
+
+            });
+            var optionStr = '';
+            _.each(data, function(element, index, list){
+                element.selected = (actualvalue == element.val ? 'selected' : '');
+                optionStr += template(element);
+            });
+            return optionStr;
+        },
+
+
+
       };
     },
 
@@ -194,10 +239,15 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       var errors = this.model.validateStep(step) ;
 
       if(this.model.get('tsolicitud')=== 'movilidad_mica' && !getSession().mica.id){
-        console.log('Tsolicitud con PROBLEMAS')
         errors = errors ||{};
         errors.tsolicitud = 'Para aplicar a MOVILIDAD MICA debe contar con una INSCRIPCIÓN ACTIVA en dicho evento';
 
+      }
+
+      if((this.model.get('tsolicitud') === 'movilidad_mica' && this.model.get('eventtype') !== 'mica') ||
+         (this.model.get('tsolicitud') !== 'movilidad_mica' && this.model.get('eventtype') === 'mica') ){
+        errors = errors ||{};
+        errors.tsolicitud = 'El tipo de solicitud y la categoría seleccionados no son compatibles';
       }
 
       this.onFormDataInvalid((errors || {}));
@@ -215,9 +265,10 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     changeTsol: function(event){
       var self = this,
           tsol = event.target.value;
-      console.log('tsolicitud:[%s]',tsol);
+
       if(tsol === 'movilidad_mica'){
         self.model.set({
+          tsolicitud: tsol,
           eventname:  'Participación en MICA, número inscripción: ' + getSession().mica.get('cnumber'),
           eventtype: 'mica',
           eventurl: 'http://mica.cultura.gob.ar/'
@@ -577,6 +628,69 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     },
 
   });
+
+  //*************************************************************
+  //       Navigate NAVIGATE form hook
+  //*************************************************************
+
+  Edit.ActiveRecordsItemView = Marionette.ItemView.extend({
+    whoami: 'ActiveRecordsItemView',
+    getTemplate: function(){
+      return _.template('<button class="btn btn-default btn-block js-edit-inscription" ><%= getInscriptionLabel() %></button>');
+    },
+    initialize: function(opts){
+
+    },
+
+    events: {
+      'click ': 'editProfile',
+    },
+
+    editProfile: function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        Edit.Controller.editInscripcion(this.model.id);
+
+    },
+
+    templateHelpers: function(){
+      var self = this;
+      return {
+        formatDate: function(date){
+          return moment(date).format('dddd LL');
+        },
+        getInscriptionLabel: function(){
+          return self.model.getInscriptionLabel();
+        },
+
+      };
+    }    
+  });
+
+  Edit.ActiveRecordsCollectionView = Marionette.CollectionView.extend({
+
+    childView: Edit.ActiveRecordsItemView,
+
+    initialize: function(opts){
+      this.options = opts;
+    },
+ 
+    events: {
+    },
+
+    onRender: function(){
+      //console.log('[%s] RENDER ',this.whoami)      
+    },
+
+    childEvents: {
+    },
+
+
+    childViewOptions: function(model, index) {
+    },
+  });
+
+
 
   //*************************************************************
   //       AJUNTO IMAGEN DE LA EMPRESA EN STEP-ONE
@@ -942,6 +1056,13 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
           tooltip.bind( 'click', remove_tooltip );
       });
 
+  };
+  var fetchProfilesTypesSoFar = function(){
+    var list = [];
+    getSession().previousProfiles.each(function(model){
+      list.push(model.get('requerimiento').tsolicitud);
+    });
+    return list;
   };
     
 });

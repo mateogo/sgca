@@ -2,7 +2,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     
   Entities.FondoRegistration = Backbone.Model.extend({
     urlRoot: "/fondosuscriptions",
-    whoami: 'FondoRegistracion:fondo.js ',
+    whoami: 'FondoRegistracion',
     idAttribute: "_id",
     
     initialize: function(opts){
@@ -20,6 +20,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return _getFieldFormatedValue(this, field);
 
     },
+    
+    linkView: function(){
+      return 'http://200.80.154.217:3000/fondo/#inscripciones/' + this.get('cnumber');
+    },
+
     tramosnumber: function(){
       if(this.get('movilidad').tramos){
         return this.get('movilidad').tramos.length;
@@ -41,6 +46,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     getFieldFormatedValue: function(field){
       return _getFieldFormatedValue(this, field);
+    },
+    getInscriptionLabel: function(){
+      var label = _.template('<%= tsolicitud %><br><%= cnumber%>')
+      return label({cnumber: this.get('cnumber'), tsolicitud: tdata.fetchLabel(tdata.tsolicitudOL, this.get('requerimiento').tsolicitud) });
+
     },
 
     validate: function(attrs, options) {
@@ -215,7 +225,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
   Entities.FondoRegistrationFindByQueryCol = Backbone.Collection.extend({
-    whoami: 'FondoRegistrationFindByQueryCol: fondo.js',
+    whoami: 'FondoRegistrationFindByQueryCol',
     model: Entities.FondoRegistration,
     url: "/navegar/fondosuscriptions",
 
@@ -225,7 +235,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'FondoRegistrationPaginatedCol: fondo.js',
     model: Entities.FondoRegistration,
     url: "/query/fondosuscriptions",
-    //url: "/navegar/fondosuscriptions",
 
     // getNextPage: function(step){
     //   var actualPage = this.state.currentPage || 1;
@@ -393,6 +402,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var exportFactory = {
     exportHeadings: [
         {val:'cnumber',                          label:'NroIns',         itemType: 'Text'},
+        {val:'linkView',                         label:'VerInscripción', itemType: 'Text'},
         {val:'requerimiento.tsolicitud',         label:'Tipo Solicitud', itemType: 'Text'},
         {val:'requerimiento.eventtype',          label:'Categoría',      itemType: 'Text'},
         {val:'requerimiento.eventname',          label:'Evento',         itemType: 'Text'},
@@ -1219,7 +1229,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     fetchEntityByUser: function(user, evento){
-      var entities = new Entities.FondoRegistrationFetchOneCol();
+      var entities = new Entities.FondoRegistrationFindByQueryCol();
       var query = {},
           defer = $.Deferred();
 
@@ -1230,14 +1240,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         data: query,
         type: 'post',
         success: function(data){
-          if(data.length){
-            defer.resolve(data.at(0));
-          }else{
-            defer.resolve(new Entities.FondoRegistration());
-          }
+          
+          defer.resolve(data);
+
         },
         error: function(data){
-            defer.resolve(new Entities.FondoRegistration());          
+            defer.resolve(new Entities.FondoRegistration());
         }
       });
       return defer.promise();
@@ -1292,6 +1300,24 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       });
     },
 
+    fetchAssets: function(model){
+      var query = {},
+          defer = $.Deferred(),
+          assetList;
+
+      query = {
+        'es_asset_de.id': model.id
+      }
+      fetchingAssets = DocManager.request("assets:filtered:entities", query);
+
+      $.when(fetchingAssets).done(function(assets){
+        assetList = DocManager.request('assets:groupby:predicate', assets, model.id);
+        defer.resolve(assetList);
+      });
+
+      return defer.promise();
+
+    },
 
   };
 
@@ -1318,6 +1344,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   DocManager.reqres.setHandler("fondorqst:query:entities", function(query, step){
     return API.getFilteredByQueryCol(query, step);
   });
+
+  DocManager.reqres.setHandler("fondorqst:fetch:assets", function(model){
+    return API.fetchAssets(model);
+  });
+
 
 });
 
