@@ -168,6 +168,24 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     whoami: 'MicaInteractionFindByQueryCol: micarondas.js',
     model: Entities.MicaInteraction,
     url: "/navegar/micainteractions",
+
+    sortfield: 'peso',
+    sortorder: 1,
+
+    comparator: function(left, right) {
+      var order = this.sortorder;
+      var l = left.get('receptor_nivel_interes') * 2 + left.get('emisor_nivel_interes');
+      var r = right.get('receptor_nivel_interes') * 2 + right.get('emisor_nivel_interes');
+
+      if (l === void 0) return -1 * order;
+      if (r === void 0) return 1 * order;
+
+      return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    },
+
+
+
+
   });
 
   Entities.MicaInteractionPaginatedCol = Backbone.PageableCollection.extend({
@@ -838,8 +856,6 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         type: 'post',
 
         success: function(data){
-          console.log('queryCollection Callback [%s]', data.length);
-          console.dir(query)
           defer.resolve(data);
         },
         error: function(data){

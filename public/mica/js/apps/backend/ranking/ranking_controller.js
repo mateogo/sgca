@@ -355,9 +355,10 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   };
 //TODO
   var registerEditorLayoutEvents = function(session, mainlayout, editorlayout, model){
-  	var modelView = new RankingMica.MicaRankingItemView({
+  	var interactionView = new RankingMica.MicaRankingItemView({
   		model: model
-  	})
+  	});
+    registerInteractionView(session, mainlayout,editorlayout, model, interactionView);
   	
 
   	mainlayout.hideList();
@@ -379,12 +380,56 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
 
   	editorlayout.on('show', function(){
-    	editorlayout.getRegion('showRegion').show(modelView);
+    	editorlayout.getRegion('showRegion').show(interactionView);
  
   	})
   	mainlayout.getRegion('editRegion').show(editorlayout);
 
   };
+
+
+  var buildProfileView = function(mainlayout, profile){
+
+    var profileView = new DocManager.BackendApp.List.MicaRequestView({
+      model: profile
+    });
+    var profileLayout = new RankingMica.MicaProfileViewLayout({
+      model: profile
+    });
+
+    profileLayout.on('show', function(){
+      profileLayout.getRegion('viewRegion').show(profileView);
+    });
+
+    profileLayout.on('close:view', function(){
+      mainlayout.showEdit();
+      profileLayout.destroy();
+
+    });
+
+
+    mainlayout.hideEdit();
+    mainlayout.getRegion('viewRegion').show(profileLayout);
+
+
+  };
+
+  var registerInteractionView = function(session, mainlayout,editorlayout, model, view){
+    view.on('profile:view', function(interaction, profileId){
+      console.log('BUBLED at Ranking Controller!')
+      var fetchingMicaRequest = DocManager.request("micarqst:entity", profileId);
+       
+      $.when(fetchingMicaRequest).done(function(micarqst){
+       
+        buildProfileView(mainlayout, micarqst);
+ 
+      });
+    });
+
+  };
+
+
+
   var API = {
 
     fetchFilteredCollection: function(filter, step){

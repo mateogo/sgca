@@ -9,6 +9,8 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
 
     regions: {
       //navbarRegion:  '#navbar-region',
+      asignadaRegion:  '#js-asignada-region',
+      profileRegion:   '#js-profile-region',
       receptorRegion:  '#js-receptor-region',
       emisorRegion:    '#js-emisor-region',
 
@@ -20,13 +22,21 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
       $.when(DocManager.request("micainteractions:query:emisorlist", self.model)).done(function(list){
 
         var emisorList = new RankingMica.MicaRankingEmisorCollectionView({collection: list});
+        emisorList.on('view:profile', function(model, profileId){
+          console.log('Bubbled at emisor MicaRankingItemView')
+          self.trigger('profile:view', model, profileId);
+        });
         self.emisorRegion.show(emisorList);
-
+ 
       });
 
       $.when(DocManager.request("micainteractions:query:receptorlist", self.model)).done(function(list){
 
         var receptorList = new RankingMica.MicaRankingEmisorCollectionView({collection: list});
+        receptorList.on('view:profile', function(model, profileId){
+          console.log('Bubbled at receptor MicaRankingItemView')
+          self.trigger('profile:view', model, profileId);
+        });
         self.receptorRegion.show(receptorList);
 
       });
@@ -58,6 +68,40 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
   });
 
 
+  RankingMica.MicaProfileViewLayout = Marionette.LayoutView.extend({
+    getTemplate: function(){
+      return utils.templates.MicaRankingProfileLayout;
+    },
+
+    regions: {
+      //navbarRegion:  '#navbar-region',
+      viewRegion:      '#view-region',
+ 
+    },
+
+    onRender: function(){
+    },
+
+    templateHelpers: function(){
+      var self = this;
+      return {
+        formatDate: function(date){
+          return moment(date).format('dddd LL');
+        },
+      };
+    },
+
+    events: {
+      'click button.js-close': 'closeView',
+    },
+    
+    closeView: function(e){
+      this.trigger('close:view');
+    }
+
+  });
+
+
 
   RankingMica.MicaRankingActorView = Marionette.ItemView.extend({
     getTemplate: function(){
@@ -66,6 +110,29 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
     initialize: function(opts){
 
     },
+
+    events: {
+
+      'click .js-emisor-profile-view' : 'viewEmisorProfile',
+      'click .js-receptor-profile-view' : 'viewReceptorProfile',
+
+    },
+    viewEmisorProfile: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Click CollectionView');
+      this.trigger('view:profile', this.model, this.model.get('emisor_inscriptionid'));
+
+    },
+
+    viewReceptorProfile: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Click CollectionView');
+      this.trigger('view:profile', this.model, this.model.get('receptor_inscriptionid'));
+
+    },
+
 
     templateHelpers: function(){
       var self = this;
@@ -107,6 +174,10 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
     },
 
     childEvents: {
+      'view:profile': function(view, model, profileId){
+        console.log('Bubbled event [%s]',  model.get('slug'));
+        this.trigger('view:profile', model, profileId);
+      }
 
     },
 

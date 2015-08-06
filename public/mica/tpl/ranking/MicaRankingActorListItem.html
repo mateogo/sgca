@@ -1,20 +1,19 @@
-
-<h3><strong>Solicitud de entrevista: </strong> <%= cnumber %>: <%= fecomp %> </h3>
-
 <div class='row'>
-	<div class="col-sm-6 col-xs-12">
-		<h3>Emisor (<%= emisor_nivel_interes %>)</h3>
-		<p><strong>Solicita: </strong> <%= emisor_rname %></p>
-		<p><strong>Organización: </strong> <%= emisor_displayName %></p>
-		<p><strong>Dijo: </strong> <%= emisor_slug%></p>	
+	<div class="col-sm-2 col-xs-12">
+		<h4><strong><%= cnumber %></strong></h4>
+		<p><%= fecomp %></p>
+		<button class="btn btn-success btn-block btn-sm">Asignar</button>
+	</div>
+	<div class="col-sm-5 col-xs-12">
+		<h4>Emisor (<%= emisor_nivel_interes %>)</h4>
+		<p><strong><%= emisor_rname %> @ </strong><%= emisor_displayName %> <button class="btn btn-xs btn-default js-emisor-profile-view">Ver perfil</button></p>
+		<p><strong>Dijo: </strong><%= emisor_slug%></p>
 	</div>
 
-	<div class="col-sm-6 col-xs-12">
-		<h3>Receptor (<%= receptor_nivel_interes %>)</h3>
-		<p><strong>Recibe: </strong> <%= receptor_rname %></p>
-		<p><strong>Organización: </strong> <%= receptor_displayName %></p>
-		<p><strong>Contestó: </strong> <%= receptor_slug%></p>
+	<div class="col-sm-5 col-xs-12">
+		<h4>Receptor (<%= receptor_nivel_interes %>)</h4>
+		<p><strong><%= receptor_rname %> @ </strong><%= receptor_displayName %> <button class="btn btn-xs btn-default js-receptor-profile-view">Ver perfil</button></p>
+		<p><strong>Contestó: </strong><%= receptor_slug%></p>
 	</div>
 </div>
-<hr>
 

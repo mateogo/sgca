@@ -13,8 +13,6 @@ utils.loadTemplate([
         // Administra Inscripciones
         // -- Vistas basicas
         'list/CommonBaseLayout','list/CommonMainLayout','list/CommonModelEditorLayout',
-        // -- Ranking
-        //'list/CommonBaseLayout','list/CommonMainLayout',
 
         // -- Lista inscripciones
         'list/MicarequestsLayout','list/MicarequestsView',
@@ -24,7 +22,8 @@ utils.loadTemplate([
 
         // -- Lista ranking
         'ranking/MicaRankingListLayout','ranking/MicaRankingItemLayout','ranking/MicaRankingItemView',
-        'ranking/MicaRankingActorListItem',
+        'ranking/MicaRankingActorListItem', 'ranking/MicaRankingProfileLayout',
+
 
         // MailSender
         'MailTemplateDefault','MailFormSubmitNotification','MailFormGuardarProvisorio',

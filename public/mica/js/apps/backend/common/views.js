@@ -85,11 +85,29 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     showList: function(){
       this.$('#list-region').show();
     },
+
+    hideEdit: function(){
+      this.$('#edit-region').hide();
+    },
+
+    showEdit: function(){
+      this.$('#edit-region').show();
+    },
+    
+    hideView: function(){
+      this.$('#view-region').hide();
+    },
+
+    showView: function(){
+      this.$('#view-region').show();
+    },
+    
     
     regions: {
       headerRegion:  '#header-region',
       listRegion:    '#list-region',
       editRegion:    '#edit-region',
+      viewRegion:    '#view-region',
       footerRegion:  '#footer-region',
     },
     

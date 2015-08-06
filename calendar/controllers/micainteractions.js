@@ -606,6 +606,9 @@ var normalizeProfiles = function(profiles){
             userid: item.user.userid,
             usermail: item.user.usermail,
             rname: item.responsable.rname,
+            rmail:  item.responsable.rmail,
+            rcel:  item.responsable.rcel,
+
             ename: item.solicitante.edisplayName,
             epais: item.solicitante.epais,
             eprov: item.solicitante.eprov,
