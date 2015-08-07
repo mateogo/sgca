@@ -194,13 +194,9 @@ TokenService.prototype.runQuery = function(code,callback){
 
   query = _.clone(query);
 
-  console.log('Buscando TOKENS query sin reasignar',JSON.stringify(query));
-
   //verificando si es para usuario logueado
   this.replaceUserLogged(query);
 
-
-  console.log('Buscando TOKENS',JSON.stringify(query));
 
   //Ejecutando el query
   TokenModel.find(query,function(err,results){

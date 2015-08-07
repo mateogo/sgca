@@ -9,10 +9,10 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
     }
     return RankingMica.Session;
   }
-  
+
 	RankingMica.Controller = {
 		listRanking: function(criterion){
-	
+
 			loadCurrentUser().then( function(user){
 				if(!getSession().mainLayout){
 					buildLayout();
@@ -20,7 +20,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         // OjO solo para debug===================
         // console.log('Ready to check Users [%s]', user.get('username'));
         // if(user.get('username') === 'mgomezortega@gmail.com'){
-        //   checkUsers();          
+        //   checkUsers();
         // }
         // // OjO ==================================
 
@@ -30,11 +30,11 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
 		}
 
-	}; 
+	};
   var checkUsers = function(){
 
   };
-	
+
   var loadCurrentUser = function(){
 
     var defer = $.Deferred();
@@ -53,7 +53,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 			  window.open('/ingresar/#mica', '_self');
 			}
 
- 
+
    	});
 
    	return defer.promise();
@@ -195,7 +195,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         this.$el.css('width','95px');
         return this;
       },
-      
+
       events: {
           'click button.js-edit': 'editClicked',
           'click button.js-trash': 'trashClicked',
@@ -206,7 +206,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       updateRecord: function(e, nuevo_estado){
         var self = this;
         e.stopPropagation();e.preventDefault();
- 
+
         self.$('.dropdown-toggle').dropdown('toggle');
         getSession().views.mainlayout.trigger('model:change:state',this.model, nuevo_estado, function(error){
         });
@@ -226,7 +226,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
           e.stopPropagation();e.preventDefault();
           getSession().views.mainlayout.trigger('grid:model:edit',this.model);
       },
-        
+
       trashClicked: function(e){
           e.stopPropagation();e.preventDefault();
           getSession().views.mainlayout.trigger('grid:model:remove',this.model);
@@ -236,7 +236,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 	var initCrudManager = function(user, criterion, step){
 
 		$.when(fetchCollection(user, criterion, step)).done(function(entities){
-			
+
 			getSession().crudManager = new backendCommons.CrudManager(
 				  {
 				    gridcols:[
@@ -260,7 +260,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
 				    layoutTpl: utils.templates.MicaRankingListLayout,
 				    formTpl: utils.templates.MicaRankingFormLayout,
-				    
+
             collection: getSession().collection,
 
 				    editModel: backendEntities.MicaRanking,
@@ -284,11 +284,11 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 	//********** LAYOUT
 	var buildLayout = function(){
     var session = getSession();
-    
+
     session.views.layout = new backendCommons.Layout({model:new Backbone.Model({title: 'Ranking interacciones - 2015'}) });
     //session.views.sidebarpanel = new backendCommons.SideBarPanel({model:session.model});
     session.views.mainlayout = new backendCommons.MainLayout({model:session.model});
-    
+
     registerSidebarEvents(session, session.views.layout,session.views.mainlayout);
     registerMainLayoutEvents(session, session.views.layout, session.views.mainlayout);
     registerLayoutEvents(session, session.views.layout, session.views.mainlayout);
@@ -336,7 +336,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
     });
 
   };
-  
+
   var registerLayoutEvents = function(session, layout, mainlayout){
     layout.on('show', function(){
     	layout.getRegion('mainRegion').show(mainlayout);
@@ -359,7 +359,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   		model: model
   	});
     registerInteractionView(session, mainlayout,editorlayout, model, interactionView);
-  	
+
 
   	mainlayout.hideList();
 
@@ -381,7 +381,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
   	editorlayout.on('show', function(){
     	editorlayout.getRegion('showRegion').show(interactionView);
- 
+
   	})
   	mainlayout.getRegion('editRegion').show(editorlayout);
 
@@ -418,11 +418,11 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
     view.on('profile:view', function(interaction, profileId){
       console.log('BUBLED at Ranking Controller!')
       var fetchingMicaRequest = DocManager.request("micarqst:entity", profileId);
-       
+
       $.when(fetchingMicaRequest).done(function(micarqst){
-       
+
         buildProfileView(mainlayout, micarqst);
- 
+
       });
     });
 

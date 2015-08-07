@@ -5,6 +5,7 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       "inscripciones": "listInscriptions",
       "showcase/anotados": "listShowcase",
       "ranking/mica": "browseRanking",
+      "agenda": "agenda"
     }
   });
 
@@ -23,6 +24,10 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       console.log('API: Ranking interacciones [%s]', criterion);
       BackendApp.RankingMica.Controller.listRanking(criterion);
     },
+
+    agenda: function(){
+      BackendApp.AgendaMica.Controller.listAll();
+    }
   };
 
   DocManager.on("inscriptions:list", function(criterion){

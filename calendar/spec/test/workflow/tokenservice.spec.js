@@ -21,8 +21,6 @@ describe('services',function(){
 
         expect(query['from._id']).toBeTruthy();
         expect(query.fromMe).toBeFalsy();
-
-        console.log(query);
     });
 
     it('Deberia reemplazar el parametro toMe de un array',function(){
@@ -35,8 +33,6 @@ describe('services',function(){
 
         expect(query.$or[1]['from._id']).toBeTruthy();
         expect(query.$or[1].fromMe).toBeFalsy();
-
-        console.log(query);
     });
   });
 

@@ -135,6 +135,7 @@ var BaseModel = Backbone.Model.extend({
     });
   },
   find: function(query,sortparam,cb){
+    var self = this;
     var sort = this.defaultSort;
 
     if(cb){
@@ -143,10 +144,24 @@ var BaseModel = Backbone.Model.extend({
       cb = sortparam;
     }
 
+    if(query.$query && query.$orderby){
+      sort = query.$orderby;
+      query = query.$query;
+    }
+
     BaseModel.dbi.collection(this.entityCol,function(err,collection){
       if(err) return cb(err);
 
-      collection.find(query).sort(sort).toArray(cb);
+      collection.find(query).sort(sort).toArray(function(err,array){
+        if(err) return cb(err);
+
+        var tmp = [];
+        for (var i = 0; i < array.length; i++) {
+          tmp.push(new self(array[i]));
+        }
+
+        cb(null,tmp);
+      });
     });
   }
 });

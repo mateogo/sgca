@@ -17,7 +17,7 @@ var requireModel = require(rootPath + '/calendar/models/requireModel');
 
 
 //Installed Dbases
-var dbaseDevel = 'mongodb://localhost/sgcadb_dev'; //port = 27017  ojo: {auto_reconnect: true}
+var dbaseDevel = 'mongodb://localhost/sgcadb_mica_dev'; //port = 27017  ojo: {auto_reconnect: true}
 var dbaseTest = 'mongodb://localhost/sgcadb_test'; //port = 27017  ojo: {auto_reconnect: true}
 var dbaseProd = 'mongodb://localhost/sgcadb';      //port = 27017  ojo: {auto_reconnect: true}
 
@@ -126,12 +126,13 @@ var routesBootstrap = function (app, express) {
       require(routes_path)(this, app);
   }
 
-  require(rootPath + '/calendar/controllers/artactivities.js').configRoutes(app);
-  require(rootPath + '/calendar/controllers/events.js').configRoutes(app);
-  require(rootPath + '/calendar/controllers/artactivitiesreport.js').configRoutes(app);
-  require(rootPath + '/calendar/controllers/obraarte.js').configRoutes(app);
-  require(rootPath + '/calendar/controllers/obraartesolicitud.js').configRoutes(app);
-  require(rootPath + '/calendar/controllers/obraswf.js').configRoutes(app);
+//  require(rootPath + '/calendar/controllers/artactivities.js').configRoutes(app);
+//  require(rootPath + '/calendar/controllers/events.js').configRoutes(app);
+//  require(rootPath + '/calendar/controllers/artactivitiesreport.js').configRoutes(app);
+//  require(rootPath + '/calendar/controllers/obraarte.js').configRoutes(app);
+//  require(rootPath + '/calendar/controllers/obraartesolicitud.js').configRoutes(app);
+//  require(rootPath + '/calendar/controllers/obraswf.js').configRoutes(app);
+  require(rootPath + '/calendar/controllers/micaagenda.js').configRoutes(app);
 };
 
 
