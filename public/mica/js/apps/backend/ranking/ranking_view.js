@@ -63,7 +63,7 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
     regions: {
       //navbarRegion:  '#navbar-region',
       viewRegion:      '#view-region',
- 
+
     },
 
     onRender: function(){
@@ -81,7 +81,7 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
     events: {
       'click button.js-close': 'closeView',
     },
-    
+
     closeView: function(e){
       this.trigger('close:view');
     }
@@ -102,6 +102,7 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
 
       'click .js-emisor-profile-view' : 'viewEmisorProfile',
       'click .js-receptor-profile-view' : 'viewReceptorProfile',
+      'click .js-asignar': 'doAsign'
 
     },
     viewEmisorProfile: function(e){
@@ -118,6 +119,19 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
       console.log('Click CollectionView');
       this.trigger('view:profile', this.model, this.model.get('receptor_inscriptionid'));
 
+    },
+
+    doAsign: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      //TODO: trigger y delegar al controller
+      var p = DocManager.request('micaagenda:assign', this.model);
+      p.done(function(response){
+        var num = response.num_reunion;
+        Message.success('Asignado a #'+num);
+      }).fail(function(){
+        Message.error('No se pudo asignar');
+      });
     },
 
 
@@ -140,7 +154,7 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
           return tdata.fetchLabel(tdata[list], field)
         },
       };
-    }    
+    }
   });
 
   RankingMica.MicaRankingEmisorCollectionView = Marionette.CollectionView.extend({
@@ -152,12 +166,12 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
 
 
     },
- 
+
     events: {
     },
 
     onRender: function(){
-      //console.log('[%s] RENDER ',this.whoami)      
+      //console.log('[%s] RENDER ',this.whoami)
     },
 
     childEvents: {
@@ -243,4 +257,3 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
 
 
 });
-

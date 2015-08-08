@@ -77,10 +77,7 @@ clazz._prepareSolicitud = function(solicitud){
     slug: solicitud.get('cnumber'),
     owner: owner
   };
-  console.log('la solicitud',solicitud);
-  console.log('antes de extender',obj);
   obj = _.extend(obj,attrs);
-  console.log('despues de extender',obj);
 
   return obj;
 };
