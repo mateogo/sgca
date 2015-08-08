@@ -509,7 +509,7 @@ exports.ranking = function(req, res) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, profiles) {
 
             dbi.collection(micainteractionsCol, function(err, collection) {
-                collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
+                collection.find().sort({cnumber:1}).toArray(function(err, items) {
 
                     res.send(getRankedList(profiles, items));
                 });
@@ -543,7 +543,40 @@ var filterOutput = function(profiles){
 
     })
     return filtered;
-}
+};
+
+var addReceptorToList = function(profile, action){
+    // Lista en la que el profile le SOLICITA reunión a un cierto RECEPTOR
+    var token = {
+        receptor_rol: action.receptor_rol,
+        receptor_inscriptionid: action.receptor_inscriptionid,
+        receptor_displayName: action.receptor_displayName,
+        receptor_slug: action.receptor_slug,
+        receptor_nivel_interes: action.receptor_nivel_interes,
+ 
+        emisor_rol: action.emisor_rol,
+        emisor_slug: action.emisor_slug,
+        emisor_nivel_interes: action.emisor_nivel_interes,
+    };
+    profile.receptorlist.push(token);
+};
+
+var addEmisorToList = function(profile, action){
+    // Lista en la que el profile RECIBE pedido de reunión a un cierto EMISOR
+    var token = {
+        emisor_rol: action.emisor_rol,
+        emisor_inscriptionid: action.emisor_inscriptionid,
+        emisor_displayName: action.emisor_displayName,
+        emisor_slug: action.emisor_slug,
+        emisor_nivel_interes: action.emisor_nivel_interes,
+ 
+        receptor_rol: action.receptor_rol,
+        receptor_slug: action.receptor_slug,
+        receptor_nivel_interes: action.receptor_nivel_interes,
+    };
+    profile.emisorlist.push(token);
+};
+
 
 var sumarizedIteration = function(nprofiles, action){
     var emisor = _.find(nprofiles, function(item){
@@ -551,10 +584,12 @@ var sumarizedIteration = function(nprofiles, action){
     })
     if(emisor){
         emisor.emisor_requests = emisor.emisor_requests + 1;
-        emisor.receptorlist.push(action.receptor_inscriptionid);
+        //emisor.receptorlist.push(action.receptor_inscriptionid);
+        addReceptorToList(emisor, action);
         emisor.peso = emisor.peso + 1;
 
     }else{
+        console.log('Emisor No Encontrado [%s]',action.emisor_inscriptionid)
     }
 
     var receptor = _.find(nprofiles, function(item){
@@ -562,7 +597,8 @@ var sumarizedIteration = function(nprofiles, action){
     })
     if(receptor){
         receptor.receptor_requests = receptor.receptor_requests + 1;
-        receptor.emisorlist.push(action.emisor_inscriptionid);
+        //receptor.emisorlist.push(action.emisor_inscriptionid);
+        addEmisorToList(receptor, action);
         receptor.peso = receptor.peso + (1 * PONDERACION);
     }else{
     }
@@ -613,26 +649,26 @@ var normalizeProfiles = function(profiles){
             epais: item.solicitante.epais,
             eprov: item.solicitante.eprov,
 
-
-
-
-
             isvendedor: item.vendedor.rolePlaying.vendedor,
             vactividades: item.vendedor.vactividades,
+            vsubact: item.vendedor['sub_' + item.vendedor.vactividades],
+            vporfolios: item.vendedor.vporfolios.length,
+            vexperienciaintl: item.vendedor.vexperienciaintl,
             
             iscomprador: (item.comprador.rolePlaying.comprador && (item.nivel_ejecucion === 'comprador_aceptado')),
-            vactividades: item.comprador.cactividades,
+            cactividades: item.comprador.cactividades,
+            csubact: item.comprador['sub_' +  + item.comprador.cactividades],
+            cporfolios: item.comprador.cporfolios.length,
+            cexperienciaintl: item.comprador.cexperienciaintl,
             
             nivel_ejecucion: item.nivel_ejecucion,
             estado_alta: item.estado_alta,
-
 
             emisor_requests: 0,
             receptor_requests: 0,
             peso: 10000,
             emisorlist:[],
             receptorlist:[],
-
         };
         return profile;
     });

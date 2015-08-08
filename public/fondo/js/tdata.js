@@ -457,6 +457,12 @@ window.tdata = {
         {val:'movilidad_mica' , label:'Ayudas a la Movilidad para la participación MICA 2015'},
     ],
 
+    tsolicitudRestrictedOL: [
+        {val:'no_definido' , label:'Tipo de movilidad requerida'},
+        {val:'movilidad_nacional' , label:'Ayudas a la Movilidad dentro del país'},
+        {val:'movilidad_intl' , label:'Ayudas a la Movilidad al exterior'},
+    ],
+
     itinerarioTipoTramoOpLst:[
         {val:'no_definido', label:'Seleccione opción'},
         {val:'ida',    label:'IDA'},

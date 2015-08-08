@@ -42,8 +42,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 		dao.gestionUser.getUser(DocManager, function (user){
       getSession().currentUser = user;
 
-			if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
-      //if(true){
+			//if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
+      if(true){
 
 	      defer.resolve(user);
 
@@ -139,13 +139,114 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   });
 
 
-  Backgrid.SolicitanteCell = Backgrid.Cell.extend({
+  //*****************************
+  // Backgrid Cell
+  //*****************************
+  var EditViewCell = Backgrid.Cell.extend({
+    render: function(){
+        if(!this.rendered){
+           var btnEdit = $('<button class="btn btn-xs btn-info js-edit"  title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
+           var btnRemove = $('<button class="btn btn-xs btn-danger js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
+           this.$el.append(btnEdit).append(btnRemove).append(drpDwnBtn());
+           this.rendered = true;
+        }
+      this.$el.css('width','95px');
+      return this;
+    },
+    
+    events: {
+        'click button.js-edit': 'editClicked',
+        'click button.js-trash': 'trashClicked',
+        'click .js-trigger-inscripcion-aceptado': 'formAccepted',
+        'click .js-trigger-inscripcion-observado': 'formObserved',
+        'click .js-trigger-inscripcion-rechazado': 'formRegected',
+    },
+    updateRecord: function(e, nuevo_estado){
+      var self = this;
+      e.stopPropagation();e.preventDefault();
+
+      self.$('.dropdown-toggle').dropdown('toggle');
+      getSession().views.mainlayout.trigger('model:change:state',this.model, nuevo_estado, function(error){
+      });
+    },
+
+    formAccepted: function(e){
+      this.updateRecord(e, 'aceptado');
+    },
+    formObserved: function(e){
+      this.updateRecord(e, 'observado');
+    },
+    formRegected: function(e){
+      this.updateRecord(e, 'rechazado');
+    },
+
+    editClicked: function(e){
+        e.stopPropagation();e.preventDefault();
+        getSession().views.mainlayout.trigger('grid:model:edit',this.model);
+    },
+      
+    trashClicked: function(e){
+        e.stopPropagation();e.preventDefault();
+        getSession().views.mainlayout.trigger('grid:model:remove',this.model);
+    }
+  });
+
+  var ActividadViewCell = Backgrid.Cell.extend({
       className: "string-cell",
       render: function(){
-      	this.$el.html(this.model.get('solicitante').edisplayName);
+        var label =[];
+        if(this.model.get('iscomprador')) label.push('C: ' + this.model.get('cactividades'));
+        if(this.model.get('isvendedor'))  label.push('V: ' + this.model.get('vactividades'));
+
+      	this.$el.html( label.join('<br>')); 
         return this;
       },
   });
+  var interactionTpl = _.template("<span title='<%= title %>'><%= data %></span>");
+  
+  var interactionTitleTpl = _.template("Rol:<%= rol %> Emisor: <%= emisor %>(<%= nie %>) / Receptor: <%= receptor %>(<%= nir %>)");
+  
+  var ReceptorViewCell = Backgrid.Cell.extend({
+      className: "string-cell",
+      render: function(){
+        var label =[];
+        var data = this.model.get('as_receptor_nie') +' / '+ this.model.get('as_receptor_nir');
+        if(data === '0 / 0') data = '';
+        var title = interactionTitleTpl({rol: this.model.get('as_receptor_rol'), emisor: this.model.get('as_receptor_slug'), receptor:  this.model.get('as_receptor_answer'), nie:  this.model.get('as_receptor_nie'), nir:  this.model.get('as_receptor_nir')});
+        this.$el.html(interactionTpl({title: title, data: data })); 
+        return this;
+      },
+  });
+
+  var EmisorViewCell = Backgrid.Cell.extend({
+      className: "string-cell",
+      render: function(){
+        var label =[];
+        var data = this.model.get('as_emisor_nie') +' / '+ this.model.get('as_emisor_nir');
+        if(data === '0 / 0') data = '';
+        //var title = this.model.get('as_emisor_rol') +': '+this.model.get('as_emisor_slug') +' / '+ this.model.get('as_emisor_answer');
+        var title = interactionTitleTpl({rol: this.model.get('as_emisor_rol'), emisor: this.model.get('as_emisor_slug'), receptor:  this.model.get('as_emisor_answer'), nie:  this.model.get('as_emisor_nie'), nir:  this.model.get('as_emisor_nir')});
+        this.$el.html(interactionTpl({title: title, data: data })); 
+        return this;
+      },
+  });
+
+  var PaisProvCell = Backgrid.Cell.extend({
+      className: "string-cell",
+      render: function(){
+        var data = this.model.get('prov') +'/ '+ this.model.get('pais');
+        //var title = interactionTitleTpl({rol: this.model.get('as_emisor_rol'), emisor: this.model.get('as_emisor_slug'), receptor:  this.model.get('as_emisor_answer')});
+        this.$el.html(data); 
+        return this;
+      },
+  });
+
+
+
+
+
+
+
   Backgrid.VactivityCell = Backgrid.StringCell.extend({
       className: "string-cell",
       initialize: function(opt){
@@ -184,54 +285,14 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
                     </ul>\
                 </div>');  };
 
-  var EditViewCell = Backgrid.Cell.extend({
-      render: function(){
-          if(!this.rendered){
-             var btnEdit = $('<button class="btn btn-xs btn-info js-edit"  title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
-             var btnRemove = $('<button class="btn btn-xs btn-danger js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
-             this.$el.append(btnEdit).append(btnRemove).append(drpDwnBtn());
-             this.rendered = true;
-          }
-        this.$el.css('width','95px');
-        return this;
-      },
-      
-      events: {
-          'click button.js-edit': 'editClicked',
-          'click button.js-trash': 'trashClicked',
-          'click .js-trigger-inscripcion-aceptado': 'formAccepted',
-          'click .js-trigger-inscripcion-observado': 'formObserved',
-          'click .js-trigger-inscripcion-rechazado': 'formRegected',
-      },
-      updateRecord: function(e, nuevo_estado){
-        var self = this;
-        e.stopPropagation();e.preventDefault();
- 
-        self.$('.dropdown-toggle').dropdown('toggle');
-        getSession().views.mainlayout.trigger('model:change:state',this.model, nuevo_estado, function(error){
-        });
-     },
+  //*****************************
+  // END: Backgrid Cell
+  //*****************************
 
-      formAccepted: function(e){
-        this.updateRecord(e, 'aceptado');
-      },
-      formObserved: function(e){
-        this.updateRecord(e, 'observado');
-      },
-      formRegected: function(e){
-        this.updateRecord(e, 'rechazado');
-      },
 
-      editClicked: function(e){
-          e.stopPropagation();e.preventDefault();
-          getSession().views.mainlayout.trigger('grid:model:edit',this.model);
-      },
-        
-      trashClicked: function(e){
-          e.stopPropagation();e.preventDefault();
-          getSession().views.mainlayout.trigger('grid:model:remove',this.model);
-      }
-    });
+  //*****************************
+  // init
+  //*****************************
 
 	var initCrudManager = function(user, criterion, step){
 
@@ -346,22 +407,110 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   };
   //***************** Vista de un Modelo ***************
   var createView = function(session, mainlayout, model){
-  	var editorLayout = new backendCommons.ModelEditorLayout({
-      template: utils.templates.MicaRankingItemLayout,
+  	var editorLayout = new RankingMica.MicaRankingLayoutView({
   		model: model,
   	})
   	registerEditorLayoutEvents(session, mainlayout, editorLayout, model)
 
   };
+
 //TODO
   var registerEditorLayoutEvents = function(session, mainlayout, editorlayout, model){
-  	var interactionView = new RankingMica.MicaRankingItemView({
-  		model: model
-  	});
-    registerInteractionView(session, mainlayout,editorlayout, model, interactionView);
+    //build Presentation Collection
+    var presentationCol = buildPresentationCol(model);
+    console.log('PresentattionCol [%s]', presentationCol.length);
+
+    getSession().presentationCol = presentationCol;
+
+    getSession().workingView = new backendCommons.CrudManager(
+          {
+            gridcols:[
+              {name: 'cnumber', label:'Nro Inscr', cell: 'string', editable:false},
+              {name: 'displayName', label:'Emprendimiento', cell:'string', editable:false},
+              {name: 'receptor', label:'Receptor', cell: EmisorViewCell, editable:false},
+              {name: 'emisor',   label:'Emisor',   cell: ReceptorViewCell, editable:false},
+
+              {name: 'cactividad', label:'Sector', cell: ActividadViewCell, editable:false},
+              {name: 'pais', label:'Prov/Pais', cell: PaisProvCell, editable:false},
+              {name: 'porfolios', label:'Pfs', cell:'string', editable:false},
+              {name: 'emisor_requests', label:'Emi', cell:'string', editable:false},
+              {name: 'receptor_requests', label:'Rec', cell:'string', editable:false},
+
+              {label:'Acciones', cell: EditViewCell, editable:false, sortable:false},
+            ],
+            filtercols:['cnumber', 'displayName', 'pais'],
+            editEventName: 'micarequest:edit',
+
+          },
+          {
+            test: 'TestOK',
+            //Data
+            collection: getSession().presentationCol,
+            editModel: backendEntities.MicaInteractionSummary,
+            modelToEdit: null,
+
+            //Filtro
+            filterEventName: 'mica:backend:filter:rows',
+            filterModel: backendEntities.MicaFilterFacet,
+            filterTitle: 'Criterios de búsqueda',
+            filterInstance: getSession().filter,
+
+
+            // Parent Layout
+            //parentLayoutView: editorlayout,
+
+            // Layout donde insertar el grid
+            layoutTpl: utils.templates.MicaRankingItemView,
+
+
+            // form de edición para cuando selecciona un item
+            formTpl: utils.templates.MicaInscriptionFormLayout,
+            
+            // Vista edición para cuando selecciona un item
+            EditorView: DocManager.MicaRequestApp.Edit.MicaWizardLayout,
+            editorOpts: {},
+
+          }
+        );
+    
+
+
+    //registerInteractionView(session, mainlayout,editorlayout, model, interactionView);
   	
 
   	mainlayout.hideList();
+
+   //  editorlayout.on('accept:micaranking', function(){
+   //    model.set('nivel_ejecucion', 'aceptado');
+   //    DocManager.request("micaranking:partial:update",[model.id],{'nivel_ejecucion': 'aceptado'});
+   //    mainlayout.showList();
+   //    editorlayout.destroy();
+
+   //  });
+
+
+    editorlayout.on('close:view', function(){
+	  	mainlayout.showList();
+	  	editorlayout.destroy();
+    });
+
+
+  	editorlayout.on('show', function(){
+    	editorlayout.getRegion('showRegion').show(getSession().workingView.getLayout());
+  	});
+
+  	mainlayout.getRegion('editRegion').show(editorlayout);
+
+  };
+
+  var registerEditorLayoutEventsAnterior = function(session, mainlayout, editorlayout, model){
+    var interactionView = new RankingMica.MicaRankingLayoutView({
+      model: model
+    });
+    registerInteractionView(session, mainlayout,editorlayout, model, interactionView);
+    
+
+    mainlayout.hideList();
 
     editorlayout.on('accept:micaranking', function(){
       model.set('nivel_ejecucion', 'aceptado');
@@ -372,18 +521,18 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
     });
 
 
-  	editorlayout.on('close:view', function(){
-	  	mainlayout.showList();
-	  	editorlayout.destroy();
+    editorlayout.on('close:view', function(){
+      mainlayout.showList();
+      editorlayout.destroy();
 
-  	});
+    });
 
 
-  	editorlayout.on('show', function(){
-    	editorlayout.getRegion('showRegion').show(interactionView);
+    editorlayout.on('show', function(){
+      editorlayout.getRegion('showRegion').show(interactionView);
  
-  	})
-  	mainlayout.getRegion('editRegion').show(editorlayout);
+    })
+    mainlayout.getRegion('editRegion').show(editorlayout);
 
   };
 
@@ -428,10 +577,94 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
   };
 
+  var emisorListContains = function(list, itemid){
+    return _.find(list, function(item){
+      if(itemid === item.emisor_inscriptionid) return true;
+      else return false;
+    })
+  };
+  var receptorListContains = function(list, itemid){
+    return _.find(list, function(item){
+      if(itemid === item.receptor_inscriptionid) return true;
+      else return false;
+    })
+  };
+
+  var buildPresentationCol = function(model){
+    var token;
+    var presentationCol = new DocManager.Entities.MicaInteractionSummaryCol();
+    var emisorList = model.get('emisorlist');
+    var receptorList = model.get('receptorlist');
+    console.log('buildPresentationCol BEGIN:[%S] e:[%s]  r:[%s] col:[%s]', model.whoami, emisorList.length, receptorList.length, getSession().collection.length);
+
+    var targetList = getSession().collection.filter(function(item, index){
+      var itemid = item.get('profileid');
+      console.log('[%s]filter: [%s] [%s] [%s]', item.whoami, itemid, emisorListContains(emisorList, itemid),receptorListContains(receptorList, itemid))
+      return (emisorListContains(emisorList, itemid) || receptorListContains(receptorList, itemid));
+    });
+
+    console.log('PASO-1: filtro lista: [%s]', targetList.length);
+
+    _.each(targetList, function(profile){
+      token = new DocManager.Entities.MicaInteractionSummary({
+        //cierto profile
+        profileid: profile.get('profileid'),
+        cnumber: profile.get('cnumber'),
+        displayName: profile.get('ename'),
+        pais: profile.get('epais'),
+        prov: profile.get('eprov'),
+
+   
+        isvendedor: profile.get('isvendedor'),
+        vactividades: profile.get('vactividades'),
+   
+        iscomprador: profile.get('iscomprador'),
+        cactividades: profile.get('cactividades'),
+
+        porfolios: profile.get('cporfolios'),
+        emisor_requests: profile.get('emisor_requests'),
+        receptor_requests: profile.get('receptor_requests'),
+        peso: profile.get('peso'),
+
+      });
+      buildSummaryData(profile.get('profileid'), token, emisorList, receptorList);
+      presentationCol.add(token);
+
+    });
+    return presentationCol;
+  };
+  var buildSummaryData = function(profileid, token, elist, rlist){
+    _.each(elist, function(item){
+      if(item.emisor_inscriptionid === profileid){
+        token.set({
+          as_emisor : token.get('as_emisor'),
+          as_emisor_nie:  item.emisor_nivel_interes,
+          as_emisor_nir:  item.receptor_nivel_interes,
+          as_emisor_slug: item.emisor_slug,
+          as_emisor_answer: item.receptor_slug,
+          as_emisor_rol: item.emisor_rol,
+        });
+
+      }
+    })
+    _.each(rlist, function(item){
+      if(item.receptor_inscriptionid === profileid){
+        token.set({
+          as_receptor : token.get('as_receptor'),
+          as_receptor_nie:  item.emisor_nivel_interes,
+          as_receptor_nir:  item.receptor_nivel_interes,
+          as_receptor_slug: item.emisor_slug,
+          as_receptor_answer: item.receptor_slug,
+          as_receptor_rol: item.receptor_rol,
+        });
+
+      }
+    })
+
+  };
 
 
   var API = {
-
     fetchFilteredCollection: function(filter, step){
       initCrudManager(getSession().currentUser, filter.attributes, step)
 

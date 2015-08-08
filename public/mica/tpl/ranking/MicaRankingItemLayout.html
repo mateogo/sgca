@@ -7,5 +7,27 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-8 col-xs-12">
+        <h2 class="solicitante"><%= ename %> <span class="nro-serie">(<%= cnumber%>)</span></h2>
+
+        <h3 class="solicitante"><%= rolMica() %></h3>
+        <p><strong>SECTOR: </strong> <%= getActividad() %></p>
+        <p><%= getTdataLabel('paisesOL', epais) %> / <%= getTdataLabel('provinciasOL', eprov) %></p>
+        <p><strong>Responsable: </strong> <%= rname %> / <%= rmail %> / <%= rcel %></p>
+
+
+    </div>
+    <div class="col-md-4 col-xs-12">
+        <div>
+            <h2>Interacciones</h2>
+            <p><strong>Reuniones recibidas: </strong> <%= receptor_requests %></p>
+            <p><strong>Reuniones solicitadas: </strong> <%= emisor_requests %></p>
+
+            <div><strong>Estado:</strong> <%  if(getFieldLabel('estado_alta') === 'activo') %><span class="label label-success">ACTIVO</span></div>
+        </div>
+
+    </div>
+</div>
 <div id="show-region"></div> 
 <div id="edit-region"></div> 

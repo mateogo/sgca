@@ -175,11 +175,12 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
         buildMovilidadOptions: function(){
             var template = _.template("<option value='<%= val %>' <%= selected %> ><%= label %></option>");
             var alreadyTypes = fetchProfilesTypesSoFar();
-            var isEditing = getSession().model.id;
+            var isEditing = getSession().model.id && profileVigente(getSession().model);
             var actualvalue = self.model.get('tsolicitud');
 
             var data = _.filter(tdata.tsolicitudOL, function(item){
               if(item.val === 'no_definido') return true;
+              if(item.val === 'movilidad_mica') return false;
               if(isEditing){
                 if(item.val === actualvalue) return true;
                 else return false;
@@ -1064,5 +1065,13 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     });
     return list;
   };
-    
+  var profileVigente = function(model){
+    if(model.get('requerimiento').tsolicitud === 'movilidad_mica' && model.get('estado_alta') === 'activo'){
+      return false;
+    }else{
+      return true;
+    }
+  };
+
+     
 });

@@ -313,9 +313,16 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     }
     if(list.whoami === 'FondoRegistracion'){
       if(list.id){
-        //console.log('Caso 1.1.: existing Model');
-        DocManager.navigate("inscripcion/" + list.id + "/edit");
-        return list;
+        if(profileVigente(list)){
+          //console.log('Caso 1.1.: existing Model');
+          DocManager.navigate("inscripcion/" + list.id + "/edit");
+          return list;
+
+        }else{
+          //console.log('Caso 1.2.: new Model');
+          DocManager.navigate("inscripcion/nueva");
+          return list;          
+        }
 
       }else{
         //console.log('Caso 1.2.: new Model');
@@ -330,7 +337,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       if(list.length){
 
         var entity = selectOneFromList(list, id, mode);
-        if(entity.id){
+        if(entity.id && profileVigente(entity)){
           //console.log('Caso 2.1.1: Retrieve id');
           DocManager.navigate("inscripcion/" + entity.id + "/edit");
         }else{
@@ -363,7 +370,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       return new DocManager.Entities.FondoRegistration();
     }else if(id){
       model = list.find(function(model){
-        if(model.id === id) return true;
+        if(model.id === id && profileVigente(model)) return true;
         else return false;
       })
       return model || new DocManager.Entities.FondoRegistration();
@@ -371,6 +378,14 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       return list.at(0);
     }
 
+  };
+
+  var profileVigente = function(model){
+    if(model.get('requerimiento').tsolicitud === 'movilidad_mica' && model.get('estado_alta') === 'activo'){
+      return false;
+    }else{
+      return true;
+    }
   };
 
   var API = {

@@ -2,47 +2,34 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
 
   var backendApp = DocManager.module('BackendApp');
 
-  RankingMica.MicaRankingItemView = Marionette.LayoutView.extend({
+  RankingMica.MicaRankingLayoutView = Marionette.LayoutView.extend({
     getTemplate: function(){
-      return utils.templates.MicaRankingItemView;
+      return utils.templates.MicaRankingItemLayout;
     },
 
     regions: {
-      //navbarRegion:  '#navbar-region',
-      asignadaRegion:  '#js-asignada-region',
-      profileRegion:   '#js-profile-region',
-      receptorRegion:  '#js-receptor-region',
-      emisorRegion:    '#js-emisor-region',
+
+      interactionRegion: '#interaction-region',
+      showRegion: '#show-region',
+      editRegion: '#edit-region',
 
     },
 
     onRender: function(){
       var self = this;
+    },
+    
+    events: {
+      'click button.js-close': 'closeView',
+      'click button.js-aceptar-micaranking': 'aceptarMicaranking',
+    },
 
-      $.when(DocManager.request("micainteractions:query:emisorlist", self.model)).done(function(list){
-
-        var emisorList = new RankingMica.MicaRankingEmisorCollectionView({collection: list});
-        emisorList.on('view:profile', function(model, profileId){
-          console.log('Bubbled at emisor MicaRankingItemView')
-          self.trigger('profile:view', model, profileId);
-        });
-        self.emisorRegion.show(emisorList);
- 
-      });
-
-      $.when(DocManager.request("micainteractions:query:receptorlist", self.model)).done(function(list){
-
-        var receptorList = new RankingMica.MicaRankingEmisorCollectionView({collection: list});
-        receptorList.on('view:profile', function(model, profileId){
-          console.log('Bubbled at receptor MicaRankingItemView')
-          self.trigger('profile:view', model, profileId);
-        });
-        self.receptorRegion.show(receptorList);
-
-      });
-
-
-
+    aceptarMicaranking: function(e){
+      this.trigger('accept:micaranking');
+    },
+    
+    closeView: function(e){
+      this.trigger('close:view');
     },
 
     templateHelpers: function(){
@@ -185,6 +172,74 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
     childViewOptions: function(model, index) {
     },
   });
+
+// Deprecated ====================
+  RankingMica.MicaRankingItemViewAnt = Marionette.LayoutView.extend({
+    getTemplate: function(){
+      return utils.templates.MicaRankingItemView;
+    },
+
+    regions: {
+      //navbarRegion:  '#navbar-region',
+      asignadaRegion:  '#js-asignada-region',
+      profileRegion:   '#js-profile-region',
+      receptorRegion:  '#js-receptor-region',
+      emisorRegion:    '#js-emisor-region',
+
+    },
+
+    onRender: function(){
+      var self = this;
+
+      $.when(DocManager.request("micainteractions:query:emisorlist", self.model)).done(function(list){
+
+        var emisorList = new RankingMica.MicaRankingEmisorCollectionView({collection: list});
+        emisorList.on('view:profile', function(model, profileId){
+          console.log('Bubbled at emisor MicaRankingItemView')
+          self.trigger('profile:view', model, profileId);
+        });
+        self.emisorRegion.show(emisorList);
+ 
+      });
+
+      $.when(DocManager.request("micainteractions:query:receptorlist", self.model)).done(function(list){
+
+        var receptorList = new RankingMica.MicaRankingEmisorCollectionView({collection: list});
+        receptorList.on('view:profile', function(model, profileId){
+          console.log('Bubbled at receptor MicaRankingItemView')
+          self.trigger('profile:view', model, profileId);
+        });
+        self.receptorRegion.show(receptorList);
+
+      });
+
+
+
+    },
+
+    templateHelpers: function(){
+      var self = this;
+      return {
+        formatDate: function(date){
+          return moment(date).format('dddd LL');
+        },
+        getFieldLabel: function(fieldName){
+          return self.model.getFieldLabel(fieldName);
+        },
+        rolMica: function(){
+          return self.model.rolLabel();
+        },
+        getActividad: function(){
+          return self.model.getActividadLabel();
+        },
+        getTdataLabel: function(list, field){
+          return tdata.fetchLabel(tdata[list], field)
+        },
+      };
+    }
+  });
+
+
 
 
 });

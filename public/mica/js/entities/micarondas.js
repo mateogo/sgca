@@ -577,6 +577,112 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
 
+  //*************************************************************
+  //           Interaction Summary Resumen resumen summary
+  //*************************************************************
+  Entities.MicaInteractionSummary = Backbone.Model.extend({
+    whoami: 'MicaInteractionSummary:micarondas.js ',
+    idAttribute: "_id",
+    
+    initialize: function(opts){
+
+    },
+    
+
+    schema: {
+    },
+
+    getFieldLabel: function(field){
+      return _getFieldLabel(this, field);
+    },
+
+    defaults: {
+       _id: null,
+
+
+      //cierto profile
+      profileid: '',
+      cnumber:'',
+      displayName: '',
+      pais: '',
+      prov: '',
+
+ 
+      isvendedor: false,
+      vactividades: '',
+      vporfolios: 0,
+ 
+      iscomprador: false,
+      cactividades: '',
+      cporfolios: 0,
+
+      emisor_requests: 0,
+      receptor_requests: 0,
+      reu_agendadas: 0,
+      peso: 0,
+
+      array_index: 0,
+
+      // en su relación con el profile bajo análisis
+      as_emisor: 0,
+      as_emisor_nie: 0,
+      as_emisor_nir: 0,
+      as_emisor_rol: '',
+      as_emisor_slug: '',
+      as_emisor_answer: '',
+
+
+      // en su relación con el profile bajo análisis
+      as_receptor: 0,
+      as_receptor_nie: 0,
+      as_receptor_nir: 0,
+      as_receptor_rol: '',
+      as_receptor_slug: '',
+      as_receptor_answer: '',
+
+    },
+
+  });
+
+  Entities.MicaInteractionSummaryCol = Backbone.PageableCollection.extend({
+    whoami: 'MicaInteractionSummaryCol: micarondas.js',
+    model: Entities.MicaInteractionSummary,
+
+    sortfield: 'peso',
+    sortorder: 1,
+
+
+    state:{
+      firstPage: 1,
+      pageSize: 25, 
+    },
+    queryParams:{
+      currentPage: 'page',
+      pageSize: 'per_page',
+      totalRecords: 'total_entries',
+    },
+
+    setQuery: function(query){
+      this.query = query;
+      _.extend(this.queryParams, query);
+
+    },
+
+
+    comparator: function(left, right) {
+      var order = this.sortorder;
+      var l = left.get(this.sortfield);
+      var r = right.get(this.sortfield);
+
+      if (l === void 0) return -1 * order;
+      if (r === void 0) return 1 * order;
+
+      return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    },
+  
+  });
+
+
 
   //*************************************************************
   //            FILTER filter FACET

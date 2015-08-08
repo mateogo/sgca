@@ -498,6 +498,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     },
     
     gridFactory: function(collection, columns){
+      console.log('columns: [%s]', columns)
       this.grid = new Backgrid.Grid({
           className: 'table table-condensed table-bordered table-hover',
           collection: this.collection,
@@ -510,6 +511,8 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
           goBackFirstOnSort:false,
           collection: this.collection,
         });
+
+
     },
 
     createLayout: function(opts){
@@ -527,8 +530,11 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 
       self.layout.on('show',function(){
         //self.layout.filterRegion.show(self.filter);
+        console.log('1');
         self.layout.tableRegion.show(self.grid);
+        console.log('2');
         self.layout.paginatorRegion.show(self.gridpaginator);
+        console.log('3');
         //self.layout.formRegion.show(self.form);
       });
 
