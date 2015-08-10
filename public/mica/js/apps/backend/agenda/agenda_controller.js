@@ -16,35 +16,89 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       loadCurrentUser().then( function(user){
         if(!getSession().mainLayout){
           buildLayout();
+
+          initCrudManager(user,{});
         }
       });
+    },
+    listBySuscriptor: function(idSuscription,rol){
+      var collection = new backendEntities.MicaAgendaOneCollection();
+      collection.setSuscription(idSuscription,rol);
+
+      var list = new AgendaMica.AgendaList({collection:collection,rol:rol});
+      DocManager.mainRegion.show(list);
     }
   };
 
   var loadCurrentUser = function(){
-
     var defer = $.Deferred();
-
     dao.gestionUser.getUser(DocManager, function (user){
       getSession().currentUser = user;
 
       if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
-      //if(true){
-
         defer.resolve(user);
-
-
       }else{
         Message.warning('Debe iniciar sesión');
         window.open('/ingresar/#mica', '_self');
       }
-
-
     });
 
     return defer.promise();
   };
 
+
+  var initCrudManager = function(user, criterion){
+
+    var collection =  new backendEntities.MicaAgendaCollection();
+    collection.getFirstPage();
+    getSession().collection = collection;
+
+
+			getSession().crudManager = new backendCommons.CrudManager(
+				  {
+				    gridcols:[
+				      {name: 'comprador',label:'Comprador', cell:AgendaMica.SuscriptorCell, editable:false},
+				      {name: 'vendedor',label:'Vendedor', cell:AgendaMica.SuscriptorCell, editable:false},
+				      {name: 'num_reunion', label:'# Reunión', cell:'string', editable:false},
+				      {name: 'estado', label:'Estado', cell:'string', editable:false},
+				      {name: 'feultmod', label:'Modificado', cell:'string', editable:false},
+				      {label:'Acciones', cell: 'string', editable:false, sortable:false},
+				    ],
+				    filtercols:['num_reunion','feultmod'],
+				    editEventName: 'micaagenda:edit',
+				  },
+				  {
+				    test: 'TestOK',
+				    parentLayoutView: getSession().views.mainlayout,
+
+				    layoutTpl: utils.templates.MicarequestsLayout,
+				    // formTpl: utils.templates.MicaInscriptionFormLayout,
+
+            collection: getSession().collection,
+
+				    editModel: backendEntities.MicaAgenda,
+				    modelToEdit: null,
+				    EditorView: AgendaMica.ReunionEdit,
+				    editorOpts: {},
+
+            filterEventName: 'micaagenda:backend:filter:rows',
+            filterModel: backendEntities.MicaAgendaFilterFacet,
+            filterTitle: 'Criterios de búsqueda',
+            filterInstance: getSession().filter,
+
+				  }
+				);
+     	getSession().views.mainlayout.listRegion.show(getSession().crudManager.getLayout());
+		// });
+
+	};
+
+
+  var initAgendaForOne = function(idSuscription,rol){
+    var collection = new backendEntities.MicaAgendaOneCollection();
+    collection.setSuscription(idSuscription,rol);
+
+  };
 
   //********** LAYOUT
 	var buildLayout = function(){
@@ -58,57 +112,48 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     registerMainLayoutEvents(session, session.views.layout, session.views.mainlayout);
     registerLayoutEvents(session, session.views.layout, session.views.mainlayout);
 
-    session.filter = new backendEntities.MicaInteractionFilterFacet();
+    session.filter = new backendEntities.MicaAgendaFilterFacet();
 
   };
-  var registerSidebarEvents = function(session, layout, mainLayout){
 
+  var registerSidebarEvents = function(session, layout, mainLayout){
   };
 
   var registerMainLayoutEvents = function(session, layout, mainlayout){
-  	mainlayout.on('grid:model:edit', function(model){
-  		var view = createView(session, mainlayout, model)
-
-  	});
-
-  	mainlayout.on('grid:model:remove', function(model){
-      if(model.get('estado_alta')=== 'activo'){
-        Message.confirm('<h3>¿Confirma la baja?</h3>',
-            [{label:'Cancelar', class:'btn-success'},{label:'Aceptar', class:'btn-danger'} ], function(response){
-          if(response === 'Aceptar'){
-            DocManager.request("micaranking:partial:update",[model.id],{'estado_alta': 'baja'});
-            getSession().collection.remove(model);
-          }
-        });
-      }else{
-        Message.confirm('<h3>¿Confirma la reactivación de la inscripción?</h3>',
-            [{label:'Cancelar', class:'btn-success'},{label:'Aceptar', class:'btn-danger'} ], function(response){
-          if(response === 'Aceptar'){
-            DocManager.request("micaranking:partial:update",[model.id],{'estado_alta': 'activo'});
-            getSession().collection.remove(model);
-          }
-        });
-
-      }
-
-  	});
-
-    mainlayout.on('model:change:state', function(model, state){
-      model.set('nivel_ejecucion', state);
-
-      DocManager.request("micaranking:partial:update",[model.id],{'nivel_ejecucion': state});
-
-    });
-
   };
 
   var registerLayoutEvents = function(session, layout, mainlayout){
     layout.on('show', function(){
     	layout.getRegion('mainRegion').show(mainlayout);
+      setTimeout(function(){
+        mainlayout.$el.find('.js-excel').hide();
+      });
     });
 
     DocManager.mainRegion.show(layout);
   };
 
+  var API = {
+    doFilter: function(){
+      var session = getSession();
+      var filter = session.filter;
+      var collection = session.collection;
+
+      collection.setQuery(filter);
+    },
+    popupAgenda: function(suscriptor){
+
+    }
+  };
+
+
+  DocManager.on('micaagenda:backend:filter:rows',function(){
+    API.doFilter();
+  });
+
+
+  DocManager.on('micaagenda:agendaone:showpopup',function(suscriptor){
+    API.popupAgenda(suscriptor);
+  });
 
 });

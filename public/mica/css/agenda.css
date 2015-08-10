@@ -1,0 +1,12 @@
+.owner-container{
+  font-size: 18px;
+}
+
+.list-item-agenda-borrador {
+
+}
+
+.list-item-agenda-libre > div > div:first-child {
+  color: #2ECC40;
+  font-weight: bold;
+}

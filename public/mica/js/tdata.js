@@ -11,7 +11,7 @@ window.tdata = {
         //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
         return node ? node.label: key;
     },
-    
+
     paisLabel:function(list, key){
         var node = _.find(list, function(data){return data.val === key;});
         //console.log('LABEL: [%s] - [%s] [%s]',list, key, node ? node.label: key);
@@ -324,7 +324,7 @@ window.tdata = {
         {val:'comprador_rechazado', label:'Rechazado', classattr:'info'},
         {val:'observado',           label:'Observado', classattr:'info'},
     ],
-    
+
     nivel_ejecucion_showcaseOL:[
         {val:'no_definido',         label:'Nivel de Ejecución',  classattr:'info'},
         {val:'enproceso',           label:'Alta usuario',         classattr:'info'},
@@ -333,7 +333,7 @@ window.tdata = {
         {val:'rechazado',           label:'Rechazado', classattr:'info'},
         {val:'observado',           label:'Observado', classattr:'info'},
     ],
-    
+
     estado_altaOL:[
         {val:'no_definido',  label:'Nivel de Ejecución',  classattr:'info'},
         {val:'activo',       label:'Activo',         classattr:'info'},
@@ -430,7 +430,7 @@ window.tdata = {
           {val: 'comunidades',  label: 'Gestión de comunidades'},
         ],
     },
-    
+
     rolesInteractionsOL: [
         {val:'no_definido', label:'Esta solicitud es para...'},
         {val:'comprador',   label:'Demandar productos o servicios'},
@@ -511,5 +511,10 @@ window.tdata = {
       ],
     },
 
+    estado_reunion:[
+        {val:'no_definido', label:'Seleccione Estado'},
+        {val:'borrador',  label:'Borrador',  classattr:'info'},
+        {val:'observado',       label:'Observado',         classattr:'info'},
+        {val:'confirmado',         label:'Confirmado',  classattr:'warning'},
+    ]
 };
-

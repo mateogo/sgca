@@ -1,20 +1,44 @@
-
 var root = '../';
+var _ = require('underscore');
 
 var MicaAgenda = require(root + 'models/micaagenda.js').getModel();
 var MicaAgendaService = require(root + 'services/micaagendaservice.js');
 
 var ctrls = {
     find: function(req,res){
-      // TODO: seguridad,
-      // si no hay login no retornar nada
-      // si es usuario comun, solo retornar los suyos
 
-      var query = {};
+      //PREPRANDO QUERY
+      var query =  _.pick(req.query,'page','per_page','textsearch','estado');
+      if(query.page){
+        query.page = parseInt(query.page);
+        if(isNaN(query.page)){
+          delete query.page;
+        }
+      }
+
+      if(query.per_page){
+        query.per_page = parseInt(query.per_page);
+        if(isNaN(query.per_page)){
+          delete query.per_page;
+        }
+      }
+
+      if(query.textsearch){
+        var reg = new RegExp(query.textsearch,'i');
+        var $or = [];
+        $or.push({'vendedor.responsable.rmail':reg});
+        $or.push({'vendedor.responsable.rname':reg});
+        $or.push({'comprador.responsable.rmail':reg});
+        $or.push({'comprador.responsable.rname':reg});
+        query.$or = $or;
+        delete query.textsearch;
+      }
+
 
       console.log('buscando en agenda',query);
 
-      MicaAgenda.find(query,function(err,result){
+      //EJECUNTADO QUERY
+      MicaAgenda.findPageable(query,function(err,result){
         if(err) return res.status(500).send(err);
 
         res.json(result);
@@ -124,7 +148,7 @@ module.exports.configRoutes = function(app){
   app.get('/micaagenda',[ensureAuthenticated,isAdminMica,ctrls.find]);
   app.get('/micaagenda/:id',[ensureAuthenticated,isAdminMica,ctrls.findById]);
 
-  app.get('/micaagenda/agenda/:idSuscriptor/:rol',[ensureAuthenticated,isAdminMica,ctrls.agenda]);
+  app.get('/micaagenda/:idSuscriptor/:rol',[ensureAuthenticated,isAdminMica,ctrls.agenda]);
 
   app.post('/micaagenda/assign',[ensureAuthenticated,isAdminMica,ctrls.assign]);
 

@@ -24,6 +24,9 @@ utils.loadTemplate([
         'ranking/MicaRankingListLayout','ranking/MicaRankingItemLayout','ranking/MicaRankingItemView',
         'ranking/MicaRankingActorListItem', 'ranking/MicaRankingProfileLayout',
 
+        // -- Agenda
+        'agenda/AgendaListItem',
+
 
         // MailSender
         'MailTemplateDefault','MailFormSubmitNotification','MailFormGuardarProvisorio',
@@ -76,7 +79,7 @@ utils.loadTemplate([
     $('[data-toggle=offcanvas]').click(function() {
         $('.row-offcanvas').toggleClass('active');
     });
-	
+
     //console.log('main: DocManager.start')
     DocManager.start();
 });

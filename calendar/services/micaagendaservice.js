@@ -20,7 +20,7 @@ var MicaSuscription = require(root + 'models/micasuscription.js').getModel();
 var  COUNT_REUNIONES = 36;
 
 var MicaAgendaService = function(userLogged){
-  this.user = userLogged;
+  this.userLogged = userLogged;
 };
 
 //TODO:
@@ -144,29 +144,81 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
     return cb('rol no valido');
   }
 
-  var query = {};
-  var sortBy = {number: 1};
+
 
   var idSuscriptor = (suscriptor._id) ?  suscriptor._id : suscriptor;
   if(idSuscriptor.toString){
     idSuscriptor = idSuscriptor.toString();
   }
-  query[rol + '._id'] = idSuscriptor;
 
-  MicaAgenda.find(query,sortBy,function(err,results){
-      if(err) return cb(err);
 
-      //completar lugares
-      for (var num = results.length+1; num <= COUNT_REUNIONES; num++) {
-        var tmp = new MicaAgenda();
-        tmp.set('estado',MicaAgenda.STATUS_FREE);
-        tmp.set('num_reunion',num);
-        tmp.set(rol,{_id:idSuscriptor});
-        results.push(tmp);
-      }
 
-      cb(null,results);
+  async.series([
+    //busca a la suscriptions
+    function(cb){
+      MicaSuscription.findById(idSuscriptor,function(err,result){
+        if(err) return cb(err);
+
+        if(!result){
+          return cb(new AppError('No existe la suscripción','','not_found'));
+        }
+        suscriptor = result.serialize();
+        cb(null,result);
+      });
+    },
+
+    //busca agenda de la suscripcion
+    function(cb){
+      var query = {};
+      var sortBy = {number: 1};
+      query[rol + '._id'] = idSuscriptor;
+      MicaAgenda.find(query,sortBy,function(err,results){
+          if(err) return cb(err);
+
+          var map = {};
+          for (var i = 0; i < results.length; i++) {
+            var key = results[i].get('num_reunion');
+            if(key in map){
+              // hay mas de una reunione con el mismo numero
+              // se crea un array para esta key
+              if(!('push' in map[key])){
+                map[key] = [map[key]];
+              }
+              map[key].push(results[i]);
+            }else{
+              map[key] = results[i];
+            }
+          }
+
+          for (var num = 1; num <= COUNT_REUNIONES; num++) {
+            if(!(num.toString() in map)){
+              var tmp = new MicaAgenda();
+              tmp.set('estado',MicaAgenda.STATUS_FREE);
+              tmp.set('num_reunion',num);
+              tmp.set(rol,suscriptor);
+              map[num.toString()] = tmp;
+            }
+          }
+          var array = [];
+          for (var key in map){
+            // si es un array se concatena
+            if('push' in map[key]){
+              array = array.concat(map[key]);
+            }else{
+              array.push(map[key]);
+            }
+          }
+
+          cb(null,array);
+      });
+    }
+  ],function(err,results){
+    if(err) return cb(err);
+
+    cb(null,results[results.length-1]);
   });
+
+
 };
 
 /**

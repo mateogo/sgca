@@ -9,10 +9,10 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     }
     return List.Session;
   }
-  
+
 	List.Controller = {
 		listInscriptions: function(criterion){
-	
+
 			loadCurrentUser().then( function(user){
 				if(!getSession().mainLayout){
 					buildLayout();
@@ -20,7 +20,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
         // OjO solo para debug===================
         // console.log('Ready to check Users [%s]', user.get('username'));
         // if(user.get('username') === 'mgomezortega@gmail.com'){
-        //   checkUsers();          
+        //   checkUsers();
         // }
         // // OjO ==================================
 
@@ -30,13 +30,13 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
 		}
 
-	}; 
+	};
   var checkUsers = function(){
     //DocManager.request('mica:check:users:data');
     //DocManager.request('user:repair:modules');
 
   };
-	
+
   var loadCurrentUser = function(){
 
     var defer = $.Deferred();
@@ -54,7 +54,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 			  window.open('/mica/#bienvenido', '_self');
 			}
 
- 
+
    	});
 
    	return defer.promise();
@@ -179,7 +179,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
           }
          return this;
       },
-      
+
       events: {
           'click button.js-edit': 'editClicked',
           'click button.js-trash': 'trashClicked',
@@ -190,7 +190,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
       updateRecord: function(e, nuevo_estado){
         var self = this;
         e.stopPropagation();e.preventDefault();
- 
+
         self.$('.dropdown-toggle').dropdown('toggle');
         getSession().views.mainlayout.trigger('model:change:state',this.model, nuevo_estado, function(error){
         });
@@ -210,18 +210,18 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
           e.stopPropagation();e.preventDefault();
           getSession().views.mainlayout.trigger('grid:model:edit',this.model);
       },
-        
+
       trashClicked: function(e){
           e.stopPropagation();e.preventDefault();
           getSession().views.mainlayout.trigger('grid:model:remove',this.model);
       }
     });
-  
+
 
 	var initCrudManager = function(user, criterion, step){
 
 		$.when(fetchCollection(user, criterion, step)).done(function(entities){
-			
+
 			getSession().crudManager = new backendCommons.CrudManager(
 				  {
 				    gridcols:[
@@ -243,7 +243,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
 				    layoutTpl: utils.templates.MicarequestsLayout,
 				    formTpl: utils.templates.MicaInscriptionFormLayout,
-				    
+
             collection: getSession().collection,
 
 				    editModel: backendEntities.MicaRegistration,
@@ -267,11 +267,11 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 	//********** LAYOUT
 	var buildLayout = function(){
     var session = getSession();
-    
+
     session.views.layout = new backendCommons.Layout({model:new Backbone.Model({title: 'Rondas de Negocios - MICA 2015'}) });
     //session.views.sidebarpanel = new backendCommons.SideBarPanel({model:session.model});
     session.views.mainlayout = new backendCommons.MainLayout({model:session.model});
-    
+
     registerSidebarEvents(session, session.views.layout,session.views.mainlayout);
     registerMainLayoutEvents(session, session.views.layout, session.views.mainlayout);
     registerLayoutEvents(session, session.views.layout, session.views.mainlayout);
@@ -319,7 +319,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     });
 
   };
-  
+
   var registerLayoutEvents = function(session, layout, mainlayout){
     layout.on('show', function(){
     	layout.getRegion('mainRegion').show(mainlayout);
@@ -340,7 +340,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   	var modelView = new List.MicaRequestView({
   		model: model
   	})
-  	
+
 
   	mainlayout.hideList();
 
@@ -362,7 +362,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
 
   	editorlayout.on('show', function(){
     	editorlayout.getRegion('showRegion').show(modelView);
- 
+
   	})
   	mainlayout.getRegion('editRegion').show(editorlayout);
 
@@ -380,7 +380,7 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
         success: function(data){
             excelCol.exportRecords();
         }
-      })      
+      })
     },
   };
 

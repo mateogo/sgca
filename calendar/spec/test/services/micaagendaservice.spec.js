@@ -11,6 +11,7 @@ var comprador;
 var vendedor;
 var reunion;
 
+var userLogged = {_id:'53b6eaf34795894846788fa1',username:'testuser',name:'Test User',mail:'test@user.com'};
 
 describe('models',function(){
 
@@ -45,7 +46,6 @@ describe('models',function(){
       });
 
       it('Deberia encontrar la agenda de un suscriptor',function(done){
-        var userLogged = {};
         var service = new MicaAgendaService(userLogged);
         service.getAgenda(comprador,'comprador',function(err,result){
           expect(err).toBe(null);
@@ -62,7 +62,6 @@ describe('models',function(){
       });
 
       it('Deberia encontrar lugares libres',function(done){
-        var userLogged = {};
         var service = new MicaAgendaService(userLogged);
         service.searchAvailability(comprador,'comprador',function(err,result){
           expect(err).toBe(null);
@@ -73,7 +72,6 @@ describe('models',function(){
       });
 
       it('Deberia encontrar TODOS los lugares disponibles',function(done){
-        var userLogged = {};
         var service = new MicaAgendaService(userLogged);
         service._crossAvailability(comprador,vendedor,function(err,result){
           expect(err).toBe(null);
@@ -87,7 +85,6 @@ describe('models',function(){
       });
 
       it('Deberia crear una reunion',function(done){
-        var userLogged = {};
         var service = new MicaAgendaService(userLogged);
         service.assign(idComprador,idVendedor,function(err,result){
           expect(err).toBe(null);
@@ -102,7 +99,6 @@ describe('models',function(){
       });
 
       it('Deberia estar la reunion en la agenda del comprador',function(done){
-        var userLogged = {};
         var service = new MicaAgendaService(userLogged);
         service.getAgenda(comprador,'comprador',function(err,result){
           expect(err).toBe(null);
@@ -117,7 +113,6 @@ describe('models',function(){
       });
 
       it('Deberia estar la reunion en la agenda del vendedor por Id',function(done){
-        var userLogged = {};
         var service = new MicaAgendaService(userLogged);
         service.getAgenda(idVendedor,'vendedor',function(err,result){
           expect(err).toBe(null);
@@ -131,7 +126,6 @@ describe('models',function(){
       });
 
       it('Deberia encontrar no todos los lugares libres',function(done){
-        var userLogged = {};
         var service = new MicaAgendaService(userLogged);
         service.searchAvailability(comprador,'comprador',function(err,result){
           expect(err).toBe(null);
@@ -152,7 +146,6 @@ describe('models',function(){
       });
 
       it('Deberia encontrar TODOS los lugares disponibles (de nuevo)',function(done){
-        var userLogged = {};
         var service = new MicaAgendaService(userLogged);
         service._crossAvailability(comprador,vendedor,function(err,result){
           expect(err).toBe(null);

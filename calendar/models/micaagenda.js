@@ -48,22 +48,24 @@ var MicaAgenda = BaseModel.extend({
 
        //serializa comprador, vendedor y usuario modificador
        function(cb){
-         var comprador = self.get('comprador');
-         var vendedor = self.get('vendedor');
-         var usermod = self.get('usermod');
+          var comprador = self.get('comprador');
+          var vendedor = self.get('vendedor');
+          var usermod = self.get('usermod');
+          var suscriptorSerializer = function(model){
+            raw = (model.toJSON)? model.toJSON() : model;
+            raw = _.pick(raw,'_id','responsable','solicitante');
+            raw._id = raw._id.toString();
+            return raw;
+          };
 
          var raw;
          if(comprador){
-           raw = (comprador.toJSON)? comprador.toJSON() : comprador;
-           raw = _.pick(raw,'_id','responsable');
-           raw._id = raw._id.toString();
+           raw =  suscriptorSerializer(comprador);
            self.set('comprador',raw);
          }
 
          if(vendedor){
-           raw = (vendedor.toJSON)? vendedor.toJSON() : vendedor;
-           raw = _.pick(raw,'_id','responsable');
-           raw._id = raw._id.toString();
+           raw = suscriptorSerializer(vendedor);
            self.set('vendedor',raw);
          }
 
