@@ -2,17 +2,16 @@
 	<div class="col-sm-2 col-xs-12">
 		<h4><strong><%= cnumber %></strong></h4>
 		<p><%= fecomp %></p>
-		<button class="btn btn-success btn-block btn-sm js-asignar">Asignar</button>
 	</div>
 	<div class="col-sm-5 col-xs-12">
 		<h4>Emisor (<%= emisor_nivel_interes %>)</h4>
-		<p><strong><%= emisor_rname %> @ </strong><%= emisor_displayName %> <button class="btn btn-xs btn-default js-emisor-profile-view">Ver perfil</button></p>
+		<p><strong><%= emisor_rname %> @ </strong><%= emisor_displayName %></p>
 		<p><strong>Dijo: </strong><%= emisor_slug%></p>
 	</div>
 
 	<div class="col-sm-5 col-xs-12">
 		<h4>Receptor (<%= receptor_nivel_interes %>)</h4>
-		<p><strong><%= receptor_rname %> @ </strong><%= receptor_displayName %> <button class="btn btn-xs btn-default js-receptor-profile-view">Ver perfil</button></p>
+		<p><strong><%= receptor_rname %> @ </strong><%= receptor_displayName %></p>
 		<p><strong>Contestó: </strong><%= receptor_slug%></p>
 	</div>
 </div>

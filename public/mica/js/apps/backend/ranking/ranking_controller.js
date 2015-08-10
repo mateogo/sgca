@@ -205,6 +205,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   var interactionTpl = _.template("<span title='<%= title %>'><%= data %></span>");
   
   var interactionTitleTpl = _.template("Rol:<%= rol %> Emisor: <%= emisor %>(<%= nie %>) / Receptor: <%= receptor %>(<%= nir %>)");
+  var cnumberTpl = _.template('<a href="#" class="js-profile-view" role="button"><span title="ver perfil"><%= cnumber %></span></a>');
+  var emisorTpl = _.template('<a href="#" class="js-emisorlist-view" role="button"><span title="ver lista de reuniones "><%= emisor %></span></a>');
   
   var ReceptorViewCell = Backgrid.Cell.extend({
       className: "string-cell",
@@ -230,9 +232,106 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         return this;
       },
   });
+  var CnumberViewCell = Backgrid.Cell.extend({
+      className: "string-cell js-profile-view",
+
+      events: {
+          'click .js-profile-view': 'profileView',
+      },
+
+      profileView: function(e){
+        var self = this;
+        e.stopPropagation();e.preventDefault();
+
+        console.log('ProfileView at CnumberCell');
+        var fetchingMicaRequest = DocManager.request("micarqst:entity", this.model.get('profileid'));
+
+        $.when(fetchingMicaRequest).done(function(micarqst){
+
+          buildProfileView(getSession().views.mainlayout, micarqst);
+
+        });
+      },
+
+      render: function(){
+        this.$el.html(cnumberTpl({cnumber: this.model.get('cnumber')}) ); 
+        return this;
+      },
+  });
+
+  var EmisorListViewCell = Backgrid.Cell.extend({
+      className: "string-cell",
+
+      events: {
+          'click .js-emisorlist-view': 'emisorList',
+      },
+
+      emisorList: function(e){
+        var self = this;
+        e.stopPropagation();e.preventDefault();
+
+        $.when(DocManager.request("micainteractions:query:emisorlist", self.model)).done(function(list){
+          console.log('emisorlist: length[%s]', list.length);
+
+          var emisorList = new RankingMica.MicaRankingEmisorCollectionView({collection: list});
+          emisorList.render();
+          console.log('EmisorList:[%s]', $(emisorList.el).html())
+
+          DocManager.confirm($(emisorList.el).html(), {okText: 'Volver', cancelText: '.'}).done(function(){
+            emisorList.destroy();
+          });
+
+        });
+      },
+
+      render: function(){
+        if(this.model.get('emisor_requests')){
+          this.$el.html(emisorTpl({emisor: this.model.get('emisor_requests')}) ); 
+        }else{
+          this.$el.html("0");
+        }
+        return this;
+      },
+  });
+
+  var ReceptorListViewCell = Backgrid.Cell.extend({
+      className: "string-cell",
+
+      events: {
+          'click .js-emisorlist-view': 'emisorList',
+      },
+
+      emisorList: function(e){
+        var self = this;
+        e.stopPropagation();e.preventDefault();
+
+        $.when(DocManager.request("micainteractions:query:receptorlist", self.model)).done(function(list){
+          console.log('emisorlist: length[%s]', list.length);
+
+          var emisorList = new RankingMica.MicaRankingEmisorCollectionView({collection: list});
+          emisorList.render();
+          console.log('EmisorList:[%s]', $(emisorList.el).html())
+
+          DocManager.confirm($(emisorList.el).html(), {okText: 'Volver', cancelText: '.'}).done(function(){
+            emisorList.destroy();
+          });
+
+        });
+      },
+
+      render: function(){
+        if(this.model.get('receptor_requests')){
+          this.$el.html(emisorTpl({emisor: this.model.get('receptor_requests')}) ); 
+        }else{
+          this.$el.html("0");
+        }
+        return this;
+      },
+  });
 
   var PaisProvCell = Backgrid.Cell.extend({
       className: "string-cell",
+
       render: function(){
         var data = this.model.get('prov') +'/ '+ this.model.get('pais');
         //var title = interactionTitleTpl({rol: this.model.get('as_emisor_rol'), emisor: this.model.get('as_emisor_slug'), receptor:  this.model.get('as_emisor_answer')});
@@ -240,11 +339,6 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         return this;
       },
   });
-
-
-
-
-
 
 
   Backgrid.VactivityCell = Backgrid.StringCell.extend({
@@ -451,14 +545,13 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   var registerEditorLayoutEvents = function(session, mainlayout, editorlayout, model){
     //build Presentation Collection
     var presentationCol = buildPresentationCol(model);
-    console.log('PresentattionCol [%s]', presentationCol.length);
 
     getSession().presentationCol = presentationCol;
 
     getSession().workingView = new backendCommons.CrudManager(
           {
             gridcols:[
-              {name: 'cnumber', label:'Nro Inscr', cell: 'string', editable:false},
+              {name: 'cnumber', label:'Nro Inscr', cell: CnumberViewCell, editable:false},
               {name: 'displayName', label:'Emprendimiento', cell:'string', editable:false},
               {name: 'receptor', label:'Receptor', cell: EmisorViewCell, editable:false},
               {name: 'emisor',   label:'Emisor',   cell: ReceptorViewCell, editable:false},
@@ -466,8 +559,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
               {name: 'cactividad', label:'Sector', cell: ActividadViewCell, editable:false},
               {name: 'pais', label:'Prov/Pais', cell: PaisProvCell, editable:false},
               {name: 'porfolios', label:'Pfs', cell:'string', editable:false},
-              {name: 'emisor_requests', label:'Emi', cell:'string', editable:false},
-              {name: 'receptor_requests', label:'Rec', cell:'string', editable:false},
+              {name: 'emisor_requests', label:'Emi', cell:EmisorListViewCell, editable:false},
+              {name: 'receptor_requests', label:'Rec', cell:ReceptorListViewCell, editable:false},
 
               {label:'Acciones', cell: EditViewCell, editable:false, sortable:false},
             ],
@@ -517,6 +610,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
    //  });
 
+    registerInteractionView(session, mainlayout, editorlayout, model);
+
 
     editorlayout.on('close:view', function(){
 	  	mainlayout.showList();
@@ -536,6 +631,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
     var interactionView = new RankingMica.MicaRankingLayoutView({
       model: model
     });
+
     registerInteractionView(session, mainlayout,editorlayout, model, interactionView);
     
 
@@ -591,17 +687,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
   };
 
-  var registerInteractionView = function(session, mainlayout,editorlayout, model, view){
-    view.on('profile:view', function(interaction, profileId){
-      console.log('BUBLED at Ranking Controller!')
-      var fetchingMicaRequest = DocManager.request("micarqst:entity", profileId);
-
-      $.when(fetchingMicaRequest).done(function(micarqst){
-
-        buildProfileView(mainlayout, micarqst);
-
-      });
-    });
+  var registerInteractionView = function(session, mainlayout,editorlayout, model){
 
   };
 
@@ -627,11 +713,11 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
     var targetList = getSession().collection.filter(function(item, index){
       var itemid = item.get('profileid');
-      console.log('[%s]filter: [%s] [%s] [%s]', item.whoami, itemid, emisorListContains(emisorList, itemid),receptorListContains(receptorList, itemid))
+      //console.log('[%s]filter: [%s] [%s] [%s]', item.whoami, itemid, emisorListContains(emisorList, itemid),receptorListContains(receptorList, itemid))
       return (emisorListContains(emisorList, itemid) || receptorListContains(receptorList, itemid));
     });
 
-    console.log('PASO-1: filtro lista: [%s]', targetList.length);
+    //console.log('PASO-1: filtro lista: [%s]', targetList.length);
 
     _.each(targetList, function(profile){
       token = new DocManager.Entities.MicaInteractionSummary({
