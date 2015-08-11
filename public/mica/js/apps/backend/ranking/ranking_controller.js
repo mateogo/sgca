@@ -142,7 +142,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   //*****************************
   // Backgrid Cell
   //*****************************
-  var EditViewCell = Backgrid.Cell.extend({
+  var EditViewCellDeprecated = Backgrid.Cell.extend({
     render: function(){
         if(!this.rendered){
            var btnEdit = $('<button class="btn btn-xs btn-info js-edit"  title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
@@ -365,6 +365,19 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         return this;
       },
   });
+  var drpDwnTpl = _.template( '\
+        <div class="btn-group acciones" role="group" aria-label="...">\
+          <button type="button" class="btn btn-sm btn-success js-agendar <%= hasMeetingClassAttr %> "><%= hasMeeting %></button>\
+          <div class="btn-group" role="group">\
+            <button type="button" class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown" aria-expanded="false">\
+              <span class="caret"></span>\
+            </button>\
+            <ul class="dropdown-menu pull-right" role="menu">\
+              <li><a href="#" class="js-desagendar" >Eliminar reunión</a></li>\
+              <li><a href="#" class="js-agenda-view" >Ver agenda candidato</a></li>\
+            </ul>\
+          </div>\
+        </div>');
 
   var drpDwnBtn = function(){
               return $('\
@@ -378,6 +391,33 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
                       <li><a href="#" class="js-trigger js-trigger-inscripcion-observado" role="button">Observado</a></li>\
                     </ul>\
                 </div>');  };
+
+  var AgendarViewCell = Backgrid.Cell.extend({
+      render: function(){
+        this.$el.html(drpDwnTpl({hasMeeting: 'Agenda', hasMeetingClassAttr: 'js-meeting-class-attr'}));
+        this.$el.css('width','150px');
+        return this;
+      },
+      templateHelpers: function(){
+        var self = this;
+        return {
+          formatDate: function(date){
+            return moment(date).format('dddd LL');
+          },
+          hasMeetingClassAttr: function(){
+            return 'js-meeting-class'
+          },
+          hasMeeting: function(){
+            return 'agendada'
+          },
+        };
+      },
+
+      events: {
+      },
+    });
+
+
 
   var EditViewCell = Backgrid.Cell.extend({
       render: function(){
@@ -562,7 +602,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
               {name: 'emisor_requests', label:'Emi', cell:EmisorListViewCell, editable:false},
               {name: 'receptor_requests', label:'Rec', cell:ReceptorListViewCell, editable:false},
 
-              {label:'Acciones', cell: EditViewCell, editable:false, sortable:false},
+              {label:'Acciones', cell: AgendarViewCell, editable:false, sortable:false},
             ],
             filtercols:['cnumber', 'displayName', 'pais'],
             editEventName: 'micarequest:edit',
@@ -752,8 +792,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       if(item.emisor_inscriptionid === profileid){
         token.set({
           as_emisor : token.get('as_emisor'),
-          as_emisor_nie:  item.emisor_nivel_interes,
-          as_emisor_nir:  item.receptor_nivel_interes,
+          as_emisor_nie:  item.emisor_nivel_interes || '' ,
+          as_emisor_nir:  item.receptor_nivel_interes || '',
           as_emisor_slug: item.emisor_slug,
           as_emisor_answer: item.receptor_slug,
           as_emisor_rol: item.emisor_rol,

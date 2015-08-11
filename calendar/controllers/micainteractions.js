@@ -589,7 +589,7 @@ var sumarizedIteration = function(nprofiles, action){
         emisor.peso = emisor.peso + 1;
 
     }else{
-        console.log('Emisor No Encontrado [%s]',action.emisor_inscriptionid)
+        //console.log('Emisor No Encontrado [%s]',action.emisor_inscriptionid)
     }
 
     var receptor = _.find(nprofiles, function(item){
