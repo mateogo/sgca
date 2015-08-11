@@ -132,12 +132,11 @@ var ensureAuthenticated = function (req, res, next) {
 var isAdminMica = function(req, res, next){
   var user = req.user;
 
-  if(!user.roles || !user.atributos){
+  if(!user.roles || !user.modulos){
     return res.send(401);
   }
 
-  if(user.roles.indexOf('mica:manager') === -1 ||
-      (user.atributos.indexOf('admin') === -1 && user.atributos.indexOf('superchimenea') === -1)){
+  if( user.roles.indexOf('admin') === -1 ||  user.modulos.indexOf('mica') === -1 ){
     return res.send(401);
   }
   return next();

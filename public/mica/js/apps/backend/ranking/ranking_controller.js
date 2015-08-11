@@ -42,8 +42,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 		dao.gestionUser.getUser(DocManager, function (user){
       getSession().currentUser = user;
 
-			//if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
-      if(true){
+			if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
+      //if(true){
 
 	      defer.resolve(user);
 
@@ -365,19 +365,6 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         return this;
       },
   });
-  var drpDwnTpl = _.template( '\
-        <div class="btn-group acciones" role="group" aria-label="...">\
-          <button type="button" class="btn btn-sm btn-success js-agendar <%= hasMeetingClassAttr %> "><%= hasMeeting %></button>\
-          <div class="btn-group" role="group">\
-            <button type="button" class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown" aria-expanded="false">\
-              <span class="caret"></span>\
-            </button>\
-            <ul class="dropdown-menu pull-right" role="menu">\
-              <li><a href="#" class="js-desagendar" >Eliminar reunión</a></li>\
-              <li><a href="#" class="js-agenda-view" >Ver agenda candidato</a></li>\
-            </ul>\
-          </div>\
-        </div>');
 
   var drpDwnBtn = function(){
               return $('\
@@ -392,28 +379,68 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
                     </ul>\
                 </div>');  };
 
+  var drpDwnTpl = _.template( '\
+        <div class="btn-group acciones" role="group" aria-label="...">\
+          <button type="button" class="btn btn-sm btn-success js-agendar <%= hasMeetingClassAttr %> "><%= hasMeeting %></button>\
+          <div class="btn-group" role="group">\
+            <button type="button" class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown" aria-expanded="false">\
+              <span class="caret"></span>\
+            </button>\
+            <ul class="dropdown-menu pull-right" role="menu">\
+              <li><a href="#" class="js-desagendar" >Eliminar reunión</a></li>\
+              <li><a href="#" class="js-agenda-view" >Ver agenda candidato</a></li>\
+            </ul>\
+          </div>\
+        </div>');
+
   var AgendarViewCell = Backgrid.Cell.extend({
+      initialize: function(opt){
+      },
+
       render: function(){
-        this.$el.html(drpDwnTpl({hasMeeting: 'Agenda', hasMeetingClassAttr: 'js-meeting-class-attr'}));
+        if(this.model.get('meeting_estado') === 'error' ){
+          this.$el.html(drpDwnTpl({hasMeeting: 'Error', hasMeetingClassAttr: 'js-meeting-class-attr'}));
+          return this;
+        }
+
+        if(this.model.get('meeting_number') === 0){
+          this.$el.html(drpDwnTpl({hasMeeting: 'Agendar', hasMeetingClassAttr: 'js-meeting-class-attr'}));
+        }else{
+          this.$el.html(drpDwnTpl({hasMeeting: 'Reu# '+this.model.get('meeting_number'), hasMeetingClassAttr: 'js-meeting-class-attr'}));
+        }
+
         this.$el.css('width','150px');
         return this;
       },
-      templateHelpers: function(){
-        var self = this;
-        return {
-          formatDate: function(date){
-            return moment(date).format('dddd LL');
-          },
-          hasMeetingClassAttr: function(){
-            return 'js-meeting-class'
-          },
-          hasMeeting: function(){
-            return 'agendada'
-          },
-        };
-      },
 
       events: {
+        'click': 'agendar',
+      },
+
+      agendar: function(){
+        var self = this;
+        console.log('agendar!!!', self.model.whoami,getSession().comprador.get('cnumber'), self.model.get('cnumber') );
+
+        if(self.model.get('meeting_number')){
+          Message.warning('Reunión previamente asignada: #' + self.model.get('meeting_number'));
+          return;
+        }
+
+        var p = DocManager.request('micaagenda:assign', {compradorid: getSession().comprador.get('profileid'), vendedorid: self.model.get('profileid')});
+        p.done(function(response){
+          var num = response.num_reunion;
+          self.model.set('meeting_number', num);
+          self.model.set('meeting_estado', 'borrador');
+          Message.success('Asignado a #'+num);
+          self.render();
+
+        }).fail(function(){
+          Message.error('No se pudo asignar');
+          self.model.set('meeting_number', 0);
+          self.model.set('meeting_estado', 'error');
+          self.render();
+        });
+
       },
     });
 
@@ -576,7 +603,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   var createView = function(session, mainlayout, model){
   	var editorLayout = new RankingMica.MicaRankingLayoutView({
   		model: model,
-  	})
+  	});
+    // TODO OjO: el model tiene que tener el rol de 'Comprador'
   	registerEditorLayoutEvents(session, mainlayout, editorLayout, model)
 
   };
@@ -584,9 +612,11 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 //TODO
   var registerEditorLayoutEvents = function(session, mainlayout, editorlayout, model){
     //build Presentation Collection
+    console.log('[%s] registerEditorLayout: [%s]', model.whoami, model.get('cnumber'))
     var presentationCol = buildPresentationCol(model);
 
     getSession().presentationCol = presentationCol;
+    getSession().comprador = model;
 
     getSession().workingView = new backendCommons.CrudManager(
           {
@@ -767,7 +797,6 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         displayName: profile.get('ename'),
         pais: profile.get('epais'),
         prov: profile.get('eprov'),
-
    
         isvendedor: profile.get('isvendedor'),
         vactividades: profile.get('vactividades'),
@@ -779,6 +808,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         emisor_requests: profile.get('emisor_requests'),
         receptor_requests: profile.get('receptor_requests'),
         peso: profile.get('peso'),
+        meeting_number: 0,
+        meeting_estado: 'no_asignada',
 
       });
       buildSummaryData(profile.get('profileid'), token, emisorList, receptorList);

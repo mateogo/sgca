@@ -99,17 +99,11 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
 
 
 
-  DocManager.reqres.setHandler('micaagenda:assign', function(micaInteraction){
+  DocManager.reqres.setHandler('micaagenda:assign', function(asignee){
 
     var comprador,vendedor;
-
-    if(micaInteraction.get('emisor_rol') === 'comprador'){
-      comprador = micaInteraction.get('emisor_inscriptionid');
-      vendedor = micaInteraction.get('receptor_inscriptionid');
-    }else{
-      comprador = micaInteraction.get('emisor_inscriptionid');
-      vendedor = micaInteraction.get('receptor_inscriptionid');
-    }
+    comprador = asignee.compradorid;
+    vendedor = asignee.vendedorid;
 
     return API.assign(comprador,vendedor);
   });
