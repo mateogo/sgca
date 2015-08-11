@@ -22,8 +22,26 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       }
   });
 
+  AgendaMica.EstadoReunionCell = Backgrid.Cell.extend({
+      className: "string-cell",
+      render: function(){
+        var fieldName = this.column.get('name');
+        var estado = this.model.get('estado');
+        var $span = $('<span></span>');
+        $span.html(this.model.get(fieldName));
+        if(estado === 'unavailable'){
+          $span.addClass('text-danger');
+          $span.html('sin disponibilidad');
+        }
+        this.$el.html($span);
+        return this;
+      }
+  });
+
 
   AgendaMica.AgendaListItem = Marionette.ItemView.extend({
+    tagName: 'li',
+    className: 'list-group-item',
     getTemplate: function(){
       return utils.templates.AgendaListItem;
     },
@@ -41,6 +59,10 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
           return ret;
         }
       };
+    },
+    onRender: function(){
+      var clazz = 'list-item-agenda-'+this.model.get('estado');
+      this.$el.addClass(clazz);
     },
     events: {
       'click .js-openagenda': function(){
@@ -73,10 +95,16 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     },
 
     onRender: function(){
-      this.renderOwner();
       var self = this;
+      this.renderOwner();
       this.collection.once('change',function(){
         self.renderOwner();
+
+        var $children = self.$el.find('.list-item-agenda-unavailable');
+        if($children.length > 0){
+          $($children[$children.length-1]).css('border-bottom','1px solid #FF4136')
+            .css('margin-bottom','10px');
+        }
       });
     },
 
@@ -93,8 +121,10 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 
   var renderSuscriptor = function(suscriptor){
     if(!suscriptor || !suscriptor.responsable) return '';
-    var responsable  = suscriptor.responsable;
-    var str = '<div class="text-primary">'+responsable.rname + ' ('+responsable.rcargo+')' +'</div> '+
+    var responsable = suscriptor.responsable;
+    var solicitante = suscriptor.solicitante;
+    var str = '<div class="text-primary">'+solicitante.edisplayName +'</div> '+
+              '<div>'+responsable.rname + ' ('+responsable.rcargo+')' +'</div> '+
               '<div>'+  responsable.rmail + '</div> '
     return str;
   }

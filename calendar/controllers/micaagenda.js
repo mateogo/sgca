@@ -28,8 +28,10 @@ var ctrls = {
         var $or = [];
         $or.push({'vendedor.responsable.rmail':reg});
         $or.push({'vendedor.responsable.rname':reg});
+        $or.push({'vendedor.solicitante.edisplayName':reg});
         $or.push({'comprador.responsable.rmail':reg});
         $or.push({'comprador.responsable.rname':reg});
+        $or.push({'comprador.solicitante.edisplayName':reg});
         query.$or = $or;
         delete query.textsearch;
       }

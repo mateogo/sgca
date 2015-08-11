@@ -60,7 +60,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 				      {name: 'comprador',label:'Comprador', cell:AgendaMica.SuscriptorCell, editable:false},
 				      {name: 'vendedor',label:'Vendedor', cell:AgendaMica.SuscriptorCell, editable:false},
 				      {name: 'num_reunion', label:'# Reunión', cell:'string', editable:false},
-				      {name: 'estado', label:'Estado', cell:'string', editable:false},
+				      {name: 'estado', label:'Estado', cell:AgendaMica.EstadoReunionCell, editable:false},
 				      {name: 'feultmod', label:'Modificado', cell:'string', editable:false},
 				      {label:'Acciones', cell: 'string', editable:false, sortable:false},
 				    ],
