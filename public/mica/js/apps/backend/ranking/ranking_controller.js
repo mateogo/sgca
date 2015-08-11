@@ -401,7 +401,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         var meeting_estado  = this.model.get('meeting_estado');
         var meeting_number = this.model.get('meeting_number');
 
-        if(meeting_estado === 'error' || meeting_estado === 'unavailable'){
+        if(meeting_estado === 'error'){
           this.$el.html(drpDwnTpl({hasMeeting: 'Error', hasMeetingClassAttr: 'js-meeting-error'}));
           return this;
         }
