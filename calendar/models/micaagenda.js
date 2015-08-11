@@ -46,10 +46,11 @@ var MicaAgenda = BaseModel.extend({
          cb();
        },
 
-       //serializa comprador, vendedor y usuario modificador
+       //serializa comprador, vendedor, usuario de alta y usuario modificador
        function(cb){
           var comprador = self.get('comprador');
           var vendedor = self.get('vendedor');
+          var useralta = self.get('useralta');
           var usermod = self.get('usermod');
           var suscriptorSerializer = function(model){
             raw = (model.toJSON)? model.toJSON() : model;
@@ -57,6 +58,13 @@ var MicaAgenda = BaseModel.extend({
             raw._id = raw._id.toString();
             return raw;
           };
+
+          var userSerializer = function(model){
+            raw = (model.toJSON)? model.toJSON() : model;
+            raw = _.pick(raw,'_id','username','name','mail');
+            raw._id = raw._id.toString();
+            return raw;
+          }
 
          var raw;
          if(comprador){
@@ -69,11 +77,12 @@ var MicaAgenda = BaseModel.extend({
            self.set('vendedor',raw);
          }
 
+         if(useralta){
+           self.set('useralta',userSerializer(useralta));
+         }
+
          if(usermod){
-           raw = (usermod.toJSON)? usermod.toJSON() : usermod;
-           raw = _.pick(raw,'_id','username','name','mail');
-           raw._id = raw._id.toString();
-           self.set('usermod',raw);
+           self.set('usermod',userSerializer(usermod));
          }
 
          cb();
@@ -90,7 +99,8 @@ var MicaAgenda = BaseModel.extend({
   STATUS_FREE: 'libre',
   STATUS_DRAFT: 'borrador',
   STATUS_OBS: 'observado',
-  STATUS_CONFIRM: 'confirmado'
+  STATUS_CONFIRM: 'confirmado',
+  STATUS_UNAVAILABLE: 'unavailable',
 });
 
 

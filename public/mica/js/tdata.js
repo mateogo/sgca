@@ -516,5 +516,6 @@ window.tdata = {
         {val:'borrador',  label:'Borrador',  classattr:'info'},
         {val:'observado',       label:'Observado',         classattr:'info'},
         {val:'confirmado',         label:'Confirmado',  classattr:'warning'},
+        {val:'unavailable',         label:'Sin disponibilidad',  classattr:'danger'},
     ]
 };

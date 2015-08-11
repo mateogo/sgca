@@ -95,7 +95,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     if(!suscriptor || !suscriptor.responsable) return '';
     var responsable  = suscriptor.responsable;
     var str = '<div class="text-primary">'+responsable.rname + ' ('+responsable.rcargo+')' +'</div> '+
-              '<div class="text-muted">'+  responsable.rmail + '</div> '
+              '<div>'+  responsable.rmail + '</div> '
     return str;
   }
 

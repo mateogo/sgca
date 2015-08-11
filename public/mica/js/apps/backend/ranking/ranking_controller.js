@@ -153,7 +153,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       this.$el.css('width','95px');
       return this;
     },
-    
+
     events: {
         'click button.js-edit': 'editClicked',
         'click button.js-trash': 'trashClicked',
@@ -184,7 +184,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         e.stopPropagation();e.preventDefault();
         getSession().views.mainlayout.trigger('grid:model:edit',this.model);
     },
-      
+
     trashClicked: function(e){
         e.stopPropagation();e.preventDefault();
         getSession().views.mainlayout.trigger('grid:model:remove',this.model);
@@ -198,16 +198,16 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         if(this.model.get('iscomprador')) label.push('C: ' + this.model.get('cactividades'));
         if(this.model.get('isvendedor'))  label.push('V: ' + this.model.get('vactividades'));
 
-      	this.$el.html( label.join('<br>')); 
+      	this.$el.html( label.join('<br>'));
         return this;
       },
   });
   var interactionTpl = _.template("<span title='<%= title %>'><%= data %></span>");
-  
+
   var interactionTitleTpl = _.template("Rol:<%= rol %> Emisor: <%= emisor %>(<%= nie %>) / Receptor: <%= receptor %>(<%= nir %>)");
   var cnumberTpl = _.template('<a href="#" class="js-profile-view" role="button"><span title="ver perfil"><%= cnumber %></span></a>');
   var emisorTpl = _.template('<a href="#" class="js-emisorlist-view" role="button"><span title="ver lista de reuniones "><%= emisor %></span></a>');
-  
+
   var ReceptorViewCell = Backgrid.Cell.extend({
       className: "string-cell",
       render: function(){
@@ -215,7 +215,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         var data = this.model.get('as_receptor_nie') +' / '+ this.model.get('as_receptor_nir');
         if(data === '0 / 0') data = '';
         var title = interactionTitleTpl({rol: this.model.get('as_receptor_rol'), emisor: this.model.get('as_receptor_slug'), receptor:  this.model.get('as_receptor_answer'), nie:  this.model.get('as_receptor_nie'), nir:  this.model.get('as_receptor_nir')});
-        this.$el.html(interactionTpl({title: title, data: data })); 
+        this.$el.html(interactionTpl({title: title, data: data }));
         return this;
       },
   });
@@ -228,7 +228,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         if(data === '0 / 0') data = '';
         //var title = this.model.get('as_emisor_rol') +': '+this.model.get('as_emisor_slug') +' / '+ this.model.get('as_emisor_answer');
         var title = interactionTitleTpl({rol: this.model.get('as_emisor_rol'), emisor: this.model.get('as_emisor_slug'), receptor:  this.model.get('as_emisor_answer'), nie:  this.model.get('as_emisor_nie'), nir:  this.model.get('as_emisor_nir')});
-        this.$el.html(interactionTpl({title: title, data: data })); 
+        this.$el.html(interactionTpl({title: title, data: data }));
         return this;
       },
   });
@@ -254,7 +254,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       },
 
       render: function(){
-        this.$el.html(cnumberTpl({cnumber: this.model.get('cnumber')}) ); 
+        this.$el.html(cnumberTpl({cnumber: this.model.get('cnumber')}) );
         return this;
       },
   });
@@ -286,7 +286,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
       render: function(){
         if(this.model.get('emisor_requests')){
-          this.$el.html(emisorTpl({emisor: this.model.get('emisor_requests')}) ); 
+          this.$el.html(emisorTpl({emisor: this.model.get('emisor_requests')}) );
         }else{
           this.$el.html("0");
         }
@@ -321,7 +321,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
       render: function(){
         if(this.model.get('receptor_requests')){
-          this.$el.html(emisorTpl({emisor: this.model.get('receptor_requests')}) ); 
+          this.$el.html(emisorTpl({emisor: this.model.get('receptor_requests')}) );
         }else{
           this.$el.html("0");
         }
@@ -335,7 +335,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       render: function(){
         var data = this.model.get('prov') +'/ '+ this.model.get('pais');
         //var title = interactionTitleTpl({rol: this.model.get('as_emisor_rol'), emisor: this.model.get('as_emisor_slug'), receptor:  this.model.get('as_emisor_answer')});
-        this.$el.html(data); 
+        this.$el.html(data);
         return this;
       },
   });
@@ -398,15 +398,25 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       },
 
       render: function(){
-        if(this.model.get('meeting_estado') === 'error' ){
-          this.$el.html(drpDwnTpl({hasMeeting: 'Error', hasMeetingClassAttr: 'js-meeting-class-attr'}));
+        var meeting_estado  = this.model.get('meeting_estado');
+        var meeting_number = this.model.get('meeting_number');
+
+        if(meeting_estado === 'error' || meeting_estado === 'unavailable'){
+          this.$el.html(drpDwnTpl({hasMeeting: 'Error', hasMeetingClassAttr: 'js-meeting-error'}));
           return this;
         }
 
-        if(this.model.get('meeting_number') === 0){
-          this.$el.html(drpDwnTpl({hasMeeting: 'Agendar', hasMeetingClassAttr: 'js-meeting-class-attr'}));
+        if(meeting_number === -1){
+          // SIN ASIGNAR
+          this.$el.html(drpDwnTpl({hasMeeting: 'Agendar', hasMeetingClassAttr: 'js-meeting-no-asignada'}));
+
+        }else if(meeting_number === 0){
+          // NO HAY DISPONIBILIDAD
+          this.$el.html(drpDwnTpl({hasMeeting: 'Sin dispobilidad', hasMeetingClassAttr: 'js-meeting-unavailable'}));
+
         }else{
-          this.$el.html(drpDwnTpl({hasMeeting: 'Reu# '+this.model.get('meeting_number'), hasMeetingClassAttr: 'js-meeting-class-attr'}));
+          // ASIGNADA
+          this.$el.html(drpDwnTpl({hasMeeting: 'Reu# '+this.model.get('meeting_number'), hasMeetingClassAttr: 'js-meeting-asignada'}));
         }
 
         this.$el.css('width','150px');
@@ -421,7 +431,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         var self = this;
         console.log('agendar!!!', self.model.whoami,getSession().comprador.get('cnumber'), self.model.get('cnumber') );
 
-        if(self.model.get('meeting_number')){
+        if(self.model.get('meeting_number') && self.model.get('meeting_number') !== -1){
           Message.warning('Reunión previamente asignada: #' + self.model.get('meeting_number'));
           return;
         }
@@ -429,9 +439,15 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         var p = DocManager.request('micaagenda:assign', {compradorid: getSession().comprador.get('profileid'), vendedorid: self.model.get('profileid')});
         p.done(function(response){
           var num = response.num_reunion;
+          var estado = response.estado;
+
+          if(estado === 'unavailable'){
+            Message.warning('No hay lugares disponibles');
+          }else{
+            Message.success('Asignado a #'+num);
+          }
           self.model.set('meeting_number', num);
-          self.model.set('meeting_estado', 'borrador');
-          Message.success('Asignado a #'+num);
+          self.model.set('meeting_estado', estado);
           self.render();
 
         }).fail(function(){
@@ -661,14 +677,14 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
             // form de edición para cuando selecciona un item
             formTpl: utils.templates.MicaInscriptionFormLayout,
-            
+
             // Vista edición para cuando selecciona un item
             EditorView: DocManager.MicaRequestApp.Edit.MicaWizardLayout,
             editorOpts: {},
 
           }
         );
-    
+
 
   	mainlayout.hideList();
 
@@ -703,7 +719,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
     });
 
     registerInteractionView(session, mainlayout,editorlayout, model, interactionView);
-    
+
 
     mainlayout.hideList();
 
@@ -724,7 +740,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
     editorlayout.on('show', function(){
       editorlayout.getRegion('showRegion').show(interactionView);
- 
+
     })
     mainlayout.getRegion('editRegion').show(editorlayout);
 
@@ -797,10 +813,10 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         displayName: profile.get('ename'),
         pais: profile.get('epais'),
         prov: profile.get('eprov'),
-   
+
         isvendedor: profile.get('isvendedor'),
         vactividades: profile.get('vactividades'),
-   
+
         iscomprador: profile.get('iscomprador'),
         cactividades: profile.get('cactividades'),
 
@@ -808,7 +824,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         emisor_requests: profile.get('emisor_requests'),
         receptor_requests: profile.get('receptor_requests'),
         peso: profile.get('peso'),
-        meeting_number: 0,
+        meeting_number: -1,
         meeting_estado: 'no_asignada',
 
       });

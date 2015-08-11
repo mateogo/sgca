@@ -70,7 +70,7 @@ var fetchserial = function(serie){
             });
         }else{
             addSerial(serie,item);
-        }  
+        }
     });
 };
 
@@ -90,7 +90,7 @@ var initSerial = function(serie){
 };
 
 var updateSerialCollection = function(serial){
-    var collection = dbi.collection(serialCol);    
+    var collection = dbi.collection(serialCol);
     collection.update( {'_id':serial._id}, serial,{w:1},function(err,result){});
 };
 
@@ -172,7 +172,7 @@ exports.findOne = function(req, res) {
             res.send(items[0]);
         });
     });
- 
+
 };
 
 exports.fetchById = function(id, cb) {
@@ -204,7 +204,7 @@ exports.find = function(req, res) {
 
 
 exports.findByQuery = function(req, res) {
-    var query = buildQuery(req.query); 
+    var query = buildQuery(req.query);
     var resultset;
     var itemcount = 0;
     var page = parseInt(req.query.page);
@@ -324,19 +324,19 @@ var buildUpdateData = function(data){
 // BUILD QUERY
 var buildQuery = function(qr){
     var query = {},
-        prov = [], 
+        prov = [],
         subc = {},
         subgenero = {},
         tmp = {},
         conditions = [];
 
     if(!qr) return query;
- 
+
     if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'solicitante.eprov': qr.provincia});
 
     if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
 
-    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
+    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){
         conditions.push({estado_alta: qr.estado_alta});
     }else{
         conditions.push({estado_alta: 'activo'});
@@ -344,7 +344,7 @@ var buildQuery = function(qr){
 
 
 
-    if(qr.tsolicitud && qr.tsolicitud !== 'no_definido'){ 
+    if(qr.tsolicitud && qr.tsolicitud !== 'no_definido'){
         conditions.push({'solicitante.tsolicitud': qr.tsolicitud});
         if(qr.tsolicitud === 'musica'){
             if(qr.subgenero && qr.subgenero !== 'no_definido'){
@@ -352,7 +352,7 @@ var buildQuery = function(qr){
                 conditions.push(subgenero);
             }
         }else{
-            if(qr.subgenero && qr.subgenero !== 'no_definido'){ 
+            if(qr.subgenero && qr.subgenero !== 'no_definido'){
                 subgenero['aescenica.generoteatral.'+qr.subgenero] = true;
                 conditions.push(subgenero);
             }
@@ -436,8 +436,3 @@ exports.delete = function(req, res) {
         });
     });
 };
-
-
-
-
-

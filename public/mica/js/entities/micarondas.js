@@ -1,14 +1,14 @@
 DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionette, $, _){
-    
+
   Entities.MicaInteraction = Backbone.Model.extend({
     urlRoot: "/micainteractions",
     whoami: 'MicaInteraction:micarondas.js ',
     idAttribute: "_id",
-    
+
     initialize: function(opts){
 
     },
-    
+
 
     schema: {
       nivel_ejecucion: {type: 'Select',   title: 'Nivel de ejecucion',options: tdata.nivel_ejecucionOL },
@@ -43,7 +43,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         return errors;
       }
     },
-    
+
     initDataForEdit: function(){
 
     },
@@ -103,6 +103,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       ronda_fecha: '',
       ronda_lugar: '',
 
+      /*** ===== CALIFICACIÓN MICA =======
+      *  estado de reunion
+      *
+      */
+      meeting_id: '',
+      meeting_estado: 'no_asignada', // ver models/micaagenda.js:MicaAgenda.STATUS_*
+      meeting_number: -1, //-1: , 0: significa que se intengo agenda pero sin disponibilidad, 1-n: numero de reunion
+
 
       /*** ===== SOLICITANTE  EMISOR =======
       *  sujeto que solicita interacción con otro.
@@ -148,7 +156,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
 
-      
+
     },
 
     facetFactory: function (){
@@ -158,7 +166,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
   });
-    
+
   Entities.MicaInteractionCol = Backbone.Collection.extend({
     model: Entities.MicaInteraction,
     url: "/micainteractions"
@@ -195,7 +203,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     state:{
       firstPage: 1,
-      pageSize: 25, 
+      pageSize: 25,
     },
     queryParams:{
       currentPage: 'page',
@@ -216,7 +224,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     parseRecords: function (resp, options ) {
       return resp[1];
     }
-  
+
   });
 
 
@@ -254,7 +262,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       receptor_hasanswer: 1,
       receptor_answerdate: fecomp,
     });
- 
+
   };
 
 
@@ -449,11 +457,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     urlRoot: "/micainteractions/ranking",
     whoami: 'MicaRanking:micarondas.js ',
     idAttribute: "_id",
-    
+
     initialize: function(opts){
 
     },
-    
+
 
     schema: {
     },
@@ -481,7 +489,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     getActividadLabel: function(){
       return tdata.fetchLabel(tdata['sectorOL'], this.get('vactividades'));
     },
-    
+
     initBeforeSave: function(){
 
     },
@@ -523,7 +531,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       epais: '',
       eprov: '',
 
-      
+
     },
 
 
@@ -536,7 +544,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     state:{
       firstPage: 1,
-      pageSize: 25, 
+      pageSize: 25,
     },
     queryParams:{
       currentPage: 'page',
@@ -572,7 +580,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     parseRecords: function (resp, options ) {
       return resp;
     }
-  
+
   });
 
 
@@ -583,11 +591,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   Entities.MicaInteractionSummary = Backbone.Model.extend({
     whoami: 'MicaInteractionSummary:micarondas.js ',
     idAttribute: "_id",
-    
+
     initialize: function(opts){
 
     },
-    
+
 
     schema: {
     },
@@ -607,11 +615,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       pais: '',
       prov: '',
 
- 
+
       isvendedor: false,
       vactividades: '',
       vporfolios: 0,
- 
+
       iscomprador: false,
       cactividades: '',
       cporfolios: 0,
@@ -654,7 +662,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     state:{
       firstPage: 1,
-      pageSize: 25, 
+      pageSize: 25,
     },
     queryParams:{
       currentPage: 'page',
@@ -679,7 +687,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       return l < r ? (1*order) : l > r ? (-1*order) : 0;
     },
-  
+
   });
 
 
@@ -906,11 +914,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       }else if(field.indexOf('.') != -1){
         tokens = field.split('.');
-        
+
         if(tokens.length === 2 ){
-          
+
           value =  model.get(tokens[0])[tokens[1]];
- 
+
         }else if(tokens.length === 3){
           value =  model.get(tokens[0])[tokens[1]][tokens[2]];
 
@@ -1018,7 +1026,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           }
         },
         error: function(data){
-            defer.resolve(new Entities.MicaInteraction());          
+            defer.resolve(new Entities.MicaInteraction());
         }
       });
       return defer.promise();
@@ -1046,7 +1054,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
 
       query.nodes = nodes;
-      query.newdata = data;  
+      query.newdata = data;
       var update = new Entities.MicaInteractionUpdate(query);
       update.save({
         success: function() {
@@ -1198,4 +1206,3 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
 
 });
-

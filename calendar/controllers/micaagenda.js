@@ -90,10 +90,6 @@ var ctrls = {
 
         res.json(result);
       });
-
-      //TODO: poder recibir tambien el id de micainteraction
-
-
     },
 
     save: function(req,res){

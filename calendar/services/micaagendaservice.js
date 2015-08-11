@@ -14,10 +14,12 @@ var root = '../';
 
 var AppError = require(root + '../core/apperror.js');
 
+var BaseModel = require(root + 'models/basemodel.js');
 var MicaAgenda = require(root + 'models/micaagenda.js').getModel();
 var MicaSuscription = require(root + 'models/micasuscription.js').getModel();
+var MicaInteraction = require(root + 'models/micainteraction.js').getModel();
 
-var  COUNT_REUNIONES = 36;
+var  COUNT_REUNIONES = 3;
 
 var MicaAgendaService = function(userLogged){
   this.userLogged = userLogged;
@@ -32,8 +34,8 @@ MicaAgendaService.COUNT_REUNIONES = COUNT_REUNIONES;
 
 /**
  * Asignacion de reunion entre un comprador y vendedor
- * @param  {String|| Object}   comprador - Id u objeto de micasuscriptions
- * @param  {String|| Object}   vendedor  [description] - Id u objeto de micasuscriptions
+ * @param  {String || Object}   comprador - Id u objeto de micasuscriptions
+ * @param  {String || Object}   vendedor  [description] - Id u objeto de micasuscriptions
  * @param  {Function} cb        callback(err,MicaAgenda)
  */
 MicaAgendaService.prototype.assign = function(compradorRef,vendedorRef,cb){
@@ -41,7 +43,9 @@ MicaAgendaService.prototype.assign = function(compradorRef,vendedorRef,cb){
   // buscar el comprador y vendedor
   // chequear que no esten ya en una reunión
   // buscar numero de reuniones posibles
-  // crear reunion si existe coincidiencia
+  // crear reunion
+  //    - con estado asignado si existe numero disponibles
+  //    - con estado unavailable si no existe disponible o coincidiencia de numeros
 
   var self = this;
 
@@ -84,12 +88,14 @@ MicaAgendaService.prototype.assign = function(compradorRef,vendedorRef,cb){
 
    //crea la reunion si hay disponibles lugar
    function(cb){
-     if(!nums_availables || nums_availables.length === 0){
-       return cb(new AppError('No hay disponibilidad para el comprado y el vendedor','Sin disponibilidad','unavailable'));
+     var num_reunion = 0;
+
+     if(nums_availables && nums_availables.length > 0){
+       num_reunion  = nums_availables[0];
      }
 
-     var num = nums_availables[0];
-     self._createReunion(comprador,vendedor,num,cb);
+     var estado = (num_reunion !== 0) ? MicaAgenda.STATUS_DRAFT : MicaAgenda.STATUS_UNAVAILABLE;
+     self._createReunion(comprador,vendedor,num_reunion,estado,cb);
    }
 
   ],function(err,results){
@@ -97,16 +103,6 @@ MicaAgendaService.prototype.assign = function(compradorRef,vendedorRef,cb){
 
     cb(null,results[results.length-1]);
   });
-};
-
-/**
- * Asignacion de reunion entre un comprador y vendedor
- * @param  {String|| Object}   comprador - Id u objeto de micasuscriptions
- * @param  {String|| Object}   vendedor  [description] - Id u objeto de micasuscriptions
- * @param  {Function} cb        callback
- */
-MicaAgendaService.prototype.assignByInteraction = function(interaction,cb){
-
 };
 
 /**
@@ -175,6 +171,8 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
       MicaAgenda.find(query,sortBy,function(err,results){
           if(err) return cb(err);
 
+          // PROCESO PARA COMPLETAR REUNIONES FALTANTES
+          // mapeo de reuniones ya creadas por numero de reunion
           var map = {};
           for (var i = 0; i < results.length; i++) {
             var key = results[i].get('num_reunion');
@@ -190,6 +188,7 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
             }
           }
 
+          // agregan las reuiones faltantes, se marcan como libres
           for (var num = 1; num <= COUNT_REUNIONES; num++) {
             if(!(num.toString() in map)){
               var tmp = new MicaAgenda();
@@ -199,6 +198,8 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
               map[num.toString()] = tmp;
             }
           }
+
+          // se pasa array el mapa de reuniones
           var array = [];
           for (var key in map){
             // si es un array se concatena
@@ -262,7 +263,7 @@ MicaAgendaService.prototype._crossAvailability = function(comprador,vendedor,cb)
  * @param  {int 1..n}  numero    Numero de reunion
  * @param  {Function} cb        callback (err,MicaAgenda)
  */
-MicaAgendaService.prototype._createReunion = function(comprador,vendedor,numero,cb){
+MicaAgendaService.prototype._createReunion = function(comprador,vendedor,numero,status,cb){
   //guardar en micaagenda
   //guardar fk en micainteractions (buscar si existe una interaccion entre ambos)
   //
@@ -271,15 +272,52 @@ MicaAgendaService.prototype._createReunion = function(comprador,vendedor,numero,
   reunion.set('comprador',comprador);
   reunion.set('vendedor',vendedor);
   reunion.set('num_reunion',numero);
-  reunion.set('estado',MicaAgenda.STATUS_DRAFT);
+  reunion.set('estado',status);
   reunion.set('usermod',this.userLogged);
+  reunion.set('useralta',this.userLogged);
 
-  reunion.save(function(err,result){
+  async.series([
+    //GUARDAR REUNION
+    function(cb){
+      reunion.save(function(err,result){
+        if(err) return cb(err);
+        reunion = result;
+        cb(null,result);
+      });
+    },
+
+    // ACTUALIZAR INTERACTIONS RELACIONAS
+    function(cb){
+      // - Cambia el estado en las interacciones entre los do suscriptiores
+      // - Agrega referencia a la reunion
+
+      var idComprador = reunion.get('comprador')._id;
+      var idVendedor = reunion.get('vendedor')._id;
+
+      var query = {
+        $or: [
+          {'emisor_inscriptionid': idComprador,'receptor_inscriptionid': idVendedor},
+          {'emisor_inscriptionid': idVendedor,'receptor_inscriptionid': idComprador}
+        ]
+      };
+      var data = {
+        meeting_number: reunion.get('num_reunion'),
+        meeting_estado: reunion.get('estado'),
+        meeting_id: reunion.id.toString()
+      };
+
+      MicaInteraction.partialupdate(query,data,function(err,countAffected){
+        if(err){
+          console.warn('[WARN] Al asignar reunión, ERROR al actualizar interactions',err);
+        }
+        cb(null);
+      });
+    }
+
+  ],function(err,results){
     if(err) return cb(err);
-
-    //TODO: GUARDAR  FK 'reunion_agenda' en micainteractions
-
-    cb(null,result);
+    // retorna la reunion guardada
+    cb(null,results[0]);
   });
 };
 

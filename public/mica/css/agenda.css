@@ -10,3 +10,19 @@
   color: #2ECC40;
   font-weight: bold;
 }
+
+
+.js-meeting-unavailable, .js-meeting-error{
+  background-color: #fa8564;
+  border-color: #fa8564;
+}
+
+.js-meeting-no-asignada{
+  background-color: #88a755;
+  border-color: #88a755;
+}
+
+.js-meeting-asignada{
+  background-color: #1fb5ad;
+  border-color: #1fb5ad;
+}

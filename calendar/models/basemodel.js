@@ -37,6 +37,8 @@ var BaseModel = Backbone.Model.extend({
                   });
   },
 
+
+
   validation: function(cb){
     cb();
   },
@@ -237,6 +239,15 @@ var BaseModel = Backbone.Model.extend({
 
         cb(null,[{'total_entries':results[0]},results[1]]);
       });
+    });
+  },
+
+  partialupdate: function(query,attributes,callback){
+    var raw = attributes;
+    BaseModel.dbi.collection(this.entityCol).update(query, {$set:raw }, {multi:true}, function(err, count) {
+      if(err) return callback(err);
+
+      callback(null,count);
     });
   }
 });
