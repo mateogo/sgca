@@ -8,7 +8,7 @@ var ctrls = {
     find: function(req,res){
 
       //PREPRANDO QUERY
-      var query =  _.pick(req.query,'page','per_page','textsearch','estado');
+      var query =  _.pick(req.query,'page','per_page','textsearch','estado','cactividades','vactividades');
       if(query.page){
         query.page = parseInt(query.page);
         if(isNaN(query.page)){
@@ -36,8 +36,17 @@ var ctrls = {
         delete query.textsearch;
       }
 
+      if(query.cactividades){
+        //corresponde a las actividades del comprador
+        query['comprador.actividades'] = query.cactividades;
+        delete query.cactividades;
+      }
 
-      console.log('buscando en agenda',query);
+      if(query.vactividades){
+        //corresponde a las actividades del comprador
+        query['vendedor.actividades'] = query.vactividades;
+        delete query.vactividades;
+      }
 
       //EJECUNTADO QUERY
       MicaAgenda.findPageable(query,function(err,result){
@@ -116,6 +125,14 @@ var ctrls = {
           res.json(r);
         });
       });
+    },
+
+    statistics: function(req,res){
+      MicaAgenda.statistics(function(err,results){
+        if(err) return res.status(500).send(err);
+
+        res.json(results);
+      });
     }
 
 };
@@ -146,6 +163,8 @@ module.exports.configRoutes = function(app){
   app.get('/micaagenda/:id',[ensureAuthenticated,isAdminMica,ctrls.findById]);
 
   app.get('/micaagenda/:idSuscriptor/:rol',[ensureAuthenticated,isAdminMica,ctrls.agenda]);
+
+  app.get('/micaagenda-statistics',[ensureAuthenticated,isAdminMica,ctrls.statistics]);
 
   app.post('/micaagenda/assign',[ensureAuthenticated,isAdminMica,ctrls.assign]);
 

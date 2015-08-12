@@ -222,6 +222,11 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
 
 };
 
+
+MicaAgendaService.prototype.statistics = function(cb){
+
+}
+
 /**
  * Busca numero de reuniones libres de cada uno,
  * buscar disponibilidades de agenda de cada uno

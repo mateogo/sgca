@@ -101,6 +101,13 @@ describe('models',function(){
         });
       });
 
+      it('Los sucriptores en la reunion deberian tener la actividades o sectores',function(){
+        if(reunion){
+          expect(reunion.get('comprador').actividades).toBeDefined();
+          expect(reunion.get('vendedor').actividades).toBeDefined();
+        }
+      });
+
       it('Deberia estar la reunion en la agenda del comprador',function(done){
         var service = new MicaAgendaService(userLogged);
         service.getAgenda(comprador,'comprador',function(err,results){

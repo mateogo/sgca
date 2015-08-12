@@ -1,5 +1,25 @@
 DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbone, Marionette, $, _){
 
+  var decoActividad = {
+    'musica': {label:'MÚSICA', 'class': 'label-mica-musica'},
+    'aescenicas': {label:'ARTES ESCÉNICAS', 'class': 'label-mica-aescenicas'},
+    'audiovisual': {label:'', 'class': 'label-mica-audiovisual'},
+    'disenio': {label:'DISEÑO', 'class': 'label-mica-diseno'},
+    'editorial': {label:'EDITORIAL', 'class': 'label-mica-editorial'},
+    'videojuegos': {label:'VIDEOJUEGOS', 'class': 'label-mica-videojuegos'},
+  };
+
+  Views.renderLabelActividad = function(actividad){
+    var $span = $('<span class="label"></span>');
+    if(actividad in decoActividad){
+      var deco = decoActividad[actividad];
+      $span.html(deco.label).addClass(deco.class);
+    }else{
+      $span.html(actividad);
+    }
+    return $span;
+  };
+
   Views.filterPopup = function(filterData, FilterModel, targetEvent, filterTitle){
     if(!filterData){
       filterData=   new FilterModel();

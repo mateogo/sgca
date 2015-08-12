@@ -21,7 +21,7 @@ describe('models',function(){
 
 
       it('Buscar alguna iteraction para asignar',function(done){
-        MicaInteraction.findPageable({'estado_asignacion':'no_asignado'},function(err,results){
+        MicaInteraction.findPageable({'meeting_estado':'no_asignada'},function(err,results){
           expect(err).toBe(null);
 
           expect(results[1].length > 0).toBeTruthy();

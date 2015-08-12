@@ -27,6 +27,12 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 
       var list = new AgendaMica.AgendaList({collection:collection,rol:rol});
       DocManager.mainRegion.show(list);
+    },
+    showStatistics: function(){
+      var collection = DocManager.request('micaagenda:statistics');
+
+      var view = new AgendaMica.EstadisticView({collection:collection});
+      DocManager.mainRegion.show(view);
     }
   };
 
@@ -60,6 +66,8 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 				      {name: 'comprador',label:'Comprador', cell:AgendaMica.SuscriptorCell, editable:false},
 				      {name: 'vendedor',label:'Vendedor', cell:AgendaMica.SuscriptorCell, editable:false},
 				      {name: 'num_reunion', label:'# Reunión', cell:'string', editable:false},
+				      {name: 'comprador', label:'Sector del Comprador', cell: AgendaMica.ActividadCell, editable:false},
+				      {name: 'vendedor', label:'Sector del Vendedor', cell: AgendaMica.ActividadCell, editable:false},
 				      {name: 'estado', label:'Estado', cell:AgendaMica.EstadoReunionCell, editable:false},
 				      {name: 'feultmod', label:'Modificado', cell:'string', editable:false},
 				      {label:'Acciones', cell: 'string', editable:false, sortable:false},
@@ -126,7 +134,14 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     layout.on('show', function(){
     	layout.getRegion('mainRegion').show(mainlayout);
       setTimeout(function(){
-        mainlayout.$el.find('.js-excel').hide();
+        var $btnExcel =  mainlayout.$el.find('.js-excel').hide();
+        var $toolbar = $btnExcel.parent();
+        var $btnStats = $('<button></button>',{class:'btn btn-default btn-sm btn-success',html:'<i class="glyphicon glyphicon-signal"></i> Estadisticas'});
+        $btnStats.insertAfter($btnExcel);
+        $btnStats.on('click',function(){
+          $btnStats.unbind('click');
+          API.showStatistics();
+        });
       });
     });
 
@@ -140,6 +155,9 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       var collection = session.collection;
 
       collection.setQuery(filter);
+    },
+    showStatistics: function(){
+      DocManager.trigger('micaagenda:statistic');
     },
     popupAgenda: function(suscriptor){
 

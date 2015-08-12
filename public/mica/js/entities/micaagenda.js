@@ -31,6 +31,7 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       var text = filter.get('textsearch');
       this.queryParams.textsearch = $.trim(text);
 
+
       if(this.queryParams.textsearch === ''){
         delete this.queryParams.textsearch;
       }
@@ -40,6 +41,19 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       }else{
         delete this.queryParams.estado;
       }
+
+      if(filter.get('cactividades') && filter.get('cactividades') !== 'no_definido'){
+        this.queryParams.cactividades = filter.get('cactividades');
+      }else{
+        delete this.queryParams.cactividades;
+      }
+
+      if(filter.get('vactividades') && filter.get('vactividades') !== 'no_definido'){
+        this.queryParams.vactividades = filter.get('vactividades');
+      }else{
+        delete this.queryParams.vactividades;
+      }
+
 
       this.getFirstPage();
     }
@@ -72,8 +86,20 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
   Entities.MicaAgendaFilterFacet = Backbone.Model.extend({
     whoami: 'Entities.MicaAgendaFilterFacet:micaagenda.js',
     schema: {
+      cactividades:   {type: 'Select',  title: 'Sector Comprador',  options: tdata.sectorOL },
+      vactividades:   {type: 'Select',  title: 'Sector Vendedor',  options: tdata.sectorOL },
       estado:   {type: 'Select',  title: 'Estado',  options: tdata.estado_reunion },
     }
+  });
+
+  Entities.MicaagendaStatistics = Backbone.Model.extend({
+    whoami: 'Entities.MicaagendaStatistics:micaagenda.js',
+  });
+
+  Entities.MicaagendaStatisticsCollection = Backbone.Collection.extend({
+    whoami: 'MicaagendaStatisticsCollection: micaagenda.js',
+    model: Entities.MicaagendaStatistics,
+    url: '/micaagenda-statistics'
   });
 
   var API = {
@@ -91,20 +117,29 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       });
 
       return p;
+    },
+
+    searchStatistics: function(){
+      var collection = new Entities.MicaagendaStatisticsCollection();
+      collection.fetch().done(function(){
+        collection.trigger('change');
+      });
+      return collection;
     }
   };
 
 
 
-
-
-
   DocManager.reqres.setHandler('micaagenda:assign', function(asignee){
-
     var comprador,vendedor;
     comprador = asignee.compradorid;
     vendedor = asignee.vendedorid;
 
     return API.assign(comprador,vendedor);
   });
+
+  DocManager.reqres.setHandler('micaagenda:statistics', function(){
+    return API.searchStatistics();
+  });
+
 });

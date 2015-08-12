@@ -52,10 +52,13 @@ var MicaAgenda = BaseModel.extend({
           var vendedor = self.get('vendedor');
           var useralta = self.get('useralta');
           var usermod = self.get('usermod');
-          var suscriptorSerializer = function(model){
+
+          var suscriptorSerializer = function(model,rol){
             raw = (model.toJSON)? model.toJSON() : model;
+            var actividades = (rol === 'comprador') ? raw.comprador.cactividades : raw.vendedor.vactividades;
             raw = _.pick(raw,'_id','responsable','solicitante');
             raw._id = raw._id.toString();
+            raw.actividades = actividades;
             return raw;
           };
 
@@ -101,6 +104,37 @@ var MicaAgenda = BaseModel.extend({
   STATUS_OBS: 'observado',
   STATUS_CONFIRM: 'confirmado',
   STATUS_UNAVAILABLE: 'unavailable',
+
+  statistics: function(cb){
+    BaseModel.dbi.collection(this.entityCol, function(err, collection) {
+      var match = {
+        estado: MicaAgenda.STATUS_DRAFT
+      };
+
+      var group = {
+        _id: {number:'$num_reunion',actividad:'$comprador.actividades'},
+        subtotal_count: {$sum: 1}
+      };
+
+      var sort = {
+        '_id.number': 1
+      }
+
+      collection.aggregate([{$match:match},{$group:group},{$sort:sort}],function(err,results){
+        if(err) return cb(err);
+
+        // console.log('resultado',results);
+        for (var i = 0; i < results.length; i++) {
+          var row =  results[i];
+          _.extend(row,row._id);
+          delete row._id;
+          results[i] = row;
+        }
+
+        cb(null,results);
+      });
+    });
+  }
 });
 
 
