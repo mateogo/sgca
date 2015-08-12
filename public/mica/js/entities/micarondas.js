@@ -571,15 +571,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return l < r ? (1*order) : l > r ? (-1*order) : 0;
     },
 
-
     parseState: function (resp, queryParams, state, options) {
-      //return {totalRecords: resp[0].total_entries};
-      return {totalRecords: resp.length};
+      return {totalRecords: resp[0].total_entries};
     },
 
     parseRecords: function (resp, options ) {
-      return resp;
+      return resp[1];
     }
+
 
   });
 

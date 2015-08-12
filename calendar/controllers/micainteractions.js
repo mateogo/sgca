@@ -18,6 +18,7 @@ var PONDERACION = 5;
 
 var micainteractionsCol = 'micainteractions';
 var micasuscriptionsCol = 'micasuscriptions';
+var micarankingCol = 'micaranking';
 
 var serialCol = 'seriales';
 
@@ -192,6 +193,50 @@ exports.findById = function(req, res) {
     });
 };
 
+exports.findRankingByQuery = function(req, res) {
+    var query = buildRankingQuery(req.query); 
+    var resultset;
+    var itemcount = 0;
+    var page = parseInt(req.query.page);
+    var limit = parseInt(req.query.per_page);
+    var cursor;
+    ///// dummy
+    //req.query.textsearch = 'altersoft';
+    /////
+    var textsearch = initTextSearch(req.query);
+
+
+
+    cursor = dbi.collection(micarankingCol).find(query).sort({cnumber:1});
+    if(textsearch){
+        cursor.toArray(function(err, items){
+            resultset = textFilter(textsearch, items);
+            itemcount = resultset.length;
+            //console.log('====RETURNING: [%s] page:[%s] limit: [%s] itemslength [%s] =========',resultset.length, (page-1)*limit, limit, items.length);
+            res.send([{total_entries: itemcount}, resultset.splice((page-1) * limit, limit)  ]);
+        });
+
+    }else if(req.query){
+        cursor.count(function(err, total){
+            //console.log('CUrsor count: [%s]', total);
+            cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
+
+                res.send([{total_entries: total}, items]);
+
+            });
+        })
+
+    }else{
+        cursor.toArray(function(err, items) {
+                res.send(items);
+        });
+
+    }
+
+};
+
+
+
 exports.findByQuery = function(req, res) {
     var query = buildQuery(req.query); 
     var resultset;
@@ -255,7 +300,7 @@ exports.rankingByQuery = function(req, res) {
             dbi.collection(micainteractionsCol, function(err, collection) {
                 collection.find().sort({cnumber:1}).toArray(function(err, items) {
 
-                    res.send(getRankedList(profiles, items));
+                    getRankedList(profiles, items, res);
                 });
             });
         });
@@ -519,7 +564,7 @@ exports.ranking = function(req, res) {
 
 };
 
-var getRankedList = function(profiles, interactionList){
+var getRankedList = function(profiles, interactionList, res){
     var normalizedProfiles = normalizeProfiles(profiles);
 
     _.each(interactionList, function(interaction){
@@ -527,8 +572,26 @@ var getRankedList = function(profiles, interactionList){
 
     });
 
+    saveProfiles(normalizedProfiles, res);
+
     
-    return normalizedProfiles;
+    //return normalizedProfiles;
+
+};
+
+var saveProfiles = function(profiles, res){
+    var collection = dbi.collection(micarankingCol);
+    collection.remove({}, function(err, result){
+        collection.insert(profiles, {w:1}, function(err, result) {
+            if (err) {
+                console.log('ERROR INSERTING save profiles:[%s]', err);
+                res.send({error: err});
+            } else {
+                res.send({result: result.length, profiles: profiles.length });
+            }
+        });        
+    });
+
 
 };
 
@@ -606,11 +669,11 @@ var sumarizedIteration = function(profileList, interaction){
     var receptorProfile = _.find(profileList, function(profile){
         return (interaction.receptor_inscriptionid == profile.profileid );
     })
-    if(emisorProfile){
-        emisorProfile.receptor_requests = emisorProfile.receptor_requests + 1;
+    if(receptorProfile){
+        receptorProfile.receptor_requests = receptorProfile.receptor_requests + 1;
         //receptor.emisorlist.push(interaction.emisor_inscriptionid);
-        addEmisorToList(emisorProfile, interaction);
-        emisorProfile.peso = emisorProfile.peso + (1 * PONDERACION);
+        addEmisorToList(receptorProfile, interaction);
+        receptorProfile.peso = receptorProfile.peso + (1 * PONDERACION);
     }else{
     }
 
