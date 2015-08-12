@@ -256,8 +256,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     model.set({
       emisor_hasread: 0,
 
-      receptor_slug: facet.get('slug'),
-      receptor_nivel_interes: facet.get('nivel_interes') ,
+      receptor_slug: facet.get('slug') || '(sin dato)',
+      receptor_nivel_interes: facet.get('nivel_interes'),
       receptor_hasread: 1,
       receptor_hasanswer: 1,
       receptor_answerdate: fecomp,
@@ -387,7 +387,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
     schema: {
-        slug:        {type: 'Text',  title: 'Comentario', editorAttrs:{placeholder: 'Su mensaje a la contraparte'}, validators:['required']},
+        slug:        {type: 'Text',  title: 'Comentario', editorAttrs:{placeholder: 'Su mensaje a la contraparte'}},
         nivel_interes: {type: 'Radio',  title: 'Calificación', options:tdata.nivel_interesOL },
 
     },
@@ -963,7 +963,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   var queryCollection = function(query, step){
       var entities = new Entities.MicaInteractionFindByQueryCol();
       var defer = $.Deferred();
-      console.log('query Collection [%s]', entities.whoami);
+      //console.log('query Collection [%s]', entities.whoami);
 
       entities.fetch({
         data: query,

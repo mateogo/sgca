@@ -271,11 +271,11 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         e.stopPropagation();e.preventDefault();
 
         $.when(DocManager.request("micainteractions:query:emisorlist", self.model)).done(function(list){
-          console.log('emisorlist: length[%s]', list.length);
+          //console.log('emisorlist: length[%s]', list.length);
 
           var emisorList = new RankingMica.MicaRankingEmisorCollectionView({collection: list});
           emisorList.render();
-          console.log('EmisorList:[%s]', $(emisorList.el).html())
+          //console.log('EmisorList:[%s]', $(emisorList.el).html())
 
           DocManager.confirm($(emisorList.el).html(), {okText: 'Volver', cancelText: '.'}).done(function(){
             emisorList.destroy();
@@ -844,6 +844,9 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
           as_emisor_slug: item.emisor_slug,
           as_emisor_answer: item.receptor_slug,
           as_emisor_rol: item.emisor_rol,
+          // meeting_id: item.meeting_id,
+          // meeting_number: item.meeting_number,
+          // meeting_estado: item.meeting_estado,
         });
 
       }
@@ -857,6 +860,9 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
           as_receptor_slug: item.emisor_slug,
           as_receptor_answer: item.receptor_slug,
           as_receptor_rol: item.receptor_rol,
+          // meeting_id: item.meeting_id,
+          // meeting_number: item.meeting_number,
+          // meeting_estado: item.meeting_estado,
         });
 
       }

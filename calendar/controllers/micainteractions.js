@@ -553,6 +553,9 @@ var addReceptorToList = function(profile, action){
         receptor_displayName: action.receptor_displayName,
         receptor_slug: action.receptor_slug,
         receptor_nivel_interes: action.receptor_nivel_interes,
+        meeting_id: (action.meeting_id|| 0),
+        meeting_number: (action.meeting_number|| 0),
+        meeting_estado: (action.meeting_estado|| 'no_definido'),
  
         emisor_rol: action.emisor_rol,
         emisor_slug: action.emisor_slug,
@@ -573,6 +576,11 @@ var addEmisorToList = function(profile, action){
         receptor_rol: action.receptor_rol,
         receptor_slug: action.receptor_slug,
         receptor_nivel_interes: action.receptor_nivel_interes,
+ 
+        meeting_id: (action.meeting_id|| 0),
+        meeting_number: (action.meeting_number|| 0),
+        meeting_estado: (action.meeting_estado|| 'no_definido'),
+
     };
     profile.emisorlist.push(token);
 };
@@ -673,10 +681,10 @@ var normalizeProfiles = function(profiles){
         return profile;
     });
 
-    _.each(normalized, function(item){
-        //console.log('[%s] [%s] [%s] v:[%s] c:[%s]', item._id, item.cnumber, item.rname, item.isvendedor, item.iscomprador);
+    // _.each(normalized, function(item){
+    //     //console.log('[%s] [%s] [%s] v:[%s] c:[%s]', item._id, item.cnumber, item.rname, item.isvendedor, item.iscomprador);
 
-    });
+    // });
     return normalized;
 
 };

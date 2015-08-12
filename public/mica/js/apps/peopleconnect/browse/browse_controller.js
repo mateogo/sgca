@@ -390,14 +390,19 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     });
 
     modal.on('ok',function(){
-        form.commit();
-        //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
-        addNewReunion(getSession().currentUser.id, getSession().micarqst, otherprofile);
-        DocManager.request('micainteractions:new:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile, interactionRecord);
-        itemview.$(".js-interact-reunion").html('¡Reunión Solicitada!');
-        itemview.$(".js-interact-reunion").addClass('solicitada');
-    });
+        var errors = form.commit({validate: true});
 
+        if(!errors){
+          //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
+          addNewReunion(getSession().currentUser.id, getSession().micarqst, otherprofile);
+          DocManager.request('micainteractions:new:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile, interactionRecord);
+            itemview.$(".js-interact-reunion").html('¡Reunión Solicitada!');
+            itemview.$(".js-interact-reunion").addClass('solicitada');
+        }else{
+          Message.warning('Se produjo un error en la actualización de sus datos. Inténtelo nuevamente');
+        }
+    });
+    
     modal.open();    
   };
 
@@ -440,13 +445,18 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     });
 
     modal.on('ok',function(){
-        form.commit();
-        //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
-        responseReunion(getSession().currentUser.id, getSession().micarqst, otherprofile);
-        DocManager.request('micainteractions:answer:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile, interactionRecord);
-        itemview.$(".js-interact-reunion").html('¡Pedido de reunión contestada!');
-        itemview.$(".js-interact-reunion").addClass('recibida');
-        itemview.$(".js-interact-reunion").addClass('active');    });
+        var errors = form.commit({validate: true});
+        if(!errors){
+          //----------------------------------------------------: facet       user asking for meeting    user's mica profile  other's profile
+          responseReunion(getSession().currentUser.id, getSession().micarqst, otherprofile);
+          DocManager.request('micainteractions:answer:interaction', form.model, getSession().currentUser, getSession().micarqst,    otherprofile, interactionRecord);
+          itemview.$(".js-interact-reunion").html('¡Pedido de reunión contestada!');
+          itemview.$(".js-interact-reunion").addClass('recibida');
+          itemview.$(".js-interact-reunion").addClass('active');
+        }else{
+          Message.warning('Se produjo un error en la actualización de sus datos. Inténtelo nuevamente');
+        }
+    });
 
     modal.open();    
   };
