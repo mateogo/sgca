@@ -543,7 +543,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         rolePlaying:   {type: 'Select',  title: 'Rol', options: tdata.rolesOL },
         cnumber:       {type: 'Text',    title: 'Número Inscripción' },
         textsearch:    {type: 'Text',    title: 'Búsqueda por texto' },
-        provincia:     {type: 'Select',  title: 'Provincia',  options: tdata.provinciasOL },
+        provincia:     {type: 'Select',  title: 'Prov / Internacional',  options: tdata.provinciasOL },
         sector:        {type: 'Select',  title: 'Sector',  options: tdata.sectorOL },
         subsector:     {type: 'Select',  title: 'SubSector',  options: tdata.subSectorOL.aescenicas },
         nivel_ejecucion: {type: 'Select',  title: 'Aprobación',  options: tdata.nivel_ejecucionOL },
