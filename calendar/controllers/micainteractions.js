@@ -250,7 +250,7 @@ exports.rankingByQuery = function(req, res) {
 
 
     dbi.collection(micasuscriptionsCol, function(err, collection) {
-        collection.find(query).sort({cnumber:1}).toArray(function(err, profiles) {
+        collection.find().sort({cnumber:1}).toArray(function(err, profiles) {
 
             dbi.collection(micainteractionsCol, function(err, collection) {
                 collection.find().sort({cnumber:1}).toArray(function(err, items) {
@@ -519,18 +519,20 @@ exports.ranking = function(req, res) {
 
 };
 
-var getRankedList = function(profiles, list){
-    var output = normalizeProfiles(profiles);
+var getRankedList = function(profiles, interactionList){
+    var normalizedProfiles = normalizeProfiles(profiles);
 
-    _.each(list, function(item){
-        sumarizedIteration(output, item);
+    _.each(interactionList, function(interaction){
+        sumarizedIteration(normalizedProfiles, interaction);
 
     });
 
     
-    return filterOutput(output);
+    return normalizedProfiles;
 
 };
+
+//deprecated
 var filterOutput = function(profiles){
     var filtered;
     filtered = _.filter(profiles, function(item){
@@ -545,69 +547,70 @@ var filterOutput = function(profiles){
     return filtered;
 };
 
-var addReceptorToList = function(profile, action){
+var addReceptorToList = function(profile, interaction){
     // Lista en la que el profile le SOLICITA reunión a un cierto RECEPTOR
     var token = {
-        receptor_rol: action.receptor_rol,
-        receptor_inscriptionid: action.receptor_inscriptionid,
-        receptor_displayName: action.receptor_displayName,
-        receptor_slug: action.receptor_slug,
-        receptor_nivel_interes: action.receptor_nivel_interes,
-        meeting_id: (action.meeting_id|| 0),
-        meeting_number: (action.meeting_number|| 0),
-        meeting_estado: (action.meeting_estado|| 'no_definido'),
+        receptor_rol:            interaction.receptor_rol,
+        receptor_inscriptionid:  interaction.receptor_inscriptionid,
+        receptor_displayName:    interaction.receptor_displayName,
+        receptor_slug:           interaction.receptor_slug,
+        receptor_nivel_interes:  interaction.receptor_nivel_interes,
+
+        emisor_rol:              interaction.emisor_rol,
+        emisor_slug:             interaction.emisor_slug,
+        emisor_nivel_interes:    interaction.emisor_nivel_interes,
+
+        meeting_id:              (interaction.meeting_id || 0),
+        meeting_number:          (interaction.meeting_number || 0),
+        meeting_estado:          (interaction.meeting_estado || 'no_definido'),
  
-        emisor_rol: action.emisor_rol,
-        emisor_slug: action.emisor_slug,
-        emisor_nivel_interes: action.emisor_nivel_interes,
     };
     profile.receptorlist.push(token);
 };
 
-var addEmisorToList = function(profile, action){
+var addEmisorToList = function(profile, interaction){
     // Lista en la que el profile RECIBE pedido de reunión a un cierto EMISOR
     var token = {
-        emisor_rol: action.emisor_rol,
-        emisor_inscriptionid: action.emisor_inscriptionid,
-        emisor_displayName: action.emisor_displayName,
-        emisor_slug: action.emisor_slug,
-        emisor_nivel_interes: action.emisor_nivel_interes,
+        emisor_rol:             interaction.emisor_rol,
+        emisor_inscriptionid:   interaction.emisor_inscriptionid,
+        emisor_displayName:     interaction.emisor_displayName,
+        emisor_slug:            interaction.emisor_slug,
+        emisor_nivel_interes:   interaction.emisor_nivel_interes,
  
-        receptor_rol: action.receptor_rol,
-        receptor_slug: action.receptor_slug,
-        receptor_nivel_interes: action.receptor_nivel_interes,
+        receptor_rol:           interaction.receptor_rol,
+        receptor_slug:          interaction.receptor_slug,
+        receptor_nivel_interes: interaction.receptor_nivel_interes,
  
-        meeting_id: (action.meeting_id|| 0),
-        meeting_number: (action.meeting_number|| 0),
-        meeting_estado: (action.meeting_estado|| 'no_definido'),
-
+        meeting_id:             (interaction.meeting_id || 0),
+        meeting_number:         (interaction.meeting_number || 0),
+        meeting_estado:         (interaction.meeting_estado || 'no_definido'),
     };
+
     profile.emisorlist.push(token);
 };
 
 
-var sumarizedIteration = function(nprofiles, action){
-    var emisor = _.find(nprofiles, function(item){
-        return (action.emisor_inscriptionid == item.profileid );
+var sumarizedIteration = function(profileList, interaction){
+    var emisorProfile = _.find(profileList, function(profile){
+        return (interaction.emisor_inscriptionid == profile.profileid );
     })
-    if(emisor){
-        emisor.emisor_requests = emisor.emisor_requests + 1;
-        //emisor.receptorlist.push(action.receptor_inscriptionid);
-        addReceptorToList(emisor, action);
-        emisor.peso = emisor.peso + 1;
+    if(emisorProfile){
+        emisorProfile.emisor_requests = emisorProfile.emisor_requests + 1;
+        addReceptorToList(emisorProfile, interaction);
+        emisorProfile.peso = emisorProfile.peso + 1;
 
     }else{
-        //console.log('Emisor No Encontrado [%s]',action.emisor_inscriptionid)
+        //console.log('Emisor No Encontrado [%s]',interaction.emisor_inscriptionid)
     }
 
-    var receptor = _.find(nprofiles, function(item){
-        return (action.receptor_inscriptionid == item.profileid );
+    var receptorProfile = _.find(profileList, function(profile){
+        return (interaction.receptor_inscriptionid == profile.profileid );
     })
-    if(receptor){
-        receptor.receptor_requests = receptor.receptor_requests + 1;
-        //receptor.emisorlist.push(action.emisor_inscriptionid);
-        addEmisorToList(receptor, action);
-        receptor.peso = receptor.peso + (1 * PONDERACION);
+    if(emisorProfile){
+        emisorProfile.receptor_requests = emisorProfile.receptor_requests + 1;
+        //receptor.emisorlist.push(interaction.emisor_inscriptionid);
+        addEmisorToList(emisorProfile, interaction);
+        emisorProfile.peso = emisorProfile.peso + (1 * PONDERACION);
     }else{
     }
 
