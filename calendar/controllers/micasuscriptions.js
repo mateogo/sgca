@@ -370,7 +370,13 @@ var buildQuery = function(qr){
     }
 
  
-    if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'solicitante.eprov': qr.provincia});
+    if(qr.provincia && qr.provincia !== 'no_definido'){
+        if(qr.provincia === 'intl'){
+            conditions.push({'solicitante.epais': {$ne: "AR"}});
+        }else{
+            conditions.push({'solicitante.eprov': qr.provincia});
+        }
+    }
 
     if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
     if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 

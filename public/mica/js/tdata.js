@@ -290,6 +290,7 @@ window.tdata = {
 
     provinciasOL: [
 	    {val: "no_definido", label: 'Seleccione Provincia'},
+      {val: "intl", label:'Internacional'},
 	    {val: "CABA", label: 'CABA'},
 	    {val: "BuenosAires", label: 'Buenos Aires'},
 	    {val: "Cordoba", label: 'Córdoba'},

@@ -23,6 +23,9 @@ DocManager.module("BackendApp.List", function(List, DocManager, Backbone, Marion
         isComprador: function(){
           return self.model.isComprador();
         },
+        isCompradorLight: function(){
+          return self.model.isCompradorLight();
+        },
         hasVendorProfiles: function(){
           return self.model.hasVendorProfiles();
         },

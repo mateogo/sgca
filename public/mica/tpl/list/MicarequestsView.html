@@ -26,7 +26,7 @@
         <div><strong>Facturación:</strong> AR$ <%= solicitante.eventas %></div>
         <div><strong>Fecha de Alta:</strong> <%= getFieldLabel('fecomp')%></div>
         
-        <%  if( isComprador() ) { %>
+        <%  if( isCompradorLight() ) { %>
         <div>
         <%  if(getFieldLabel('nivel_ejecucion') === 'comprador_rechazado') { %><span class="label label-danger">PERFIL DE COMPRADOR RECHAZADO</span><% } %>
         <%  if(getFieldLabel('nivel_ejecucion') === 'comprador_aceptado') { %><span class="label label-success">PERFIL DE COMPRADOR ACEPTADO</span><% } %>
@@ -92,7 +92,7 @@
        </div>
 
     <% } %>
-    <%  if(isComprador()){ %>
+    <%  if(isCompradorLight()){ %>
     <hr>
         <div class="col-md-12 col-xs-12">
             <h3><span class="fa fa-shopping-cart"></span> Perfil de Comprador 

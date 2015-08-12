@@ -195,8 +195,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       className: "string-cell",
       render: function(){
         var label =[];
-        if(this.model.get('iscomprador')) label.push('C: ' + this.model.get('cactividades'));
-        if(this.model.get('isvendedor'))  label.push('V: ' + this.model.get('vactividades'));
+        if(this.model.get('iscomprador')) label.push('C:' + this.model.get('cactividades'));
+        if(this.model.get('isvendedor'))  label.push('V:' + this.model.get('vactividades'));
 
       	this.$el.html( label.join('<br>'));
         return this;
@@ -514,6 +514,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 				      {name: 'cnumber', label:'Nro Inscr', cell:'string', editable:false},
               {name: 'ename', label:'Responsable', cell:'string', editable:false},
               {name: 'eprov', label:'Prov', cell:'string', editable:false},
+              {name: 'cactividad', label:'Sector', cell: ActividadViewCell, editable:false},
               {name: 'iscomprador', label:'C?', cell:'string', editable:false},
               {name: 'isvendedor', label:'V?', cell:'string', editable:false},
               {name: 'receptor_requests', label:'Recibidas', cell:'number', editable:false},
