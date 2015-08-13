@@ -18,7 +18,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         'click': function(){
           var rol = this.column.get('name');
           var suscriptor = this.model.get(rol);
-          DocManager.trigger('micaagenda:agendaone:show',suscriptor._id,rol);
+          DocManager.trigger('micaagenda:agendaone:show:popup',suscriptor._id,rol);
         }
       }
   });
@@ -48,6 +48,39 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         this.$el.html(CommonsViews.renderLabelActividad(value));
         return this;
       }
+  });
+
+  AgendaMica.ActionsCells = Backgrid.Cell.extend({
+    render: function(){
+        if(!this.rendered){
+           var $btnRemove = $('<button class="btn btn-xs btn-danger js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
+           this.$el.append($btnRemove);
+           this.rendered = true;
+        }
+      this.$el.css('width','95px');
+      return this;
+    },
+    events: {
+      'click .js-trash': 'doRemove'
+    },
+    doRemove: function(e){
+      var self = this;
+      e.stopPropagation();
+      DocManager.confirm('<h3>¿Está seguro que desea borrar la reunión?</h3>').done(function(){
+        var $btn = self.$el.find('.js-trash');
+        Message.warning('Borrando...');
+        var p = DocManager.request('micaagenda:reunion:borrar',self.model);
+        p.done(function(){
+          Message.clear();
+          Message.success('Reunión borrada');
+        }).fail(function(){
+          Message.clear();
+          Message.error('No se pudo borrar');
+        });
+
+      });
+
+    }
   });
 
 
@@ -90,12 +123,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       this.rol = opts.rol;
       this.contraparte_rol = (opts.rol === 'comprador') ? 'vendedor' : 'comprador';
       var self = this;
-      console.log('cambio',opts.collection);
-      // opts.collection.on('change',function(){
-      //   self.renderOwner();
-      // });
     },
-    className: 'wrapper',
     template: _.template('<div class="text-muted">La agenda de <div class="owner-container"></div></div><ul class="list-group"></ul>'),
     childViewContainer: 'ul',
     childView: AgendaMica.AgendaListItem,
@@ -118,6 +146,19 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
             .css('border-bottom','1px solid #FF4136')
             .css('margin-bottom','10px');
         }
+
+        var parentWidth = self.$el.parent().width();
+        if(parentWidth < 400){
+          self.$el.find('.hidden-xs').hide();
+          self.$el.parent().on('mousewheel',function(e,delta){
+            console.log(this.scrollTop,delta,e);
+            if (this.scrollTop < 1 && delta > 0 ||
+                  (this.clientHeight + this.scrollTop) === this.scrollHeight && delta < 0
+              ) {
+                e.preventDefault();
+              }
+          })
+        }
       });
     },
 
@@ -135,11 +176,25 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
   });
 
 
+
+  //TODO: lista agrupada por algun campo
   AgendaMica.AgendaGroupList = Marionette.CompositeView.extend({
 
   });
 
 
+  AgendaMica.AgendaPage = Marionette.LayoutView.extend({
+    className: 'wrapper',
+    template: _.template('<div style="margin-bottom:20px;"> <button class="btn btn-default btn-sm js-back"><span class="fa fa-angle-left"></span> Volver</button></div><div class="body-container"></div>'),
+    regions: {
+      'bodyRegion': '.body-container'
+    },
+    events: {
+      'click .js-back':function(e){
+        DocManager.navigateBack();
+      }
+    }
+  });
 
   // doc ref: https://github.com/nicolaskruchten/pivottable
   AgendaMica.EstadisticView = Marionette.ItemView.extend({
@@ -192,8 +247,8 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     var responsable = suscriptor.responsable;
     var solicitante = suscriptor.solicitante;
     var str = '<strong class="text-primary">'+solicitante.edisplayName +'</strong> '+
-              '<div>'+responsable.rname + ' ('+responsable.rcargo+')' +'</div> '+
-              '<div>'+  responsable.rmail + '</div> ';
+              '<div class="hidden-xs"><div>'+responsable.rname + ' ('+responsable.rcargo+')' +'</div> '+
+              '<div>'+  responsable.rmail + '</div> </div>';
     if(showActividad){
       var $span = CommonsViews.renderLabelActividad(suscriptor.actividades);
       str += $span.prop('outerHTML');

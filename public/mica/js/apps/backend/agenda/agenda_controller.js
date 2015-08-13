@@ -22,17 +22,46 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       });
     },
     listBySuscriptor: function(idSuscription,rol){
-      var collection = new backendEntities.MicaAgendaOneCollection();
-      collection.setSuscription(idSuscription,rol);
+      var list = this._listBySuscription(idSuscription,rol);
+
+      var layout = new AgendaMica.AgendaPage();
+      layout.on('show',function(){
+        layout.bodyRegion.show(list);
+      });
+      DocManager.mainRegion.show(layout);
+    },
+
+    listPopup: function(idSuscription,rol){
+      var list = this._listBySuscription(idSuscription,rol);
+
+      if(!AgendaMica.Session.popup){
+        AgendaMica.Session.popup = DocManager.openPopup(list);
+        AgendaMica.Session.popup.once('destroy',function(){
+          AgendaMica.Session.popup = null;
+        });
+      }else{
+        AgendaMica.Session.popup.bodyRegion.show(list);
+      }
+    },
+
+    listRight: function(idSuscription,rol){
+      var collection = DocManager.request('micaagenda:searchAgenda',idSuscription,rol);
 
       var list = new AgendaMica.AgendaList({collection:collection,rol:rol});
-      DocManager.mainRegion.show(list);
+
+      DocManager.openRightPanel(list);
     },
     showStatistics: function(){
       var collection = DocManager.request('micaagenda:statistics');
 
       var view = new AgendaMica.EstadisticView({collection:collection});
       DocManager.mainRegion.show(view);
+    },
+    _listBySuscription: function(idSuscription,rol){
+      var collection = DocManager.request('micaagenda:searchAgenda',idSuscription,rol);
+
+      var list = new AgendaMica.AgendaList({collection:collection,rol:rol});
+      return list;
     }
   };
 
@@ -70,7 +99,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 				      {name: 'vendedor', label:'Sector del Vendedor', cell: AgendaMica.ActividadCell, editable:false},
 				      {name: 'estado', label:'Estado', cell:AgendaMica.EstadoReunionCell, editable:false},
 				      {name: 'feultmod', label:'Modificado', cell:'string', editable:false},
-				      {label:'Acciones', cell: 'string', editable:false, sortable:false},
+				      {label:'Acciones', cell: AgendaMica.ActionsCells, editable:false, sortable:false},
 				    ],
 				    filtercols:['num_reunion','feultmod'],
 				    editEventName: 'micaagenda:edit',

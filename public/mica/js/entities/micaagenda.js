@@ -119,8 +119,21 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       return p;
     },
 
+    remove: function(reunion){
+      return reunion.destroy({wait:true,contentType: false, processData: false});
+    },
+
     searchStatistics: function(){
       var collection = new Entities.MicaagendaStatisticsCollection();
+      collection.fetch().done(function(){
+        collection.trigger('change');
+      });
+      return collection;
+    },
+
+    searchAgenda: function(idSuscription,rol){
+      var collection = new Entities.MicaAgendaOneCollection();
+      collection.setSuscription(idSuscription,rol);
       collection.fetch().done(function(){
         collection.trigger('change');
       });
@@ -140,6 +153,14 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
 
   DocManager.reqres.setHandler('micaagenda:statistics', function(){
     return API.searchStatistics();
+  });
+
+  DocManager.reqres.setHandler('micaagenda:searchAgenda', function(idSuscription,rol){
+    return API.searchAgenda(idSuscription,rol);
+  });
+
+  DocManager.reqres.setHandler('micaagenda:reunion:borrar', function(model){
+    return API.remove(model);
   });
 
 });

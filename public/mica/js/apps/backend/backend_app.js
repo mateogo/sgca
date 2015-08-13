@@ -31,8 +31,14 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
     agenda: function(){
       BackendApp.AgendaMica.Controller.listAll();
     },
-    agendaSuscriptor: function(idSuscription,rol){
-      BackendApp.AgendaMica.Controller.listBySuscriptor(idSuscription,rol);
+    agendaSuscriptor: function(idSuscription,rol,place){
+      if(place === 'right'){
+        BackendApp.AgendaMica.Controller.listRight(idSuscription,rol);
+      }else if(place === 'popup'){
+        BackendApp.AgendaMica.Controller.listPopup(idSuscription,rol);
+      }else{
+        BackendApp.AgendaMica.Controller.listBySuscriptor(idSuscription,rol);
+      }
     },
     statistics: function(){
       BackendApp.AgendaMica.Controller.showStatistics();
@@ -57,6 +63,13 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
   DocManager.on('micaagenda:agendaone:show',function(suscriptor,rol){
     DocManager.navigate("agenda/" + suscriptor + '/'+rol);
     API.agendaSuscriptor(suscriptor,rol);
+  });
+
+  DocManager.on('micaagenda:agendaone:show:right',function(suscriptor,rol){
+    API.agendaSuscriptor(suscriptor,rol,'right');
+  });
+  DocManager.on('micaagenda:agendaone:show:popup',function(suscriptor,rol){
+    API.agendaSuscriptor(suscriptor,rol,'popup');
   });
 
   DocManager.on('micaagenda:statistic',function(){

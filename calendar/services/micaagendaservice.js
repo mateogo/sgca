@@ -140,14 +140,10 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
     return cb('rol no valido');
   }
 
-
-
   var idSuscriptor = (suscriptor._id) ?  suscriptor._id : suscriptor;
   if(idSuscriptor.toString){
     idSuscriptor = idSuscriptor.toString();
   }
-
-
 
   async.series([
     //busca a la suscriptions
@@ -201,12 +197,12 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
 
           // se pasa array el mapa de reuniones
           var array = [];
-          for (var key in map){
+          for (var keyTmp in map){
             // si es un array se concatena
-            if('push' in map[key]){
-              array = array.concat(map[key]);
+            if('push' in map[keyTmp]){
+              array = array.concat(map[keyTmp]);
             }else{
-              array.push(map[key]);
+              array.push(map[keyTmp]);
             }
           }
 
@@ -223,9 +219,135 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
 };
 
 
-MicaAgendaService.prototype.statistics = function(cb){
+/**
+ * Cambia el estado de una reunion,
+ * Se verifica que no haya otra reunion confirmada con el mismo numero
+ * para los solicitantes involucrados.
+ *
+ * @param  {String || Object}   idReunion  id del MicaAgendaCollection
+ * @param  {Function} cb
+ */
+MicaAgendaService.prototype.changeStatus = function(idReunion,newStatus,callback){
+  // verficar que exista la reunion
+  // si el estado pasa a confirmado, verificar que no haya conflictos con otras reuniones
+  // (para otro estado no hay problema)
 
-}
+  if(typeof(idReunion) === 'object'){
+    idReunion = idReunion.id.toString();
+  }
+
+  var reunion;
+
+  async.series([
+    //trae la reunion
+    function(cb){
+      MicaAgenda.findById(idReunion,function(err,result){
+        if(err) return cb(err);
+
+        if(!result){
+          return cb(new AppError('No se pudo cambiar el estado','not found row micaagenda','not_found'));
+        }
+
+        reunion = result;
+        cb();
+      });
+    },
+
+    // TODO: verifica que no haya conflictos
+    function(cb){
+      return cb();
+      if(newStatus !== MicaAgenda.STATUS_CONFIRM){
+        return cb();
+      }
+
+      var query = {
+        estado: MicaAgenda.STATUS_CONFIRM,
+        num_reunion: reunion.get('num_reunion')
+      };
+
+      MicaAgenda.find(query,function(err,results){
+        if(err) return cb(err);
+
+        if(results && results.length > 0){
+          return cb(new AppError('Hay otras reuniones confirmadas','meeting conflict','conflict'));
+        }
+
+        cb();
+      });
+    },
+
+    // cambia el estado en micaagenda
+    function(cb){
+      MicaAgenda.partialupdate({_id:reunion.id},{estado:newStatus},cb);
+    },
+
+    //TODO: cambia el estado en micainteractions
+    function(cb){
+      cb();
+    },
+
+    // retorna el objeto entero
+    function(cb){
+      MicaAgenda.findById(idReunion,cb);
+    }
+
+  ],function(err,results){
+    if(err) return callback(err);
+    callback(null,results[results.length-1]);
+  });
+};
+
+MicaAgendaService.prototype.remove = function(idReunion,cb){
+  // verificar que exista
+  // borrar reunion
+  // borrar fk de micainteractions
+
+  async.series([
+    //verificar que existe + borrar
+    function(cb){
+      MicaAgenda.findById(idReunion,function(err,object){
+        if(err) return cb(err);
+
+        if(!object){
+          return cb('not found');
+        }
+
+        object.remove(function(err,r){
+          if(err) return res.status(500).send(err);
+
+          cb();
+        });
+      });
+    },
+
+    // borrar fk de micainteractions
+    function(cb){
+      if(idReunion.toString){
+        idReunion = idReunion.toString();
+      }
+      var query = {
+        meeting_id: idReunion
+      };
+
+      var data = {
+        meeting_number: -1,
+        meeting_estado: 'no_asignada',
+        meeting_id: ''
+      };
+
+      MicaInteraction.partialupdate(query,data,function(err,countAffected){
+        if(err){
+          console.warn('[WARN] Al borrar reunión, ERROR al actualizar interactions',err);
+        }
+        cb();
+      });
+    },
+  ],function(err,results){
+      if(err) return cb(err);
+
+      cb(null,results[results.length-1]);
+  });
+};
 
 /**
  * Busca numero de reuniones libres de cada uno,

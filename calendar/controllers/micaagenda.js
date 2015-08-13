@@ -108,22 +108,17 @@ var ctrls = {
     },
 
     remove: function(req,res){
-      // TODO: seguridad,
-      // solo se puede borrar los propios
-
       if(!req.params.id){
         return res.status(500).send('invalid params');
       }
 
       var id = req.params.id;
 
-      MicaAgenda.findById(id,function(err,object){
+      var service = new MicaAgendaService(req.user);
+      service.remove(id,function(err,result){
         if(err) return res.status(500).send(err);
-        object.remove(function(err,r){
-          if(err) return res.status(500).send(err);
 
-          res.json(r);
-        });
+        res.status(204).json({});
       });
     },
 

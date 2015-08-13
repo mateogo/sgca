@@ -22,6 +22,7 @@ var MicaAgenda = BaseModel.extend({
     vendedor: null,
     num_reunion: '',
     estado: '',
+    estado_alta: 'alta',
 
     fealta: null,
     feultmod: null,
@@ -67,7 +68,7 @@ var MicaAgenda = BaseModel.extend({
             raw = _.pick(raw,'_id','username','name','mail');
             raw._id = raw._id.toString();
             return raw;
-          }
+          };
 
          var raw;
          if(comprador){
@@ -118,7 +119,7 @@ var MicaAgenda = BaseModel.extend({
 
       var sort = {
         '_id.number': 1
-      }
+      };
 
       collection.aggregate([{$match:match},{$group:group},{$sort:sort}],function(err,results){
         if(err) return cb(err);

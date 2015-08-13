@@ -5,6 +5,7 @@ DocManager.addRegions({
   bucketSidebarRegion: "#main-side-menu",
   mainRegion: 	"#main-region",
   footerRegion: "#footer-region",
+  rightRegion: '.right-sidebar'
 });
 
 DocManager.navigate = function(route,  options){
@@ -36,18 +37,31 @@ DocManager.getCurrentDomain = function(){
   return location.origin;
 };
 
+DocManager.openRightPanel = function($content){
+  setTimeout(function(){
+    $('.right-sidebar').toggleClass('open-right-bar');
+    $('#container').toggleClass('open-right-panel');
+  });
+
+  DocManager.rightRegion.show($content);
+};
+
+DocManager.openPopup = function($content){
+  return DocManager.module('BackendApp.Common.Views').slimPopup($content);
+};
+
 
 /**
  * @return {promise}
  */
 DocManager.confirm = function(txt,opts){
   var def = $.Deferred();
-  
-  var okText = (opts && opts.okText) ? opts.okText : 'ok';
-  var cancelText = (opts && opts.cancelText) ? opts.cancelText : 'cancel';
-  
+
+  var okText = (opts && opts.okText) ? opts.okText : 's';
+  var cancelText = (opts && opts.cancelText) ? opts.cancelText : 'cancelar';
+
   var modal = new Backbone.BootstrapModal({ content:  txt ,okText:okText,cancelText:cancelText});
-  
+
   modal.open();
   modal.once('ok',def.resolve);
   modal.once('cancel',def.reject);

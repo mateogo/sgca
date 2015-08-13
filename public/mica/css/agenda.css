@@ -30,3 +30,42 @@
   background-color: #1fb5ad;
   border-color: #1fb5ad;
 }
+
+
+.slim-popup{
+  position: fixed;
+  z-index: 1003;
+  right: 0;
+  top:0;
+
+  border: 1px solid #ccc;
+  width: 450px;
+  height: 330px;
+  -webkit-box-shadow: 0px 0px 11px -1px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 11px -1px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 11px -1px rgba(0,0,0,0.75);
+}
+
+.slim-popup .header{
+  position: absolute;
+  top: 0;left:0;right: 0;
+  height: 25px;
+  background-color: #38bbeb;
+  color: white;
+}
+
+.slim-popup .js-close{
+  position: absolute;
+  top: 4px;
+  right: 10px;
+}
+
+.slim-popup .body{
+  background-color: #f1f2f7;
+  color: black;
+  padding: 10px;
+  top: 20px;  bottom: 0;
+  left: 0;right: 0;
+  position: absolute;
+  overflow: auto;
+}

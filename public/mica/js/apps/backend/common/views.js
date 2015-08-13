@@ -600,4 +600,31 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
   });
   ////////////////
 
+  var SlimPopup =  Marionette.LayoutView.extend({
+    className: 'slim-popup',
+    template: _.template('<div><div class="header"><div class="js-close">Cerrar</div></div><div class="body"></div></div>'),
+    regions: {
+      bodyRegion: '.body'
+    },
+    close: function(){
+      this.destroy();
+    },
+    events: {
+      'click .js-close': 'close'
+    }
+  });
+
+  Views.slimPopup = function($content){
+    var popup = new SlimPopup();
+    popup.$el.css('display','none');
+    $('body').append(popup.render().el);
+    popup.bodyRegion.show($content);
+    popup.$el.fadeIn();
+    popup.$el.draggable({containment:$('body'),handle:'.header'});
+    popup.once('destroy',function(){
+      popup.$el.draggable('destroy');
+    });
+    return popup;
+  };
+
 });

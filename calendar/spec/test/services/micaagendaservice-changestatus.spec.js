@@ -17,7 +17,7 @@ var userLogged = {_id:'53b6eaf34795894846788fa1',username:'jasminetest',name:'Ja
 
 describe('models',function(){
 
-  describe('MicaAgendaService',function(){
+  describe('MicaAgendaService - Cambio de estado.',function(){
 
 
       it('Buscar alguna iteraction para asignar',function(done){
@@ -90,17 +90,14 @@ describe('models',function(){
         }
       });
 
-      it('Deberia cambiar de estado la Interaction',function(done){
-        MicaInteraction.findById(interaction.id,function(err,result){
+      it('Deberia poder cambiar el stado',function(done){
+        var service = new MicaAgendaService(userLogged);
+        service.changeStatus(reunion,MicaAgenda.STATUS_CONFIRM,function(err,result){
           expect(err).toBe(null);
           expect(result).toBeDefined();
 
+          expect(result.get('estado')).toBe(MicaAgenda.STATUS_CONFIRM);
 
-          expect(result.id.toString()).toBe(interaction.id.toString());
-
-          expect(result.get('meeting_estado')).toBe(reunion.get('estado'));
-          expect(result.get('meeting_number')).toBe(reunion.get('num_reunion'));
-          expect(result.get('meeting_id')).toBe(reunion.id.toString());
           done();
         });
       });
@@ -111,19 +108,6 @@ describe('models',function(){
         var service = new MicaAgendaService(userLogged);
         service.remove(reunion.id,function(err,result){
           expect(err).toBe(null);
-          done();
-        });
-      });
-
-      it('Deberia encontrar TODOS los lugares disponibles (de nuevo)',function(done){
-        var service = new MicaAgendaService(userLogged);
-        service._crossAvailability(comprador,vendedor,function(err,result){
-          expect(err).toBe(null);
-          expect(result).toBeDefined();
-          expect(result.length).toBeDefined();
-
-          //deberia haber lugares disponibles
-          expect(result.length).toBe(MicaAgendaService.COUNT_REUNIONES);
           done();
         });
       });
