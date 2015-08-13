@@ -393,7 +393,7 @@ window.tdata = {
         ],
         disenio: [
           {val: 'no_definido',  label:'Subsector de Diseño'},
-          {val: 'grafico', label: 'Gráfico/ Ilustración'},
+          {val: 'grafica', label: 'Gráfico/ Ilustración'},
           {val: 'indumentaria', label: 'Indumentaria'},
           {val: 'industrial', label: 'Industrial/ objetos'},
           {val: 'joyeria', label: 'Joyería'},

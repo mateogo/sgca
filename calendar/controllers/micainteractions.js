@@ -193,48 +193,6 @@ exports.findById = function(req, res) {
     });
 };
 
-exports.findRankingByQuery = function(req, res) {
-    var query = buildRankingQuery(req.query); 
-    var resultset;
-    var itemcount = 0;
-    var page = parseInt(req.query.page);
-    var limit = parseInt(req.query.per_page);
-    var cursor;
-    ///// dummy
-    //req.query.textsearch = 'altersoft';
-    /////
-    var textsearch = initTextSearch(req.query);
-
-
-
-    cursor = dbi.collection(micarankingCol).find(query).sort({cnumber:1});
-    if(textsearch){
-        cursor.toArray(function(err, items){
-            resultset = textFilter(textsearch, items);
-            itemcount = resultset.length;
-            //console.log('====RETURNING: [%s] page:[%s] limit: [%s] itemslength [%s] =========',resultset.length, (page-1)*limit, limit, items.length);
-            res.send([{total_entries: itemcount}, resultset.splice((page-1) * limit, limit)  ]);
-        });
-
-    }else if(req.query){
-        cursor.count(function(err, total){
-            //console.log('CUrsor count: [%s]', total);
-            cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
-
-                res.send([{total_entries: total}, items]);
-
-            });
-        })
-
-    }else{
-        cursor.toArray(function(err, items) {
-                res.send(items);
-        });
-
-    }
-
-};
-
 
 
 exports.findByQuery = function(req, res) {
@@ -459,45 +417,6 @@ var buildQuery = function(qr){
     return query;
 };
 
-
-// BUILD QUERY
-var buildRankingQuery = function(qr){
-    var query = {},
-        prov = [], 
-        subc = {},
-        subv = {},
-        tmp = {},
-        conditions = [];
-
-    if(!qr) return query;
-
-    if(qr.rolePlaying && qr.rolePlaying !== 'no_definido'){
-        if(qr.rolePlaying === 'comprador'){
-            conditions.push({'iscomprador': true});
-        }else{
-            conditions.push({'isvendedor': true});
-        }
-    }
- 
-    if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'eprov': qr.provincia});
-
-    if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
-    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
-        conditions.push({estado_alta: qr.estado_alta});
-    }else{
-        conditions.push({estado_alta: 'activo'});
-    }
-
-    if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
-    //console.log('micainteractions#376');
-    //console.dir(conditions);
-
-
-    query['$and'] = conditions;
-
-    return query;
-};
-
 var buildAreaList = function(areas){
     return _.map(areas, function(item){
         return {area: item};
@@ -547,6 +466,181 @@ exports.delete = function(req, res) {
     });
 };
 
+/************************
+ * RANKING ranking
+ ************************/
+// BUILD QUERY
+var buildRankingQuery = function(qr){
+    var query = {},
+        prov = [], 
+        subc = {},
+        subv = {},
+        tmp = {},
+        lk = [],
+        conditions = [];
+
+    if(!qr) return query;
+
+    // ======= OjO Caso especial =======
+    if(qr.linkedlist){
+        lk = _.map(qr.linkedlist, function(item){
+            return BSON.ObjectID(item);
+        });
+        query['profileid'] = {$in: lk};
+        return query;        
+    }
+    // ========= OjO =================
+
+    if(qr.rolePlaying && qr.rolePlaying !== 'no_definido'){
+        if(qr.rolePlaying === 'comprador'){
+            conditions.push({'iscomprador': true});
+        }else{
+            conditions.push({'isvendedor': true});
+        }
+    }
+    
+    if(qr.sector && qr.sector !== 'no_definido'){
+        conditions.push({'$or': [{'cactividades': qr.sector}, {'vactividades': qr.sector}] });
+
+        if(qr.subsector && qr.subsector !== 'no_definido'){
+            subc['csubact' + '.' + qr.subsector] = true;
+            subv['vsubact' + '.' + qr.subsector] = true;
+            conditions.push({'$or': [{'$and': [subc, {'cactividades': qr.sector}]}, {'$and': [subv, {'vactividades': qr.sector}]} ]} );
+        }
+    }
+
+    if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'eprov': qr.provincia});
+
+    if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
+    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
+        conditions.push({estado_alta: qr.estado_alta});
+    }else{
+        conditions.push({estado_alta: 'activo'});
+    }
+
+    if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
+    //console.log('micainteractions#376');
+    //console.dir(conditions);
+
+
+    query['$and'] = conditions;
+
+    return query;
+};
+
+
+exports.findRankingByQuery = function(req, res) {
+    var query = buildRankingQuery(req.query); 
+    var resultset;
+    var itemcount = 0;
+    var page = parseInt(req.query.page);
+    var limit = parseInt(req.query.per_page);
+    var cursor;
+    ///// dummy
+    //req.query.textsearch = 'altersoft';
+    /////
+    var textsearch = initTextSearch(req.query);
+
+    console.log('#538 ranking by query');
+    console.dir(query);
+
+
+    cursor = dbi.collection(micarankingCol).find(query).sort({cnumber:1});
+    if(textsearch){
+        cursor.toArray(function(err, items){
+            resultset = textFilter(textsearch, items);
+            itemcount = resultset.length;
+            //console.log('====RETURNING: [%s] page:[%s] limit: [%s] itemslength [%s] =========',resultset.length, (page-1)*limit, limit, items.length);
+            res.send([{total_entries: itemcount}, resultset.splice((page-1) * limit, limit)  ]);
+        });
+
+    }else if(req.query){
+        cursor.count(function(err, total){
+            console.log('CUrsor count: [%s]', total);
+            cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
+
+                res.send([{total_entries: total}, items]);
+
+            });
+        })
+
+    }else{
+        cursor.toArray(function(err, items) {
+                res.send(items);
+        });
+
+    }
+
+};
+
+// BUILD QUERY
+var buildLinkedProfilesQuery = function(qr){
+    var query = {},
+        prov = [], 
+        subc = {},
+        subv = {},
+        tmp = {},
+        conditions = [];
+
+    if(!qr) return null;
+    if(!qr.profilelist) return null;
+
+
+    query['$or'] = qr.prfilelist;
+
+    return query;
+};
+
+
+exports.findLinkedProfiles = function(req, res) {
+    var query = buildLinkedProfilesQuery(req.query); 
+    var resultset;
+    var itemcount = 0;
+    var page = parseInt(req.query.page);
+    var limit = parseInt(req.query.per_page);
+    var cursor;
+    ///// dummy
+    //req.query.textsearch = 'altersoft';
+    /////
+    var textsearch = initTextSearch(req.query);
+    if(!query){ 
+        res.send([{total_entries: 0}, {}]);
+        return;
+    }
+
+
+
+    cursor = dbi.collection(micarankingCol).find(query).sort({cnumber:1});
+    if(textsearch){
+        cursor.toArray(function(err, items){
+            resultset = textFilter(textsearch, items);
+            itemcount = resultset.length;
+            //console.log('====RETURNING: [%s] page:[%s] limit: [%s] itemslength [%s] =========',resultset.length, (page-1)*limit, limit, items.length);
+            res.send([{total_entries: itemcount}, resultset.splice((page-1) * limit, limit)  ]);
+        });
+
+    }else if(req.query){
+        cursor.count(function(err, total){
+            //console.log('CUrsor count: [%s]', total);
+            cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
+
+                res.send([{total_entries: total}, items]);
+
+            });
+        })
+
+    }else{
+        cursor.toArray(function(err, items) {
+                res.send(items);
+        });
+
+    }
+
+};
+
+
+
+// Genera la colección rankeada
 exports.ranking = function(req, res) {
     var query = req.body; //{};
 
@@ -573,12 +667,8 @@ var getRankedList = function(profiles, interactionList, res){
     });
 
     saveProfiles(normalizedProfiles, res);
-
-    
     //return normalizedProfiles;
-
 };
-
 var saveProfiles = function(profiles, res){
     var collection = dbi.collection(micarankingCol);
     collection.remove({}, function(err, result){
@@ -591,23 +681,6 @@ var saveProfiles = function(profiles, res){
             }
         });        
     });
-
-
-};
-
-//deprecated
-var filterOutput = function(profiles){
-    var filtered;
-    filtered = _.filter(profiles, function(item){
-        if(item.emisor_requests>0 || item.receptor_requests>0){
-            return true;
-        }else{
-            return false;
-        }
-
-
-    })
-    return filtered;
 };
 
 var addReceptorToList = function(profile, interaction){
@@ -652,7 +725,6 @@ var addEmisorToList = function(profile, interaction){
     profile.emisorlist.push(token);
 };
 
-
 var sumarizedIteration = function(profileList, interaction){
     var emisorProfile = _.find(profileList, function(profile){
         return (interaction.emisor_inscriptionid == profile.profileid );
@@ -678,6 +750,7 @@ var sumarizedIteration = function(profileList, interaction){
     }
 
 };
+
 var filterProfiles = function(profiles){
     var filtered;
 
@@ -692,15 +765,6 @@ var filterProfiles = function(profiles){
     });
     return filtered;
 };
-
-var isVendedor = function(item){
-    return (item.vendedor.rolePlaying.vendedor  && item.estado_alta === 'activo');
-};
-
-var isComprador = function(item){
-    return (item.comprador.rolePlaying.comprador && (item.nivel_ejecucion === 'comprador_aceptado') && (item.estado_alta === 'activo'));
-};
-
 
 var normalizeProfiles = function(profiles){
     var normalized, 
@@ -731,7 +795,7 @@ var normalizeProfiles = function(profiles){
             
             iscomprador: (item.comprador.rolePlaying.comprador && (item.nivel_ejecucion === 'comprador_aceptado')),
             cactividades: item.comprador.cactividades,
-            csubact: item.comprador['sub_' +  + item.comprador.cactividades],
+            csubact: item.comprador['sub_' + item.comprador.cactividades],
             cporfolios: item.comprador.cporfolios.length,
             cexperienciaintl: item.comprador.cexperienciaintl,
             
@@ -747,13 +811,34 @@ var normalizeProfiles = function(profiles){
         return profile;
     });
 
-    // _.each(normalized, function(item){
-    //     //console.log('[%s] [%s] [%s] v:[%s] c:[%s]', item._id, item.cnumber, item.rname, item.isvendedor, item.iscomprador);
-
-    // });
     return normalized;
-
 };
+
+
+
+//deprecated
+var filterOutput = function(profiles){
+    var filtered;
+    filtered = _.filter(profiles, function(item){
+        if(item.emisor_requests>0 || item.receptor_requests>0){
+            return true;
+        }else{
+            return false;
+        }
+
+
+    })
+    return filtered;
+};
+
+var isVendedor = function(item){
+    return (item.vendedor.rolePlaying.vendedor  && item.estado_alta === 'activo');
+};
+
+var isComprador = function(item){
+    return (item.comprador.rolePlaying.comprador && (item.nivel_ejecucion === 'comprador_aceptado') && (item.estado_alta === 'activo'));
+};
+
 
 
 

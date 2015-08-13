@@ -42,8 +42,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 		dao.gestionUser.getUser(DocManager, function (user){
       getSession().currentUser = user;
 
-			if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
-      //if(true){
+			//if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
+      if(true){
 
 	      defer.resolve(user);
 
@@ -129,6 +129,53 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
     return defer.promise();
   };
 
+  var fetchLinkedCol = function(user, criterion, step){
+    var defer = $.Deferred(),
+        action,
+        query = {
+          estado_alta: 'activo',
+        };
+
+
+    if(criterion){
+      _.extend(query, criterion);
+    }
+
+    if(step === 'next'){
+      action = 'getNextPage';
+      getSession().linkedcol.setQuery(query);
+      getSession().linkedcol.getNextPage().done(function (data){
+        //console.log('===action: [%s]=== NextPage ==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().linkedcol.whoami, getSession().linkedcol.length);
+        defer.resolve(data);
+      })
+
+    }else if(step === 'previous'){
+      action = 'getPreviousPage';
+      getSession().linkedcol.setQuery(query);
+      getSession().linkedcol.getPreviousPage().done(function (data){
+        //console.log('===action: [%s]=== previousPage==== Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().linkedcol.whoami, getSession().linkedcol.length);
+        defer.resolve(data);
+      })
+
+
+    }else{
+      action = 'getFirstPage';
+
+      getSession().linkedcol =  new DocManager.Entities.MicaRankingPaginatedCol();
+
+      getSession().linkedcol.setQuery(query);
+      getSession().linkedcol.getFirstPage().done(function(data){
+        //console.log('===action: [%s]==== FirstPage ======= Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().linkedcol.whoami, getSession().linkedcol.length);
+        defer.resolve(data);
+      });
+    }
+
+    return defer.promise();
+  };
+
+
+
+
 
   var fieldLabelCell = Backgrid.Cell.extend({
     render:function(){
@@ -195,8 +242,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       className: "string-cell",
       render: function(){
         var label =[];
-        if(this.model.get('iscomprador')) label.push('C:' + this.model.get('cactividades'));
-        if(this.model.get('isvendedor'))  label.push('V:' + this.model.get('vactividades'));
+        if(this.model.get('iscomprador')) label.push('C:' + this.model.get('cactividades') + '(' + this.model.buildCSubSectorList() + ')');
+        if(this.model.get('isvendedor'))  label.push('V:' + this.model.get('vactividades') + '(' + this.model.buildVSubSectorList() + ')');
 
       	this.$el.html( label.join('<br>'));
         return this;
@@ -627,88 +674,91 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 //TODO
   var registerEditorLayoutEvents = function(session, mainlayout, editorlayout, model){
     //build Presentation Collection
-    console.log('[%s] registerEditorLayout: [%s]', model.whoami, model.get('cnumber'))
-    var presentationCol = buildPresentationCol(model);
+    //console.log('[%s] registerEditorLayout: [%s]', model.whoami, model.get('cnumber'))
+    buildPresentationCol(model).then(function(presentationCol){
 
-    getSession().presentationCol = presentationCol;
-    getSession().comprador = model;
+      getSession().presentationCol = presentationCol;
+      getSession().comprador = model;
 
-    getSession().workingView = new backendCommons.CrudManager(
-          {
-            gridcols:[
-              {name: 'cnumber', label:'Nro Inscr', cell: CnumberViewCell, editable:false},
-              {name: 'displayName', label:'Emprendimiento', cell:'string', editable:false},
-              {name: 'receptor', label:'Receptor', cell: EmisorViewCell, editable:false},
-              {name: 'emisor',   label:'Emisor',   cell: ReceptorViewCell, editable:false},
+      getSession().workingView = new backendCommons.CrudManager(
+            {
+              gridcols:[
+                {name: 'cnumber', label:'Nro Inscr', cell: CnumberViewCell, editable:false},
+                {name: 'displayName', label:'Emprendimiento', cell:'string', editable:false},
+                {name: 'receptor', label:'Receptor', cell: EmisorViewCell, editable:false},
+                {name: 'emisor',   label:'Emisor',   cell: ReceptorViewCell, editable:false},
 
-              {name: 'cactividad', label:'Sector', cell: ActividadViewCell, editable:false},
-              {name: 'pais', label:'Prov/Pais', cell: PaisProvCell, editable:false},
-              {name: 'porfolios', label:'Pfs', cell:'string', editable:false},
-              {name: 'emisor_requests', label:'Emi', cell:EmisorListViewCell, editable:false},
-              {name: 'receptor_requests', label:'Rec', cell:ReceptorListViewCell, editable:false},
+                {name: 'cactividad', label:'Sector', cell: ActividadViewCell, editable:false},
+                {name: 'pais', label:'Prov/Pais', cell: PaisProvCell, editable:false},
+                {name: 'porfolios', label:'Pfs', cell:'string', editable:false},
+                {name: 'emisor_requests', label:'Emi', cell:EmisorListViewCell, editable:false},
+                {name: 'receptor_requests', label:'Rec', cell:ReceptorListViewCell, editable:false},
 
-              {label:'Acciones', cell: AgendarViewCell, editable:false, sortable:false},
-            ],
-            filtercols:['cnumber', 'displayName', 'pais'],
-            editEventName: 'micarequest:edit',
+                {label:'Acciones', cell: AgendarViewCell, editable:false, sortable:false},
+              ],
+              filtercols:['cnumber', 'displayName', 'pais'],
+              editEventName: 'micarequest:edit',
 
-          },
-          {
-            test: 'TestOK',
-            //Data
-            collection: getSession().presentationCol,
-            editModel: backendEntities.MicaInteractionSummary,
-            modelToEdit: null,
+            },
+            {
+              test: 'TestOK',
+              //Data
+              collection: getSession().presentationCol,
+              editModel: backendEntities.MicaInteractionSummary,
+              modelToEdit: null,
 
-            //Filtro
-            filterEventName: 'mica:backend:filter:rows',
-            filterModel: backendEntities.MicaFilterFacet,
-            filterTitle: 'Criterios de búsqueda',
-            filterInstance: getSession().filter,
-
-
-            // Parent Layout
-            //parentLayoutView: editorlayout,
-
-            // Layout donde insertar el grid
-            layoutTpl: utils.templates.MicaRankingItemView,
+              //Filtro
+              filterEventName: 'mica:backend:filter:rows',
+              filterModel: backendEntities.MicaFilterFacet,
+              filterTitle: 'Criterios de búsqueda',
+              filterInstance: getSession().filter,
 
 
-            // form de edición para cuando selecciona un item
-            formTpl: utils.templates.MicaInscriptionFormLayout,
+              // Parent Layout
+              //parentLayoutView: editorlayout,
 
-            // Vista edición para cuando selecciona un item
-            EditorView: DocManager.MicaRequestApp.Edit.MicaWizardLayout,
-            editorOpts: {},
-
-          }
-        );
+              // Layout donde insertar el grid
+              layoutTpl: utils.templates.MicaRankingItemView,
 
 
-  	mainlayout.hideList();
+              // form de edición para cuando selecciona un item
+              formTpl: utils.templates.MicaInscriptionFormLayout,
 
-   //  editorlayout.on('accept:micaranking', function(){
-   //    model.set('nivel_ejecucion', 'aceptado');
-   //    DocManager.request("micaranking:partial:update",[model.id],{'nivel_ejecucion': 'aceptado'});
-   //    mainlayout.showList();
-   //    editorlayout.destroy();
+              // Vista edición para cuando selecciona un item
+              EditorView: DocManager.MicaRequestApp.Edit.MicaWizardLayout,
+              editorOpts: {},
 
-   //  });
-
-    registerInteractionView(session, mainlayout, editorlayout, model);
+            }
+          );
 
 
-    editorlayout.on('close:view', function(){
-	  	mainlayout.showList();
-	  	editorlayout.destroy();
+      mainlayout.hideList();
+
+     //  editorlayout.on('accept:micaranking', function(){
+     //    model.set('nivel_ejecucion', 'aceptado');
+     //    DocManager.request("micaranking:partial:update",[model.id],{'nivel_ejecucion': 'aceptado'});
+     //    mainlayout.showList();
+     //    editorlayout.destroy();
+
+     //  });
+
+      registerInteractionView(session, mainlayout, editorlayout, model);
+
+
+      editorlayout.on('close:view', function(){
+        mainlayout.showList();
+        editorlayout.destroy();
+      });
+
+
+      editorlayout.on('show', function(){
+        editorlayout.getRegion('showRegion').show(getSession().workingView.getLayout());
+      });
+
+      mainlayout.getRegion('editRegion').show(editorlayout);
+
+
     });
-
-
-  	editorlayout.on('show', function(){
-    	editorlayout.getRegion('showRegion').show(getSession().workingView.getLayout());
-  	});
-
-  	mainlayout.getRegion('editRegion').show(editorlayout);
 
   };
 
@@ -788,51 +838,75 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       else return false;
     })
   };
+  var getLinkedProfilesIds = function(emisor, receptor){
+    var linkedList = [];
+    _.each(emisor, function(item){
+      linkedList.push(item.emisor_inscriptionid);
+    });
+    _.each(receptor, function(item){
+      linkedList.push(item.receptor_inscriptionid);
+    });
+    return linkedList;
+  }
 
   var buildPresentationCol = function(model){
     var token;
+    var defer = $.Deferred();
     var presentationCol = new DocManager.Entities.MicaInteractionSummaryCol();
     var emisorList = model.get('emisorlist');
     var receptorList = model.get('receptorlist');
+    var linkedProfiles = getLinkedProfilesIds(emisorList, receptorList);
+
     console.log('buildPresentationCol BEGIN:[%S] e:[%s]  r:[%s] col:[%s]', model.whoami, emisorList.length, receptorList.length, getSession().collection.length);
+    console.log('linked profiles: [%s]', linkedProfiles.length)
 
-    var targetList = getSession().collection.filter(function(item, index){
-      var itemid = item.get('profileid');
-      //console.log('[%s]filter: [%s] [%s] [%s]', item.whoami, itemid, emisorListContains(emisorList, itemid),receptorListContains(receptorList, itemid))
-      return (emisorListContains(emisorList, itemid) || receptorListContains(receptorList, itemid));
-    });
 
-    //console.log('PASO-1: filtro lista: [%s]', targetList.length);
+    $.when(fetchLinkedCol(getSession().currentUser, {linkedlist: linkedProfiles}, 'getFirstPage')).done(function(targetList){
 
-    _.each(targetList, function(profile){
-      token = new DocManager.Entities.MicaInteractionSummary({
-        //cierto profile
-        profileid: profile.get('profileid'),
-        cnumber: profile.get('cnumber'),
-        displayName: profile.get('ename'),
-        pais: profile.get('epais'),
-        prov: profile.get('eprov'),
+      getSession().linkedcol.each(function(profile){
+        token = new DocManager.Entities.MicaInteractionSummary({
+          //cierto profile
+          profileid: profile.get('profileid'),
+          cnumber: profile.get('cnumber'),
+          displayName: profile.get('ename'),
+          pais: profile.get('epais'),
+          prov: profile.get('eprov'),
 
-        isvendedor: profile.get('isvendedor'),
-        vactividades: profile.get('vactividades'),
+          isvendedor: profile.get('isvendedor'),
+          vactividades: profile.get('vactividades'),
+          vsubact: profile.get('vsubact'),
 
-        iscomprador: profile.get('iscomprador'),
-        cactividades: profile.get('cactividades'),
+          iscomprador: profile.get('iscomprador'),
+          cactividades: profile.get('cactividades'),
+          csubact: profile.get('csubact'),
 
-        porfolios: profile.get('cporfolios'),
-        emisor_requests: profile.get('emisor_requests'),
-        receptor_requests: profile.get('receptor_requests'),
-        peso: profile.get('peso'),
-        meeting_number: -1,
-        meeting_estado: 'no_asignada',
+          porfolios: profile.get('cporfolios'),
+          emisor_requests: profile.get('emisor_requests'),
+          receptor_requests: profile.get('receptor_requests'),
+          peso: profile.get('peso'),
+          meeting_number: -1,
+          meeting_estado: 'no_asignada',
+
+        });
+        buildSummaryData(profile.get('profileid'), token, emisorList, receptorList);
+        presentationCol.add(token);
 
       });
-      buildSummaryData(profile.get('profileid'), token, emisorList, receptorList);
-      presentationCol.add(token);
+      defer.resolve(presentationCol);
 
     });
-    return presentationCol;
+
+    // var targetList = getSession().collection.filter(function(item, index){
+    //   var itemid = item.get('profileid');
+    //   //console.log('[%s]filter: [%s] [%s] [%s]', item.whoami, itemid, emisorListContains(emisorList, itemid),receptorListContains(receptorList, itemid))
+    //   return (emisorListContains(emisorList, itemid) || receptorListContains(receptorList, itemid));
+    // });
+
+    //console.log('PASO-1: filtro lista: [%s]', targetList.length);
+    return defer;
+
   };
+
   var buildSummaryData = function(profileid, token, elist, rlist){
     _.each(elist, function(item){
       if(item.emisor_inscriptionid === profileid){

@@ -47,6 +47,13 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
         getActividad: function(){
           return self.model.getActividadLabel();
         },
+        getSubActividad: function(){
+          if(self.model.get('iscomprador')){
+            return self.model.buildCSubSectorList();
+          }else{
+            return self.model.buildVSubSectorList();
+          }
+        },
         getTdataLabel: function(list, field){
           return tdata.fetchLabel(tdata[list], field)
         },

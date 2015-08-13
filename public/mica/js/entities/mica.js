@@ -330,6 +330,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           industrial: false,
           joyeria: false,
           multimedia: false,
+          grafica: false,
         },
         sub_videojuegos: {
           programacion: false,
@@ -408,6 +409,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           industrial: false,
           joyeria: false,
           multimedia: false,
+          grafica: false,
         },
         sub_videojuegos: {
           programacion: false,

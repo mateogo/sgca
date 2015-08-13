@@ -489,6 +489,37 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     getActividadLabel: function(){
       return tdata.fetchLabel(tdata['sectorOL'], this.get('vactividades'));
     },
+    buildCSubSectorList: function(){
+      if(this.get('iscomprador')){
+        var sub = this.get('csubact');
+        var memo = '';
+        var atmp = [];
+        _.each(sub, function(item, key){
+          if(item){
+            atmp.push(key);
+          }
+        });
+        return atmp.join('; ');
+      }else{
+        return '';
+      }
+    },
+    buildVSubSectorList: function(){
+      if(this.get('isvendedor')){
+        var sub = this.get('vsubact');
+        var memo = '';
+        var atmp = [];
+        _.each(sub, function(item, key){
+          if(item){
+            atmp.push(key);
+          }
+        });
+        return atmp.join('; ');
+      }else{
+        return '';
+      }
+    },
+
 
     initBeforeSave: function(){
 
@@ -594,6 +625,37 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     initialize: function(opts){
 
     },
+    buildCSubSectorList: function(){
+      if(this.get('iscomprador')){
+        var sub = this.get('csubact');
+        var memo = '';
+        var atmp = [];
+        _.each(sub, function(item, key){
+          if(item){
+            atmp.push(key);
+          }
+        });
+        return atmp.join('; ');
+      }else{
+        return '';
+      }
+    },
+    buildVSubSectorList: function(){
+      if(this.get('isvendedor')){
+        var sub = this.get('vsubact');
+        var memo = '';
+        var atmp = [];
+        _.each(sub, function(item, key){
+          if(item){
+            atmp.push(key);
+          }
+        });
+        return atmp.join('; ');
+      }else{
+        return '';
+      }
+    },
+
 
 
     schema: {
@@ -697,12 +759,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   Entities.MicaInteractionFilterFacet = Backbone.Model.extend({
     whoami: 'Entities.MicaInteractionFilterFacet:micarondas.js',
     initialize: function(opts){
-      //this.schema.subsector.options = tdata.subSectorOL[this.get('sector')];
+      this.schema.subsector.options = tdata.subSectorOL[this.get('sector')];
 
     },
 
     schema: {
         rolePlaying:   {type: 'Select',  title: 'Rol', options: tdata.rolesOL },
+        sector:        {type: 'Select',  title: 'Sector', options: tdata.sectorOL },
+        subsector:     {type: 'Select',  title: 'SubSector',  options: tdata.subSectorOL.aescenicas },
         cnumber:       {type: 'Text',    title: 'Número Inscripción' },
         textsearch:    {type: 'Text',    title: 'Búsqueda por texto' },
         provincia:     {type: 'Select',  title: 'Provincia',  options: tdata.provinciasOL },
@@ -714,10 +778,14 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     defaults: {
       rolePlaying: 'no_definido',
       provincia: 'no_definido',
+      sector: 'no_definido',
+      subsector: 'no_definido',
       cnumber: '',
       textsearch: '',
+
       nivel_ejecucion: 'no_definido',
       estado_alta: 'activo',
+
       favorito: false,
       emisor: 0,
       receptor: 0,
@@ -1150,6 +1218,25 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       facet.addRespuesta(user, myprofile, otherprofile, interactionRecord);
 
     },
+    
+    getLinkedListCol: function(query, step){
+      var fetchingEntities = queryCollection(query, step),
+          defer = $.Deferred();
+
+      $.when(fetchingEntities).done(function(entities){
+
+        var filteredEntities = queryFactory(entities);
+
+        if(query){
+          filteredEntities.filter(query);
+        }
+
+        defer.resolve(filteredEntities);
+
+      });
+      return defer.promise();
+    },
+
 
 
   };
@@ -1194,6 +1281,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   DocManager.reqres.setHandler("micainteractions:query:entities", function(query, step){
     return API.getFilteredByQueryCol(query, step);
   });
+
+  DocManager.reqres.setHandler("micainteractions:query:linkedlist", function(query, step){
+    return API.getLinkedListCol(query, step);
+  });
+
 
   DocManager.reqres.setHandler("micainteractions:query:emisorlist", function(model){
     return API.getActorList(model, 'emisor');

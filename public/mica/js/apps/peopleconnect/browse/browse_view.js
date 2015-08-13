@@ -102,6 +102,9 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
  
       
     initForm: function(){
+
+      this.model.schema.subsector.options = tdata.subSectorOL[this.model.get('sector')];
+
       var form = new Backbone.Form({
         model: this.model,
         template: utils.templates.FilterProfilesEditor,
