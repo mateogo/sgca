@@ -250,7 +250,7 @@ var textFilter = function(textsearch, items){
     var querystr;
     var test;
     rset = _.filter(items, function(item){
-        querystr = utils.safeName(item.solicitante.edisplayName + item.solicitante.ename + item.solicitante.edescription);
+        querystr = utils.safeName(item.ename + item.rname + item.email);
         test = querystr.indexOf(textsearch) !== -1 ? true : false;
         return test;
     });
@@ -492,7 +492,15 @@ var buildRankingQuery = function(qr){
         }
     }
 
-    if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'eprov': qr.provincia});
+    if(qr.provincia && qr.provincia !== 'no_definido'){
+        if(qr.provincia === 'intl'){
+            conditions.push({'epais': {$ne: "AR"}});
+        }else{
+            conditions.push({'eprov': qr.provincia});
+        }
+    }
+
+
 
     if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
     if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
