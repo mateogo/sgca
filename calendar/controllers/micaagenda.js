@@ -66,6 +66,23 @@ var ctrls = {
       });
     },
 
+    findByActors: function(req,res){
+      var query = {};
+      query['comprador._id'] = req.body.comprador;
+      query['vendedor._id'] = req.body.vendedor;
+      //  'vendedor._id': BSON.ObjectID(req.query.vendedor)
+
+      dbi.collection('micaagenda', function(err, collection) {
+          collection.find(query).toArray(function(err, agendas) {
+            if(agendas.length){
+              res.json(agendas[0]);
+            }else{
+              res.send('no_encontrado');
+            }
+          });
+      });
+    },
+
     agenda: function(req,res){
 
       var suscriptor = req.params.idSuscriptor;
@@ -163,6 +180,8 @@ module.exports.configRoutes = function(app){
 
   app.post('/micaagenda/assign',[ensureAuthenticated,isAdminMica,ctrls.assign]);
 
+  app.post('/micaagenda/actores',[ensureAuthenticated,ctrls.findByActors]);
+
   app.post('/micaagenda',[ensureAuthenticated,isAdminMica,ctrls.save]);
   app.put('/micaagenda/:id',[ensureAuthenticated,isAdminMica,ctrls.save]);
 
@@ -170,6 +189,13 @@ module.exports.configRoutes = function(app){
 };
 
 // dummy para hacerlo compatible con config
-module.exports.setDb = function(db){ return this;};
-module.exports.setBSON = function(bson){ return this;};
+module.exports.setDb = function(db){    
+  dbi = db;
+  return this;
+};
+module.exports.setBSON = function(bson){
+  BSON = bson;
+  return this;
+};
+
 module.exports.setConfig = function(config){ return this;};

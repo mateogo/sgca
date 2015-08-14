@@ -42,8 +42,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 		dao.gestionUser.getUser(DocManager, function (user){
       getSession().currentUser = user;
 
-			//if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
-      if(true){
+			if(user && dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) ){
+      //if(true){
 
 	      defer.resolve(user);
 
@@ -442,6 +442,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
   var AgendarViewCell = Backgrid.Cell.extend({
       initialize: function(opt){
+        this.model.bind("change", this.render, this);
+        var promis = this.model.fetchMeetingNumber(getSession().comprador.get('profileid'), this.model.get('profileid'));
       },
 
       render: function(){
@@ -475,15 +477,27 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       },
 
       agendar: function(){
-        var self = this;
-        console.log('agendar!!!', self.model.whoami,getSession().comprador.get('cnumber'), self.model.get('cnumber') );
+        var self = this,
+            query;
+        //console.log('agendar!!!', self.model.whoami,getSession().comprador.get('cnumber'), self.model.get('cnumber') );
 
         if(self.model.get('meeting_number') && self.model.get('meeting_number') !== -1){
           Message.warning('Reunión previamente asignada: #' + self.model.get('meeting_number'));
           return;
         }
+        if(getSession().comprador.meetingRol() === 'comprador'){
+          query = {
+            compradorid:  getSession().comprador.get('profileid'),
+            vendedorid: self.model.get('profileid'),
+          };
+        }else{
+          query = {
+            vendedorid:  getSession().comprador.get('profileid'),
+            compradorid: self.model.get('profileid'),
+          };
+        }
 
-        var p = DocManager.request('micaagenda:assign', {compradorid: getSession().comprador.get('profileid'), vendedorid: self.model.get('profileid')});
+        var p = DocManager.request('micaagenda:assign', query);
         p.done(function(response){
           var num = response.num_reunion;
           var estado = response.estado;
@@ -495,7 +509,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
           }
           self.model.set('meeting_number', num);
           self.model.set('meeting_estado', estado);
-          self.render();
+          //self.render();
 
         }).fail(function(){
           Message.error('No se pudo asignar');
@@ -857,8 +871,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
     var receptorList = model.get('receptorlist');
     var linkedProfiles = getLinkedProfilesIds(emisorList, receptorList);
 
-    console.log('buildPresentationCol BEGIN:[%S] e:[%s]  r:[%s] col:[%s]', model.whoami, emisorList.length, receptorList.length, getSession().collection.length);
-    console.log('linked profiles: [%s]', linkedProfiles.length)
+    //console.log('buildPresentationCol BEGIN:[%S] e:[%s]  r:[%s] col:[%s]', model.whoami, emisorList.length, receptorList.length, getSession().collection.length);
+    //console.log('linked profiles: [%s]', linkedProfiles.length)
 
 
     $.when(fetchLinkedCol(getSession().currentUser, {linkedlist: linkedProfiles}, 'getFirstPage')).done(function(targetList){

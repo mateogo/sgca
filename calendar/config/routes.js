@@ -174,8 +174,10 @@ module.exports = function (config, app) {
 
     // micainteractions - ronda entre participantes MICA- routes
     var micainteractions = require(rootPath + '/calendar/controllers/micainteractions');
-    app.get ('/buildmicaranking',               micainteractions.rankingByQuery);
-    app.get ('/micainteractions/ranking',       micainteractions.findRankingByQuery);
+    app.get ('/buildmicaranking/stats',       micainteractions.rankingstats);
+    app.get ('/buildmicaranking',            micainteractions.buildranking);
+    
+    app.get ('/micainteractions/ranking',    micainteractions.findRankingByQuery);
 
     app.post('/actualizar/micainteractions', micainteractions.partialupdate);
     app.get ('/micainteractions',            micainteractions.findAll);

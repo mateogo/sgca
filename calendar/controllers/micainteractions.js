@@ -237,34 +237,6 @@ exports.findByQuery = function(req, res) {
 
 };
 
-exports.rankingByQuery = function(req, res) {
-    var query = buildQuery(req.query); 
-    var resultset;
-    var itemcount = 0;
-    var page = parseInt(req.query.page);
-    var limit = parseInt(req.query.per_page);
-    var cursor;
-    ///// dummy
-    //req.query.textsearch = 'altersoft';
-    /////
-    var textsearch = initTextSearch(req.query);
-
-    //console.log('find:micasuscription Retrieving micasuscription collection with QUERY [%s] [%s]', page, limit);
-
-
-    dbi.collection(micasuscriptionsCol, function(err, collection) {
-        collection.find().sort({cnumber:1}).toArray(function(err, profiles) {
-
-            dbi.collection(micainteractionsCol, function(err, collection) {
-                collection.find().sort({cnumber:1}).toArray(function(err, items) {
-
-                    getRankedList(profiles, items, res);
-                });
-            });
-        });
-    });
-};
-
 
 var initTextSearch = function(query){
     if(!query || !query.textsearch) return null;
@@ -409,7 +381,7 @@ var buildQuery = function(qr){
     if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
     if(qr.evento) conditions.push({evento: qr.evento});
     if(qr.rubro) conditions.push({rubro: qr.rubro});
-    console.dir(conditions);
+    //console.dir(conditions);
 
 
     query['$and'] = conditions;
@@ -541,11 +513,11 @@ exports.findRankingByQuery = function(req, res) {
     /////
     var textsearch = initTextSearch(req.query);
 
-    console.log('#538 ranking by query');
-    console.dir(query);
+    // console.log('#538 ranking by query');
+    // console.dir(query);
 
 
-    cursor = dbi.collection(micarankingCol).find(query).sort({cnumber:1});
+    cursor = dbi.collection(micarankingCol).find(query).sort([['peso', -1]]);
     if(textsearch){
         cursor.toArray(function(err, items){
             resultset = textFilter(textsearch, items);
@@ -556,7 +528,7 @@ exports.findRankingByQuery = function(req, res) {
 
     }else if(req.query){
         cursor.count(function(err, total){
-            console.log('CUrsor count: [%s]', total);
+            //console.log('Cursor count: [%s]', total);
             cursor.skip((page-1) * limit).limit(limit).toArray(function(err, items){
 
                 res.send([{total_entries: total}, items]);
@@ -638,10 +610,264 @@ exports.findLinkedProfiles = function(req, res) {
 
 };
 
+exports.rankingstats = function(req, res){
+    console.log('RankingStats BEGIN')
+    dbi.collection(micarankingCol).find().toArray(function(err, profiles) {
+        console.log('profiles [%s] ', profiles.length)
+        res.send(getStats(profiles));
+    });
+
+
+};
+var initToken = function(){
+    token = {
+        total: {
+            profiles: 0,
+            vendedor:{
+                total: 0,
+                aescenicas: 0,
+                audiovisual: 0,
+                disenio: 0,
+                editorial: 0,
+                musica: 0,
+                videojuegos: 0,
+                sindato: 0,
+            },
+            comprador:{
+                total: 0,
+                aescenicas: 0,
+                audiovisual: 0,
+                disenio: 0,
+                editorial: 0,
+                musica: 0,
+                videojuegos: 0,
+                sindato: 0,
+            },
+            sinsector: 0,
+        },
+        aescenicas: {
+            comprador: 0,
+            vendedor: 0,
+            comprador_unique_receptor: 0,
+            comprador_unique_emisor: 0,
+            vendedor_unique_receptor: 0,
+            vendedor_unique_emisor: 0,
+            comprador_total_receptor: 0,
+            comprador_total_emisor: 0,
+            vendedor_total_receptor: 0,
+            vendedor_total_emisor: 0,
+            comovendedor:{
+                total: 0,
+                aescenicas: 0,
+                audiovisual: 0,
+                disenio: 0,
+                editorial: 0,
+                musica: 0,
+                videojuegos: 0,
+                sindato: 0,
+            },
+        },
+        audiovisual: {
+            comprador: 0,
+            vendedor: 0,
+            comprador_unique_receptor: 0,
+            comprador_unique_emisor: 0,
+            vendedor_unique_receptor: 0,
+            vendedor_unique_emisor: 0,
+            comprador_total_receptor: 0,
+            comprador_total_emisor: 0,
+            vendedor_total_receptor: 0,
+            vendedor_total_emisor: 0,
+            comovendedor:{
+                total: 0,
+                aescenicas: 0,
+                audiovisual: 0,
+                disenio: 0,
+                editorial: 0,
+                musica: 0,
+                videojuegos: 0,
+                sindato: 0,
+            },
+        },
+        disenio: {
+            comprador: 0,
+            vendedor: 0,
+            comprador_unique_receptor: 0,
+            comprador_unique_emisor: 0,
+            vendedor_unique_receptor: 0,
+            vendedor_unique_emisor: 0,
+            comprador_total_receptor: 0,
+            comprador_total_emisor: 0,
+            vendedor_total_receptor: 0,
+            vendedor_total_emisor: 0,
+            comovendedor:{
+                total: 0,
+                aescenicas: 0,
+                audiovisual: 0,
+                disenio: 0,
+                editorial: 0,
+                musica: 0,
+                videojuegos: 0,
+                sindato: 0,
+            },
+        },
+        editorial: {
+            comprador: 0,
+            vendedor: 0,
+            comprador_unique_receptor: 0,
+            comprador_unique_emisor: 0,
+            vendedor_unique_receptor: 0,
+            vendedor_unique_emisor: 0,
+            comprador_total_receptor: 0,
+            comprador_total_emisor: 0,
+            vendedor_total_receptor: 0,
+            vendedor_total_emisor: 0,
+            comovendedor:{
+                total: 0,
+                aescenicas: 0,
+                audiovisual: 0,
+                disenio: 0,
+                editorial: 0,
+                musica: 0,
+                videojuegos: 0,
+                sindato: 0,
+            },
+        },
+        musica: {
+            comprador: 0,
+            vendedor: 0,
+            comprador_unique_receptor: 0,
+            comprador_unique_emisor: 0,
+            vendedor_unique_receptor: 0,
+            vendedor_unique_emisor: 0,
+            comprador_total_receptor: 0,
+            comprador_total_emisor: 0,
+            vendedor_total_receptor: 0,
+            vendedor_total_emisor: 0,
+            comovendedor:{
+                total: 0,
+                aescenicas: 0,
+                audiovisual: 0,
+                disenio: 0,
+                editorial: 0,
+                musica: 0,
+                videojuegos: 0,
+                sindato: 0,
+            },
+        },
+        videojuegos: {
+            comprador: 0,
+            vendedor: 0,
+            comprador_unique_receptor: 0,
+            comprador_unique_emisor: 0,
+            vendedor_unique_receptor: 0,
+            vendedor_unique_emisor: 0,
+            comprador_total_receptor: 0,
+            comprador_total_emisor: 0,
+            vendedor_total_receptor: 0,
+            vendedor_total_emisor: 0,
+            comovendedor:{
+                total: 0,
+                aescenicas: 0,
+                audiovisual: 0,
+                disenio: 0,
+                editorial: 0,
+                musica: 0,
+                videojuegos: 0,
+                sindato: 0,
+            },
+        },
+        sindato: {
+            comprador: 0,
+            vendedor: 0,
+            comprador_unique_receptor: 0,
+            comprador_unique_emisor: 0,
+            vendedor_unique_receptor: 0,
+            vendedor_unique_emisor: 0,
+            comprador_total_receptor: 0,
+            comprador_total_emisor: 0,
+            vendedor_total_receptor: 0,
+            vendedor_total_emisor: 0,
+            comovendedor:{
+                total: 0,
+                aescenicas: 0,
+                audiovisual: 0,
+                disenio: 0,
+                editorial: 0,
+                musica: 0,
+                videojuegos: 0,
+                sindato: 0,
+            },
+        },
+    }
+    return token;
+};
+
+var buildStats = function(profile, stats){
+    var vendedor,
+        actividad;
+    if(!profile.cactividades) profile.cactividades = 'sindato';
+    if(!profile.vactividades) profile.vactividades = 'sindato';
+
+    stats.total.profiles += 1;
+
+    if(profile.iscomprador){
+        actividad = profile.cactividades
+        stats['total']['comprador']['total'] += 1;
+        stats['total']['comprador'][actividad] += 1;
+
+        stats[actividad]['comprador'] += 1
+
+        if(profile.isvendedor){
+            stats[actividad]['comovendedor'][profile.vactividades] += 1;
+            stats[actividad]['comovendedor']['total'] += 1;
+        }
+        if(profile.emisor_requests){
+            stats[actividad]['comprador_unique_emisor'] += 1;
+            stats[actividad]['comprador_total_emisor'] += profile.emisor_requests;
+        }
+        if(profile.receptor_requests){
+            stats[actividad]['comprador_unique_receptor'] += 1;
+            stats[actividad]['comprador_total_receptor'] += profile.receptor_requests;
+        }
+
+    }else if(profile.isvendedor){
+        actividad = profile.vactividades
+
+        stats['total']['vendedor']['total'] += 1;
+        stats['total']['vendedor'][actividad] += 1;
+
+        stats[actividad]['vendedor'] += 1
+
+        if(profile.emisor_requests){
+            stats[actividad]['vendedor_unique_emisor'] += 1;
+            stats[actividad]['vendedor_total_emisor'] += profile.emisor_requests;
+        }
+        if(profile.receptor_requests){
+            stats[actividad]['vendedor_unique_receptor'] += 1;
+            stats[actividad]['vendedor_total_receptor'] += profile.receptor_requests;
+        }
+
+    }else{
+        stats['total']['sinsector'] += 1;
+    }
+}
+
+var getStats = function(profiles){
+    var stats = initToken();
+    console.log('getStats BEGIN')
+
+    _.each(profiles, function(profile){
+        console.log('proflie iteration [%s]', profile.cnumber)
+        buildStats(profile, stats);
+    });
+
+    return stats;
+};
 
 
 // Genera la colección rankeada
-exports.ranking = function(req, res) {
+exports.buildranking = function(req, res) {
     var query = req.body; //{};
 
     dbi.collection(micasuscriptionsCol, function(err, collection) {
@@ -778,7 +1004,6 @@ var normalizeProfiles = function(profiles){
             profileid: item._id,
             cnumber: item.cnumber,
             userid: item.user.userid,
-            usermail: item.user.usermail,
             rname: item.responsable.rname,
             rmail:  item.responsable.rmail,
             rcel:  item.responsable.rcel,
@@ -789,13 +1014,13 @@ var normalizeProfiles = function(profiles){
 
             isvendedor: item.vendedor.rolePlaying.vendedor,
             vactividades: item.vendedor.vactividades,
-            vsubact: item.vendedor['sub_' + item.vendedor.vactividades],
+            vsubact: item.vendedor['sub_' + item.vendedor.vactividades] || {},
             vporfolios: item.vendedor.vporfolios.length,
             vexperienciaintl: item.vendedor.vexperienciaintl,
             
             iscomprador: (item.comprador.rolePlaying.comprador && (item.nivel_ejecucion === 'comprador_aceptado')),
             cactividades: item.comprador.cactividades,
-            csubact: item.comprador['sub_' + item.comprador.cactividades],
+            csubact: item.comprador['sub_' + item.comprador.cactividades] || {},
             cporfolios: item.comprador.cporfolios.length,
             cexperienciaintl: item.comprador.cexperienciaintl,
             

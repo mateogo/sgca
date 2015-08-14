@@ -19,7 +19,7 @@ var MicaAgenda = require(root + 'models/micaagenda.js').getModel();
 var MicaSuscription = require(root + 'models/micasuscription.js').getModel();
 var MicaInteraction = require(root + 'models/micainteraction.js').getModel();
 
-var  COUNT_REUNIONES = 3;
+var  COUNT_REUNIONES = 36;
 
 var MicaAgendaService = function(userLogged){
   this.userLogged = userLogged;

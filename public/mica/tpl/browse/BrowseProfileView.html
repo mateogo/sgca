@@ -10,7 +10,7 @@
         <h4><%= solicitante.epais %> | | <%= solicitante.eprov %> | <%= solicitante.otraprov %> | <%= solicitante.elocalidad %> </h4>
         <p>
         <%  if(getFieldLabel('solicitante').eweb != '') { %>
-            <span class="fa fa-globe"></span> <a href="<%= solicitante.eweb %>" target="_blank"><%= solicitante.eweb %></a><br>
+            <span class="fa fa-globe"></span> <a href="<%= solicitante.eweb.indexOf('http') === -1 ? 'http://' + solicitante.eweb : solicitante.eweb %>" target="_blank"><%= solicitante.eweb %></a><br>
         <% } %>
         <%  if(getFieldLabel('solicitante').email != '') { %>
         <span class="fa fa-envelope-o"></span> <a href="mailto:<%= solicitante.email %>"><%= solicitante.email %></a>

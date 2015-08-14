@@ -466,6 +466,19 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     schema: {
     },
 
+
+
+      // var idComprador = reunion.get('comprador')._id;
+      // var idVendedor = reunion.get('vendedor')._id;
+
+      // var query = {
+      //   $or: [
+      //     {'emisor_inscriptionid': idComprador,'receptor_inscriptionid': idVendedor},
+      //     {'emisor_inscriptionid': idVendedor,'receptor_inscriptionid': idComprador}
+      //   ]
+      // };
+
+
     getFieldLabel: function(field){
       return _getFieldLabel(this, field);
     },
@@ -477,6 +490,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         return errors;
       }
     },
+
+    meetingRol: function(){
+      return this.get('iscomprador') ? 'comprador' : 'vendedor';
+    },
+
     isVendedorLabel: function(){
       return this.get('isvendedor') ? 'Vendedor': '';
     },
@@ -588,19 +606,19 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       _.extend(this.queryParams, query);
 
     },
-    sortfield: 'peso',
-    sortorder: 1,
+    // sortfield: 'peso',
+    // sortorder: 1,
 
-    comparator: function(left, right) {
-      var order = this.sortorder;
-      var l = left.get(this.sortfield);
-      var r = right.get(this.sortfield);
+    // comparator: function(left, right) {
+    //   var order = this.sortorder;
+    //   var l = left.get(this.sortfield);
+    //   var r = right.get(this.sortfield);
 
-      if (l === void 0) return -1 * order;
-      if (r === void 0) return 1 * order;
+    //   if (l === void 0) return -1 * order;
+    //   if (r === void 0) return 1 * order;
 
-      return l < r ? (1*order) : l > r ? (-1*order) : 0;
-    },
+    //   return l < r ? (1*order) : l > r ? (-1*order) : 0;
+    // },
 
     parseState: function (resp, queryParams, state, options) {
       return {totalRecords: resp[0].total_entries};
@@ -625,6 +643,62 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     initialize: function(opts){
 
     },
+    fetchMeetingNumber: function(comprador, vendedor){
+      var defer = $.Deferred();
+      var self = this;
+
+      var data = {
+        comprador: comprador,
+        vendedor: vendedor
+      };
+      console.log('comprador: [%s]   vendedor: [%s]', comprador, vendedor);
+
+      var p = $.ajax({
+          type: 'post',
+          url: '/micaagenda/actores',
+          data: data,
+          dataType: 'json',
+          success: function(data){
+            if(!data || data ==='no_encontrado'){
+              return null;
+            }else{
+              console.log('bingo! num:[%s]  e:[%s]', data.num_reunion, data.estado);
+              console.log('bingo!', data.num_reunion);
+              self.set('meeting_number', data.num_reunion);
+              self.set('meeting_estado', data.estado);
+              //console.dir(data);
+            }
+          }
+      });
+
+      return p;
+
+
+      // var query = {
+      //   $or: [
+      //     {'emisor_inscriptionid': idComprador,'receptor_inscriptionid': idVendedor},
+      //     {'emisor_inscriptionid': idVendedor,'receptor_inscriptionid': idComprador}
+      //   ]
+      // };
+
+    },
+          // self.model.set('meeting_number', num);
+          // self.model.set('meeting_estado', estado);
+
+
+
+      // var idComprador = reunion.get('comprador')._id;
+      // var idVendedor = reunion.get('vendedor')._id;
+
+      // var query = {
+      //   $or: [
+      //     {'emisor_inscriptionid': idComprador,'receptor_inscriptionid': idVendedor},
+      //     {'emisor_inscriptionid': idVendedor,'receptor_inscriptionid': idComprador}
+      //   ]
+      // };
+
+
+
     buildCSubSectorList: function(){
       if(this.get('iscomprador')){
         var sub = this.get('csubact');
@@ -1218,7 +1292,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       facet.addRespuesta(user, myprofile, otherprofile, interactionRecord);
 
     },
-    
+
     getLinkedListCol: function(query, step){
       var fetchingEntities = queryCollection(query, step),
           defer = $.Deferred();
@@ -1262,6 +1336,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   });
 
   DocManager.reqres.setHandler("micainteractions:answer:interaction", function(facet, user, myprofile, otherprofile, interactionRecord){
+    return API.addAnswerInteraction(facet, user, myprofile, otherprofile, interactionRecord);
+  });
+
+  DocManager.reqres.setHandler("micainteractions:find:meeting", function(facet, user, myprofile, otherprofile, interactionRecord){
     return API.addAnswerInteraction(facet, user, myprofile, otherprofile, interactionRecord);
   });
 
