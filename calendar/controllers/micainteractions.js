@@ -259,8 +259,9 @@ var textFilter = function(textsearch, items){
 
 exports.find = function(req, res) {
     var query = req.body; //{};
-    //console.log('find: [%s]', micainteractionsCol)
-    //console.dir(query);
+
+    console.log('find: [%s]', micainteractionsCol)
+    console.dir(query);
 
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
@@ -270,6 +271,8 @@ exports.find = function(req, res) {
 };
 
 exports.findAll = function(req, res) {
+
+    console.log('findall: [%s]', micainteractionsCol)
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.find().sort({cnumber:1}).toArray(function(err, items) {
             res.send(items);
@@ -877,7 +880,7 @@ exports.buildranking = function(req, res) {
                 collection.find().sort({cnumber:1}).toArray(function(err, items) {
 
                     getRankedList(profiles, items, res);
-                    
+
                 });
             });
         });

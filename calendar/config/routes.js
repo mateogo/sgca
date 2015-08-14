@@ -177,16 +177,16 @@ module.exports = function (config, app) {
     app.get ('/buildmicaranking/stats',       micainteractions.rankingstats);
     app.get ('/buildmicaranking',            micainteractions.buildranking);
     
+    app.get ('/micainteractions',            micainteractions.findAll);
+    app.post('/micainteractions',            micainteractions.add);
     app.get ('/micainteractions/ranking',    micainteractions.findRankingByQuery);
 
     app.post('/actualizar/micainteractions', micainteractions.partialupdate);
-    app.get ('/micainteractions',            micainteractions.findAll);
     app.post('/micainteractions/fetch',      micainteractions.findOne);
     app.post('/navegar/micainteractions',    micainteractions.find);
     app.get('/query/micainteractions',      micainteractions.findByQuery);
 
     app.get ('/micainteractions/:id',        micainteractions.findById);
-    app.post('/micainteractions',            micainteractions.add);
     app.put ('/micainteractions/:id',        micainteractions.update);
     app.delete('/micainteractions/:id',      micainteractions.delete);
 
