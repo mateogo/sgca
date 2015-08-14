@@ -21,7 +21,7 @@ var anyw = false;
 var transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: 'intranet.mcn@gmail.com',
+        user: 'intranet.mcn.2@gmail.com',
         pass: 'NaY-yZM-S9M-wVU'
        }
 });
@@ -88,7 +88,7 @@ var createFolder = function(publicPath, today){
 
     var serverPath = 'files'
     if(!fs.existsSync(publicPath + serverPath)) fs.mkdirSync(publicPath + serverPath);
-    
+
     serverPath += '/assets';
     if(!fs.existsSync(publicPath + serverPath)) fs.mkdirSync(publicPath + serverPath);
 
@@ -140,7 +140,7 @@ exports.userHome = function (user){
 
 var isFalsey = function(data){
     if (!data) return true;
-    
+
     if (data === '0')
     {
         return true;
@@ -200,7 +200,7 @@ var parseData = function(dataCol ,options){
         }
         parsedCol.push(row);
     });
-    return parsedCol;    
+    return parsedCol;
 };
 
 exports.uploadExcelData = function(req, res, next, rootPath){
@@ -209,7 +209,7 @@ exports.uploadExcelData = function(req, res, next, rootPath){
   form.maxFieldsSize = 30 * 1024 * 1024;
   //form.type = 'multipart';
   //form.type = 'urlencoded';
-  
+
   form.parse(req, function(err, fields, files){
     fields.data = JSON.parse(fields.data);
     fields.heading = JSON.parse(fields.heading);
@@ -242,14 +242,14 @@ exports.excelBuilder = function (request, rootPath, cb){
     var publicPath = rootPath + '/public/';
 
     var name = saveFileName(rootPath, request.name + '.xlsx');
-    
+
     var relativeName = name.substr(publicPath.length - 1);
 
     var writer = new SpreadsheetWriter(name);
-    
+
     var pData = parseData(request.data, request.heading);
 
-    
+
     writer.addFormat('heading', { font: { bold: true } });
     writer.write(0, 0, heading, 'heading');
 
@@ -266,7 +266,7 @@ exports.excelBuilder = function (request, rootPath, cb){
                 error: "save concretado",
                 file: relativeName
             };
-            cb(respdata);    
+            cb(respdata);
         }
     });
 
@@ -282,10 +282,10 @@ exports.sendMail = function (mailOptions,cb){
             var error = {
                 error: 'Message sent: ' + info.response,
             };
-        cb(error);    
+        cb(error);
         }
-    
-    }); 
+
+    });
 };
 
 exports.safeName = function (name){
@@ -342,7 +342,7 @@ exports.moveFile = function(req, res, next,rootPath){
                     lastModifiedDate: req.files.loadfiles.lastModifiedDate,
                     uploadDate: times
                 }
-            });                
+            });
         }
     });
 };
@@ -353,17 +353,17 @@ exports.moveFile2 = function(req, res, next, rootPath){
   var today = new Date();
   var times = today.getTime();
   var times_str = times.toString()+'_';
-  
+
   var form = new formidable.IncomingForm();
-  
+
   form.parse(req, function(err, fields, files) {
 
     var filename = safeFileName(files.loadfiles.name);
-    
+
     var publicPath = rootPath + '/public/';
     var urlPath = createFolder(publicPath, today) + '/' + times_str + filename;
     var serverPath = rootPath + '/public/' + urlPath;
-    
+
     fs.rename(files.loadfiles.path, serverPath, function(error){
         if(error){
             res.send({error: 'Ooops! algo salio mal!'});
@@ -380,14 +380,14 @@ exports.moveFile2 = function(req, res, next, rootPath){
                     lastModifiedDate: files.loadfiles.lastModifiedDate,
                     uploadDate: times
                 }
-            });                
+            });
         }
         next();
     });
   });
-  
+
   return;
-  
+
 };
 
 var saveFileName = function(rootPath, name){
