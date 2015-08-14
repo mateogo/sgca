@@ -876,7 +876,8 @@ exports.buildranking = function(req, res) {
             dbi.collection(micainteractionsCol, function(err, collection) {
                 collection.find().sort({cnumber:1}).toArray(function(err, items) {
 
-                    res.send(getRankedList(profiles, items));
+                    getRankedList(profiles, items, res);
+                    
                 });
             });
         });
