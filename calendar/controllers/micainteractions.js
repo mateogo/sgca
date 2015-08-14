@@ -261,8 +261,8 @@ var textFilter = function(textsearch, items){
 exports.find = function(req, res) {
     var query = req.body; //{};
 
-    console.log('find: [%s]', micainteractionsCol)
-    console.dir(query);
+    // console.log('find: [%s]', micainteractionsCol)
+    // console.dir(query);
 
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.find(query).toArray(function(err, items) {
@@ -274,7 +274,7 @@ exports.find = function(req, res) {
 
 exports.findAll = function(req, res) {
 
-    console.log('findall: [%s]', micainteractionsCol)
+    //console.log('findall: [%s]', micainteractionsCol)
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.find().toArray(function(err, items) {
             if (err) {
@@ -907,18 +907,27 @@ var getRankedList = function(profiles, interactionList, res){
     saveProfiles(normalizedProfiles, res);
     //return normalizedProfiles;
 };
+
+var insertProfile = function(collection, profile){
+        collection.insert(profile, {w:0});
+        // , {w:1}, function(err, result) {
+        //     if (err) {
+        //         console.log('ERROR INSERTING save profiles:[%s]', err);
+        //     } else {
+        //     }
+        // });        
+
+};
+
 var saveProfiles = function(profiles, res){
     var collection = dbi.collection(micarankingCol);
     collection.remove({}, function(err, result){
-        collection.insert(profiles, {w:1}, function(err, result) {
-            if (err) {
-                console.log('ERROR INSERTING save profiles:[%s]', err);
-                res.send({error: err});
-            } else {
-                res.send({result: result.length, profiles: profiles.length });
-            }
-        });        
+        _.each(profiles, function(profile){
+            insertProfile(collection, profile);
+
+        });
     });
+    res.send({profiles: profiles.length });
 };
 
 var addReceptorToList = function(profile, interaction){
