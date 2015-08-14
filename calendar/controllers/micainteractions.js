@@ -275,7 +275,7 @@ exports.findAll = function(req, res) {
 
     console.log('findall: [%s]', micainteractionsCol)
     dbi.collection(micainteractionsCol, function(err, collection) {
-        collection.find().sort({cnumber:1}).toArray(function(err, items) {
+        collection.find().toArray(function(err, items) {
             if (err) {
                 console.log('Error finding %s error: %s',micainteractionsCol, err);
                 res.send({error: err});
