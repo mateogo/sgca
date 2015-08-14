@@ -586,6 +586,41 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   });
 
+  Entities.MicaRankingNonPaginatedCol = Backbone.PageableCollection.extend({
+    whoami: 'MicaRankingNonPaginatedCol: micarondas.js',
+    model: Entities.MicaRanking,
+    url: "/micainteractions/ranking",
+
+    state:{
+      firstPage: 1,
+      pageSize: 500,
+    },
+    queryParams:{
+      currentPage: 'page',
+      pageSize: 'per_page',
+      totalRecords: 'total_entries',
+    },
+
+    setQuery: function(query){
+      this.query = query;
+      _.extend(this.queryParams, query);
+
+    },
+
+    parseState: function (resp, queryParams, state, options) {
+      return {totalRecords: resp[0].total_entries};
+    },
+
+    parseRecords: function (resp, options ) {
+      return resp[1];
+    }
+
+
+  });
+
+
+
+
   Entities.MicaRankingPaginatedCol = Backbone.PageableCollection.extend({
     whoami: 'MicaRankingPaginatedCol: micarondas.js',
     model: Entities.MicaRanking,

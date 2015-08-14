@@ -161,7 +161,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
     }else{
       action = 'getFirstPage';
 
-      getSession().linkedcol =  new DocManager.Entities.MicaRankingPaginatedCol();
+      getSession().linkedcol =  new DocManager.Entities.MicaRankingNonPaginatedCol();
 
       getSession().linkedcol.setQuery(query);
       getSession().linkedcol.getFirstPage().done(function(data){
