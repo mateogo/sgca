@@ -143,6 +143,7 @@ a,a:hover,a:focus {
     height:100%;
     position:fixed;
     background:#32323a;
+    z-index: 50;
     -webkit-transition:all .3s ease-in-out;
     -moz-transition:all .3s ease-in-out;
     -o-transition:all .3s ease-in-out;

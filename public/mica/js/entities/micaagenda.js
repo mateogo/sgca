@@ -15,6 +15,8 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       feultmod: null,
       usermod: null
     }
+  },{
+    STATUS: ['confirmado','observado','borrador','unavailable','libre']
   });
 
   Entities.MicaAgendaCollection = Backbone.PageableCollection.extend({
@@ -134,10 +136,19 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
     searchAgenda: function(idSuscription,rol){
       var collection = new Entities.MicaAgendaOneCollection();
       collection.setSuscription(idSuscription,rol);
-      collection.fetch().done(function(){
-        collection.trigger('change');
-      });
       return collection;
+    },
+
+    changeStatus: function(reunion,newStatus){
+      return reunion.save({estado:newStatus},{patch:true});
+    },
+
+    changeStatusAlta: function(reunion,newStatus){
+      var p = reunion.save({estado_alta:newStatus},{patch:true});
+      p.done(function(){
+        reunion.trigger('change');
+      })
+      return p;
     }
   };
 
@@ -162,5 +173,15 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
   DocManager.reqres.setHandler('micaagenda:reunion:borrar', function(model){
     return API.remove(model);
   });
+
+  DocManager.reqres.setHandler('micaagenda:reunion:changestatus', function(model,newStatus){
+    return API.changeStatus(model,newStatus);
+  });
+
+  DocManager.reqres.setHandler('micaagenda:reunion:changestatusalta', function(model,newStatus){
+    return API.changeStatusAlta(model,newStatus);
+  });
+
+
 
 });

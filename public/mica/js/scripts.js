@@ -170,7 +170,7 @@
                 colors: ["#ff6d60", "#cbcdd9"]
             });
         }
-        
+
         /*==Collapsible==*/
         $('.widget-head').click(function (e) {
             var widgetElem = $(this).children('.widget-collapse').children('i');

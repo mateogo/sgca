@@ -1,10 +1,10 @@
 DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette, $, _){
-    
-  //Doc: http://bootstrap-growl.remabledesigns.com/  
-    
-  
+
+  //Doc: http://bootstrap-growl.remabledesigns.com/
+
+
   function notify(str,type,icon){
-      $.notify({
+      return $.notify({
           message: str,
           icon: icon
         },{
@@ -19,30 +19,30 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
           template: '<div data-notify="container" class="col-xs-10 col-sm-4 alert alert-sgc alert-{0} text-center" role="alert"> '+
                     '   <span data-notify="icon" class=""></span>'+
                     '   <span data-notify="message">{2}</span>'+
-                    '</div>'      
+                    '</div>'
       });
-  }  
-   
-  
+  }
+
+
     var NotifyImpl = {
       success: function(str){
-          notify(str,'success','glyphicon glyphicon-ok');
+          return notify(str,'success','glyphicon glyphicon-ok');
           console.log(this);
       },
       info: function(str){
-          notify(str,'info','glyphicon glyphicon-info-sign');
+          return notify(str,'info','glyphicon glyphicon-info-sign');
       },
       warning: function(str){
-          notify(str,'warning','glyphicon glyphicon-warning-sign');
+          return notify(str,'warning','glyphicon glyphicon-warning-sign');
       },
       error: function(str){
-          notify(str,'danger','glyphicon glyphicon-warning-sign');
+          return notify(str,'danger','glyphicon glyphicon-warning-sign');
       },
       clear: function(){
         $.notifyClose();
       }
     }
-    
+
    var InlineImpl = {
       success: function(str){
         this.notify(str,'success','glyphicon glyphicon-ok');
@@ -63,6 +63,10 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
         $alert.html('<i class="'+icon+'"></i> ' + str);
         $alert.show();
         this.autoHide();
+        return this;
+      },
+      update: function(){
+        //dummy function
       },
       hide: function(){
         var $alert = (InlineImpl.el) ? $(InlineImpl.el) : $('.alert').first();
@@ -78,19 +82,19 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
         this.hide();
       }
     }
-    
+
   Message = {
       success: function(str,cont){
-        this.getHandler(cont).success(str);
+        return this.getHandler(cont).success(str);
       },
       info: function(str,cont){
-        this.getHandler(cont).info(str);
+        return this.getHandler(cont).info(str);
       },
       warning: function(str,cont){
-        this.getHandler(cont).warning(str);
+        return this.getHandler(cont).warning(str);
       },
       error: function(str,cont){
-        this.getHandler(cont).error(str);
+        return this.getHandler(cont).error(str);
       },
       clear: function(){
         InlineImpl.clear();
@@ -103,8 +107,8 @@ DocManager.module("Message", function(Messages, DocManager, Backbone, Marionette
         }
         return NotifyImpl;
       }
-  }; 
-  
+  };
+
   window.Message = Message;
-    
+
 });

@@ -518,5 +518,11 @@ window.tdata = {
         {val:'observado',       label:'Observado',         classattr:'info'},
         {val:'confirmado',         label:'Confirmado',  classattr:'warning'},
         {val:'unavailable',         label:'Sin disponibilidad',  classattr:'danger'},
+    ],
+
+    estadoalta_reunion:[
+        {val:'no_definido', label:'Seleccione Estado'},
+        {val:'baja',  label:'Baja',  classattr:'info'},
+        {val:'alta',       label:'Alta',         classattr:'info'}
     ]
 };

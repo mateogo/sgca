@@ -15,7 +15,8 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         return this;
       },
       events: {
-        'click': function(){
+        'click': function(e){
+          e.stopPropagation();
           var rol = this.column.get('name');
           var suscriptor = this.model.get(rol);
           DocManager.trigger('micaagenda:agendaone:show:popup',suscriptor._id,rol);
@@ -28,6 +29,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       render: function(){
         var fieldName = this.column.get('name');
         var estado = this.model.get('estado');
+
         var $span = $('<div class="text-center"></span>');
         $span.html(this.model.get(fieldName));
         if(estado === 'unavailable'){
@@ -50,39 +52,117 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       }
   });
 
+  var drpDwnBtn = _.template('<div class="btn-group" role="group"> '+
+              '<button type="button" class="btn btn-xs btn-default dropdown-toggle" title="modificar estado" data-toggle="dropdown" aria-expanded="false"> '+
+              '   estado <i class="fa fa-edit"></i> '+
+              ' </button> '+
+              ' <ul class="dropdown-menu pull-right js-changeStatus" role="menu">'+
+              '     <% _.each(tdata.estado_reunion,function(estado){ %> '+
+              '         <li><a role="button" data-value="<%=estado.val%>"><%=estado.label%></a></li> '+
+              '     <% }) %> '+
+              '   </ul> '+
+              ' </div>');
+
+  var drpDwnEstadoAltaBtn = _.template('<div class="btn-group" role="group"> '+
+              '<button type="button" class="btn btn-xs btn-default dropdown-toggle" title="modificar estado" data-toggle="dropdown" aria-expanded="false"> '+
+              '   estado alta <i class="fa fa-edit"></i> '+
+              ' </button> '+
+              ' <ul class="dropdown-menu pull-right js-changeStatusAlta" role="menu">'+
+              '     <% _.each(tdata.estadoalta_reunion,function(estado){ %> '+
+              '         <li><a role="button" data-value="<%=estado.val%>"><%=estado.label%></a></li> '+
+              '     <% }) %> '+
+              '   </ul> '+
+              ' </div>');
+
+
   AgendaMica.ActionsCells = Backgrid.Cell.extend({
     render: function(){
         if(!this.rendered){
            var $btnRemove = $('<button class="btn btn-xs btn-danger js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
-           this.$el.append($btnRemove);
+           var $btnChangeStatus = drpDwnBtn();
+           var $btnChageStatusAlta = drpDwnEstadoAltaBtn();
+           this.$el.append($btnRemove).append($btnChangeStatus).append($btnChageStatusAlta);
            this.rendered = true;
+           this.$el.find('button').css('width','83px').css('margin-bottom','3px');
         }
       this.$el.css('width','95px');
       return this;
     },
     events: {
-      'click .js-trash': 'doRemove'
+      'click .js-trash': 'doRemove',
+      'click .js-changeStatus li a': 'doChangeStatus',
+      'click .js-changeStatusAlta li a': 'doChangeStatusAlta'
     },
     doRemove: function(e){
       var self = this;
       e.stopPropagation();
-      DocManager.confirm('<h3>¿Está seguro que desea borrar la reunión?</h3>').done(function(){
-        var $btn = self.$el.find('.js-trash');
-        Message.warning('Borrando...');
+      Message.confirm('<h3>¿Está seguro que desea borrar la reunión?</h3>',[{label:'cancelar'},{label:'Si',class:'btn-danger'}],function(r){
+        if(r !== 'Si') return;
+        var msg = Message.warning('Borrando...');
         var p = DocManager.request('micaagenda:reunion:borrar',self.model);
         p.done(function(){
-          Message.clear();
-          Message.success('Reunión borrada');
+          msg.update({type:'success',message:'Reunión borrada'});
         }).fail(function(){
-          Message.clear();
-          Message.error('No se pudo borrar');
+          msg.update({type:'danger',message:'No se pudo borrar'});
         });
 
       });
+    },
+    doChangeStatus: function(e){
+      var self = this;
+      var $el = $(e.currentTarget);
+      var newStatus = $el.data('value');
+      if(newStatus === 'no_definido') return;
+      Message.confirm('<h3>¿Está seguro que desea cambiar el estado a la reunión?</h3>',[{label:'cancelar'},{label:'Si',class:'btn-danger'}],function(r){
+        if(r !== 'Si') return;
+        var msg = Message.warning('Cambiando estado...');
+        var p = DocManager.request('micaagenda:reunion:changestatus',self.model,newStatus);
+        p.done(function(){
+          msg.update({type:'success',message:'Guardado'});
+        }).fail(function(){
+          msg.update({type:'danger',message:'No se pudo cambiar'});
+        });
+      });
+    },
+    doChangeStatusAlta: function(e){
+      var self = this;
+      var $el = $(e.currentTarget);
+      var newStatus = $el.data('value');
+      if(newStatus === 'no_definido') return;
+      Message.confirm('<h3>¿Está seguro que desea cambiar el estado de alta a la reunión?</h3>',[{label:'cancelar'},{label:'Si',class:'btn-danger'}],function(r){
+        if(r !== 'Si') return;
+        var msg = Message.warning('Cambiando estado...');
+        var p = DocManager.request('micaagenda:reunion:changestatusalta',self.model,newStatus);
+        p.done(function(){
+           msg.update({type:'success',message:'Guardado'});
+        }).fail(function(err){
+          msg.update({type:'danger',message:'No se pudo modificar el estado'});
+        });
 
+      });
     }
   });
 
+  AgendaMica.AgendaListItemBox = Marionette.ItemView.extend({
+    tagName: 'div',
+    className: 'box-agenda',
+    template: _.template('<%=num_reunion%>'),
+    onRender: function(){
+      var estado = this.model.get('estado');
+      this.$el.addClass('box-agenda-'+estado);
+
+      var tooltip;
+      if(estado !== 'libre'){
+        var field = this.options.contraparte_rol;
+        var contraparte = this.model.get(field);
+        tooltip = contraparte.solicitante.edisplayName +
+                  ' \n- '+contraparte.responsable.rname + ' -\n '+ contraparte.actividades;
+      }else{
+        tooltip = 'Espacio libre';
+      }
+      this.$el.attr('data-tooltip',tooltip);
+    }
+  });
 
   AgendaMica.AgendaListItem = Marionette.ItemView.extend({
     tagName: 'li',
@@ -118,13 +198,28 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     }
   });
 
+  AgendaMica.AgendaSubList = Marionette.CollectionView.extend({
+    childView: AgendaMica.AgendaListItemBox,
+    childViewOptions: function(model,index){
+      var self = this;
+      return {
+        contraparte_rol:  self.options.contraparte_rol
+      };
+    }
+  });
+
   AgendaMica.AgendaList = Marionette.CompositeView.extend({
     initialize: function(opts){
       this.rol = opts.rol;
       this.contraparte_rol = (opts.rol === 'comprador') ? 'vendedor' : 'comprador';
       var self = this;
     },
-    template: _.template('<div class="text-muted">La agenda de <div class="owner-container"></div></div><ul class="list-group"></ul>'),
+    template: _.template('<div class="text-muted"> '+
+                         '  La agenda de '+
+                         '  <div class="owner-container"></div>  '+
+                         //'         <div class="pull-right"><button class="btn btn-default bt-sm"> <i class="glyphicon glyphicon-th-list"></i>  </button><button class="btn btn-default bt-sm"> <i class="glyphicon glyphicon-th"></i> </button></div>  '+
+                         //'         <div class="clearfix"></div> '+
+                         '</div><div class="map-list" style="margin-bottom:20px"></div> <ul class="list-group"></ul>'),
     childViewContainer: 'ul',
     childView: AgendaMica.AgendaListItem,
     childViewOptions: function(model,index){
@@ -138,6 +233,9 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       var self = this;
       this.renderOwner();
       this.collection.once('change',function(){
+        var mapList = new AgendaMica.AgendaSubList({collection:self.collection,contraparte_rol:self.contraparte_rol});
+        self.$el.find('.map-list').html(mapList.render().$el);
+
         self.renderOwner();
 
         var $children = self.$el.find('.list-item-agenda-unavailable');
@@ -157,7 +255,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
               ) {
                 e.preventDefault();
               }
-          })
+          });
         }
       });
     },
@@ -227,7 +325,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
                   value: function() { return this.count; },
                   format: function(x) { return x; },
                   label: "Cantidad"
-                }
+                };
               }
       });
     },
@@ -238,8 +336,6 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       }
     }
   });
-
-
 
   // es un suscriptor serializado para micaagenda
   var renderSuscriptor = function(suscriptor,showActividad){

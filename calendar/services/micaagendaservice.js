@@ -220,6 +220,62 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
 
 
 /**
+ * guarda parcial de
+ * @param  {String}   idReunion String ObjectID
+ * @param  {Object}   attrs     [description]
+ * @param  {Function} callback  Retorna el objeto guardado con todos los campos
+ */
+MicaAgendaService.prototype.savePartial = function(idReunion,attrs,callback){
+  if('estado' in attrs){
+    return this.changeStatus(idReunion,attrs.estado,callback);
+  }
+
+  if('estado_alta' in attrs){
+    return this.changeStatusAlta(idReunion,attrs.estado_alta,callback);
+  }
+
+  callback('Por el momento, solo se puede modificar el estado');
+};
+
+MicaAgendaService.prototype.changeStatusAlta = function(idReunion,newStatus,callback){
+  if(typeof(idReunion) === 'object'){
+    idReunion = idReunion.id.toString();
+  }
+
+  var reunion;
+
+  async.series([
+    //trae la reunion
+    function(cb){
+      MicaAgenda.findById(idReunion,function(err,result){
+        if(err) return cb(err);
+
+        if(!result){
+          return cb(new AppError('No se pudo cambiar el estado','not found row micaagenda','not_found'));
+        }
+
+        reunion = result;
+        cb();
+      });
+    },
+
+    // cambia el estado en micaagenda
+    function(cb){
+      MicaAgenda.partialupdate({_id:reunion.id},{estado_alta:newStatus},cb);
+    },
+
+    // retorna el objeto entero
+    function(cb){
+      MicaAgenda.findById(idReunion,cb);
+    }
+
+  ],function(err,results){
+    if(err) return callback(err);
+    callback(null,results[results.length-1]);
+  });
+};
+
+/**
  * Cambia el estado de una reunion,
  * Se verifica que no haya otra reunion confirmada con el mismo numero
  * para los solicitantes involucrados.

@@ -124,11 +124,22 @@ var ctrls = {
       res.status(500).send('en construccion');
     },
 
+    savePartial: function(req,res){
+      var idReunion = req.params.id;
+      var attrs = req.body;
+
+      var service = new MicaAgendaService(req.user);
+      service.savePartial(idReunion,attrs,function(err,result){
+        if(err) return res.status(500).send(err);
+
+        res.json(result);
+      });
+    },
+
     remove: function(req,res){
       if(!req.params.id){
         return res.status(500).send('invalid params');
       }
-
       var id = req.params.id;
 
       var service = new MicaAgendaService(req.user);
@@ -184,12 +195,13 @@ module.exports.configRoutes = function(app){
 
   app.post('/micaagenda',[ensureAuthenticated,isAdminMica,ctrls.save]);
   app.put('/micaagenda/:id',[ensureAuthenticated,isAdminMica,ctrls.save]);
+  app.patch('/micaagenda/:id',[ensureAuthenticated,isAdminMica,ctrls.savePartial]);
 
   app.delete('/micaagenda/:id',[ensureAuthenticated,isAdminMica,ctrls.remove]);
 };
 
 // dummy para hacerlo compatible con config
-module.exports.setDb = function(db){    
+module.exports.setDb = function(db){
   dbi = db;
   return this;
 };
