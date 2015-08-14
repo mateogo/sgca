@@ -265,6 +265,7 @@ exports.find = function(req, res) {
 
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
+
             res.send(items);
         });
     });
@@ -275,7 +276,13 @@ exports.findAll = function(req, res) {
     console.log('findall: [%s]', micainteractionsCol)
     dbi.collection(micainteractionsCol, function(err, collection) {
         collection.find().sort({cnumber:1}).toArray(function(err, items) {
-            res.send(items);
+            if (err) {
+                console.log('Error finding %s error: %s',micainteractionsCol, err);
+                res.send({error: err});
+            } else {
+                res.send(items);
+            }
+
         });
     });
 };
