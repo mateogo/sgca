@@ -209,7 +209,8 @@ exports.findByQuery = function(req, res) {
 
 
 
-    cursor = dbi.collection(micainteractionsCol).find(query).sort({cnumber:1});
+    //cursor = dbi.collection(micainteractionsCol).find(query).sort({cnumber:1});
+    cursor = dbi.collection(micainteractionsCol).find(query);
     if(textsearch){
         cursor.toArray(function(err, items){
             resultset = textFilter(textsearch, items);
@@ -264,7 +265,7 @@ exports.find = function(req, res) {
     console.dir(query);
 
     dbi.collection(micainteractionsCol, function(err, collection) {
-        collection.find(query).sort({cnumber:1}).toArray(function(err, items) {
+        collection.find(query).toArray(function(err, items) {
 
             res.send(items);
         });
@@ -592,7 +593,7 @@ exports.findLinkedProfiles = function(req, res) {
 
 
 
-    cursor = dbi.collection(micarankingCol).find(query).sort({cnumber:1});
+    cursor = dbi.collection(micarankingCol).find(query).sort([['peso', -1]]);
     if(textsearch){
         cursor.toArray(function(err, items){
             resultset = textFilter(textsearch, items);
@@ -881,10 +882,10 @@ exports.buildranking = function(req, res) {
     var query = req.body; //{};
 
     dbi.collection(micasuscriptionsCol, function(err, collection) {
-        collection.find(query).sort({cnumber:1}).toArray(function(err, profiles) {
+        collection.find(query).toArray(function(err, profiles) {
 
             dbi.collection(micainteractionsCol, function(err, collection) {
-                collection.find().sort({cnumber:1}).toArray(function(err, items) {
+                collection.find().toArray(function(err, items) {
 
                     getRankedList(profiles, items, res);
 
