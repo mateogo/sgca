@@ -454,7 +454,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
           itemview.$(".js-interact-reunion").addClass('recibida');
           itemview.$(".js-interact-reunion").addClass('active');
         }else{
-          Message.warning('Se produjo un error en la actualización de sus datos. Inténtelo nuevamente');
+          Message.warning('Debe completar todos los campos para solicitar una reunión.');
         }
     });
 
