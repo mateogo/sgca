@@ -686,7 +686,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         comprador: comprador,
         vendedor: vendedor
       };
-      console.log('comprador: [%s]   vendedor: [%s]', comprador, vendedor);
+      //console.log('comprador: [%s]   vendedor: [%s]', comprador, vendedor);
 
       var p = $.ajax({
           type: 'post',
@@ -697,8 +697,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             if(!data || data ==='no_encontrado'){
               return null;
             }else{
-              console.log('bingo! num:[%s]  e:[%s]', data.num_reunion, data.estado);
-              console.log('bingo!', data.num_reunion);
+              //console.log('bingo! num:[%s]  e:[%s]', data.num_reunion, data.estado);
+              //console.log('bingo!', data.num_reunion);
               self.set('meeting_number', data.num_reunion);
               self.set('meeting_estado', data.estado);
               //console.dir(data);

@@ -693,7 +693,6 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
       getSession().presentationCol = presentationCol;
       getSession().comprador = model;
-      console.log('CrudManager to BEGIN:[%s]', presentationCol.length);
 
       getSession().workingView = new backendCommons.CrudManager(
             {
@@ -872,12 +871,12 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
     var receptorList = model.get('receptorlist');
     var linkedProfiles = getLinkedProfilesIds(emisorList, receptorList);
 
-    console.log('buildPresentationCol BEGIN:[%S] e:[%s]  r:[%s] col:[%s]', model.whoami, emisorList.length, receptorList.length, getSession().collection.length);
+    //console.log('buildPresentationCol BEGIN:[%S] e:[%s]  r:[%s] col:[%s]', model.whoami, emisorList.length, receptorList.length, getSession().collection.length);
     //console.log('linked profiles: [%s]', linkedProfiles.length)
 
 
     $.when(fetchLinkedCol(getSession().currentUser, {linkedlist: linkedProfiles}, 'getFirstPage')).done(function(targetList){
-      console.log('targetList', targetList.length, getSession().linkedcol.length);
+      //console.log('targetList', targetList.length, getSession().linkedcol.length);
 
       getSession().linkedcol.each(function(profile){
         token = new DocManager.Entities.MicaInteractionSummary({
@@ -908,7 +907,6 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         presentationCol.add(token);
 
       });
-      console.log('resolve presentationCol [%s]', presentationCol.length);
       defer.resolve(presentationCol);
 
     });
