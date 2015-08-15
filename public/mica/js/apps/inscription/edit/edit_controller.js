@@ -46,13 +46,18 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
        
         $.when(fetchingMicaRequest).done(function(micarqst){
           //console.log('MicaRequestApp.Edit BEGIN [%s] [%s]', micarqst.whoami, micarqst.id);
+          if(micarqst.id){
+            micarqst.initDataForEdit()
 
-          micarqst.initDataForEdit()
+            getSession().model = micarqst;
 
-          getSession().model = micarqst;
-
-          initDataForEdit(user, micarqst)
-          defer.resolve(micarqst);
+            initDataForEdit(user, micarqst)
+            defer.resolve(micarqst);
+          }else{
+            console.log('MICA está cerrado para nuevas inscripciones');
+            Message.warning('Se han cerrado las inscripciones para MICA 2015');
+            window.open('/mica/#bienvenido', '_self');
+          }
            
         });
       }else{
