@@ -21,7 +21,8 @@ var anyw = false;
 var transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: 'intranet.mcn.2@gmail.com',
+        //user: 'intranet.mcn.2@gmail.com',
+        user: 'intranet.mcn@gmail.com',
         pass: 'NaY-yZM-S9M-wVU'
        }
 });
