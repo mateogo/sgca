@@ -40,7 +40,7 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 
 		loginFondo: function(){
 			//console.log('API: Login FONDO');
-			this.loginUser('fondo/#inscripcion/nueva', 'fondo');
+			this.loginUser('fondo/#bienvenido', 'fondo');
 		},
 
 		loginShowcase: function(){

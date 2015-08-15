@@ -637,7 +637,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   Edit.ActiveRecordsItemView = Marionette.ItemView.extend({
     whoami: 'ActiveRecordsItemView',
     getTemplate: function(){
-      return _.template('<button class="btn btn-default btn-block js-edit-inscription" ><%= getInscriptionLabel() %></button>');
+      return _.template('<button class="btn btn-default btn-block js-edit-inscription" disabled="disabled"><%= getInscriptionLabel() %></button>');
     },
     initialize: function(opts){
 
