@@ -367,6 +367,34 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   	mainlayout.getRegion('editRegion').show(editorlayout);
 
   };
+
+  var downloadCollection = function(user, criterion, exportCol){
+    var defer = $.Deferred(),
+        action,
+        exportCol,
+        query = {
+          evento: 'mica',
+          estado_alta: 'activo',
+        };
+
+
+    if(criterion){
+      _.extend(query, criterion);
+    }
+
+    action = 'getFirstPage';
+
+    exportCol.setQuery(query);
+
+    exportCol.getFirstPage().done(function(data){
+      //console.log('===action: [%s]==== FirstPage ======= Stop:[%s] col:[%s]  items:[%s]', action, step, getSession().collection.whoami, getSession().collection.length);
+      defer.resolve(data);
+    });
+
+    return defer.promise();
+  };
+
+
   var API = {
 
     fetchFilteredCollection: function(filter, step){
@@ -375,12 +403,21 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     },
 
     buildExcelExport: function(){
+
       var excelCol = new DocManager.Entities.MicaExportCollection();
-      excelCol.fetch({
-        success: function(data){
-            excelCol.exportRecords();
-        }
-      })
+      console.log('buildExcel Exports BEGIN')
+
+      $.when(downloadCollection(getSession().currentUser, getSession().filter.attributes, excelCol)).done(function(entities){
+        excelCol.exportRecords();
+      });
+
+
+      // var excelCol = new DocManager.Entities.MicaExportCollection();
+      // excelCol.fetch({
+      //   success: function(data){
+      //       excelCol.exportRecords();
+      //   }
+      // })
     },
   };
 

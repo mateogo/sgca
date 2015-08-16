@@ -580,12 +580,42 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //*************************************************************
   //            Exporta a excel EXCEL Excel
   //*************************************************************
-  Entities.MicaExportCollection = Backbone.Collection.extend({
-    whoami: 'Entities.MicaExportCollection:mica.js ',
-    url: "/micasuscriptions",
+
+  Entities.MicaExportCollection = Backbone.PageableCollection.extend({
+    whoami: 'Entities.MicaExportCollection:fondo.js ',
     model: Entities.MicaRegistration,
+    url: "/fetch/micasuscriptions",
     sortfield: 'cnumber',
     sortorder: -1,
+
+    state:{
+      firstPage: 1,
+      pageSize: 15, 
+    },
+    queryParams:{
+      currentPage: 'page',
+      pageSize: 'per_page',
+      totalRecords: 'total_entries',
+    },
+
+
+    setQuery: function(query){
+      this.query = query;
+      _.extend(this.queryParams, query);
+
+    },
+
+    parseState: function (resp, queryParams, state, options) {
+
+      return {totalRecords: resp.length};
+
+    },
+
+    parseRecords: function (resp, options ) {
+
+      return resp;
+
+    },
 
     comparator: function(left, right) {
       var order = this.sortorder;
@@ -602,13 +632,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       var self = this;
       if(!self.length) return;
 
-      //console.log('collection export [%s]',self.length);
-
-
       exportFactory.processRequest(exportFactory.fetchCollection(self));
       //
 
     },
+
   });
 
   var exportFactory = {
@@ -665,7 +693,41 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return this.exportHeadings;
     },
 
+
     processRequest: function(col){
+      var self = this;
+
+      var formData = new FormData();
+
+      formData.append('name', 'Inscriptos MICA 2015');
+      formData.append('heading',JSON.stringify(self.fetchLabels()));
+      formData.append('data',JSON.stringify(col));
+
+      var xhr = new XMLHttpRequest();
+
+      xhr.open('POST', '/excelfactory');
+
+      xhr.onload = function() {
+          var srvresponse = JSON.parse(xhr.responseText);
+          window.open(srvresponse.file)
+
+      };
+
+      xhr.upload.onprogress = function(event) {
+          // if (event.lengthComputable) {
+          //     var complete = (event.loaded / event.total * 100 | 0);
+          //     $(progressbar).css({'width':complete+'%'});
+          // }
+      };
+
+      xhr.send(formData);    
+
+    },
+
+
+
+
+    processRequestAnt: function(col){
       var self = this;
       var query = {
           name: 'Items del Presupuesto',

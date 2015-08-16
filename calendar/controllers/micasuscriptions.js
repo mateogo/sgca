@@ -185,6 +185,21 @@ exports.findById = function(req, res) {
     });
 };
 
+exports.fetchByQuery = function(req, res) {
+    var query = buildQuery(req.query),
+        cursor;
+
+    //console.log('find:micasuscription Retrieving micasuscription collection with QUERY [%s] [%s]', page, limit);
+
+    cursor = dbi.collection(micasuscriptionsCol).find(query).sort({cnumber:1});
+    cursor.toArray(function(err, items) {
+            res.send(items);
+    });
+
+};
+
+
+
 exports.findByQuery = function(req, res) {
     var query = buildQuery(req.query); 
     var resultset;

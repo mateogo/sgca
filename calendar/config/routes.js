@@ -165,6 +165,7 @@ module.exports = function (config, app) {
     app.post('/micasuscriptions/fetch',      micasuscriptions.findOne);
     app.post('/navegar/micasuscriptions',    micasuscriptions.find);
     app.get('/query/micasuscriptions',      micasuscriptions.findByQuery);
+    app.get ('/fetch/micasuscriptions',      micasuscriptions.fetchByQuery);
 
     app.get ('/micasuscriptions/:id',        micasuscriptions.findById);
     app.post('/micasuscriptions',            micasuscriptions.add);
@@ -184,7 +185,7 @@ module.exports = function (config, app) {
     app.post('/actualizar/micainteractions', micainteractions.partialupdate);
     app.post('/micainteractions/fetch',      micainteractions.findOne);
     app.post('/navegar/micainteractions',    micainteractions.find);
-    app.get('/query/micainteractions',      micainteractions.findByQuery);
+    app.get('/query/micainteractions',       micainteractions.findByQuery);
 
     app.get ('/micainteractions/:id',        micainteractions.findById);
     app.put ('/micainteractions/:id',        micainteractions.update);
