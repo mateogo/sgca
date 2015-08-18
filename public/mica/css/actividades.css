@@ -1,0 +1,40 @@
+.event-date-item{
+    padding:5px;
+    background-color:white;
+    border:1px solid #CCC;
+    border-radius:5px;
+    margin-bottom:5px
+}
+
+.event-date-item:hover{
+    background-color: #f3f3f3;
+}
+
+.agenda-toolbar{
+   background-color: #f3f3f3;
+   padding:5px;
+   border-radius: 4px;
+   margin-bottom: 10px;
+}
+
+.agenda-toolbar div label{
+    display: inline-block;
+    font-size: 0.95em;
+    margin-right: 5px;
+}
+
+.agenda-item{
+    padding-top:10px;
+    padding-bottom:10px;
+    margin-botton:10px;
+    border-bottom: 1px solid #f3f3f3;
+}
+
+#messageDrop{
+    border: 4px dotted #CCC;
+    background-color:rgba(240,240,240,0.5);
+    position:absolute;top:0;bottom:0;left:0;right:0;
+    text-align:center;
+    color: #555;
+    display:none;
+}

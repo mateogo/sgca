@@ -1,0 +1,122 @@
+<div class="col-xs-12">
+    <div class="col-xs-12" style="margin-top:10px">
+        <button type="button" class="btn btn-primary btn-sm pull-right js-save">Guardar</button>
+        <button type="button" class="btn btn-link pull-right js-cancel">cancel</button>
+    </div>
+    <div>
+        <h3 class="text-info">Descripción</h3>
+        <div class="well">
+            <div data-fields="headline"></div><div class="clearfix"></div>
+            <div data-fields="subhead"></div><div class="clearfix"></div>
+            <div data-fields="subhead_pro"></div><div class="clearfix"></div>
+            <div data-fields="volanta"></div><div class="clearfix"></div>
+        </div>
+        <h3 class="text-info">Contenido</h3>
+        <div class="well">
+            <div data-editors="content"></div><div class="clearfix"></div>
+        </div>
+        <h3 class="text-info">Artistas</h3>
+        <div class="well">
+            <div data-editors="artists"></div><div class="clearfix"></div>
+        </div>
+        <h3 class="text-info">Estado</h3>
+        <div class="well">
+            <div data-fields="estado_alta"></div><div class="clearfix"></div>
+            <div data-fields="nivel_ejecucion"></div><div class="clearfix"></div>
+            <div data-fields="nivel_importancia"></div><div class="clearfix"></div>
+            <div data-fields="obs"></div><div class="clearfix"></div>
+        </div>
+        <h3 class="text-info">Donde</h3>
+        <div class="well">
+            <div class="form-group clearfix">
+                <button class="btn btn-default js-locationmodalnew pull-right" title="nueva"><span class="glyphicon glyphicon-plus"></span> Crear Locación</button>
+            </div>
+            <div data-fields="location"></div><div class="clearfix"></div>
+            <div data-fields="espacios"></div><div class="clearfix"></div>
+        </div>
+        <h3 class="text-info">Cuando</h3>
+        <div class="well">
+            <div data-fields="ftype" style="width:50%"></div><div class="clearfix"></div>
+            
+            <div id="singleDate" style="margin-top:5px">
+                <div class="pull-left" style="padding-left:15px;margin-top:5px">
+                    <div class="pull-left">
+                        <label>Desde</label>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="pull-left">
+                        <div data-editors="fdesde"></div>
+                    </div>
+                </div>
+                <div class="pull-left" style="margin-top:5px">
+                    <div class="pull-left">
+                        <label>H.Inicio</label>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="pull-left">
+                        <div data-editors="hinicio" style="width:75px"></div>
+                    </div>
+                </div>
+                 <div class="pull-left" style="margin-top:5px">
+                    <div class="pull-left">
+                        <label>H.Fin</label>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="pull-left">
+                        <div data-editors="hfin" style="width:75px"></div>
+                    </div>
+                </div>
+                <div class="pull-left" style="margin-left:5px;padding-top:4px">
+                    <div class="pull-left" style="width:105px">
+                        <label>Duración</label>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="pull-left">
+                        <div data-editors="duration" style="width:90px"></div>
+                    </div>
+                </div>
+               
+                <div id="contFechaHasta" class="pull-left" style="margin-left:5px;padding-top:4px;">
+                    <div class="pull-left col-sm-2" >
+                        <label>Hasta</label>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="pull-left">
+                        <div data-editors="fhasta"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="" style="padding-left:15px;padding-top:10px">
+                      <div class="form-group">
+                        <label>Leyenda Fecha</label> <br/>
+                        <div data-editors="leyendafecha" style="width:50%"></div>
+                      </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+             
+            
+            <div id="contFechaRep" style="padding-top:20px">
+                  <div>
+                    <button class="btn btn-success btn-xs js-makerdates">Generar nuevas fechas</button>
+                    <button class="btn btn-primary btn-xs js-newdate">Nueva fecha </button>
+                    <button class="pull-right btn btn-link js-cleardates">borrar todas las fechas</button>
+                  </div>
+                  <div class="clearfix"></div>
+                       
+                    
+                  <div id="datesContainer"> </div>
+            </div>
+        </div>
+        
+        <h3 class="text-info">Adjuntos</h3>
+        <div class="well" id="attachmentContainer">
+            
+        </div>
+    </div>
+    <div class="col-xs-12" style="margin-top:10px">
+        <button type="button" class="btn btn-primary btn-sm pull-right js-save">Guardar</button>
+        <button type="button" class="btn btn-link pull-right js-cancel">cancel</button>
+    </div>
+</div>

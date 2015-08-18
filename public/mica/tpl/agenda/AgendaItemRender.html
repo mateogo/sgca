@@ -1,0 +1,25 @@
+<div class="media agenda-item">
+  <div class="media-left">
+    <a>
+      <img class="media-object img-thumbnail" src="" style="width:120px;height:120px">
+    </a>
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading text-primary js-open" style="cursor:pointer">
+      <% if(typeof(slug) != 'undefined') {%>
+        <%= slug %>
+      <% } %>
+      <% if(typeof(headline) != 'undefined') {%>
+        <%= headline %>
+      <% } %>
+      <small><%=leyendafecha%></small></h4>
+    <h5 class="text-info">
+        <%= getLabelWhen() %>
+    </h5>
+    <p class="text-muted">
+      <% if(typeof(description) != 'undefined') {%>
+        <%= description %>
+      <% } %>
+    </p>
+  </div>
+</div>

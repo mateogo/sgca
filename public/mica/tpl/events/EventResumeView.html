@@ -1,0 +1,23 @@
+<div>
+    <h3 class="text-primary">Evento <%= headline%> </h3>
+    <h4 class="text-muted"><%= subhead%></h4>
+    
+    <h5>
+        <label>Rubro: </label><%=rubro%>
+        <label>Sub Rubro:</label> <%=subrubro%>
+        <label>Tipo de audiencia:</label> <%=type_content%>
+        <label>Estado:</label> <%=estado_alta%>
+    </h5>
+    
+    <p>
+        <%= content%>
+    </p>
+    
+    
+    <% if(artists){ %>
+        <h4>Artistas invitados</h4>
+        <p>
+           <%= artists%> 
+        </p>
+    <% } %>
+</div>

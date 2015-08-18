@@ -12,15 +12,17 @@
 
 <!-- CSS BASE  aileiz0Shaew   /var/log/sisplan.log -->
 
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"> <!-- link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" -->
 	<link href="css/bootstrap-reset.css" rel="stylesheet">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/theme-admin.css" rel="stylesheet">
 	<link href="css/style-responsive.css" rel="stylesheet"/>
 
 <!--CSS ADICIONALES-->
-
+    <link href="css/jquery-ui.min.css" rel="stylesheet" >
+	<link href="/lib/select2/css/select2.css" rel="stylesheet">
 	<link href="css/agenda.css" rel="stylesheet">
+    <link href="css/actividades.css" rel="stylesheet">
 	<link href="/css/backbone-forms-bootstrap.css" rel="stylesheet">
 	<link href="css/bootstrap-tagsinput.css" rel="stylesheet">
 	<link href="lib/croppic/croppic.css" rel="stylesheet">
@@ -32,9 +34,10 @@
   	<link href="/lib/backgrid-paginator.css" rel="stylesheet" >
 
 	<link href="css/theme-fondo.css" rel="stylesheet">
-	<link href="css/datepicker3.css" rel="stylesheet">
+	<!-- <link href="css/datepicker3.css" rel="stylesheet"> -->
 
 	<link href="lib/pivottable/pivot.css" rel="stylesheet">
+    <link href="lib/timepicker/jquery.timepicker.css" rel="stylesheet" >
 
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -123,7 +126,6 @@
 <script src="/lib/backbone.paginator.min.js"></script>
 <!-- script src="/lib/backbone.picky.min.js"></script    -->
 <script src="lib/backbone.marionette.min.js"></script>
-<script src="lib/bootstrap.min.js"></script>
 
 <script src="/lib/backbone-forms.min.js"></script>
 <!-- script src="/lib/backbone-forms-bootstrap.js"></script -->
@@ -132,7 +134,13 @@
 <script src="/lib/backbone.picky.min.js"></script>
 <!-- -->
 <script src="//code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
-<script src="lib/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+	// Change JQueryUI plugin names to fix name collision with Bootstrap.
+	$.widget.bridge('uitooltip', $.ui.tooltip);
+	$.widget.bridge('uibutton', $.ui.button);
+</script>
+<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+<!-- <script src="lib/bootstrap-datepicker.js"></script> -->
 
 <script src="/sisplan/lib/bootstrap-notify.min.js"></script>
 
@@ -140,13 +148,19 @@
 <script src="/sisplan/lib/backgrid/backgrid-filter.min.js"></script>
 <script src="/lib/backgrid-paginator.js"></script>
 
+<script src="/lib/select2/js/select2.js"></script>
+
 <!-- script src="lib/TimeCircles.js"></script -->
 <script src="lib/moment.min.js"></script>
 <script src="lib/moment-locale-es.js"></script>
 
 <!--Maneja los tagsinput-->
 <script src="lib/bootstrap-tagsinput.min.js"></script>
-<script src="lib/fuelux.min.js"></script>
+<!-- <script src="lib/fuelux.min.js"></script> -->
+
+
+<script src="lib/rrule/rrule.js"></script>
+<script src="lib/rrule/nlp.js"></script>
 
 <!--conexion con FB y TW-->
 <!--script src="/mica2015/lib/socialnetworks.js"></script -->
@@ -174,6 +188,8 @@
 <script src="js/app.js"></script>
 <script src="js/tdata.js"></script>
 
+<script src="/commons/js/entities/assets.js"></script>
+
 <script src="js/entities/person.js"></script>
 <script src="js/entities/user.js"></script>
 <script src="js/entities/header.js"></script>
@@ -183,6 +199,16 @@
 <script src="js/entities/mica.js"></script>
 <script src="js/entities/micashowcase.js"></script>
 <script src="js/entities/micaagenda.js"></script>
+
+<!--actividades y eventos-->
+<script src="js/entities/area.js"></script>
+<script src="js/entities/action.js"></script>
+<script src="js/entities/location.js"></script>
+<script src="js/entities/artactivity.js"></script>
+<script src="js/entities/event.js"></script>
+<script src="js/entities/agenda.js"></script>
+
+
 
 <!--   commons  -->
 <script src="/commons/js/apps/helpers/message.js"></script>
@@ -246,6 +272,27 @@
 <script src="js/apps/profile/edit/edit_view.js"></script>
 <script src="js/apps/profile/edit/edit_controller.js"></script>
 
+<!--actividades y eventos -->
+<script src="js/apps/artactivities/artactivities_app.js"></script>
+<script src="js/apps/artactivities/list/list_controller.js"></script>
+<script src="js/apps/artactivities/list/list_view.js"></script>
+<script src="js/apps/artactivities/edit/edit_controller.js"></script>
+<script src="js/apps/artactivities/edit/edit_view.js"></script>
+<script src="js/apps/events/events_app.js"></script>
+<script src="js/apps/events/list/list_controller.js"></script>
+<script src="js/apps/events/list/list_view.js"></script>
+<script src="js/apps/events/edit/edit_controller.js"></script>
+<script src="js/apps/events/edit/edit_view.js"></script>
+<script src="js/apps/events/show/show_controller.js"></script>
+<script src="js/apps/events/show/show_view.js"></script>
+<script src="js/apps/agenda/agenda_app.js"></script>
+<script src="js/apps/agenda/list/list_controller.js"></script>
+<script src="js/apps/agenda/list/list_view.js"></script>
+
+<script src="js/apps/common/backbone-forms-validators.js"></script>
+<script src="js/apps/common/backbone-forms-editors.js"></script>
+<script src="js/apps/common/datepattern-form.js"></script>
+
 <script src="js/main.js"></script>
 
 <script src="lib/jquery.nicescroll.js"></script>
@@ -256,6 +303,8 @@
 <script src="lib/pivottable/pivot.min.js"></script>
 <script src="lib/pivottable/pivot.es.min.js"></script>
 
-
+<script src="lib/datepicker-es.js"></script>
+<script src="lib/timepicker/jquery.timepicker.min.js"></script>
+<script src="//cdn.ckeditor.com/4.4.7/standard/ckeditor.js"></script>
 </body>
 </html>

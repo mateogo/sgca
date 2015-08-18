@@ -5,9 +5,9 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       "inscripciones": "listInscriptions",
       "showcase/anotados": "listShowcase",
       "ranking/mica": "browseRanking",
-      "agenda": "agenda",
-      "agenda/:idSuscription/:rol": "agendaSuscriptor",
-      "agenda/estadisticas": 'statistics'
+      "agenda-rondas": "agenda",
+      "agenda-rondas/:idSuscription/:rol": "agendaSuscriptor",
+      "agenda-rondas/estadisticas": 'statistics'
 
     }
   });
@@ -61,7 +61,7 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
   });
 
   DocManager.on('micaagenda:agendaone:show',function(suscriptor,rol){
-    DocManager.navigate("agenda/" + suscriptor + '/'+rol);
+    DocManager.navigate("agenda-rondas/" + suscriptor + '/'+rol);
     API.agendaSuscriptor(suscriptor,rol);
   });
 
@@ -73,7 +73,7 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
   });
 
   DocManager.on('micaagenda:statistic',function(){
-    DocManager.navigate("agenda/estadisticas");
+    DocManager.navigate("agenda-rondas/estadisticas");
     API.statistics();
   });
 

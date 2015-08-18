@@ -24,8 +24,8 @@ utils.loadTemplate([
         'ranking/MicaRankingListLayout','ranking/MicaRankingItemLayout','ranking/MicaRankingItemView',
         'ranking/MicaRankingActorListItem', 'ranking/MicaRankingProfileLayout',
 
-        // -- Agenda
-        'agenda/AgendaListItem',
+        // -- Agenda de Rondas de negocio
+        'agenda-rondas/AgendaListItem',
 
 
         // MailSender
@@ -72,6 +72,15 @@ utils.loadTemplate([
         'showcase/IntegranteLayout','showcase/IntegranteForm',
         'showcase/ReferenceLayout','showcase/ReferenceForm',
         'showcase/MailShowcaseProvisorio','showcase/MailShowcaseDefinitivo',
+        
+        //ACTIVIDADES Y EVENTOS
+        'artactivities/ArtActivityListLayoutView','artactivities/ArtActivityEditLayoutView','artactivities/ArtActivityEditHeaderInfoView',
+        'artactivities/ArtActivityResumeView','artactivities/ArtActivityEditBasicView','artactivities/ArtActivityEditBasicForm',
+        'events/EventListLayoutView','events/EventEditLayout','events/EventEditForm',
+        'events/EventDateItemRender','events/EventDateItemEditor','events/EventResumeView',
+        'attachmentview/AttachmentItemEditorView','attachmentview/AttachmentLayoutView','attachmentview/AttachmentItem',
+        'common/DatePatternForm',
+        'agenda/AgendaLayoutView','agenda/AgendaItemRender', 'agenda/AgendaFilterView',
 
 
     ], function() {
