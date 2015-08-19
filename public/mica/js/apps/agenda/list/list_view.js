@@ -61,7 +61,8 @@ DocManager.module("AgendaApp.List", function(List, DocManager, Backbone, Marione
     },
 
     openClicked: function(e){
-      DocManager.trigger('agenda:openItem',this.model);
+      console.log('el item seleccionado',this.model);
+      DocManager.trigger('agenda:showItem',this.model);
     }
 
   });

@@ -7,7 +7,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         initialize: function(opts){
           _.bindAll(this, 'updateAction');
 
-          if(opts.action){
+          if(opts && opts.action){
             var slug   = this.get('slug')   || opts.action.slug;
             var fdesde = this.get('fdesde') || opts.action.feaccion;
             var fhasta = this.get('fhasta') || opts.action.feaccion;
@@ -236,6 +236,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     });
 
     Entities.ArtActivityFilterFacet =  Backbone.Model.extend({
+      model: Entities.ArtActivity,
       initialize: function(opts){
         /* XXX schema se evalúa antes de cargar los datos desde la base, por lo que solo tiene los defaults.
          * Podría usar la forma de function, pero, en otros lados del sistema se sobreescribe así como así partes del mismo
@@ -267,6 +268,36 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         });
         return ret;
       }
+    });
+
+
+    var API = {
+      loadByCNumber: function(cnumber){
+        var def = $.Deferred();
+
+        if(cnumber instanceof Entities.Agenda){
+          cnumber = cnumber.get('cnumber');
+          model = (cnumber.charAt(0) === 'E')? new Entities.Event(cnumber) : new Entities.ArtActivity(cnumber);
+          def.resolve(model);
+        }else {
+          model = (cnumber.charAt(0) === 'E')? new Entities.Event() : new Entities.ArtActivity();
+          model.fetch({data:{cnumber:cnumber}})
+          .done(function(result){
+            if(result && result.length > 0){
+              model.set(result[0]);
+              def.resolve(model);
+            }else{
+              def.reject('not found');
+            }
+          }).fail(def.reject);
+        }
+
+        return def.promise();
+      }
+    };
+
+    DocManager.reqres.setHandler('artactivity:item:load', function(cnumber){
+      return API.loadByCNumber(cnumber);
     });
 
 });

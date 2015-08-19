@@ -12,13 +12,8 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
       mainRegion: '.main-region'
     },
 
-    goToList: function(){
-      DocManager.trigger('artactivities:list');
-    },
-
     events: {
-      'click .js-basicedit': 'onClickBaseEdit',
-      'click .js-artactivites': 'goToList'
+      'click .js-basicedit': 'onClickBaseEdit'
     },
 
     onClickBaseEdit: function(){
@@ -61,13 +56,16 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
         this.$el.find('#navbar-region li').removeClass('disabled');
       }
     },
+
+
     events: {
       'click .js-openevent': 'openEventClicked',
       'click .js-openresume': 'openResumeClicked',
       'click .js-openasset': 'openAssetsClicked',
       'click .js-openresource': 'notYet',
       'click .js-openresults':  'openResultsClicked',
-      'click .js-opentask': 'notYet'
+      'click .js-opentask': 'notYet',
+      'click .js-artactivites': 'goBackToList'
     },
 
     selectTab: function(str){
@@ -108,7 +106,11 @@ DocManager.module('ArtActivitiesApp.Edit', function(Edit, DocManager, Backbone, 
       if(this.disabledSubTabs) return;
 
       DocManager.trigger('artActivity:results',this.model);
-    }
+    },
+
+    goBackToList: function(){
+      DocManager.trigger('artactivities:list');
+    },
   });
 
   Edit.ResumeView = Marionette.ItemView.extend({

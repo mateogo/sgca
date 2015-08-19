@@ -1,23 +1,30 @@
 DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
-  
+
   var CommonViews = DocManager.module('Common.views');
   var Entities = DocManager.module('Entities');
-  
+
   var AppCommon = DocManager.module('App.Common');
-  
+
   Edit.Layout = Marionette.LayoutView.extend({
     className: 'row row-offcanvas row-offcanvas-left wrapper',
 
     getTemplate: function(){
       return utils.templates.EventEditLayout;
     },
-    
+
     regions: {
       headerInfoRegion: '#headerinfo-region',
       mainRegion:    '.main-region'
+    },
+
+    goToList: function(){
+      DocManager.trigger('artactivities:list');
+    },
+    events: {
+      'click .js-artactivites': 'goToList'
     }
   });
-  
+
   Edit.Editor = Marionette.ItemView.extend({
     tagName: 'div',
     initialize: function(opts){
@@ -28,9 +35,9 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
         model: model,
         template: utils.templates.EventEditForm
       });
-      
+
       this.autoFillLocalLeyenda = !(model.get('localleyenda'));
-      
+
       Marionette.ItemView.prototype.initialize.apply(this,arguments);
     },
     getTemplate: function(){
@@ -77,22 +84,22 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
 
       return dfd.promise();
     },
-    
+
     validateFechaType: function(){
       var type = this.$el.find('[name=ftype]').val();
       var showFHasta = (type === Entities.Event.TYPE_FROMTO);
       var contFechaRep = (type === Entities.Event.TYPE_REPEAT);
-      
+
       if(showFHasta || contFechaRep){
         this.$el.find('#contFechaHasta').show();
       }else{
         this.$el.find('#contFechaHasta').hide();
-      } 
-      
+      }
+
       if(contFechaRep){
         this.$el.find('#contFechaRep').show();
         this.$el.find('#singleDate').hide();
-        var dates = this.model.get('dates'); 
+        var dates = this.model.get('dates');
         if(dates && dates.length <2){
           this.openDatesGenerators();
         }
@@ -101,10 +108,10 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
         this.$el.find('#singleDate').show();
       }
     },
-    
+
     validateDates: function(){
       console.log('validando fechas');
-      
+
       var dates = this.model.get('dates');
       this.datesCollection = new Backbone.Collection(dates);
       this.datesCollection.comparator = function(a,b){
@@ -112,7 +119,7 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
         var d2 = b.get('dfecha');
         if(!(d1 instanceof Date)) d1 = new Date(d1);
         if(!(d2 instanceof Date)) d2 = new Date(d2);
-        
+
         if(d1 < d2) return -1;
         if(d1 > d2) return 1;
         return 0;
@@ -123,10 +130,10 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
         self.datesCollection.sort();
         //self.setDates(self.datesCollection.toJSON());
       });
-      
+
       this.$el.find('#datesContainer').html(this.datesView.render().el);
     },
-    
+
     getFDesde: function(){
       var fecha = this.$el.find('[name=fdesde]').datepicker('getDate');
       var hora = this.$el.find('[name=hdesde]').timepicker('getTime');
@@ -135,36 +142,36 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
       }
       return fecha;
     },
-    
+
     commitDates: function(){
-      
-      
+
+
       // setea fechas en base a fecha de repeticion
       var dates = this.datesCollection.toJSON();
       this.model.set('dates',dates);
       if(dates.length > 0){
         var first = dates[0].dfecha;
         if(!(first instanceof Date)) first = new Date(first);
-        
+
         var last = dates[dates.length-1].dfecha;
         if(!(last instanceof Date)) last = new Date(last);
-        
+
         this.$el.find('[name=fdesde]').datepicker('setDate',first);
         this.$el.find('[name=hinicio]').timepicker('setTime',first);
         this.$el.find('[name=fhasta]').datepicker('setDate',last);
         this.$el.find('[name=hfin]').timepicker('setTime',last);
       }
     },
-    
+
     done: function(){
       DocManager.navigateBack();
     },
-    
+
     openDatesGenerators: function(){
         var self = this;
         var datePatternForm = new CommonViews.DatePatternForm({model:this.model});
-        
-        
+
+
        var modal = new Backbone.BootstrapModal({
          content: datePatternForm,
          title: '',
@@ -172,21 +179,21 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
          cancelText: 'cancelar',
          enterTriggersOk: false,
        });
-       
+
        modal.on('ok',function(){
            var dates = datePatternForm.getAllDates();
            var otherFields = datePatternForm.getOtherFields();
            for (var i = 0; i < dates.length; i++) {
              dates[i] = _.extend({dfecha: dates[i]},otherFields);
-             
+
            }
            self.datesCollection.add(dates);
            //self.setDates(dates);
        });
-       
+
        modal.open();
     },
-    
+
     events: {
        'change [name=ftype]': 'onChangeFType',
        'click .js-newdate': 'onNewDate',
@@ -212,27 +219,27 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
     onChangeFType: function(e){
       this.validateFechaType();
     },
-    
+
     onNewDate: function(e){
       var date = {fdesde:null,hinicio:null,hfin:null};
       this.datesCollection.push(date);
     },
-    
+
     onClearDates: function(e){
       e.stopPropagation();
       if(!this.model.get('dates')) return;
-      
+
       var self = this;
       DocManager.confirm('¿Está seguro de borrar todas las fechas?').done(function(){
         self.datesCollection.reset([]);
         self.model.set('dates',[]);
       });
     },
-    
+
     onChangeLocation: function(e){
       this.validateLocation();
     },
-    
+
     onChangeLocal: function(e){
       var value = this.$el.find('[name=local] option:selected').text();
       var fieldBind = this.$el.find('[name=localleyenda]');
@@ -240,33 +247,33 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
         fieldBind.val(value);
       }
     },
-    
+
     onKeyUpLocalLeyenda: function(e){
       var value = $(e.currentTarget).val();
       this.autoFillLocalLeyenda = value == '';
     },
-    
+
     onSave: function(){
       this.commitDates();
       var errors = this.form.commit();
-      
+
       if(errors){
         Message.warning('Por favor revise el formulario');
         return;
       }
-      
+
       var fdesde = this.model.get('fdesde');
       var fhasta = this.model.get('fhasta');
-      
+
       var hinicio = this.model.get('hinicio');
       var hfin = this.model.get('hfin');
-      
+
       hinicio = utils.mergeDateTime(fdesde,hinicio);
       hfin = utils.mergeDateTime(fhasta,hfin);
-      
+
       this.model.set('hinicio',hinicio);
       this.model.set('hfin',hfin);
-      
+
       var self = this;
       this.model.save().done(function(){
         Message.success('Guardado');
@@ -275,15 +282,15 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
         Message.error('Ops! no se pudo guardar');
       });
     },
-    
+
     onCancel: function(e){
       this.done();
     }
   });
-  
-  
+
+
   //EDITOR ITEM DATE
-  
+
   Edit.ItemDate = Marionette.ItemView.extend({
     tagName: 'div',
     initialize: function(){
@@ -295,23 +302,23 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
       if(this.modeEdit){
         return utils.templates.EventDateItemEditor;
       }else{
-        return utils.templates.EventDateItemRender; 
+        return utils.templates.EventDateItemRender;
       }
     },
-    
+
     onRender: function(){
       var date = this.model.get('dfecha');
       var hinicio = this.model.get('hinicio');
       var hfin = this.model.get('hfin');
-      
+
       if(!(date instanceof Date)) date = new Date(date);
       if(hinicio && !(hinicio instanceof Date)) hinicio = new Date(hinicio);
       if(hfin && !(hfin instanceof Date)) hfin = new Date(hfin);
-      
-      
+
+
       if(this.modeEdit){
         var timeParams = {timeFormat:'H:i'};
-        
+
         this.$el.find('[name=date]').datepicker({format:'dd/mm/YYYY'}).datepicker('setDate',date);
         this.$el.find('[name=hinicio]').timepicker(timeParams).timepicker('setTime',hinicio);
         this.$el.find('[name=hfin]').timepicker(timeParams).timepicker('setTime',hfin);
@@ -328,7 +335,7 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
           str += '<span class="text-muted">' + moment(hinicio).format('LT') + '</span>';
         }
         if(this.model.get('duration')) str += ' '+ this.model.get('duration');
-        if(this.model.get('leyenda')) str += ' - '+ this.model.get('leyenda');  
+        if(this.model.get('leyenda')) str += ' - '+ this.model.get('leyenda');
         this.$el.find('#label').html(str);
       }
     },
@@ -336,17 +343,17 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
       this.modeEdit = (typeof(hide) === 'undefined') || (hide !== false);
       this.render();
     },
-    
+
     commit: function(){
       var date = this.$el.find('[name=date]').datepicker('getDate');
       var hinicio = this.$el.find('[name=hinicio]').timepicker('getTime');
       var hfin = this.$el.find('[name=hfin]').timepicker('getTime');
       var duration = this.$el.find('[name=duration]').val();
       var leyenda = this.$el.find('[name=leyenda]').val();
-      
+
       hinicio = utils.mergeDateTime(date,hinicio);
       hfin = utils.mergeDateTime(date,hfin);
-      
+
       this.model.set('dfecha',date);
       this.model.set('hinicio',hinicio);
       this.model.set('hfin',hfin);
@@ -354,14 +361,14 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
       this.model.set('duration',duration);
       this.model.set('leyenda',leyenda);
     },
-    
+
     events: {
       'click .js-edit': 'onEdit',
       'click .js-save': 'onSave',
       'click .js-cancel': 'onCancel',
       'click .js-removedate': 'onRemoveDate'
     },
-    
+
     onEdit: function(e){
       e.stopPropagation();
       this.editMode();
@@ -379,11 +386,11 @@ DocManager.module("EventsApp.Edit", function(Edit, DocManager, Backbone, Marione
       e.stopPropagation();
       this.model.collection.remove(this.model);
     }
-    
+
   });
-  
+
   Edit.CollectionDateView = Marionette.CollectionView.extend({
     childView: Edit.ItemDate
   });
-  
+
 });

@@ -1,16 +1,16 @@
 DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionette, $, _){
-    
+
     Entities.Event = Backbone.Model.extend({
         urlRoot: "/eventos",
         whoami: 'event:backboneModel ',
         idAttribute: "_id",
-        
+
         initialize: function(opts){
           Backbone.Model.prototype.initialize.apply(this,arguments);
-          
-          if(opts.artactivity && this.isNew()){
-            var activity = opts.artactivity;  
-            
+
+          if(opts && opts.artactivity && this.isNew()){
+            var activity = opts.artactivity;
+
             this.set('headline',activity.slug);
             this.set('fdesde',activity.fdesde);
             this.set('fhasta',activity.fhasta);
@@ -18,12 +18,13 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
             this.set('estado_alta',activity.estado_alta);
             this.set('nivel_ejecucion',activity.nivel_ejecucion);
             this.set('nivel_importancia',activity.nivel_importancia);
-            
+
             if(!(opts.artactivity instanceof Entities.ArtActivity)){
               opts.artactivity = new Entities.ArtActivity(opts.artactivity);
             }
           }
-          this.schema.location.options.fetch();
+          //TODO: location deshabilitada
+          //this.schema.location.options.fetch();
         },
 
         defaults: {
@@ -31,32 +32,32 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           cnumber: null,
           fealta: null,
           feultmod: null,
-          
+
           headline: '', // titulo
           subhead: '', // bajada
           subhead_pro: '', // bajada destacada
           volanta: '',
-          
+
           estado_alta: null,
           nivel_ejecucion: null,
           nivel_importancia: null,
           obs: '',
-          
+
           location: '',
           espacios:[],
-          
+
           ftype: '', // tipo de fecha (puntual, fecha-hasta,repeticion)
           fdesde: null, //fecha y hora
           fhasta: null, //fecha y hora
           duration: 0,
           leyendafecha: '',
-          
+
           content: '',
           artists: '', // descripción de los artistas que participan
-          
+
           assets_id: [] //array de referencias a assets
         },
-        
+
         schema: {
           headline:  { validators: ['required'], title: 'Título'},
           subhead:  { validators: ['required'], title: 'Bajada'},
@@ -68,10 +69,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           obs: {type:'TextArea',title:'Observaciones'},
           location: {type:'Select',title:'Locación', options: new DocManager.Entities.LocationCollection()},
           espacios: {type:'Select2', title:'Espacios', options:[],config: { multiple: 'true'}},
-          
+
           content: {type:'RichText',title:'Contenido'},
           artists: {type:'TextArea',title:'Artistas'},
-          
+
           ftype: {type:'Select',title:'Tipo fecha',options:[{val:'puntual',label:'Puntual'},{val:'desde-hasta',label:'Fecha desde-hasta'},{val:'repeticion',label:'Repetición'}]},
           fdesde: {type:'DatePicker',title:'Fecha desde'},
           fhasta: {type:'DatePicker',title:'Fecha hasta'},
@@ -80,11 +81,11 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           hfin: {type:'TimePicker',title:'Hora Fin'},
           leyendafecha: {type:'Text',title:'Leyenda Fecha'}
         },
-        
+
         load: function(){
           return $.when(this.loadArtActivity(),this.loadAssets());
         },
-        
+
         loadArtActivity: function(){
           var self = this;
           var def = $.Deferred();
@@ -94,7 +95,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               artactivity = new Entities.ArtActivity(artactivity);
               this.set('artactivity',artactivity);
             }
-            
+
             def.resolve(this.get('artactivity'));
           }else{
             var p = Entities.ArtActivity.findById(this.get('artactivity_id'));
@@ -103,7 +104,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               def.resolve(activity);
             }).fail(def.reject);
           }
-          
+
           def.done(function(activity){
             if(self.isNew()){
               self.set('fdesde',activity.get('fdesde'));
@@ -111,7 +112,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               self.set('leyendafecha',activity.get('leyendafecha'));
             }
           });
-          return def.promise(); 
+          return def.promise();
         },
         loadAssets: function(){
           var def = $.Deferred();
@@ -125,23 +126,23 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           }
           return def;
         },
-        
+
         toJSON: function(){
           var json = this.attributes;
-          
+
           //delete json.assets;
-            
+
           return json;
         }
-        
-        
+
+
     },{
       //static methods
       findById: function(id){
         if(!this.cache) this.cache = {};
-        
+
         var def = $.Deferred();
-        
+
         if(id in this.cache){
           def.resolve(this.cache[id]);
         }else{
@@ -156,18 +157,18 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
               }
           },def.reject);
         }
-        
+
         return def.promise();
       },
       TYPE_REPEAT: 'repeticion',
       TYPE_FROMTO: 'desde-hasta'
     });
-    
+
     Entities.EventCollection = Backbone.Collection.extend({
 
       model: Entities.Event,
 
       url: "/eventos"
   });
- 
+
 });

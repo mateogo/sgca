@@ -2,6 +2,8 @@ window.tdata = {
 
     whoami:'tdata.js',
 
+    formatLongDate: 'dddd, D MMMM YYYY, HH:mm',
+
     fetchListKey:function(list, key){
         var node = _.find(list, function(data){return data.val === key;});
         return node;

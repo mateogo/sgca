@@ -1,0 +1,32 @@
+<div>
+  <button type="button" name="button" class="btn btn-default btn-sm js-returnsearch"><i class="glyphicon glyphicon-chevron-left"></i> Volver a la lista</button>
+  <h1>Detalle el evento</h1>
+
+
+  <div class="media agenda-item">
+    <div class="media-left">
+      <a>
+        <img class="media-object img-thumbnail" src="" style="width:240px;height:240px">
+      </a>
+    </div>
+    <div class="media-body">
+      <h4 class="media-heading text-primary js-open" style="cursor:pointer">
+        <% if(typeof(slug) != 'undefined') {%>
+          <%= slug %>
+        <% } %>
+        <% if(typeof(headline) != 'undefined') {%>
+          <%= headline %>
+        <% } %>
+        <small><%=leyendafecha%></small></h4>
+      <h5 class="text-info">
+      </h5>
+      <p class="text-muted">
+        <% if(typeof(description) != 'undefined') {%>
+          <%= description %>
+        <% } %>
+      </p>
+    </div>
+  </div>
+
+
+</div>

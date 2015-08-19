@@ -72,7 +72,7 @@ utils.loadTemplate([
         'showcase/IntegranteLayout','showcase/IntegranteForm',
         'showcase/ReferenceLayout','showcase/ReferenceForm',
         'showcase/MailShowcaseProvisorio','showcase/MailShowcaseDefinitivo',
-        
+
         //ACTIVIDADES Y EVENTOS
         'artactivities/ArtActivityListLayoutView','artactivities/ArtActivityEditLayoutView','artactivities/ArtActivityEditHeaderInfoView',
         'artactivities/ArtActivityResumeView','artactivities/ArtActivityEditBasicView','artactivities/ArtActivityEditBasicForm',
@@ -81,6 +81,7 @@ utils.loadTemplate([
         'attachmentview/AttachmentItemEditorView','attachmentview/AttachmentLayoutView','attachmentview/AttachmentItem',
         'common/DatePatternForm',
         'agenda/AgendaLayoutView','agenda/AgendaItemRender', 'agenda/AgendaFilterView',
+        'agenda/AgendaActivityShow','agenda/AgendaEventShow',
 
 
     ], function() {

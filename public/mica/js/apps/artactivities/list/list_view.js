@@ -46,11 +46,11 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
     agendaClicked: function(e){
       DocManager.trigger('agenda:list',null);
     },
-    
+
     newClicked: function(e){
       DocManager.trigger('artactivity:new',{});
     }
-    
+
 
   });
 
@@ -125,6 +125,16 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
   });
 
 
+  var fDesdeHastaCell = Backgrid.Cell.extend({
+    render:function(){
+      var desde = this.model.get('fdesde');
+      var hasta = this.model.get('fhasta');
+      this.$el.html(moment(desde).format(tdata.formatLongDate) + ' <br/>' +
+                    moment(hasta).format(tdata.formatLongDate));
+      return this;
+    }
+  });
+
 
   List.GridCreator = function(collection){
     return new Backgrid.Grid({
@@ -132,7 +142,7 @@ DocManager.module("ArtActivitiesApp.List", function(List, DocManager, Backbone, 
         collection: collection,
         columns: [{name: 'cnumber',label: 'Actividad',cell: activityCell,editable:false},
                   {name: 'action.cnumber',label: 'Acción',editable:false, cell: actionCell},
-                  {name: 'fealta',label: 'Fecha Alta',cell: 'string',editable:false},
+                  {name: 'fdesde',label: 'Fecha',cell: fDesdeHastaCell,editable:false},
                   {name: 'slug',label: 'Asunto-Descripción',cell: 'string',editable:false},
                   {name: 'estado_alta',label: 'Estado de alta',cell: fieldLabelCell,editable:false},
                   {name: 'nivel_ejecucion',label: 'Nivel de ejecución',cell: fieldLabelCell,editable:false},
