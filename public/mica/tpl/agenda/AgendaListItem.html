@@ -6,6 +6,8 @@
           <%=getContraparte()%>
       </div>
       <div class="col-md-3">
-          <span class="text-muted"><%=estado%></span>
+          <% _.each(getActions(),function(action){ %>
+                <a class="btn-link js-runaction" data-name="<%=action.name%>" style="cursor:pointer"><%=action.label%></a> |
+          <%  }) %>
       </div>
   </div>

@@ -26,7 +26,6 @@ var MicaAgendaService = function(userLogged){
 };
 
 //TODO:
-// - verificar caso de reunion disponibles con numero intermedio
 // - verificar que ya no esten reunidos un comprador + vendedor
 // - guardar FK en interactions
 
@@ -72,33 +71,63 @@ MicaAgendaService.prototype.assign = function(compradorRef,vendedorRef,cb){
       });
     },
 
-    //TODO: chequear que no esten ya en una reunion
-    function(cb){
-      cb();
-    },
-
     // buscar numero de reuniones posibles
     function(cb){
       self._crossAvailability(comprador,vendedor,function(err,results){
         if(err) return cb(err);
         nums_availables = results;
+        if(!nums_availables){
+          nums_availables = [];
+        }
         cb();
       });
     },
 
-   //crea la reunion si hay disponibles lugar
+    // chequea reuniones previas
+    function(cb){
+      // busca si existe reunion para el comprador y vendedor
+      // si existe retorna esa reunion
+
+      var query = {
+        'comprador._id': comprador._id.toString(),
+        'vendedor._id': vendedor._id.toString()
+      };
+
+      MicaAgenda.find(query,function(err,results){
+        if(err) return cb(err);
+
+        if(results && results.length > 0){
+          var previous = results[0];
+
+          // si ahora hay disponibiliad y la anterior es no disponible, se borra la ultima
+          if(previous.get('estado') === MicaAgenda.STATUS_UNAVAILABLE && nums_availables.length > 0){
+              self.remove(previous.id,cb);
+          }else{
+            cb({previous:results[0]});
+          }
+
+        }else{
+          cb();
+        }
+      });
+    },
+
+   //crea la reunion
+   // si no hay disponibles crea una reunion con estado no disponible
    function(cb){
      var num_reunion = 0;
 
-     if(nums_availables && nums_availables.length > 0){
+     if(nums_availables.length > 0){
        num_reunion  = nums_availables[0];
      }
 
-     var estado = (num_reunion !== 0) ? MicaAgenda.STATUS_DRAFT : MicaAgenda.STATUS_UNAVAILABLE;
+     var estado = (num_reunion !== 0) ? MicaAgenda.STATUS_ASIGNED : MicaAgenda.STATUS_UNAVAILABLE;
      self._createReunion(comprador,vendedor,num_reunion,estado,cb);
    }
 
   ],function(err,results){
+
+    if(err && err.previous) return cb(null,err.previous);
     if(err) return cb(err);
 
     cb(null,results[results.length-1]);
@@ -184,7 +213,7 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
             }
           }
 
-          // agregan las reuiones faltantes, se marcan como libres
+          // agregan las reuniones faltantes, se marcan como libres
           for (var num = 1; num <= COUNT_REUNIONES; num++) {
             if(!(num.toString() in map)){
               var tmp = new MicaAgenda();
@@ -218,6 +247,51 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
 
 };
 
+MicaAgendaService.prototype.save = function(obj,callback){
+  obj = (obj.toJSON)? obj.toJSON() : obj;
+  obj.usermod = this.userLogged;
+
+  async.series([
+
+    // carga perfil completo del comprador
+    function(callback){
+      if(!obj.comprador){
+        return callback();
+      }
+
+      MicaSuscription.findById(obj.comprador._id,function(err,result){
+        if(err) return callback(err);
+
+        obj.comprador = result.toJSON();
+        callback();
+      });
+    },
+
+    //carga perfil completo del vendedor
+    function(callback){
+      if(!obj.vendedor){
+        return callback();
+      }
+
+      MicaSuscription.findById(obj.vendedor._id,function(err,result){
+        if(err) return callback(err);
+
+        obj.vendedor = result.toJSON();
+        callback();
+      });
+    },
+
+    // guarda reunion
+    function(callback){
+      var micaAgenda = new MicaAgenda(obj);
+      micaAgenda.save(callback);
+    }
+  ],function(err,results){
+    if(err) return callback(err);
+
+    callback(null,results[results.length-1]);
+  });
+};
 
 /**
  * guarda parcial de
@@ -459,7 +533,36 @@ MicaAgendaService.prototype._createReunion = function(comprador,vendedor,numero,
   reunion.set('usermod',this.userLogged);
   reunion.set('useralta',this.userLogged);
 
+  var self = this;
   async.series([
+
+    //BUSCA REUNION LIBRES ANTERIORES, para eliminarlas
+    function(cb){
+      // buscar reunion libre para comprador y numero
+      // si exite, la borra
+      // lo mismo para el vendedor
+
+      var $or = [];
+      $or.push({'comprador._id':comprador._id.toString(),num_reunion:numero,estado:'libre'});
+      $or.push({'vendedor._id':vendedor._id.toString(),num_reunion:numero,estado:'libre'});
+
+      var query = {$or: $or};
+      // console.log('buscando viejas',query);
+      MicaAgenda.find(query,function(err,results){
+        if(err) console.log('ERROR',err);
+        if(err) return cb(err);
+        // console.log('BORRANDO',results);
+        async.eachSeries(results,function(item,cb){
+          self.remove(item.id,cb);
+        },function(err,results){
+          // console.log('TERMINO');
+          if(err) console.log('ERROR',err);
+          // termino de borrar las anteriores
+          cb(err);
+        });
+      });
+    },
+
     //GUARDAR REUNION
     function(cb){
       reunion.save(function(err,result){
@@ -500,7 +603,7 @@ MicaAgendaService.prototype._createReunion = function(comprador,vendedor,numero,
   ],function(err,results){
     if(err) return cb(err);
     // retorna la reunion guardada
-    cb(null,results[0]);
+    cb(null,reunion);
   });
 };
 

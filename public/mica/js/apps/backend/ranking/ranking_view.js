@@ -18,18 +18,25 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
     onRender: function(){
       var self = this;
     },
-    
+
     events: {
       'click button.js-close': 'closeView',
       'click button.js-aceptar-micaranking': 'aceptarMicaranking',
+      'click .js-openagenda': 'openAgenda',
     },
 
     aceptarMicaranking: function(e){
       this.trigger('accept:micaranking');
     },
-    
+
     closeView: function(e){
       this.trigger('close:view');
+    },
+
+    openAgenda: function(e){
+      e.stopPropagation();
+      var rol = $(e.currentTarget).data('rol');
+      DocManager.trigger('micaagenda:agendaone:show:popup',this.model.get('profileid'),rol);
     },
 
     templateHelpers: function(){
@@ -42,7 +49,15 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
           return self.model.getFieldLabel(fieldName);
         },
         rolMica: function(){
-          return self.model.rolLabel();
+          var comprador = self.model.isCompradorLabel();
+          var vendedor = self.model.isVendedorLabel();
+          if(comprador){
+            comprador = ' <a class="btn-link js-openagenda" style="cursor:pointer" data-rol="comprador" data-tooltip="ver agenda como comprador">'+comprador+'</a> ';
+          }
+          if(vendedor){
+            vendedor = ' <a class="btn-link js-openagenda" style="cursor:pointer" data-rol="vendedor" data-tooltip="ver agenda como vendedor">'+vendedor+'</a> ';
+          }
+          return comprador + vendedor;
         },
         getActividad: function(){
           return self.model.getActividadLabel();
@@ -220,7 +235,7 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
           self.trigger('profile:view', model, profileId);
         });
         self.emisorRegion.show(emisorList);
- 
+
       });
 
       $.when(DocManager.request("micainteractions:query:receptorlist", self.model)).done(function(list){

@@ -54,12 +54,18 @@ var MicaAgenda = BaseModel.extend({
           var useralta = self.get('useralta');
           var usermod = self.get('usermod');
 
+
           var suscriptorSerializer = function(model,rol){
             raw = (model.toJSON)? model.toJSON() : model;
-            var actividades = (rol === 'comprador') ? raw.comprador.cactividades : raw.vendedor.vactividades;
-            raw = _.pick(raw,'_id','responsable','solicitante');
+
+            if(rol in raw){
+              var actividades = (rol === 'comprador') ? raw.comprador.cactividades : raw.vendedor.vactividades;
+              raw.actividades = actividades;
+            }
+
+            raw = _.pick(raw,'_id','responsable','solicitante','actividades');
             raw._id = raw._id.toString();
-            raw.actividades = actividades;
+
             return raw;
           };
 
@@ -72,12 +78,12 @@ var MicaAgenda = BaseModel.extend({
 
          var raw;
          if(comprador){
-           raw =  suscriptorSerializer(comprador);
+           raw =  suscriptorSerializer(comprador,'comprador');
            self.set('comprador',raw);
          }
 
          if(vendedor){
-           raw = suscriptorSerializer(vendedor);
+           raw = suscriptorSerializer(vendedor,'vendedor');
            self.set('vendedor',raw);
          }
 
@@ -101,15 +107,15 @@ var MicaAgenda = BaseModel.extend({
   entityCol: entityCol,
   defaultSort: {cnumber:1},
   STATUS_FREE: 'libre',
-  STATUS_DRAFT: 'borrador',
   STATUS_OBS: 'observado',
-  STATUS_CONFIRM: 'confirmado',
+  STATUS_ASIGNED: 'asignado',
+  STATUS_BLOCKED: 'bloqueado',
   STATUS_UNAVAILABLE: 'unavailable',
 
   statistics: function(cb){
     BaseModel.dbi.collection(this.entityCol, function(err, collection) {
       var match = {
-        estado: MicaAgenda.STATUS_DRAFT
+        estado: MicaAgenda.STATUS_ASIGNED
       };
 
       var group = {

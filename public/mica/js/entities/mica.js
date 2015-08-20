@@ -1,14 +1,14 @@
 DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionette, $, _){
-    
+
   Entities.MicaRegistration = Backbone.Model.extend({
     urlRoot: "/micasuscriptions",
     whoami: 'MicaRegistration:mica.js ',
     idAttribute: "_id",
-    
+
     initialize: function(opts){
 
     },
-    
+
     getAvatar: function(){
       var avatar = this.get('solicitante').eavatar;
       if(avatar && avatar.urlpath){
@@ -26,7 +26,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     getFieldLabel: function(field){
       var value;
       if(!field) return '';
-      
+
       if(this[field]) return this[field]();
 
       if(field.indexOf('.')!=-1){
@@ -54,7 +54,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         return errors;
       }
     },
-    
+
     initDataForEdit: function(){
       this.facetFactory();
 
@@ -124,7 +124,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return false;
 
       // MICA ESTA CERRADO
-      // La regla es que tengan perfiles cruzados entre self y other profile 
+      // La regla es que tengan perfiles cruzados entre self y other profile
       // var self = this;
       // if(self.id === otherprofile.id)
       //   return false;
@@ -158,7 +158,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           tokendata;
 
       if(!userid || !self.id) return;
-      
+
       tokendata = self.get(userid) || {};
       tokendata[modosolicitud] = newvalue;
 
@@ -172,17 +172,17 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           tokendata;
 
       if(!userid || !self.id) return;
-      
+
       tokendata = self.get(userid) || {};
 
 
       if(tokendata.favorito){
- 
+
         if(tokendata.favorito == true || tokendata.favorito == 'true')
           tokendata.favorito = false;
         else
           tokendata.favorito = true;
- 
+
       }else{
        tokendata.favorito = true;
       }
@@ -211,7 +211,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       edicionevento: '2015',
       nivel_ejecucion: 'enproceso',
 
-      //user 
+      //user
       user:{
         usermail: '',
         userid: '',
@@ -264,7 +264,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         ridiomas: '',
         representantes: [],
       },
-      
+
       isComprador: '',
       isVendedor: '',
 
@@ -285,7 +285,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           videojuegos: false,
         },
 
-*/      
+*/
         sub_aescenicas: {
           diseniador: false,
           direccion: false,
@@ -435,7 +435,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       },
 
 
-      
+
     },
 
     facetFactory: function (){
@@ -449,7 +449,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     },
 
   });
-    
+
   Entities.MicaRegistrationCol = Backbone.Collection.extend({
     model: Entities.MicaRegistration,
     url: "/micasuscriptions"
@@ -484,7 +484,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     state:{
       firstPage: 1,
-      pageSize: 15, 
+      pageSize: 15,
     },
     queryParams:{
       currentPage: 'page',
@@ -512,7 +512,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     }
 
    // // You can remap the query parameters from `state` keys from
-  
+
   });
 
 
@@ -590,7 +590,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     state:{
       firstPage: 1,
-      pageSize: 15, 
+      pageSize: 15,
     },
     queryParams:{
       currentPage: 'page',
@@ -720,7 +720,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           // }
       };
 
-      xhr.send(formData);    
+      xhr.send(formData);
 
     },
 
@@ -816,7 +816,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     urlRoot: "/micasuscriptions",
     whoami: 'MicaStepOneFacet:mica.js ',
     idAttribute: "_id",
-    
+
     initialize: function(opts){
 
     },
@@ -891,7 +891,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     urlRoot: "/micasuscriptions",
     whoami: 'MicaStepTwoFacet:mica.js ',
     idAttribute: "_id",
-    
+
     initialize: function(opts){
 
     },
@@ -956,7 +956,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     urlRoot: "/micasuscriptions",
     whoami: 'MicaStepThreeFacet:mica.js ',
     idAttribute: "_id",
-    
+
     initialize: function(opts){
 
     },
@@ -997,7 +997,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         if (_.has(attrs,'vactividades') && (!attrs.vactividades )) {
           errors.vactividades = "No puede ser nulo";
         }
-        
+
         if (_.has(attrs,'vcomentario') && (!attrs.vcomentario )) {
           errors.vcomentario = "No puede ser nulo";
         }
@@ -1025,7 +1025,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     urlRoot: "/micasuscriptions",
     whoami: 'MicaStepFourFacet:mica.js ',
     idAttribute: "_id",
-    
+
     initialize: function(opts){
 
     },
@@ -1064,7 +1064,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         if (_.has(attrs,'cactividades') && (!attrs.cactividades )) {
           errors.cactividades = "No puede ser nulo";
         }
-        
+
         if (_.has(attrs,'ccomentario') && (!attrs.ccomentario )) {
           errors.ccomentario = "No puede ser nulo";
         }
@@ -1092,7 +1092,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     urlRoot: "/micasuscriptions",
     whoami: 'MicaStepFiveFacet:mica.js ',
     idAttribute: "_id",
-    
+
     initialize: function(opts){
 
     },
@@ -1136,12 +1136,12 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         afenac:   {type: 'Text',  title: 'Fecha Nacimiento', editorAttrs:{placeholder:'dd/mm/aaaa'}},
         adni:     {type: 'Text',  title: 'DNI / Pasaporte', editorAttrs:{placeholder:'número de documento'}},
     },
- 
+
     validate: function(attrs, options) {
       var errors = {}
       if (_.has(attrs,'rname') && (!attrs.rname )) {
         errors.rname = "No puede ser nulo";
-      }     
+      }
 
       if( ! _.isEmpty(errors)){
         return errors;
@@ -1158,8 +1158,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       afenac: '',
       adni: '',
     },
-  }); 
-  
+  });
+
   Entities.RepresentanteCol = Backbone.Collection.extend({
     whoami: 'Entities.RepresentanteCol:mica.js ',
     model: Entities.Representante,
@@ -1171,19 +1171,19 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
   //*************************************************************
   Entities.Porfolio = Backbone.Model.extend({
     whoami: 'Porfolio: MICA.js ',
-    
+
     schema: {
         slug: {type: 'Text',  title: 'Denominación del producto o servicio', editorAttrs:{placeholder:'Título o denominación para este elemento del porfolio'}},
         denominacion: {type: 'TextArea',  title: 'Describa su producto, proyecto o servicio', editorAttrs:{placeholder:'Síntesis ejecutiva del producto/servicio a destacar'}},
         //referencias:  {type: 'TextArea',  title: 'Indique referencias externas (enlaces a sitio web, notas periodísticas, audios, videos, u otros)'},
     },
 
- 
+
     validate: function(attrs, options) {
       var errors = {}
       if (_.has(attrs,'rname') && (!attrs.rname )) {
         errors.rname = "No puede ser nulo";
-      }     
+      }
 
       if( ! _.isEmpty(errors)){
         return errors;
@@ -1195,8 +1195,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       denominacion: '',
       referencias: [],
     },
-  }); 
-  
+  });
+
   Entities.PorfolioCol = Backbone.Collection.extend({
     whoami: 'PorfolioCol: mica.js',
     model: Entities.Porfolio,
@@ -1211,20 +1211,20 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     // links externos, a modo de referencias, asociados al porfolio
 
     whoami: 'PorfolioReference: MICA.js ',
-    
+
     schema: {
       tlink:     {type: 'Select',   title: 'Tipo de enlace externo',   editorAttrs:{placeholder:'Tipo de referencia externa'},options: utils.linkTypeOpLst },
       slug:      {type: 'Text',     title: 'Descripción',      editorAttrs:{placeholder:'Descripción/ comentario del enlace propuesto'}},
       targeturl: {type: 'Text',     title: 'Enlace (URL)',      editorAttrs:{placeholder:'http://www.dominio.com.pais'}, dataType:'url', validators:['required', 'url']},
     },
 
- 
+
     validate: function(attrs, options) {
       var errors = {}
 
       if (_.has(attrs,'slug') && (!attrs.slug )) {
         errors.rname = "No puede ser nulo";
-      }     
+      }
 
       if( ! _.isEmpty(errors)){
         return errors;
@@ -1245,8 +1245,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     // },
 
 
-  }); 
-  
+  });
+
   Entities.PorfolioReferenceCol = Backbone.Collection.extend({
     whoami: 'PorfolioReferenceCol: mica.js',
     model: Entities.PorfolioReference,
@@ -1454,7 +1454,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           }
         },
         error: function(data){
-            defer.resolve(new Entities.MicaRegistration());          
+            defer.resolve(new Entities.MicaRegistration());
         }
       });
       return defer.promise();
@@ -1482,7 +1482,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       }
 
       query.nodes = nodes;
-      query.newdata = data;  
+      query.newdata = data;
       var update = new Entities.MicaRegistrationUpdate(query);
       update.save({
         success: function() {
@@ -1513,8 +1513,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
                   //|| user.get('home')!== 'mica:rondas' || user.get('grupo') !== 'adherente'
 
                   console.log('user: [%s] [%s] role:[%s] mod:[%s] [%s] grp:[%s] [%s]',
-                    user.get('displayName'),user.get('username'), 
-                    user.get('roles'), user.get('modulos'), user.get('estado_alta'), 
+                    user.get('displayName'),user.get('username'),
+                    user.get('roles'), user.get('modulos'), user.get('estado_alta'),
                     user.get('grupo'), user.get('home'));
                   roles = user.get('roles')|| [];
                   modulos = user.get('modulos')|| [];

@@ -90,13 +90,13 @@ describe('models',function(){
         }
       });
 
-      it('Deberia poder cambiar el stado',function(done){
+      it('Deberia poder cambiar el estado',function(done){
         var service = new MicaAgendaService(userLogged);
-        service.changeStatus(reunion,MicaAgenda.STATUS_CONFIRM,function(err,result){
+        service.changeStatus(reunion,MicaAgenda.STATUS_BLOCKED,function(err,result){
           expect(err).toBe(null);
           expect(result).toBeDefined();
 
-          expect(result.get('estado')).toBe(MicaAgenda.STATUS_CONFIRM);
+          expect(result.get('estado')).toBe(MicaAgenda.STATUS_BLOCKED);
 
           done();
         });

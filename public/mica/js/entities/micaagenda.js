@@ -14,9 +14,26 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       fealta: null,
       feultmod: null,
       usermod: null
+    },
+    /** retorna acciones posibles para productores según el estado */
+    getProdActions: function(){
+      var estado = this.get('estado');
+      var actions = [];
+      if(estado === 'libre'){
+        actions.push({name:'bloquear',label:'Bloquear'});
+        //actions.push({name:'asignar',label:'Asignar'});
+
+      }else if(estado === 'bloqueado'){
+        actions.push({name:'desbloquear',label:'Desbloquear'});
+
+      }else if(estado === 'asignado' || estado === 'borrador'){
+        //actions.push({name:'liberar',label:'Liberar'});
+      }
+
+      return actions;
     }
   },{
-    STATUS: ['confirmado','observado','borrador','unavailable','libre']
+    STATUS: ['asignado','bloqueado','observado','unavailable','libre']
   });
 
   Entities.MicaAgendaCollection = Backbone.PageableCollection.extend({
@@ -58,7 +75,9 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
 
 
       this.getFirstPage();
-    }
+    },
+
+
   });
 
   /**
@@ -77,6 +96,12 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
     setSuscription: function(suscription,rol){
       this.idSuscription = suscription;
       this.rol = rol;
+      var self = this;
+      this.fetch().done(function(){
+        self.trigger('change');
+      });
+    },
+    refresh: function(){
       var self = this;
       this.fetch().done(function(){
         self.trigger('change');
@@ -118,6 +143,10 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
           dataType: 'json'
       });
 
+      p.done(function(){
+        DocManager.trigger('micaagenda:changed');
+      });
+
       return p;
     },
 
@@ -147,8 +176,18 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       var p = reunion.save({estado_alta:newStatus},{patch:true});
       p.done(function(){
         reunion.trigger('change');
-      })
+      });
       return p;
+    },
+
+    runAction: function(reunion,action){
+      if(action === 'bloquear'){
+        return this.changeStatus(reunion,'bloqueado');
+      }else if(action === 'desbloquear'){
+        return this.changeStatus(reunion,'libre');
+      }else{
+        Message.error('No se reconoce la acción. Disculpe las molestias');
+      }
     }
   };
 
@@ -182,6 +221,8 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
     return API.changeStatusAlta(model,newStatus);
   });
 
-
+  DocManager.reqres.setHandler('micaagenda:reunion:runaction', function(model,actionName){
+    return API.runAction(model,actionName);
+  });
 
 });

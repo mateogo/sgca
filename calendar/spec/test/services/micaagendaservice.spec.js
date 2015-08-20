@@ -127,7 +127,7 @@ describe('models',function(){
             // deberia haber una sola reunion con ese numero
             expect(reuniones.length).toBe(1);
             expect(reuniones[0].get('num_reunion')).toBe(reunion.get('num_reunion'));
-            expect(reuniones[0].get('estado')).toBe(MicaAgenda.STATUS_DRAFT);
+            expect(reuniones[0].get('estado')).toBe(MicaAgenda.STATUS_ASIGNED);
           }
           done();
         });
@@ -152,7 +152,7 @@ describe('models',function(){
             // deberia haber una sola reunion con ese numero
             expect(reuniones.length).toBe(1);
             expect(reuniones[0].get('num_reunion')).toBe(reunion.get('num_reunion'));
-            expect(reuniones[0].get('estado')).toBe(MicaAgenda.STATUS_DRAFT);
+            expect(reuniones[0].get('estado')).toBe(MicaAgenda.STATUS_ASIGNED);
           }
           done();
         });

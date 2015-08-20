@@ -121,7 +121,14 @@ var ctrls = {
     },
 
     save: function(req,res){
-      res.status(500).send('en construccion');
+      var obj = req.body;
+
+      var service = new MicaAgendaService(req.user);
+      service.save(obj,function(err,result){
+        if(err) return res.status(500).send(err);
+
+        res.json(result);
+      });
     },
 
     savePartial: function(req,res){

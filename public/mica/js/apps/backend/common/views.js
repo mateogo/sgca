@@ -602,7 +602,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 
   var SlimPopup =  Marionette.LayoutView.extend({
     className: 'slim-popup',
-    template: _.template('<div><div class="header"><div class="js-close">Cerrar</div></div><div class="body"></div></div>'),
+    template: _.template('<div><div class="header"><div class="js-close" style="cursor:pointer">Cerrar</div></div><div class="body"></div></div>'),
     regions: {
       bodyRegion: '.body'
     },
