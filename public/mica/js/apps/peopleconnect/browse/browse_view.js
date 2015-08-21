@@ -12,7 +12,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     getTemplate: function(){
       return utils.templates.BrowseProfileView;
     },
-    
+
     templateHelpers: function(){
       var self = this;
       return {
@@ -35,7 +35,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
         hasCompradorProfiles: function(){
           return self.model.hasCompradorProfiles();
         },
-        
+
         vendorSubActivities: function(){
           var subact = self.model.get('vendedor')['sub_' + self.model.get('vendedor').vactividades];
           var memo = "";
@@ -79,10 +79,10 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     initialize: function(opts){
       this.options = opts;
     },
-    
+
     onRender: function(){
       this.initForm();
-      
+
     },
 
     templateHelpers: function(){
@@ -99,8 +99,8 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
 
       }
     },
- 
-      
+
+
     initForm: function(){
 
       this.model.schema.subsector.options = tdata.subSectorOL[this.model.get('sector')];
@@ -109,11 +109,11 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
         model: this.model,
         template: utils.templates.FilterProfilesEditor,
       });
-      
+
       form.render();
       this.$el.find('#fieldsContainer').html(form.el);
       this.form = form;
-      
+
 
       form.on('sector:change', function(form, editorContent) {
           var contenido = editorContent.getValue(),
@@ -130,10 +130,10 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       if(this.model.get('emisor')){
         this.form.$('.js-reuniones-solicitadas').addClass('active');
       }
-      
+
     },
-        
-    _updateUI: function(){ 
+
+    _updateUI: function(){
       var fieldsForms = this.form.fields;
       for(var field in fieldsForms){
         var value = this.model.get(field);
@@ -141,10 +141,10 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
           fieldsForms[field].editor.setValue(value);
         }
       }
-      
+
       this.mapHandler._updateUI();
     },
-    
+
     events: {
       'click .js-browse': 'browseData',
       'click .js-previous-page': 'previousPage',
@@ -163,12 +163,12 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       this.model.set('emisor', 0);
       this.triggerRecordsFetching();
     },
-    
+
     filterReunionesRecibidas: function(e){
       e.preventDefault();
       e.stopPropagation();
       this.form.commit();
-      
+
       this.model.set('receptor', 1);
       this.model.set('emisor', 0);
       this.triggerRecordsFetching();
@@ -178,7 +178,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       e.preventDefault();
       e.stopPropagation();
       this.formCommit();
-      
+
       this.model.set('receptor', 0);
       this.model.set('emisor', 1);
       this.triggerRecordsFetching();
@@ -214,7 +214,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
     doneEdition: function(){
       //DocManager.trigger('location:list',this.action);
     },
-    
+
   });
 
 
@@ -225,7 +225,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
       return utils.templates.ProfileItemView;
     },
 
-   
+
     templateHelpers: function(){
       var self = this;
       return {
@@ -290,7 +290,7 @@ DocManager.module("RondasApp.Browse", function(Browse, DocManager, Backbone, Mar
         },
       }
     },
- 
+
     initialize: function(){
 
     },

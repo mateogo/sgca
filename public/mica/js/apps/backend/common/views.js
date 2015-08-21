@@ -602,28 +602,64 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 
   var SlimPopup =  Marionette.LayoutView.extend({
     className: 'slim-popup',
-    template: _.template('<div><div class="header"><div class="js-close" style="cursor:pointer">Cerrar</div></div><div class="body"></div></div>'),
+    template: _.template('<div><div class="header"><span class="header-title"></span><div class="header-toolbar"><div class="btn-link js-tomain" style="display:none">Abrir en página base |</div> <div class="btn-link js-close" style="cursor:pointer">Cerrar</div></div></div><div class="body"></div></div>'),
     regions: {
       bodyRegion: '.body'
     },
+    setTitle: function(str){
+      this.$el.find('.header-title').html(str);
+      return this;
+    },
+    width: function(str){
+      this.$el.width(str);
+      return this;
+    },
+    height: function(str){
+      this.$el.height(str);
+      return this;
+    },
+    center: function(){
+      var w = this.$el.outerWidth(true);
+      var h = this.$el.outerHeight(true);
+      var screenWidth = $(window).width();
+      var screenHeight = $(window).height();
+      var top = screenHeight/2 - h/2;
+      var left = screenWidth/2 - w/2;
+      this.$el.css('top',top).css('left',left);
+      return this;
+    },
+    setNavigationUrl: function(url){
+      this.url = url;
+      this.$el.find('.js-tomain').show();
+    },
+    toMainView: function(){
+      DocManager.navigate(this.url,{trigger:true});
+      this.destroy();
+      return this;
+    },
     close: function(){
       this.destroy();
+      return this;
     },
     events: {
-      'click .js-close': 'close'
+      'click .js-close': 'close',
+      'click .js-tomain': 'toMainView'
     }
   });
 
   Views.slimPopup = function($content){
+
     var popup = new SlimPopup();
     popup.$el.css('display','none');
     $('body').append(popup.render().el);
     popup.bodyRegion.show($content);
+    popup.body = $content;
     popup.$el.fadeIn();
     popup.$el.draggable({containment:$('body'),handle:'.header'});
     popup.once('destroy',function(){
       popup.$el.draggable('destroy');
     });
+    popup.center();
     return popup;
   };
 

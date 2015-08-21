@@ -26,7 +26,7 @@ DocManager.module("RondasApp", function(RondasApp, DocManager, Backbone, Marione
     DocManager.navigate("emprendimientos/explorar" );
     API.browseEmprendimientos({emisor: 1, receptor: 0});
   });
-  
+
   DocManager.on("rondas:browse:receptor", function(){
     DocManager.navigate("emprendimientos/explorar" );
     API.browseEmprendimientos({emisor: 0, receptor: 1});

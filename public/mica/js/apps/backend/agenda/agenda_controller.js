@@ -31,19 +31,27 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       DocManager.mainRegion.show(layout);
     },
 
-    listPopup: function(idSuscription,rol){
+    listPopup: function(idSuscription,rol,url){
       var session = getSession();
       var list = this._listBySuscription(idSuscription,rol);
 
-      if(!session.popup){
-        session.popup = DocManager.openPopup(list);
-        session.popup.once('destroy',function(){
-          session.popup = null;
-        });
+      var oncePopup = false;
+      var popup;
+      if(oncePopup){
+        if(!session.popup){
+          session.popup = DocManager.openPopup(list);
+          session.popup.once('destroy',function(){
+            session.popup = null;
+          });
+        }else{
+          session.popup.bodyRegion.show(list);
+        }
+        popup = session.popup;
       }else{
-        session.popup.bodyRegion.show(list);
+        popup = DocManager.openPopup(list);
       }
-      
+
+      popup.setTitle('Agenda').setNavigationUrl(url);
     },
 
     listRight: function(idSuscription,rol){

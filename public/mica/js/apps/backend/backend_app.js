@@ -7,7 +7,8 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       "ranking/mica": "browseRanking",
       "agenda": "agenda",
       "agenda/:idSuscription/:rol": "agendaSuscriptor",
-      "agenda/estadisticas": 'statistics'
+      "agenda/estadisticas": 'statistics',
+      "perfil/:idSuscription":  "profileShow",
 
     }
   });
@@ -32,17 +33,28 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       BackendApp.AgendaMica.Controller.listAll();
     },
     agendaSuscriptor: function(idSuscription,rol,place){
+      var navigateUrl = 'agenda/' + idSuscription + '/'+rol;
+
       if(place === 'right'){
         BackendApp.AgendaMica.Controller.listRight(idSuscription,rol);
       }else if(place === 'popup'){
-        console.log('popup')
-        BackendApp.AgendaMica.Controller.listPopup(idSuscription,rol);
+        BackendApp.AgendaMica.Controller.listPopup(idSuscription,rol,navigateUrl);
       }else{
+        DocManager.navigate(navigateUrl);
         BackendApp.AgendaMica.Controller.listBySuscriptor(idSuscription,rol);
       }
     },
     statistics: function(){
       BackendApp.AgendaMica.Controller.showStatistics();
+    },
+
+    profileShow: function(idSuscription,place){
+      var navigateUrl = 'perfil/' + idSuscription;
+      var toPopup = place === 'popup';
+      if(!toPopup){
+        DocManager.navigate(navigateUrl);
+      }
+      BackendApp.RankingMica.Controller.profileShow(idSuscription,{popup:toPopup,url:navigateUrl});
     }
   };
 
@@ -62,7 +74,6 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
   });
 
   DocManager.on('micaagenda:agendaone:show',function(suscriptor,rol){
-    DocManager.navigate("agenda/" + suscriptor + '/'+rol);
     API.agendaSuscriptor(suscriptor,rol);
   });
 
@@ -71,6 +82,14 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
   });
   DocManager.on('micaagenda:agendaone:show:popup',function(suscriptor,rol){
     API.agendaSuscriptor(suscriptor,rol,'popup');
+  });
+
+  DocManager.on('micaagenda:profile:show:popup',function(idSuscription){
+    API.profileShow(idSuscription,'popup');
+  });
+
+  DocManager.on('micaagenda:profile:show',function(idSuscription){
+    API.profileShow(idSuscription);
   });
 
   DocManager.on('micaagenda:statistic',function(){

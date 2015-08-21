@@ -218,7 +218,10 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         },
         getActions: function(){
           return self.model.getProdActions();
-        }
+        },
+        getAvatar: function(){
+          return self.model.getAvatar();
+        },
       };
     },
     onRender: function(){
@@ -246,12 +249,22 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     },
     events: {
       'click .js-runaction': 'runAction',
-      'click .js-openagenda': function(e){
-        e.stopPropagation();
-        var rol = this.options.contraparte_rol;
-        var suscriptor = this.model.get(rol);
-        DocManager.trigger('micaagenda:agendaone:show',suscriptor._id,rol);
-      }
+      'click .js-openagenda': 'openAgenda',
+      'click .js-openperfil': 'openPerfil'
+    },
+
+    openAgenda: function(e){
+      e.stopPropagation();
+      var rol = this.options.contraparte_rol;
+      var suscriptor = this.model.get(rol);
+      DocManager.trigger('micaagenda:agendaone:show:popup',suscriptor._id,rol);
+    },
+
+    openPerfil: function(e){
+      e.stopPropagation();
+      var rol = this.options.contraparte_rol;
+      var suscriptor = this.model.get(rol);
+      DocManager.trigger('micaagenda:profile:show:popup',suscriptor._id);
     },
 
     runAction: function(e){
@@ -334,9 +347,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         var tmp = this.collection.at(0);
         ret = renderSuscriptor(tmp.get(rol),true);
       }
-      this.$el.find('.owner-container').html(ret)
-        .css('padding-bottom','20px')
-        .css('margin-bottom','10px').css('font-size','16px');
+      this.$el.find('.owner-container').html(ret);
       this.$el.find('.label-rol').html(rol);
     },
 
@@ -376,14 +387,6 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     }
 
   });
-
-
-
-  //TODO: lista agrupada por algun campo
-  AgendaMica.AgendaGroupList = Marionette.CompositeView.extend({
-
-  });
-
 
   AgendaMica.AgendaPage = Marionette.LayoutView.extend({
     className: 'wrapper',
@@ -446,9 +449,22 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     if(!suscriptor || !suscriptor.responsable) return '';
     var responsable = suscriptor.responsable;
     var solicitante = suscriptor.solicitante;
-    var str = '<strong class="text-primary">'+solicitante.edisplayName +'</strong> '+
-              '<div class="hidden-xs"><div>'+responsable.rname + ' ('+responsable.rcargo+')' +'</div> '+
-              '<div>'+  responsable.rmail + '</div> </div>';
+
+    var template = utils.templates.AgendaSolicitanteRender;
+
+    str = template({
+      solicitante:solicitante,
+      getAvatar: function(){
+        var avatar = this.solicitante.eavatar;
+        if(avatar && avatar.urlpath){
+          return avatar.urlpath;
+        }else{
+          return 'mica/images/back-dotted.png';
+        }
+      },
+      cnumber: suscriptor.cnumber
+    });
+
     if(showActividad){
       var $span = CommonsViews.renderLabelActividad(suscriptor.actividades);
       str += $span.prop('outerHTML');

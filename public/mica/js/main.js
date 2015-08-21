@@ -25,7 +25,7 @@ utils.loadTemplate([
         'ranking/MicaRankingActorListItem', 'ranking/MicaRankingProfileLayout',
 
         // -- Agenda
-        'agenda/AgendaListItem',
+        'agenda/AgendaListItem', 'agenda/AgendaSolicitanteRender',
 
 
         // MailSender

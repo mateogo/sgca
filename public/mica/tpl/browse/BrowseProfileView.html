@@ -1,4 +1,4 @@
-<div class="row">
+\<div class="row">
     <hr>
     <div class="col-xs-12">
         <% if(solicitante.eavatar != '') {%>
@@ -25,7 +25,7 @@
     </div>
     <%  if(isVendedor()){ %>
         <div class="col-md-12 col-xs-12">
-            <h3><span class="fa fa-briefcase"></span> Perfil de Vendedor 
+            <h3><span class="fa fa-briefcase"></span> Perfil de Vendedor
                 <%  if(getFieldLabel('vendedor').vactividades === 'musica') { %>
                   <span class="label label-mica-musica">MÚSICA</span>
                 <% } %>
@@ -47,13 +47,13 @@
             </h3>
             <p><%= vendorSubActivities() %></p>
             <p><%= getFieldLabel('vendedor').vcomentario %></p>
-            
+
             <p><strong>Negocios extra-fronteras: </strong>
                 <%  if(getFieldLabel('vendedor').vexperienciaintl === "4") { %>Frecuentes<% } %>
                 <%  if(getFieldLabel('vendedor').vexperienciaintl === "2") { %>Esporádicos<% } %>
                 <%  if(getFieldLabel('vendedor').vexperienciaintl === "1") { %>Nunca<% } %>
             </p>
-                    
+
             <%  if(hasVendorProfiles()){ %>
                     <h4>Portfolio</h4>
                     <ol class="portfolio">
@@ -79,7 +79,7 @@
     <% } %>
     <%  if(isComprador()){ %>
         <div class="col-md-12 col-xs-12"><hr>
-            <h3><span class="fa fa-shopping-cart"></span> Perfil de Comprador 
+            <h3><span class="fa fa-shopping-cart"></span> Perfil de Comprador
                 <%  if(getFieldLabel('comprador').cactividades === 'musica') { %>
                   <span class="label label-mica-musica">MÚSICA</span>
                 <% } %>
@@ -110,7 +110,7 @@
                 <%  if(getFieldLabel('comprador').cexperienciaintl === "2") { %>Esporádicos<% } %>
                 <%  if(getFieldLabel('comprador').cexperienciaintl === "1") { %>Nunca<% } %>
             </p>
-            
+
             <%  if(hasCompradorProfiles()){ %>
                     <h4>Porfolio</h4>
                     <ol class="portfolio">
@@ -136,4 +136,4 @@
        </div>
     <% } %>
 
-</div> 
+</div>

@@ -101,11 +101,34 @@
   color: white;
 }
 
-.slim-popup .js-close{
+.slim-popup .header-title{
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  font-weight: bold;
+}
+
+.slim-popup .header-toolbar{
   position: absolute;
   top: 6px;
   right: 10px;
 }
+
+.slim-popup .header-toolbar > *{
+  display: inline-block;
+  color: white;
+}
+
+.slim-popup .header-toolbar > *:hover{
+  display: inline-block;
+  color: inherit;
+}
+
+/*.slim-popup .js-close{
+  position: absolute;
+  top: 6px;
+  right: 10px;
+}*/
 
 .slim-popup .body{
   background-color: #f1f2f7;

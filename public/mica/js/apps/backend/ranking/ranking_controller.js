@@ -27,8 +27,15 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         initCrudManager(user, criterion, 'reset');
 
 			});
+		},
 
-		}
+    profileShow: function(idProfile,opts){
+      var fetchingMicaRequest = DocManager.request("micarqst:entity", idProfile);
+
+      $.when(fetchingMicaRequest).done(function(micarqst){
+        buildProfileView(getSession().views.mainlayout, micarqst,opts);
+      });
+    }
 
 	};
   var checkUsers = function(){
@@ -291,17 +298,13 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         e.stopPropagation();e.preventDefault();
 
         console.log('ProfileView at CnumberCell');
-        var fetchingMicaRequest = DocManager.request("micarqst:entity", this.model.get('profileid'));
 
-        $.when(fetchingMicaRequest).done(function(micarqst){
-
-          buildProfileView(getSession().views.mainlayout, micarqst);
-
-        });
+        DocManager.trigger('micaagenda:profile:show:popup',this.model.get('profileid'));
       },
 
       render: function(){
         this.$el.html(cnumberTpl({cnumber: this.model.get('cnumber')}) );
+
         return this;
       },
   });
@@ -459,12 +462,17 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
           this.$el.html(drpDwnTpl({hasMeeting: 'Reu# '+this.model.get('meeting_number'), hasMeetingClassAttr: 'js-meeting-asignada'}));
         }
 
-        this.$el.css('width','150px');
+        var anotherOptions = '<br><a class="js-openperfil" style="cursor:pointer">ver perfil</a> <span class="text-muted">|</span> ' +
+                             '<a class="js-openagenda" style="cursor:pointer">ver agenda</a>';
+
+        this.$el.css('width','150px').append(anotherOptions);
         return this;
       },
 
       events: {
-        'click': 'agendar',
+        'click .js-agendar': 'agendar',
+        'click .js-openagenda': 'openAgenda',
+        'click .js-openperfil': 'openPerfil'
       },
 
       agendar: function(){
@@ -510,6 +518,18 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         });
 
       },
+
+      openAgenda: function(e){
+        e.stopPropagation();
+        var idSuscriptor = this.model.get('profileid');
+        DocManager.trigger('micaagenda:agendaone:show:popup',idSuscriptor,'vendedor');
+      },
+
+      openPerfil: function(e){
+        e.stopPropagation();
+        var idSuscriptor = this.model.get('profileid');
+        DocManager.trigger('micaagenda:profile:show:popup',idSuscriptor);
+      }
     });
 
 
@@ -809,7 +829,9 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   };
 
 
-  var buildProfileView = function(mainlayout, profile){
+  var buildProfileView = function(mainlayout, profile,opts){
+
+
 
     var profileView = new DocManager.BackendApp.List.MicaRequestView({
       model: profile
@@ -825,13 +847,28 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
     profileLayout.on('close:view', function(){
       mainlayout.showEdit();
       profileLayout.destroy();
-
     });
 
+    if(opts && opts.popup){
+      var pop = DocManager.openPopup(profileLayout);
+      var who;
+      if(profile.get('solicitante')){
+        who = profile.get('solicitante').edisplayName;
+      }
+      pop.setTitle('Perfil de '+who).width('1000px').center();
+      if(opts.url){
+        pop.setNavigationUrl(opts.url);
+      }
+      pop.$el.find('.body .js-close').remove();
 
-    mainlayout.hideEdit();
-    mainlayout.getRegion('viewRegion').show(profileLayout);
-
+    }else{
+      if(!getSession().mainLayout){
+        buildLayout();
+        mainlayout = getSession().views.mainlayout;
+      }
+      mainlayout.hideEdit();
+      mainlayout.getRegion('viewRegion').show(profileLayout);
+    }
 
   };
 
