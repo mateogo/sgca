@@ -504,8 +504,19 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
     rolLabel: function(){
       return this.isCompradorLabel() + ' ' + this.isVendedorLabel();
     },
+    isRondasActive: function(){
+      return (this.estado_rondas === 'ausente' ? false : true);
+    },
+    
     getActividadLabel: function(){
-      return tdata.fetchLabel(tdata['sectorOL'], this.get('vactividades'));
+      var text = [];
+      if(this.get('iscomprador')){
+        text.push('C: ' + tdata.fetchLabel(tdata['sectorOL'], this.get('cactividades')));
+      }
+      if(this.get('isvendedor')){
+        text.push('V: ' + tdata.fetchLabel(tdata['sectorOL'], this.get('vactividades')));
+      }
+      return text.join(' / ');
     },
     buildCSubSectorList: function(){
       if(this.get('iscomprador')){

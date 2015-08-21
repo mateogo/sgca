@@ -483,7 +483,15 @@ var buildRankingQuery = function(qr){
     }
     
     if(qr.sector && qr.sector !== 'no_definido'){
-        conditions.push({'$or': [{'cactividades': qr.sector}, {'vactividades': qr.sector}] });
+        if(qr.rolePlaying === 'comprador'){
+            conditions.push({'cactividades': qr.sector});
+
+        }else if(qr.rolePlaying === 'vendedor'){
+            conditions.push({'vactividades': qr.sector});
+
+        }else{
+            conditions.push({'$or': [{'cactividades': qr.sector}, {'vactividades': qr.sector}] });
+        }
 
         if(qr.subsector && qr.subsector !== 'no_definido'){
             subc['csubact' + '.' + qr.subsector] = true;
@@ -1055,6 +1063,7 @@ var normalizeProfiles = function(profiles){
             
             nivel_ejecucion: item.nivel_ejecucion,
             estado_alta: item.estado_alta,
+            estado_rondas: item.estado_rondas || 'activo',
 
             emisor_requests: 0,
             receptor_requests: 0,

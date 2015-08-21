@@ -165,6 +165,10 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
                       <li><a href="#" class="js-trigger js-trigger-compradoraceptado"  role="button">Comprador Aceptado</a></li>\
                       <li><a href="#" class="js-trigger js-trigger-compradorrechazado" role="button">Comprador Rechazado</a></li>\
                       <li><a href="#" class="js-trigger js-trigger-observado" role="button">Observado</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-absent" role="button">Ausente Rondas</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-present" role="button">Presente Rondas</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-activo" role="button">Inscripción Normal</a></li>\
+                      <li><a href="#" class="js-trigger js-trigger-tardio" role="button">Inscripción Tardía</a></li>\
                     </ul>\
                 </div>');
   };
@@ -186,6 +190,10 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
           'click .js-trigger-compradorrechazado': 'buyerRegected',
           'click .js-trigger-compradoraceptado': 'buyerAccepted',
           'click .js-trigger-observado': 'buyerObserved',
+          'click .js-trigger-absent': 'buyerAbsent',
+          'click .js-trigger-present': 'buyerPresent',
+          'click .js-trigger-tardio': 'buyerTardio',
+          'click .js-trigger-activo': 'buyerActivo',
       },
       updateRecord: function(e, nuevo_estado){
         var self = this;
@@ -205,6 +213,19 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
       buyerObserved: function(e){
         this.updateRecord(e, 'observado');
       },
+      buyerAbsent: function(e){
+        this.updateRecord(e, 'ausente');
+      },
+      buyerPresent: function(e){
+        this.updateRecord(e, 'presente');
+      },
+      buyerTardio: function(e){
+        this.updateRecord(e, 'tardio');
+      },
+      buyerActivo: function(e){
+        this.updateRecord(e, 'activo');
+      },
+
 
       editClicked: function(e){
           e.stopPropagation();e.preventDefault();
@@ -312,10 +333,18 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
   	});
 
     mainlayout.on('model:change:state', function(model, state){
-      model.set('nivel_ejecucion', state);
+      if(state === 'ausente' || state === 'presente'){
+        model.set('estado_rondas', state);
+        DocManager.request("micarqst:partial:update",[model.id],{'estado_rondas': state});
 
-      DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': state});
+      }else if(state === 'activo' || state === 'tardio'){
+        model.set('estado_rondas', state);
+        DocManager.request("micarqst:partial:update",[model.id],{'estado_rondas': state});        
 
+      }else{
+        model.set('nivel_ejecucion', state);
+        DocManager.request("micarqst:partial:update",[model.id],{'nivel_ejecucion': state});        
+      }
     });
 
   };
@@ -405,7 +434,6 @@ DocManager.module('BackendApp.List',function(List, DocManager, Backbone, Marione
     buildExcelExport: function(){
 
       var excelCol = new DocManager.Entities.MicaExportCollection();
-      console.log('buildExcel Exports BEGIN')
 
       $.when(downloadCollection(getSession().currentUser, getSession().filter.attributes, excelCol)).done(function(entities){
         excelCol.exportRecords();

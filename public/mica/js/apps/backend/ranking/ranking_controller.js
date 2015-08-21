@@ -429,15 +429,6 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   var drpDwnTpl = _.template( '\
         <div class="btn-group acciones" role="group" aria-label="...">\
           <button type="button" class="btn btn-sm btn-success js-agendar <%= hasMeetingClassAttr %> "><%= hasMeeting %></button>\
-          <div class="btn-group" role="group">\
-            <button type="button" class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown" aria-expanded="false">\
-              <span class="caret"></span>\
-            </button>\
-            <ul class="dropdown-menu pull-right" role="menu">\
-              <li><a href="#" class="js-desagendar" >Eliminar reunión</a></li>\
-              <li><a href="#" class="js-agenda-view" >Ver agenda candidato</a></li>\
-            </ul>\
-          </div>\
         </div>');
 
   var AgendarViewCell = Backgrid.Cell.extend({
@@ -526,12 +517,13 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   var EditViewCell = Backgrid.Cell.extend({
       render: function(){
           if(!this.rendered){
-             var btnEdit = $('<button class="btn btn-xs btn-info js-edit"  title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
+             var btnEdit = $('<button class="btn btn-xs btn-info js-edit"  title="agendar reuniones"><span class="glyphicon glyphicon-edit"></span></button>');
              var btnRemove = $('<button class="btn btn-xs btn-danger js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
-             this.$el.append(btnEdit).append(btnRemove).append(drpDwnBtn());
+             //this.$el.append(btnEdit).append(btnRemove).append(drpDwnBtn());
+             this.$el.append(btnEdit);
              this.rendered = true;
           }
-        this.$el.css('width','95px');
+        this.$el.css('width','50px');
         return this;
       },
 
@@ -578,7 +570,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
               {name: 'eprov', label:'Prov', cell:'string', editable:false},
               {name: 'receptor_requests', label:'Recibidas', cell:'number', editable:false},
               {name: 'emisor_requests', label:'Solicitadas', cell:'number', editable:false},
-				      {label:'Acciones', cell: EditViewCell, editable:false, sortable:false},
+				      {label:'Agendar', cell: EditViewCell, editable:false, sortable:false},
 				    ],
 				    filtercols:['cnumber', 'ename',  'nivel_ejecucion', 'cactividad', 'eprov'],
 				    editEventName: 'micaranking:edit',
@@ -633,7 +625,14 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
   var registerMainLayoutEvents = function(session, layout, mainlayout){
   	mainlayout.on('grid:model:edit', function(model){
-  		var view = createView(session, mainlayout, model)
+      if(model.get('estado_rondas') === 'ausente'){
+        Message.confirm('<h3>Emprendimiento AUSENTE para RONDAS</h3>',
+            [{label:'Aceptar', class:'btn-success'} ], function(response){});
+
+      }else{
+        var view = createView(session, mainlayout, model)
+
+      }
 
   	});
 

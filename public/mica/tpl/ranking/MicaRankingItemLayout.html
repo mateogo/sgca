@@ -25,7 +25,10 @@
             <p><strong>Reuniones recibidas: </strong> <%= receptor_requests %></p>
             <p><strong>Reuniones solicitadas: </strong> <%= emisor_requests %></p>
 
-            <div><strong>Estado:</strong> <%  if(getFieldLabel('estado_alta') === 'activo') %><span class="label label-success">ACTIVO</span></div>
+            <div><strong>ESTADO RONDAS:</strong> <%  if(getFieldLabel('estado_rondas') === 'ausente') {%><span class="label label-warning">AUSENTE</span><% }else{ %><span class="label label-success">activo</span><% } %></div>
+            <br>
+            <div><button class='btn btn-primary btn-large js-ver-agenda'>Ver/ Editar Agenda</button></div>
+
         </div>
 
     </div>

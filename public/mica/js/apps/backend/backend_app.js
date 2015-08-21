@@ -35,6 +35,7 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       if(place === 'right'){
         BackendApp.AgendaMica.Controller.listRight(idSuscription,rol);
       }else if(place === 'popup'){
+        console.log('popup')
         BackendApp.AgendaMica.Controller.listPopup(idSuscription,rol);
       }else{
         BackendApp.AgendaMica.Controller.listBySuscriptor(idSuscription,rol);

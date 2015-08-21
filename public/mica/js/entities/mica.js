@@ -120,20 +120,25 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return ((userid && this.get(userid)) && ( (this.get(userid).receptor && this.get(userid).receptor > 1) || (this.get(userid).emisor && this.get(userid).emisor > 1) ) );
     },
 
-    isReunionPermited: function(otherprofile){
-      return false;
+    isReunionPermited: function(userprofile){
+      var self = this;
+      if(userprofile.get('estado_rondas') !== 'habilitadotardio'){
+        //MICA ESTA CERRADO
+        return false;
 
-      // MICA ESTA CERRADO
-      // La regla es que tengan perfiles cruzados entre self y other profile 
-      // var self = this;
-      // if(self.id === otherprofile.id)
-      //   return false;
+      }else{
+        //La regla es que tengan perfiles cruzados entre self y other profile 
+        if(self.id === userprofile.id)
+          return false;
 
-      // if(self.isVendedor() && otherprofile.isComprador() || self.isComprador() && otherprofile.isVendedor()){
-      //   return true;
-      // }else{
-      //   return false;
-      // }
+        if(self.isVendedor() && userprofile.isComprador() || self.isComprador() && userprofile.isVendedor()){
+          return true;
+        }else{
+          return false;
+        }
+
+      }
+
     },
     checkConsistency: function(){
       var self = this,
@@ -796,6 +801,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       description: '',
       estado_alta:'activo',
       nivel_ejecucion: 'enproceso',
+      estado_rondas: 'habilitadotardio',
       user:{
         usermail: user.mail,
         userid: user.id,

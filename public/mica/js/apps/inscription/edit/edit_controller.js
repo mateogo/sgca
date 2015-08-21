@@ -5,7 +5,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
   Edit.Controller = {
       
       editInscripcion: function(id){
-        loadModel(id).then(function(){
+        loadModel(id, 'add_default').then(function(){
           createLayoutView();
           createWizardFormViews();
         });
@@ -13,7 +13,15 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
       },
       
       addInscripcion: function(){
-        loadModel().then(function(){
+        loadModel(null, 'add_default').then(function(){
+          createLayoutView();
+          createWizardFormViews();
+        });
+        $('body').scrollTop(0);
+      },
+
+      addInscripcionTardia: function(){
+        loadModel(null, 'add_permitted').then(function(){
           createLayoutView();
           createWizardFormViews();
         });
@@ -28,7 +36,7 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
     return Edit.Session;
   }
   
-  var loadModel = function(id){
+  var loadModel = function(id, permission){
 
     var defer = $.Deferred(),
         fetchingMicaRequest;
@@ -46,8 +54,10 @@ DocManager.module("MicaRequestApp.Edit", function(Edit, DocManager, Backbone, Ma
        
         $.when(fetchingMicaRequest).done(function(micarqst){
           //console.log('MicaRequestApp.Edit BEGIN [%s] [%s]', micarqst.whoami, micarqst.id);
-          if(micarqst.id){
-            micarqst.initDataForEdit()
+          if(micarqst.id || permission === 'add_permitted'){
+            micarqst.initDataForEdit();
+
+            
 
             getSession().model = micarqst;
 

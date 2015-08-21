@@ -34,13 +34,13 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     listPopup: function(idSuscription,rol){
       var list = this._listBySuscription(idSuscription,rol);
 
-      if(!AgendaMica.Session.popup){
-        AgendaMica.Session.popup = DocManager.openPopup(list);
-        AgendaMica.Session.popup.once('destroy',function(){
-          AgendaMica.Session.popup = null;
+      if(!getSession().popup){
+        getSession().popup = DocManager.openPopup(list);
+        getSession().popup.once('destroy',function(){
+          getSession().popup = null;
         });
       }else{
-        AgendaMica.Session.popup.bodyRegion.show(list);
+        getSession().popup.bodyRegion.show(list);
       }
     },
 

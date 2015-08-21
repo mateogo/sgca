@@ -22,6 +22,11 @@ DocManager.module("BackendApp.RankingMica", function(RankingMica, DocManager, Ba
     events: {
       'click button.js-close': 'closeView',
       'click button.js-aceptar-micaranking': 'aceptarMicaranking',
+      'click button.js-ver-agenda': 'editarAgenda',
+    },
+    editarAgenda:function(e){
+      console.log('EditarAgenda');
+      DocManager.trigger('micaagenda:agendaone:show:popup',this.model.get('profileid'),'comprador');
     },
 
     aceptarMicaranking: function(e){

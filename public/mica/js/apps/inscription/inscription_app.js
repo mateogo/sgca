@@ -4,6 +4,7 @@ DocManager.module("MicaRequestApp", function(MicaRequestApp, DocManager, Backbon
     appRoutes: {
       "inscripcion/:id/edit": "editInscripcion",
       "inscripcion/nueva": "addInscripcion",
+      "inscripcion/tardia": "addInscripcionTardia",
       "showcase/nueva": "addShowcase",
       "showcase/:id/edit": "editShowcase",
     }
@@ -21,6 +22,10 @@ DocManager.module("MicaRequestApp", function(MicaRequestApp, DocManager, Backbon
     addInscripcion: function(){
       console.log('API: nueva inscripción ');
       MicaRequestApp.Edit.Controller.addInscripcion();
+    },
+    addInscripcionTardia: function(){
+      console.log('API: nueva inscripción tardía');
+      MicaRequestApp.Edit.Controller.addInscripcionTardia();
     },
     addShowcase: function(){
       console.log('API: nueva alta showcase ');
