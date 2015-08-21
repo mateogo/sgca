@@ -1,3 +1,5 @@
+//testo de bloqueo de una reunion libre
+
 var root = '../../../../';
 var async = require('async');
 
@@ -13,12 +15,13 @@ var idComprador,
     vendedor,
     reunion;
 
+var agenda;// array de reuniones
+
 var userLogged = {_id:'53b6eaf34795894846788fa1',username:'jasminetest',name:'Jasmine Tester',mail:'jasmine@test.com'};
 
 describe('models',function(){
 
-  describe('MicaAgendaService',function(){
-
+  describe('MicaAgendaService - Cambio de estado.',function(){
 
       it('Buscar alguna iteraction para asignar',function(done){
         MicaInteraction.findPageable({'meeting_estado':'no_asignada'},function(err,results){
@@ -68,80 +71,68 @@ describe('models',function(){
           });
       });
 
-      it('Deberia crear una reunion',function(done){
+      it('Deberia retorna la agenda de reuniones',function(done){
         var service = new MicaAgendaService(userLogged);
-        service.assign(idComprador,idVendedor,function(err,result){
+        service.getAgenda(comprador,'comprador',function(err,result){
           expect(err).toBe(null);
-          expect(result instanceof MicaAgenda).toBeTruthy();
+          expect(result).toBeDefined();
+          expect(result.length).toBe(MicaAgendaService.COUNT_REUNIONES);
 
-          expect(result.get('num_reunion')).toBeDefined();
-          expect(parseInt(result.get('num_reunion'))).not.toBe(NaN);
-          expect(result.get('comprador')._id).toBe(idComprador);
-          expect(result.get('vendedor')._id).toBe(idVendedor);
+          for (var i = 0; i < result.length; i++) {
+            var reunion = result[i];
+            expect(reunion.get('num_reunion')).toBe(i+1);
+          }
+
+          agenda = result;
+
+          done();
+        });
+      });
+
+      it('Deberia poder guardar la reunion con bloqueo de una reunion libre',function(done){
+        reunion = null;
+        for (var i = 0; i < agenda.length && reunion === null; i++) {
+          if(agenda[i].get('estado') === 'libre'){
+            reunion = agenda[i];
+          }
+        }
+
+        if(!reunion){
+          expect(reunion).toBeTruthy();
+          return done();
+        }
+
+        reunion.set('estado',MicaAgenda.STATUS_BLOCKED);
+
+        var service = new MicaAgendaService(userLogged);
+        service.save(reunion,function(err,result){
+          expect(err).toBe(null);
+          expect(result).toBeDefined();
+
+          expect(result.get('estado')).toBe(MicaAgenda.STATUS_BLOCKED);
+          expect(result.get('usermod')).toBeDefined();
+
+          var compradorlocal = result.get('comprador');
+          expect(compradorlocal).toBeTruthy();
+          if(compradorlocal){
+            expect(compradorlocal._id).toBe(idComprador);
+          }
 
           reunion = result;
           done();
         });
       });
 
-      it('Deberia tener estado unavailable si tiene num_reunion 0',function(){
-        if(reunion.get('num_reunion') === 0){
-            expect(reunion.get('estado')).toBe('unavailable');
-        }
+      it('El comprador Deberia tener la actividad',function(){
+          expect(reunion.get('comprador').actividades).toBeDefined();
       });
 
-      it('Deberia cambiar de estado la Interaction',function(done){
-        MicaInteraction.findById(interaction.id,function(err,result){
-          expect(err).toBe(null);
-          expect(result).toBeDefined();
-
-
-          expect(result.id.toString()).toBe(interaction.id.toString());
-
-          expect(result.get('meeting_estado')).toBe(reunion.get('estado'));
-          expect(result.get('meeting_number')).toBe(reunion.get('num_reunion'));
-          expect(result.get('meeting_id')).toBe(reunion.id.toString());
-          done();
-        });
-      });
-
-      it('Deberia liberar la reunion',function(done){
-        if(!reunion) return done();
-
+      //BORRAR REUNION ASIGNADA
+      it('Deberia poder borrar la reunion',function(done){
+        if(!reunion) return;
         var service = new MicaAgendaService(userLogged);
-        service.liberate(reunion,function(err,result){
+        service.remove(reunion.id,function(err,result){
           expect(err).toBe(null);
-
-          expect(result.id).toBeFalsy();
-          expect(result.get('estado')).toBe(MicaAgenda.STATUS_FREE);
-          expect(result.get('num_reunion')).toBe(reunion.get('num_reunion'));
-          done();
-        });
-      });
-
-      it('Deberia encontrar TODOS los lugares disponibles (de nuevo)',function(done){
-        var service = new MicaAgendaService(userLogged);
-        service._crossAvailability(comprador,vendedor,function(err,result){
-          expect(err).toBe(null);
-          expect(result).toBeDefined();
-          expect(result.length).toBeDefined();
-
-          //deberia haber lugares disponibles
-          expect(result.length).toBe(MicaAgendaService.COUNT_REUNIONES);
-          done();
-        });
-      });
-
-      it('Deberia reseter la interaccion',function(done){
-        MicaInteraction.findById(interaction.id,function(err,result){
-          expect(err).toBe(null);
-          expect(result).toBeDefined();
-
-          expect(result.id.toString()).toBe(interaction.id.toString());
-
-          expect(result.get('meeting_estado')).toBe('no_asignada');
-          expect(result.get('meeting_number')).toBe(-1);
-          expect(result.get('meeting_id')).toBe('');
           done();
         });
       });

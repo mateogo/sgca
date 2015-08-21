@@ -134,6 +134,57 @@ MicaAgendaService.prototype.assign = function(compradorRef,vendedorRef,cb){
   });
 };
 
+
+
+/**
+ * libera una reunion
+ * La forma de liberar es borrandola retorna con id nulo
+ * @param  {String || Object}   reunion  String Id o Object
+ * @param  {Function} cb      [description]
+ * @return {[type]}           [description]
+ */
+MicaAgendaService.prototype.liberate = function(reunion,cb){
+  var self = this;
+
+  var idReunion;
+  if(reunion.id){
+    idReunion = reunion.id;
+  }else if (reunion._id){
+    idReunion = reunion._id;
+  }else{
+    idReunion = reunion;
+  }
+
+  if(idReunion.toString){
+    idReunion = idReunion.toString();
+  }
+
+  async.series([
+    //busca la reunion
+    function(cb){
+      MicaAgenda.findById(idReunion,function(err,result){
+          if(err) return cb(err);
+
+          reunion = result;
+          cb();
+      });
+    },
+
+    function(cb){
+      self.remove(reunion.id,cb);
+    }
+
+  ],function(err,results){
+    if(err) return cb(err);
+
+    var libre = new MicaAgenda();
+    libre.set('estado',MicaAgenda.STATUS_FREE);
+    libre.set('num_reunion',reunion.get('num_reunion'));
+    libre.set('_id',null);
+    cb(null,libre);
+  });
+};
+
 /**
  * Busca lugares disponibles para un suscriptor ( puede ser comprador como vendedor)
  * Retorna array con numeros de las reuniones que tiene disponibles

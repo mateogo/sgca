@@ -255,8 +255,21 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     },
 
     runAction: function(e){
+      var self = this;
+      var model = this.model;
+      var rol = this.options.rol;
       var actionName = $(e.currentTarget).data('name');
-      var p = DocManager.request('micaagenda:reunion:runaction',this.model,actionName);
+
+      if(actionName === 'liberar'){
+        Message.confirm('<h3 class="text-center">¿Está seguro que desea liberar la reunión?</h3>',
+                          ['cancelar',{label:'Liberar',class:'btn-danger'}],function(r){
+            if(r === 'Liberar'){
+              DocManager.request('micaagenda:reunion:runaction',model,actionName,rol);
+            }
+          });
+      }else{
+        DocManager.request('micaagenda:reunion:runaction',model,actionName);
+      }
     }
   });
 
@@ -265,7 +278,8 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     childViewOptions: function(model,index){
       var self = this;
       return {
-        contraparte_rol:  self.options.contraparte_rol
+        rol: self.rol,
+        contraparte_rol: self.options.contraparte_rol
       };
     }
   });
@@ -275,9 +289,11 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       this.rol = opts.rol;
       this.contraparte_rol = (opts.rol === 'comprador') ? 'vendedor' : 'comprador';
       var self = this;
-      DocManager.on('micaagenda:changed',function(){
+
+      this.handlerMicaChanged = function(){
         self.collection.refresh();
-      });
+      };
+      DocManager.on('micaagenda:changed',this.handlerMicaChanged);
     },
     template: _.template('<div class="text-muted"> '+
                          '  La agenda como <span class="label-rol" style="font-size: 18px"></span> '+
@@ -290,6 +306,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     childViewOptions: function(model,index){
       var self = this;
       return {
+        rol: self.rol,
         contraparte_rol:  self.contraparte_rol
       };
     },
@@ -300,7 +317,10 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     },
 
     onDestroy: function(){
-      DocManager.unbind('micaagenda:changed');
+      if(this.handlerMicaChanged){
+        DocManager.unbind('micaagenda:changed',this.handlerMicaChanged);
+        this.handlerMicaChanged = null;
+      }
       if(this.mapList){
         this.mapList.destroy();
         this.mapList = null;

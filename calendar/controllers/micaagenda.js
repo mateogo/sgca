@@ -120,6 +120,17 @@ var ctrls = {
       });
     },
 
+    liberate: function(req,res){
+      var service = new MicaAgendaService(req.user);
+      var body = req.body;
+
+      service.liberate(body,function(err,result){
+        if(err) return res.status(500).send(err);
+
+        res.json(result);
+      });
+    },
+
     save: function(req,res){
       var obj = req.body;
 
@@ -197,6 +208,7 @@ module.exports.configRoutes = function(app){
   app.get('/micaagenda-statistics',[ensureAuthenticated,isAdminMica,ctrls.statistics]);
 
   app.post('/micaagenda/assign',[ensureAuthenticated,isAdminMica,ctrls.assign]);
+  app.post('/micaagenda/liberate',[ensureAuthenticated,isAdminMica,ctrls.liberate]);
 
   app.post('/micaagenda/actores',[ensureAuthenticated,ctrls.findByActors]);
 

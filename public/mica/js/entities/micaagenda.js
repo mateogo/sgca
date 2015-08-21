@@ -27,7 +27,10 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
         actions.push({name:'desbloquear',label:'Desbloquear'});
 
       }else if(estado === 'asignado' || estado === 'borrador'){
-        //actions.push({name:'liberar',label:'Liberar'});
+        actions.push({name:'liberar',label:'Liberar'});
+
+      }else if(estado === 'unavailable'){
+        actions.push({name:'autoasignar',label:'AutoAsignar'});
       }
 
       return actions;
@@ -130,6 +133,11 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
   });
 
   var API = {
+    /**
+     * asigna a un comprador y vendedor
+     * @param  {String} comprador - id de suscripcion
+     * @param  {String} vendedor  - id de suscripcion
+     */
     assign: function(comprador,vendedor){
       var data = {
         comprador: comprador,
@@ -180,11 +188,52 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       return p;
     },
 
-    runAction: function(reunion,action){
+    /**
+     * @param  {Entities.MicaAgenda} reunion
+     * @param  {String} mainRol (comprador,vendedor)
+     */
+    liberar: function(reunion,mainRol){
+      var p = $.ajax({
+          type: 'post',
+          url: '/micaagenda/liberate',
+          data: {_id: reunion.id},
+          dataType: 'json'
+      });
+
+      p.done(function(result){
+        //mantiene el rol principal
+        if(mainRol){
+          result[mainRol] = reunion.get(mainRol);
+        }
+
+        result._id = null;
+        reunion.set(result);
+      });
+
+      return p;
+    },
+
+    runAction: function(reunion,action,param){
       if(action === 'bloquear'){
         return this.changeStatus(reunion,'bloqueado');
       }else if(action === 'desbloquear'){
         return this.changeStatus(reunion,'libre');
+
+      }else if(action === 'liberar'){
+        return this.liberar(reunion,param);
+
+      // se re-intenta la autoasignacion
+    }else if(action === 'autoasignar'){
+        var idComprador = reunion.get('comprador')._id;
+        var idVendedor = reunion.get('vendedor')._id;
+        var p = this.assign(idComprador,idVendedor);
+        p.done(function(result){
+          if(result.estado === 'unavailable' ){
+            Message.warning('No hay espacios disponibles');
+          }
+        });
+        return p;
+
       }else{
         Message.error('No se reconoce la acción. Disculpe las molestias');
       }
@@ -221,8 +270,8 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
     return API.changeStatusAlta(model,newStatus);
   });
 
-  DocManager.reqres.setHandler('micaagenda:reunion:runaction', function(model,actionName){
-    return API.runAction(model,actionName);
+  DocManager.reqres.setHandler('micaagenda:reunion:runaction', function(model,actionName,param){
+    return API.runAction(model,actionName,param);
   });
 
 });
