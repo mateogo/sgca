@@ -32,6 +32,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     },
 
     listPopup: function(idSuscription,rol){
+      var session = getSession();
       var list = this._listBySuscription(idSuscription,rol);
 
       if(!getSession().popup){
@@ -42,6 +43,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       }else{
         getSession().popup.bodyRegion.show(list);
       }
+      
     },
 
     listRight: function(idSuscription,rol){
@@ -98,7 +100,6 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 				      {name: 'comprador', label:'Sector del Comprador', cell: AgendaMica.ActividadCell, editable:false},
 				      {name: 'vendedor', label:'Sector del Vendedor', cell: AgendaMica.ActividadCell, editable:false},
 				      {name: 'estado', label:'Estado', cell:AgendaMica.EstadoReunionCell, editable:false},
-				      {name: 'estado_alta', label:'Estado Alta', cell:'string', editable:false},
 				      {name: 'feultmod', label:'Modificado', cell:'string', editable:false},
 				      {label:'Acciones', cell: AgendaMica.ActionsCells, editable:false, sortable:false},
 				    ],

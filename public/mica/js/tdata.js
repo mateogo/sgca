@@ -514,9 +514,10 @@ window.tdata = {
 
     estado_reunion:[
         {val:'no_definido', label:'Seleccione Estado'},
-        {val:'borrador',  label:'Borrador',  classattr:'info'},
+        {val:'bloqueado',  label:'Bloqueado',  classattr:'info'},
         {val:'observado',       label:'Observado',         classattr:'info'},
-        {val:'confirmado',         label:'Confirmado',  classattr:'warning'},
+        {val:'asignado',         label:'Asignado',  classattr:'warning'},
+        {val:'libre',         label:'Libre',  classattr:'warning'},
         {val:'unavailable',         label:'Sin disponibilidad',  classattr:'danger'},
     ],
 
