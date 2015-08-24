@@ -1,0 +1,45 @@
+<!--
+VISTA DETALLE DE EVENTO
+
+Puse los campos tal cual los uso en la Agenda en Wordpress en http://mica.testing.cultura.gob.ar/evento/?dia=03 por si se intenta linkear via API.
+
+event.title = Titulo del evento
+event.tipo = Tipo (rondas, workshop, showcase, acto de cierre, entrevista, show artistico, demo, adiovisual, brindis, fiesta)
+event.sector = sector (artes escenicas, audioviusual, diseño, etc..)
+event._start_day=  dia de inicio
+event._start_month= mes de inicio
+event._start_hour= hora de inicio
+event._start_minute= minutos de inicio
+event._end_day=  dia de fin
+event._end_month= mes de fin
+event._end_hour= hora de fin
+event._end_minute= minutos de fin
+event._event_location= locacion
+
+-->
+
+<div class="row">
+    <hr>
+    <div class="col-xs-12">
+        <h2 class="event">
+            <%= event.title %>
+        </h2>
+        <% if(event.image != '') {%>
+            <img src="/<%= event.image.urlpath %>" class="img-responsive">
+        <% } %>
+
+        <div>
+            <span class="label label-tipo"><%= event.tipo %></span>
+              <!--beg loop-->
+            <span class="label label-<%= event.sector %>"><%= event.sector %></span>
+              <!--end loop-->     
+            <hr>
+            <div>
+            <span class="event-day"> <%= event._start_day %> de <%= event._start_month %></span>  |  
+            <span class="event-time"> <%= event._start_hour %>:<%= event._start_minute %></span>
+            <span class="event-location"> <%= event._event_location %></span>
+            </div>
+        </div>
+        <p><%= event.edescription %></p>
+    </div>
+</div>
