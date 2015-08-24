@@ -1,5 +1,6 @@
 DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backbone, Marionette, $, _){
 
+  var Entities = DocManager.module('Entities');
   var backendApp = DocManager.module('BackendApp');
   var backendCommons = DocManager.module('BackendApp.Common.Views');
   var backendEntities = DocManager.module('Entities');
@@ -61,6 +62,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 
       DocManager.openRightPanel(list);
     },
+
     showStatistics: function(){
       var collection = DocManager.request('micaagenda:statistics');
 
@@ -72,6 +74,39 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 
       var list = new AgendaMica.AgendaList({collection:collection,rol:rol});
       return list;
+    },
+
+    /**
+     * pide un cnumber como <rol> para asignar a una reunion
+     * @paran {MicaAgenda} reunion
+     * @param {String} rol - 'comprador' o 'vendedor'
+     */
+    asignarByCNumber: function(reunion,rol){
+      AgendaMica.requestCnumberUI(reunion,rol,function(cnumber){
+        if(!cnumber) return;
+        var params = {
+          cnumber: cnumber,
+          rol: rol
+        };
+        var p = DocManager.request('micaagenda:reunion:runaction',reunion,'asignarcnumber',params);
+
+        p.fail(function(result){
+          var error = result.responseJSON;
+          if(error && error.code && error.code === 'meeting_unavailable'){
+            AgendaMica.showMettingUnavailable(rol,new Entities.MicaAgenda(error.reunion));
+
+          }else if(error && error.code && error.code === 'have_already'){
+            AgendaMica.showHaveAlready(error.userMessage);
+
+          }else if(error && error.userMessage){
+            Message.error(error.userMessage);
+
+          }else{
+            Message.error('No se pudo asignar la reunión');
+            console.error(result);
+          }
+        });
+      });
     }
   };
 

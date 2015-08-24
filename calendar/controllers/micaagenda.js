@@ -105,7 +105,6 @@ var ctrls = {
 
       var service = new MicaAgendaService(req.user);
 
-
       var comprador = req.body.comprador;
       var vendedor = req.body.vendedor;
 
@@ -115,6 +114,31 @@ var ctrls = {
 
       service.assign(comprador,vendedor,function(err,result){
         if(err) return res.status(500).send(err);
+
+        res.json(result);
+      });
+    },
+
+    assignCNumber: function(req,res){
+      var service = new MicaAgendaService(req.user);
+
+
+      var comprador = req.body.comprador;
+      var vendedor = req.body.vendedor;
+      var num_reunion = parseInt(req.body.num_reunion);
+
+      if(!comprador || !vendedor || !num_reunion){
+        return res.status(400).send('datos no validos');
+      }
+
+      service.assignToNum(comprador,vendedor,num_reunion,function(err,result){
+        if(err){
+          if(err.userMessage){
+            return res.status(409).send(err);
+          }else{
+            return res.status(500).send(err);
+          }
+        }
 
         res.json(result);
       });
@@ -208,6 +232,7 @@ module.exports.configRoutes = function(app){
   app.get('/micaagenda-statistics',[ensureAuthenticated,isAdminMica,ctrls.statistics]);
 
   app.post('/micaagenda/assign',[ensureAuthenticated,isAdminMica,ctrls.assign]);
+  app.post('/micaagenda/assigncnumber',[ensureAuthenticated,isAdminMica,ctrls.assignCNumber]);
   app.post('/micaagenda/liberate',[ensureAuthenticated,isAdminMica,ctrls.liberate]);
 
   app.post('/micaagenda/actores',[ensureAuthenticated,ctrls.findByActors]);

@@ -22,7 +22,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 
   Views.filterPopup = function(filterData, FilterModel, targetEvent, filterTitle){
     if(!filterData){
-      filterData=   new FilterModel();
+      filterData = new FilterModel();
     }
 
     if(filterData.schema.subsector)
@@ -267,7 +267,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 
     cancelClicked: function(e){
       e.preventDefault();
-      this.close()
+      this.close();
     },
 
     showAlert: function(title, text, klass){
@@ -297,13 +297,13 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
           $(this).removeClass(tstyle);
           $('.help-block', $(this)).html("");
         });
-      }
+      };
 
       var markErrors = function(value, key){
         var $controlGroup = $view.find("#" + key).closest('.form-group');
         $controlGroup.addClass(tstyle);
         $('.help-block', $controlGroup).html(value);
-      }
+      };
 
       clearFormErrors();
       _.each(msgs, markErrors);
@@ -320,13 +320,13 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
           $(this).removeClass("has-error");
           $('.help-block', $(this)).html("");
         });
-      }
+      };
 
       var markErrors = function(value, key){
         var $controlGroup = $view.find("#" + key).closest('.form-group');
         $controlGroup.addClass("has-error");
         $('.help-block', $controlGroup).html(value);
-      }
+      };
 
       clearFormErrors();
       _.each(errors, markErrors);
@@ -355,8 +355,8 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     initialize: function(options){
       var self = this;
       if(options){
-        if(options.template) self.setTemplate(options.template)
-        if(options.formTemplate) self.setFormTemplate(options.formTemplate)
+        if(options.template) self.setTemplate(options.template);
+        if(options.formTemplate) self.setFormTemplate(options.formTemplate);
         this.options = options;
       }
       if(options.filterInstance){
@@ -656,6 +656,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
     popup.body = $content;
     popup.$el.fadeIn();
     popup.$el.draggable({containment:$('body'),handle:'.header'});
+    popup.$el.resizable({containment:$('body'),minWidth:200,minHeight:200});
     popup.once('destroy',function(){
       popup.$el.draggable('destroy');
     });

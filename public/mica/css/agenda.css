@@ -1,5 +1,5 @@
 .owner-container{
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .list-item-space{
@@ -123,12 +123,6 @@
   display: inline-block;
   color: inherit;
 }
-
-/*.slim-popup .js-close{
-  position: absolute;
-  top: 6px;
-  right: 10px;
-}*/
 
 .slim-popup .body{
   background-color: #f1f2f7;

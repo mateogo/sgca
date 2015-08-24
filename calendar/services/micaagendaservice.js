@@ -135,6 +135,150 @@ MicaAgendaService.prototype.assign = function(compradorRef,vendedorRef,cb){
 };
 
 
+/**
+ * Asignacion de reunion entre comprador y vendedor a la reunion especifica
+ * Si no esta libre el numero de reunion, retorna error con el detalle de reunion actual
+ * @param  {String}   compradorRef - Suscription id o cnumber
+ * @param  {String}   vendedorRef  - Suscription id o cnumber
+ * @param  {Function} cb           - documento de micaagenda
+ */
+MicaAgendaService.prototype.assignToNum = function(compradorRef,vendedorRef,numReunion,cb){
+  // buscar a comprador y vendedor
+  // chequear existencia libre de la reunion
+  // crear la reunion
+
+  var self = this;
+
+  var comprador; // MicaSuscription
+  var vendedor; // MicaSuscription
+  var agenda; //array of MicaAgenda
+
+  async.series([
+    //busca al comprador
+    function(cb){
+      var query  = compradorRef;
+      var method =  MicaSuscription.findById;
+      if(compradorRef.length === 8){
+        method = MicaSuscription.find;
+        query = {cnumber: compradorRef};
+      }
+      method.call(MicaSuscription,query,function(err,result){
+          if(err) return cb(err);
+          comprador = result;
+          comprador = (result.length && result.length > 0) ? result[0] : result;
+          if(!comprador || !comprador.id){
+            return cb(new AppError('No se encontró al comprador','','comprador_notfound'));
+          }
+          cb();
+      });
+    },
+
+    //busca al vendedor
+    function(cb){
+      var query  = vendedorRef;
+      var method =  MicaSuscription.findById;
+      if(vendedorRef.length === 8){
+        method = MicaSuscription.find;
+        query = {cnumber: vendedorRef};
+      }
+      method.call(MicaSuscription,query,function(err,result){
+          if(err) return cb(err);
+          vendedor = (result.length && result.length > 0) ? result[0] : result;
+          if(!vendedor || !vendedor.id){
+            return cb(new AppError('No se encontró al vendendor','','vendedor_notfound'));
+          }
+          cb();
+      });
+    },
+
+    // chequea estado de la reunion para el comprador
+    function(cb){
+      self.getAgenda(comprador.id,'comprador',function(err,result){
+        if(err) return cb(err);
+        var agenda = result;
+
+        var index = numReunion - 1;
+        if(!(index in agenda)){
+          return cb(new AppError('No se pudo asignar la reunión','No se encontro la reunion en la agenda','meeting_notfound'));
+        }
+
+        var reunion = agenda[index];
+        if(reunion.get('estado') !== MicaAgenda.STATUS_FREE){
+          var error = new AppError('El Comprador no tiene disponible la reunión','reunion ocupada','meeting_unavailable');
+          error.reunion = reunion;
+          return cb(error);
+        }
+
+        cb();
+      });
+    },
+
+    // chequea estado de la reunion desde el vendedor
+    function(cb){
+      self.getAgenda(vendedor.id,'vendedor',function(err,result){
+        if(err) return cb(err);
+        var agenda = result;
+
+        var index = numReunion - 1;
+        if(!(index in agenda)){
+          return cb(new AppError('No se pudo asignar la reunión','No se encontro la reunion en la agenda','meeting_notfound'));
+        }
+
+        var reunion = agenda[index];
+        if(reunion.get('estado') !== MicaAgenda.STATUS_FREE){
+          var error = new AppError('EL vendedor no tiene disponible la reunión','reunion ocupada','meeting_unavailable');
+          error.reunion = reunion;
+          return cb(error);
+        }
+
+        cb();
+      });
+    },
+
+    // chequea reuniones previas
+    function(cb){
+      // busca si existe reunion para el comprador y vendedor
+      // si existe retorna esa reunion
+
+      var query = {
+        'comprador._id': comprador.id.toString(),
+        'vendedor._id': vendedor.id.toString()
+      };
+
+      MicaAgenda.find(query,function(err,results){
+        if(err) return cb(err);
+
+        if(results && results.length > 0){
+          var previous = results[0];
+
+          // si ahora hay disponibiliad y la anterior es no disponible, se borra la ultima
+          if(previous.get('estado') === MicaAgenda.STATUS_UNAVAILABLE && nums_availables.length > 0){
+              self.remove(previous.id,cb);
+          }else{
+            var apperror = new AppError('Ya están asignados a la reunion #'+previous.get('num_reunion'),'','have_already');
+            apperror.reunion = previous;
+            cb(apperror);
+          }
+
+        }else{
+          cb();
+        }
+      });
+    },
+
+   // asigna la reunion
+   function(cb){
+     self._createReunion(comprador.toJSON(),vendedor.toJSON(),numReunion,MicaAgenda.STATUS_ASIGNED,cb);
+   }
+
+  ],function(err,results){
+    if(err){
+      return cb(err);
+    }
+
+    cb(null,results[results.length-1]);
+  });
+};
 
 /**
  * libera una reunion
@@ -234,7 +378,8 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
         if(!result){
           return cb(new AppError('No existe la suscripción','','not_found'));
         }
-        suscriptor = result.serialize();
+        suscriptor = result.serialize(rol);
+
         cb(null,result);
       });
     },

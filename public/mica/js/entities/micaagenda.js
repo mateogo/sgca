@@ -21,7 +21,7 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       var actions = [];
       if(estado === 'libre'){
         actions.push({name:'bloquear',label:'Bloquear'});
-        //actions.push({name:'asignar',label:'Asignar'});
+        actions.push({name:'asignarcnumber',label:'Asignar por Código'});
 
       }else if(estado === 'bloqueado'){
         actions.push({name:'desbloquear',label:'Desbloquear'});
@@ -30,7 +30,7 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
         actions.push({name:'liberar',label:'Liberar'});
 
       }else if(estado === 'unavailable'){
-        actions.push({name:'autoasignar',label:'AutoAsignar'});
+        actions.push({name:'autoasignar',label:'reintento asignar'});
       }
 
       return actions;
@@ -213,6 +213,46 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       return p;
     },
 
+    // se re-intenta la autoasignacion
+    autoAsignar: function(reunion){
+      var idComprador = reunion.get('comprador')._id;
+      var idVendedor = reunion.get('vendedor')._id;
+      var p = this.assign(idComprador,idVendedor);
+      p.done(function(result){
+        if(result.estado === 'unavailable' ){
+          Message.warning('No hay espacios disponibles');
+        }
+      });
+      return p;
+    },
+
+    /**
+     * Proceso de asignar reunion cnumber
+     * @param {Object} param {cnumber:String,rol:String} rol: (comprador|vendedor)
+     */
+    asignarByCNumber: function(reunion,param){
+      var data = {
+        num_reunion: reunion.get('num_reunion')
+      };
+      var contraparte = (param.rol === 'comprador')? 'vendedor':'comprador';
+      data[contraparte] = reunion.get(contraparte)._id;
+      data[param.rol] = param.cnumber;
+
+      var p = $.ajax({
+          type: 'post',
+          url: '/micaagenda/assigncnumber',
+          data: data,
+          dataType: 'json'
+      });
+
+      p.done(function(result){
+        reunion.set(result);
+        DocManager.trigger('micaagenda:changed');
+      });
+
+      return p;
+    },
+
     runAction: function(reunion,action,param){
       if(action === 'bloquear'){
         return this.changeStatus(reunion,'bloqueado');
@@ -222,20 +262,14 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       }else if(action === 'liberar'){
         return this.liberar(reunion,param);
 
-      // se re-intenta la autoasignacion
-    }else if(action === 'autoasignar'){
-        var idComprador = reunion.get('comprador')._id;
-        var idVendedor = reunion.get('vendedor')._id;
-        var p = this.assign(idComprador,idVendedor);
-        p.done(function(result){
-          if(result.estado === 'unavailable' ){
-            Message.warning('No hay espacios disponibles');
-          }
-        });
-        return p;
+      }else if(action === 'autoasignar'){
+        return this.autoAsignar(reunion);
+
+      }else if(action === 'asignarcnumber'){
+        return this.asignarByCNumber(reunion,param);
 
       }else{
-        Message.error('No se reconoce la acción. Disculpe las molestias');
+          Message.error('No se reconoce la acción. Disculpe las molestias');
       }
     }
   };

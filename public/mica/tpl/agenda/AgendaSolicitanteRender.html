@@ -1,16 +1,19 @@
 <div class="media">
   <div class="media-left">
-    <a>
+    <a class="thumbnail" style="width:80px;height:85px">
         <img class="media-object avatar" src="/<%= getAvatar() %>" alt="" style="height: 73px; width:73px;">
     </a>
   </div>
   <div class="media-body">
-    <h4 style="margin-top:0"><%= solicitante.edisplayName %>
+    <h3 style="margin-top:0"><%= solicitante.edisplayName %>
         <span class="nro-serie"> (<%= cnumber%>) </span>
-    </h4>
+    </h3>
+    <div><%=getActividad()%></div>
     <%= solicitante.edescription %>
-    <br/>
-    <a class="js-openperfil" style="cursor:pointer">ver perfil</a> <span class="text-muted">|</span>
-    <a class="js-openagenda" style="cursor:pointer">ver agenda</a>
+    <% if(showToolbar){ %>
+      <br/>
+      <a class="js-openperfil" style="cursor:pointer">ver perfil</a> <span class="text-muted">|</span>
+      <a class="js-openagenda" style="cursor:pointer">ver agenda</a>
+    <% } %>
   </div>
 </div>

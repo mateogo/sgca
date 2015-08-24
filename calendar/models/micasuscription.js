@@ -28,9 +28,15 @@ var MicaSuscription = BaseModel.extend({
     callback('No se puede guardar por este medio. Es para solo lectura');
   },
 
-  serialize: function(){
+  serialize: function(rol){
     raw = (this.toJSON)? this.toJSON() : this;
-    raw = _.pick(raw,'_id','responsable','solicitante');
+    raw = _.pick(raw,'_id','responsable','solicitante','cnumber');
+
+    if(rol){
+      var actividades = (rol === 'comprador') ? this.get(rol).cactividades : this.get(rol).vactividades;
+      raw.actividades = actividades;
+    }
+
     raw._id = raw._id.toString();
     return raw;
   }
