@@ -298,6 +298,12 @@ p.metadata {
   padding: 0.3em 0.8em;
 }
 .label-mica-aescenicas{background:#55abdd}.label-mica-audiovisual{background:#faad24}.label-mica-diseno{background:#ef71aa}.label-mica-editorial{background:#f05f2f}.label-mica-musica{background:#8ac43e}.label-mica-videojuegos{background:#a4529f}
+.label-tipo {
+    background: #C3C5CC;
+    position: relative;
+    bottom: 2px;
+}
+
 ul.list-unstyled .usuario .label {text-transform: uppercase;}
 .bio {padding-right: 30px;}
 
@@ -745,4 +751,59 @@ button.btn.btn-sm.btn-success.js-interact-reunion.recibida {
 }
 .mini-stat-info span {
   font-size: 16px;
+}
+.agenda ul {
+  padding-left: 0;
+}
+.row.agenda {
+    list-style: none;
+    border-bottom: solid 1px #CCC;
+    padding: 20px 0;
+}
+.agenda h3 {
+  font-weight: bold;
+  margin: 7px 0;
+  line-height: 1.4em;
+}
+.agenda .brief p {
+    font-weight: 300;
+    font-family: Arial;
+    margin: 3px 0;
+}
+.agenda .metadata {
+  margin-top: 3px;
+}
+span.event-day, span.event-time, span.event-location {
+    font-weight: bold;
+    font-size: 14px;
+}
+.event-location {
+    display: block;
+}
+span.event-day:before {
+    font-family: "FontAwesome";
+    content: "\f073";
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    text-decoration: inherit;
+    width: 15px;
+}
+span.event-time:before {
+    font-family: "FontAwesome";
+    content: "\f017";
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    text-decoration: inherit;
+    width: 15px;
+}
+span.event-location:before {
+    font-family: "FontAwesome";
+    content: "\f041";
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    text-decoration: inherit;
+    width: 15px;
 }

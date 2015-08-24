@@ -1,0 +1,39 @@
+<!--
+LISTADO DE EVENTOS DE AGENDA
+
+Puse los campos tal cual los uso en la Agenda en Wordpress en http://mica.testing.cultura.gob.ar/evento/?dia=03 por si se intenta linkear via API.
+
+event.title = Titulo del evento
+event.tipo = Tipo (rondas, workshop, showcase, acto de cierre, entrevista, show artistico, demo, adiovisual, brindis, fiesta)
+event.sector = sector (artes escenicas, audioviusual, diseño, etc..)
+event._start_day=  dia de inicio
+event._start_month= mes de inicio
+event._start_hour= hora de inicio
+event._start_minute= minutos de inicio
+event._end_day=  dia de fin
+event._end_month= mes de fin
+event._end_hour= hora de fin
+event._end_minute= minutos de fin
+event._event_location= locacion
+
+-->
+
+<div class="row agenda">
+  <div class="col-md-12">
+    <div class="content">
+      <h3 class="fullname js-action-event-name"><a href="#" class="js-event-view" ><%= event.title %></a> <span class="label label-tipo"><%= event.tipo %></span></h3>
+      <div class="brief"><p><%= event.excerpt %></p></div>
+      <ul>
+        <div>
+          <span class="event-day"> <%= event._start_day %> de <%= event._start_month %></span>  |  <span class="event-time"> <%= event._start_hour %>:<%= event._start_minute %></span>
+        </div>
+        <div>
+          <span class="event-location"> <%= event._event_location %></span>
+        </div>
+      </ul>
+      <p class="metadata">
+        <span class="label label-<%= event.sector %>"><%= event.sector %></span>
+      </p>
+    </div>
+  </div>
+</div>
