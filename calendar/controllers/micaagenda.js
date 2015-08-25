@@ -2,6 +2,7 @@ var root = '../';
 var _ = require('underscore');
 
 var MicaAgenda = require(root + 'models/micaagenda.js').getModel();
+var MicaSuscription = require(root + 'models/micasuscription.js').getModel();
 var MicaAgendaService = require(root + 'services/micaagendaservice.js');
 
 var ctrls = {
@@ -29,9 +30,11 @@ var ctrls = {
         $or.push({'vendedor.responsable.rmail':reg});
         $or.push({'vendedor.responsable.rname':reg});
         $or.push({'vendedor.solicitante.edisplayName':reg});
+        $or.push({'vendedor.cnumber':reg});
         $or.push({'comprador.responsable.rmail':reg});
         $or.push({'comprador.responsable.rname':reg});
         $or.push({'comprador.solicitante.edisplayName':reg});
+        $or.push({'comprador.cnumber':reg});
         query.$or = $or;
         delete query.textsearch;
       }
@@ -237,12 +240,38 @@ var isAdminMica = function(req, res, next){
   return next();
 };
 
+var isAdminMicaOrOwner = function(req,res,next){
+  var user = req.user;
+
+  if(!user.roles || !user.modulos){
+    return res.send(401);
+  }
+
+  if( user.roles.indexOf('admin') > -1 &&  user.modulos.indexOf('mica') > -1 ){
+    return next();
+  }
+
+  //busca si es el dueño
+  var idSuscriptor = req.params.idSuscriptor;
+  MicaSuscription.findById(idSuscriptor,function(err,result){
+    if(err || !result){
+      res.send(401);
+    }
+
+    if(result.get('user').userid === req.user._id.toString()){
+      next();
+    }else{
+      res.send(401);
+    }
+  });
+};
+
 
 module.exports.configRoutes = function(app){
   app.get('/micaagenda',[ensureAuthenticated,isAdminMica,ctrls.find]);
   app.get('/micaagenda/:id',[ensureAuthenticated,isAdminMica,ctrls.findById]);
 
-  app.get('/micaagenda/:idSuscriptor/:rol',[ensureAuthenticated,isAdminMica,ctrls.agenda]);
+  app.get('/micaagenda/:idSuscriptor/:rol',[ensureAuthenticated,isAdminMicaOrOwner,ctrls.agenda]);
 
   app.get('/micaagenda-statistics',[ensureAuthenticated,isAdminMica,ctrls.statistics]);
   app.get('/micaagenda-statistics/profile/:idSuscriptor',[ensureAuthenticated,isAdminMica,ctrls.agendaCount]);

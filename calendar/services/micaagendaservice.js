@@ -197,7 +197,14 @@ MicaAgendaService.prototype.assignToNum = function(compradorRef,vendedorRef,numR
         if(err) return cb(err);
         var agenda = result;
 
-        var index = numReunion - 1;
+        var index = -1;
+        for (var i = 0; i < result.length && index === -1; i++) {
+            var item = result[i];
+            if(item.get('num_reunion') == numReunion ){
+              index = i;
+            }
+        }
+
         if(!(index in agenda)){
           return cb(new AppError('No se pudo asignar la reunión','No se encontro la reunion en la agenda','meeting_notfound'));
         }
@@ -219,7 +226,14 @@ MicaAgendaService.prototype.assignToNum = function(compradorRef,vendedorRef,numR
         if(err) return cb(err);
         var agenda = result;
 
-        var index = numReunion - 1;
+        var index = -1;
+        for (var i = 0; i < result.length && index === -1; i++) {
+            var item = result[i];
+            if(item.get('num_reunion') == numReunion ){
+              index = i;
+            }
+        }
+
         if(!(index in agenda)){
           return cb(new AppError('No se pudo asignar la reunión','No se encontro la reunion en la agenda','meeting_notfound'));
         }

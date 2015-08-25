@@ -602,7 +602,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     if(!suscriptor || !suscriptor.responsable) return '';
     var responsable = suscriptor.responsable;
     var solicitante = suscriptor.solicitante;
-    var str = '<strong class="text-primary">'+solicitante.edisplayName +'</strong> '+
+    var str = '<strong class="text-primary">'+solicitante.edisplayName + ' ('+suscriptor.cnumber+')' +'</strong> '+
               '<div class="hidden-xs"><div>'+responsable.rname + ' ('+responsable.rcargo+')' +'</div> '+
               '<div>'+  responsable.rmail + '</div> </div>';
     if(showActividad){
