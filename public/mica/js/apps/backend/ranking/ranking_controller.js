@@ -443,6 +443,35 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
           <button type="button" class="btn btn-sm btn-success js-agendar <%= hasMeetingClassAttr %> "><%= hasMeeting %></button>\
         </div>');
 
+  var YaAgendadoViewCell = Backgrid.Cell.extend({
+      initialize: function(opt){
+        var self = this;
+        self.model.bind("change", self.render, self);
+        
+        if(!self.model.get('agendacount')){
+
+          DocManager.request('micaagenda:profile:count',self.model.get('profileid')).done(function(result){
+              self.model.set('agendacount', result);
+          });
+        }
+      },
+
+      render: function(){
+        var agcount = this.model.get('agendacount');
+        if (!agcount){
+          this.$el.html('0/0');
+
+        }else{
+          this.$el.html(agcount.comprador + ' / ' + agcount.vendedor);
+
+        }
+        return this;
+      },
+
+    });
+
+
+
   var AgendarViewCell = Backgrid.Cell.extend({
       initialize: function(opt){
         this.model.bind("change", this.render, this);
@@ -611,6 +640,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 				  {
 				    gridcols:[
 				      {name: 'cnumber', label:'Nro Inscr', cell:'string', editable:false},
+              {name: 'agendado', label:'Agda (C/V)', cell: YaAgendadoViewCell, editable:false},
               {name: 'cactividad', label:'Sector', cell: ActividadViewCell, editable:false},
               {name: 'ename', label:'Responsable', cell:'string', editable:false},
               {name: 'eprov', label:'Prov', cell:'string', editable:false},
