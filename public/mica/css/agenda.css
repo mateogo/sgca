@@ -140,3 +140,8 @@
   font-weight: bold;
   color: #FF851B;
 }
+
+.row-selected{
+  background-color: white;
+  font-weight: bold;
+}

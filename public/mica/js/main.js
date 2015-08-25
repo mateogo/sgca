@@ -27,6 +27,8 @@ utils.loadTemplate([
         // -- Agenda
         'agenda/AgendaListItem', 'agenda/AgendaSolicitanteRender',
 
+        // -- Place
+        'places/PlaceEdit',
 
         // MailSender
         'MailTemplateDefault','MailFormSubmitNotification','MailFormGuardarProvisorio',

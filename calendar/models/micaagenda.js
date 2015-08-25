@@ -63,7 +63,7 @@ var MicaAgenda = BaseModel.extend({
               raw.actividades = actividades;
             }
 
-            raw = _.pick(raw,'_id','cnumber','responsable','solicitante','actividades');
+            raw = _.pick(raw,'_id','cnumber','responsable','solicitante','actividades','place');
             raw._id = raw._id.toString();
 
             return raw;

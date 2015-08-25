@@ -443,6 +443,49 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
 
 };
 
+
+MicaAgendaService.prototype.getAgendaCount = function(suscriptor,cb){
+  var idSuscriptor = (suscriptor._id) ?  suscriptor._id : suscriptor;
+  if(idSuscriptor.toString){
+    idSuscriptor = idSuscriptor.toString();
+  }
+
+  var compradorCount = 0;
+  var vendedorCount = 0;
+
+  async.series([
+    //busca cant compradores
+    function(cb){
+      var query = {
+        'comprador._id': idSuscriptor,
+        estado: MicaAgenda.STATUS_ASIGNED
+      };
+      MicaAgenda.count(query,function(err,result){
+        if(err) return cb(err);
+        compradorCount = result;
+        cb(null,compradorCount);
+      });
+    },
+
+    //busca cant vendedores
+    function(cb){
+      var query = {
+        'vendedor._id': idSuscriptor,
+        estado: MicaAgenda.STATUS_ASIGNED
+      };
+      MicaAgenda.count(query,function(err,result){
+        if(err) return cb(err);
+        vendedorCount = result;
+        cb(null,vendedorCount);
+      });
+    }
+  ],function(err,results){
+    if(err) return cb(err);
+
+    cb(null,{profileid:idSuscriptor,comprador:compradorCount,vendedor:vendedorCount});
+  });
+};
+
 MicaAgendaService.prototype.save = function(obj,callback){
   obj = (obj.toJSON)? obj.toJSON() : obj;
   obj.usermod = this.userLogged;

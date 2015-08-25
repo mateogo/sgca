@@ -293,6 +293,14 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
           'click .js-profile-view': 'profileView',
       },
 
+      setSeletected: function(){
+        var $tr = this.$el.closest('tr');
+        var $table =  $tr.closest('table');
+
+        $table.find('.row-selected').removeClass('row-selected');
+        $tr.addClass('row-selected');
+      },
+
       profileView: function(e){
         var self = this;
         e.stopPropagation();e.preventDefault();
@@ -300,6 +308,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         console.log('ProfileView at CnumberCell');
 
         DocManager.trigger('micaagenda:profile:show:popup',this.model.get('profileid'));
+        this.setSeletected();
       },
 
       render: function(){
@@ -469,6 +478,14 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         return this;
       },
 
+      setSeletected: function(){
+        var $tr = this.$el.closest('tr');
+        var $table =  $tr.closest('table');
+
+        $table.find('.row-selected').removeClass('row-selected');
+        $tr.addClass('row-selected');
+      },
+
       events: {
         'click .js-agendar': 'agendar',
         'click .js-openagenda': 'openAgenda',
@@ -523,12 +540,14 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         e.stopPropagation();
         var idSuscriptor = this.model.get('profileid');
         DocManager.trigger('micaagenda:agendaone:show:popup',idSuscriptor,'vendedor');
+        this.setSeletected();
       },
 
       openPerfil: function(e){
         e.stopPropagation();
         var idSuscriptor = this.model.get('profileid');
         DocManager.trigger('micaagenda:profile:show:popup',idSuscriptor);
+        this.setSeletected();
       }
     });
 
@@ -537,10 +556,12 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   var EditViewCell = Backgrid.Cell.extend({
       render: function(){
           if(!this.rendered){
-             var btnEdit = $('<button class="btn btn-xs btn-info js-edit"  title="agendar reuniones"><span class="glyphicon glyphicon-edit"></span></button>');
+             var btnEdit = $(' <button class="btn btn-xs btn-info js-edit"  data-tooltip="Agendar reuniones" title="agendar reuniones"><span class="glyphicon glyphicon-edit"></span></button>');
              var btnRemove = $('<button class="btn btn-xs btn-danger js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
+             var btnAsignPlace = $(' <button class="btn btn-xs btn-info js-place" data-tooltip="Asignar ubicación"  title="asignar ubicación" style="margin-left:5px;"><span class="glyphicon glyphicon-pushpin"></span></button>');
+             btnAsignPlace.css('display','none');
              //this.$el.append(btnEdit).append(btnRemove).append(drpDwnBtn());
-             this.$el.append(btnEdit);
+             this.$el.append(btnEdit).append(btnAsignPlace);
              this.rendered = true;
           }
         this.$el.css('width','50px');
@@ -550,6 +571,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       events: {
           'click button.js-edit': 'editClicked',
           'click button.js-trash': 'trashClicked',
+          'click button.js-place': 'placeClicked',
           'click .js-trigger-inscripcion-aceptado': 'formAccepted',
           'click .js-trigger-inscripcion-observado': 'formObserved',
           'click .js-trigger-inscripcion-rechazado': 'formRegected',
@@ -563,13 +585,17 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
         });
       },
       editClicked: function(e){
-          e.stopPropagation();e.preventDefault();
-          getSession().views.mainlayout.trigger('grid:model:edit',this.model);
+        e.stopPropagation();e.preventDefault();
+        getSession().views.mainlayout.trigger('grid:model:edit',this.model);
       },
 
       trashClicked: function(e){
-          e.stopPropagation();e.preventDefault();
-          getSession().views.mainlayout.trigger('grid:model:remove',this.model);
+        e.stopPropagation();e.preventDefault();
+        getSession().views.mainlayout.trigger('grid:model:remove',this.model);
+      },
+      placeClicked: function(e){
+        e.stopPropagation();e.preventDefault();
+        getSession().views.mainlayout.trigger('grid:model:editplace',this.model);
       }
     });
   //*****************************
@@ -678,13 +704,16 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 
   	});
 
+    mainlayout.listenTo(mainlayout,'grid:model:editplace',function(model){
+      DocManager.trigger('micasuscription:edit:place',model);
+    });
+
     mainlayout.on('model:change:state', function(model, state){
       model.set('nivel_ejecucion', state);
 
       DocManager.request("micaranking:partial:update",[model.id],{'nivel_ejecucion': state});
 
     });
-
   };
 
   var registerLayoutEvents = function(session, layout, mainlayout){

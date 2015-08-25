@@ -17,6 +17,8 @@ var config = {};
 var micasuscriptionsCol = 'micasuscriptions';
 var serialCol = 'seriales';
 
+var MicaSuscriptionService = require(rootPath + '/calendar/services/micasuscriptionservice.js');
+
 var utils = require(rootPath + '/core/util/utils');
 
 
@@ -66,7 +68,7 @@ var fetchserial = function(serie){
             });
         }else{
             addSerial(serie,item);
-        }  
+        }
     });
 };
 
@@ -86,7 +88,7 @@ var initSerial = function(serie){
 };
 
 var updateSerialCollection = function(serial){
-    var collection = dbi.collection(serialCol);    
+    var collection = dbi.collection(serialCol);
     collection.update( {'_id':serial._id}, serial,{w:1},function(err,result){});
 };
 
@@ -165,7 +167,7 @@ exports.findOne = function(req, res) {
             res.send(items[0]);
         });
     });
- 
+
 };
 
 exports.fetchById = function(id, cb) {
@@ -201,7 +203,7 @@ exports.fetchByQuery = function(req, res) {
 
 
 exports.findByQuery = function(req, res) {
-    var query = buildQuery(req.query); 
+    var query = buildQuery(req.query);
     var resultset;
     var itemcount = 0;
     var page = parseInt(req.query.page);
@@ -261,7 +263,7 @@ var textFilter = function(textsearch, items){
 
 exports.find = function(req, res) {
 
-    var query = buildQuery(req.body); 
+    var query = buildQuery(req.body);
     var page = parseInt(req.body.page);
     var limit = parseInt(req.body.per_page);
     var cursor;
@@ -339,7 +341,7 @@ var buildUpdateData = function(data){
 // BUILD QUERY
 var buildQuery = function(qr){
     var query = {},
-        prov = [], 
+        prov = [],
         subc = {},
         subv = {},
         tmp = {},
@@ -384,7 +386,7 @@ var buildQuery = function(qr){
         conditions.push(token);
     }
 
- 
+
     if(qr.provincia && qr.provincia !== 'no_definido'){
         if(qr.provincia === 'intl'){
             conditions.push({'solicitante.epais': {$ne: "AR"}});
@@ -394,7 +396,7 @@ var buildQuery = function(qr){
     }
 
     if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
-    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
+    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){
         conditions.push({estado_alta: qr.estado_alta});
     }else{
         conditions.push({estado_alta: 'activo'});
@@ -416,33 +418,51 @@ var buildAreaList = function(areas){
         return {area: item};
 
     });
-}
+};
 
 
 exports.partialupdate = function(req, res) {
     if (req){
         data = req.body;
+    }else{
+        //bad request
+        return res.status(400);
     }
-    var query = buildTargetNodes(data);
-    var update = buildUpdateData(data);
 
-    dbi.collection(micasuscriptionsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
-        if (err) {
-            console.log('Error partial updating %s error: %s',micasuscriptionsCol,err);
-            if(res){
-                res.send({error: MSGS[0] + err});
-            }else if(cb){
-                cb({error: MSGS[0] + err});
-            }
+    if('newdata' in data && 'place' in data.newdata){
+      // MODIFICA EL PLACE (UBICACION en el MICA, SALA + MESA)
+      var service = new MicaSuscriptionService(req.user);
+      service.updatePlace(data.newdata,function(err,result){
+        if(err) return res.status(409).send(err);
 
-        } else {
-            if(res){
-                res.send({result: result});
-            }else if(cb){
-                cb({result: result});
-            }
-        }
-    })
+        res.json(result);
+      });
+
+    }else{
+
+      // PROCESO NORMAL DE UPDATE
+
+      var query = buildTargetNodes(data);
+      var update = buildUpdateData(data);
+
+      dbi.collection(micasuscriptionsCol).update(query, {$set: update}, {safe:true, multi:true}, function(err, result) {
+          if (err) {
+              console.log('Error partial updating %s error: %s',micasuscriptionsCol,err);
+              if(res){
+                  res.send({error: MSGS[0] + err});
+              }else if(cb){
+                  cb({error: MSGS[0] + err});
+              }
+
+          } else {
+              if(res){
+                  res.send({result: result});
+              }else if(cb){
+                  cb({result: result});
+              }
+          }
+      })
+    };
 };
 
 exports.delete = function(req, res) {
@@ -458,8 +478,3 @@ exports.delete = function(req, res) {
         });
     });
 };
-
-
-
-
-

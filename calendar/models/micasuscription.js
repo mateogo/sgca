@@ -30,7 +30,7 @@ var MicaSuscription = BaseModel.extend({
 
   serialize: function(rol){
     raw = (this.toJSON)? this.toJSON() : this;
-    raw = _.pick(raw,'_id','responsable','solicitante','cnumber');
+    raw = _.pick(raw,'_id','responsable','solicitante','cnumber','place');
 
     if(rol){
       var actividades = (rol === 'comprador') ? this.get(rol).cactividades : this.get(rol).vactividades;

@@ -250,7 +250,8 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     events: {
       'click .js-runaction': 'runAction',
       'click .js-openagenda': 'openAgenda',
-      'click .js-openperfil': 'openPerfil'
+      'click .js-openperfil': 'openPerfil',
+      'click .js-countassigned': 'countAssigned'
     },
 
     openAgenda: function(e){
@@ -265,6 +266,18 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       var rol = this.options.contraparte_rol;
       var suscriptor = this.model.get(rol);
       DocManager.trigger('micaagenda:profile:show:popup',suscriptor._id);
+    },
+
+    countAssigned: function(e){
+      e.stopPropagation();
+      var rol = this.options.contraparte_rol;
+      var suscriptor = this.model.get(rol);
+      var p = DocManager.request('micaagenda:profile:count',suscriptor);
+      p.done(function(result){
+        if(result){
+          Message.info('Comprador: '+result.comprador + '  ' + 'Vendedor: '+result.vendedor);
+        }
+      });
     },
 
     runAction: function(e){
@@ -583,6 +596,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 
     return str;
   };
+  CommonsViews.renderSuscriptor = renderSuscriptor;
 
   var renderLiteSuscriptor = function(suscriptor,showActividad){
     if(!suscriptor || !suscriptor.responsable) return '';

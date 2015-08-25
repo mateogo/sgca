@@ -50,7 +50,7 @@ var ctrls = {
 
       //EJECUNTADO QUERY
       MicaAgenda.findPageable(query,function(err,result){
-        if(err) return res.status(500).send(err);
+        if(err) return res.status(409).send(err);
 
         res.json(result);
       });
@@ -60,7 +60,7 @@ var ctrls = {
       var id = req.params.id;
 
       MicaAgenda.findById(id,function(err,result){
-        if(err) return res.status(500).send(err);
+        if(err) return res.status(409).send(err);
 
         res.json(result);
       });
@@ -90,7 +90,22 @@ var ctrls = {
 
       var service = new MicaAgendaService(req.user);
       service.getAgenda(suscriptor,rol,function(err,result){
-        if(err) return res.status(500).send(err);
+        if(err) return res.status(409).send(err);
+
+        res.json(result);
+      });
+    },
+
+    /**
+     * retorna cantidad de reuniones agendadas para un profile-id
+     * {comprador: int, vendedor: int}
+     */
+    agendaCount: function(req,res){
+      var suscriptor = req.params.idSuscriptor;
+
+      var service = new MicaAgendaService(req.user);
+      service.getAgendaCount(suscriptor,function(err,result){
+        if(err) return res.status(409).send(err);
 
         res.json(result);
       });
@@ -113,7 +128,7 @@ var ctrls = {
       }
 
       service.assign(comprador,vendedor,function(err,result){
-        if(err) return res.status(500).send(err);
+        if(err) return res.status(409).send(err);
 
         res.json(result);
       });
@@ -136,7 +151,7 @@ var ctrls = {
           if(err.userMessage){
             return res.status(409).send(err);
           }else{
-            return res.status(500).send(err);
+            return res.status(409).send(err);
           }
         }
 
@@ -149,7 +164,7 @@ var ctrls = {
       var body = req.body;
 
       service.liberate(body,function(err,result){
-        if(err) return res.status(500).send(err);
+        if(err) return res.status(409).send(err);
 
         res.json(result);
       });
@@ -160,7 +175,7 @@ var ctrls = {
 
       var service = new MicaAgendaService(req.user);
       service.save(obj,function(err,result){
-        if(err) return res.status(500).send(err);
+        if(err) return res.status(409).send(err);
 
         res.json(result);
       });
@@ -172,7 +187,7 @@ var ctrls = {
 
       var service = new MicaAgendaService(req.user);
       service.savePartial(idReunion,attrs,function(err,result){
-        if(err) return res.status(500).send(err);
+        if(err) return res.status(409).send(err);
 
         res.json(result);
       });
@@ -180,13 +195,13 @@ var ctrls = {
 
     remove: function(req,res){
       if(!req.params.id){
-        return res.status(500).send('invalid params');
+        return res.status(409).send('invalid params');
       }
       var id = req.params.id;
 
       var service = new MicaAgendaService(req.user);
       service.remove(id,function(err,result){
-        if(err) return res.status(500).send(err);
+        if(err) return res.status(409).send(err);
 
         res.status(204).json({});
       });
@@ -194,7 +209,7 @@ var ctrls = {
 
     statistics: function(req,res){
       MicaAgenda.statistics(function(err,results){
-        if(err) return res.status(500).send(err);
+        if(err) return res.status(409).send(err);
 
         res.json(results);
       });
@@ -230,6 +245,7 @@ module.exports.configRoutes = function(app){
   app.get('/micaagenda/:idSuscriptor/:rol',[ensureAuthenticated,isAdminMica,ctrls.agenda]);
 
   app.get('/micaagenda-statistics',[ensureAuthenticated,isAdminMica,ctrls.statistics]);
+  app.get('/micaagenda-statistics/profile/:idSuscriptor',[ensureAuthenticated,isAdminMica,ctrls.agendaCount]);
 
   app.post('/micaagenda/assign',[ensureAuthenticated,isAdminMica,ctrls.assign]);
   app.post('/micaagenda/assigncnumber',[ensureAuthenticated,isAdminMica,ctrls.assignCNumber]);

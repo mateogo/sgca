@@ -55,6 +55,10 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
         DocManager.navigate(navigateUrl);
       }
       BackendApp.RankingMica.Controller.profileShow(idSuscription,{popup:toPopup,url:navigateUrl});
+    },
+
+    editPlace: function(suscription){
+      BackendApp.Places.Controller.settingView(suscription);
     }
   };
 
@@ -95,6 +99,10 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
   DocManager.on('micaagenda:statistic',function(){
     DocManager.navigate("agenda/estadisticas");
     API.statistics();
+  });
+
+  DocManager.on('micasuscription:edit:place',function(suscription){
+    API.editPlace(suscription);
   });
 
   DocManager.addInitializer(function(){

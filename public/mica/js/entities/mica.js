@@ -127,7 +127,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         return false;
 
       }else{
-        //La regla es que tengan perfiles cruzados entre self y other profile 
+        //La regla es que tengan perfiles cruzados entre self y other profile
         if(self.id === userprofile.id)
           return false;
 
@@ -1489,8 +1489,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
       query.nodes = nodes;
       query.newdata = data;
-      var update = new Entities.MicaRegistrationUpdate(query);
-      update.save({
+      update = new Entities.MicaRegistrationUpdate(query);
+      return update.save({
         success: function() {
         }
       });

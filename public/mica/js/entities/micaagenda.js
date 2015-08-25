@@ -253,6 +253,30 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       return p;
     },
 
+    countAssigned: function(suscriptor){
+      var id = null;
+
+      if(typeof(suscriptor) === 'string'){
+        id = suscriptor;
+      }else if(suscriptor.has && suscriptor.has('profileid')){
+        id = suscriptor.get('profileid');
+      }else if(suscriptor.id){
+        id = suscriptor.id;
+      }else if(suscriptor._id){
+        id = suscriptor._id;
+      }else{
+        id = suscriptor;
+      }
+
+      var p = $.ajax({
+          type: 'get',
+          url: '/micaagenda-statistics/profile/'+id,
+          dataType: 'json'
+      });
+
+      return p;
+    },
+
     runAction: function(reunion,action,param){
       if(action === 'bloquear'){
         return this.changeStatus(reunion,'bloqueado');
@@ -306,6 +330,14 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
 
   DocManager.reqres.setHandler('micaagenda:reunion:runaction', function(model,actionName,param){
     return API.runAction(model,actionName,param);
+  });
+
+  DocManager.reqres.setHandler('micaagenda:profile:count',function(model,callback){
+    var p =  API.countAssigned(model);
+    if(callback){
+      p.done(callback);
+    }
+    return p;
   });
 
 });
