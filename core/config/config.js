@@ -78,15 +78,15 @@ var routesBootstrap = function (app, express) {
 
 				user.comparePassword(userdao.password, password, function(err, isMatch) {
           if (isMatch) {
-            var pp = app;
-            var xx = express;
-            console.log('match!!!');
+
+            //console.log('passport: password match!!! [%s]', userdao.displayName);
             return done(null, userdao);
+
           } else {
 
-            console.log('noooooooooo match!');
-              return done(null, false, { message: 'Incorrect password.' });
-            }
+            //console.log('noooooooooo match!');
+            return done(null, false, { message: 'Incorrect password.' });
+          }
         });
       });
 
@@ -94,7 +94,7 @@ var routesBootstrap = function (app, express) {
   ));
 
   passport.serializeUser(function(user, done) {
-    //console.log('serialize:[%s]',user.name);
+    //console.log('serialize: user:[%s] [%s]',user.displayName, user._id);
     done(null, user._id);
   });
 
@@ -114,8 +114,8 @@ var routesBootstrap = function (app, express) {
   // see: https://github.com/senchalabs/connect/wiki/Connect-3.0
   //https://groups.google.com/forum/#!msg/express-js/iP2VyhkypHo/5AXQiYN3RPcJ
   app.use(express.json());
-  app.use(express.urlencoded());
-  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);
