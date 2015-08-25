@@ -443,17 +443,21 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
           <button type="button" class="btn btn-sm btn-success js-agendar <%= hasMeetingClassAttr %> "><%= hasMeeting %></button>\
         </div>');
 
+  var fetchYaAgendadas = function(model){
+
+    DocManager.request('micaagenda:profile:count', model.get('profileid')).done(function(result){
+      console.log('[%s] cnumber:[%s] reult:[%s]/[%s]',model.get('profileid'), model.get('cnumber'), result.comprador, result.vendedor)
+
+      model.set('agendacount', result);
+    });
+  };
+
   var YaAgendadoViewCell = Backgrid.Cell.extend({
       initialize: function(opt){
-        var self = this;
-        self.model.bind("change", self.render, self);
-        
-        if(!self.model.get('agendacount')){
+        this.model.bind("change", this.render, this);
 
-          DocManager.request('micaagenda:profile:count',self.model.get('profileid')).done(function(result){
-              self.model.set('agendacount', result);
-          });
-        }
+        fetchYaAgendadas(this.model);
+
       },
 
       render: function(){
@@ -776,6 +780,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
             {
               gridcols:[
                 {name: 'cnumber', label:'Nro Inscr', cell: CnumberViewCell, editable:false},
+                {name: 'agendado', label:'Agda (C/V)', cell: YaAgendadoViewCell, editable:false},
                 {name: 'displayName', label:'Emprendimiento', cell:'string', editable:false},
                 {name: 'receptor', label:'Receptor', cell: EmisorViewCell, editable:false},
                 {name: 'emisor',   label:'Emisor',   cell: ReceptorViewCell, editable:false},
