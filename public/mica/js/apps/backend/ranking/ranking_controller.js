@@ -443,6 +443,39 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
           <button type="button" class="btn btn-sm btn-success js-agendar <%= hasMeetingClassAttr %> "><%= hasMeeting %></button>\
         </div>');
 
+  var fetchYaAgendadas = function(model){
+
+    DocManager.request('micaagenda:profile:count', model.get('profileid')).done(function(result){
+      console.log('[%s] cnumber:[%s] reult:[%s]/[%s]',model.get('profileid'), model.get('cnumber'), result.comprador, result.vendedor)
+
+      model.set('agendacount', result);
+    });
+  };
+
+  var YaAgendadoViewCell = Backgrid.Cell.extend({
+      initialize: function(opt){
+        this.model.bind("change", this.render, this);
+
+        fetchYaAgendadas(this.model);
+
+      },
+
+      render: function(){
+        var agcount = this.model.get('agendacount');
+        if (!agcount){
+          this.$el.html('0/0');
+
+        }else{
+          this.$el.html(agcount.comprador + ' / ' + agcount.vendedor);
+
+        }
+        return this;
+      },
+
+    });
+
+
+
   var AgendarViewCell = Backgrid.Cell.extend({
       initialize: function(opt){
         this.model.bind("change", this.render, this);
@@ -611,6 +644,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 				  {
 				    gridcols:[
 				      {name: 'cnumber', label:'Nro Inscr', cell:'string', editable:false},
+              {name: 'agendado', label:'Agda (C/V)', cell: YaAgendadoViewCell, editable:false},
               {name: 'cactividad', label:'Sector', cell: ActividadViewCell, editable:false},
               {name: 'ename', label:'Responsable', cell:'string', editable:false},
               {name: 'eprov', label:'Prov', cell:'string', editable:false},
@@ -746,6 +780,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
             {
               gridcols:[
                 {name: 'cnumber', label:'Nro Inscr', cell: CnumberViewCell, editable:false},
+                {name: 'agendado', label:'Agda (C/V)', cell: YaAgendadoViewCell, editable:false},
                 {name: 'displayName', label:'Emprendimiento', cell:'string', editable:false},
                 {name: 'receptor', label:'Receptor', cell: EmisorViewCell, editable:false},
                 {name: 'emisor',   label:'Emisor',   cell: ReceptorViewCell, editable:false},
