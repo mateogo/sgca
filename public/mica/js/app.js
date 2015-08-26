@@ -78,3 +78,60 @@ DocManager.on("start", function(){
     }
   }
 });
+
+
+(function(){
+
+  var session = {
+    user: null,
+    micaisncr: null,
+    isMicaAdmin: false
+  };
+
+  var load = function(callback){
+    dao.gestionUser.getUser(DocManager, function (user){
+      session.user = user;
+      if(user.id ){// && dao.gestionUser.hasPermissionTo('mica:user', 'mica', {} ) ){
+
+        //Verificación: el usuario YA TIENE una inscripción en MICA
+        fetchingMicaRequest = DocManager.request("micarqst:fetchby:user", user, "mica");
+        $.when(fetchingMicaRequest).done(function(micarqst){
+          session.micarqst = micarqst;
+          session.isMicaAdmin =  dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} );
+          callback(session);
+        });
+
+      }else{
+        Message.warning('Debe iniciar sesión y estar inscripto en MICA 2015');
+        window.open('/ingresar/#mica', '_self');
+      }
+    });
+  };
+
+
+
+  DocManager.reqres.setHandler('userlogged:load',function(callback){
+    if(!session.user){
+      load(function(){
+        callback(session.user);
+      });
+    }else{
+      callback(session.user);
+    }
+  });
+
+  DocManager.reqres.setHandler('userlogged:getMicaProfile',function(callback){
+    return session.micarqst;
+  });
+
+  DocManager.reqres.setHandler('userlogged:isMicaAdmin',function(callback){
+    if(!session.user){
+      load(function(){
+        callback(session.isMicaAdmin);
+      });
+    }else{
+      callback(session.isMicaAdmin);
+    }
+  });
+
+})();

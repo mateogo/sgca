@@ -9,14 +9,14 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     }
     return Browse.Session;
   }
-  
+
 	Browse.Controller = {
 		browseProfiles: function(criterion){
 
 			loadCurrentUser().then( function(user){
         getSession().filter = new backendEntities.MicaFilterFacet(criterion);
         getSession().filter.set('userid', getSession().currentUser.id);
-      
+
         criterion = getSession().filter.attributes;
 
 				if(!getSession().mainLayout){
@@ -29,8 +29,8 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
 		}
 
-	}; 
-	
+	};
+
   var loadCurrentUser = function(){
 
     var defer = $.Deferred();
@@ -60,7 +60,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 			  window.open('/mica/#bienvenido', '_self');
 			}
 
- 
+
    	});
 
    	return defer.promise();
@@ -83,7 +83,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     if(!getSession().collection){
       getSession().collection =  new DocManager.Entities.MicaRegistrationPaginatedCol();
     }
-    
+
     if(criterion){
       _.extend(query, criterion);
     }
@@ -130,7 +130,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     }
   });
 
-  
+
   Backgrid.VactivityCell = Backgrid.StringCell.extend({
       className: "string-cell",
       initialize: function(opt){
@@ -176,7 +176,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
           }
          return this;
       },
-      
+
       events: {
           'click button.js-edit': 'editClicked',
           'click button.js-trash': 'trashClicked',
@@ -187,7 +187,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
       updateRecord: function(e, nuevo_estado){
         var self = this;
         e.stopPropagation();e.preventDefault();
- 
+
         self.$('.dropdown-toggle').dropdown('toggle');
         getSession().views.mainlayout.trigger('model:change:state',this.model, nuevo_estado, function(error){
         });
@@ -207,13 +207,13 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
           e.stopPropagation();e.preventDefault();
           getSession().views.mainlayout.trigger('grid:model:edit',this.model);
       },
-        
+
       trashClicked: function(e){
           e.stopPropagation();e.preventDefault();
           getSession().views.mainlayout.trigger('grid:model:remove',this.model);
       }
     });
-  
+
 
 	var initCrudManager = function(user, criterion, step){
 
@@ -240,9 +240,9 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
 
 				    layoutTpl: utils.templates.BrowseProfilesLayout,
 				    formTpl: utils.templates.MicaInscriptionFormLayout,
-				    
+
             collection: getSession().collection,
-            collectionView: Browse.ProfileCollection, 
+            collectionView: Browse.ProfileCollection,
 
 				    editModel: backendEntities.MicaRegistration,
 				    modelToEdit: null,
@@ -269,7 +269,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     session.views.layout = new backendCommons.Layout({model:new Backbone.Model({title: 'Rondas de Negocios - MICA 2015'}) });
     //session.views.sidebarpanel = new backendCommons.SideBarPanel({model:session.model});
     session.views.mainlayout = new backendCommons.MainLayout({model:session.model});
-    
+
     registerSidebarEvents(session, session.views.layout,session.views.mainlayout);
     registerMainLayoutEvents(session, session.views.layout, session.views.mainlayout);
     registerLayoutEvents(session, session.views.layout, session.views.mainlayout);
@@ -302,7 +302,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
     });
 
   };
-  
+
   var registerLayoutEvents = function(session, layout, mainlayout){
     layout.on('show', function(){
     	layout.getRegion('mainRegion').show(mainlayout);
@@ -325,7 +325,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   	var modelView = new Browse.BrowseProfileView({
   		model: model
   	})
-  	
+
   	mainlayout.hideList();
     // TODO
     // editorlayout.on('accept:buyer', function(){
@@ -342,7 +342,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
   	});
   	editorlayout.on('show', function(){
     	editorlayout.getRegion('showRegion').show(modelView);
- 
+
   	})
   	mainlayout.getRegion('editRegion').show(editorlayout);
   };
@@ -370,7 +370,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         openMeetingForm(session, itemview, otherprofile, facetEditor, entities.at( 0 ))
       }
 
-    });  
+    });
 
 
   };
@@ -380,7 +380,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
       model: facetEditor,
       template: _.template(utils.templates.AskEditor(interactionRecord.attributes)),
     });
-    
+
     var modal = new Backbone.BootstrapModal({
       content: form,
       title: 'Solicitud de reunión' ,
@@ -402,8 +402,8 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
           Message.warning('Se produjo un error en la actualización de sus datos. Inténtelo nuevamente');
         }
     });
-    
-    modal.open();    
+
+    modal.open();
   };
 
   //=============================
@@ -415,7 +415,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         mode = 'receptor',
         fetchRecords,
         facetEditor;
- 
+
     fetchRecords = DocManager.request("micainteraction:queryby:otherprofile", userid, myprofile, otherprofile, mode);
     $.when(fetchRecords).done(function(entities){
       if(!entities.length) {
@@ -425,7 +425,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         openAnswerForm(session, itemview, otherprofile, facetEditor, entities.at(0))
       }
 
-    });  
+    });
 
   };
 
@@ -435,7 +435,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
       model: facetEditor,
       template: _.template(utils.templates.AnswerEditor(interactionRecord.attributes)),
     });
-    
+
     var modal = new Backbone.BootstrapModal({
       content: form,
       title: 'Pedido de reunión recibida' ,
@@ -458,7 +458,7 @@ DocManager.module('RondasApp.Browse',function(Browse, DocManager, Backbone, Mari
         }
     });
 
-    modal.open();    
+    modal.open();
   };
 
 

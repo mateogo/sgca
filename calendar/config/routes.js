@@ -2,8 +2,8 @@
  *  bacua routes.js
  *  package: /bacua/config
  *  DOC: Configura los routes para Bacua.
- *       
- *       
+ *
+ *
  *  Use:
  *     Exporta la funcion que asigna las rutas al objeto app de Exrpess
  */
@@ -13,10 +13,10 @@ module.exports = function (config, app) {
     var formidable = require('formidable');
     var http = require("http");
     var passport = require('passport');
-	
+
     var ensureAuthenticated = function (req, res, next) {
-        if (req.isAuthenticated()) { 
-            return next(); 
+        if (req.isAuthenticated()) {
+            return next();
         }
         res.redirect('/');
     };
@@ -26,7 +26,7 @@ module.exports = function (config, app) {
             //console.log("/login [%s] [%s]", req.user.username, utils.anywModule());
             res.redirect(utils.userHome(req.user));
     });
-    
+
     app.post('/login/:route',
         passport.authenticate('local', {failureRedirect:'/ingresar' }), function(req, res){
             //console.log('ROUTE AUTHENTICATE OK!!!![%s] [%s] route:[%s]', req, res, req.params.route)
@@ -42,20 +42,20 @@ module.exports = function (config, app) {
         //console.log("/login:routes.js ");
         res.redirect('/');
     });
-	
+
     app.post('/mica/login',
         passport.authenticate('local', {failureRedirect:'/mica'}), function(req, res){
             //console.log("/mica/login [%s] [%s]", req.user.username, utils.anywModule());
             res.redirect(utils.userHome(req.user));
     });
-	
+
 	app.post('/img', function (req, res){
 		var form = new formidable.IncomingForm();
 		form.parse(req, function(err, fields, files) {
 			res.writeHead(200, {'content-type': 'application/json'});
 			res.end(JSON.stringify({status:"success", url: 'uploads/'+files.img.name}));
 		});
-		
+
 		form.on('end', function(fields, files) {
 			/* Temporary location of our uploaded file */
 			var temp_path = this.openedFiles[0].path;
@@ -63,7 +63,7 @@ module.exports = function (config, app) {
 			var file_name = this.openedFiles[0].name;
 			/* Location where we want to copy the uploaded file */
 			var new_location = 'img/';
-			fs.copy(temp_path, new_location + file_name, function(err) {  
+			fs.copy(temp_path, new_location + file_name, function(err) {
 				if (err) {
 					console.error(err);
 				} else {
@@ -84,12 +84,12 @@ module.exports = function (config, app) {
       req.logout();
       res.redirect(req.params.route);
     });
-    
-    
+
+
     app.get('/inicio', function(req,res,next){
         res.redirect(utils.userHome(req.user));
     });
-    
+
     app.post('/excelfactory', function(req,res,next){
 
         utils.uploadExcelData(req, res, next, rootPath);
@@ -98,7 +98,7 @@ module.exports = function (config, app) {
 
     app.post('/excelbuilder', function(req,res,next){
         var request = req.body;
-        request.data = JSON.parse(req.body.data); 
+        request.data = JSON.parse(req.body.data);
 
         //validar datos
         var error = utils.excelBuilder(request, rootPath, function(error){
@@ -177,7 +177,7 @@ module.exports = function (config, app) {
     var micainteractions = require(rootPath + '/calendar/controllers/micainteractions');
     app.get ('/buildmicaranking/stats',       micainteractions.rankingstats);
     app.get ('/buildmicaranking',            micainteractions.buildranking);
-    
+
     app.get ('/micainteractions',            micainteractions.findAll);
     app.post('/micainteractions',            micainteractions.add);
     app.get ('/micainteractions/ranking',    micainteractions.findRankingByQuery);
@@ -262,10 +262,10 @@ module.exports = function (config, app) {
     app.post('/acciones',            action.add);
     app.put ('/acciones/:id',        action.update);
     app.delete('/acciones/:id',      action.delete);
-    
+
     app.put('/acciones/:id/participantes',action.addParticipant);
     app.post('/acciones/:id/participantes',action.addParticipant);
-    
+
     app.post('/acciones/:id/locaciones',action.addLocation);
 
     // projects routes

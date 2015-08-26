@@ -14,7 +14,7 @@ DocManager.module('BackendApp.Places',function(Places, DocManager, Backbone, Mar
     },
 
     onRender: function(){
-      var content = CommonsViews.renderSuscriptor(this.model.toJSON(),true,true);
+      var content = CommonsViews.renderSuscriptor(this.model.toJSON(),{showToolbar:true,showActividad:true});
       this.$el.find('.region-suscriptor-detail').html(content);
     },
 

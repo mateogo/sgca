@@ -211,13 +211,22 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
           var model = self.model;
           var ret = '';
           if(self.model.has(field)){
-            ret = renderSuscriptor(self.model.get(field),true,true);
+            var opts = {
+              showToolbar:true,
+              showActividad:true,
+              showOpenAgenda:self.options.isAdmin
+            };
+            ret = renderSuscriptor(self.model.get(field),opts);
           }
 
           return ret;
         },
         getActions: function(){
-          return self.model.getProdActions();
+          var actions = [];
+          if(self.options.isAdmin){
+            actions = self.model.getProdActions();
+          }
+          return actions;
         },
         getAvatar: function(){
           return self.model.getAvatar();
@@ -337,7 +346,8 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       var self = this;
       return {
         rol: self.rol,
-        contraparte_rol:  self.contraparte_rol
+        contraparte_rol:  self.contraparte_rol,
+        isAdmin: self.options.isAdmin
       };
     },
 
@@ -362,7 +372,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       var ret = '';
       if(this.collection.length > 0){
         var tmp = this.collection.at(0);
-        ret = renderSuscriptor(tmp.get(rol),true,false);
+        ret = renderSuscriptor(tmp.get(rol),{showToolbar:false,showActividad:true});
       }
       this.$el.find('.owner-container').html(ret);
       this.$el.find('.label-rol').html(rol);
@@ -565,8 +575,11 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     return modal;
   };
 
-  // es un suscriptor serializado para micaagenda
-  var renderSuscriptor = function(suscriptor,showActividad,showToolbar){
+  /**
+   *  Es un suscriptor serializado para micaagenda
+   *  @param {Object} opts - {showActividad:bool,showToolbar:bool,showOpenAgenda:bool}
+   */
+  var renderSuscriptor = function(suscriptor,opts){
     if(!suscriptor || !suscriptor.responsable) return '';
     var responsable = suscriptor.responsable;
     var solicitante = suscriptor.solicitante;
@@ -574,7 +587,8 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     var template = utils.templates.AgendaSolicitanteRender;
 
     str = template({
-      showToolbar: showToolbar,
+      showToolbar: opts.showToolbar,
+      showOpenAgenda: opts.showOpenAgenda,
       solicitante:solicitante,
       getAvatar: function(){
         var avatar = this.solicitante.eavatar;
@@ -586,7 +600,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       },
       cnumber: suscriptor.cnumber,
       getActividad: function(){
-        if(showActividad){
+        if(opts.showActividad){
           var $span = CommonsViews.renderLabelActividad(suscriptor.actividades);
           return $span.prop('outerHTML');
         }

@@ -8,13 +8,31 @@ DocManager.module("HeaderApp.List", function(List, DocManager, Backbone, Marione
       // console.log('listHeader BEGINS  [%s]', sidebarLinks.length);
       // console.log('Sidebars[0] [%s]  [%s]', sidebarLinks.at(0).get('name'),sidebarLinks.at(0).get('url'));
 
-      dao.gestionUser.getUser(DocManager, function (user){
+      DocManager.request('userlogged:load', function (user){
         user = (user || new User());
+
+        var micaProfile = DocManager.request('userlogged:getMicaProfile');
+
+        //elimina opciones que son solo para perfiles de comprador y vendedor;
+        var rejectedItems;
+        if(!micaProfile.isCompradorLight()){
+            rejectedItems = sidebarLinks.reject(function(item){
+              return (!item.has('role') || item.get('role') !== 'comprador');
+            });
+            sidebarLinks.remove(rejectedItems);
+        }
+
+        if(!micaProfile.isVendedor()){
+            rejectedItems = sidebarLinks.reject(function(item){
+              return (!item.has('role') || item.get('role') !== 'vendedor');
+            });
+            sidebarLinks.remove(rejectedItems);
+        }
 
 
         var bucketSidebars = new List.BucketHeaders({collection: sidebarLinks, model: user});
         bucketSidebars.on("childview:navigate", function(childView, model){
-          console.log('childview:navigate')
+          console.log('childview:navigate');
           var trigger = model.get("navigationTrigger");
           DocManager.trigger(trigger);
         });

@@ -22,37 +22,44 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         }
       });
     },
-    listBySuscriptor: function(idSuscription,rol){
-      var list = this._listBySuscription(idSuscription,rol);
 
-      var layout = new AgendaMica.AgendaPage();
-      layout.on('show',function(){
-        layout.bodyRegion.show(list);
+    listBySuscriptor: function(idSuscription,rol){
+      var self = this;
+      DocManager.request('userlogged:isMicaAdmin',function(isAdmin){
+        var list = self._listBySuscription(idSuscription,rol,isAdmin);
+
+        var layout = new AgendaMica.AgendaPage();
+        layout.on('show',function(){
+          layout.bodyRegion.show(list);
+        });
+        DocManager.mainRegion.show(layout);
       });
-      DocManager.mainRegion.show(layout);
     },
 
     listPopup: function(idSuscription,rol,url){
-      var session = getSession();
-      var list = this._listBySuscription(idSuscription,rol);
+      var self = this;
+      DocManager.request('userlogged:isMicaAdmin',function(isAdmin){
+        var session = getSession();
+        var list = self._listBySuscription(idSuscription,rol,isAdmin);
 
-      var oncePopup = false;
-      var popup;
-      if(oncePopup){
-        if(!session.popup){
-          session.popup = DocManager.openPopup(list);
-          session.popup.once('destroy',function(){
-            session.popup = null;
-          });
+        var oncePopup = false;
+        var popup;
+        if(oncePopup){
+          if(!session.popup){
+            session.popup = DocManager.openPopup(list);
+            session.popup.once('destroy',function(){
+              session.popup = null;
+            });
+          }else{
+            session.popup.bodyRegion.show(list);
+          }
+          popup = session.popup;
         }else{
-          session.popup.bodyRegion.show(list);
+          popup = DocManager.openPopup(list);
         }
-        popup = session.popup;
-      }else{
-        popup = DocManager.openPopup(list);
-      }
 
-      popup.setTitle('Agenda').setNavigationUrl(url);
+        popup.setTitle('Agenda').setNavigationUrl(url);
+      });
     },
 
     listRight: function(idSuscription,rol){
@@ -69,10 +76,11 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       var view = new AgendaMica.EstadisticView({collection:collection});
       DocManager.mainRegion.show(view);
     },
-    _listBySuscription: function(idSuscription,rol){
+
+    _listBySuscription: function(idSuscription,rol,isAdmin){
       var collection = DocManager.request('micaagenda:searchAgenda',idSuscription,rol);
 
-      var list = new AgendaMica.AgendaList({collection:collection,rol:rol});
+      var list = new AgendaMica.AgendaList({collection:collection,rol:rol,isAdmin:isAdmin});
       return list;
     },
 
@@ -121,6 +129,16 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         Message.warning('Debe iniciar sesión');
         window.open('/ingresar/#mica', '_self');
       }
+    });
+
+    return defer.promise();
+  };
+
+  var loadCurrentUserNoAuth = function(){
+    var defer = $.Deferred();
+    dao.gestionUser.getUser(DocManager, function (user){
+
+      defer.resolve(user);
     });
 
     return defer.promise();

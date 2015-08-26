@@ -27,8 +27,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       { name: "Mi Perfil MICA",                   url: "nuevo",    navigationTrigger: "micarequest:add" },
       { name: "Explorador de emprendimientos",    url: "reporte",  navigationTrigger: "rondas:browse:profiles" },
       { name: "Mis favoritos",                    url: "lista",    navigationTrigger: "rondas:browse:favoritos" },
-      { name: "Pedidos de reuniones recibidas",   url: "lista",    navigationTrigger: "rondas:browse:receptor" },
-      { name: "Pedidos de reuniones solicitadas", url: "lista",    navigationTrigger: "rondas:browse:emisor" },
+      { name: "Pedidos de reuniones recibidas",   url: "lista",    navigationTrigger: "rondas:browse:receptor",  },
+      { name: "Pedidos de reuniones solicitadas", url: "lista",    navigationTrigger: "rondas:browse:emisor"  },
+      //{ name: "Mi Agenda de rondas como Comprador", url: "lista",    navigationTrigger: "rondas:browse:agenda:comprador", role: "comprador" },
+      //{ name: "Mi Agenda de rondas como Vendedor",  url: "lista",    navigationTrigger: "rondas:browse:agenda:vendedor" , role: "vendedor"},
     ]);
   };
 
@@ -95,7 +97,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         initreportitemheaders();
       }
       return Entities.reportedititems;
-    }  */  
+    }  */
   };
 
   DocManager.reqres.setHandler("header:entities", function(){

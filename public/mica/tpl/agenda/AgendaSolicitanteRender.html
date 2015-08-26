@@ -13,7 +13,9 @@
     <% if(showToolbar){ %>
       <br/>
       <a class="js-openperfil" style="cursor:pointer">ver perfil</a> <span class="text-muted">|</span>
-      <a class="js-openagenda" style="cursor:pointer">ver agenda</a>  <span class="text-muted">|</span>
+      <%if(showOpenAgenda){ %>
+        <a class="js-openagenda" style="cursor:pointer">ver agenda</a>  <span class="text-muted">|</span>
+      <% } %>
       <a class="js-countassigned" style="cursor:pointer;display:none">ver recuento</a>
     <% } %>
   </div>

@@ -44,6 +44,18 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
         BackendApp.AgendaMica.Controller.listBySuscriptor(idSuscription,rol);
       }
     },
+
+    /**
+     * muestra agenda de rondas para el usuario logueado
+     */
+    agendaRondasLogged: function(rol){
+      var suscription = DocManager.micarqst;
+      if(!suscription || !suscription.get('cnumber')){
+        return Message.error('No se encontro tu inscripción al MICA');
+      }
+      this.agendaSuscriptor(suscription.id,rol);
+    },
+
     statistics: function(){
       BackendApp.AgendaMica.Controller.showStatistics();
     },
@@ -103,6 +115,14 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
 
   DocManager.on('micasuscription:edit:place',function(suscription){
     API.editPlace(suscription);
+  });
+
+  DocManager.on("rondas:browse:agenda:comprador",function(){
+    API.agendaRondasLogged('comprador');
+  });
+
+  DocManager.on("rondas:browse:agenda:vendedor",function(){
+    API.agendaRondasLogged('vendedor');
   });
 
   DocManager.addInitializer(function(){
