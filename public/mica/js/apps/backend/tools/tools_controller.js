@@ -44,7 +44,7 @@ DocManager.module('BackendApp.ToolsMica',function(ToolsMica, DocManager, Backbon
     var p = DocManager.request('micaagenda:tools:run','fixCNumber');
     p.done(function(){
       $btnFix.html('Listo').prop('disabled',true);
-      ToolsMica.Handler.checkCNumber(view,$section);
+      ToolsMica.Handler.checkCNumber($section);
       stateRunReset($section);
     }).fail(function(e){
       $btnFix.html('Error').prop('disabled',false);
