@@ -384,19 +384,39 @@ MicaAgendaService.prototype.getAgenda = function(suscriptor,rol,cb){
   }
 
   async.series([
-    //busca a la suscriptions
+    //busca a la suscriptions por CNUMBER o id de profile (micasuscription._id)
     function(cb){
-      MicaSuscription.findById(idSuscriptor,function(err,result){
-        if(err) return cb(err);
+      var query  = idSuscriptor;
+      var method =  MicaSuscription.findById;
+      if(idSuscriptor.length === 8){
+        method = MicaSuscription.find;
+        query = {cnumber: idSuscriptor};
+      }
+      method.call(MicaSuscription,query,function(err,result){
+          if(err) return cb(err);
+          suscriptor = (result.length && result.length > 0) ? result[0] : result;
+          if(!suscriptor || !suscriptor.id){
+            return cb(new AppError('No existe la suscripción','','not_found'));
+          }
 
-        if(!result){
-          return cb(new AppError('No existe la suscripción','','not_found'));
-        }
-        suscriptor = result.serialize(rol);
-
-        cb(null,result);
+          idSuscriptor = suscriptor.id.toString();
+          suscriptor = suscriptor.serialize(rol);
+          cb(null,result);
       });
     },
+
+    // function(cb){
+    //   MicaSuscription.findById(idSuscriptor,function(err,result){
+    //     if(err) return cb(err);
+    //
+    //     if(!result){
+    //       return cb(new AppError('No existe la suscripción','','not_found'));
+    //     }
+    //     suscriptor = result.serialize(rol);
+    //
+    //     cb(null,result);
+    //   });
+    // },
 
     //busca agenda de la suscripcion
     function(cb){

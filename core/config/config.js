@@ -133,6 +133,7 @@ var routesBootstrap = function (app, express) {
 //  require(rootPath + '/calendar/controllers/obraartesolicitud.js').configRoutes(app);
 //  require(rootPath + '/calendar/controllers/obraswf.js').configRoutes(app);
   require(rootPath + '/calendar/controllers/micaagenda.js').configRoutes(app);
+  require(rootPath + '/calendar/controllers/micatools.js').configRoutes(app);
 };
 
 

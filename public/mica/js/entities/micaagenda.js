@@ -295,6 +295,21 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       }else{
           Message.error('No se reconoce la acción. Disculpe las molestias');
       }
+    },
+
+    runTool: function(name,params){
+      var data = {
+        name: name,
+        params: params
+      };
+      var p = $.ajax({
+          type: 'post',
+          url: '/micatools',
+          data: data,
+          dataType: 'json'
+      });
+
+      return p;
     }
   };
 
@@ -330,6 +345,10 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
 
   DocManager.reqres.setHandler('micaagenda:reunion:runaction', function(model,actionName,param){
     return API.runAction(model,actionName,param);
+  });
+
+  DocManager.reqres.setHandler('micaagenda:tools:run', function(name,params){
+    return API.runTool(name,params);
   });
 
   DocManager.reqres.setHandler('micaagenda:profile:count',function(model,callback){

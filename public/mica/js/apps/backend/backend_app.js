@@ -9,6 +9,7 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       "agenda/:idSuscription/:rol": "agendaSuscriptor",
       "agenda/estadisticas": 'statistics',
       "perfil/:idSuscription":  "profileShow",
+      "herramientas": 'showTools'
 
     }
   });
@@ -71,6 +72,11 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
 
     editPlace: function(suscription){
       BackendApp.Places.Controller.settingView(suscription);
+    },
+
+    showTools: function(){
+      DocManager.navigate("herramientas");
+      BackendApp.ToolsMica.Controller.tools();
     }
   };
 
@@ -123,6 +129,11 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
 
   DocManager.on("rondas:browse:agenda:vendedor",function(){
     API.agendaRondasLogged('vendedor');
+  });
+
+
+  DocManager.on("toolsmica:show",function(){
+    API.showTools();
   });
 
   DocManager.addInitializer(function(){

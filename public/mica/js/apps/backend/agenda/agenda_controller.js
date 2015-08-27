@@ -230,9 +230,23 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         var $toolbar = $btnExcel.parent();
         var $btnStats = $('<button></button>',{class:'btn btn-default btn-sm btn-success',html:'<i class="glyphicon glyphicon-signal"></i> Estadisticas'});
         $btnStats.insertAfter($btnExcel);
-        $btnStats.on('click',function(){
+
+
+        $btnTools = $('<button></button>',{class:'btn btn-default btn-sm btn-success',html:'<i class="glyphicon glyphicon-wrench"></i> Herramientas'});
+        $btnTools.css('margin-left','5px');
+        $btnTools.insertAfter($btnStats);
+
+
+        $btnStats.on('click',function(e){
           $btnStats.unbind('click');
+          $btnTools.unbind('click');
           API.showStatistics();
+        });
+
+        $btnTools.on('click',function(e){
+          $btnStats.unbind('click');
+          $btnTools.unbind('click');
+          DocManager.trigger('toolsmica:show');
         });
       });
     });

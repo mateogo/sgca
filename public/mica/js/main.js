@@ -30,6 +30,9 @@ utils.loadTemplate([
         // -- Place
         'places/PlaceEdit',
 
+        // -- Tools
+        'tools/ToolsView',
+
         // MailSender
         'MailTemplateDefault','MailFormSubmitNotification','MailFormGuardarProvisorio',
 
