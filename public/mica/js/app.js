@@ -135,4 +135,10 @@ DocManager.on("start", function(){
     }
   });
 
+  DocManager.reqres.setHandler('userlogged:isProfileOwner',function(suscription){
+    if(!session || !session.micarqst || !suscription) return false;
+
+    return suscription._id == session.micarqst.id;
+  });
+
 })();

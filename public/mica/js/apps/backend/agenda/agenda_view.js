@@ -11,6 +11,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       render: function(){
         var fieldName = this.column.get('name');
         var suscriptor = this.model.get(fieldName);
+        console.log(fieldName,suscriptor);
         this.$el.html(renderLiteSuscriptor(suscriptor));
         return this;
       },
@@ -277,6 +278,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       };
     },
     onRender: function(){
+      var isAdmin = DocManager.request('userlogged:isMicaAdmin');
       var flagAddWrap = true;
       if(this._lastClazz){
         flagAddWrap = false;
@@ -293,6 +295,11 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
           numDia += 1;
           self.$el.before('<li class="list-group-item list-item-space"><div>Día '+numDia+'</div></li>');
         });
+      }
+
+      if(isAdmin){
+        var tmp =  this.model.get(this.options.contraparte_rol);
+        this.$el.find('.confirmacion-container').html(renderConfirmacionAsistencia(tmp));
       }
     },
 
@@ -377,12 +384,11 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       };
       DocManager.on('micaagenda:changed',this.handlerMicaChanged);
     },
-    template: _.template('<div class="text-muted well"> '+
-                         '  <h3 style="margin:0;margin-bottom:5px;">La agenda <small>como</small> <span class="label-rol" style="font-size: 18px"></span></h3>'+
+    template: _.template('<h2 class="text-primary" style="margin:0;margin-bottom:5px;">Agenda de emprededores <small>como</small> <span class="label-rol" style="font-size: 18px"></span></h2><div class="text-muted well"> '+
                          '  <div class="owner-container"></div>  '+
-                         //'         <div class="pull-right"><button class="btn btn-default bt-sm"> <i class="glyphicon glyphicon-th-list"></i>  </button><button class="btn btn-default bt-sm"> <i class="glyphicon glyphicon-th"></i> </button></div>  '+
-                         //'         <div class="clearfix"></div> '+
-                         '</div><div class="map-list well text-center"></div> <ul class="list-group agenda-rondas"></ul>'),
+                         '</div>'+
+                         '<div class="confirm-container"></div>' +
+                         '<div class="map-list well text-center"></div> <ul class="list-group agenda-rondas"></ul>'),
     childViewContainer: 'ul',
     childView: AgendaMica.AgendaListItem,
     childViewOptions: function(model,index){
@@ -395,7 +401,6 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     },
 
     onRender: function(){
-      var self = this;
       this.renderOwner();
     },
 
@@ -415,10 +420,24 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       var ret = '';
       if(this.collection.length > 0){
         var tmp = this.collection.at(0);
+        this.suscription = tmp.get(rol);
         ret = renderSuscriptor(tmp.get(rol),{showToolbar:false,showActividad:true});
+
+        this.renderConfirmation();
       }
       this.$el.find('.owner-container').html(ret);
       this.$el.find('.label-rol').html(rol);
+    },
+
+    renderConfirmation: function(){
+      var isAdmin = DocManager.request('userlogged:isMicaAdmin');
+      var isOwner = DocManager.request('userlogged:isProfileOwner',this.suscription);
+
+      if(!isAdmin || isOwner){
+        var profile = DocManager.request('userlogged:getMicaProfile');
+        var view = new AgendaMica.AgendaConfirmView({model:profile,rol:this.options.rol});
+        this.$el.find('.confirm-container').html(view.render().$el);
+      }
     },
 
     collectionEvents: {
@@ -456,6 +475,74 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       }
     }
 
+  });
+
+
+  AgendaMica.AgendaConfirmView = Marionette.ItemView.extend({
+    template: _.template('<h2 class="text-primary">Confirma tu asistencia</h2> <div class="well confirmation-section text-center"> '+
+                        ' <button class="btn btn-success btn-lg js-confirm" data-tooltip="Confirmo mi asistencia a las rondas de emprendedores del MICA 2015">Confirmo asistencia</button>' +
+                        '<button class="btn btn-danger btn-lg js-deny" data-tooltip="No podré asistir a las rondas de emprendedores del MICA 2015. Desestimo la agenda propuesta">No podré asistir</button>'+
+                       '</div>'
+                     ),
+    events: {
+      'click .js-confirm':'confirm',
+      'click .js-deny':'deny',
+    },
+
+    serializeData: function(){
+      var data = this.model.toJSON();
+      data.rol = this.options.rol;
+      return data;
+    },
+    onRender: function(){
+      var rolName = this.options.rol;
+      var rol = this.model.get(rolName);
+      if(typeof(rol.confirma_asistencia) !== 'undefined'){
+        var html = '';
+        if(rol.confirma_asistencia){
+          html = '<h3 class="text-success"> Recibimos tu confirmación de asistencia como como <i>'+rolName+'</i> a las rondas de emprendedores del MICA 2015 </h3>';
+        }else{
+          html = '<h3 class="text-danger">  Recibimos tu aviso de que no podrás asistir como <i>'+rolName+'</i> a las rondas de emprendedores del MICA 2015</h3>';
+        }
+        this.$el.find('.confirmation-section').html(html);
+      }
+    },
+
+    doConfirm: function(bool){
+      var data = {
+        _id: this.model.id,
+        confirma_asistencia: bool,
+        confirma_rol: this.options.rol
+      };
+      var self = this;
+      var $btns = this.$el.find('button');
+      $btns.prop('disabled',true);
+      $('body').css('cursor','wait');
+      var p = DocManager.request('micarqst:partial:update',this.model,data);
+      p.done(function(result){
+        self.model.set(result);
+        self.render();
+        $('body').css('cursor','auto');
+
+      }).fail(function(){
+        $('body').css('cursor','auto');
+        $btns.prop('disabled',false);
+        Message.error('No se pudo confirmar');
+      });
+    },
+
+    confirm: function(){
+      this.doConfirm(true);
+    },
+
+    deny: function(){
+      var self = this;
+      Message.confirm('<h3>¿Estas seguro que no podes asistir?</h3><p> Se va a desistimar la agenda propuesta</p>',['cancelar',{label:'No asistiré',class:'btn-danger'}],function(r){
+        if(r == 'No asistiré'){
+          self.doConfirm(false);
+        }
+      });
+    }
   });
 
   AgendaMica.AgendaPage = Marionette.LayoutView.extend({
@@ -666,7 +753,17 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       var $span = CommonsViews.renderLabelActividad(suscriptor.actividades);
       str += $span.prop('outerHTML');
     }
+    str += renderConfirmacionAsistencia(suscriptor);
     return str;
+  };
+
+  var renderConfirmacionAsistencia = function(suscriptor){
+    if(!suscriptor || typeof(suscriptor.confirma_asistencia) === 'undefined') return '';
+    if(suscriptor.confirma_asistencia){
+      return '<label class="label label-success">confirmó asistencia</label>';
+    }else{
+      return '<label class="label label-danger">confirmó no viene!</label>';
+    }
   };
 
 });

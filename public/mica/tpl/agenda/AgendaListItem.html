@@ -2,6 +2,7 @@
     <div class="col-xs-12" style="position:relative">
       <% if(profile){ %>
             <div class="media-left hidden-print">
+
               <a class="thumbnail" style="width:80px;height:85px">
                   <img class="media-object avatar" src="http://200.80.154.217:3000/<%= profile.avatar%>" alt="" style="height: 73px; width:73px;">
               </a>
@@ -34,7 +35,7 @@
                 </div>
               <% } %>
 
-              <%=renderActividad()%>
+              <%=renderActividad()%> <span class="confirmacion-container"></span>
 
             </div>
 

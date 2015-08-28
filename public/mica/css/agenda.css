@@ -180,7 +180,16 @@
   margin: 3px 0;
 }
 
+.confirmation-section{
+}
+
+.confirmation-section button{
+  margin-left: 10px;
+  margin-right: 20px;
+}
+
 @media print {
+
 
   .box-agenda-libre{
     color: #c3c3c3 !important;

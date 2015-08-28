@@ -429,10 +429,21 @@ exports.partialupdate = function(req, res) {
         return res.status(400);
     }
 
+    var service;
+
     if('newdata' in data && 'place' in data.newdata){
       // MODIFICA EL PLACE (UBICACION en el MICA, SALA + MESA)
-      var service = new MicaSuscriptionService(req.user);
+      service = new MicaSuscriptionService(req.user);
       service.updatePlace(data.newdata,function(err,result){
+        if(err) return res.status(409).send(err);
+
+        res.json(result);
+      });
+
+    }else if('newdata' in data && 'confirma_asistencia' in data.newdata){
+      // REGISTRA LA CONFIRMACION O NO DE LA ASISTENCIA AL MICA
+      service = new MicaSuscriptionService(req.user);
+      service.confirmAsistencia(data.newdata,function(err,result){
         if(err) return res.status(409).send(err);
 
         res.json(result);
