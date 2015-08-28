@@ -197,6 +197,38 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     getTemplate: function(){
       return utils.templates.AgendaListItem;
     },
+    serializeData: function(){
+      var data = this.model.toJSON();
+      //fecha
+      var date = this.model.getFechaReunion();
+      if(date){
+        var mdate = moment(date);
+        data.fecha = {};
+        data.fecha.event_day = mdate.format('dddd DD');
+        data.fecha.event_time = mdate.format('hh:mm');
+      }
+      //perfil
+      data.profile = this.model.get(this.options.contraparte_rol);
+      this.profile = data.profile;
+
+      // avatar
+      if(data.profile){
+        var avatar =  data.profile.solicitante.eavatar;
+        if(avatar && avatar.urlpath){
+          avatar = avatar.urlpath;
+        }else{
+          avatar = 'mica/images/back-dotted.png';
+        }
+        data.profile.avatar = avatar;
+      }
+
+
+      // opciones de vista
+      data.showToolbar = true;
+      data.showActividad = true;
+      data.showOpenAgenda = this.options.isAdmin;
+      return data;
+    },
     templateHelpers: function(){
       var self = this;
       return {
@@ -231,6 +263,17 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         getAvatar: function(){
           return self.model.getAvatar();
         },
+        getFechaReunion: function(){
+          return moment(self.model.getFechaReunion(),'dddd dd hh:mm');
+        },
+        renderActividad: function(){
+          if(self.profile){
+            var $span = CommonsViews.renderLabelActividad(self.profile.actividades);
+            return $span.prop('outerHTML');
+          }else{
+            return '';
+          }
+        }
       };
     },
     onRender: function(){
@@ -240,7 +283,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         this.$el.removeClass(this._lastClazz);
       }
       this._lastClazz = 'list-item-agenda-'+this.model.get('estado');
-      this.$el.addClass(this._lastClazz);
+      this.$el.addClass(this._lastClazz).addClass('list-item-agenda-rondas');
       var num_reunion = parseInt(this.model.get('num_reunion'));
       var wrap = ((num_reunion-1) % 12 === 0);
       if(wrap && flagAddWrap){
@@ -339,7 +382,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
                          '  <div class="owner-container"></div>  '+
                          //'         <div class="pull-right"><button class="btn btn-default bt-sm"> <i class="glyphicon glyphicon-th-list"></i>  </button><button class="btn btn-default bt-sm"> <i class="glyphicon glyphicon-th"></i> </button></div>  '+
                          //'         <div class="clearfix"></div> '+
-                         '</div><div class="map-list well text-center" style="margin-bottom:20px"></div> <ul class="list-group"></ul>'),
+                         '</div><div class="map-list well text-center"></div> <ul class="list-group agenda-rondas"></ul>'),
     childViewContainer: 'ul',
     childView: AgendaMica.AgendaListItem,
     childViewOptions: function(model,index){
@@ -417,7 +460,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 
   AgendaMica.AgendaPage = Marionette.LayoutView.extend({
     className: 'wrapper',
-    template: _.template('<div style="margin-bottom:20px;"> <button class="btn btn-default btn-sm js-back"><span class="fa fa-angle-left"></span> Volver</button></div><div class="body-container"></div>'),
+    template: _.template('<div style="margin-bottom:20px;"> <button class="btn btn-default btn-sm js-back hidden-print"><span class="fa fa-angle-left"></span> Volver</button></div><div class="body-container"></div>'),
     regions: {
       'bodyRegion': '.body-container'
     },

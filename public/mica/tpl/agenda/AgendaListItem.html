@@ -1,14 +1,61 @@
-  <div class="row">
-      <div class="col-xs-1" style="width:50px">
-          #<%=num_reunion%>
-      </div>
-      <div class="col-xs-11" style="position:relative">
-          <%=getContraparte() %>
+<div class="row">
+    <div class="col-xs-12" style="position:relative">
+      <% if(profile){ %>
+            <div class="media-left hidden-print">
+              <a class="thumbnail" style="width:80px;height:85px">
+                  <img class="media-object avatar" src="http://200.80.154.217:3000/<%= profile.avatar%>" alt="" style="height: 73px; width:73px;">
+              </a>
+            </div>
+            <div class="media-body">
 
-          <div style="position:absolute;right:0;top:0">
-          <% _.each(getActions(),function(action){ %>
-                <button class="btn btn-xs btn-primary js-runaction" data-name="<%=action.name%>" style="cursor:pointer"><%=action.label%></button>
-          <%  }) %>
-          </div>
-      </div>
-  </div>
+              <h3 class="fullname js-openperfil">
+                  <a>#<%=num_reunion%>. <%= profile.solicitante.edisplayName %></a>
+                  <span class="nro-serie"> (<%=profile.cnumber%>) </span>
+                  <!-- <span class="label label-tipo">event</span> -->
+
+              </h3>
+
+              <div class="brief hidden-print"><p><%= profile.solicitante.edescription %></p></div>
+
+              <% if(showToolbar){ %>
+                <div class="hidden-print">
+                  <a class="js-openperfil" style="cursor:pointer">ver perfil</a>
+                  <%if(showOpenAgenda){ %>
+                    <span class="text-muted">|</span> <a class="js-openagenda" style="cursor:pointer">ver agenda</a>
+                  <% } %>
+                </div>
+              <% } %>
+
+
+              <% if(typeof(fecha) !== 'undefined'){ %>
+                <div style="margin-top: 5px;margin-bottom: 5px">
+                  <span class="event-day"><%=fecha.event_day%></span>
+                  <span class="event-time"><%=fecha.event_time%></span>
+                </div>
+              <% } %>
+
+              <%=renderActividad()%>
+
+            </div>
+
+        <% }else{ %>
+            <h3>
+              #<%=num_reunion%>. <span><%=estado%>.</span>
+              <% if(estado === 'libre'){ %>
+                  <span class="text-muted">
+                    Podes ver las actividades alternativas en el agenda del MICA
+                  </span>
+              <% } %>
+            </h3>
+        <% } %>
+
+
+
+
+        <div class="hidden-print" style="position:absolute;right:5px;top:0">
+        <% _.each(getActions(),function(action){ %>
+              <button class="btn btn-xs btn-primary js-runaction" data-name="<%=action.name%>" style="cursor:pointer"><%=action.label%></button>
+        <%  }) %>
+        </div>
+    </div>
+</div>

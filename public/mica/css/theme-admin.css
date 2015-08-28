@@ -298,13 +298,16 @@ ul.sidebar-menu li a.active i {
     font-size: 11px;
 }
 /*main content*/
-#main-region {
-    margin-left:240px;
-    -webkit-transition:all .3s ease-in-out;
-    -moz-transition:all .3s ease-in-out;
-    -o-transition:all .3s ease-in-out;
-    transition:all .3s ease-in-out;
+@media screen {
+  #main-region {
+      margin-left:240px;
+      -webkit-transition:all .3s ease-in-out;
+      -moz-transition:all .3s ease-in-out;
+      -o-transition:all .3s ease-in-out;
+      transition:all .3s ease-in-out;
+  }
 }
+
 .footer {
     min-height:60px;
     padding:0 15px;

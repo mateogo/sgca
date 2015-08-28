@@ -752,6 +752,29 @@ MicaAgendaService.prototype.remove = function(idReunion,cb){
   });
 };
 
+
+/**
+ * Retorna la fecha y la hora
+ * Viernes de 10:00 a 12:45 van las rondas 1 a 12 (inclusive) cada 15 minutos
+ * Sábado de 10:00 a 12:45 van las rondas 13 a 24 (inclusive) cada 15 minutos
+ * Domingo de 10:00 a 12:45 van las rondas 25 a 36 (inclusive) cada 15 minutos
+ * @param  {int} number  - numero de reunion
+ * @return {Date}        - Fecha y hora de la reunion
+ */
+MicaAgendaService.prototype.getFechaReunion = function(number){
+  var n =  parseInt(number);
+  if(isNaN(n) || !(n>=1 && n<=36)) return null;
+  var key = n.toString();
+  if(!(key in this.mapfecha_reunion)){
+    var baseDate = new Date(2015,08,4,10,0);
+    var incDay = Math.floor((n-1)/12);
+    var incMinutes = ((n-1) % 12) * 15;
+    var date = new Date(baseDate.getTime() + incDay*86400000 + incMinutes*60000);
+    this.mapfecha_reunion[key] = date;
+  }
+  return this.mapfecha_reunion[key];
+};
+
 /**
  * Busca numero de reuniones libres de cada uno,
  * buscar disponibilidades de agenda de cada uno

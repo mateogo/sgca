@@ -149,3 +149,80 @@
 .tool{
   margin: 10px;
 }
+
+.list-item-agenda-rondas{
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.list-item-agenda-rondas div div h3 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  margin-bottom: 5px;
+  font-size: 1.1em !important;
+  line-height: 1.3em;
+  font-weight: 700;
+  font-family: Montserrat;
+}
+
+.list-item-agenda-rondas div div h3 a {
+  color: rgb(51, 122, 183);
+}
+
+.list-item-agenda-rondas div div .brief p {
+  font-size: 12px;
+  font-weight: 300;
+  font-family: Arial;
+  margin: 3px 0;
+}
+
+@media print {
+
+  .box-agenda-libre{
+    color: #c3c3c3 !important;
+  }
+
+  .box-agenda-asignado, .box-agenda-borrador{
+    color: black !important;
+    border-color: black;
+  }
+
+  .box-agenda-bloqueado{
+    color: #c3c3c3 !important;
+  }
+
+  .map-list{
+    visibility: hidden;
+    display:none;
+  }
+
+  .list-item-agenda-rondas{
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border:0;
+
+  }
+
+  .list-item-agenda-rondas{
+    border-bottom: 1px solid #cecece;
+    margin-bottom: 5px;
+  }
+
+  .list-item-space{
+    page-break-after: always;
+  }
+
+  .well{
+    border:0;
+  }
+
+  .label-mica{
+    display:none;
+    visibility: hidden;
+  }
+
+}

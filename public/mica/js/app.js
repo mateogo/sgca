@@ -127,10 +127,11 @@ DocManager.on("start", function(){
   DocManager.reqres.setHandler('userlogged:isMicaAdmin',function(callback){
     if(!session.user){
       load(function(){
-        callback(session.isMicaAdmin);
+        if(callback) callback(session.isMicaAdmin);
       });
     }else{
-      callback(session.isMicaAdmin);
+      if(callback) callback(session.isMicaAdmin);
+      return session.isMicaAdmin;
     }
   });
 

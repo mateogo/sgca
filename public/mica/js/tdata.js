@@ -525,5 +525,7 @@ window.tdata = {
         {val:'no_definido', label:'Seleccione Estado'},
         {val:'baja',  label:'Baja',  classattr:'info'},
         {val:'alta',       label:'Alta',         classattr:'info'}
-    ]
+    ],
+
+  
 };

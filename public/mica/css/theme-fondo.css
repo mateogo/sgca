@@ -353,14 +353,14 @@ button.js-filter-favorito:hover {
   background-color: rgb(215, 143, 143)!important;
   border: solid 1px rgb(215, 143, 143)!important;
 }
-.btn-default.active.focus, 
-.btn-default.active:focus, 
-.btn-default.active:hover, 
-.btn-default.focus:active, 
-.btn-default:active:focus, 
-.btn-default:active:hover, 
-.open > .dropdown-toggle.btn-default.focus, 
-.open > .dropdown-toggle.btn-default:focus, 
+.btn-default.active.focus,
+.btn-default.active:focus,
+.btn-default.active:hover,
+.btn-default.focus:active,
+.btn-default:active:focus,
+.btn-default:active:hover,
+.open > .dropdown-toggle.btn-default.focus,
+.open > .dropdown-toggle.btn-default:focus,
 .open > .dropdown-toggle.btn-default:hover {
   background-color: #b0b5b9;
   border-color: #b0b5b9;
@@ -421,7 +421,7 @@ button.btn.btn-sm.btn-success.js-interact-reunion.recibida {
 }
 .buscador-sm-go {
   border-radius: 0 4px 4px 0;
-} 
+}
 .renderable .btn-link {
   margin-right: 2px;
 }
@@ -775,7 +775,7 @@ button.btn.btn-sm.btn-success.js-interact-reunion.recibida {
 }
 span.event-day, span.event-time, span.event-location {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 13px;
 }
 .event-location {
     display: block;

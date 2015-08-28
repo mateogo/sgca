@@ -34,6 +34,10 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       }
 
       return actions;
+    },
+
+    getFechaReunion: function(){
+      return API.getFechaReunion(this.get('num_reunion'));
     }
   },{
     STATUS: ['asignado','bloqueado','observado','unavailable','libre']
@@ -96,6 +100,16 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
     url: function(){
       return '/micaagenda/' + this.idSuscription + '/'+ this.rol;
     },
+    parse: function(response) {
+      var isAdmin = DocManager.request('userlogged:isMicaAdmin');
+      if(!isAdmin){
+        // sacar las reuniones no disponibles
+        response = _.reject(response,function(item){
+          return item.num_reunion == '0';
+        });
+      }
+      return response;
+    },
     setSuscription: function(suscription,rol){
       this.idSuscription = suscription;
       this.rol = rol;
@@ -131,6 +145,10 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
     model: Entities.MicaagendaStatistics,
     url: '/micaagenda-statistics'
   });
+
+  var mapfecha_reunion = {
+    '1': new Date(2015,08,4,10,0)
+  };
 
   var API = {
     /**
@@ -310,6 +328,26 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       });
 
       return p;
+    },
+
+
+    /**
+     * retorna la fecha y la hora
+     * @param  {int} number  - numero de reunion
+     * @return {Date}        - Fecha y hora de la reunion
+     */
+    getFechaReunion: function(number){
+      var n =  parseInt(number);
+      if(isNaN(n) || !(n>=1 && n<=36)) return null;
+      var key = n.toString();
+      if(!(key in mapfecha_reunion)){
+        var baseDate = new Date(2015,08,4,10,0);
+        var incDay = Math.floor((n-1)/12);
+        var incMinutes = ((n-1) % 12) * 15;
+        var date = new Date(baseDate.getTime() + incDay*86400000 + incMinutes*60000);
+        mapfecha_reunion[key] = date;
+      }
+      return mapfecha_reunion[key];
     }
   };
 

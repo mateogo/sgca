@@ -50,7 +50,7 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
      * muestra agenda de rondas para el usuario logueado
      */
     agendaRondasLogged: function(rol){
-      var suscription = DocManager.micarqst;
+      var suscription = DocManager.request('userlogged:getMicaProfile');
       if(!suscription || !suscription.get('cnumber')){
         return Message.error('No se encontro tu inscripción al MICA');
       }

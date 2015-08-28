@@ -10,7 +10,7 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
   };
 
   Views.renderLabelActividad = function(actividad){
-    var $span = $('<span class="label"></span>');
+    var $span = $('<span class="label label-mica"></span>');
     if(actividad in decoActividad){
       var deco = decoActividad[actividad];
       $span.html(deco.label).addClass(deco.class);
