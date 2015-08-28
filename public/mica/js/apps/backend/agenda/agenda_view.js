@@ -384,7 +384,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       };
       DocManager.on('micaagenda:changed',this.handlerMicaChanged);
     },
-    template: _.template('<h2 class="text-primary" style="margin:0;margin-bottom:5px;">Agenda de emprededores <small>como</small> <span class="label-rol" style="font-size: 18px"></span></h2><div class="text-muted well"> '+
+    template: _.template('<h2 class="text-primary" style="margin:0;margin-bottom:5px;">Tu agenda de rondas <small>como</small> <span class="label-rol" style="font-size: 18px"></span></h2><div class="text-muted well"> '+
                          '  <div class="owner-container"></div>  '+
                          '</div>'+
                          '<div class="confirm-container"></div>' +
@@ -479,9 +479,10 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 
 
   AgendaMica.AgendaConfirmView = Marionette.ItemView.extend({
-    template: _.template('<h2 class="text-primary">Confirma tu asistencia</h2> <div class="well confirmation-section text-center"> '+
-                        ' <button class="btn btn-success btn-lg js-confirm" data-tooltip="Confirmo mi asistencia a las rondas de emprendedores del MICA 2015">Confirmo asistencia</button>' +
-                        '<button class="btn btn-danger btn-lg js-deny" data-tooltip="No podré asistir a las rondas de emprendedores del MICA 2015. Desestimo la agenda propuesta">No podré asistir</button>'+
+    template: _.template('<div class="well confirmation-section text-center"> '+
+                        ' <h1 class="text-primary" style="margin-top:0">Confirmá tu asistencia</h1> ' +
+                        ' <button class="btn btn-success btn-lg js-confirm" data-tooltip="Confirmo mi asistencia a las rondas de emprendedores del MICA 2015">Asistiré</button>' +
+                        '<button class="btn btn-danger btn-lg js-deny" data-tooltip="No podré asistir a las rondas de emprendedores del MICA 2015. Desestimo la agenda propuesta">No asistiré</button>'+
                        '</div>'
                      ),
     events: {
@@ -537,8 +538,10 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 
     deny: function(){
       var self = this;
-      Message.confirm('<h3>¿Estas seguro que no podes asistir?</h3><p> Se va a desistimar la agenda propuesta</p>',['cancelar',{label:'No asistiré',class:'btn-danger'}],function(r){
-        if(r == 'No asistiré'){
+      var rol = this.options.rol;
+      var label = 'No asistiré como '+ rol;
+      Message.confirm('<h3>¿Estas seguro que no podes asistir?</h3><p> Se va a desistimar la agenda propuesta</p>',['cancelar',{label:label,class:'btn-danger'}],function(r){
+        if(r == label){
           self.doConfirm(false);
         }
       });
