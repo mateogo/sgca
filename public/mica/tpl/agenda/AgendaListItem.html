@@ -35,6 +35,13 @@
                 </div>
               <% } %>
 
+              <% if(place){ %>
+                <div style="margin-top: 5px;margin-bottom: 5px">
+                  <span class="event-location">Sala: <%= place.sala %> / Mesa: <%= place.mesa %></span>
+                </div>
+              <% } %>
+
+
               <%=renderActividad()%> <span class="confirmacion-container"></span>
 
             </div>
