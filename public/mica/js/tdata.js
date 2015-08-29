@@ -527,5 +527,20 @@ window.tdata = {
         {val:'alta',       label:'Alta',         classattr:'info'}
     ],
 
+    salasrondas:[
+
+        {val:'no_definido', label:'Seleccione Sala para rondas'},
+        {val:'terraza',  label:'Terraza (Música)',  buyerd:1, buyerh: 119, classattr:'info'},
+        {val:'402',  label:'Sala 402 (Escénicas)',  buyerd:120, buyerh: 176,  classattr:'info'},
+        {val:'403',  label:'Sala 403 (Escéncias)',  buyerd:177, buyerh: 200, classattr:'info'},
+        {val:'404',  label:'Sala 404 (Diseño)',     buyerd:201, buyerh: 261, classattr:'info'},
+        {val:'405',  label:'Sala 405 (Audiovisuales)',  buyerd:262, buyerh: 285, classattr:'info'},
+        {val:'406',  label:'Sala 406 (Audiovisuales)',  buyerd:286, buyerh: 342, classattr:'info'},
+        {val:'411',  label:'Sala 411 (Editorial)',    buyerd:343, buyerh: 398, classattr:'info'},
+        {val:'413',  label:'Sala 413 (Editorial)',    buyerd:343, buyerh: 398, classattr:'info'},
+        {val:'412',  label:'Sala 412 (Videojuegos)',  buyerd:399, buyerh: 435, classattr:'info'},
+
+    ],
+
   
 };

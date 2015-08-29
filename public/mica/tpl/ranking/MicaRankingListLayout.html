@@ -1,4 +1,21 @@
 <div class="row">
+
+  <div class="form-group col-xs-12 col-sm-12">
+    <div class="col-sm-4 selectContainer">
+      <label class="control-label" for="salatoassign">Sala</label>
+      <select  id="salatoassign"  title="Sala a asginar" class="form-control" name="salatoassign">
+           <%= tdata.buildSelectOptions('salas',tdata.salasrondas, salatoassign) %>
+      </select>
+      <span class="help-block"></span>
+    </div>
+  
+    <div class="col-sm-2">
+      <label class="control-label" for="nextbuyernumber">Mesa</label>
+      <input id='nextbuyernumber' title="Próximo número de mesa a asignar" type="number" class="buscador-sm" name="nextbuyernumber" >
+      <span class="help-block"></span>
+    </div>
+  </div>
+
   <div id="itemtable-region" class="col-xs-12 col-sm-12">
     <div  class="hidden-print" style="margin-bottom:10px">
       <div id="filter-region" class="pull-right hidden hidden-print"></div>

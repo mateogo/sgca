@@ -545,7 +545,9 @@ DocManager.module("BackendApp.Common.Views", function(Views, DocManager, Backbon
 
     createLayout: function(opts){
       var self = this;
-      var data = _.extend({}, self.get('layoutdefaults'), {itemssofar: self.collection.length});
+      //console.log('createLayout:[%s]', opts.layoutdefaults);
+
+      var data = _.extend({}, opts.layoutdefaults, {itemssofar: self.collection.length});
 
       self.layout = new Views.CrudLayout({
         model: new Backbone.Model(data),

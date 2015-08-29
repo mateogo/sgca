@@ -318,6 +318,104 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
       },
   });
 
+  var SalaNumberCell = Backgrid.Cell.extend({
+      className: "string-cell js-profile-view",
+
+      initialize: function(opt){
+        var self = this;
+        //console.log('sala-mesa INIT: Profile: [%s] - [%s]', self.model.get('cnumber'), self.model.id)
+
+        this.model.bind("change", this.render, this);
+
+        var fetchingMicaRequest = DocManager.request("micarqst:entity", self.model.get('profileid'));
+        $.when(fetchingMicaRequest).done(function(micarqst){
+          var place = micarqst.get('place') || {sala: 'no_definido', mesa: 0};
+          //console.log('sala-mesa INIT: Profile: [%s]: [%s]: [%s]', micarqst.get('cnumber'), place.sala, place.mesa);
+          self.model.set('place', place);
+        });
+
+      },
+
+      events: {
+          'click .js-asignarsala': 'salaAsign',
+      },
+
+      setSeletected: function(){
+        var $tr = this.$el.closest('tr');
+        var $table =  $tr.closest('table');
+
+        $table.find('.row-selected').removeClass('row-selected');
+        $tr.addClass('row-selected');
+      },
+
+      salaAsign: function(e){
+        var self = this;
+        e.stopPropagation();e.preventDefault();
+        var targetSala = getSession().crudManager.getLayout().$el.find('[name=salatoassign]').val();
+        var targetMesa = getSession().crudManager.getLayout().$el.find('[name=nextbuyernumber]').val();
+ 
+        if(!self.model.get('iscomprador')){
+          Message.error('Solo se asigna Sala y Mesa a un COMPRADOR AUTORIZADO');
+          return;
+        }
+
+        if(targetSala === 'no_definido' || !targetMesa){
+          Message.error('Indique Sala y Mesa en la cabecera ');
+          return;
+        }
+
+        var testMesa = DocManager.request('micarqst:query:mesa',targetMesa);
+        testMesa.done(function(result){
+          if(result && result.id){
+            if(result.id === self.model.get('profileid')){
+              assignSalaMesaToBuyer(self, targetSala, targetMesa);
+
+            }else{
+              Message.error('El número de mesa ya ha sido asignado al perfil: ' + result.get('cnumber'));
+              return;
+            }
+
+
+          }else{
+            assignSalaMesaToBuyer(self, targetSala, targetMesa);
+          }
+
+        });
+
+      },
+
+      render: function(){
+        var place = this.model.get('place') || {sala: 'no_definido', mesa: 0};
+        this.$el.html(salanumberTpl(place) );
+        return this;
+      },
+  });
+  var salanumberTpl = _.template('<a href="#" class="js-asignarsala" role="button"><span title="Asignar sala y mesa para este comprador"><%= sala ===  "no_definido" ? "Asignar" : sala + ": " + mesa %></span></a>');
+
+
+  var assignSalaMesaToBuyer = function(view, sala, mesa){
+      var data = {
+        _id: view.model.get('profileid'),
+        place: {
+          sala: sala,
+          mesa: mesa
+        }
+
+      };
+      var mesai = parseInt(mesa);
+  
+      getSession().crudManager.getLayout().$el.find('[name=nextbuyernumber]').val(mesai + 1);
+
+      var p = DocManager.request('micarqst:partial:update',[view.model.get('profileid')], data);
+      p.done(function(){
+        view.model.set(data);
+        Message.success('Asignación exitosa');
+      }).fail(function(){
+        Message.error('No se pudo asignar Sala / mesa');
+      });
+
+  };
+
   var EmisorListViewCell = Backgrid.Cell.extend({
       className: "string-cell",
 
@@ -446,7 +544,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   var fetchYaAgendadas = function(model){
 
     DocManager.request('micaagenda:profile:count', model.get('profileid')).done(function(result){
-      console.log('[%s] cnumber:[%s] reult:[%s]/[%s]',model.get('profileid'), model.get('cnumber'), result.comprador, result.vendedor)
+      //console.log('[%s] cnumber:[%s] reult:[%s]/[%s]',model.get('profileid'), model.get('cnumber'), result.comprador, result.vendedor)
 
       model.set('agendacount', result);
     });
@@ -589,7 +687,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
   var EditViewCell = Backgrid.Cell.extend({
       render: function(){
           if(!this.rendered){
-             var btnEdit = $(' <button class="btn btn-xs btn-info js-edit"  data-tooltip="Agendar reuniones" title="agendar reuniones"><span class="glyphicon glyphicon-edit"></span></button>');
+             var btnEdit = $(' <button class="btn btn-xs btn-info js-edit"  data-tooltip="Agendar Reuniones" title="agendar reuniones"><span class="glyphicon glyphicon-edit"></span></button>');
              var btnRemove = $('<button class="btn btn-xs btn-danger js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
              var btnAsignPlace = $(' <button class="btn btn-xs btn-info js-place" data-tooltip="Asignar ubicación"  title="asignar ubicación" style="margin-left:5px;"><span class="glyphicon glyphicon-pushpin"></span></button>');
              btnAsignPlace.css('display','none');
@@ -639,12 +737,15 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 	var initCrudManager = function(user, criterion, step){
 
 		$.when(fetchCollection(user, criterion, step)).done(function(entities){
+      
+      var buyerandsala = new Backbone.Model({salatoassign: 'no_definido', nextbuyernumber: 0})
 
 			getSession().crudManager = new backendCommons.CrudManager(
 				  {
 				    gridcols:[
 				      {name: 'cnumber', label:'Nro Inscr', cell:'string', editable:false},
               {name: 'agendado', label:'Agda (C/V)', cell: YaAgendadoViewCell, editable:false},
+              {name: 'salamesa', label:'Asignar sala/mesa', cell: SalaNumberCell, editable:false},
               {name: 'cactividad', label:'Sector', cell: ActividadViewCell, editable:false},
               {name: 'ename', label:'Responsable', cell:'string', editable:false},
               {name: 'eprov', label:'Prov', cell:'string', editable:false},
@@ -661,6 +762,7 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
             baseLayoutTitle: 'Ranking interacciones - MICA 2015',
 				    parentLayoutView: getSession().views.mainlayout,
 
+            layoutdefaults: buyerandsala.attributes,
 				    layoutTpl: utils.templates.MicaRankingListLayout,
 				    formTpl: utils.templates.MicaRankingFormLayout,
 
@@ -689,8 +791,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
     var session = getSession();
 
     session.views.layout = new backendCommons.Layout({model:new Backbone.Model({title: 'Ranking interacciones - 2015'}) });
-    //session.views.sidebarpanel = new backendCommons.SideBarPanel({model:session.model});
-    session.views.mainlayout = new backendCommons.MainLayout({model:session.model});
+
+    session.views.mainlayout = new backendCommons.MainLayout();
 
     registerSidebarEvents(session, session.views.layout,session.views.mainlayout);
     registerMainLayoutEvents(session, session.views.layout, session.views.mainlayout);
@@ -770,7 +872,8 @@ DocManager.module('BackendApp.RankingMica',function(RankingMica, DocManager, Bac
 //TODO
   var registerEditorLayoutEvents = function(session, mainlayout, editorlayout, model){
     //build Presentation Collection
-    //console.log('[%s] registerEditorLayout: [%s]', model.whoami, model.get('cnumber'))
+    console.log('[%s] registerEditorLayout: [%s]', model.whoami, model.get('cnumber'))
+    
     buildPresentationCol(model).then(function(presentationCol){
 
       getSession().presentationCol = presentationCol;

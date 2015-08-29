@@ -1576,6 +1576,29 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       return defer.promise();
     },
 
+    checkAvailabilityForMesa: function(mesa){
+      var entities = new Entities.MicaExportCollection();
+      var query = {},
+          defer = $.Deferred();
+
+      query.mesa = mesa;
+ 
+      entities.fetch({
+        data: query,
+        success: function(data){
+          if(data.length){
+            defer.resolve(data.at(0));
+          }else{
+            defer.resolve({'not_found': true});
+          }
+        },
+        error: function(data){
+            defer.resolve({'error': true});
+        }
+      });
+      return defer.promise();
+
+    },
 
   };
 
@@ -1608,6 +1631,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   DocManager.reqres.setHandler("micarqst:query:entities", function(query, step){
     return API.getFilteredByQueryCol(query, step);
+  });
+
+  DocManager.reqres.setHandler("micarqst:query:mesa", function(mesa){
+    return API.checkAvailabilityForMesa(mesa);
   });
 
 });

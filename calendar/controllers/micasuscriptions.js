@@ -407,6 +407,8 @@ var buildQuery = function(qr){
     if(qr.rubro) conditions.push({rubro: qr.rubro});
     //console.dir(conditions);
 
+    if(qr.mesa) conditions.push({'place.mesa': qr.mesa});
+
 
     query['$and'] = conditions;
 

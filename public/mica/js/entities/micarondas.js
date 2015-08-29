@@ -591,6 +591,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       epais: '',
       eprov: '',
 
+      salatoassign: 'no_definido',
+      nextbuyernumber: 0,
 
     },
 
