@@ -203,12 +203,22 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       var data = this.model.toJSON();
       //fecha
       var date = this.model.getFechaReunion();
+
       if(date){
         var mdate = moment(date);
         data.fecha = {};
         data.fecha.event_day = mdate.format('dddd DD');
         data.fecha.event_time = mdate.format('hh:mm');
+        data.fecha.event_time_end =  mdate.add(15,'m').format('hh:mm');
+      }else{
+        data.fecha = {event_day:'',event_time:'',event_time_end:''};
       }
+
+      //Place
+      if(!('place' in data)){
+        data.place = {sala:'a definir', mesa:'a definir'};
+      }
+
       //perfil
       data.profile = this.model.get(this.options.contraparte_rol);
       this.profile = data.profile;

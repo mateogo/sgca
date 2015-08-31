@@ -15,6 +15,11 @@
                 </div>
               <% } %>
 
+              <% if(typeof(place) !== 'undefined' ){ %>
+                <div style="margin-top: 5px;margin-bottom: 5px">
+                  <span class="event-location">Sala: <%= place.sala %> / Mesa: <%= place.mesa %></span>
+                </div>
+              <% } %>
 
               <h3 class="fullname js-openperfil">
                   <a>#<%=num_reunion%>. <%= profile.solicitante.edisplayName %></a>
