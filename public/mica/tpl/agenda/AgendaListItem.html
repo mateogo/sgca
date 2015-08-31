@@ -61,10 +61,12 @@
 
 
 
+        <% if(0) { %>
         <div class="hidden-print" style="position:absolute;right:5px;top:0">
         <% _.each(getActions(),function(action){ %>
               <button class="btn btn-xs btn-primary js-runaction" data-name="<%=action.name%>" style="cursor:pointer"><%=action.label%></button>
         <%  }) %>
         </div>
+        <% } %>
     </div>
 </div>
