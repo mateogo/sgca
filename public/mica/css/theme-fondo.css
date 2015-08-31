@@ -807,3 +807,10 @@ span.event-location:before {
     text-decoration: inherit;
     width: 15px;
 }
+.notification-info ul.unstyled-list li {
+    text-align: left!important;
+    font-size: 12px;
+    list-style: circle!important;
+    padding-left: 0px;
+    margin-left: 15px;
+}
