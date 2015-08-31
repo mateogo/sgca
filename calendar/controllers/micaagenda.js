@@ -9,7 +9,7 @@ var ctrls = {
     find: function(req,res){
 
       //PREPRANDO QUERY
-      var query =  _.pick(req.query,'page','per_page','textsearch','estado','cactividades','vactividades');
+      var query =  _.pick(req.query,'page','per_page','textsearch','estado','cactividades','vactividades','confirmado');
       if(query.page){
         query.page = parseInt(query.page);
         if(isNaN(query.page)){
@@ -51,6 +51,27 @@ var ctrls = {
         delete query.vactividades;
       }
 
+      if(query.confirmado){
+        var $or1 = [];
+        var $or2 = [];
+
+        var confirma = query.confirmado === 'asiste';
+
+        $or1.push({'comprador.confirma_asistencia':{$exists: true}});
+        $or1.push({'vendedor.confirma_asistencia':{$exists: true}});
+        $or2.push({'comprador.confirma_asistencia':confirma});
+        $or2.push({'vendedor.confirma_asistencia':confirma});
+
+        var $and = [{$or:$or1},{$or:$or2}];
+
+        if(query.$or){
+          query.$and = [query.$or,$and];
+        }else{
+          query.$and = $and;
+        }
+        delete query.confirmado;
+      }
+      console.log(query);
       //EJECUNTADO QUERY
       MicaAgenda.findPageable(query,function(err,result){
         if(err) return res.status(409).send(err);
@@ -216,6 +237,14 @@ var ctrls = {
 
         res.json(results);
       });
+    },
+
+    statisticConfirma: function(req,res){
+      MicaAgenda.statisticConfirma(function(err,results){
+        if(err) return res.status(409).send(err);
+
+        res.json(results);
+      });
     }
 
 };
@@ -274,6 +303,7 @@ module.exports.configRoutes = function(app){
   app.get('/micaagenda/:idSuscriptor/:rol',[ensureAuthenticated,isAdminMicaOrOwner,ctrls.agenda]);
 
   app.get('/micaagenda-statistics',[ensureAuthenticated,isAdminMica,ctrls.statistics]);
+  app.get('/micaagenda-statistics/confirmado',[ensureAuthenticated,isAdminMica,ctrls.statisticConfirma]);
   app.get('/micaagenda-statistics/profile/:idSuscriptor',[ensureAuthenticated,isAdminMica,ctrls.agendaCount]);
 
   app.post('/micaagenda/assign',[ensureAuthenticated,isAdminMica,ctrls.assign]);

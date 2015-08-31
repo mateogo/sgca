@@ -527,6 +527,12 @@ window.tdata = {
         {val:'alta',       label:'Alta',         classattr:'info'}
     ],
 
+    estado_confirmado: [
+      {val:'no_definido', label:'Seleccione'},
+      {val:'asiste',  label:'Asiste',  classattr:'info'},
+      {val:'noasiste',       label:'No Asiste',         classattr:'info'}
+    ],
+
     salasrondas:[
 
         {val:'no_definido', label:'Seleccione Sala para rondas'},
@@ -542,5 +548,5 @@ window.tdata = {
 
     ],
 
-  
+
 };

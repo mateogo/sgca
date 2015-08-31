@@ -9,6 +9,7 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       "agenda/:idSuscription/:rol/admin": "agendaSuscriptor",
       "agenda/:idSuscription/:rol": "agendaSuscriptorPublica",
       "agenda/estadisticas": 'statistics',
+      "agenda/estadisticas2": 'statistics2',
       "perfil/:idSuscription":  "profileShow",
       "herramientas": 'showTools'
 
@@ -68,6 +69,10 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       BackendApp.AgendaMica.Controller.showStatistics();
     },
 
+    statistics2: function(){
+      BackendApp.AgendaMica.Controller.showStatistics2();
+    },
+
     profileShow: function(idSuscription,place){
       var navigateUrl = 'perfil/' + idSuscription;
       var toPopup = place === 'popup';
@@ -124,6 +129,11 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
   DocManager.on('micaagenda:statistic',function(){
     DocManager.navigate("agenda/estadisticas");
     API.statistics();
+  });
+
+  DocManager.on('micaagenda:statistic:confirmado',function(){
+    DocManager.navigate("agenda/estadisticas2");
+    API.statistics2();
   });
 
   DocManager.on('micasuscription:edit:place',function(suscription){

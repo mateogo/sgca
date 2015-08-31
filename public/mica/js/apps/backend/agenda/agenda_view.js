@@ -762,6 +762,67 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     }
   });
 
+  AgendaMica.EstadisticConfirmadoView = Marionette.ItemView.extend({
+    className: 'wrapper',
+    template: _.template('<h1>Estadisticas 2</h1><div style="margin-bottom: 10px"><button class="btn btn-default btn-sm js-back"><span class="fa fa-angle-left"></span> Volver</button></div><div class="pivot"></div>'),
+    //childView: RecountItem,
+    //childViewContainer: '.body-container',
+    initialize: function(opts){
+      var self = this;
+      opts.collection.once('change',function(){
+          self.renderPivot();
+      });
+    },
+    onRender: function(){
+      if(this.collection && this.collection.length > 0){
+        this.renderPivot();
+      }
+    },
+
+    renderPivot: function(){
+      var dataSource = this.collection.toJSON();
+      var $pivot = this.$el.find('.pivot').pivot(dataSource,{
+              localeStrings: $.pivotUtilities.locales.es.localeStrings,
+              rows: ["number"],
+              cols: ["actividad"],
+              aggregator: function(data,rowKey,colKey){
+                return {
+                  count: 0,
+                  confirmado:0,
+                  noconfirmado: 0,
+                  push: function(record) {
+                    if(typeof(record.comprador_confirma) != 'undefined'){
+                      if(record.comprador_confirma){
+                        this.confirmado += record.subtotal_count;
+                      }else{
+                        this.noconfirmado += record.subtotal_count;
+                      }
+                    }else if(typeof(record.vendedor_confirma) != 'undefined'){
+                      if(record.vendedor_confirma){
+                        this.confirmado += record.subtotal_count;
+                      }else{
+                        this.noconfirmado += record.subtotal_count;
+                      }
+                    }else{
+                      this.count += record.subtotal_count;
+                    }
+                  },
+                  value: function() { return '<b>'+ this.count + '</b> (<span class="text-success">'+this.confirmado+'</span> - <span class="text-danger">'+this.noconfirmado+'</span>)';},
+                  format: function(x) { return x; },
+                  label: "Cantidad"
+                };
+              }
+      });
+    },
+
+    events: {
+      'click .js-back': function(){
+        DocManager.navigateBack();
+      }
+    }
+  });
+
+
   AgendaMica.MeetingUnavailableView = Marionette.ItemView.extend({
     template: _.template('<h3><p class="text-center text-danger">No disponible</p>'+
                          '<p>El <%=rol%> <i><%=mainName%></i> ya tiene asignado la reunión #<%=num_reunion%> con' +

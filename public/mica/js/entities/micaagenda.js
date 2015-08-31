@@ -80,6 +80,12 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
         delete this.queryParams.vactividades;
       }
 
+      if(filter.get('confirmado') && filter.get('confirmado') !== 'no_definido'){
+        this.queryParams.confirmado = filter.get('confirmado');
+      }else{
+        delete this.queryParams.confirmado;
+      }
+
 
       this.getFirstPage();
     },
@@ -136,6 +142,7 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       cactividades:   {type: 'Select',  title: 'Sector Comprador',  options: tdata.sectorOL },
       vactividades:   {type: 'Select',  title: 'Sector Vendedor',  options: tdata.sectorOL },
       estado:   {type: 'Select',  title: 'Estado',  options: tdata.estado_reunion },
+      confirmado:   {type: 'Select',  title: 'Confirmado',  options: tdata.estado_confirmado },
     }
   });
 
@@ -147,6 +154,12 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
     whoami: 'MicaagendaStatisticsCollection: micaagenda.js',
     model: Entities.MicaagendaStatistics,
     url: '/micaagenda-statistics'
+  });
+
+  Entities.MicaagendaStatisticsCollection2 = Backbone.Collection.extend({
+    whoami: 'MicaagendaStatisticsCollection: micaagenda.js',
+    model: Entities.MicaagendaStatistics,
+    url: '/micaagenda-statistics/confirmado'
   });
 
   var mapfecha_reunion = {
@@ -185,6 +198,14 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
 
     searchStatistics: function(){
       var collection = new Entities.MicaagendaStatisticsCollection();
+      collection.fetch().done(function(){
+        collection.trigger('change');
+      });
+      return collection;
+    },
+
+    searchStatistics2: function(){
+      var collection = new Entities.MicaagendaStatisticsCollection2();
       collection.fetch().done(function(){
         collection.trigger('change');
       });
@@ -366,6 +387,10 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
 
   DocManager.reqres.setHandler('micaagenda:statistics', function(){
     return API.searchStatistics();
+  });
+
+  DocManager.reqres.setHandler('micaagenda:statistics:confirmado', function(){
+    return API.searchStatistics2();
   });
 
   DocManager.reqres.setHandler('micaagenda:searchAgenda', function(idSuscription,rol){

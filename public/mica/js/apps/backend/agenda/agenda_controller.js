@@ -77,6 +77,14 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       DocManager.mainRegion.show(view);
     },
 
+    showStatistics2: function(){
+      var collection = DocManager.request('micaagenda:statistics:confirmado');
+
+      var view = new AgendaMica.EstadisticConfirmadoView({collection:collection});
+      DocManager.mainRegion.show(view);
+    },
+
+
     _listBySuscription: function(idSuscription,rol,isAdmin,publicVersion){
       var collection = DocManager.request('micaagenda:searchAgenda',idSuscription,rol);
       if(publicVersion){
@@ -243,7 +251,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         $btnStats.on('click',function(e){
           $btnStats.unbind('click');
           $btnTools.unbind('click');
-          API.showStatistics();
+          API.showStatistics2();
         });
 
         $btnTools.on('click',function(e){
@@ -268,6 +276,10 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     showStatistics: function(){
       DocManager.trigger('micaagenda:statistic');
     },
+    showStatistics2: function(){
+      DocManager.trigger('micaagenda:statistic:confirmado');
+    },
+
     popupAgenda: function(suscriptor){
 
     }

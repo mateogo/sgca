@@ -141,6 +141,47 @@ var MicaAgenda = BaseModel.extend({
         cb(null,results);
       });
     });
+  },
+
+  statisticConfirma: function(cb){
+    BaseModel.dbi.collection(this.entityCol, function(err, collection) {
+      var match = {
+        estado: MicaAgenda.STATUS_ASIGNED,
+        $or: [{'comprador.confirma_asistencia': {$exists: true}},
+              {'vendedor.confirma_asistencia': {$exists: true}}],
+      };
+
+      var group = {
+        _id:{number:'$num_reunion',
+        actividad:'$comprador.actividades',
+        comprador_confirma:'$comprador.confirma_asistencia',
+        vendedor_confirma:'$vendedor.confirma_asistencia'},
+        subtotal_count: {$sum: 0.5}
+      };
+
+      var sort = {
+        '_id.number': 1
+      };
+
+      collection.aggregate([{$match:match},{$group:group},{$sort:sort}],function(err,results){
+        if(err) return cb(err);
+
+        // console.log('resultado',results);
+        for (var i = 0; i < results.length; i++) {
+          var row =  results[i];
+          _.extend(row,row._id);
+          delete row._id;
+          results[i] = row;
+        }
+
+        MicaAgenda.statistics(function(err,result1){
+          if(err) return cb(err);
+          var ret = results.concat(result1);
+
+          cb(null,ret);
+        });
+      });
+    });
   }
 });
 
