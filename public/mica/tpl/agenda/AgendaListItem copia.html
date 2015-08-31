@@ -1,9 +1,13 @@
 <div class="row">
-    <div class="col-sm-12 col-xs-12" style="position:relative">
+    <div class="col-xs-12" style="position:relative">
       <% if(profile){ %>
-            <div class="row">
-            <div class="col-sm-3 col-xs-12" >
+            <div class="media-left hidden-print">
 
+              <a class="thumbnail" style="width:80px;height:85px">
+                  <img class="media-object avatar" src="http://200.80.154.217:3000/<%= profile.avatar%>" alt="" style="height: 73px; width:73px;">
+              </a>
+            </div>
+            <div class="media-body">
               <% if(typeof(fecha) !== 'undefined'){ %>
                 <div style="margin-top: 5px;margin-bottom: 5px">
                   <span class="event-day"><%=fecha.event_day%></span>
@@ -16,10 +20,6 @@
                   <span class="event-location">Sala: <%= place.sala %> / Mesa: <%= place.mesa %></span>
                 </div>
               <% } %>
-
-            </div>
-            <div class="col-sm-9 col-xs-12" >
-
 
               <h3 class="fullname js-openperfil">
                   <a>#<%=num_reunion%>. <%= profile.solicitante.edisplayName %></a>
@@ -44,7 +44,6 @@
 
               <%=renderActividad()%> <span class="confirmacion-container"></span>
 
-            </div>
             </div>
 
         <% }else if(0) { %>
