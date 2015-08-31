@@ -25,32 +25,53 @@
                 </span>
             </header>
             <div class="panel-body row" style="display: block;">
-              <!--<div class="col-md-6">
-                <div class="alert alert-danger">
+              <div class="col-md-12">
+                <div class="alert alert-success">
                     <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
                     <div class="notification-info">
                         <ul class="clearfix notification-meta">
-                            <li class="pull-left notification-meta"><strong>Última oportunidad para evaluar tus reuniones</strong></li>
+                            <li class="pull-left notification-meta"><strong>¡Tu agenda está lista!</strong></li>
                         </ul>
                         <p>
-                            Tenés tiempo hasta el martes 18 de agosto a las 23.59 hrs para puntuar las reuniones que te solicitaron. Recordá que ya está cerrada la posibilidad de pedir nuevas reuniones.
-                        </p>
-                    </div>
-                </div>
-              </div>-->
-              <div class="col-md-12">
-                <div class="alert alert-info">
-                    <span class="alert-icon"><i class="fa fa-calendar"></i></span>
-                    <div class="notification-info">
-                        <ul class="clearfix notification-meta">
-                            <li class="pull-left notification-meta">Tu agenda MICA</li>
-                        </ul>
-                        <p>
-                            Estamos armando las agendas en base a los pedidos y las puntuaciones de los productores. Unos días antes del comienzo del MICA, podrás entrar y ver cómo quedó tu agenda.
+                          <ul class="unstyled-list">
+
+                            <!--IF IS VENDEDOR-->
+                            <% if(isVendedor()) {%>
+                              <li>Es obligatorio que confirmes tu asistencia como <strong>Vendedor</strong> desde <a class="js-agenda-vendedor" href="#">AQUÍ</a> 
+                              </li>
+                            <% } %>
+
+                            <!--IF IS COMPRADOR-->
+                            <% if(isComprador()) {%>
+                              <li>Es obligatorio que confirmes tu asistencia como <strong>Comprador</strong> desde <a class="js-agenda-comprador" href="#">AQUÍ</a> 
+                              </li>
+                            <% } %>
+                            
+                            <li>Recuerda imprimir tu agenda</li>
+                            <li>Para poder acceder al espacio de rondas de negocios deberás estar acreditado previamente</li>
+                            <li>Recomendamos acreditarte el día jueves 3 desde las 9 horas en el Hall de la Planta Baja del <a href="http://www.culturalkirchner.gob.ar/" target="_blank">Centro Cultural Kirchner</a></li>
+                          </ul>
                         </p>
                     </div>
                 </div>
               </div>
+              <!--<div class="col-md-6">
+                <div class="alert alert-info">
+                    <span class="alert-icon"><i class="fa fa-calendar"></i></span>
+                    <div class="notification-info">
+                        <ul class="clearfix notification-meta">
+                            <li class="pull-left notification-meta"><strong>Consejos útiles</strong></li>
+                        </ul>
+                        <p>
+                          <ul class="unstyled-list">
+                            <li>Recuerda imprimir tu agenda</li>
+                            <li>Para poder acceder al espacio de rondas de negocios deberás estar acreditado previamente</li>
+                            <li>Recomendamos inscribirte el día jueves 3 desde las 9 horas en el Hall de la Planta Baja del <a href="http://www.culturalkirchner.gob.ar/" target="_blank">Centro Cultural Kirchner</a></li>
+                          </ul>
+                        </p>
+                    </div>
+                </div>
+              </div>-->
             </div>
         </section>
         <!--notification end-->
