@@ -608,7 +608,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       if(typeof(rol.confirma_asistencia) !== 'undefined'){
         var html = '';
         if(rol.confirma_asistencia){
-          html = '<h3 class="text-success"> Recibimos tu confirmación de asistencia como como <i>'+rolName+'</i> a las rondas de emprendedores del MICA 2015 </h3>';
+          html = '<h3 class="text-success"> Recibimos tu confirmación de asistencia como <i>'+rolName+'</i> a las rondas de emprendedores del MICA 2015 </h3>';
         }else{
           html = '<h3 class="text-danger">  Recibimos tu aviso de que no podrás asistir como <i>'+rolName+'</i> a las rondas de emprendedores del MICA 2015</h3>';
         }
