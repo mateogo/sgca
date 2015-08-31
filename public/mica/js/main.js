@@ -27,6 +27,10 @@ utils.loadTemplate([
         // -- Agenda
         'agenda/AgendaListItem', 'agenda/AgendaSolicitanteRender',
         'agenda/AgendaRondasPublicList','agenda/AgendaRondasPublicItem',
+        'agenda/AgendaComplementariaAudiovisual','agenda/AgendaComplementariaDisenio',
+        'agenda/AgendaComplementariaEscenicas','agenda/AgendaComplementariaMusica',
+
+
 
         // -- Place
         'places/PlaceEdit',

@@ -602,10 +602,10 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       var sector = this.owner.actividades;
 
       var mapTemplate = {
-        'audiovisual': _.template('extendida audio visual'),
-        'musica': _.template('extendida musica'),
-        'aescenicas': _.template('extendida artes escenicas'),
-        'disenio': _.template('extendida diseñó')
+        'audiovisual': utils.templates.AgendaComplementariaAudiovisual,
+        'musica': utils.templates.AgendaComplementariaMusica,
+        'aescenicas': utils.templates.AgendaComplementariaEscenicas,
+        'disenio': utils.templates.AgendaComplementariaDisenio
       };
 
       var template = mapTemplate[sector];
