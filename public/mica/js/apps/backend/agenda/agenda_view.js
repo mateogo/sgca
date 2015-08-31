@@ -542,7 +542,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     initialize: function(opts){
       this.rol = opts.rol;
       this.contraparte_rol = (opts.rol === 'comprador') ? 'vendedor' : 'comprador';
-      this.sucription = opts.model;
+      this.owner = opts.model;
     },
     template: function(){
       return utils.templates.AgendaRondasPublicList;
@@ -562,14 +562,18 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       this.renderConfirmation();
     },
     renderOwner: function(){
-      var template = _.template('<h3>Participante: <span class="text-primary"><%=solicitante.edisplayName%> (<%=rol%>)</span> </h3>');
-      var data = this.model.toJSON();
-      data.rol = this.rol;
-      this.$el.find('.owner-container').html(template(data));
+      if(this.owner){
+        var template = _.template('<h3>Participante: <span class="text-primary"><%=solicitante.edisplayName%> (<%=rol%>)</span> </h3>');
+        var data = this.owner;
+        data.rol = this.rol;
+        this.$el.find('.owner-container').html(template(data));
+      }
     },
     renderConfirmation: function(){
+      if(!this.owner) return;
+
       var isAdmin = DocManager.request('userlogged:isMicaAdmin');
-      var isOwner = DocManager.request('userlogged:isProfileOwner',this.suscription);
+      var isOwner = DocManager.request('userlogged:isProfileOwner',this.owner);
 
       if(!isAdmin || isOwner){
         var profile = DocManager.request('userlogged:getMicaProfile');
@@ -577,6 +581,18 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         this.$el.find('.confirm-container').html(view.render().$el);
       }
     },
+
+    collectionEvents: {
+      'change': 'onChangeCollection'
+    },
+    onChangeCollection: function(e){
+      if(this.collection.length > 0){
+        var tmp = this.collection.at(0);
+        this.owner = tmp.get(this.rol);
+        this.renderOwner();
+        this.renderConfirmation();
+      }
+    }
   });
 
 

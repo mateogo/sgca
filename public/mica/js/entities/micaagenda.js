@@ -102,10 +102,10 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
     },
     parse: function(response) {
       var isAdmin = DocManager.request('userlogged:isMicaAdmin');
-      if(!isAdmin){
+      if(!isAdmin || this.isPublicMode){
         // sacar las reuniones no disponibles y libres
         response = _.reject(response,function(item){
-          return item.estado != 'asignado';
+          return item.estado != 'asignado' && item.estado != 'borrador';
         });
       }
       return response;
@@ -123,6 +123,9 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       this.fetch().done(function(){
         self.trigger('change');
       });
+    },
+    activePublicMode:function(){
+      this.isPublicMode =true;
     }
   });
 

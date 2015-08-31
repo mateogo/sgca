@@ -7,6 +7,7 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       "ranking/mica": "browseRanking",
       "agenda": "agenda",
       "agenda/:idSuscription/:rol": "agendaSuscriptor",
+      "agenda/:idSuscription/:rol/publica": "agendaSuscriptorPublica",
       "agenda/estadisticas": 'statistics',
       "perfil/:idSuscription":  "profileShow",
       "herramientas": 'showTools'
@@ -44,6 +45,12 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
         DocManager.navigate(navigateUrl);
         BackendApp.AgendaMica.Controller.listBySuscriptor(idSuscription,rol);
       }
+    },
+
+    agendaSuscriptorPublica: function(idSuscription,rol,place){
+        var navigateUrl = 'agenda/' + idSuscription + '/'+rol + '/publica';
+        DocManager.navigate(navigateUrl);
+        BackendApp.AgendaMica.Controller.listBySuscriptor(idSuscription,rol,true);
     },
 
     /**

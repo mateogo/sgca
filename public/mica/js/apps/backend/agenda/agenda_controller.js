@@ -23,10 +23,10 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       });
     },
 
-    listBySuscriptor: function(idSuscription,rol){
+    listBySuscriptor: function(idSuscription,rol,publicVersion){
       var self = this;
       DocManager.request('userlogged:isMicaAdmin',function(isAdmin){
-        var list = self._listBySuscription(idSuscription,rol,isAdmin);
+        var list = self._listBySuscription(idSuscription,rol,isAdmin,publicVersion);
 
         var layout = new AgendaMica.AgendaPage();
         layout.on('show',function(){
@@ -77,11 +77,13 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       DocManager.mainRegion.show(view);
     },
 
-    _listBySuscription: function(idSuscription,rol,isAdmin){
+    _listBySuscription: function(idSuscription,rol,isAdmin,publicVersion){
       var collection = DocManager.request('micaagenda:searchAgenda',idSuscription,rol);
-      var userProfile = DocManager.request('userlogged:getMicaProfile');
-      var ViewClass = (isAdmin)? AgendaMica.AgendaList :  AgendaMica.AgendaRondasPublicaList;
-      var list = new ViewClass({collection:collection,rol:rol,isAdmin:isAdmin,model:userProfile});
+      if(publicVersion){
+        collection.activePublicMode();
+      }
+      var ViewClass = (isAdmin && !publicVersion)? AgendaMica.AgendaList :  AgendaMica.AgendaRondasPublicaList;
+      var list = new ViewClass({collection:collection,rol:rol,isAdmin:isAdmin});
       return list;
     },
 
