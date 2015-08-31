@@ -1,13 +1,9 @@
 <div class="row">
-    <div class="col-xs-12" style="position:relative">
+    <div class="col-sm-12 col-xs-12" style="position:relative">
       <% if(profile){ %>
-            <div class="media-left hidden-print">
+            <div class="row">
+            <div class="col-sm-3 col-xs-12" >
 
-              <a class="thumbnail" style="width:80px;height:85px">
-                  <img class="media-object avatar" src="http://200.80.154.217:3000/<%= profile.avatar%>" alt="" style="height: 73px; width:73px;">
-              </a>
-            </div>
-            <div class="media-body">
               <% if(typeof(fecha) !== 'undefined'){ %>
                 <div style="margin-top: 5px;margin-bottom: 5px">
                   <span class="event-day"><%=fecha.event_day%></span>
@@ -15,11 +11,15 @@
                 </div>
               <% } %>
 
-              <% if(typeof(place) !== 'undefined' ){ %>
+              <% if(typeof(place) !== 'undefined'){ %>
                 <div style="margin-top: 5px;margin-bottom: 5px">
                   <span class="event-location">Sala: <%= place.sala %> / Mesa: <%= place.mesa %></span>
                 </div>
               <% } %>
+
+            </div>
+            <div class="col-sm-9 col-xs-12" >
+
 
               <h3 class="fullname js-openperfil">
                   <a>#<%=num_reunion%>. <%= profile.solicitante.edisplayName %></a>
@@ -45,18 +45,28 @@
               <%=renderActividad()%> <span class="confirmacion-container"></span>
 
             </div>
+            </div>
 
-        <% }else{ %>
+        <% }else if(0) { %>
             <h3>
               #<%=num_reunion%>. <span><%=estado%>.</span>
+              <% if(estado === 'libre'){ %>
+                  <span class="text-muted">
+                    Podes ver las actividades alternativas en el agenda del MICA
+                  </span>
+              <% } %>
             </h3>
         <% } %>
 
 
+
+
+        <% if(0) { %>
         <div class="hidden-print" style="position:absolute;right:5px;top:0">
         <% _.each(getActions(),function(action){ %>
               <button class="btn btn-xs btn-primary js-runaction" data-name="<%=action.name%>" style="cursor:pointer"><%=action.label%></button>
         <%  }) %>
         </div>
+        <% } %>
     </div>
 </div>

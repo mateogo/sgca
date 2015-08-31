@@ -445,16 +445,11 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       };
       DocManager.on('micaagenda:changed',this.handlerMicaChanged);
     },
-    // template: _.template('<h2 class="text-primary" style="margin:0;margin-bottom:5px;">Tu agenda de rondas <small>como</small> <span class="label-rol" style="font-size: 18px"></span></h2><div class="text-muted well"> '+
-    //                      '  <div class="owner-container"></div>  '+
-    //                      '</div>'+
-    //                      '<div class="confirm-container"></div>' +
-    //                      '<div class="map-list well text-center"></div> <ul class="list-group agenda-rondas"></ul>'),
     template: _.template('<h2 class="text-primary" style="margin:0;margin-bottom:5px;">Tu agenda de rondas <small>como</small> <span class="label-rol" style="font-size: 18px"></span></h2><div class="text-muted well"> '+
                          '  <div class="owner-container"></div>  '+
                          '</div>'+
                          '<div class="confirm-container"></div>' +
-                         '</div> <ul class="list-group agenda-rondas"></ul>'),
+                         '<div class="map-list well text-center"></div> <ul class="list-group agenda-rondas"></ul>'),
     childViewContainer: 'ul',
     childView: AgendaMica.AgendaListItem,
     childViewOptions: function(model,index){
@@ -514,10 +509,10 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       this.render();
       var self = this;
       if(!this.mapList){
-        //this.mapList = new AgendaMica.AgendaSubList({collection:self.collection,contraparte_rol:self.contraparte_rol});
+        this.mapList = new AgendaMica.AgendaSubList({collection:self.collection,contraparte_rol:self.contraparte_rol});
       }
-      //this.mapList.$el.empty();
-      //self.$el.find('.map-list').html(this.mapList.render().$el);
+      this.mapList.$el.empty();
+      self.$el.find('.map-list').html(this.mapList.render().$el);
 
       self.renderOwner();
 
