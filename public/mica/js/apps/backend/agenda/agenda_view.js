@@ -11,7 +11,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       render: function(){
         var fieldName = this.column.get('name');
         var suscriptor = this.model.get(fieldName);
-        console.log(fieldName,suscriptor);
+        //console.log(fieldName,suscriptor);
         this.$el.html(renderLiteSuscriptor(suscriptor));
         return this;
       },
@@ -362,6 +362,67 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     }
   });
 
+
+  AgendaMica.AgendaPublicItem = Marionette.ItemView.extend({
+    tagName: 'tr',
+    getTemplate: function(){
+      return utils.templates.AgendaRondasPublicItem;
+    },
+    serializeData: function(){
+      var data = this.model.toJSON();
+      //fecha
+      var date = this.model.getFechaReunion();
+      if(date){
+        var mdate = moment(date);
+        data.fecha = {};
+        data.fecha.event_day = mdate.format('dddd DD');
+        data.fecha.event_time = mdate.format('hh:mm');
+        data.fecha.event_time_end =  mdate.add(15,'m').format('hh:mm');
+      }else{
+        data.fecha = {event_day:'',event_time:'',event_time_end:''};
+      }
+
+      //Place
+      if(!('place' in data)){
+        data.place = {sala:'',mesa:''};
+      }
+
+      //perfil
+      data.profile = this.model.get(this.options.contraparte_rol);
+      this.profile = data.profile;
+
+      // avatar
+      if(data.profile){
+        var avatar =  data.profile.solicitante.eavatar;
+        if(avatar && avatar.urlpath){
+          avatar = avatar.urlpath;
+        }else{
+          avatar = 'mica/images/back-dotted.png';
+        }
+        data.profile.avatar = avatar;
+      }else{
+        data.profile = {solicitante: {edisplayName:''}};
+      }
+      return data;
+    },
+    templateHelpers: function(){
+      var self = this;
+      return {
+      };
+    },
+
+    events: {
+      'click .js-openperfil': 'openPerfil',
+    },
+    openPerfil: function(e){
+      e.stopPropagation();
+      var rol = this.options.contraparte_rol;
+      var suscriptor = this.model.get(rol);
+      DocManager.trigger('micaagenda:profile:show:popup',suscriptor._id);
+    },
+  });
+
+
   AgendaMica.AgendaSubList = Marionette.CollectionView.extend({
     childView: AgendaMica.AgendaListItemBox,
     childViewOptions: function(model,index){
@@ -393,7 +454,8 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
                          '  <div class="owner-container"></div>  '+
                          '</div>'+
                          '<div class="confirm-container"></div>' +
-                         '</div> <ul class="list-group agenda-rondas"></ul>'),    childViewContainer: 'ul',
+                         '</div> <ul class="list-group agenda-rondas"></ul>'),
+    childViewContainer: 'ul',
     childView: AgendaMica.AgendaListItem,
     childViewOptions: function(model,index){
       var self = this;
@@ -481,6 +543,47 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 
   });
 
+  AgendaMica.AgendaRondasPublicaList = Marionette.CompositeView.extend({
+    initialize: function(opts){
+      this.rol = opts.rol;
+      this.contraparte_rol = (opts.rol === 'comprador') ? 'vendedor' : 'comprador';
+      this.sucription = opts.model;
+    },
+    template: function(){
+      return utils.templates.AgendaRondasPublicList;
+    },
+    childViewContainer: 'tbody',
+    childView: AgendaMica.AgendaPublicItem,
+    childViewOptions: function(model,index){
+      var self = this;
+      return {
+        rol: self.rol,
+        contraparte_rol:  self.contraparte_rol,
+        isAdmin: self.options.isAdmin
+      };
+    },
+    onRender: function(){
+      this.renderOwner();
+      this.renderConfirmation();
+    },
+    renderOwner: function(){
+      var template = _.template('<h3>Participante: <span class="text-primary"><%=solicitante.edisplayName%> (<%=rol%>)</span> </h3>');
+      var data = this.model.toJSON();
+      data.rol = this.rol;
+      this.$el.find('.owner-container').html(template(data));
+    },
+    renderConfirmation: function(){
+      var isAdmin = DocManager.request('userlogged:isMicaAdmin');
+      var isOwner = DocManager.request('userlogged:isProfileOwner',this.suscription);
+
+      if(!isAdmin || isOwner){
+        var profile = DocManager.request('userlogged:getMicaProfile');
+        var view = new AgendaMica.AgendaConfirmView({model:profile,rol:this.options.rol});
+        this.$el.find('.confirm-container').html(view.render().$el);
+      }
+    },
+  });
+
 
   AgendaMica.AgendaConfirmView = Marionette.ItemView.extend({
     template: _.template('<div class="well confirmation-section text-center"> '+
@@ -554,13 +657,17 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 
   AgendaMica.AgendaPage = Marionette.LayoutView.extend({
     className: 'wrapper',
-    template: _.template('<div style="margin-bottom:20px;"> <button class="btn btn-default btn-sm js-back hidden-print"><span class="fa fa-angle-left"></span> Volver</button></div><div class="body-container"></div>'),
+    template: _.template('<div style="margin-bottom:20px;"> <button class="btn btn-default btn-sm js-back hidden-print"><span class="fa fa-angle-left"></span> Volver</button> <button class="btn btn-default btn-sm js-print hidden-print"><span class="fa fa-print"></span> Imprimir</button> </div><div class="body-container"></div>'),
     regions: {
       'bodyRegion': '.body-container'
     },
     events: {
       'click .js-back':function(e){
         DocManager.navigateBack();
+      },
+      'click .js-print': function(e){
+        e.stopPropagation();
+        window.print();
       }
     }
   });

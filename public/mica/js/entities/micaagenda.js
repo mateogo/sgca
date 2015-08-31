@@ -103,9 +103,9 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
     parse: function(response) {
       var isAdmin = DocManager.request('userlogged:isMicaAdmin');
       if(!isAdmin){
-        // sacar las reuniones no disponibles
+        // sacar las reuniones no disponibles y libres
         response = _.reject(response,function(item){
-          return item.num_reunion == '0';
+          return item.estado != 'asignado';
         });
       }
       return response;

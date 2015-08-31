@@ -79,8 +79,9 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 
     _listBySuscription: function(idSuscription,rol,isAdmin){
       var collection = DocManager.request('micaagenda:searchAgenda',idSuscription,rol);
-
-      var list = new AgendaMica.AgendaList({collection:collection,rol:rol,isAdmin:isAdmin});
+      var userProfile = DocManager.request('userlogged:getMicaProfile');
+      var ViewClass = (isAdmin)? AgendaMica.AgendaList :  AgendaMica.AgendaRondasPublicaList;
+      var list = new ViewClass({collection:collection,rol:rol,isAdmin:isAdmin,model:userProfile});
       return list;
     },
 

@@ -26,6 +26,7 @@ utils.loadTemplate([
 
         // -- Agenda
         'agenda/AgendaListItem', 'agenda/AgendaSolicitanteRender',
+        'agenda/AgendaRondasPublicList','agenda/AgendaRondasPublicItem',
 
         // -- Place
         'places/PlaceEdit',
