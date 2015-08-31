@@ -35,7 +35,7 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       BackendApp.AgendaMica.Controller.listAll();
     },
     agendaSuscriptor: function(idSuscription,rol,place){
-      var navigateUrl = 'agenda/' + idSuscription + '/'+rol;
+      var navigateUrl = 'agenda/' + idSuscription + '/'+rol + '/admin';
 
       if(place === 'right'){
         BackendApp.AgendaMica.Controller.listRight(idSuscription,rol);
@@ -48,7 +48,7 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
     },
 
     agendaSuscriptorPublica: function(idSuscription,rol,place){
-        var navigateUrl = 'agenda/' + idSuscription + '/'+rol + '/publica';
+        var navigateUrl = 'agenda/' + idSuscription + '/'+rol;
         DocManager.navigate(navigateUrl);
         BackendApp.AgendaMica.Controller.listBySuscriptor(idSuscription,rol,true);
     },
