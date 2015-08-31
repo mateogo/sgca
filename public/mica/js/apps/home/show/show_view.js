@@ -203,6 +203,8 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 
     },
 
+		childView: Show.HomeFeatureItemDetail,
+
     templateHelpers: function(){
       var self = this;
 
@@ -215,13 +217,44 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
         	//console.log('profileHasProblems: [%s] id:[%s]', self.model.whoami, self.micarqst.id)
           return self.micarqst.id;
         },
-      }
+
+        isVendedor: function(){
+        	//console.log('profileHasProblems: [%s] id:[%s]', self.model.whoami, self.micarqst.id)
+        	if(!self.micarqst.id) return false
+          return self.micarqst.isVendedor();
+        },
+
+        isComprador: function(){
+        	//console.log('profileHasProblems: [%s] id:[%s]', self.model.whoami, self.micarqst.id)
+        	if(!self.micarqst.id) return false
+          return self.micarqst.isComprador();
+		    },
+      };
     },
+    
+    events: {
+		//	"click .js-insertuser"     : "insertNewUser",     
+			"click .js-agenda-comprador"	: "agendaComprador",
+			"click .js-agenda-vendedor"	: "agendaVendedor",
+		},
+		agendaComprador: function(e){
+			e.preventDefault(); e.stopPropagation();
+			console.log('Agenda Comprador');
+			DocManager.trigger('rondas:browse:agenda:comprador');
+
+		},
+		agendaVendedor: function(e){
+			e.preventDefault(); e.stopPropagation();
+			console.log('Agenda Vendedor');
+			DocManager.trigger('rondas:browse:agenda:vendedor');
+
+		},
+
 
 		getTemplate: function(){
 			return utils.templates.HomeShowFeatureItemComposite;
 		},
-		childView: Show.HomeFeatureItemDetail,
+
   });
 
 

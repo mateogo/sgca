@@ -34,12 +34,18 @@
                         </ul>
                         <p>
                           <ul class="unstyled-list">
+
                             <!--IF IS VENDEDOR-->
-                              <li>Es obligatorio que confirmes tu asistencia como <strong>Vendedor</strong> desde <a href="#">AQUÍ</a> 
+                            <% if(isVendedor()) {%>
+                              <li>Es obligatorio que confirmes tu asistencia como <strong>Vendedor</strong> desde <a class="js-agenda-vendedor" href="#">AQUÍ</a> 
                               </li>
+                            <% } %>
+
                             <!--IF IS COMPRADOR-->
-                              <li>Es obligatorio que confirmes tu asistencia como <strong>Comprador</strong> desde <a href="#">AQUÍ</a> 
+                            <% if(isComprador()) {%>
+                              <li>Es obligatorio que confirmes tu asistencia como <strong>Comprador</strong> desde <a class="js-agenda-comprador" href="#">AQUÍ</a> 
                               </li>
+                            <% } %>
                             
                             <li>Recuerda imprimir tu agenda</li>
                             <li>Para poder acceder al espacio de rondas de negocios deberás estar acreditado previamente</li>
