@@ -194,6 +194,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
 
   AgendaMica.AgendaListItem = Marionette.ItemView.extend({
     tagName: 'li',
+    //className: 'list-group-item',
     className: 'list-group-item',
     getTemplate: function(){
       return utils.templates.AgendaListItem;
