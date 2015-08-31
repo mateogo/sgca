@@ -1,12 +1,17 @@
   <td>
       <span class="event-day"><%=fecha.event_day%></span>
   </td>
-  <td>
+  <td >
+      <span class="event-time">
       <%=fecha.event_time%> -
       <%=fecha.event_time_end%>
+      </span>
   </td>
   <td>
-    <a style="cursor:pointer" class="js-openperfil"><%= profile.solicitante.edisplayName %></a>
+    <a style="cursor:pointer" class="js-openperfil">
+      <%= profile.solicitante.edisplayName %>
+    </a>
+    <span class="text-muted"><%=profile.cnumber%></span>
   </td>
   <td>
     <span class="event-location"><%= place.sala %></span>

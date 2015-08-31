@@ -553,7 +553,7 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     initialize: function(opts){
       this.rol = opts.rol;
       this.contraparte_rol = (opts.rol === 'comprador') ? 'vendedor' : 'comprador';
-      this.owner = opts.model;
+      this.owner = opts.model; // deberia ser un micasuscription
     },
     template: function(){
       return utils.templates.AgendaRondasPublicList;
@@ -571,10 +571,11 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     onRender: function(){
       this.renderOwner();
       this.renderConfirmation();
+      this.renderAgendaPlus();
     },
     renderOwner: function(){
       if(this.owner){
-        var template = _.template('<h3>Participante: <span class="text-primary"><%=solicitante.edisplayName%> (<%=rol%>)</span> </h3>');
+        var template = _.template('<h3>Participante <%=rol%>: <span class="text-primary"><%=solicitante.edisplayName%></span>  <span class="text-muted"><%=cnumber%></span> </h3>');
         var data = this.owner;
         data.rol = this.rol;
         this.$el.find('.owner-container').html(template(data));
@@ -593,15 +594,39 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
       }
     },
 
+    renderAgendaPlus: function(){
+      if(this.collection.length > 8 || !this.owner || this.owner.rol != 'vendedor'){
+        return;
+      }
+
+      var sector = this.owner.actividades;
+
+      var mapTemplate = {
+        'audiovisual': utils.templates.AgendaComplementariaAudiovisual,
+        'musica': utils.templates.AgendaComplementariaMusica,
+        'aescenicas': utils.templates.AgendaComplementariaEscenicas,
+        'disenio': utils.templates.AgendaComplementariaDisenio
+      };
+
+      var template = mapTemplate[sector];
+      if(template){
+        this.$el.find('.agenda-plus').html(template());
+      }else{
+        this.$el.find('.agenda-plus').html('');
+      }
+    },
+
     collectionEvents: {
       'change': 'onChangeCollection'
     },
+
     onChangeCollection: function(e){
       if(this.collection.length > 0){
         var tmp = this.collection.at(0);
         this.owner = tmp.get(this.rol);
         this.renderOwner();
         this.renderConfirmation();
+        this.renderAgendaPlus();
       }
     }
   });
