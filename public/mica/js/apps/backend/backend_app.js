@@ -6,8 +6,8 @@ DocManager.module("BackendApp", function(BackendApp, DocManager, Backbone, Mario
       "showcase/anotados": "listShowcase",
       "ranking/mica": "browseRanking",
       "agenda": "agenda",
-      "agenda/:idSuscription/:rol": "agendaSuscriptor",
-      "agenda/:idSuscription/:rol/publica": "agendaSuscriptorPublica",
+      "agenda/:idSuscription/:rol/admin": "agendaSuscriptor",
+      "agenda/:idSuscription/:rol": "agendaSuscriptorPublica",
       "agenda/estadisticas": 'statistics',
       "perfil/:idSuscription":  "profileShow",
       "herramientas": 'showTools'

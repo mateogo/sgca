@@ -1,2 +1,8 @@
-/node_modules/
-/.project
+node_modules/
+/.idea
+tests/
+utils/
+public/files/
+Procfile
+.gitignore
+.DS_Store
