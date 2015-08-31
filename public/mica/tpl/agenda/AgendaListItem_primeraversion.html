@@ -1,0 +1,22 @@
+
+
+  <div class="row">
+      <div class="col-xs-1" style="width:50px">
+          #<%=num_reunion%>
+
+      </div>
+      <div class="col-xs-11" style="position:relative">
+          <%=getContraparte() %>
+
+          <% if(typeof(fecha) !== 'undefined'){ %>
+            <span class="event-day"><%=fecha.event_day%></span>
+            <span class="event-time"><%=fecha.event_time%></span>
+          <% } %>
+
+          <div style="position:absolute;right:0;top:0">
+          <% _.each(getActions(),function(action){ %>
+                <button class="btn btn-xs btn-primary js-runaction" data-name="<%=action.name%>" style="cursor:pointer"><%=action.label%></button>
+          <%  }) %>
+          </div>
+      </div>
+  </div>
