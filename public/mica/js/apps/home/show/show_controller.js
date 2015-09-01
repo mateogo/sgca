@@ -12,7 +12,6 @@ DocManager.module("HomeApp.Show", function(Show, DocManager, Backbone, Marionett
 	        fetchingMicaRequest = DocManager.request("micarqst:fetchby:user", user, "mica");
 	        $.when(fetchingMicaRequest).done(function(micarqst){
 	        	launchDashboard(micarqst, dao.gestionUser.hasPermissionTo('mica:manager', 'mica', {} ) );
-						console.log('MICA RQST',micarqst);
 	        });
 
 
