@@ -558,6 +558,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         subsector:     {type: 'Select',  title: 'SubSector',  options: tdata.subSectorOL.aescenicas },
         nivel_ejecucion: {type: 'Select',  title: 'Aprobación',  options: tdata.nivel_ejecucionOL },
         estado_alta:   {type: 'Select',  title: 'Estado',  options: tdata.estado_altaOL },
+        confirmado:   {type: 'Select',  title: 'Confirmación',  options: tdata.estado_confirmado },
     },
 
 
@@ -1582,7 +1583,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
           defer = $.Deferred();
 
       query.mesa = mesa;
- 
+
       entities.fetch({
         data: query,
         success: function(data){

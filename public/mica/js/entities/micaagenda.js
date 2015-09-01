@@ -142,7 +142,7 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       cactividades:   {type: 'Select',  title: 'Sector Comprador',  options: tdata.sectorOL },
       vactividades:   {type: 'Select',  title: 'Sector Vendedor',  options: tdata.sectorOL },
       estado:   {type: 'Select',  title: 'Estado',  options: tdata.estado_reunion },
-      confirmado:   {type: 'Select',  title: 'Confirmado',  options: tdata.estado_confirmado },
+      confirmado:   {type: 'Select',  title: 'Confirmación',  options: tdata.estado_confirmado },
     }
   });
 

@@ -71,7 +71,7 @@ var fetchserial = function(serie){
             });
         }else{
             addSerial(serie,item);
-        }  
+        }
     });
 };
 
@@ -91,7 +91,7 @@ var initSerial = function(serie){
 };
 
 var updateSerialCollection = function(serial){
-    var collection = dbi.collection(serialCol);    
+    var collection = dbi.collection(serialCol);
     collection.update( {'_id':serial._id}, serial,{w:1},function(err,result){});
 };
 
@@ -173,7 +173,7 @@ exports.findOne = function(req, res) {
             res.send(items[0]);
         });
     });
- 
+
 };
 
 exports.fetchById = function(id, cb) {
@@ -196,7 +196,7 @@ exports.findById = function(req, res) {
 
 
 exports.findByQuery = function(req, res) {
-    var query = buildQuery(req.query); 
+    var query = buildQuery(req.query);
     var resultset;
     var itemcount = 0;
     var page = parseInt(req.query.page);
@@ -334,7 +334,7 @@ var buildUpdateData = function(data){
 // SUSCRIPTION QUERY
 var buildQuery = function(qr){
     var query = {},
-        prov = [], 
+        prov = [],
         subc = {},
         subv = {},
         tmp = {},
@@ -379,11 +379,11 @@ var buildQuery = function(qr){
         conditions.push(token);
     }
 
- 
+
     if(qr.provincia && qr.provincia !== 'no_definido') conditions.push({'solicitante.eprov': qr.provincia});
 
     if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
-    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
+    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){
         conditions.push({estado_alta: qr.estado_alta});
     }else{
         conditions.push({estado_alta: 'activo'});
@@ -455,7 +455,7 @@ exports.delete = function(req, res) {
 // BUILD QUERY
 var buildRankingQuery = function(qr){
     var query = {},
-        prov = [], 
+        prov = [],
         subc = {},
         subv = {},
         tmp = {},
@@ -470,7 +470,7 @@ var buildRankingQuery = function(qr){
             return BSON.ObjectID(item);
         });
         query['profileid'] = {$in: lk};
-        return query;        
+        return query;
     }
     // ========= OjO =================
 
@@ -481,7 +481,7 @@ var buildRankingQuery = function(qr){
             conditions.push({'isvendedor': true});
         }
     }
-    
+
     if(qr.sector && qr.sector !== 'no_definido'){
         if(qr.rolePlaying === 'comprador'){
             conditions.push({'cactividades': qr.sector});
@@ -511,7 +511,7 @@ var buildRankingQuery = function(qr){
 
 
     if(qr.nivel_ejecucion && qr.nivel_ejecucion !== 'no_definido') conditions.push({nivel_ejecucion: qr.nivel_ejecucion});
-    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){ 
+    if(qr.estado_alta && qr.estado_alta !== 'no_definido'){
         conditions.push({estado_alta: qr.estado_alta});
     }else{
         conditions.push({estado_alta: 'activo'});
@@ -520,16 +520,21 @@ var buildRankingQuery = function(qr){
     if(qr.cnumber) conditions.push({cnumber: qr.cnumber});
     //console.log('micainteractions#376');
     //console.dir(conditions);
+    //
+
+    if(qr.confirmado && qr.confirmado !== 'no_definido'){
+      //OPS! en ranking no esta el confirmado
+    }
 
 
-    query['$and'] = conditions;
+    query.$and = conditions;
 
     return query;
 };
 
 
 exports.findRankingByQuery = function(req, res) {
-    var query = buildRankingQuery(req.query); 
+    var query = buildRankingQuery(req.query);
     var resultset;
     var itemcount = 0;
     var page = parseInt(req.query.page);
@@ -575,7 +580,7 @@ exports.findRankingByQuery = function(req, res) {
 // BUILD QUERY
 var buildLinkedProfilesQuery = function(qr){
     var query = {},
-        prov = [], 
+        prov = [],
         subc = {},
         subv = {},
         tmp = {},
@@ -592,7 +597,7 @@ var buildLinkedProfilesQuery = function(qr){
 
 
 exports.findLinkedProfiles = function(req, res) {
-    var query = buildLinkedProfilesQuery(req.query); 
+    var query = buildLinkedProfilesQuery(req.query);
     var resultset;
     var itemcount = 0;
     var page = parseInt(req.query.page);
@@ -602,7 +607,7 @@ exports.findLinkedProfiles = function(req, res) {
     //req.query.textsearch = 'altersoft';
     /////
     var textsearch = initTextSearch(req.query);
-    if(!query){ 
+    if(!query){
         res.send([{total_entries: 0}, {}]);
         return;
     }
@@ -931,7 +936,7 @@ var insertProfile = function(collection, profile){
         //         console.log('ERROR INSERTING save profiles:[%s]', err);
         //     } else {
         //     }
-        // });        
+        // });
 
 };
 
@@ -962,7 +967,7 @@ var addReceptorToList = function(profile, interaction){
         meeting_id:              (interaction.meeting_id || 0),
         meeting_number:          (interaction.meeting_number || 0),
         meeting_estado:          (interaction.meeting_estado || 'no_definido'),
- 
+
     };
     profile.receptorlist.push(token);
 };
@@ -975,11 +980,11 @@ var addEmisorToList = function(profile, interaction){
         emisor_displayName:     interaction.emisor_displayName,
         emisor_slug:            interaction.emisor_slug,
         emisor_nivel_interes:   interaction.emisor_nivel_interes,
- 
+
         receptor_rol:           interaction.receptor_rol,
         receptor_slug:          interaction.receptor_slug,
         receptor_nivel_interes: interaction.receptor_nivel_interes,
- 
+
         meeting_id:             (interaction.meeting_id || 0),
         meeting_number:         (interaction.meeting_number || 0),
         meeting_estado:         (interaction.meeting_estado || 'no_definido'),
@@ -1030,7 +1035,7 @@ var filterProfiles = function(profiles){
 };
 
 var normalizeProfiles = function(profiles){
-    var normalized, 
+    var normalized,
         profile;
 
     profiles = filterProfiles(profiles);
@@ -1054,13 +1059,13 @@ var normalizeProfiles = function(profiles){
             vsubact: item.vendedor['sub_' + item.vendedor.vactividades] || {},
             vporfolios: item.vendedor.vporfolios.length,
             vexperienciaintl: item.vendedor.vexperienciaintl,
-            
+
             iscomprador: (item.comprador.rolePlaying.comprador && (item.nivel_ejecucion === 'comprador_aceptado')),
             cactividades: item.comprador.cactividades,
             csubact: item.comprador['sub_' + item.comprador.cactividades] || {},
             cporfolios: item.comprador.cporfolios.length,
             cexperienciaintl: item.comprador.cexperienciaintl,
-            
+
             nivel_ejecucion: item.nivel_ejecucion,
             estado_alta: item.estado_alta,
             estado_rondas: item.estado_rondas || 'activo',
@@ -1101,7 +1106,3 @@ var isVendedor = function(item){
 var isComprador = function(item){
     return (item.comprador.rolePlaying.comprador && (item.nivel_ejecucion === 'comprador_aceptado') && (item.estado_alta === 'activo'));
 };
-
-
-
-
