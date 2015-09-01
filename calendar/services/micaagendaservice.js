@@ -940,7 +940,9 @@ MicaAgendaService.prototype._populateDataToExcel = function(request,data){
     var rowData = [];
     _.each(request.heading,function(metaField){
       if(metaField.field === 'time'){
-        rowData.push(self.getFechaReunion(raw.num_reunion));
+        var date = self.getFechaReunion(raw.num_reunion);
+        var dateStr = date.getDate() + '/'+(date.getMonth()+1) + '/'+ date.getFullYear()+ ' '+ date.getHours() +':'+date.getMinutes();
+        rowData.push(dateStr);
       }else if(metaField.field === 'place'){
         var str = '';
         if('place' in raw){
