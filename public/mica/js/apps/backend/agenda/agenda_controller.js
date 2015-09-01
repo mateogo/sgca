@@ -247,6 +247,10 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
         $btnTools.css('margin-left','5px');
         $btnTools.insertAfter($btnStats);
 
+        $btnExport = $('<button></button>',{class:'btn btn-default btn-sm btn-success',html:'<i class="glyphicon glyphicon-arrow-down"></i> Exportar a Excel'});
+        $btnExport.css('margin-left','5px');
+        $btnExport.insertAfter($btnTools);
+
 
         $btnStats.on('click',function(e){
           $btnStats.unbind('click');
@@ -258,6 +262,10 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
           $btnStats.unbind('click');
           $btnTools.unbind('click');
           DocManager.trigger('toolsmica:show');
+        });
+
+        $btnExport.on('click',function(e){
+          AgendaMica.Controller.startProcessExport();
         });
       });
     });

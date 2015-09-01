@@ -354,6 +354,21 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       return p;
     },
 
+    runExport: function(name,params){
+      var data = {
+        name: name,
+        params:params
+      };
+      var p = $.ajax({
+          type: 'post',
+          url: '/micaagenda-export',
+          data: data,
+          dataType: 'json'
+      });
+
+      return p;
+    },
+
 
     /**
      * retorna la fecha y la hora
@@ -423,6 +438,10 @@ DocManager.module('Entities', function(Entities, DocManager, Backbone, Marionett
       p.done(callback);
     }
     return p;
+  });
+
+  DocManager.reqres.setHandler('micaagenda:export:step', function(stepname,params){
+    return API.runExport(stepname,params);
   });
 
 });

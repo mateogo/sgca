@@ -231,7 +231,7 @@ var excelHeadings = function(headings){
     var labels = [];
     _.each(headings, function(token){
         labels.push(token.label);
-    })
+    });
     return labels;
 };
 
@@ -414,6 +414,20 @@ exports.dateToStr = function(date) {
     var mo = (prefix+(date.getMonth()+1)).substr(-prefix.length);
     var ye = date.getFullYear();
     return da+"/"+mo+"/"+ye;
+};
+
+exports.getDeepValue = function(obj, path) {
+  var parts = path.split('.'),
+        rv,
+        index;
+
+    for (rv = obj, index = 0; rv && index < parts.length; ++index) {
+        if(!(parts[index] in rv)){
+          return '';
+        }
+        rv = rv[parts[index]];
+    }
+    return rv;
 };
 
 var parseDateStr = function(str) {

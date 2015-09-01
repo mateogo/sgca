@@ -9,10 +9,15 @@
 
 var async = require('async');
 var _ = require('underscore');
+var path = require('path');
+var fs = require('fs');
+var archiver = require('archiver');
 
 var root = '../';
 
 var AppError = require(root + '../core/apperror.js');
+var utils = require(root + '../core/util/utils.js');
+var config = require(root + '../core/config/config.js');
 
 var BaseModel = require(root + 'models/basemodel.js');
 var MicaAgenda = require(root + 'models/micaagenda.js').getModel();
@@ -23,6 +28,7 @@ var  COUNT_REUNIONES = 36;
 
 var MicaAgendaService = function(userLogged){
   this.userLogged = userLogged;
+  this.mapfecha_reunion = {};
 };
 
 //TODO:
@@ -774,6 +780,181 @@ MicaAgendaService.prototype.getFechaReunion = function(number){
   }
   return this.mapfecha_reunion[key];
 };
+
+
+
+/**
+ * construye los excel para exportar
+ * @param  {Function} cb [description]
+ * @return {[type]}      [description]
+ */
+MicaAgendaService.prototype.buildExcelExport = function(cb){
+
+  this.buildVendedoresExcel('aescenicas',cb);
+  //return this.buildCompradoresExcel(cb);
+};
+
+MicaAgendaService.prototype.getExporterFiles = function(cb){
+  cb(null,MicaAgendaService.exporterMan.files);
+};
+
+MicaAgendaService.prototype.getZipExporter = function(cb){
+  var publicPath= "/files/micaagenda-excel.zip";
+  var fullpath = config.development.root + '/public'+publicPath;
+
+  path.exists(fullpath,function(exists){
+    if(exists){
+      cb(null,{file:publicPath});
+    }else{
+      cb(null,{file:null});
+    }
+  });
+};
+
+MicaAgendaService.prototype.clearExport = function(cb){
+  MicaAgendaService.exporterMan.clear();
+  cb(null,{});
+};
+
+MicaAgendaService.prototype.buildZip = function(cb){
+  var files = MicaAgendaService.exporterMan.files;
+
+  // creating archives
+   var archive = archiver.create('zip');
+
+   _.each(files,function(file){
+     // add local file
+     try{
+       var pathFile = config.development.root + '/public'+file;
+       archive.file(pathFile, { name: path.basename(pathFile)});
+     }catch(e){
+       console.warn(e);
+     }
+   });
+
+   var output = fs.createWriteStream(config.development.root + "/public/files/micaagenda-excel.zip");
+   archive.pipe(output);
+
+   // or write everything to disk
+   archive.finalize();
+
+  output.on('close', function() {
+    cb(null,{file:'/files/micaagenda-excel.zip'});
+  });
+
+};
+
+
+MicaAgendaService.prototype.buildCompradoresExcel = function(cb){
+  var query = {'estado':'asignado'};
+  var sort = {'comprador.cnumber':1,'num_reunion':1};
+  var self = this;
+
+  MicaAgenda.find(query,sort,function(err,result){
+    if(err) return cb(err);
+
+    var request = {
+      name: 'compradores',
+      data: [],
+      heading: [ {label:'Número Inscripción',itemType:'Text',field:'comprador.cnumber'},
+                 {label:'Sector',itemType:'Text',field:'comprador.actividades'},
+                 {label:'Emprendimiento',itemType:'Text',field:'comprador.solicitante.edisplayName'},
+                 {label:'Representante',itemType:'Text',field:'comprador.responsable.rname'},
+                 {label:'Email',itemType:'Text',field:'comprador.responsable.rmail'},
+                 {label:'#Reunión',itemType:'Number',field:'num_reunion'},
+                 {label:'Fecha/Hora',itemType:'Text',field:'time'},
+                 {label:'Sala/Mesa',itemType:'Text',field:'place'},
+                 {label:'Con Vendedor (Núm. Inscripción)',itemType:'Text',field:'vendedor.cnumber'},
+                 {label:'Con Vendedor Emprendimiento',itemType:'Text',field:'vendedor.solicitante.edisplayName'},
+                ]
+    };
+    //Preparar datos
+    self._populateDataToExcel(request,result);
+
+    //construir excel
+    utils.excelBuilder(request,config.development.root,function(result){
+      if(result.error === 'save concretado'){
+        MicaAgendaService.exporterMan.addFile(result.file);
+        cb(null,result.file);
+      }else{
+        cb('No se pudo generar');
+      }
+    });
+
+  });
+};
+
+MicaAgendaService.prototype.buildVendedoresExcel = function(sector,cb){
+  var query = {'estado':'asignado','vendedor.actividades':sector};
+  var sort = {'vendedor.cnumber':1,'num_reunion':1};
+  var self = this;
+
+  MicaAgenda.find(query,sort,function(err,result){
+    if(err) return cb(err);
+
+    var request = {
+      name: 'vendedores_'+sector,
+      data: [],
+      heading: [ {label:'Número Inscripción',itemType:'Text',field:'vendedor.cnumber'},
+                 {label:'Sector',itemType:'Text',field:'vendedor.actividades'},
+                 {label:'Emprendimiento',itemType:'Text',field:'vendedor.solicitante.edisplayName'},
+                 {label:'Representante',itemType:'Text',field:'vendedor.responsable.rname'},
+                 {label:'Email',itemType:'Text',field:'vendedor.responsable.rmail'},
+                 {label:'#Reunión',itemType:'Number',field:'num_reunion'},
+                 {label:'Fecha/Hora',itemType:'Text',field:'time'},
+                 {label:'Sala/Mesa',itemType:'Text',field:'place'},
+                 {label:'Comprador (Núm. Inscripción)',itemType:'Text',field:'comprador.cnumber'},
+                 {label:'Comprador Emprendimiento',itemType:'Text',field:'comprador.solicitante.edisplayName'},
+                ]
+    };
+    //Preparar datos
+    self._populateDataToExcel(request,result);
+
+    //construir excel
+    utils.excelBuilder(request,config.development.root,function(result){
+      if(result.error === 'save concretado'){
+        MicaAgendaService.exporterMan.addFile(result.file);
+        cb(null,result.file);
+      }else{
+        cb('No se pudo generar');
+      }
+    });
+
+  });
+};
+
+MicaAgendaService.exporterMan = {
+  files: [],
+  clear: function(){
+    this.files = [];
+  },
+  addFile: function(fileRelativePath){
+    this.files.push(fileRelativePath);
+  }
+},
+
+MicaAgendaService.prototype._populateDataToExcel = function(request,data){
+  var self = this;
+  _.each(data,function(row){
+    var raw = row.toJSON();
+    var rowData = [];
+    _.each(request.heading,function(metaField){
+      if(metaField.field === 'time'){
+        rowData.push(self.getFechaReunion(raw.num_reunion));
+      }else if(metaField.field === 'place'){
+        var str = '';
+        if('place' in raw){
+          str = raw.place.sala + '-'+ raw.place.mesa;
+        }
+        rowData.push(str);
+      }else{
+        rowData.push(utils.getDeepValue(raw,metaField.field));
+      }
+    });
+    request.data.push(rowData);
+  });
+};
+
 
 /**
  * Busca numero de reuniones libres de cada uno,

@@ -850,6 +850,25 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     }
   });
 
+  AgendaMica.ExportProcessView = Marionette.ItemView.extend({
+    template: _.template('<h4> <i class="fa fa-spin fa-circle-o-notch"></i> <span class="label-container"></span></h4> <div class="progress"> '+
+                          '  <div class="progress-bar" role="progressbar" aria-valuenow="0 aria-valuemin="0" aria-valuemax="100" style="width: 0%;"> '+
+                          '  </div>'+
+                          '</div>'),
+    setLabel: function(str){
+      this.$el.find('.label-container').first().html(str);
+      return this;
+    },
+    setProgress: function(numb){
+      this.$el.find('.progress-bar').css('width',numb+'%');
+      return this;
+    },
+    setBody: function(html){
+      this.$el.html(html);
+      return this;
+    }
+  });
+
   AgendaMica.showMettingUnavailable = function(rol,reunion){
     var view = new AgendaMica.MeetingUnavailableView({rol:rol,model:reunion});
 
@@ -926,6 +945,8 @@ DocManager.module('BackendApp.AgendaMica',function(AgendaMica, DocManager, Backb
     });
     return modal;
   };
+
+
 
   /**
    *  Es un suscriptor serializado para micaagenda

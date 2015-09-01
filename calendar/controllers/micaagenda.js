@@ -245,6 +245,33 @@ var ctrls = {
 
         res.json(results);
       });
+    },
+
+    runAction: function(req,res){
+      var action = req.body;
+
+      if(!action.name){
+        return res.status(400).send('');
+      }
+
+      var service = new MicaAgendaService(req.user);
+      var method;
+      if(action.name in service){
+        method = service[action.name];
+      }
+
+      if(!method){
+        return res.status(400).send('');
+      }
+
+      var params = action.params || [];
+
+      params.push(function(err,results){
+        if(err) return res.status(409).send(err);
+
+        res.json(results);
+      });
+      method.apply(service,params);
     }
 
 };
@@ -317,6 +344,8 @@ module.exports.configRoutes = function(app){
   app.patch('/micaagenda/:id',[ensureAuthenticated,isAdminMica,ctrls.savePartial]);
 
   app.delete('/micaagenda/:id',[ensureAuthenticated,isAdminMica,ctrls.remove]);
+
+  app.post('/micaagenda-export',[ensureAuthenticated,isAdminMica,ctrls.runAction]);
 };
 
 // dummy para hacerlo compatible con config
