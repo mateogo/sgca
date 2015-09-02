@@ -354,11 +354,28 @@ var buildQuery = function(qr){
             if(qr.nivel_ejecucion === 'no_definido')
                 conditions.push({$and: [{'comprador.rolePlaying.comprador': true}, {nivel_ejecucion: 'comprador_aceptado'}] } );
             else
-                conditions.push({'comprador.rolePlaying.comprador': true} );
+                conditions.push({'comprador.rolePlaying.comprador': true});
+            if(qr.agenda !== 'no_definido'){
+                if(qr.agenda === 'si'){
+                    conditions.push({'comprador.confirma_asistencia': true});
+                }
+                if(qr.agenda === 'no'){
+                    conditions.push({'comprador.confirma_asistencia': false});
+                }
+            }
         }else{
             conditions.push({'vendedor.rolePlaying.vendedor': true});
+            if(qr.agenda !== 'no_definido'){
+                if(qr.agenda === 'si'){
+                    conditions.push({'vendedor.confirma_asistencia': true});
+                }
+                if(qr.agenda === 'no'){
+                    conditions.push({'vendedor.confirma_asistencia': false});
+                }
+            }
         }
     }
+
     if(qr.sector && qr.sector !== 'no_definido'){
         conditions.push({'$or': [{'comprador.cactividades': qr.sector}, {'vendedor.vactividades': qr.sector}] });
 

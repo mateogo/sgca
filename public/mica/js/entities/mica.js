@@ -558,9 +558,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         subsector:     {type: 'Select',  title: 'SubSector',  options: tdata.subSectorOL.aescenicas },
         nivel_ejecucion: {type: 'Select',  title: 'Aprobación',  options: tdata.nivel_ejecucionOL },
         estado_alta:   {type: 'Select',  title: 'Estado',  options: tdata.estado_altaOL },
-        confirmado:   {type: 'Select',  title: 'Confirmación',  options: tdata.estado_confirmado },
-    },
+        confirmado:    {type: 'Select',  title: 'Asistencia confirmada',  options: tdata.estado_confirmado },
+        agenda:        {type: 'Select',  title: 'Asistencia a rondas confirmada',  options: tdata.estado_agenda },
 
+    },
 
     defaults: {
       rolePlaying: 'no_definido',
@@ -577,6 +578,8 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       emisor: 0,
       receptor: 0,
       userid: '',
+      agenda: 'no_definido',
+      confirmado: 'no_definido',
 
     },
   });

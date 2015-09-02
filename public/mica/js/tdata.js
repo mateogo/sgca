@@ -529,8 +529,14 @@ window.tdata = {
 
     estado_confirmado: [
       {val:'no_definido', label:'Seleccione'},
-      {val:'asiste',  label:'Asiste',  classattr:'info'},
+      {val:'asiste',  label:'Asiste al ',  classattr:'info'},
       {val:'noasiste',       label:'No Asiste',         classattr:'info'}
+    ],
+
+    estado_agenda: [
+      {val:'no_definido', label:'Seleccione estado agenda'},
+      {val:'si',       label:'Confirmó Agenda',    classattr:'info'},
+      {val:'no',       label:'Rechazó Agenda',     classattr:'info'}
     ],
 
     salasrondas:[
