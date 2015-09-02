@@ -73,19 +73,19 @@ MicaSuscriptionService.prototype.estadisticaConfirmacion = function(cb){
         });
       },
       function(cb){
-        MicaSuscription.count({'comprador.confirma_asistencia':true,'cnumber':{$in:vendedores}},function(err,result){
+        MicaSuscription.count({'vendedor.confirma_asistencia':true,'cnumber':{$in:vendedores}},function(err,result){
           statics.vendedores.asistiran = result;
           cb();
         });
       },
       function(cb){
-        MicaSuscription.count({'comprador.confirma_asistencia':false,'cnumber':{$in:vendedores}},function(err,result){
+        MicaSuscription.count({'vendedor.confirma_asistencia':false,'cnumber':{$in:vendedores}},function(err,result){
           statics.vendedores.no_asistiran = result;
           cb();
         });
       },
       function(cb){
-        MicaSuscription.count({'comprador.confirma_asistencia':{$exists:false},'cnumber':{$in:vendedores}},function(err,result){
+        MicaSuscription.count({'vendedor.confirma_asistencia':{$exists:false},'cnumber':{$in:vendedores}},function(err,result){
           statics.vendedores.no_contestaron = result;
           cb();
         });
