@@ -42,7 +42,10 @@ var MicaSuscription = BaseModel.extend({
   }
 },{
   entityCol: entityCol,
-  defaultSort: {cnumber:1}
+  defaultSort: {cnumber:1},
+  statisticConfirma: function(cb){
+    
+  }
 });
 
 

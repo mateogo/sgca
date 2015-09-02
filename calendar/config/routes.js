@@ -171,6 +171,7 @@ module.exports = function (config, app) {
     app.post('/micasuscriptions',            micasuscriptions.add);
     app.put ('/micasuscriptions/:id',        micasuscriptions.update);
     app.delete('/micasuscriptions/:id',      micasuscriptions.delete);
+    app.get('/confirmaciones-estadistica',      micasuscriptions.estaditicaConfirmacion);
 
 
     // micainteractions - ronda entre participantes MICA- routes

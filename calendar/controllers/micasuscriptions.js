@@ -439,6 +439,15 @@ var buildAreaList = function(areas){
     });
 };
 
+exports.estaditicaConfirmacion = function(req, res) {
+  var service = new MicaSuscriptionService();
+  service.estadisticaConfirmacion(function(err,result){
+    if(err) return res.status(409).send(err);
+
+    res.json(result);
+  });
+};
+
 
 exports.partialupdate = function(req, res) {
     if (req){

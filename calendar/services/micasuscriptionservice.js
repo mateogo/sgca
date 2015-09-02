@@ -4,11 +4,97 @@ var _ = require('underscore');
 var root = '../';
 
 var AppError = require(root + '../core/apperror.js');
+var BaseModel = require(root + 'models/basemodel.js');
 var MicaAgenda = require(root + 'models/micaagenda.js').getModel();
 var MicaSuscription = require(root + 'models/micasuscription.js').getModel();
 
 var MicaSuscriptionService = function(userLogged){
   this.userLogged = userLogged;
+};
+
+
+MicaSuscriptionService.prototype.estadisticaConfirmacion = function(cb){
+  // buscar todos los compradores que tiene al menos una reunion
+  // ver de esos quien confirmaron asistencia, confirmaron no asistencia, y no respondieron
+  // lo mismo para los vendedores
+
+  var statics = {
+    compradores : {
+      asistiran: 0,
+      no_asistiran: 0,
+      no_contestaron: 0
+    },
+    vendedores: {
+      asistiran: 0,
+      no_asistiran: 0,
+      no_contestaron: 0
+    }
+  };
+
+  var compradores;
+  var vendedores;
+
+  async.series([
+      // busca compradores que tengan alguna reunion
+      function(cb){
+        BaseModel.dbi.collection(MicaAgenda.entityCol, function(err, collection) {
+          collection.distinct('comprador.cnumber',{'estado':'asignado'},function(err,results){
+            compradores = results;
+            cb();
+          });
+        });
+      },
+      function(cb){
+        MicaSuscription.count({'comprador.confirma_asistencia':true,'cnumber':{$in:compradores}},function(err,result){
+          statics.compradores.asistiran = result;
+          cb();
+        });
+      },
+      function(cb){
+        MicaSuscription.count({'comprador.confirma_asistencia':false,'cnumber':{$in:compradores}},function(err,result){
+          statics.compradores.no_asistiran = result;
+          cb();
+        });
+      },
+      function(cb){
+        MicaSuscription.count({'comprador.confirma_asistencia':{$exists:false},'cnumber':{$in:compradores}},function(err,result){
+          statics.compradores.no_contestaron = result;
+          cb();
+        });
+      },
+
+      // busca vendedores que tengan alguna reunion
+      function(cb){
+        BaseModel.dbi.collection(MicaAgenda.entityCol, function(err, collection) {
+          collection.distinct('vendedor.cnumber',{'estado':'asignado'},function(err,results){
+            vendedores = results;
+            cb();
+          });
+        });
+      },
+      function(cb){
+        MicaSuscription.count({'comprador.confirma_asistencia':true,'cnumber':{$in:vendedores}},function(err,result){
+          statics.vendedores.asistiran = result;
+          cb();
+        });
+      },
+      function(cb){
+        MicaSuscription.count({'comprador.confirma_asistencia':false,'cnumber':{$in:vendedores}},function(err,result){
+          statics.vendedores.no_asistiran = result;
+          cb();
+        });
+      },
+      function(cb){
+        MicaSuscription.count({'comprador.confirma_asistencia':{$exists:false},'cnumber':{$in:vendedores}},function(err,result){
+          statics.vendedores.no_contestaron = result;
+          cb();
+        });
+      },
+  ],function(err,result){
+    if(err) return cb(err);
+
+    cb(null,statics);
+  });
 };
 
 /**
