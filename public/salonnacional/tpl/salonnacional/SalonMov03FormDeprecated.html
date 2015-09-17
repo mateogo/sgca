@@ -1,0 +1,45 @@
+<div id="itinerario-form">
+
+<div class="row">
+  <div class="col-sm-6 col-xs-12 form-group">
+    <label class="control-label" for="qpax">Cantidad de Pasajeros</label>
+    <div class="input-group">
+      <input type="text" id="qpax" class="form-control" placeholder="Pasajeros requeridos" name="qpax" value='<%= qpax %>'/>
+      <div class="input-group-addon">
+        <div title="<strong>CANTIDAD MÁXIMA DE PASAJES</strong><br><strong>MOVILIDAD MICA 2015</strong><br>Distancia min. 250km: 2 pasajeros<hr><strong>MOVILIDAD DENTRO DEL PAÍS / AL EXTERIOR</strong><br><strong>Participación en ferias y mercados:</strong><br>Dentro del país: 2 pasajeros<br>Exterior: 2 pasajeros<br><strong>Participación en festivales, encuentros y residencias, ó<br>Ayudas a giras artísticas y culturales: </strong><br>Dentro del país: 10 pasajeros<br>Exterior: 6 pasajeros" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+    </div>
+    <span class="help-block"></span>
+  </div>
+  <div class="col-sm-6 col-xs-12 form-group">
+    <label class="control-label" for="qpaxmin">Cantidad Mínima de Pasajeros</label>
+    <div class="input-group">
+      <input type="text" id="qpaxmin" class="form-control" placeholder="Pasajeros mínimos" name="qpaxmin" value='<%= qpaxmin %>'/>
+      <div class="input-group-addon">
+        <div title="Cantidad mínima de pasajeros ayudados para la ejecución del proyecto" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+    </div>
+    <span class="help-block"></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12 col-xs-12 form-group">
+    <label class="control-label" for="description">Descripción ejecutiva. Fecha e itinerario previsto</label>
+    <div class="input-group">
+      <input type="text" id="description" class="form-control" placeholder="Fecha tentativa de salida, destino." name="description" value='<%= description %>'/>
+      <div class="input-group-addon">
+        <div title="Síntesis ejecutiva de fechas y lugares a recorrer, que luego detalla en la sección 'Tramos'." rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+    </div>
+    <span class="help-block"></span>
+  </div>
+</div>
+
+</div>

@@ -1,0 +1,56 @@
+<div class="nav notify-row" id="top_menu">
+      <!--  notification start -->
+      <ul class="nav top-menu">
+        <li id="header_notification_bar" class="dropdown">
+              <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+
+                  <i class="fa fa-bell-o"></i>
+                  <!--<span class="badge bg-warning">1</span>-->
+              </a>
+              <ul class="dropdown-menu extended notification">
+                  <li>
+                      <p>No tiene nuevas notificaciones</p>
+                  </li>
+                  <!--<li>
+                      <div class="alert alert-info clearfix">
+                          <span class="alert-icon"><i class="fa fa-info"></i></span>
+                          <div class="noti-info">
+                              Desde el 20 de Julio podrás acceder a solicitar Rondas de Negocios
+                          </div>
+                      </div>
+                  </li>-->
+
+              </ul>
+          </li>
+          <!-- notification dropdown end -->
+      </ul>
+      <!--  notification end -->
+  </div>
+  <div class="top-nav clearfix">
+      <!--search & user info start-->
+      <ul class="nav pull-right top-menu">
+          <!--<li>
+              <input type="text" class="form-control search" placeholder=" Buscar">
+          </li>-->
+          <!-- user login dropdown start-->
+          <li class="dropdown">
+              <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                  <img alt="" src="../mica/images/avatar1_small.jpg">
+                  <span class="username"><%= displayName%></span>
+                  <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu extended logout">
+                  <li><a href="#perfil"><i class=" fa fa-suitcase"></i>Mi perfil</a></li>
+                  <!--<li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>-->
+                  <li><a href="/logout/ingresar/#fondo"><i class="fa fa-key"></i> Salir</a></li>
+              </ul>
+          </li>
+          <!-- user login dropdown end -->
+          <!--<li>
+              <div class="toggle-right-box">
+                  <div class="fa fa-bars"></div>
+              </div>
+          </li>-->
+      </ul>
+      <!--search & user info end-->
+  </div>

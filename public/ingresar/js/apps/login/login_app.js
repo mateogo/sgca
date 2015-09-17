@@ -9,6 +9,9 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 			'fondo': 'loginFondo',
 			'fondo/inscripcion/nueva': 'loginFondo',
 
+			'salonnacional': 'loginSalon',
+			'salonnacional/inscripcion/nueva': 'loginSalon',
+
 			'showcase': 'loginShowcase',
 			'showcase/nueva': 'loginShowcase',
 
@@ -41,6 +44,11 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 		loginFondo: function(){
 			//console.log('API: Login FONDO');
 			this.loginUser('fondo/#bienvenido', 'fondo');
+		},
+
+		loginSalon: function(){
+			//console.log('API: Login FONDO');
+			this.loginUser('salonnacional/#inscripcion/nueva', 'salonnacional');
 		},
 
 		loginShowcase: function(){
@@ -82,6 +90,12 @@ DocManager.module('LoginApp',function(LoginApp,DocManager,Backbonone,Marionette,
 		//console.log('Login MICA:');
 		DocManager.navigate('inscripcion/nueva');
 		API.loginMica(path);
+  });
+
+	DocManager.on('login:salon:inscripcion',function(){
+		//console.log('Login MICA:');
+		DocManager.navigate('inscripcion/nueva');
+		API.loginSalon(path);
   });
 
 	DocManager.on('login:view:user',function(username){

@@ -1,0 +1,299 @@
+<div class="row">
+  <div class="form-group required col-sm-12 radio">
+        <legend class="control-label">Forma jurídica del que suscribe</legend>
+
+        <label id="pfisica" class="radio-custom radio-inline" for="etipojuridico1">
+          <input type="radio" id="etipojuridico1" <%= etipojuridico == 'pfisica' ? 'checked="checked"' : '' %> name="etipojuridico"  value="pfisica">
+          Persona física
+        </label>
+      
+  </div>
+</div>
+
+<div class="row">  
+
+  <div class="col-sm-6 col-xs-12 form-group required">
+    <label class="control-label" for="ename">Nombre del artista</label>
+    <!-- label class="control-label en" for="ename">Business name</label -->
+    <div class="input-group">
+      <input type="text" id="ename" class="form-control" name="ename" value='<%= ename %>'/>
+      <div class="input-group-addon">
+        <div title="Datos del autor de la obra" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="form-group col-sm-6">
+      <label class="control-label" for="ecuit">CUIT/CUIL</label>
+      <div class="input-group">
+        <input type="text" id="ecuit" class="form-control" name="ecuit" value="<%= ecuit %>">
+        <div class="input-group-addon">
+          <div title="Ingrese números sin espacios ni guiones" rel="tooltip">
+            <span class="fa fa-question-circle"></span>
+          </div>
+        </div>
+    </div>
+  </div>
+<!--BEG Personería-->
+    <div class="togglejuridica">
+    <div class="form-group required col-sm-6">
+        <label class="control-label" for="efechapj">Otorgamiento de la personería jurídica (sólo personas jurídicas) </label>
+          <div class="input-group date">
+            <input type="text" class="form-control calendar-container" id="efechapj" name="efechapj" value="<%= efechapj %>"><span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+          </div>
+    </div>
+    </div><!--END Personería-->
+</div>
+
+<hr class="spacer">
+<h4>Dirección legal y datos de contacto</h4>
+
+<div class="row">
+  <div class="form-group required col-sm-4 selectContainer">
+      <label class="control-label" for="epais">País</label>
+      <select  id="epais" class="form-control" name="epais" disabled>
+           <%= tdata.buildSelectOptions('paises',tdata.paisesOL, epais) %>
+      </select>
+      <span class="help-block"></span>
+  </div>
+
+  <div class="form-group required col-sm-4 col-xs-12 selectContainer">
+      <label class="control-label" for="eprov">Provincia</label>
+      <select id="eprov" class="form-control js-provarg" name="eprov">
+           <%= tdata.buildSelectOptions('provincias',tdata.provinciasOL, eprov) %>
+      </select>
+      <label class="sr-only" for="otraprov">Ingrese el nombre de su Provincia o Estado</label>
+      <input type="text" id="otraprov" class="form-control js-provext" name="otraprov" value="<%= otraprov %>" style="display: none;">
+      <span class="help-block"></span>
+  </div>
+        
+  <div class="form-group col-sm-4 col-xs-12">
+    <label class="control-label" for="elocalidad">Localidad</label>
+    <input type="text" id="elocalidad" class="form-control" name="elocalidad" value="<%= elocalidad %>">
+  </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-sm-6 col-xs-12">
+      <label class="control-label" for="edomicilio">Domicilio</label>
+      <div class="input-group">
+        <input type="text" id="edomicilio" class="form-control" name="edomicilio" value="<%= edomicilio %>">
+        <div class="input-group-addon">
+          <div title="Calle, número, piso y departamento" rel="tooltip">
+            <span class="fa fa-question-circle"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-2">
+      <label class="control-label" for="ecp">CP</label>
+      <input type="text" id="ecp" class="form-control" name="ecp" value="<%= ecp %>">
+    </div>
+</div>
+
+<div>
+  <div class="row">
+    <div class="col-sm-6 form-group required">
+      <label class="control-label" for="email">Email</label>
+      <input type="email" id="email" class="form-control" name="email" value="<%= email %>">
+      <span class="help-block"></span>
+    </div>
+
+    <div class="col-sm-6">
+      <label class="control-label" for="eweb">Web</label>
+      <input type="text" id="eweb" class="form-control" placeholder="http://www.dominio.com.pais" name="eweb" value="<%= eweb %>">
+      <span class="help-block"></span>
+    </div>
+  </div>
+</div>
+
+
+
+<hr class="spacer">
+
+<h4>Datos del firmante (representante legal o titular)</h4>
+
+<div class="form-group required">
+  <div class="row">
+      <div class="col-sm-12">
+          <label class="control-label" for="rmail">Email del Representante</label>
+          <input type="text" id="rmail" class="form-control" placeholder="Email" disabled name="rmail" value="<%= rmail %>" >
+          <!--A completar automáticamente-->
+      </div>
+  </div>
+</div>
+
+<div>
+  <div class="row">
+    <div class="form-group required col-sm-8">
+        <label class="control-label" for="rname">Nombre y apellido del Representante</label>
+        <input type="text" id="rname" class="form-control" name="rname" value="<%= rname %>">
+    </div>
+
+    <div class="col-sm-4">
+        <label class="control-label" for="rcargo">Cargo / Función</label>
+        <input type="text" id="rcargo" class="form-control" name="rcargo" value="<%= rcargo %>">
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="row">
+    <div class="col-sm-3 form-group required">
+        <label class="control-label" for="rdocnum">DNI / Pasaporte</label>
+        <input type="text" id="rdocnum" class="form-control" placeholder="número de documento" name="rdocnum" value="<%= rdocnum %>">
+        <!--A completar automáticamente-->
+    </div>
+
+    <div class="col-sm-3">
+        <label class="control-label" for="rfenac">Fecha de nacimiento</label>
+        <input type="text" id="rfenac" class="form-control" name="rfenac" value="<%= rfenac %>" placeholder="dd/mm/aaaa">
+    </div>
+
+    <div class="col-sm-3 form-group required">
+        <label class="control-label" for="rtel">Teléfono</label>
+        <input type="text" id="rtel" class="form-control" placeholder="+54 (área) número" name="rtel" value="<%= rtel %>">
+    </div>
+
+    <div class="col-sm-3 form-group">
+        <label class="control-label" for="rcel">Teléfono móvil</label>
+        <input type="text" id="rcel" class="form-control" placeholder="+54 (área) número" name="rcel" value="<%= rcel %>">
+    </div>
+  </div>
+</div>
+
+<hr class="spacer">
+<h4>Actividad del postulante</h4>
+
+<div class="row">
+  <div class="col-sm-12 col-xs-12 form-group required">
+    <label class="control-label" for="actividadppal">Describa la actividad principal</label>
+    <div class="input-group">
+      <input type="text" id="actividadppal" class="form-control" name="actividadppal" value='<%= actividadppal %>'/>
+      <div class="input-group-addon">
+        <div title="La actividad de su grupo que justifica la solicitud de ayuda" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+    </div>
+    <span class="help-block"></span>
+  </div>
+</div>
+
+<div class="row">
+
+    <div class="form-group required col-sm-12" >
+      <legend>Disciplinas (seleccione todas los que correspondan)</legend>
+
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="chbx01">
+        <input type="checkbox" id="chbx01" class="sr-only" <%= disciplinas.musica ? 'checked="checked"' : '' %> name="disciplinas" value="musica"> <span class="checkbox-label">Música</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="chbx02">
+        <input type="checkbox" id="chbx02" class="sr-only" <%= disciplinas.letras ? 'checked="checked"' : '' %> name="disciplinas" value="letras"> <span class="checkbox-label">Letras</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="chbx04">
+        <input type="checkbox" id="chbx04" class="sr-only" <%= disciplinas.artesvisuales ? 'checked="checked"' : '' %> name="disciplinas" value="artesvisuales"> <span class="checkbox-label">Artes visuales</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="chbx05">
+        <input type="checkbox" id="chbx05" class="sr-only" <%= disciplinas.artesescenicas ? 'checked="checked"' : '' %> name="disciplinas" value="artesescenicas"> <span class="checkbox-label">Artes escénicas</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="chbx06">
+        <input type="checkbox" id="chbx06" class="sr-only" <%= disciplinas.disenio ? 'checked="checked"' : '' %> name="disciplinas" value="disenio"> <span class="checkbox-label">Diseño</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="chbx07">
+        <input type="checkbox" id="chbx07" class="sr-only" <%= disciplinas.audiovisuales ? 'checked="checked"' : '' %> name="disciplinas" value="audiovisuales"> <span class="checkbox-label">Producción audiovisual</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="chbx08">
+        <input type="checkbox" id="chbx02" class="sr-only" <%= disciplinas.videojuegos ? 'checked="checked"' : '' %> name="disciplinas" value="videojuegos"> <span class="checkbox-label">Videojuegos</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="chbx09">
+        <input type="checkbox" id="chbx08" class="sr-only" <%= disciplinas.culturadigital ? 'checked="checked"' : '' %> name="disciplinas" value="culturadigital"> <span class="checkbox-label">Cultura digital</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="chbx10">
+        <input type="checkbox" id="chbx10" class="sr-only" <%= disciplinas.gestioncultural ? 'checked="checked"' : '' %> name="disciplinas" value="gestioncultural"> <span class="checkbox-label">Gestión cultural</span>
+      </label>
+      <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="chbx11">
+        <input type="checkbox" id="chbx11" class="sr-only" <%= disciplinas.patrimonio ? 'checked="checked"' : '' %> name="disciplinas" value="patrimonio"> <span class="checkbox-label">Patrimonio</span>
+      </label>
+    </div>
+</div>
+
+<hr class="spacer">
+<h4>Participaciones anteriores</h4>
+
+<div class="form-group required">
+  <legend class="control-label">¿Participo en la convocatoria 2015 del Salon Nacional?</legend>
+
+  <label class="radio-custom radio-inline" data-initialize="radio" for="r0202">
+    <input type="radio" id="r0202" class="sr-only" data-toggle="#salon-detail" name="salon2015"   value="si"
+        <%= salon2015 == 'si' ? 'checked="checked"' : '' %> >
+     Si
+  </label>
+  <label class="radio-custom radio-inline" data-initialize="radio" for="r0201" >
+    <input type="radio" id="r0201" class="sr-only" data-toggle="#nada" name="salon2015" value="no"
+         <%= salon2015 == 'no' ? 'checked="checked"' : '' %> >
+    No
+  </label>
+
+  <div id="salon-detail">
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="ch0601">
+      <input type="checkbox" id="ch0601" class="sr-only" <%= salonanteriores.pintura ? 'checked="checked"' : '' %> name="salonanteriores" value="pintura"> 
+      <span class="checkbox-label">Pintura</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="ch0602">
+      <input type="checkbox" id="ch0602" class="sr-only" <%= salonanteriores.ceramica ? 'checked="checked"' : '' %> name="salonanteriores" value="ceramica"> 
+      <span class="checkbox-label">Cerámica</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="ch0603">
+      <input type="checkbox" id="ch0603" class="sr-only" <%= salonanteriores.fotografia ? 'checked="checked"' : '' %> name="salonanteriores" value="fotografia"> 
+      <span class="checkbox-label">Fotografía</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="ch0604">
+      <input type="checkbox" id="ch0604" class="sr-only" <%= salonanteriores.escultura ? 'checked="checked"' : '' %> name="salonanteriores" value="escultura"> 
+      <span class="checkbox-label">Escultura</span>
+    </label>
+  </div>
+</div>
+
+
+<div class="form-group required">
+  <legend class="control-label">¿Participó en algún MICA en ediciones anteriores?</legend>
+
+  <label class="radio-custom radio-inline" data-initialize="radio" for="r0401">
+    <input type="radio" id="r0401" class="sr-only" data-toggle="#mica-detail" name="mica2014" value="si"
+          <%= mica2014 == 'si' ? 'checked="checked"' : '' %> >
+     Si
+  </label>
+
+  <label class="radio-custom radio-inline" data-initialize="radio" for="r0402">
+    <input type="radio" id="r0402" class="sr-only" data-toggle="#nada" name="mica2014" value="no"
+          <%= mica2014 == 'no' ? 'checked="checked"' : '' %> >
+    No
+  </label>
+
+  <div id="mica-detail">
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="ch0401">
+      <input type="checkbox" id="ch0401" class="sr-only" <%= micaanteriores.mica ? 'checked="checked"' : '' %> name="micaanteriores" value="mica"> 
+      <span class="checkbox-label">MICA</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="ch0402">
+      <input type="checkbox" id="ch0402" class="sr-only" <%= micaanteriores.premica ? 'checked="checked"' : '' %> name="micaanteriores" value="premica"> 
+      <span class="checkbox-label">PreMICA</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="ch0403">
+      <input type="checkbox" id="ch0403" class="sr-only" <%= micaanteriores.micsur ? 'checked="checked"' : '' %> name="micaanteriores" value="micsur"> 
+      <span class="checkbox-label">MICSUR</span>
+    </label>
+    <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="ch0404">
+      <input type="checkbox" id="ch0404" class="sr-only" <%= micaanteriores.micaproduce ? 'checked="checked"' : '' %> name="micaanteriores" value="micaproduce"> 
+      <span class="checkbox-label">MICA Produce</span>
+    </label>
+  </div>
+</div>
+
+<hr class="spacer">

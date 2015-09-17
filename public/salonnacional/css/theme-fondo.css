@@ -1,0 +1,47 @@
+.navbar-brand{padding: 10px 0;}
+.splash-container h1 {
+	font-size: 50px;
+}
+/* layout.css Style */
+.upload-drop-zone {
+  height: 200px;
+  border-width: 2px;
+  margin-bottom: 20px;
+}
+
+/* skin.css Style*/
+.upload-drop-zone {
+  color: #ccc;
+  border-style: dashed;
+  border-color: #ccc;
+  line-height: 200px;
+  text-align: center
+}
+.upload-drop-zone.drop {
+  color: #222;
+  border-color: #222;
+}
+.form-group.required .control-label:after {
+  content:"*";
+  color:red;
+}
+//.comboA, .comboB, .comboC {display: none;}
+legend {
+  font-weight:bold;
+  font-size: 13px;
+  margin-bottom: 5px;
+  border-bottom: 0;
+}
+[data-toggle="buttons"] > .btn > input[type="radio"],
+[data-toggle="buttons"] > .btn > input[type="checkbox"] {
+    display:inline;
+    position:absolute;
+    left:-9999px;
+}
+.tree a {
+  font-weight: bold;
+}
+
+.checkbox-inline  {
+  margin-right: 15px;
+}

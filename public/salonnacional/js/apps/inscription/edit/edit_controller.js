@@ -1,4 +1,4 @@
-DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
+DocManager.module("SalonRequestApp.Edit", function(Edit, DocManager, Backbone, Marionette, $, _){
   
   var Entities = DocManager.module('Entities');
   
@@ -44,28 +44,28 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
         fetchingRequest,
         fetchingMicaRequest,
         fetchingAssets,
-        fondorqst,
+        salonrqst,
         query;
 
     dao.gestionUser.getUser(DocManager, function (user){
       console.log('Dao Get Current user: [%s]', user.get('username'));
       getSession().currentUser = user;
       
-      fetchingRequest = DocManager.request("fondorqst:factory:new", user, "fondo");
+      fetchingRequest = DocManager.request("salonrqst:factory:new", user, "salon");
 
       // if(id){
-      //     fetchingRequest = DocManager.request("fondorqst:entity", id);
+      //     fetchingRequest = DocManager.request("salonrqst:entity", id);
       // }else{
       // }
      
-      $.when(fetchingRequest).done(function(fondorqsts){
-        fondorqst = populateNavigationBar(fondorqsts, id, mode);
-        console.log('FondoRequestApp.Edit BEGIN [%s] [%s]', fondorqst.whoami, fondorqst.id);
+      $.when(fetchingRequest).done(function(salonrqsts){
+        salonrqst = populateNavigationBar(salonrqsts, id, mode);
+        console.log('SalonRequestApp.Edit BEGIN [%s] [%s]', salonrqst.whoami, salonrqst.id);
 
         // off the record: si tiene inscripción en mica buscamos datos default
 
         query = {
-          'es_asset_de.id': fondorqst.id
+          'es_asset_de.id': salonrqst.id
         }
         fetchingAssets = DocManager.request("assets:filtered:entities", query);
         $.when(fetchingAssets).done(function(assets){
@@ -74,23 +74,23 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
           $.when(fetchingMicaRequest).done(function(micarqst){
             //console.log('FETCHING MicaRequest [%s] [%s]', micarqst.whoami, micarqst.id);
 
-            fondorqst.initDataForEdit();
+            salonrqst.initDataForEdit();
 
-            getSession().model = fondorqst;
+            getSession().model = salonrqst;
             
-            getSession().adjuntos = DocManager.request('assets:groupby:predicate', assets, fondorqst.id);
+            getSession().adjuntos = DocManager.request('assets:groupby:predicate', assets, salonrqst.id);
             
-            initData(user, fondorqst);
+            initData(user, salonrqst);
             
             if(micarqst && micarqst.id ){
               getSession().mica = micarqst;
-              setDefaultData(user, fondorqst, micarqst);
+              setDefaultData(user, salonrqst, micarqst);
             }
-            defer.resolve(fondorqst);
+            defer.resolve(salonrqst);
 
           }); // mica
         });// asstes
-      });//fondo
+      });//salon
  
     });//user
     return defer.promise();
@@ -165,14 +165,14 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     var stepThree = new Edit.StepThreeLayout({model: session.model['stepThree']});
     registerStepThreeEvents(session, stepThree);
 
-    var stepFour = new Edit.StepFourLayout({model: session.model['stepFour']});
-    registerStepFourEvents(session, stepFour);
+    //var stepFour = new Edit.StepFourLayout({model: session.model['stepFour']});
+    // registerStepFourEvents(session, stepFour);
 
     session.views.wizardlayout = wizardlayout;
     session.views.stepOne   = stepOne;
     session.views.stepTwo   = stepTwo;
     session.views.stepThree = stepThree;
-    session.views.stepFour = stepFour;
+    //session.views.stepFour = stepFour;
 
 
     // //         this.trigger('adminrequest:cost:changed', costo_total);
@@ -182,7 +182,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     wizardlayout.getRegion('steponeRegion').show(stepOne);
     wizardlayout.getRegion('steptwoRegion').show(stepTwo);
     wizardlayout.getRegion('stepthreeRegion').show(stepThree);
-    wizardlayout.getRegion('stepfourRegion').show(stepFour);
+    //wizardlayout.getRegion('stepfourRegion').show(stepFour);
 
 
   };
@@ -192,7 +192,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     wizardlayout.on("submit:form:provisorio", function(model){
       //console.log('******** provisorio SUBMIT PROVISORIO BEGINS********[%s]', model.whoami)
       
-      getSession().model.update(session.currentUser, session.pasajeros, session.tramos, function(error, model){
+      getSession().model.update(session.currentUser, function(error, model){
         Message.success('Los datos han sido guardados en modo borrador.');
 
         enviarmail(utils.templates.MailFormGuardarProvisorio, {
@@ -203,8 +203,8 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
           slug: model.get('requerimiento').emotivation,
         });
 
-        window.open('http://fondo.cultura.gob.ar','_self');
-        //DocManager.trigger('fondorequest:edit', model)
+        window.open('http://www.cultura.gob.ar','_self');
+        //DocManager.trigger('salonrequest:edit', model)
 
       });
     });
@@ -212,7 +212,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
     wizardlayout.on("submit:form:definitivo", function(model){
       //console.log('******** definitivo SUBMIT DEFINITIVO BEGINS********[%s]', model.whoami, model.get('requerimiento').emotivation)
       getSession().model.set('nivel_ejecucion', 'submit_definitivo');
-      getSession().model.update(session.currentUser, session.pasajeros, session.tramos, function(error, model){
+      getSession().model.update(session.currentUser, function(error, model){
 
         Message.success('Grabación exitosa. Recibirás un correo electrónico de confirmación');
         enviarmail(utils.templates.MailFormSubmitNotification, {
@@ -223,8 +223,8 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
           slug: model.get('requerimiento').emotivation,
         });
 
-        window.open('http://fondo.cultura.gob.ar','_self');
-        //DocManager.trigger('fondorequest:edit', model)
+        window.open('http://www.cultura.gob.ar','_self');
+        //DocManager.trigger('salonrequest:edit', model)
 
       });
 
@@ -235,7 +235,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   var enviarmail = function(template, data){
       var mailModel = new DocManager.Entities.SendMail({
           from: 'intranet.mcn@gmail.com',
-          subject:'[FONDO] Inscripción Fondo Argentino de Desarrollo Cultural - Movilidad',
+          subject:'[SALON-NACIONAL] Inscripción Salon Nacional de las Artes Visuales',
       });
 
       mailModel.set('to',getSession().currentUser.get('username'));
@@ -272,46 +272,44 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   };
 
 
+  // var registerStepThreeEvents = function(session, layout){
+  //   var stepThreeForm = new Edit.StepThreeForm({model: session.model['stepThree']});
+  //   session.views.stepThreeForm = stepThreeForm;
+
+  //   var tramosCol = new Entities.TramosCol(session.model.tramos);
+  //   var tramo = new Entities.Tramo();
+  //   session.tramos = tramosCol;
+
+  //   var pasajerosCol = new Entities.PasajerosCol(session.model.pasajeros);
+  //   var pasajero = new Entities.Pasajero();
+  //   session.pasajeros = pasajerosCol;
+
+
+  //   layout.on("show", function(){
+  //     layout.formRegion.show(stepThreeForm);
+  //   });
+  // };
+
+
   var registerStepThreeEvents = function(session, layout){
     var stepThreeForm = new Edit.StepThreeForm({model: session.model['stepThree']});
     session.views.stepThreeForm = stepThreeForm;
 
-    var tramosCol = new Entities.TramosCol(session.model.tramos);
-    var tramo = new Entities.Tramo();
-    session.tramos = tramosCol;
-
-    var pasajerosCol = new Entities.PasajerosCol(session.model.pasajeros);
-    var pasajero = new Entities.Pasajero();
-    session.pasajeros = pasajerosCol;
-
-
     layout.on("show", function(){
       layout.formRegion.show(stepThreeForm);
-      DocManager.trigger('tramos:edit',tramo);
-      DocManager.trigger('pasajeros:edit',pasajero);
-    });
-  };
-
-
-  var registerStepFourEvents = function(session, layout){
-    var stepFourForm = new Edit.StepFourForm({model: session.model['stepFour']});
-    session.views.stepFourForm = stepFourForm;
-
-    layout.on("show", function(){
-      layout.formRegion.show(stepFourForm);
     });
 
   };
 
   var populateNavigationBar = function(list, id, mode){
-    getSession().previousProfiles = new DocManager.Entities.FondoRegistrationFindByQueryCol();
+    getSession().previousProfiles = new DocManager.Entities.SalonRegistrationFindByQueryCol();
     if(!list){
       console.log('Caso 0: list is null');
       DocManager.navigate("inscripcion/nueva");
-      return new DocManager.Entities.FondoRegistration();
+      return new DocManager.Entities.SalonRegistration();
 
     }
-    if(list.whoami === 'FondoRegistracion'){
+    if(list.whoami === 'SalonRegistracion'){
       if(list.id){
         if(profileVigente(list)){
           console.log('Caso 1.1.: existing Model');
@@ -331,7 +329,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
       }
 
-    }else if(list.whoami === 'FondoRegistrationFindByQueryCol'){
+    }else if(list.whoami === 'SalonRegistrationFindByQueryCol'){
       getSession().previousProfiles = list;
       createButtonAccess(list);
       if(list.length){
@@ -350,7 +348,7 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
       }else{
         console.log('Caso 2.2: collection has no models');
         DocManager.navigate("inscripcion/nueva");
-        return new DocManager.Entities.FondoRegistration();
+        return new DocManager.Entities.SalonRegistration();
 
       }
 
@@ -359,21 +357,21 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
   };
 
   var createButtonAccess = function(list){
-    $('#fondo-active-profiles').html('');
-    var colView = new Edit.ActiveRecordsCollectionView({collection: list, el:$('#fondo-active-profiles') });
+    $('#salon-active-profiles').html('');
+    var colView = new Edit.ActiveRecordsCollectionView({collection: list, el:$('#salon-active-profiles') });
     colView.render();
   };
 
   var selectOneFromList = function(list, id, mode){
     var model;
     if(mode === 'add'){
-      return new DocManager.Entities.FondoRegistration();
+      return new DocManager.Entities.SalonRegistration();
     }else if(id){
       model = list.find(function(model){
         if(model.id === id && profileVigente(model)) return true;
         else return false;
       })
-      return model || new DocManager.Entities.FondoRegistration();
+      return model || new DocManager.Entities.SalonRegistration();
     }else{
       return list.at(0);
     }
@@ -390,66 +388,10 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
   var API = {
  
-    initTramosView: function(model){
-      var session = getSession();
-      var crudManager = new Edit.CrudManager(
-          {
-            gridcols:[
-              {name:'fesalida', label:'Salida', cell:'string', editable:false},
-              {name:'origen',   label:'Origen', cell:'string', editable:false},
-              {name:'destino',  label:'Destino', cell:'string', editable:false},
-              {name:'eventname',  label:'Evento', cell:'string', editable:false},
-              {label: 'Acciones', cell: 'ItinerarioAction', editable:false, sortable:false},
-            ],
-            filtercols:['origen', 'destino'],
-            editEventName: 'tramos:edit',
-
-          },
-          {
-            test: 'TestOK',
-            layoutTpl: utils.templates.ItinerarioLayout,
-            formTpl: utils.templates.ItinerarioForm,
-            collection: session.tramos,
-            editModel: Entities.Tramo,
-            modelToEdit: model,
-            editorOpts: {},
-          }
-      );
-      session.views.stepThree.itinerarioRegion.show(crudManager.getLayout());
-
-    },
-
-    initPasajerosView: function(model){
-      var session = getSession();
-      var crudManager = new Edit.CrudManager(
-          {
-            gridcols:[
-              {name:'pnombre',   label:'Nombre', cell:'string', editable:false},
-              {name:'papellido', label:'Apellido', cell:'string', editable:false},
-              {name:'pdni',      label:'DNI', cell:'string', editable:false},
-              {label: 'Acciones', cell: 'PasajeroAction', editable:false, sortable:false},
-            ],
-            filtercols:['pnombre', 'papellido', 'pmail'],
-            editEventName: 'pasajeros:edit',
-
-          },
-          {
-            test: 'TestOK',
-            layoutTpl: utils.templates.PasajeroLayout,
-            formTpl: utils.templates.PasajeroForm,
-            collection: session.pasajeros,
-            editModel: Entities.Pasajero,
-            modelToEdit: model,
-            editorOpts: {},
-          }
-      );
-      session.views.stepThree.pasajeroRegion.show(crudManager.getLayout());
-
-    },
 
     saveStep: function(step){
       var session = getSession();
-      session.model.update(session.currentUser, session.pasajeros, session.tramos, function(error, model){
+      session.model.update(session.currentUser, function(error, model){
 
       });
     },
@@ -458,14 +400,6 @@ DocManager.module("FondoRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
   DocManager.on("wizard:next:step", function(step){
     API.saveStep(step);
-  });
-
-  DocManager.on("tramos:edit", function(model){
-    API.initTramosView(model);
-  });
-
-  DocManager.on("pasajeros:edit", function(model){
-    API.initPasajerosView(model);
   });
 
 

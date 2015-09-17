@@ -184,6 +184,24 @@ DocManager.module("LoginApp.Edit", function(Edit, DocManager, Backbone, Marionet
 
             mailModel.sendmail();
 
+        }else if(targetUser === 'salonnacional'){
+
+          data = {
+              username: user.get('username'),
+              toName: user.get('displayName'),
+              cnumber: '',
+              fecomp: '',
+              nodeId: '',
+              slug: 'Alta de Usuario para el Salón Nacional de las Artes Visuales',
+            };
+
+            mailModel.set(data);
+            mailModel.setTemplate(utils.templates.MailAltaUsuarioFondo);
+
+            mailModel.buildMailContent();
+
+            mailModel.sendmail();
+
         }else if(targetUser === 'sisplan'){
 
 

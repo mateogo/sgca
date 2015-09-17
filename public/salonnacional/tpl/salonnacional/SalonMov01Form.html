@@ -1,0 +1,74 @@
+<h4>Disciplina en la que se inscribe</h4>
+
+
+<div class="row">
+  <div class="form-group required col-sm-6 col-xs-12  selectContainer">
+      <label class="control-label" for="tsolicitud">Seleccione la disciplina</label>
+      <select  id="tsolicitud" class="form-control" name="tsolicitud">
+
+        <%= buildMovilidadOptions() %>
+
+      </select>
+      <span class="help-block"></span>
+  </div>
+
+  <div class="form-group required col-sm-6 col-xs-12 selectContainer">
+      <label class="control-label" for="categoria">Categoría</label>
+      <select  id="categoria" class="form-control" name="categoria">
+        <option value='no_definido'
+        <%= categoria == 'no_definido' ? 'selected':'' %>>Categoría</option>
+
+        <option value='general'
+        <%= categoria == 'general' ? 'selected':'' %>>General</option>
+
+        <option value='jovenes'
+        <%= categoria == 'jovenes' ? 'selected':'' %>>Jóvenes</option>
+
+      </select>
+      <span class="help-block"></span>
+  </div>
+
+
+
+</div>
+<hr>
+<h4>Denominación de la obra a presentar</h4>
+<div class="row">  
+  <div class="col-sm-12 col-xs-12 form-group required">
+    <label class="control-label" for="obraname">Indique la denominación de la obra</label>
+    <!-- label class="control-label en" for="obraname">Business name</label -->
+    <div class="input-group">
+      <input type="text" id="obraname" class="form-control" name="obraname" value='<%= obraname %>'/>
+      <div class="input-group-addon">
+        <div title="Nombre identificatoria de la obra a presentar" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+    </div>
+    <span class="help-block"></span>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="form-group col-sm-12 required">
+    <label class="control-label" for="obradescription">Descripción</label>
+    <div class="input-group">
+      <textarea id="obradescription" class="form-control" rows="6"  maxlength="600" placeholder="" name="obradescription" ><%= obradescription %></textarea>
+      <div class="input-group-addon">
+        <div title="Describa sintéticamente la obra a presentar (Máximo 600 caracteres)" rel="tooltip">
+          <span class="fa fa-question-circle"></span>
+        </div>
+      </div>
+      <p id="limit-chars"></p>
+    </div>
+    <span class="help-block"></span>
+  </div>
+</div>
+
+
+
+<div class="row">
+  <div class="col-sm-12"><h4>Agregue (opcional) una imagen de perfil</h4></div>
+  <div class="col-sm-12  js-avatar" style="border: 1px solid rgb(204, 204, 204);margin-bottom: 20px;" ></div>
+</div>

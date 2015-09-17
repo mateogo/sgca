@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<title>SALON NACIONAL de las ARTES VISUALES</title>
+	<link rel="icon" href="http://www.cultura.gob.ar/static/favicon.ico">
+	<meta name="description" content="El Salon Nacional es un concurso de diversas expresiones de las artes visuales con alcance nacional">
+	<meta name="author" content="Dirección General de Tecnología y Sistemas - Ministerio de Cultura">
+	<meta name="keywords" content="Ministerio de Cultura de la Nacion, Palais de Glace" />
+
+<!-- CSS BASE  aileiz0Shaew   /var/log/sisplan.log -->
+	
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+	<link href="../mica/css/bootstrap-reset.css" rel="stylesheet">
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="../mica/css/theme-admin.css" rel="stylesheet">
+	<link href="../mica/css/style-responsive.css" rel="stylesheet"/>
+
+<!--CSS ADICIONALES-->
+	
+	<link href="/css/backbone-forms-bootstrap.css" rel="stylesheet">
+	<link href="../mica/css/bootstrap-tagsinput.css" rel="stylesheet">
+	<link href="../mica/lib/croppic/croppic.css" rel="stylesheet">
+
+	<link href="../mica/css/fuelux.min.css" rel="stylesheet">
+  	
+  	<link href="/sisplan/lib/backgrid/backgrid.min.css" rel="stylesheet" >
+  	<link href="/sisplan/lib/backgrid/backgrid-filter.min.css" rel="stylesheet" >
+  	<link href="/lib/backgrid-paginator.css" rel="stylesheet" >
+
+	<link href="../mica/css/theme-fondo.css" rel="stylesheet">
+	<link href="../mica/css/datepicker3.css" rel="stylesheet">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+<section id="container">
+<!--header start-->
+<header class="header fixed-top clearfix">
+	<!--logo start-->
+	<div class="brand">
+		<a href="http://www.cultura.gob.ar" class="logo" target="_blank">
+	        <img src="../mica/images/logo.png" alt="Ministerio de Cultura de la Nación" class="img-responsive">
+	    </a>
+	    <div class="sidebar-toggle-box">
+	        <div class="fa fa-bars"></div>
+	    </div>
+	</div>
+	<!--logo end-->
+	<div id="header-region"></div>
+</header>
+<!--header end-->
+<!--sidebar start-->
+<aside>
+    <div id="sidebar" class="nav-collapse">
+        <!-- sidebar menu start-->
+        <div class="leftside-navigation" tabindex="5000" style="overflow: hidden; outline: none;">
+        	<div id='main-side-menu'>
+	         	<ul class="sidebar-menu" id="nav-accordion">
+
+	            <li class="sub-menu dcjq-parent-li">
+	             	<a href="javascript:;" class="dcjq-parent">
+	                  <i class="fa fa-laptop"></i>
+	                  <span>SALON NACIONAL</span>
+	             	<span class="dcjq-icon"></span></a>
+	             	<ul class="sub" >
+	                <li><a href="http://www.cultura.gob.ar">Salir</a></li>
+	               </ul>
+	            </li>
+	        	</ul>
+
+
+ 
+	        	<h3 style="color: #aeaeae; padding-left: 20px;">Solicitudes Activas</h3>
+	        	<div id="salon-active-profiles" style="background: #28282e;"></div>
+          </div>
+
+          <div class="logo-footer">
+              <img src="http://www.cultura.gob.ar/static/img/logo-presidencia-de-la-nacion-footer.png" alt="Ministerio de Cultura de la Nacion" title="Ministerio de Cultura de la Nacion" class="img-responsive">
+          </div>
+        </div>
+        <!-- sidebar menu end-->
+    <div id="ascrail2000" class="nicescroll-rails" style="width: 3px; z-index: auto; cursor: default; position: absolute; top: 0px; left: 237px; height: 355px; display: block; opacity: 0;"><div style="position: relative; top: 0px; float: right; width: 3px; height: 0px; border: 0px solid rgb(255, 255, 255); border-radius: 0px; background-color: rgb(31, 181, 173); background-clip: padding-box;"></div></div><div id="ascrail2000-hr" class="nicescroll-rails" style="height: 3px; z-index: auto; top: 352px; left: 0px; position: absolute; cursor: default; display: none; opacity: 0; width: 237px;"><div style="position: relative; top: 0px; height: 3px; width: 0px; border: 0px solid rgb(255, 255, 255); border-radius: 0px; left: 0px; background-color: rgb(31, 181, 173); background-clip: padding-box;"></div></div></div>
+</aside>
+<!--sidebar end-->
+
+	<div id="dialog-region"></div>
+	<!-- Off Canvas
+	================================================== -->
+
+<!--main content start-->
+	<div id="main-region"></div>
+<!--main content end-->
+</section>
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="lib/jquery.min.js"></script>
+<script src="lib/underscore-min.js"></script>
+<script src="lib/backbone.js"></script>
+<script src="/lib/backbone.paginator.min.js"></script> 
+<!-- script src="/lib/backbone.picky.min.js"></script    --> 
+<script src="lib/backbone.marionette.min.js"></script>
+<script src="lib/bootstrap.min.js"></script>
+
+<script src="/mica/lib/backbone-forms.min.js"></script>
+<!-- script src="/lib/backbone-forms-bootstrap.js"></script -->
+<script src="/mica/lib/backbone-forms-bootstrap3.js"></script>
+<script src="/mica/lib/backbone.bootstrap-modal.js"></script>
+<script src="/lib/backbone.picky.min.js"></script> 
+<!-- -->
+<script src="//code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<script src="lib/bootstrap-datepicker.js"></script>
+
+<script src="/sisplan/lib/bootstrap-notify.min.js"></script>
+
+<script src="/sisplan/lib/backgrid/backgrid.min.js"></script>
+<script src="/sisplan/lib/backgrid/backgrid-filter.min.js"></script>
+<script src="/lib/backgrid-paginator.js"></script>
+
+<!-- script src="lib/TimeCircles.js"></script -->
+<script src="lib/moment.min.js"></script>
+<script src="lib/moment-locale-es.js"></script>
+
+<!--Maneja los tagsinput-->
+<script src="lib/bootstrap-tagsinput.min.js"></script>
+<script src="lib/fuelux.min.js"></script>    
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+
+
+
+<!--conexion con FB y TW-->
+<!-- script src="lib/socialnetworks.js"></script -->
+<!--Manipula imagenes del perfil-->
+<!--script src="lib/croppic/croppic.js"></script -->
+<!--Manipula imagenes de la portada-->
+<!-- script src="lib/imagesloaded.pkgd.min.js"></script -->
+<!-- script src="lib/masonry.pkgd.min.js"></script -->
+<!-- -->
+<script src="/js/utils.js"></script>
+<script src="/js/dao.js"></script>
+	
+<!---->
+<script src="js/custom.js"></script>
+<script src="js/app.js"></script>
+<script src="js/tdata.js"></script>
+
+<script src="js/entities/person.js"></script>
+<script src="js/entities/user.js"></script>
+<script src="js/entities/header.js"></script>
+<script src="js/entities/sendmail.js"></script>
+
+<script src="js/entities/salon.js"></script>
+<script src="/mica/js/entities/mica.js"></script>
+
+<!--   commons  -->
+<script src="/commons/js/apps/helpers/message.js"></script>
+<script src="/commons/js/entities/filtercollection.js"></script>
+
+<!--   splash entities  -->
+<script src="/commons/js/entities/assets.js"></script>
+<script src="js/entities/features.js"></script>
+<script src="js/entities/home.js"></script>
+
+	
+<script src="js/apps/header/header_app.js"></script>
+<script src="js/apps/header/list/list_view.js"></script>
+<script src="js/apps/header/list/list_controller.js"></script>
+
+<!--Splash-->
+<script src="js/apps/home/home_app.js"></script>
+<script src="js/apps/home/show/show_view.js"></script>
+<script src="js/apps/home/show/show_controller.js"></script>
+
+<!--upload-->
+<script src="/commons/js/apps/attachment/attachment-view.js"></script>
+
+
+<!--inscrpcion-->
+<script src="js/apps/inscription/common/views.js"></script>
+<script src="js/apps/inscription/inscription_app.js"></script>
+
+<script src="js/apps/inscription/edit/crud_view.js"></script>
+<script src="js/apps/inscription/edit/edit_view.js"></script>
+<script src="js/apps/inscription/edit/edit_controller.js"></script>
+
+<!--backend-->
+<script src="js/apps/backend/common/views.js"></script>
+<script src="js/apps/backend/backend_app.js"></script>
+
+<script src="js/apps/backend/list/list_view.js"></script>
+<script src="js/apps/backend/list/list_controller.js"></script>
+
+
+<!--editar perfil -->
+<script src="js/apps/profile/profile_app.js"></script>
+<script src="js/apps/profile/edit/edit_view.js"></script>
+<script src="js/apps/profile/edit/edit_controller.js"></script>
+
+<script src="js/main.js"></script>
+
+</body>
+</html>

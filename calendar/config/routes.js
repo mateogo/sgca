@@ -207,6 +207,20 @@ module.exports = function (config, app) {
     app.put ('/micashowcase/:id',        micashowcase.update);
     app.delete('/micashowcase/:id',      micashowcase.delete);
 
+    // salonosuscribe -perfil inscriptos FONDO- routes
+    var salonsuscribe = require(rootPath + '/calendar/controllers/salonsuscriptions');
+    app.post('/actualizar/salonsuscriptions', salonsuscribe.partialupdate);
+    app.get ('/salonsuscriptions',            salonsuscribe.findAll);
+    app.post('/salonsuscriptions/fetch',      salonsuscribe.findOne);
+    app.post('/navegar/salonsuscriptions',    salonsuscribe.find);
+    app.get('/query/salonsuscriptions',       salonsuscribe.findByQuery);
+    app.get ('/fetch/salonsuscriptions',      salonsuscribe.fetchByQuery);
+
+    app.get ('/salonsuscriptions/:id',        salonsuscribe.findById);
+    app.post('/salonsuscriptions',            salonsuscribe.add);
+    app.put ('/salonsuscriptions/:id',        salonsuscribe.update);
+    app.delete('/salonsuscriptions/:id',      salonsuscribe.delete);
+
 
     // fondosuscribe -perfil inscriptos FONDO- routes
     var fondosuscribe = require(rootPath + '/calendar/controllers/fondosuscriptions');

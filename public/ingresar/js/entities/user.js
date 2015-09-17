@@ -361,7 +361,7 @@ atribuciones (array)
         user = new Entities.User(),
         userattrs = {};
 
-        //console.log('addNewUser [%s] [%s]', self.get('target'), self.get('targetUser'));
+        console.log('addNewUser [%s] [%s]', self.get('target'), self.get('targetUser'));
 
         userattrs.displayName = self.get('displayName');
         userattrs.name = self.get('name');
@@ -400,6 +400,7 @@ atribuciones (array)
     },
 
     buildDefaultsFor: function(target, user){
+      console.log('target: [%s]', target)
         if(target === 'sisplan'){
             user.home = 'sisplan:acciones:list';
 
@@ -426,6 +427,17 @@ atribuciones (array)
             user.atributos = [];
 
             user.modulos = ['mica','fondo','ic'];
+            user.estado_alta = 'activo';
+
+
+        }else if(target === 'salonnacional'){
+            user.grupo = 'adherente';
+            user.home = 'salon:inscripcion';
+
+            user.roles = ['usuario'];
+            user.atributos = [];
+
+            user.modulos = ['mcn','salon'];
             user.estado_alta = 'activo';
 
         }
