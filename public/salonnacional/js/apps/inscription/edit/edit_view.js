@@ -568,7 +568,7 @@ DocManager.module("SalonRequestApp.Edit", function(Edit, DocManager, Backbone, M
   });
 
  Edit.StepThreeForm = DocManager.SalonRequestApp.Common.Views.Form.extend({
-    whoami: 'StepFourForm',
+    whoami: 'StepThreeForm',
     
     getTemplate: function(){
       return utils.templates.SalonMov03Form;
@@ -863,7 +863,7 @@ DocManager.module("SalonRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
     }else if(step === 3){
 
-      if(!session.views.stepFourForm.validateStep(step)) {
+      if(!session.views.stepThreeForm.validateStep(step)) {
         evt.preventDefault();
         Message.error('Debe adjuntar los documentos solicitados para avanzar');
         $('#myWizard').wizard('selectedItem', {step: step});
@@ -888,7 +888,7 @@ DocManager.module("SalonRequestApp.Edit", function(Edit, DocManager, Backbone, M
 
   
   var checkAttachments = function(){
-      var view = getSession().views.stepFourForm,
+      var view = getSession().views.stepThreeForm,
           tsolicitud = getSession().views.stepOne.model.get('tsolicitud'),
           attacherror = {},
           hasErrors = false,
@@ -905,9 +905,9 @@ DocManager.module("SalonRequestApp.Edit", function(Edit, DocManager, Backbone, M
         if(!view[type] || !view[type].model.assets.length){
           hasErrors = true;
           attacherror[type] = 'Debe adjuntar archivo';
-          getSession().views.stepFour.model.set(type, false);
+          getSession().views.stepThree.model.set(type, false);
         }else{
-          getSession().views.stepFour.model.set(type, true);
+          getSession().views.stepThree.model.set(type, true);
         }
       });
 
