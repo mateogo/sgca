@@ -185,8 +185,8 @@ DocManager.module("FondoBackendApp.List", function(List, DocManager, Backbone, M
     },
     
     events: {
-      'click .js-edit':'onEdit',
-      'click .js-remove':'onRemove',
+      'click .js-edit': 'onEdit',
+      'click .js-remove': 'onRemove',
       'click .js-save': 'onSave',
       'click .js-cancelEdit': 'onCancelEdit'
     },
@@ -199,20 +199,31 @@ DocManager.module("FondoBackendApp.List", function(List, DocManager, Backbone, M
     onSave: function(e){
       e.stopPropagation();
       
-      var $btn = this.$el.find('.js-save');
-      $btn.button('loading');
+      //var $btn = this.$el.find('.js-save');
+      //$btn.button('loading');
       this.model.set('slug',this.$el.find('[name=slug]').val());
       this.model.set('name',this.$el.find('[name=name]').val());
+
+      var related = {
+        id: this.suscription.id,
+        code: this.suscription.get('cnumber'),
+        slug: 'Inscripción Fondo: ' + this.suscription.get('cnumber'),
+        predicate: this.$el.find('[name=predicate]').val(),
+
+      }
+
+      var relatedArray = [related];
+      this.model.set('es_asset_de', relatedArray);
       
       var self = this;
       this.model.save().done(function(){
-        $btn.button('reset');
+        //$btn.button('reset');
         self.setEditMode(false);
         
         self.triggerMethod('assets:save',self.model);
         
       }).fail(function(){
-        $btn.button('reset');
+        //$btn.button('reset');
         self.setEditMode(false);
       });
       
@@ -262,11 +273,13 @@ DocManager.module("FondoBackendApp.List", function(List, DocManager, Backbone, M
       if(targetAsset(asset)){
         console.log('Iterando TRUE AssetsCol [%s]', asset.get('name'));
         assetView = new AttachmentItemView({model:asset});
+        assetView.suscription = model;
         view.$('#orphan').append(assetView.render().el);
 
       }else{
         console.log('Iterando FALSE AssetsCol [%s]', asset.get('name'));
         assetView = new AttachmentItemView({model:asset});
+        assetView.suscription = model;
         view.$('#assetsfound').append(assetView.render().el);
       }
 
