@@ -1319,6 +1319,40 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
     },
 
+    fetchOrphanAssets: function(model){
+      var query = {},
+          defer = $.Deferred(),
+          assetList,
+          fecomp,
+          desde,
+          hasta;
+
+      fecomp = model.get('fecomp').split('/')
+
+      desde = 'files/assets/2015/' + fecomp[1] + '/' + fecomp[0];
+      hasta = desde + '/xxxx';
+
+
+      console.log('query: [%s] [%s]', desde , hasta)
+
+      query = {
+        //'es_asset_de.id': model.id
+        $and: [{'urlpath':{$gte: desde}}, {'urlpath':{$lte:hasta}}   ] 
+      };
+
+
+      fetchingAssets = DocManager.request("assets:filtered:entities", query);
+
+      $.when(fetchingAssets).done(function(assets){
+        console.log('Orphan Fetched so-far: [%s]', assets.length);
+        //assetList = DocManager.request('assets:groupby:predicate', assets, model.id);
+        defer.resolve(assets);
+      });
+
+      return defer.promise();
+
+    },
+
   };
 
   //*************************************************************
@@ -1347,6 +1381,10 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 
   DocManager.reqres.setHandler("fondorqst:fetch:assets", function(model){
     return API.fetchAssets(model);
+  });
+
+  DocManager.reqres.setHandler("fondorqst:fetch:orphan:assets", function(model){
+    return API.fetchOrphanAssets(model);
   });
 
 

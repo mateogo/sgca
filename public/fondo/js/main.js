@@ -16,6 +16,8 @@ utils.loadTemplate([
         // -- Lista inscripciones
         'list/CommonBaseLayout','list/CommonMainLayout',
         'list/FondorequestsLayout','list/FondorequestsView','list/CommonModelEditorLayout',
+        'list/RepairAssetItem','list/RepairAssetItemEditor',
+        
 
 
 

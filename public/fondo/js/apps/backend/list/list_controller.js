@@ -188,17 +188,19 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
   var EditViewCell = Backgrid.Cell.extend({
       render: function(){
           if(!this.rendered){
-             var btnEdit = $('<button class="btn btn-xs btn-info js-edit" title="editar - ver"><span class="glyphicon glyphicon-edit"></span></button>');
+             var btnEdit = $('<button class="btn btn-xs btn-info js-edit" title="editar - VER"><span class="glyphicon glyphicon-edit"></span></button>');
+             var btnAsset = $('<button class="btn btn-xs btn-danger js-edit-asset" title="reparar archivos"><span class="glyphicon glyphicon-pencil"></span></button>');
              var btnRemove = $('<button class="btn btn-xs btn-danger js-trash" title="borrar"><span class="glyphicon glyphicon-remove"></span></button>');
-             this.$el.append(btnEdit).append(btnRemove).append(drpDwnBtn());
+             this.$el.append(btnEdit).append(btnAsset).append(btnRemove).append(drpDwnBtn());
              this.rendered = true;
           }
-        this.$el.css('width','95px');
+        this.$el.css('width','115px');
         return this;
       },
       
       events: {
           'click button.js-edit': 'editClicked',
+          'click button.js-edit-asset': 'editAssetClicked',
           'click button.js-trash': 'trashClicked',
           'click .js-trigger-inscripcion-aceptado': 'formAccepted',
           'click .js-trigger-inscripcion-observado': 'formObserved',
@@ -226,6 +228,11 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
       editClicked: function(e){
           e.stopPropagation();e.preventDefault();
           getSession().views.mainlayout.trigger('grid:model:edit',this.model);
+      },
+        
+      editAssetClicked: function(e){
+          e.stopPropagation();e.preventDefault();
+          getSession().views.mainlayout.trigger('grid:model:asset:edit',this.model);
       },
         
       trashClicked: function(e){
@@ -307,6 +314,13 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
 
   	});
 
+    mainlayout.on('grid:model:asset:edit', function(model){
+      console.log('Edit Asset');
+      var view = createRepairAssetView(session, mainlayout, model)
+
+    });
+
+
   	mainlayout.on('grid:model:remove', function(model){
       if(model.get('estado_alta')=== 'activo'){
         Message.confirm('<h3>¿Confirma la baja?</h3>',
@@ -357,7 +371,55 @@ DocManager.module('FondoBackendApp.List',function(List, DocManager, Backbone, Ma
 
     });
 
+  };
 
+  //***************** Vista de un Modelo ***************
+  var createRepairAssetView = function(session, mainlayout, model){
+    console.log('CreateRepairAssetView BEGIN')
+
+    var assets = DocManager.request('fondorqst:fetch:orphan:assets', model);
+    assets.done(function(assetList){
+      var editorLayout = new backendCommons.ModelEditorLayout({
+        model: model,
+      })
+      registerAssetEditorLayoutEvents(session, mainlayout, editorLayout, model, assetList)
+
+    });
+
+
+
+  };
+
+  var registerAssetEditorLayoutEvents = function(session, mainlayout, editorlayout, model, assetList){
+    var modelView = new List.FondoRepairAssetView({
+      model: model,
+      adjuntos: assetList
+    })
+    
+
+    mainlayout.hideList();
+
+    // editorlayout.on('accept:buyer', function(){
+    //   model.set('nivel_ejecucion', 'aceptado');
+    //   DocManager.request("fondorqst:partial:update",[model.id],{'nivel_ejecucion': 'aceptado'});
+    //   mainlayout.showList();
+    //   editorlayout.destroy();
+
+    // });
+
+
+    editorlayout.on('close:view', function(){
+      mainlayout.showList();
+      editorlayout.destroy();
+
+    });
+
+
+    editorlayout.on('show', function(){
+      editorlayout.getRegion('showRegion').show(modelView);
+ 
+    })
+    mainlayout.getRegion('editRegion').show(editorlayout);
 
   };
 
