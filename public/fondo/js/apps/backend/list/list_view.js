@@ -252,10 +252,19 @@ DocManager.module("FondoBackendApp.List", function(List, DocManager, Backbone, M
     console.log('buildReapirAssets item view [%s] whoami:[%s] ', assetsCol.length, assetsCol.whoami);
 
     assetsCol.each(function(asset){
-      console.log('Iterando AssetsCol [%s]', asset.get('name'));
-      assetView = new AttachmentItemView({model:asset});
 
-      view.$('#orphan').append(assetView.render().el);
+      if(targetAsset(asset)){
+        console.log('Iterando AssetsCol [%s]', asset.get('name'));
+        assetView = new AttachmentItemView({model:asset});
+
+        view.$('#orphan').append(assetView.render().el);
+      }else{
+        console.log('Iterando AssetsCol [%s]', asset.get('name'));
+        assetView = new AttachmentItemView({model:asset});
+        view.$('#assetsfound').append(assetView.render().el);
+      }
+
+
     });
 
 
@@ -266,6 +275,22 @@ DocManager.module("FondoBackendApp.List", function(List, DocManager, Backbone, M
   };
 
 
+  var targetAsset = function(asset){
+    var esasset = asset.get('es_asset_de');
+    if(!esasset){
+      
+      return true;
+
+    }else{
+
+      if(!esasset.id){
+        return true;
+      }
+    }
+    
+    return false;
+
+  };
 
   var buildAttachments = function(view, model){
     var adjuntos = view.adjuntos,
