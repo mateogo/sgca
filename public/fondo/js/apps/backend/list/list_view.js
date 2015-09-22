@@ -135,7 +135,7 @@ DocManager.module("FondoBackendApp.List", function(List, DocManager, Backbone, M
         },
         buildAdjuntoOptions: function(){
           var asCol = self.model.get('es_asset_de') || [];
-          var as = asCol[0];
+          var as = asCol[0] || {};
           var predicate = as.predicate || 'not_defined';
           return tdata.buildSelectOptions('predicate', tdata.adjuntosOpLst, predicate);
 
