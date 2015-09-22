@@ -133,7 +133,13 @@ DocManager.module("FondoBackendApp.List", function(List, DocManager, Backbone, M
           return strData;
 
         },
-        
+        buildAdjuntoOptions: function(){
+          var asCol = self.model.get('es_asset_de') || [];
+          var as = asCol[0];
+          var predicate = as.predicate || 'not_defined';
+          return tdata.buildSelectOptions('predicate', tdata.adjuntosOpLst, predicate);
+
+        },
       };
     },
     onRender: function(){
@@ -254,12 +260,12 @@ DocManager.module("FondoBackendApp.List", function(List, DocManager, Backbone, M
     assetsCol.each(function(asset){
 
       if(targetAsset(asset)){
-        console.log('Iterando AssetsCol [%s]', asset.get('name'));
+        console.log('Iterando TRUE AssetsCol [%s]', asset.get('name'));
         assetView = new AttachmentItemView({model:asset});
-
         view.$('#orphan').append(assetView.render().el);
+
       }else{
-        console.log('Iterando AssetsCol [%s]', asset.get('name'));
+        console.log('Iterando FALSE AssetsCol [%s]', asset.get('name'));
         assetView = new AttachmentItemView({model:asset});
         view.$('#assetsfound').append(assetView.render().el);
       }
@@ -276,20 +282,36 @@ DocManager.module("FondoBackendApp.List", function(List, DocManager, Backbone, M
 
 
   var targetAsset = function(asset){
-    var esasset = asset.get('es_asset_de');
+    var esassetCol = asset.get('es_asset_de');
+    if(!esassetCol){
+      console.log('TRUE-0 ');
+      return true;
+
+    }else{
+      esasset = esassetCol[0];
+    }
+
     if(!esasset){
       
+      console.log('TRUE-1 target Asset:[%s]', asset.get('name'), asset.get('es_asset_de'));
       return true;
 
     }else{
 
       if(!esasset.id){
+        console.log('TRUE-2 target Asset:[%s]', asset.get('name'), asset.get('es_asset_de'));
         return true;
+      }else{
+        console.log('TRUE-3 target Asset:[%s]', asset.get('name'), asset.get('es_asset_de'));
+        if(esasset.id === 'null' || esasset.code === 'ASSET'){
+          return true;
+        }else{
+          console.log('FALSE*****************');
+          return false;
+        }
       }
     }
     
-    return false;
-
   };
 
   var buildAttachments = function(view, model){

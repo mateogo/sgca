@@ -470,5 +470,16 @@ window.tdata = {
         {val:'idavta', label:'TRAMO INTERMEDIO'},
     ],
 
+    adjuntosOpLst:[
+        {val:'no_definido',      label:'Tipo de adjunto'},
+        {val:'especifico',       label:'Específico'},
+        {val:'cartaministra',    label:'Carta a la Ministra'},
+        {val:'invitacion',       label:'Invitación'},
+        {val:'docidentidad',     label:'Documento de Identidad'},
+        {val:'constanciacuit',   label:'Constancia CUIT'},
+        {val:'resenia',          label:'Resenia'},
+    ],
+
+
 };
 

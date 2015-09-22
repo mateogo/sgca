@@ -1333,7 +1333,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       hasta = desde + '/xxxx';
 
 
-      console.log('query: [%s] [%s]', desde , hasta)
+      //console.log('query: [%s] [%s]', desde , hasta)
 
       query = {
         //'es_asset_de.id': model.id
@@ -1344,7 +1344,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
       fetchingAssets = DocManager.request("assets:filtered:entities", query);
 
       $.when(fetchingAssets).done(function(assets){
-        console.log('Orphan Fetched so-far: [%s]', assets.length);
+        //console.log('Orphan Fetched so-far: [%s]', assets.length);
         //assetList = DocManager.request('assets:groupby:predicate', assets, model.id);
         defer.resolve(assets);
       });
