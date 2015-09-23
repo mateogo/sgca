@@ -339,6 +339,8 @@ module.exports = function (config, app) {
     app.delete('/activos/:id', asset.delete);
     app.get('/asset/render/img/:id', asset.renderImg);
     app.get('/asset/render/video/:id', asset.renderVideo);
+    app.get('/asset/check/out', asset.auditdb);
+
 
     // article (articulos) routes
     var article = require(rootPath + '/calendar/controllers/articles');

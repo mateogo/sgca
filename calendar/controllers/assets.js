@@ -10,8 +10,12 @@
  *     metodos exportados:
  *          open(); findById; findAll; add(), update(); delete()
  */
+var path = require('path');
+var rootPath = path.normalize(__dirname + '/../..');
 
 var _ = require('underscore');
+
+var utils = require(rootPath + '/core/util/utils');
 
 var dbi ;
 var BSON;
@@ -187,4 +191,79 @@ exports.delete = function(req, res) {
         });
     });
 }
-//mgo modifique esta linea
+
+exports.auditdb = function(req, res){
+    console.log('ASSETS AUDIT-DB [%s] collection', assetsCol);
+    dbi.collection(assetsCol, function(err, collection) {
+        collection.find().sort({name:1}).toArray(function(err, items) {
+            auditAssets(items, req, res);
+        });
+    });
+};
+var auditAssets = function(assetsArray, req, res){
+    var audit = {};
+    audit.total = 0;
+    audit.orphans = 0;
+    audit.relatedok = 0;
+    audit.relatednull = 0;
+    audit.relatedfdoguess = 0;
+    audit.orphanCol = [];
+    _.each(attachTypes, function(predicate){
+        audit[predicate] = [];
+    });
+
+    audit.assets_length = assetsArray.length;
+
+    console.log('AuditAssets BEGIN: [%s]', assetsArray.length);
+    _.each(assetsArray, function(asset){
+        checkAsset(asset, audit);
+
+    });
+
+    // BACK
+    res.send(audit);
+    //
+};
+
+var checkAsset = function(asset, audit){
+    var parent = asset.es_asset_de;
+    var related;
+    audit.total += 1;
+
+    // CASO-1: No contiene esta key ó no es un array ó no tiene elementos
+    if(!parent || !parent.length){
+        processOrphanAsset(asset, audit);
+        return;
+    }else{
+        _.each(parent, function(token){
+            checkRelatedToken(token, asset, audit);
+        });
+
+    }
+};
+var attachTypes = ['especifico', 'cartaministra', 'invitacion',  'docidentidad', 'constanciacuit', 'resenia'];
+
+var processOrphanAsset = function(asset, audit){
+    audit.orphans += 1;
+    //audit.orphanCol.push(asset.urlpath || 'sin_dato_valido');
+};
+
+var checkRelatedToken = function(token, asset, audit){
+    // CASO-2: tiene token
+
+    if(token.predicate){
+        if(attachTypes.indexOf(token.predicate) !== -1){
+            if(notValidToken(token)){
+                audit[token.predicate].push(asset.urlpath|| 'sin_dato_valido');
+            }
+        }
+    }
+};
+
+var notValidToken = function(token){
+    if(!token.id || token.id === 'null'){
+        return true;
+    }else{
+        return false;
+    }
+};
