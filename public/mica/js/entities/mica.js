@@ -661,6 +661,9 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
         {val:'responsable.rcel',                label:'Celular',          itemType: 'Text'},
         {val:'solicitante.edisplayName',        label:'Solicitante',      itemType: 'Text'},
         {val:'solicitante.eprov',               label:'Provincia',        itemType: 'Text'},
+        {val:'solicitante.efundacion',          label:'InicioActividad',  itemType: 'Text'},
+        {val:'solicitante.enumempleados',       label:'NumEmpleados',     itemType: 'Text'},
+        {val:'solicitante.eventas',             label:'VentasAnuales',    itemType: 'Number'},
     ],
 
     fetchCollection: function(collection){
