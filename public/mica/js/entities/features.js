@@ -9,7 +9,7 @@ DocManager.module("Entities", function(Entities, DocManager, Backbone, Marionett
 		
 		defaults: {
 			titulo: "Mercado de Industrias Culturales Argentinas",
-			description: "Bienvenido a la plataforma que te permitirá armar tu agenda para participar de las Rondas de negocios de MICA 2015.",
+			description: "Bienvenido a la plataforma MICA donde podrás estar en contacto con productores culturales de todo el país.",
 			items: [{
 				icon: "class='icons'",
 				size: "class='fa'",

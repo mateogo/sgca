@@ -15,67 +15,7 @@
 <% } %>
   <div class="row">
     <div class="col-md-12">
-        <!--notification start-->
-        <section class="panel">
-            <header class="panel-heading">
-                Notificaciones <span class="tools pull-right">
-                <a href="javascript:;" class="fa fa-chevron-down"></a>
-                <!--<a href="javascript:;" class="fa fa-cog"></a>-->
-                <a href="javascript:;" class="fa fa-times"></a>
-                </span>
-            </header>
-            <div class="panel-body row" style="display: block;">
-              <div class="col-md-12">
-                <div class="alert alert-success">
-                    <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
-                    <div class="notification-info">
-                        <ul class="clearfix notification-meta">
-                            <li class="pull-left notification-meta"><strong>¡Tu agenda está lista!</strong></li>
-                        </ul>
-                        <p>
-                          <ul class="unstyled-list">
-
-                            <!--IF IS VENDEDOR-->
-                            <% if(isVendedor()) {%>
-                              <li>Es obligatorio que confirmes tu asistencia como <strong>Vendedor</strong> desde <a class="js-agenda-vendedor" href="#">AQUÍ</a> 
-                              </li>
-                            <% } %>
-
-                            <!--IF IS COMPRADOR-->
-                            <% if(isComprador()) {%>
-                              <li>Es obligatorio que confirmes tu asistencia como <strong>Comprador</strong> desde <a class="js-agenda-comprador" href="#">AQUÍ</a> 
-                              </li>
-                            <% } %>
-                            
-                            <li>Recuerda imprimir tu agenda</li>
-                            <li>Para poder acceder al espacio de rondas de negocios deberás estar acreditado previamente</li>
-                            <li>Recomendamos acreditarte el día jueves 3 desde las 9 horas en el Hall de la Planta Baja del <a href="http://www.culturalkirchner.gob.ar/" target="_blank">Centro Cultural Kirchner</a></li>
-                          </ul>
-                        </p>
-                    </div>
-                </div>
-              </div>
-              <!--<div class="col-md-6">
-                <div class="alert alert-info">
-                    <span class="alert-icon"><i class="fa fa-calendar"></i></span>
-                    <div class="notification-info">
-                        <ul class="clearfix notification-meta">
-                            <li class="pull-left notification-meta"><strong>Consejos útiles</strong></li>
-                        </ul>
-                        <p>
-                          <ul class="unstyled-list">
-                            <li>Recuerda imprimir tu agenda</li>
-                            <li>Para poder acceder al espacio de rondas de negocios deberás estar acreditado previamente</li>
-                            <li>Recomendamos inscribirte el día jueves 3 desde las 9 horas en el Hall de la Planta Baja del <a href="http://www.culturalkirchner.gob.ar/" target="_blank">Centro Cultural Kirchner</a></li>
-                          </ul>
-                        </p>
-                    </div>
-                </div>
-              </div>-->
-            </div>
-        </section>
-        <!--notification end-->
-
+        
         <section>
           <div class="row">
               
@@ -83,8 +23,8 @@
               <div class="mini-stat clearfix">
                 <span class="mini-stat-icon green"><i class="fa fa-eye"></i></span>
                 <div class="mini-stat-info">
-                  <span>Mirá quiénes van a estar en el MICA</span>
-                  Explorá los perfiles de los emprendimientos participantes
+                  <span>Explorá el perfil de otros emprendimientos</span>
+                  Podés ver los emprendimientos que participaron del MICA
                   <hr>
                   <a href="#emprendimientos/explorar" class="btn btn-default btn-block">Acceder</a>
                 </div>
@@ -96,7 +36,7 @@
                 <span class="mini-stat-icon green"><i class="fa fa-pencil-square-o"></i></span>
                 <div class="mini-stat-info">
                   <span>Actualizá tu perfil</span>
-                  Podés seguir mejorando y ajustando tu perfil para que los productores lo vean
+                  Enriquecé y ajustá tu perfil. Es tu carta de presentación para que todos puedan ver tus producciones.
                   <hr>
                   <a href="#inscripcion/nueva" class="btn btn-default btn-block">Acceder</a>
                 </div>
